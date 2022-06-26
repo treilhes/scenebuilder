@@ -41,7 +41,7 @@ open module scenebuilder.ext.source.gen {
     exports com.oracle.javafx.scenebuilder.sourcegen;
 
     requires scenebuilder.starter;
-    requires transitive scenebuilder.core.api;
+    requires transitive scenebuilder.fxml.api;
     requires transitive scenebuilder.core.core;
     requires scenebuilder.core.extension.api;
 

@@ -533,7 +533,7 @@ public class FXOMNodes {
 
         for (String fxId : new HashSet<>(fxIdMap.keySet())) {
             final FXOMObject fxomObject = fxIdMap.get(fxId);
-            if (fxomObject.getSceneGraphObject() instanceof ToggleGroup) {
+            if (fxomObject.getSceneGraphObject().get() instanceof ToggleGroup) {
                 fxIdMap.remove(fxId);
             }
         }

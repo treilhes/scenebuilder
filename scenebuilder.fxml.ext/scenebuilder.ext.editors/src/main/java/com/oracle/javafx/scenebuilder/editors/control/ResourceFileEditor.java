@@ -41,18 +41,18 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.scenebuilder.fxml.api.Documentation;
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Documentation;
-import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -79,13 +79,13 @@ public class ResourceFileEditor extends InlineListEditor {
     private TextField resourceFileField;
 
     private final FileSystem fileSystem;
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
 
     public ResourceFileEditor(
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem,
-            DocumentManager documentManager) {
+            FxmlDocumentManager documentManager) {
         super(dialog, documentation, fileSystem);
         this.fileSystem = fileSystem;
         this.documentManager = documentManager;

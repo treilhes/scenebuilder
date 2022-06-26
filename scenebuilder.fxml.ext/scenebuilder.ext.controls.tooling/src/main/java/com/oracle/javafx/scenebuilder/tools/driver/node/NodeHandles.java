@@ -33,6 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.node;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +41,6 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractNodeHandles;
 
@@ -61,7 +61,7 @@ public class NodeHandles extends AbstractNodeHandles<Node> {
     public NodeHandles(
             Driver driver,
             Content contentPanelController,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory) {
         super(driver, contentPanelController, documentManager, discardGestureFactory, resizeGestureFactory, Node.class);

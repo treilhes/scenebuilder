@@ -6,7 +6,7 @@ open module scenebuilder.ext.script.graalvm.javascript {
     exports org.scenebuilder.ext.script.graalvm.javascript;
     exports org.scenebuilder.ext.script.graalvm.javascript.i18n;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive scenebuilder.fxml.api;
     requires transitive scenebuilder.core.extension.api;
     requires transitive org.scenebuilder.ext.script.graalvm.javascript.runtime;
     requires java.scripting;

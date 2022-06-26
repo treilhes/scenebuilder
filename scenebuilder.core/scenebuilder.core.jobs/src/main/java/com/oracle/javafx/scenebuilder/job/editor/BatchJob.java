@@ -42,12 +42,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
 
 /**
  * Allow to group multiple jobs into one job logic unit. Child jobs are executed
@@ -62,7 +62,7 @@ public final class BatchJob extends AbstractJob {
     private boolean shouldRefreshSceneGraph;
     private boolean shouldUpdateSelection;
     private String description;
-    private final FXOMDocument fxomDocument;
+    private final OMDocument omDocument;
     private final Selection selection;
 
     // @formatter:off
@@ -72,7 +72,7 @@ public final class BatchJob extends AbstractJob {
             Selection selection) {
     // @formatter:on
         super(extensionFactory);
-        this.fxomDocument = documentManager.fxomDocument().get();
+        this.omDocument = documentManager.omDocument().get();
         this.selection = selection;
     }
 
@@ -117,13 +117,13 @@ public final class BatchJob extends AbstractJob {
             selection.beginUpdate();
         }
         if (shouldRefreshSceneGraph) {
-            fxomDocument.beginUpdate();
+            omDocument.beginUpdate();
         }
         for (AbstractJob subJob : subJobs) {
             subJob.execute();
         }
         if (shouldRefreshSceneGraph) {
-            fxomDocument.endUpdate();
+            omDocument.endUpdate();
         }
         if (shouldUpdateSelection) {
             selection.endUpdate();
@@ -136,13 +136,13 @@ public final class BatchJob extends AbstractJob {
             selection.beginUpdate();
         }
         if (shouldRefreshSceneGraph) {
-            fxomDocument.beginUpdate();
+            omDocument.beginUpdate();
         }
         for (int i = subJobs.size() - 1; i >= 0; i--) {
             subJobs.get(i).undo();
         }
         if (shouldRefreshSceneGraph) {
-            fxomDocument.endUpdate();
+            omDocument.endUpdate();
         }
         if (shouldUpdateSelection) {
             selection.endUpdate();
@@ -155,13 +155,13 @@ public final class BatchJob extends AbstractJob {
             selection.beginUpdate();
         }
         if (shouldRefreshSceneGraph) {
-            fxomDocument.beginUpdate();
+            omDocument.beginUpdate();
         }
         for (AbstractJob subJob : subJobs) {
             subJob.redo();
         }
         if (shouldRefreshSceneGraph) {
-            fxomDocument.endUpdate();
+            omDocument.endUpdate();
         }
         if (shouldUpdateSelection) {
             selection.endUpdate();
@@ -186,8 +186,8 @@ public final class BatchJob extends AbstractJob {
          *
          * @param description             the job description (or class name if null)
          * @param shouldRefreshSceneGraph if true wrap jobs execution between
-         *                                {@link FXOMDocument#beginUpdate()} /
-         *                                {@link FXOMDocument#endUpdate()}
+         *                                {@link OMDocument#beginUpdate()} /
+         *                                {@link OMDocument#endUpdate()}
          * @param shouldUpdateSelection   if true wrap jobs execution between
          *                                {@link Selection#beginUpdate()} /
          *                                {@link Selection#endUpdate()}
@@ -203,8 +203,8 @@ public final class BatchJob extends AbstractJob {
          *
          * @param description             the job description (or class name if null)
          * @param shouldRefreshSceneGraph if true wrap jobs execution between
-         *                                {@link FXOMDocument#beginUpdate()} /
-         *                                {@link FXOMDocument#endUpdate()}
+         *                                {@link OMDocument#beginUpdate()} /
+         *                                {@link OMDocument#endUpdate()}
          * @return the job to execute
          */
         public BatchJob getJob(String description, boolean shouldRefreshSceneGraph) {
@@ -213,7 +213,7 @@ public final class BatchJob extends AbstractJob {
         }
 
         /**
-         * Create a {@link BatchJob} job and notify {@link FXOMDocument} and
+         * Create a {@link BatchJob} job and notify {@link OMDocument} and
          * {@link Selection} updates
          *
          * @param description the job description (or class name if null)
@@ -224,7 +224,7 @@ public final class BatchJob extends AbstractJob {
         }
 
         /**
-         * Create a default {@link BatchJob} job and notify {@link FXOMDocument} and
+         * Create a default {@link BatchJob} job and notify {@link OMDocument} and
          * {@link Selection} updates
          *
          * @return the job to execute

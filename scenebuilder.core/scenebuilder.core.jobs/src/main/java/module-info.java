@@ -36,10 +36,8 @@ import com.oracle.javafx.scenebuilder.job.JobsExtension;
 
 open module scenebuilder.core.jobs {
     exports com.oracle.javafx.scenebuilder.job;
-    exports com.oracle.javafx.scenebuilder.job.editor.atomic;
-    exports com.oracle.javafx.scenebuilder.job.editor.reference;
     exports com.oracle.javafx.scenebuilder.job.editor;
-    exports com.oracle.javafx.scenebuilder.job.preferences.global;
+    exports com.oracle.javafx.scenebuilder.job.editor.atomic;
 
 //    requires io.reactivex.rxjava2;
 //    requires java.prefs;

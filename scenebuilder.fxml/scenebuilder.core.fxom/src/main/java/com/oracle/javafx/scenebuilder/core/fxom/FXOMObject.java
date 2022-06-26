@@ -44,24 +44,24 @@ import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueElement;
 import com.oracle.javafx.scenebuilder.core.fxom.util.JavaLanguage;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.om.api.OMObject;
+import com.oracle.javafx.scenebuilder.om.api.SceneGraphObject;
 import com.oracle.javafx.scenebuilder.util.URLUtils;
 
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
 /**
  *
  *
  */
-public abstract class FXOMObject extends FXOMNode {
+public abstract class FXOMObject extends FXOMNode implements OMObject {
 
     private final GlueElement glueElement;
     private FXOMProperty parentProperty;
     private FXOMCollection parentCollection;
     //private FXOMDefine parentDefine;
-    private Object sceneGraphObject;
+    private SceneGraphObject sceneGraphObject = new SceneGraphObject();
 
     FXOMObject(FXOMDocument fxomDocument, GlueElement glueElement, Object sceneGraphObject) {
         super(fxomDocument);
@@ -70,7 +70,7 @@ public abstract class FXOMObject extends FXOMNode {
         assert glueElement.getDocument() == fxomDocument.getGlue();
 
         this.glueElement = glueElement;
-        this.sceneGraphObject = sceneGraphObject;
+        this.sceneGraphObject = new SceneGraphObject(sceneGraphObject);
     }
 
     FXOMObject(FXOMDocument fxomDocument, String tagName) {
@@ -253,12 +253,13 @@ public abstract class FXOMObject extends FXOMNode {
 //        return result;
 //    }
 
-    public Object getSceneGraphObject() {
+    @Override
+    public SceneGraphObject getSceneGraphObject() {
         return sceneGraphObject;
     }
 
     public void setSceneGraphObject(Object sceneGraphObject) {
-        this.sceneGraphObject = sceneGraphObject;
+        this.sceneGraphObject = new SceneGraphObject(sceneGraphObject);
     }
 
     public FXOMObject getNextSlibing() {
@@ -351,23 +352,11 @@ public abstract class FXOMObject extends FXOMNode {
         }
     }
 
-    public Scene getScene() {
-        final Scene result;
-
-        if (sceneGraphObject instanceof Node) {
-            final Node sceneGraphNode = (Node) sceneGraphObject;
-            result = sceneGraphNode.getScene();
-        } else  {
-            result = null;
-        }
-
-        return result;
-    }
 
     public FXOMObject getFirstAncestorWithNonNullScene() {
         FXOMObject result = this;
 
-        while ((result != null) && (result.getScene() == null)) {
+        while ((result != null) && (!result.getSceneGraphObject().hasScene())) {
             result = result.getParentObject();
         }
 
@@ -541,6 +530,7 @@ public abstract class FXOMObject extends FXOMNode {
      * Utilities
      */
 
+    @Override
     public FXOMObject getParentObject() {
         final FXOMObject result;
         if (parentProperty != null) {
@@ -590,17 +580,7 @@ public abstract class FXOMObject extends FXOMNode {
         return result;
     }
 
-    public boolean isNode() {
-        return sceneGraphObject instanceof Node;
-    }
 
-    public boolean isParent() {
-        return sceneGraphObject instanceof Parent;
-    }
-
-    public boolean hasParent() {
-        return isNode() && ((Node)sceneGraphObject).getParent() != null;
-    }
 
     /**
      * Check if the object is in a detached graph
@@ -610,8 +590,7 @@ public abstract class FXOMObject extends FXOMNode {
      * @return true if in detached graph/ false if is in the main graph
      */
     public boolean isDetachedGraph() {
-        return isNode() && ((Node)sceneGraphObject).getParent() == null
-                && getParentObject() != null && getParentObject().isNode();
+        return !sceneGraphObject.hasParent() && getParentObject() != null && getParentObject().getSceneGraphObject().isNode();
     }
 
     /**
@@ -621,12 +600,12 @@ public abstract class FXOMObject extends FXOMNode {
      * @return true if viewable
      */
     public boolean isViewable() {
-        if (!isNode()) {
+        if (!sceneGraphObject.isNode()) {
             return false;
         }
         FXOMObject parent = getParentObject();
         while (parent != null) {
-            if (!parent.isNode()) {
+            if (!parent.getSceneGraphObject().isNode()) {
                 return false;
             }
             parent = parent.getParentObject();
@@ -638,11 +617,11 @@ public abstract class FXOMObject extends FXOMNode {
         FXOMObject result;
 
         result = this;
-        while ((result.isNode() == false) && (result.getParentObject() != null)) {
+        while ((result.getSceneGraphObject().isNode() == false) && (result.getParentObject() != null)) {
             result = result.getParentObject();
         }
 
-        return result.isNode() ? result : null;
+        return result.getSceneGraphObject().isNode() ? result : null;
     }
 
     public FXOMObject getClosestMainGraphNode() {
@@ -652,13 +631,13 @@ public abstract class FXOMObject extends FXOMNode {
         result = this;
         current = this;
         while (current.getParentObject() != null) {
-            boolean isNode = current.isNode();
+            boolean isNode = current.getSceneGraphObject().isNode();
 
             if (isNode) {
-                Node node = (Node)current.getSceneGraphObject();
+                Node node = (Node)current.getSceneGraphObject().get();
                 boolean hasParent = node.getParent() != null;
                 boolean hasParentSubScene = current.getParentObject() != null
-                        && current.getParentObject().getSceneGraphObject() instanceof SubScene;
+                        && current.getParentObject().getSceneGraphObject().get() instanceof SubScene;
                 if (result == null && hasParent) {
                     result = current;
                 } else if (result != null && !hasParent && !hasParentSubScene) {
@@ -671,7 +650,7 @@ public abstract class FXOMObject extends FXOMNode {
 
         if (result != null) {
             return result;
-        } else if (current.isNode()) {
+        } else if (current.getSceneGraphObject().isNode()) {
             return current;
         } else {
             return null;
@@ -682,11 +661,11 @@ public abstract class FXOMObject extends FXOMNode {
         FXOMObject result;
 
         result = this;
-        while ((result.isParent() == false) && (result.getParentObject() != null)) {
+        while ((result.getSceneGraphObject().isParent() == false) && (result.getParentObject() != null)) {
             result = result.getParentObject();
         }
 
-        return result.isParent() ? result : null;
+        return result.getSceneGraphObject().isParent() ? result : null;
     }
 
     public String getFxId() {

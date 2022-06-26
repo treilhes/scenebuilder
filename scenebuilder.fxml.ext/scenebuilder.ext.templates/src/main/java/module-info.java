@@ -42,7 +42,7 @@ open module scenebuilder.ext.templates {
 
     requires scenebuilder.starter;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive scenebuilder.fxml.api;
     requires scenebuilder.ext.defaultx;
     requires scenebuilder.core.extension.api;
     requires scenebuilder.core.jobs;

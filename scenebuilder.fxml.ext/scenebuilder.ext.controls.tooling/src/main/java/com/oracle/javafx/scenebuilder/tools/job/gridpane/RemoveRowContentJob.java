@@ -36,18 +36,18 @@ package com.oracle.javafx.scenebuilder.tools.job.gridpane;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.BatchDocumentJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.BatchDocumentJob;
+import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.job.JobFactory;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.selection.job.DeleteObjectJob;
+import com.oracle.javafx.scenebuilder.fxml.selection.job.DeleteObjectJob;
 import com.oracle.javafx.scenebuilder.tools.mask.GridPaneHierarchyMask;
 
 import javafx.scene.layout.GridPane;
@@ -69,7 +69,7 @@ public final class RemoveRowContentJob extends BatchDocumentJob {
     // @formatter:off
     protected RemoveRowContentJob(
             JobExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             DeleteObjectJob.Factory deleteObjectJobFactory,
             GridPaneHierarchyMask.Factory maskFactory) {
     // @formatter:on

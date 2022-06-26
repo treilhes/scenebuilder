@@ -33,28 +33,19 @@
 package com.oracle.javafx.scenebuilder.api.template;
 
 import java.net.URL;
-import java.util.List;
-
-import com.oracle.javafx.scenebuilder.api.theme.Theme;
 
 public interface Template {
 
     String getOrderKey();
-    
+
     String getName();
-    
+
     TemplateGroup getGroup();
 
     URL getFxmlUrl();
 
-    int getWidth();
-
-    int getHeight();
-
     URL getIconUrl();
 
     URL getIconX2Url();
-
-    List<Class<? extends Theme>> getThemes();
 
 }

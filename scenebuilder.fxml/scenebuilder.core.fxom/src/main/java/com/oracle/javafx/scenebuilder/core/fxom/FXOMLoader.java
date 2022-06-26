@@ -81,6 +81,7 @@ class FXOMLoader implements LoadListener {
     private long virtualElementIndex;
     private TransientClassLoader classloader;
     private FXMLLoader fxmlLoader;
+
     /*
      * FXOMLoader
      */

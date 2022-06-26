@@ -47,25 +47,25 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Documentation;
-import com.oracle.javafx.scenebuilder.api.Drag;
-import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardHandler;
 import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.dnd.Drag;
+import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
@@ -226,7 +226,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
 
     private final CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference;
 
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
     private final FileSystem fileSystem;
 
     private final Drag drag;
@@ -252,7 +252,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     // @formatter:off
     public CssPanelController(
             SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             Metadata metadata,
             Selection selection,
             Editor editor,

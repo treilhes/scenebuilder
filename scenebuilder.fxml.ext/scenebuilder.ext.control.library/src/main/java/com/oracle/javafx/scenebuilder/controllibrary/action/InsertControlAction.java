@@ -40,22 +40,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.scenebuilder.fxml.api.HierarchyMask.Accessory;
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
-import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
@@ -63,7 +64,6 @@ import com.oracle.javafx.scenebuilder.api.menu.MenuAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.MenuProvider;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemImpl;
@@ -88,7 +88,7 @@ public class InsertControlAction extends AbstractAction {
     private final SetDocumentRootJob.Factory setDocumentRootJobFactory;
     private final InsertAsAccessoryJob.Factory insertAsAccessoryJobFactory;
     private final JobManager jobManager;
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
     private final Selection selection;
     private final DesignHierarchyMask.Factory designMaskFactory;
 
@@ -96,7 +96,7 @@ public class InsertControlAction extends AbstractAction {
 
     public InsertControlAction(
             ActionExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             Selection selection,
             JobManager jobManager,
             DesignHierarchyMask.Factory designMaskFactory,

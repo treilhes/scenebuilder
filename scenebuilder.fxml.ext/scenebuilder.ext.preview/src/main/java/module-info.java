@@ -6,7 +6,7 @@ open module scenebuilder.ext.preview {
     exports com.oracle.javafx.scenebuilder.preview.menu;
     exports com.oracle.javafx.scenebuilder.preview;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive scenebuilder.fxml.api;
     requires transitive scenebuilder.core.core;
     requires scenebuilder.ext.editor.fxml;
 

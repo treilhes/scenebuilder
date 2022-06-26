@@ -15,7 +15,7 @@ open module scenebuilder.ext.exporter {
 //    requires javafx.controls;
 //    requires javafx.graphics;
 //    requires javafx.swing;
-    requires transitive scenebuilder.core.api;
+    requires transitive scenebuilder.fxml.api;
     requires scenebuilder.core.extension.api;
 //    requires spring.beans;
 //    requires spring.context;

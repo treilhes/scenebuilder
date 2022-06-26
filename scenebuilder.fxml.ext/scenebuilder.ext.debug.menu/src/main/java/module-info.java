@@ -48,7 +48,7 @@ open module scenebuilder.ext.debug.menu {
 //    requires javafx.graphics;
     requires scenebuilder.starter;
     requires scenebuilder.core.jobs;
-    requires transitive scenebuilder.core.api;
+    requires transitive scenebuilder.fxml.api;
     requires scenebuilder.core.extension.api;
     requires scenebuilder.ext.menu;
 //    requires spring.beans;

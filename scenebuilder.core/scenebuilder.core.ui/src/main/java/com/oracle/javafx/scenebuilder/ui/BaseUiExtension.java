@@ -37,6 +37,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.oracle.javafx.scenebuilder.core.dock.AnnotatedViewAttachmentProvider;
+import com.oracle.javafx.scenebuilder.core.dock.DockPanelController;
+import com.oracle.javafx.scenebuilder.core.dock.DockTypeAccordion;
+import com.oracle.javafx.scenebuilder.core.dock.DockTypeSplitH;
+import com.oracle.javafx.scenebuilder.core.dock.DockTypeSplitV;
+import com.oracle.javafx.scenebuilder.core.dock.DockTypeTab;
+import com.oracle.javafx.scenebuilder.core.dock.DockViewControllerImpl;
+import com.oracle.javafx.scenebuilder.core.dock.DockWindowController;
+import com.oracle.javafx.scenebuilder.core.dock.DockWindowFactory;
+import com.oracle.javafx.scenebuilder.core.dock.preferences.document.DockMinimizedPreference;
+import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockDockTypePreference;
+import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
+import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastViewVisibilityPreference;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.ui.controller.DocumentController;
 import com.oracle.javafx.scenebuilder.ui.controller.DocumentWindowController;
@@ -99,7 +112,21 @@ public class BaseUiExtension extends AbstractExtension {
                 StageWidthPreference.class,
                 TextViewDialog.class,
                 XPosPreference.class,
-                YPosPreference.class
+                YPosPreference.class,
+                AnnotatedViewAttachmentProvider.class,
+                DockMinimizedPreference.class,
+                DockPanelController.class,
+                DockTypeAccordion.class,
+                DockTypeSplitH.class,
+                DockTypeSplitV.class,
+                DockTypeTab.class,
+                DockViewControllerImpl.class,
+                DockWindowController.class,
+                DockWindowFactory.class,
+
+                LastDockDockTypePreference.class,
+                LastDockUuidPreference.class,
+                LastViewVisibilityPreference.class
             );
      // @formatter:on
     }

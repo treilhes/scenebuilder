@@ -44,16 +44,17 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.ApplicationContext;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.oracle.javafx.scenebuilder.api.ContextMenu;
-import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.InlineEdit;
-import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
+import com.oracle.javafx.scenebuilder.api.dnd.Drag;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
@@ -105,7 +106,7 @@ class DocumentUiTest {
     SceneBuilderManager scenebuilderManager = new SceneBuilderManager.SceneBuilderManagerImpl();
 
     @Spy
-    DocumentManager documentManager = new DocumentManager.DocumentManagerImpl();
+    FxmlDocumentManager documentManager = new DocumentManager.DocumentManagerImpl();
 
     @Mock
     UpdateReferencesJob.Factory updateReferencesJobFactory;

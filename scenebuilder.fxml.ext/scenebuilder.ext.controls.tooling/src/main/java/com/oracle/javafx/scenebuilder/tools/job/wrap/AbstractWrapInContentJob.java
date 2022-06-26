@@ -36,16 +36,18 @@ package com.oracle.javafx.scenebuilder.tools.job.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.fxml.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxControllerJob;
@@ -54,7 +56,6 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyValueJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ToggleFxRootJob;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.selection.job.SetDocumentRootJob;
 
 /**
  * Main class used for the wrap jobs using the new container CONTENT property.
@@ -66,7 +67,7 @@ public abstract class AbstractWrapInContentJob extends AbstractWrapInJob {
     private final DesignHierarchyMask.Factory designMaskFactory;
     private final AddPropertyJob.Factory addPropertyJobFactory;
 
-    public AbstractWrapInContentJob(JobExtensionFactory extensionFactory, DocumentManager documentManager,
+    public AbstractWrapInContentJob(JobExtensionFactory extensionFactory, FxmlDocumentManager documentManager,
             Selection selection, DesignHierarchyMask.Factory designMaskFactory, Metadata metadata,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             ToggleFxRootJob.Factory toggleFxRootJobFactory,

@@ -52,10 +52,6 @@ public interface Document {
     void logInfoMessage(String key);
     void logInfoMessage(String key, Object... args);
 
-//    ActionStatus save();
-//    ActionStatus saveAs();
-//    void revert();
-
     //API to be validated
 
     /**
@@ -82,6 +78,15 @@ public interface Document {
 
     void updateWithDefaultContent();
 
+    void close();
+    void onFocus();
+    DocumentWindow getDocumentWindow();
+    URL getFxmlLocation();
+    void closeWindow();
+    Editor getEditorController();
+    FileTime getLoadFileTime();
+    void updateLoadFileTime();
+
     public static class TitleComparator implements Comparator<Document> {
 
         @Override
@@ -105,18 +110,5 @@ public interface Document {
         }
 
     }
-
-    void close();
-    void onFocus();
-    DocumentWindow getDocumentWindow();
-    //boolean canPerformEditAction(DocumentEditAction editAction);
-    //void performEditAction(DocumentEditAction editAction);
-    //boolean canPerformControlAction(DocumentControlAction controlAction);
-    URL getFxmlLocation();
-    void closeWindow();
-    Editor getEditorController();
-    FileTime getLoadFileTime();
-    void updateLoadFileTime();
-    //ActionStatus performCloseAction();
 
 }

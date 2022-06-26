@@ -44,6 +44,7 @@ import java.util.Set;
 
 import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueElement;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.om.api.OMObject;
 
 /**
  *
@@ -93,7 +94,6 @@ public class FXOMCollection extends FXOMObject {
     public List<FXOMObject> getItems() {
         return Collections.unmodifiableList(items);
     }
-
 
     /*
      * FXOMObject
@@ -297,4 +297,5 @@ public class FXOMCollection extends FXOMObject {
     public Class<?> getMetadataClass() {
         return getSceneGraphObject() == null ? null : getSceneGraphObject().getClass();
     }
+
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,10 +34,11 @@
 package com.oracle.javafx.scenebuilder.core.editor.drag.source;
 
 import java.net.URL;
-import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.DragSource;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
+import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
+import com.oracle.javafx.scenebuilder.om.api.OMObject;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -47,9 +49,9 @@ import javafx.stage.Window;
  *
  */
 public abstract class AbstractDragSource implements DragSource{
-    
+
     private static URL stylesheet = null;
-    
+
     /**
      * Returns the URL of the CSS style associated to DragSource class.
      * This stylesheet contains rules shareable by all other components of
@@ -78,26 +80,34 @@ public abstract class AbstractDragSource implements DragSource{
     @Override
     public abstract boolean isAcceptable();
     @Override
-    public abstract List<FXOMObject> getDraggedObjects();
+    public abstract SelectionGroup<OMDocument, OMObject> getDraggedObjects();
     @Override
-    public abstract FXOMObject getHitObject();
+    public abstract OMObject getHitObject();
     @Override
     public abstract double getHitX();
     @Override
     public abstract double getHitY();
+
     public abstract ClipboardContent makeClipboardContent();
+
     public abstract Image makeDragView();
     @Override
     public abstract Node makeShadow();
     @Override
     public abstract String makeDropJobDescription();
+
+
     @Override
+    @Deprecated
     public abstract boolean isNodeOnly();
     @Override
+    @Deprecated
     public abstract boolean isSingleImageViewOnly();
     @Override
+    @Deprecated
     public abstract boolean isSingleTooltipOnly();
     @Override
+    @Deprecated
     public abstract boolean isSingleContextMenuOnly();
 
 }

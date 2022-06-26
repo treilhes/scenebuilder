@@ -33,38 +33,24 @@
 package com.oracle.javafx.scenebuilder.api.template;
 
 import java.net.URL;
-import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.Size;
-import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.api.util.Ordered;
 
 public abstract class AbstractTemplate extends Ordered implements Template {
 
     private final TemplateGroup group;
     private final URL fxmlUrl;
-    private final int width;
-    private final int height;
-    
+
     /** Icon illustrating this placeholder. */
     private final URL iconUrl;
-    
+
     /** Icon illustrating this placeholder. double sized */
     private final URL iconX2Url;
-    
-    private final List<Class<? extends Theme>> themes;
 
-    public AbstractTemplate(TemplateGroup group, String orderKey, String name, URL fxmlUrl, Size size, URL iconUrl, URL iconX2Url, List<Class<? extends Theme>> themes) {
-        this(group, orderKey, name, fxmlUrl, size.getWidth(), size.getHeight(), iconUrl, iconX2Url, themes);
-    }
-    
-    public AbstractTemplate(TemplateGroup group, String orderKey, String name, URL fxmlUrl, int width, int height, URL iconUrl, URL iconX2Url, List<Class<? extends Theme>> themes) {
+    public AbstractTemplate(TemplateGroup group, String orderKey, String name, URL fxmlUrl, URL iconUrl, URL iconX2Url) {
         super(orderKey, name);
         this.group = group;
         this.fxmlUrl = fxmlUrl;
-        this.width = width;
-        this.height = height;
-        this.themes = themes;
         this.iconUrl = iconUrl;
         this.iconX2Url = iconX2Url;
     }
@@ -80,16 +66,6 @@ public abstract class AbstractTemplate extends Ordered implements Template {
     }
 
     @Override
-    public int getWidth() {
-        return width;
-    }
-
-    @Override
-    public int getHeight() {
-        return height;
-    }
-
-    @Override
     public URL getIconUrl() {
         return iconUrl;
     }
@@ -97,11 +73,6 @@ public abstract class AbstractTemplate extends Ordered implements Template {
     @Override
     public URL getIconX2Url() {
         return iconX2Url;
-    }
-
-    @Override
-    public List<Class<? extends Theme>> getThemes() {
-        return themes;
     }
 
 }

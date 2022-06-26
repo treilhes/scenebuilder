@@ -37,10 +37,10 @@ import java.io.File;
 import java.net.URISyntaxException;
 
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
 
 public class FXOMDocumentUtils {
-    public static final String makeTitle(FXOMDocument fxomDocument) {
+    public static final String makeTitle(OMDocument fxomDocument) {
         final String title;
 
         if (fxomDocument == null) {

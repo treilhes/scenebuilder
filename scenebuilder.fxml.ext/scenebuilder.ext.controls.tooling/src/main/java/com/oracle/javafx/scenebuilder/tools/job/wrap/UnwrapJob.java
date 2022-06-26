@@ -36,20 +36,20 @@ package com.oracle.javafx.scenebuilder.tools.job.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.BatchSelectionJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.BatchSelectionJob;
+import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
@@ -57,6 +57,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.fxml.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxControllerJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
@@ -64,7 +65,6 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyValueJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ToggleFxRootJob;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.selection.job.SetDocumentRootJob;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -96,7 +96,7 @@ public final class UnwrapJob extends BatchSelectionJob {
  // @formatter:off
     protected UnwrapJob(
             JobExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             Selection selection,
             RemovePropertyJob.Factory removePropertyJobFactory,
             RemovePropertyValueJob.Factory removePropertyValueJobFactory,

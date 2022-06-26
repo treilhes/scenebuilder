@@ -33,28 +33,24 @@
  */
 package com.oracle.javafx.scenebuilder.selection;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
 import java.util.Objects;
 
-import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroupAccessor;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
+import com.oracle.javafx.scenebuilder.om.api.OMObject;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Node;
-import javafx.scene.control.Control;
 
 /**
  * Selection class represents the selected objects for an editor controller.
@@ -65,24 +61,18 @@ import javafx.scene.control.Control;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
-public class SelectionImpl implements Selection {
+@Primary
+public class SelectionImpl implements Selection<OMDocument, OMObject> {
 
-    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
-    private AbstractSelectionGroup group;
+    private SelectionGroup<OMDocument, OMObject> group;
     private final SimpleIntegerProperty revision = new SimpleIntegerProperty();
     private boolean lock;
     private long lastListenerInvocationTime;
     private int updateDepth;
-    private Accessory targetAccessory;
 
-    public SelectionImpl(
-            DocumentManager documentManager,
-            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+    public SelectionImpl(DocumentManager documentManager) {
         super();
-        this.objectSelectionGroupFactory = objectSelectionGroupFactory;
-        revision.addListener((ob,o,n) -> documentManager.selectionDidChange().set(new SelectionStateImpl(this)));
-        documentManager.fxomDocument().subscribe(fxom -> clear());
+        documentManager.omDocument().subscribe(fxom -> clear());
     }
 
     /**
@@ -112,7 +102,7 @@ public class SelectionImpl implements Selection {
      * @param newGroup null or the selection group defining items to be selected
      */
     @Override
-    public void select(AbstractSelectionGroup newGroup) {
+    public void select(SelectionGroup<OMDocument, OMObject> newGroup) {
 
         if (lock) {
             // Method is called from a revision property listener
@@ -121,78 +111,77 @@ public class SelectionImpl implements Selection {
 
         if (Objects.equals(this.group, newGroup) == false) {
             beginUpdate();
-            clearTargetAccessory();
             this.group = newGroup;
             endUpdate();
         }
     }
 
-    /**
-     * Replaces the selected items by the specified fxom object.
-     * This routine adds +1 to the revision number.
-     *
-     * @param fxomObject the object to be selected
-     */
-    @Override
-    public void select(FXOMObject fxomObject) {
-        assert fxomObject != null;
-
-        select(fxomObject, null);
-    }
-
-    /**
-     * Replaces the selected items by the specified fxom object and hit node.
-     * This routine adds +1 to the revision number.
-     *
-     * @param fxomObject the object to be selected
-     * @param hitNode null or the node hit by the mouse during selection
-     */
-    @Override
-    public void select(FXOMObject fxomObject, Node hitNode) {
-        select(objectSelectionGroupFactory.getGroup(fxomObject, hitNode));
-    }
-
-    /**
-     * Replaces the selected items by the specified fxom objects.
-     * This routine adds +1 to the revision number.
-     *
-     * @param fxomObjects the objects to be selected
-     */
-    @Override
-    public void select(Collection<FXOMObject> fxomObjects) {
-        assert fxomObjects != null;
-
-        final FXOMObject hitObject;
-        if (fxomObjects.isEmpty()) {
-            hitObject = null;
-        } else {
-            hitObject = fxomObjects.iterator().next();
-        }
-
-        select(fxomObjects, hitObject, null);
-    }
-
-    /**
-     * Replaces the selected items by the specified fxom objects.
-     * This routine adds +1 to the revision number.
-     *
-     * @param fxomObjects the objects to be selected
-     * @param hitObject the object hit by the mouse during selection
-     * @param hitNode null or the node hit by the mouse during selection
-     */
-    @Override
-    public void select(Collection<FXOMObject> fxomObjects, FXOMObject hitObject, Node hitNode) {
-
-        assert fxomObjects != null;
-
-        final ObjectSelectionGroup newGroup;
-        if (fxomObjects.isEmpty()) {
-            newGroup = null;
-        } else {
-            newGroup = objectSelectionGroupFactory.getGroup(fxomObjects, hitObject, hitNode);
-        }
-        select(newGroup);
-    }
+//    /**
+//     * Replaces the selected items by the specified fxom object.
+//     * This routine adds +1 to the revision number.
+//     *
+//     * @param fxomObject the object to be selected
+//     */
+//    @Override
+//    public void select(OMObject fxomObject) {
+//        assert fxomObject != null;
+//
+//        select(fxomObject, null);
+//    }
+//
+//    /**
+//     * Replaces the selected items by the specified fxom object and hit node.
+//     * This routine adds +1 to the revision number.
+//     *
+//     * @param fxomObject the object to be selected
+//     * @param hitNode null or the node hit by the mouse during selection
+//     */
+//    @Override
+//    public void select(OMObject fxomObject, Node hitNode) {
+//        select(objectSelectionGroupFactory.getGroup(fxomObject, hitNode));
+//    }
+//
+//    /**
+//     * Replaces the selected items by the specified fxom objects.
+//     * This routine adds +1 to the revision number.
+//     *
+//     * @param fxomObjects the objects to be selected
+//     */
+//    @Override
+//    public void select(Collection<OMObject> fxomObjects) {
+//        assert fxomObjects != null;
+//
+//        final OMObject hitObject;
+//        if (fxomObjects.isEmpty()) {
+//            hitObject = null;
+//        } else {
+//            hitObject = fxomObjects.iterator().next();
+//        }
+//
+//        select(fxomObjects, hitObject, null);
+//    }
+//
+//    /**
+//     * Replaces the selected items by the specified fxom objects.
+//     * This routine adds +1 to the revision number.
+//     *
+//     * @param fxomObjects the objects to be selected
+//     * @param hitObject the object hit by the mouse during selection
+//     * @param hitNode null or the node hit by the mouse during selection
+//     */
+//    @Override
+//    public void select(Collection<OMObject> fxomObjects, OMObject hitObject, Node hitNode) {
+//
+//        assert fxomObjects != null;
+//
+//        final ObjectSelectionGroup newGroup;
+//        if (fxomObjects.isEmpty()) {
+//            newGroup = null;
+//        } else {
+//            newGroup = objectSelectionGroupFactory.getGroup(fxomObjects, hitObject, hitNode);
+//        }
+//        select(newGroup);
+//    }
 //
 //    /**
 //     * Replaces the selected items by the specified column/row.
@@ -211,15 +200,15 @@ public class SelectionImpl implements Selection {
 //    }
 
     @Override
-    public boolean isSelected(AbstractSelectionGroup selectedGroup) {
+    public boolean isSelected(SelectionGroup<OMDocument, OMObject> selectedGroup) {
         if (selectedGroup != null && group != null) {
-            return new SelectionGroupAccessor(group).isSelected(selectedGroup);
+            return new SelectionGroupAccessor<>(group).isSelected(selectedGroup);
         }
         return false;
     }
 
     @Override
-    public boolean isSelected(FXOMObject fxomObject) {
+    public boolean isSelected(OMObject fxomObject) {
         if (fxomObject != null && group != null) {
             return group.getItems().contains(fxomObject);
         }
@@ -282,45 +271,43 @@ public class SelectionImpl implements Selection {
 //      return result;
 //  }
 
-    /**
-     * Update the hit object and hit point of the current selection.
-     *
-     * @param hitObject the object hit by the mouse during selection
-     * @param hitNode null or the node hit by the mouse during selection
-     */
-    @Override
-    public void updateHitObject(FXOMObject hitObject, Node hitNode) {
-        if (isSelected(hitObject)) {
-            assert group instanceof ObjectSelectionGroup;
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) group;
-            select(osg.getItems(), hitObject, hitNode);
-        } else {
-            select(hitObject, hitNode);
-        }
-    }
+//    /**
+//     * Update the hit object and hit point of the current selection.
+//     *
+//     * @param hitObject the object hit by the mouse during selection
+//     * @param hitNode null or the node hit by the mouse during selection
+//     */
+//    @Override
+//    public void updateHitObject(FXOMObject hitObject, Node hitNode) {
+//        if (isSelected(hitObject)) {
+//            assert group instanceof ObjectSelectionGroup;
+//            final ObjectSelectionGroup osg = (ObjectSelectionGroup) group;
+//            select(osg.getItems(), hitObject, hitNode);
+//        } else {
+//            select(hitObject, hitNode);
+//        }
+//    }
 
 
 
     @Override
-    public FXOMObject getHitItem() {
+    public OMObject getHitItem() {
         return group.getHitItem();
     }
 
     @Override
     public Node getCheckedHitNode() {
-        return group == null ? null : new SelectionGroupAccessor(group).getCheckedHitNode();
+        return group == null ? null : new SelectionGroupAccessor<>(group).getCheckedHitNode();
     }
 
-
-
     @Override
-    public void toggleSelection(AbstractSelectionGroup toggleGroup) {
+    public void toggleSelection(SelectionGroup<OMDocument, OMObject> toggleGroup) {
         assert toggleGroup != null;
 
         if (group == null || group.getClass() != toggleGroup.getClass()) {
             select(toggleGroup);
         } else {
-            AbstractSelectionGroup toggledGroup = new SelectionGroupAccessor(group).toggle(toggleGroup);
+            var toggledGroup = new SelectionGroupAccessor<>(group).toggle(toggleGroup);
             select(toggledGroup);
         }
     }
@@ -369,16 +356,16 @@ public class SelectionImpl implements Selection {
 //        select(newGroup);
 //    }
 //
-    /**
-     * Adds/removes the specified object from the selected items.
-     * This routine adds +1 to the revision number.
-     *
-     * @param fxomObject the object to be added/removed
-     */
-    @Override
-    public void toggleSelection(FXOMObject fxomObject) {
-        toggleSelection(objectSelectionGroupFactory.getGroup(fxomObject, null));
-    }
+//    /**
+//     * Adds/removes the specified object from the selected items.
+//     * This routine adds +1 to the revision number.
+//     *
+//     * @param fxomObject the object to be added/removed
+//     */
+//    @Override
+//    public void toggleSelection(FXOMObject fxomObject) {
+//        toggleSelection(objectSelectionGroupFactory.getGroup(fxomObject, null));
+//    }
 //
 //    /**
 //     * Adds/removes the specified object from the selected items.
@@ -430,11 +417,11 @@ public class SelectionImpl implements Selection {
      * @return null or the first selected ancestor of the specified fxom object.
      */
     @Override
-    public FXOMObject lookupSelectedAncestor(FXOMObject fxomObject) {
+    public OMObject lookupSelectedAncestor(OMObject fxomObject) {
         assert fxomObject != null;
 
-        FXOMObject result = null;
-        FXOMObject parent = fxomObject.getParentObject();
+        OMObject result = null;
+        OMObject parent = fxomObject.getParentObject();
 
         while ((parent != null) && (result == null)) {
             if (isSelected(parent)) {
@@ -478,7 +465,7 @@ public class SelectionImpl implements Selection {
      * @return  the group containing the selected items or null if selection is empty.
      */
     @Override
-    public AbstractSelectionGroup getGroup() {
+    public SelectionGroup<OMDocument, OMObject> getGroup() {
         return group;
     }
 
@@ -521,8 +508,8 @@ public class SelectionImpl implements Selection {
      * @return
      */
     @Override
-    public FXOMObject getAncestor() {
-        final FXOMObject result;
+    public OMObject getAncestor() {
+        final OMObject result;
 
         if (group == null) {
             // Selection is emtpy
@@ -543,7 +530,7 @@ public class SelectionImpl implements Selection {
      * specified documents.
      */
     @Override
-    public boolean isValid(FXOMDocument fxomDocument) {
+    public boolean isValid(OMDocument fxomDocument) {
         assert fxomDocument != null;
 
         final boolean result;
@@ -571,56 +558,6 @@ public class SelectionImpl implements Selection {
         lastListenerInvocationTime = System.nanoTime() - startTime;
     }
 
-    /**
-     * Check if the current selection objects are all instances of a {@link Node},
-     * @return true if the current selection objects are all instances of a {@link Node},
-     * false otherwise.
-     */
-    @Override
-    public boolean isSelectionNode() {
-        return isSelectionOfType(Node.class);
-    }
-
-    /**
-     * Check if the current selection objects are all instances of a {@link Control}
-     * @return true if the current selection objects are all instances of a {@link Control},
-     * false otherwise.
-     */
-    @Override
-    public boolean isSelectionControl() {
-        return isSelectionOfType(Control.class);
-    }
-
-    /**
-     * Check if the current selection objects are all instances of the provided type,
-     * @param the required type of selected objects
-     * @return true if the current selection objects are all instances of the provided type,
-     * false otherwise.
-     */
-    @Override
-    public boolean isSelectionOfType(Class<?> type) {
-        if (group != null) {
-            for (FXOMObject fxomObject : group.getItems()) {
-                final boolean isClass = type.isAssignableFrom(fxomObject.getSceneGraphObject().getClass());
-                if (isClass == false) {
-                    return false;
-                }
-            }
-        } else {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Selection can be moved if true
-     * @return can be moved
-     */
-    @Override
-    public boolean isMovable() {
-        return group == null ? null : new SelectionGroupAccessor(group).isMovable();
-    }
-
     @Override
     public void selectNext() {
         if (!isEmpty()) {
@@ -642,23 +579,5 @@ public class SelectionImpl implements Selection {
         }
     }
 
-    @Override
-    public Map<String, FXOMObject> collectSelectedFxIds() {
-        return group == null ? Collections.emptyMap() : group.collectSelectedFxIds();
-    }
-
-    @Override
-    public Accessory getTargetAccessory() {
-        return targetAccessory;
-    }
-
-    @Override
-    public void select(Accessory targetAccessory) {
-        this.targetAccessory = targetAccessory;
-    }
-
-    private void clearTargetAccessory() {
-        this.targetAccessory = null;
-    }
 }
 

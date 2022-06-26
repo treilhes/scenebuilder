@@ -67,7 +67,7 @@ public class MessageLog implements MessageLogger{
     private final static String TIMESTAMP_PATTERN = "h:mm a EEEEEEEEE d MMM. yyyy"; //NOCHECK
     private static SimpleDateFormat TIMESTAMP_DATE_FORMAT;
 
-    
+
 
     /*
      * Public
@@ -77,8 +77,8 @@ public class MessageLog implements MessageLogger{
             @Autowired DocumentManager documentManager
             ) {
         super();
-        
-        documentManager.fxomDocument().subscribe(fd -> clear());
+
+        documentManager.omDocument().subscribe(fd -> clear());
     }
 
     @Override

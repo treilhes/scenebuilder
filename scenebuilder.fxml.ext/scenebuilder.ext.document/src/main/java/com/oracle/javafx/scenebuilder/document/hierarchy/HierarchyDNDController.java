@@ -35,18 +35,18 @@ package com.oracle.javafx.scenebuilder.document.hierarchy;
 
 import java.util.Optional;
 
+import org.scenebuilder.fxml.api.HierarchyMask.Accessory;
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Drag;
-import com.oracle.javafx.scenebuilder.api.DragSource;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.InlineEdit;
-import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.dnd.Drag;
+import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
+import com.oracle.javafx.scenebuilder.api.dnd.DropTarget;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.DocumentDragSource;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -97,7 +97,7 @@ public class HierarchyDNDController implements HierarchyDND {
 
     private final HierarchyTreeViewController hierarchyTreeView;
     private HierarchyTaskScheduler scheduler;
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
     private final HierarchyAnimationScheduler animationScheduler;
     private final HierarchyInsertLine insertLine;
     private final HierarchyParentRing parentRing;
@@ -123,7 +123,7 @@ public class HierarchyDNDController implements HierarchyDND {
 
     protected HierarchyDNDController(
             Drag drag,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             Selection selection,
             InlineEdit inlineEdit,
             HierarchyTreeViewController hierarchyTreeView,

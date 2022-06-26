@@ -38,7 +38,7 @@ import java.security.Security;
 
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.FileSystem;
+import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
 import com.oracle.javafx.scenebuilder.certmngr.tls.ReloadableTrustManagerProvider;
 

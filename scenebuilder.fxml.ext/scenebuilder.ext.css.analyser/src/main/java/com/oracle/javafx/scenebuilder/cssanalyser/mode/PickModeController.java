@@ -33,6 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.cssanalyser.mode;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -44,7 +45,6 @@ import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
@@ -65,13 +65,13 @@ import javafx.scene.input.MouseEvent;
 public class PickModeController extends AbstractModeController {
 
     private final Driver driver;
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
     private final Selection selection;
     //private HitNodeChrome hitNodeChrome;
 
     public PickModeController(
             @Autowired Driver driver,
-            @Autowired DocumentManager documentManager,
+            @Autowired FxmlDocumentManager documentManager,
             @Autowired Selection selection,
     		@Autowired @Lazy Content contentPanelController) {
         super(contentPanelController);

@@ -34,7 +34,6 @@
 package com.oracle.javafx.scenebuilder.api.dnd;
 
 
-import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
 

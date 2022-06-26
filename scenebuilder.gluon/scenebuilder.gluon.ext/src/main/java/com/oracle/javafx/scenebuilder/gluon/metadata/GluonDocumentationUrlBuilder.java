@@ -34,9 +34,9 @@ package com.oracle.javafx.scenebuilder.gluon.metadata;
 
 import java.util.Locale;
 
+import org.scenebuilder.fxml.api.DocumentationUrlBuilder;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DocumentationUrlBuilder;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.gluon.GluonConstants;
 

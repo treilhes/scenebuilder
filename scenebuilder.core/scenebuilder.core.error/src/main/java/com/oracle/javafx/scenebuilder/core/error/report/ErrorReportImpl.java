@@ -33,35 +33,22 @@
  */
 package com.oracle.javafx.scenebuilder.core.error.report;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.ErrorReport;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.error.ErrorCollector;
+import com.oracle.javafx.scenebuilder.api.error.ErrorReport;
+import com.oracle.javafx.scenebuilder.api.error.ErrorReportEntry;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMAssetIndex;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInclude;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
+import com.oracle.javafx.scenebuilder.om.api.OMObject;
 
 /**
  *
@@ -69,51 +56,53 @@ import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
 public class ErrorReportImpl implements ErrorReport {
 
-    private final Map<FXOMNode, List<ErrorReportEntry>> entries = new HashMap<>();
-    private final Map<Path, CSSParsingReportImpl> cssParsingReports = new HashMap<>();
+    private final Map<OMObject, List<ErrorReportEntry>> documentErrors = new HashMap<>();
     private final DocumentManager documentManager;
-    private final DesignHierarchyMask.Factory designHierarchyMaskFactory;
 
     private boolean dirty = true;
 
-    public ErrorReportImpl(
-            @Autowired DocumentManager documentManager,
-            DesignHierarchyMask.Factory designHierarchyMaskFactory) {
+    private final List<ErrorCollector> errorCollectors;
+
+    public ErrorReportImpl(@Autowired DocumentManager documentManager,
+            @Autowired(required = false) List<ErrorCollector> errorCollectors) {
         super();
         this.documentManager = documentManager;
-        this.designHierarchyMaskFactory = designHierarchyMaskFactory;
-        this.documentManager.fxomDocument().subscribe(fd -> forget());
+        this.errorCollectors = errorCollectors;
+
+        this.documentManager.omDocument().subscribe(fd -> forget());
+        this.errorCollectors.forEach(ec -> ec.setErrorReport(this));
     }
 
     @Override
     public void forget() {
-        this.entries.clear();
+        this.documentErrors.clear();
         this.dirty = true;
     }
 
     @Override
-    public List<ErrorReportEntry> query(FXOMObject fxomObject, boolean recursive) {
+    public <T> List<ErrorReportEntry> query(T fxomObject, InternalItemsCollector<T> internalCollector) {
         final List<ErrorReportEntry> result;
 
         updateReport();
 
         final List<ErrorReportEntry> collected = new ArrayList<>();
-        if (recursive) {
-            collectEntries(fxomObject, collected);
-        } else {
-            if (entries.get(fxomObject) != null) {
-                collected.addAll(entries.get(fxomObject));
-            }
-            if (fxomObject instanceof FXOMInstance) {
-                final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-                for (FXOMProperty fxomProperty : fxomInstance.getProperties().values()) {
-                    if (entries.get(fxomProperty) != null) {
-                        collected.addAll(entries.get(fxomProperty));
+
+        if (documentErrors.get(fxomObject) != null) {
+            collected.addAll(documentErrors.get(fxomObject));
+        }
+
+        if (internalCollector != null) {
+            List<Object> internals = internalCollector.collectInternals(fxomObject);
+
+            if (internals != null) {
+                internals.forEach(i -> {
+                    List<ErrorReportEntry> internalErrors = documentErrors.get(i);
+                    if (internalErrors != null) {
+                        collected.addAll(internalErrors);
                     }
-                }
+                });
             }
         }
 
@@ -128,17 +117,50 @@ public class ErrorReportImpl implements ErrorReport {
         return result;
     }
 
-    public Map<FXOMNode, List<ErrorReportEntry>> getEntries() {
+    @Override
+    public <T> List<ErrorReportEntry> queryRecursive(T fxomObject, InternalItemsCollector<T> internalCollector, ChildrenCollector<T> childrenCollector) {
+
+        final List<ErrorReportEntry> result;
+
         updateReport();
-        return Collections.unmodifiableMap(entries);
+
+        final List<ErrorReportEntry> collected = new ArrayList<>();
+
+        List<ErrorReportEntry> localErrors = query(fxomObject, internalCollector);
+
+        if (localErrors != null) {
+            collected.addAll(localErrors);
+        }
+
+        if (childrenCollector != null) {
+            List<T> children = childrenCollector.collectChildren(fxomObject);
+
+            if (children != null) {
+                children.forEach(c -> {
+                    List<ErrorReportEntry> childErrors = queryRecursive(c, internalCollector, childrenCollector);
+
+                    if (childErrors != null) {
+                        collected.addAll(childErrors);
+                    }
+                });
+            }
+        }
+
+        if (collected.isEmpty()) {
+            result = null;
+        } else {
+            result = collected;
+        }
+
+        assert (result == null) || (result.size() >= 1);
+
+        return result;
     }
 
     @Override
-    public void cssFileDidChange(Path cssPath) {
-        if (cssParsingReports.containsKey(cssPath)) {
-            cssParsingReports.remove(cssPath);
-            forget();
-        }
+    public Map<Object, List<ErrorReportEntry>> getEntries() {
+        updateReport();
+        return Collections.unmodifiableMap(documentErrors);
     }
 
     /*
@@ -147,158 +169,16 @@ public class ErrorReportImpl implements ErrorReport {
 
     private void updateReport() {
         if (dirty) {
-            assert entries.isEmpty();
-            if (documentManager.fxomDocument().get() != null) {
-                verifyAssets();
-                verifyUnresolvedObjects();
-                verifyBindingExpressions();
+            assert documentErrors.isEmpty();
+            if (documentManager.omDocument().get() != null && errorCollectors != null) {
+                errorCollectors.stream().map(dec -> dec.collect()).forEach(this::processCollectedErrors);
             }
             dirty = false;
         }
     }
 
-    private void verifyAssets() {
-        final FXOMAssetIndex assetIndex = new FXOMAssetIndex(documentManager.fxomDocument().get());
-        for (Map.Entry<Path, FXOMNode> e : assetIndex.getFileAssets().entrySet()) {
-            final Path assetPath = e.getKey();
-            if (assetPath.toFile().canRead() == false) {
-                final ErrorReportEntry newEntry = new ErrorReportEntryImpl(e.getValue(),
-                        ErrorReportEntry.Type.UNRESOLVED_LOCATION);
-                addEntry(e.getValue(), newEntry);
-            } else {
-                final String assetPathName = assetPath.toString();
-                if (assetPathName.toLowerCase(Locale.ROOT).endsWith(".css")) { // NOCHECK
-                    // assetPath is a CSS file : check its parsing report
-                    final CSSParsingReportImpl r = getCSSParsingReport(assetPath);
-                    assert r != null;
-                    if (r.isEmpty() == false) {
-                        final ErrorReportEntry newEntry = new ErrorReportEntryImpl(e.getValue(),
-                                ErrorReportEntry.Type.INVALID_CSS_CONTENT, r);
-                        addEntry(e.getValue(), newEntry);
-                    }
-                }
-            }
-        }
+    private void processCollectedErrors(ErrorCollector.ErrorCollectorResult result) {
+        documentErrors.putAll(result.getDocumentErrors());
     }
 
-    private void verifyUnresolvedObjects() {
-        for (FXOMObject fxomObject : FXOMNodes.serializeObjects(documentManager.fxomDocument().get().getFxomRoot())) {
-
-            if (fxomObject.isVirtual()) {
-                continue;
-            }
-
-            final Object sceneGraphObject;
-            if (fxomObject instanceof FXOMIntrinsic) {
-                final FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) fxomObject;
-                sceneGraphObject = fxomIntrinsic.getSourceSceneGraphObject();
-                if (!(fxomObject instanceof FXOMInclude)) {
-                    String reference = fxomIntrinsic.getSource();
-                    final FXOMObject referee = fxomIntrinsic.getFxomDocument().searchWithFxId(reference);
-
-                    if (referee == null) {
-                        final ErrorReportEntry newEntry = new ErrorReportEntryImpl(fxomObject,
-                                ErrorReportEntry.Type.UNRESOLVED_REFERENCE);
-                        addEntry(fxomObject, newEntry);
-                    }
-
-                }
-
-            } else {
-                sceneGraphObject = fxomObject.getSceneGraphObject();
-            }
-            if (!fxomObject.isVirtual() && sceneGraphObject == null) {
-                final ErrorReportEntry newEntry = new ErrorReportEntryImpl(fxomObject,
-                        ErrorReportEntry.Type.UNRESOLVED_CLASS);
-                addEntry(fxomObject, newEntry);
-            }
-        }
-    }
-
-    private void verifyBindingExpressions() {
-        for (FXOMPropertyT p : documentManager.fxomDocument().get().getFxomRoot().collectPropertiesT()) {
-            final PrefixedValue pv = new PrefixedValue(p.getValue());
-            if (pv.isBindingExpression()) {
-                final ErrorReportEntry newEntry = new ErrorReportEntryImpl(p,
-                        ErrorReportEntry.Type.UNSUPPORTED_EXPRESSION);
-                addEntry(p, newEntry);
-            }
-        }
-    }
-
-    private void addEntry(FXOMNode fxomNode, ErrorReportEntry newEntry) {
-        List<ErrorReportEntry> nodeEntries = entries.get(fxomNode);
-        if (nodeEntries == null) {
-            nodeEntries = new ArrayList<>();
-            entries.put(fxomNode, nodeEntries);
-        }
-        nodeEntries.add(newEntry);
-    }
-
-    private CSSParsingReportImpl getCSSParsingReport(Path assetPath) {
-        CSSParsingReportImpl result = cssParsingReports.get(assetPath);
-        if (result == null) {
-            result = new CSSParsingReportImpl(assetPath);
-            cssParsingReports.put(assetPath, result);
-        }
-        return result;
-    }
-
-    private void collectEntries(FXOMNode fxomNode, List<ErrorReportEntry> collected) {
-        assert fxomNode != null;
-        assert collected != null;
-
-        final List<ErrorReportEntry> nodeEntries = entries.get(fxomNode);
-        if (nodeEntries != null) {
-            collected.addAll(nodeEntries);
-        }
-
-        if (fxomNode instanceof FXOMCollection) {
-            final FXOMCollection fxomCollection = (FXOMCollection) fxomNode;
-            for (FXOMObject item : fxomCollection.getItems()) {
-                collectEntries(item, collected);
-            }
-        } else if (fxomNode instanceof FXOMInstance) {
-            final FXOMInstance fxomInstance = (FXOMInstance) fxomNode;
-            for (FXOMProperty fxomProperty : fxomInstance.getProperties().values()) {
-                collectEntries(fxomProperty, collected);
-            }
-        } else if (fxomNode instanceof FXOMPropertyC) {
-            final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomNode;
-            for (FXOMObject value : fxomPropertyC.getChildren()) {
-                collectEntries(value, collected);
-            }
-        }
-    }
-
-    @Override
-    public String getText(ErrorReportEntry entry) {
-
-        final StringBuilder result = new StringBuilder();
-
-        final FXOMNode fxomNode = entry.getFxomNode();
-
-        if (entry.getType() == ErrorReportEntry.Type.INVALID_CSS_CONTENT) {
-            assert entry.getCssParsingReport() != null;
-            result.append(entry.getCssParsingReport().asString(5, "\n", "...")); //NOCHECK
-        } else {
-            result.append(entry.getType().getMessage());
-        }
-
-        result.append(" "); //NOCHECK
-        if (fxomNode instanceof FXOMPropertyT) {
-            final FXOMPropertyT fxomProperty = (FXOMPropertyT) fxomNode;
-            result.append(fxomProperty.getValue());
-        } else if (fxomNode instanceof FXOMIntrinsic) {
-            final FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) fxomNode;
-            result.append(fxomIntrinsic.getSource());
-        } else if (fxomNode instanceof FXOMObject) {
-            final FXOMObject fxomObject = (FXOMObject) fxomNode;
-            final DesignHierarchyMask mask = designHierarchyMaskFactory.getMask(fxomObject);
-            //TODO check if an accessory, maybe the main one must be passed here
-            result.append(mask.getClassNameInfo(null));
-        }
-
-        return result.toString();
-    }
 }

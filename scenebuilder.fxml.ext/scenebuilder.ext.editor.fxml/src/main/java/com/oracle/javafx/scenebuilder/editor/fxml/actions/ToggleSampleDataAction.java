@@ -33,6 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +45,6 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 @Component
@@ -60,12 +60,12 @@ public class ToggleSampleDataAction extends AbstractAction {
 
     public final static String MENU_ID = "toggleSampleDataMenu";
 
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
     private final Editor editor;
 
     public ToggleSampleDataAction(
             ActionExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             Editor editor) {
         super(extensionFactory);
         this.documentManager = documentManager;

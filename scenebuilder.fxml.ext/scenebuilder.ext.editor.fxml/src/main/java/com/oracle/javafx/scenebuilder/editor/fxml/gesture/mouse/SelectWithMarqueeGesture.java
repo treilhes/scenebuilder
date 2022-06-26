@@ -38,6 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -55,7 +56,6 @@ import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.editor.fxml.controller.EditModeController;
@@ -83,10 +83,10 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
     private ModeManager modeManager;
     private final DesignHierarchyMask.Factory maskFactory;
     private final Selection selection;
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
 
     protected SelectWithMarqueeGesture(
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             Driver driver,
             Selection selection,
             DesignHierarchyMask.Factory maskFactory,

@@ -49,7 +49,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
-import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
+import com.oracle.javafx.scenebuilder.api.util.FXMLUtils;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;

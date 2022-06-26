@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -46,7 +47,6 @@ import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.exporter.format.ExportFormat;
 
@@ -64,11 +64,11 @@ public class ExporterMenuController {
 
     private final DocumentWindow document;
     private final List<ExportFormat> formats;
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
 
     public ExporterMenuController(
             @Autowired @Lazy DocumentWindow document, 
-            @Autowired @Lazy DocumentManager documentManager,
+            @Autowired @Lazy FxmlDocumentManager documentManager,
             @Autowired List<ExportFormat> formats) {
         this.document = document;
         this.documentManager = documentManager;

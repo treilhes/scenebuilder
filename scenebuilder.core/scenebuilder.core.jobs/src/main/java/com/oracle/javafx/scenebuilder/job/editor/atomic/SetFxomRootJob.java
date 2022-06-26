@@ -37,12 +37,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
+import com.oracle.javafx.scenebuilder.om.api.OMObject;
 
 /**
  * This Job updates the FXOM document at execution time.
@@ -52,20 +52,20 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public final class SetFxomRootJob extends AbstractJob {
 
-    private FXOMObject newRoot;
-    private FXOMObject oldRoot;
+    private OMObject newRoot;
+    private OMObject oldRoot;
 
-    private final FXOMDocument fxomDocument;
+    private final OMDocument fxomDocument;
 
     protected SetFxomRootJob(
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager) {
         super(extensionFactory);
-        this.fxomDocument = documentManager.fxomDocument().get();
+        this.fxomDocument = documentManager.omDocument().get();
         assert fxomDocument != null;
     }
 
-    protected void setJobParameters(FXOMObject newRoot) {
+    protected void setJobParameters(OMObject newRoot) {
         assert (newRoot == null) || (newRoot.getFxomDocument() == fxomDocument);
 
         this.newRoot = newRoot;
@@ -122,11 +122,11 @@ public final class SetFxomRootJob extends AbstractJob {
         return getClass().getSimpleName();
     }
 
-	public FXOMObject getNewRoot() {
+	public OMObject getNewRoot() {
 		return newRoot;
 	}
 
-	public FXOMObject getOldRoot() {
+	public OMObject getOldRoot() {
 		return oldRoot;
 	}
 
@@ -138,10 +138,10 @@ public final class SetFxomRootJob extends AbstractJob {
         }
         /**
          * Create an {@link SetFxomRootJob} job
-         * @param newRoot the new root of current {@link FXOMDocument}
+         * @param newRoot the new root of current {@link OMDocument}
          * @return the job to execute
          */
-        public SetFxomRootJob getJob(FXOMObject newRoot) {
+        public SetFxomRootJob getJob(OMObject newRoot) {
             return create(SetFxomRootJob.class, j -> j.setJobParameters(newRoot));
         }
     }

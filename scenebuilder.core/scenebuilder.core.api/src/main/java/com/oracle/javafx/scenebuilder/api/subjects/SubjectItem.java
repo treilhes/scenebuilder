@@ -59,16 +59,31 @@ public class SubjectItem<T> extends Observable<T> {
         this.onSet = onSet;
     }
     
+    public SubjectItem(SubjectItem<T> subjectItem, OnSetHandler<T> onSet, ObservableBuilder<T> observableBuilder) {
+        this(subjectItem.subject, onSet, observableBuilder);
+    }
+    
     public SubjectItem(Subject<T> subject, ObservableBuilder<T> observableBuilder) {
         this(subject, null, observableBuilder);
+    }
+    
+    public SubjectItem(SubjectItem<T> subjectItem, ObservableBuilder<T> observableBuilder) {
+        this(subjectItem.subject, null, observableBuilder);
     }
     
     public SubjectItem(Subject<T> subject, OnSetHandler<T> onSet) {
         this(subject, onSet, null);
     }
     
+    public SubjectItem(SubjectItem<T> subjectItem, OnSetHandler<T> onSet) {
+        this(subjectItem.subject, onSet, null);
+    }
+    
     public SubjectItem(Subject<T> subject) {
         this(subject, null, null);
+    }
+    public SubjectItem(SubjectItem<T> subjectItem) {
+        this(subjectItem.subject, null, null);
     }
     
     public T get() {

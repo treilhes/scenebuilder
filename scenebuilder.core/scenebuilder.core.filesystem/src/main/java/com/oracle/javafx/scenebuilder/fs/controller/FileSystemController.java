@@ -34,35 +34,46 @@
 package com.oracle.javafx.scenebuilder.fs.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.FileSystem;
+import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.fs.DocumentLoader;
+import com.oracle.javafx.scenebuilder.api.fs.DocumentLoaderProvider;
+import com.oracle.javafx.scenebuilder.api.fs.DocumentSaver;
+import com.oracle.javafx.scenebuilder.api.fs.DocumentSaverProvider;
+import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
+import com.oracle.javafx.scenebuilder.api.fs.LoaderSelector;
+import com.oracle.javafx.scenebuilder.api.fs.SaverSelector;
+import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.extension.DefaultFolders;
 import com.oracle.javafx.scenebuilder.fs.preference.global.InitialDirectoryPreference;
-import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.fs.util.FileWatcher;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
-    private final static Logger log = Logger.getLogger(FileSystemController.class.getName());
+    private final static Logger logger = LoggerFactory.getLogger(FileSystemController.class);
 
     private final InitialDirectoryPreference initialDirectoryPreference;
-    private final RecentItemsPreference recentItemsPreference;
+    //private final RecentItemsPreference recentItemsPreference;
 
     private final Map<DocumentWindow, List<Object>> documentWatchKeys = new HashMap<>();
     private final Map<Object, List<Path>> watchedFiles = new HashMap<>();
@@ -71,11 +82,63 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     private final FileWatcher fileWatcher = new FileWatcher(2000 /* ms */, this,
             FileSystemController.class.getSimpleName());
 
+    private final Set<DocumentLoader> documentLoaders;
+
+    private final Set<DocumentSaver> documentSavers;
+
+    private final SceneBuilderManager sceneBuilderManager;
+
+    // @formatter:off
     public FileSystemController(
-            InitialDirectoryPreference initialDirectoryPreference,
-            RecentItemsPreference recentItemsPreference) {
+            SceneBuilderManager sceneBuilderManager,
+            @Autowired(required = false) List<DocumentLoaderProvider> documentLoaderProviders,
+            @Autowired(required = false) List<DocumentSaverProvider> documentSaverProviders,
+            //RecentItemsPreference recentItemsPreference,
+            InitialDirectoryPreference initialDirectoryPreference) {
+     // @formatter:on
+        this.sceneBuilderManager = sceneBuilderManager;
         this.initialDirectoryPreference = initialDirectoryPreference;
-        this.recentItemsPreference = recentItemsPreference;
+        //this.recentItemsPreference = recentItemsPreference;
+
+        this.documentLoaders = documentLoaderProviders.stream().flatMap(dlp -> dlp.documentLoaders().stream())
+                .collect(Collectors.toSet());
+        this.documentSavers = documentSaverProviders.stream().flatMap(dlp -> dlp.documentSavers().stream())
+                .collect(Collectors.toSet());
+
+    }
+
+    @Override
+    public OMDocument<?> load(URL url, LoaderSelector loaderSelector, boolean keepTrackOfLocation) throws IOException {
+        List<DocumentLoader> applicable = documentLoaders.stream().filter(dl -> dl.canLoad(url))
+                .collect(Collectors.toList());
+
+        ClassLoader classloader = sceneBuilderManager.classloader().get();
+
+        if (applicable.size() > 1) {
+            return loaderSelector.select(applicable).load(url, classloader, keepTrackOfLocation);
+        } else if (applicable.size() == 1) {
+            return applicable.iterator().next().load(url, classloader, keepTrackOfLocation);
+        } else {
+            logger.error("Unable to load {}, did not find any applicable {}, see {} to provide one", url,
+                    DocumentLoader.class, DocumentLoaderProvider.class);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean save(OMDocument<?> omDocument, Path path, SaverSelector saverSelector) {
+        List<DocumentSaver> applicable = documentSavers.stream().filter(ds -> ds.canSave(omDocument))
+                .collect(Collectors.toList());
+
+        if (applicable.size() > 1) {
+            return saverSelector.select(applicable).save(omDocument, path);
+        } else if (applicable.size() == 1) {
+            return applicable.iterator().next().save(omDocument, path);
+        } else {
+            logger.error("Unable to save {} to {}, did not find any applicable {}, see {} to provide one", omDocument,
+                    path, DocumentSaver.class, DocumentSaverProvider.class);
+        }
+        return false;
     }
 
     @Override
@@ -136,7 +199,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
                     callbacks.add(callback);
                 }
 
-                log.log(Level.INFO, "Watching file : {0}", p.toAbsolutePath());
+                logger.info("Watching file : {}", p.toAbsolutePath());
             });
         }
     }
@@ -146,7 +209,8 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
         if (watchedFiles.containsKey(key)) {
             watchedFiles.get(key).forEach(p -> {
                 List<WatchingCallback> callbacks = watchCallbacks.get(p);
-                List<WatchingCallback> ownedCallbacks = callbacks.stream().filter(c -> c.getOwnerKey() == key).collect(Collectors.toList());
+                List<WatchingCallback> ownedCallbacks = callbacks.stream().filter(c -> c.getOwnerKey() == key)
+                        .collect(Collectors.toList());
 
                 callbacks.removeAll(ownedCallbacks);
 
@@ -159,7 +223,6 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
         }
     }
 
-
     @Override
     public void unwatchDocument(DocumentWindow document) {
         List<Object> keys = documentWatchKeys.get(document);
@@ -171,43 +234,49 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
     @Override
     public void startWatcher() {
-        log.log(Level.INFO, "Starting filewatcher !");
+        logger.info("Starting filewatcher !");
         fileWatcher.start();
     }
 
     @Override
     public void stopWatcher() {
-        log.log(Level.INFO, "Stoping filewatcher !");
+        logger.info("Stoping filewatcher !");
         fileWatcher.stop();
     }
 
     /*
      * FileWatcher.Delegate
      */
+    // FIXME SbPlatform.runForDocumentLater is misused here, what about watcher from
+    // other documents ?
     @Override
     public void fileWatcherDidWatchTargetCreation(Path target) {
-        log.log(Level.INFO, "File Event : file created ({0})", target.toFile().getName());
+        logger.info("File Event : file created ({})", target.toFile().getName());
         if (watchCallbacks.containsKey(target)) {
-            log.log(Level.INFO, "File Event sent : file created ({0})", target.toFile().getName());
-            watchCallbacks.get(target).forEach(c -> c.created(target));
+            logger.info("File Event sent : file created ({})", target.toFile().getName());
+            SbPlatform.runForDocumentLater(() -> watchCallbacks.get(target).forEach(c -> c.created(target)));
         }
     }
 
+    // FIXME SbPlatform.runForDocumentLater is misused here, what about watcher from
+    // other documents ?
     @Override
     public void fileWatcherDidWatchTargetDeletion(Path target) {
-        log.log(Level.INFO, "File Event : file deleted ({0})", target.toFile().getName());
+        logger.info("File Event : file deleted ({})", target.toFile().getName());
         if (watchCallbacks.containsKey(target)) {
-            log.log(Level.INFO, "File Event sent : file deleted ({0})", target.toFile().getName());
-            watchCallbacks.get(target).forEach(c -> c.deleted(target));
+            logger.info("File Event sent : file deleted ({})", target.toFile().getName());
+            SbPlatform.runForDocumentLater(() -> watchCallbacks.get(target).forEach(c -> c.deleted(target)));
         }
     }
 
+    // FIXME SbPlatform.runForDocumentLater is misused here, what about watcher from
+    // other documents ?
     @Override
     public void fileWatcherDidWatchTargetModification(Path target) {
-        log.log(Level.INFO, "File Event : file modified ({0})", target.toFile().getName());
+        logger.info("File Event : file modified ({})", target.toFile().getName());
         if (watchCallbacks.containsKey(target)) {
-            log.log(Level.INFO, "File Event sent : file modified ({0})", target.toFile().getName());
-            watchCallbacks.get(target).forEach(c -> c.modified(target));
+            logger.info("File Event sent : file modified ({})", target.toFile().getName());
+            SbPlatform.runForDocumentLater(() -> watchCallbacks.get(target).forEach(c -> c.modified(target)));
         }
     }
 

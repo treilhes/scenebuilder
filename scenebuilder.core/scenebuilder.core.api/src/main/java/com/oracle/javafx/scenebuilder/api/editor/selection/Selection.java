@@ -33,18 +33,13 @@
  */
 package com.oracle.javafx.scenebuilder.api.editor.selection;
 
-import java.util.Collection;
-import java.util.Map;
-
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
+import com.oracle.javafx.scenebuilder.om.api.OMObject;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.scene.Node;
-import javafx.scene.control.Control;
 
-public interface Selection {
+public interface Selection<D extends OMDocument, O extends OMObject> {
 
     /**
      * Returns the property holding the revision number of this selection.
@@ -61,115 +56,24 @@ public interface Selection {
      */
     int getRevision();
 
+
+    Node getCheckedHitNode();
+
+
     /**
      * Replaces the selected items by the one from the specified selection group.
      *
      * @param newGroup null or the selection group defining items to be selected
      */
-    void select(AbstractSelectionGroup newGroup);
+    void select(SelectionGroup<D, O> newGroup);
 
-    boolean isSelected(AbstractSelectionGroup selectedGroup);
+    boolean isSelected(SelectionGroup<D, O> selectedGroup);
 
-    boolean isSelected(FXOMObject fxomObject);
+    boolean isSelected(O fxomObject);
 
-    FXOMObject getHitItem();
+    O getHitItem();
 
-    Node getCheckedHitNode();
-
-    void toggleSelection(AbstractSelectionGroup toggleGroup);
-    //    /**
-    //     * Adds/removes the specified column/row to/from the selected items.
-    //     * This routine adds +1 to the revision number.
-    //     *
-    //     * @param gridPaneObject fxom object of the gridpane holding the column/row
-    //     * @param feature column/row
-    //     * @param featureIndex index of the column/row to be selected
-    //     */
-    //    public void toggleSelection(FXOMInstance gridPaneObject, Type feature, int featureIndex) {
-    //
-    //        assert gridPaneObject != null;
-    //        assert gridPaneObject.getSceneGraphObject() instanceof GridPane;
-    //
-    //        final AbstractSelectionGroup newGroup;
-    //        if (group instanceof GridSelectionGroup) {
-    //            final GridSelectionGroup gsg = (GridSelectionGroup) group;
-    //            if (gsg.getType() == feature) {
-    //                final Set<Integer> indexes = gsg.getIndexes();
-    //                if (indexes.contains(featureIndex)) {
-    //                    if (indexes.size() == 1) {
-    //                        // featureIndex is the last selected index
-    //                        // GridSelectionGroup -> ObjectSelectionGroup
-    //                        newGroup = objectSelectionGroupFactory.getGroup(gridPaneObject, null);
-    //                    } else {
-    //                        final Set<Integer> newIndexes = new HashSet<>();
-    //                        newIndexes.addAll(indexes);
-    //                        newIndexes.remove(featureIndex);
-    //                        newGroup = gridSelectionGroupFactory.getGroup(gridPaneObject, feature, newIndexes);
-    //                    }
-    //                } else {
-    //                    final Set<Integer> newIndexes = new HashSet<>();
-    //                    newIndexes.addAll(indexes);
-    //                    newIndexes.add(featureIndex);
-    //                    newGroup = gridSelectionGroupFactory.getGroup(gridPaneObject, feature, newIndexes);
-    //                }
-    //            } else {
-    //                newGroup = gridSelectionGroupFactory.getGroup(gridPaneObject, feature, featureIndex);
-    //            }
-    //        } else {
-    //            newGroup = gridSelectionGroupFactory.getGroup(gridPaneObject, feature, featureIndex);
-    //        }
-    //
-    //        select(newGroup);
-    //    }
-    //
-    //    /**
-    //     * Adds/removes the specified object from the selected items.
-    //     * This routine adds +1 to the revision number.
-    //     *
-    //     * @param fxomObject the object to be added/removed
-    //     */
-    //    public void toggleSelection(FXOMObject fxomObject) {
-    //        toggleSelection(fxomObject, null);
-    //    }
-    //
-    //    /**
-    //     * Adds/removes the specified object from the selected items.
-    //     * This routine adds +1 to the revision number.
-    //     *
-    //     * @param fxomObject the object to be added/removed
-    //     * @param hitNode null or the node hit by the mouse during selection
-    //     */
-    //    public void toggleSelection(FXOMObject fxomObject, Node hitNode) {
-    //
-    //        assert fxomObject != null;
-    //
-    //        final ObjectSelectionGroup newGroup;
-    //        if (group instanceof ObjectSelectionGroup) {
-    //            final ObjectSelectionGroup osg = (ObjectSelectionGroup) group;
-    //            final Set<FXOMObject> currentItems = osg.getItems();
-    //            if (currentItems.contains(fxomObject)) {
-    //                if (currentItems.size() == 1) {
-    //                    // fxomObject is selected and is the last item
-    //                    newGroup = null;
-    //                } else {
-    //                    final Set<FXOMObject> newItems = new HashSet<>();
-    //                    newItems.addAll(currentItems);
-    //                    newItems.remove(fxomObject);
-    //                    final FXOMObject newHitItem = newItems.iterator().next();
-    //                    newGroup = objectSelectionGroupFactory.getGroup(newItems, newHitItem, null);
-    //                }
-    //            } else {
-    //                final Set<FXOMObject> newItems = new HashSet<>();
-    //                newItems.addAll(currentItems);
-    //                newItems.add(fxomObject);
-    //                newGroup = objectSelectionGroupFactory.getGroup(newItems, fxomObject, hitNode);
-    //            }
-    //        } else {
-    //            newGroup = objectSelectionGroupFactory.getGroup(fxomObject, hitNode);
-    //        }
-    //
-    //        select(newGroup);
-    //    }
+    void toggleSelection(SelectionGroup<D, O> toggleGroup);
 
     /**
      * Returns null or the first selected ancestor of the specified fxom object.
@@ -177,7 +81,7 @@ public interface Selection {
      * @param fxomObject an fxom object
      * @return null or the first selected ancestor of the specified fxom object.
      */
-    FXOMObject lookupSelectedAncestor(FXOMObject fxomObject);
+    OMObject lookupSelectedAncestor(O fxomObject);
 
     /**
      * Empties this selection.
@@ -199,7 +103,7 @@ public interface Selection {
      *
      * @return  the group containing the selected items or null if selection is empty.
      */
-    AbstractSelectionGroup getGroup();
+    SelectionGroup<D, O> getGroup();
 
     /**
      * Returns number of nanoseconds taken to execute selection listeners.
@@ -225,7 +129,7 @@ public interface Selection {
      *
      * @return
      */
-    FXOMObject getAncestor();
+    O getAncestor();
 
     /**
      * Returns true if the selected objects are all connected to the
@@ -235,90 +139,66 @@ public interface Selection {
      * @return true if the selected objects are all connected to the
      * specified documents.
      */
-    boolean isValid(FXOMDocument fxomDocument);
+    boolean isValid(D fxomDocument);
 
-    /**
-     * Check if the current selection objects are all instances of a {@link Node},
-     * @return true if the current selection objects are all instances of a {@link Node},
-     * false otherwise.
-     */
-    boolean isSelectionNode();
+//    /**
+//     * Check if the current selection objects are all instances of the provided type,
+//     * @param the required type of selected objects
+//     * @return true if the current selection objects are all instances of the provided type,
+//     * false otherwise.
+//     */
+//    boolean isSelectionOfType(Class<?> type);
 
-    /**
-     * Check if the current selection objects are all instances of a {@link Control}
-     * @return true if the current selection objects are all instances of a {@link Control},
-     * false otherwise.
-     */
-    boolean isSelectionControl();
+//    /**
+//     * Replaces the selected items by the specified fxom object and hit node.
+//     * This routine adds +1 to the revision number.
+//     *
+//     * @param fxomObject the object to be selected
+//     * @param hitNode null or the node hit by the mouse during selection
+//     */
+//    void select(O fxomObject, Node hitNode);
+//
+//    /**
+//     * Replaces the selected items by the specified fxom object.
+//     * This routine adds +1 to the revision number.
+//     *
+//     * @param fxomObject the object to be selected
+//     */
+//    void select(O fxomObject);
+//
+//    /**
+//     * Replaces the selected items by the specified fxom objects.
+//     * This routine adds +1 to the revision number.
+//     *
+//     * @param fxomObjects the objects to be selected
+//     */
+//    void select(Collection<O> fxomObjects);
+//
+//    /**
+//     * Replaces the selected items by the specified fxom objects.
+//     * This routine adds +1 to the revision number.
+//     *
+//     * @param fxomObjects the objects to be selected
+//     * @param hitObject the object hit by the mouse during selection
+//     * @param hitNode null or the node hit by the mouse during selection
+//     */
+//    void select(Collection<O> fxomObjects, O hitObject, Node hitNode);
 
-    /**
-     * Check if the current selection objects are all instances of the provided type,
-     * @param the required type of selected objects
-     * @return true if the current selection objects are all instances of the provided type,
-     * false otherwise.
-     */
-    boolean isSelectionOfType(Class<?> type);
+//    /**
+//     * Update the hit object and hit point of the current selection.
+//     *
+//     * @param hitObject the object hit by the mouse during selection
+//     * @param hitNode null or the node hit by the mouse during selection
+//     */
+//    void updateHitObject(O hitObject, Node hitNode);
 
-    /**
-     * Selection can be moved if true
-     * @return can be moved
-     */
-    boolean isMovable();
-
-    /**
-     * Replaces the selected items by the specified fxom object and hit node.
-     * This routine adds +1 to the revision number.
-     *
-     * @param fxomObject the object to be selected
-     * @param hitNode null or the node hit by the mouse during selection
-     */
-    void select(FXOMObject fxomObject, Node hitNode);
-
-    /**
-     * Replaces the selected items by the specified fxom object.
-     * This routine adds +1 to the revision number.
-     *
-     * @param fxomObject the object to be selected
-     */
-    void select(FXOMObject fxomObject);
-
-    /**
-     * Replaces the selected items by the specified fxom objects.
-     * This routine adds +1 to the revision number.
-     *
-     * @param fxomObjects the objects to be selected
-     */
-    void select(Collection<FXOMObject> fxomObjects);
-
-    /**
-     * Replaces the selected items by the specified fxom objects.
-     * This routine adds +1 to the revision number.
-     *
-     * @param fxomObjects the objects to be selected
-     * @param hitObject the object hit by the mouse during selection
-     * @param hitNode null or the node hit by the mouse during selection
-     */
-    void select(Collection<FXOMObject> fxomObjects, FXOMObject hitObject, Node hitNode);
-
-    /**
-     * Update the hit object and hit point of the current selection.
-     *
-     * @param hitObject the object hit by the mouse during selection
-     * @param hitNode null or the node hit by the mouse during selection
-     */
-    void updateHitObject(FXOMObject hitObject, Node hitNode);
-
-    /**
-     * @param hitObject
-     */
-    void toggleSelection(FXOMObject hitObject);
+//    /**
+//     * @param hitObject
+//     */
+//    void toggleSelection(O hitObject);
 
     void selectNext();
     void selectPrevious();
     void selectAll();
 
-    public Map<String, FXOMObject> collectSelectedFxIds();
-
-    public Accessory getTargetAccessory();
-    public void select(Accessory targetAccessory);
 }

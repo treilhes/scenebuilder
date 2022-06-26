@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gluonhq.scenebuilder</groupId>
     <artifactId>parent</artifactId>
@@ -14,6 +13,7 @@
     <modules>
         <module>dev.utils</module>
         <module>scenebuilder.application</module>
+        <module>scenebuilder.application.core</module>
         <module>scenebuilder.core</module>
         <module>scenebuilder.core.ext</module>
         <module>scenebuilder.fxml</module>
@@ -121,6 +121,11 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.core.om</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.core.selection</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -216,7 +221,7 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.ext.extension.library</artifactId>
+                <artifactId>scenebuilder.core.ext.extension.library</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -246,12 +251,12 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.ext.log.viewer</artifactId>
+                <artifactId>scenebuilder.core.ext.log.viewer</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.ext.preference.editor</artifactId>
+                <artifactId>scenebuilder.core.ext.preference.editor</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -281,12 +286,12 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.ext.update.manager</artifactId>
+                <artifactId>scenebuilder.core.ext.update.manager</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.ext.about</artifactId>
+                <artifactId>scenebuilder.core.ext.about</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -296,7 +301,7 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.ext.scenicview</artifactId>
+                <artifactId>scenebuilder.core.ext.scenicview</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -326,6 +331,36 @@
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.ext.script</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.fxml.api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.fxml.core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.fxml.core.drag.and.drop</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.fxml.core.jobs</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.fxml.core.selection</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -441,6 +476,8 @@
                             <arg>javafx.graphics/com.sun.javafx.scene=scenebuilder.core.fxom</arg>
                             <arg>--add-exports</arg>
                             <arg>javafx.graphics/com.sun.javafx.scene=scenebuilder.core.api</arg>
+                            <arg>--add-exports</arg>
+                            <arg>javafx.graphics/com.sun.javafx.scene=scenebuilder.fxml.api</arg>
                             <arg>--add-exports</arg>
                             <arg>javafx.fxml/com.sun.javafx.fxml=scenebuilder.core.fxom</arg>
                             <arg>--add-exports</arg>

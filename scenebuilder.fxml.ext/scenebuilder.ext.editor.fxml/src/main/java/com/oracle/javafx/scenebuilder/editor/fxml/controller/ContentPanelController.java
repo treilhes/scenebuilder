@@ -38,6 +38,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -46,17 +47,16 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.ContextMenu;
-import com.oracle.javafx.scenebuilder.api.Drag;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
-import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.content.ModeManager;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.dnd.Drag;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPanelController;
 import com.oracle.javafx.scenebuilder.core.content.util.BoundsUnion;
@@ -135,7 +135,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
     private final ModeManager modeManager;
     private final Drag drag;
     private final Selection selection;
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
     private final MessageLogger messageLogger;
     private final ContextMenu contextMenu;
     private final DesignHierarchyMask.Factory maskFactory;
@@ -160,7 +160,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
     // @formatter:off
     public ContentPanelController(
             SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             Driver driver,
             DesignHierarchyMask.Factory maskFactory,
             AlignmentGuidesColorPreference alignmentGuidesColorPreference,

@@ -33,6 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.tab;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +41,6 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractPring;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
@@ -83,7 +83,7 @@ public class TabPring extends AbstractPring<Tab> {
 
     public TabPring(
             Content contentPanelController,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             SelectWithPringGesture.Factory selectWithPringGestureFactory) {
         super(contentPanelController, documentManager, Tab.class);
         this.selectWithPringGestureFactory = selectWithPringGestureFactory;

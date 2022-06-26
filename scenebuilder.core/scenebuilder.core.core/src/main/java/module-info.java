@@ -42,16 +42,13 @@ open module scenebuilder.core.core {
     exports com.oracle.javafx.scenebuilder.core.clipboard.internal;
     exports com.oracle.javafx.scenebuilder.core.content.util;
     exports com.oracle.javafx.scenebuilder.core.di;
-    exports com.oracle.javafx.scenebuilder.core.doc;
-    exports com.oracle.javafx.scenebuilder.core.dock;
-    exports com.oracle.javafx.scenebuilder.core.dock.preferences.document;
+
     exports com.oracle.javafx.scenebuilder.core.editor.drag.source;
-    exports com.oracle.javafx.scenebuilder.core.editor.panel.util.dialog;
-    exports com.oracle.javafx.scenebuilder.core.editors;
+
     exports com.oracle.javafx.scenebuilder.core.guides;
     exports com.oracle.javafx.scenebuilder.core.i18n;
     exports com.oracle.javafx.scenebuilder.core.menu;
-    exports com.oracle.javafx.scenebuilder.core.util;
+
     exports com.oracle.javafx.scenebuilder.core;
 
     requires transitive scenebuilder.core.api;

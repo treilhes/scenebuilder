@@ -41,6 +41,7 @@ import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 
@@ -50,12 +51,12 @@ import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 public class AlertController implements InitWithDocument {
 
     private final DocumentWindow document;
-    private final DocumentManager documentManager;
+    private final DocumentManager<FXOMDocument> documentManager;
     private final ThemeDocumentPreference themePreference;
     
     public AlertController(
             @Autowired @Lazy DocumentWindow document,
-            @Autowired DocumentManager documentManager,
+            @Autowired DocumentManager<FXOMDocument> documentManager,
             @Autowired ThemeDocumentPreference themePreference
             ) {
         super();

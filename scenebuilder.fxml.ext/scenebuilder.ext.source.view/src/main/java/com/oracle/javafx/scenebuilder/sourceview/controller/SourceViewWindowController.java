@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,6 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
@@ -91,7 +91,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
 
     private FXOMDocument fxomDocument;
     private String documentName;
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
     private final WildcardImportsPreference wildcardImportsPreference;
 
     private final Editor editor;
@@ -103,7 +103,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
 
     public SourceViewWindowController(
             SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             @Autowired Editor editor,
             @Autowired WildcardImportsPreference wildcardImportsPreference,
             ViewMenuController viewMenuController) {

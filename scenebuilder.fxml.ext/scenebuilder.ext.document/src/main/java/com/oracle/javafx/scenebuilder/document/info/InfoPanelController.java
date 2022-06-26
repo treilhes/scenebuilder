@@ -39,19 +39,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPanelController;
 import com.oracle.javafx.scenebuilder.core.editors.ControllerClassEditor;
@@ -98,7 +98,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
     private boolean controllerDidLoadFxmlOver = false;
     private final PropertyEditorFactorySession editorFactorysession;
     private final Editor editor;
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
     private final Selection selection;
     private final JobManager jobManager;
     private final ToggleFxRootJob.Factory toggleFxRootJobFactory;
@@ -106,7 +106,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
 
     public InfoPanelController(
             SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
     		Editor editor,
     		Selection selection,
     		JobManager jobManager,

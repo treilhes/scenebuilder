@@ -33,6 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.preview.actions;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -46,7 +47,6 @@ import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 
 @Component
@@ -63,13 +63,13 @@ public class ShowPreviewAction extends AbstractAction {
 
     public final static String SHOW_PREVIEW_IN_WINDOW_ID = "showPreviewInWindow";
 
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
     private final PreviewWindowController previewWindowController;
 
     public ShowPreviewAction(
             ActionExtensionFactory extensionFactory,
             @Autowired PreviewWindowController previewWindowController,
-            @Autowired DocumentManager documentManager) {
+            @Autowired FxmlDocumentManager documentManager) {
         super(extensionFactory);
         this.documentManager = documentManager;
         this.previewWindowController = previewWindowController;

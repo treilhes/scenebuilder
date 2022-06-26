@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,12 +37,12 @@ import java.net.URL;
 
 /**
  *
- * 
+ *
  */
 public abstract class FXOMNode {
-    
+
     private FXOMDocument fxomDocument;
-    
+
     FXOMNode(FXOMDocument fxomDocument) {
         assert fxomDocument != null;
         this.fxomDocument = fxomDocument;
@@ -50,16 +51,16 @@ public abstract class FXOMNode {
     public FXOMDocument getFxomDocument() {
         return fxomDocument;
     }
-    
+
     public abstract void moveToFxomDocument(FXOMDocument destination);
-    
+
     public abstract void documentLocationWillChange(URL newLocation);
-    
+
     protected void changeFxomDocument(FXOMDocument destination) {
         assert destination != null;
         assert destination != fxomDocument;
         fxomDocument = destination;
     }
-    
-    
+
+
 }

@@ -37,8 +37,9 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Objects;
 
-import com.oracle.javafx.scenebuilder.api.HierarchyMask;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
+import org.scenebuilder.fxml.api.HierarchyMask;
+import org.scenebuilder.fxml.api.HierarchyMask.Accessory;
+
 import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;

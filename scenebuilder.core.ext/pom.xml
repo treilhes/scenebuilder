@@ -9,6 +9,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>scenebuilder.core.ext.menu</module>
     <module>scenebuilder.core.ext.about</module>
     <module>scenebuilder.core.ext.certificate.manager</module>
     <module>scenebuilder.core.ext.extension.library</module>
@@ -17,5 +18,6 @@
     <module>scenebuilder.core.ext.scenicview</module>
     <module>scenebuilder.core.ext.update.manager</module>
     <module>scenebuilder.maven.client</module>
+    <module>scenebuilder.ext.sb</module>
   </modules>
 </project>

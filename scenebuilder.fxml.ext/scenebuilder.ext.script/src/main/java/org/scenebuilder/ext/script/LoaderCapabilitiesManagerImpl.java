@@ -3,6 +3,7 @@ package org.scenebuilder.ext.script;
 import java.io.IOException;
 
 import org.scenebuilder.ext.script.preference.global.StaticLoadPreference;
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.ext.LoaderCapabilitiesManager;
 
@@ -30,7 +30,7 @@ public class LoaderCapabilitiesManagerImpl implements LoaderCapabilitiesManager,
     @Autowired
     public LoaderCapabilitiesManagerImpl(
             @Autowired StaticLoadPreference staticLoadPreference,
-            @Autowired DocumentManager docManager) {
+            @Autowired FxmlDocumentManager docManager) {
 
         staticLoadPreference.getObservableValue().addListener((ob, o, n) -> {
             setStaticLoadingEnabled(n);
@@ -64,7 +64,7 @@ public class LoaderCapabilitiesManagerImpl implements LoaderCapabilitiesManager,
     @Override
     public void initWithDocument() {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

@@ -16,11 +16,8 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.jobs</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.selection</artifactId>
+            <artifactId>scenebuilder.starter.test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

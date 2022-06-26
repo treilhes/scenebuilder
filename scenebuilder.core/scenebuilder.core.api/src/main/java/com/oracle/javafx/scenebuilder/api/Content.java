@@ -51,19 +51,11 @@ public interface Content extends FXOMDocument.SceneGraphHolder {
 
 	Pane getGlassLayer();
 
-	//Driver lookupDriver(FXOMObject fxomInstance);
-
 	FXOMObject pick(double hitX, double hitY, Set<FXOMObject> pickExcludes);
 
 	HudWindow getHudWindowController();
 
 	boolean isGuidesVisible();
-
-	//Group getHandleLayer();
-
-	//Group getRudderLayer();
-
-	//Transform computeSceneGraphToRudderLayerTransform(Node sceneGraphObject);
 
 	Paint getGuidesColor();
 
@@ -75,13 +67,9 @@ public interface Content extends FXOMDocument.SceneGraphHolder {
 
 	void setScaling(double min);
 
-	//Paint getPringColor();
-
 	boolean isContentDisplayable();
 
 	void endInteraction();
-
-	//Group getPringLayer();
 
 	void scrollToSelection();// TODO not working, need to investigate
 

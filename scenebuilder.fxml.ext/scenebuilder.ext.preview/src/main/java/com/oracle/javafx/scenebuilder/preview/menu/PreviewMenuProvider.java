@@ -36,6 +36,7 @@ package com.oracle.javafx.scenebuilder.preview.menu;
 import java.util.Arrays;
 import java.util.List;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -48,7 +49,6 @@ import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.util.StringUtils;
 import com.oracle.javafx.scenebuilder.preview.actions.ShowPreviewDialogAction;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
@@ -65,12 +65,12 @@ import javafx.scene.control.ToggleGroup;
 public class PreviewMenuProvider implements MenuItemProvider {
 
     private final MenuBuilder menuBuilder;
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
     private final PreviewWindowController previewWindowController;
 
     public PreviewMenuProvider(
             MenuBuilder menuBuilder,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             @Lazy PreviewWindowController previewWindowController) {
         this.menuBuilder = menuBuilder;
         this.documentManager = documentManager;

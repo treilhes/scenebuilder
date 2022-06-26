@@ -41,27 +41,8 @@ import com.oracle.javafx.scenebuilder.core.accelerator.AcceleratorsController;
 import com.oracle.javafx.scenebuilder.core.accelerator.preferences.global.AcceleratorsMapPreference;
 import com.oracle.javafx.scenebuilder.core.accelerator.preferences.global.FocusedAcceleratorsMapPreference;
 import com.oracle.javafx.scenebuilder.core.di.SceneBuilderBeanFactoryPostProcessor;
-import com.oracle.javafx.scenebuilder.core.doc.DocumentationImpl;
-import com.oracle.javafx.scenebuilder.core.dock.AnnotatedViewAttachmentProvider;
-import com.oracle.javafx.scenebuilder.core.dock.DockNameHelper;
-import com.oracle.javafx.scenebuilder.core.dock.DockPanelController;
-import com.oracle.javafx.scenebuilder.core.dock.DockTypeAccordion;
-import com.oracle.javafx.scenebuilder.core.dock.DockTypeSplitH;
-import com.oracle.javafx.scenebuilder.core.dock.DockTypeSplitV;
-import com.oracle.javafx.scenebuilder.core.dock.DockTypeTab;
-import com.oracle.javafx.scenebuilder.core.dock.DockViewControllerImpl;
-import com.oracle.javafx.scenebuilder.core.dock.DockWindowController;
-import com.oracle.javafx.scenebuilder.core.dock.DockWindowFactory;
-import com.oracle.javafx.scenebuilder.core.dock.preferences.document.DockMinimizedPreference;
-import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockDockTypePreference;
-import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
-import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastViewVisibilityPreference;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.DocumentDragSource;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
-import com.oracle.javafx.scenebuilder.core.editors.ControllerClassEditor;
-import com.oracle.javafx.scenebuilder.core.editors.CoreEditors;
-import com.oracle.javafx.scenebuilder.core.editors.FxIdEditor;
-import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
 import com.oracle.javafx.scenebuilder.core.i18n.I18NScenebuilderCore;
 import com.oracle.javafx.scenebuilder.core.menu.AnnotatedActionContextMenuItemProvider;
 import com.oracle.javafx.scenebuilder.core.menu.AnnotatedActionMenuItemProvider;
@@ -86,31 +67,12 @@ public class ScenebuilderCoreExtension extends AbstractExtension {
                 AnnotatedActionContextMenuItemProvider.class,
                 AnnotatedActionMenuItemProvider.class,
                 AnnotatedActionViewMenuItemProvider.class,
-                AnnotatedViewAttachmentProvider.class,
-                ControllerClassEditor.class,
-                CoreEditors.class,
-                DockMinimizedPreference.class,
-                DockNameHelper.class,
-                DockPanelController.class,
-                DockTypeAccordion.class,
-                DockTypeSplitH.class,
-                DockTypeSplitV.class,
-                DockTypeTab.class,
-                DockViewControllerImpl.class,
-                DockWindowController.class,
-                DockWindowFactory.class,
                 DocumentDragSource.class,
                 DocumentDragSource.Factory.class,
-                DocumentationImpl.class,
                 ExternalDragSource.class,
                 ExternalDragSource.Factory.class,
                 FocusedAcceleratorsMapPreference.Factory.class,
-                FxIdEditor.class,
                 I18NScenebuilderCore.class,
-                LastDockDockTypePreference.class,
-                LastDockUuidPreference.class,
-                LastViewVisibilityPreference.class,
-                PropertyEditorFactory.class,
                 SceneBuilderBeanFactoryPostProcessor.class
             );
      // @formatter:on

@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.editor.fxml.controller;
 
 import java.util.List;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -42,7 +43,6 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.HudWindow;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPopupController;
 import com.oracle.javafx.scenebuilder.core.content.util.LineEquation;
@@ -83,7 +83,7 @@ public class HudWindowController extends AbstractFxmlPopupController implements 
      */
     public HudWindowController(
             SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager
+            FxmlDocumentManager documentManager
             ) {
         super(scenebuilderManager, documentManager, HudWindowController.class.getResource("HudWindow.fxml"));
     }

@@ -40,7 +40,7 @@ open module scenebuilder.ext.editor.script {
 
     requires scenebuilder.starter;
     
-    requires transitive scenebuilder.core.api;
+    requires transitive scenebuilder.fxml.api;
     requires scenebuilder.core.extension.api;
     requires eu.mihosoft.monacofx;
 

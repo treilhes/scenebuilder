@@ -26,9 +26,8 @@
         <module>scenebuilder.ext.help.features</module>
         <module>scenebuilder.ext.image.library</module>
         <module>scenebuilder.ext.inspector</module>
-        <module>scenebuilder.ext.menu</module>
+        <module>scenebuilder.fxml.ext.menu</module>
         <module>scenebuilder.ext.preview</module>
-        <module>scenebuilder.ext.sb</module>
         <module>scenebuilder.ext.script.graalvm-javascript-rt</module>
         <module>scenebuilder.ext.script.graalvm-javascript</module>
         <module>scenebuilder.ext.script</module>

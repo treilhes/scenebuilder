@@ -33,20 +33,20 @@
  */
 package com.oracle.javafx.scenebuilder.imagelibrary.controller;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Drag;
-import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.dnd.Drag;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.imagelibrary.drag.source.ImageLibraryDragSource;
@@ -80,7 +80,7 @@ public class ImageLibraryController {
     public ImageLibraryController(
             @Autowired JobManager jobManager,
             @Autowired Drag drag,
-            @Autowired @Lazy DocumentManager documentManager,
+            @Autowired @Lazy FxmlDocumentManager documentManager,
             ImageLibraryDragSource.Factory libraryDragSourceFactory,
             SetDocumentRootJob.Factory setDocumentRootJobFactory,
             InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory) {

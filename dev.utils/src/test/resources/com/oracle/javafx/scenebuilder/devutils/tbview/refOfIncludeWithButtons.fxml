@@ -10,7 +10,7 @@
             <Button layoutX="100" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="ButtonInclude" />
          </fx:include>
       </fx:define>
-      <fx:reference source="inc1">
+      <fx:copy source="inc1">
         <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="ButtonRef" />
       </fx:reference>
    </children>

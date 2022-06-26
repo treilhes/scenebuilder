@@ -42,14 +42,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.scenebuilder.fxml.api.HierarchyMask;
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.HudWindow;
-import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
 import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
@@ -59,9 +59,9 @@ import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -105,7 +105,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
 	private final JobManager jobManager;
 	private final Driver driver;
 	private final HudWindow hudWindow;
-	private final DocumentManager documentManager;
+	private final FxmlDocumentManager documentManager;
 	private final ModifyObjectJob.Factory modifyObjectJobFactory;
 
 	private Parent closestParent;
@@ -116,7 +116,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
 	        Driver driver,
 	        DesignHierarchyMask.Factory designMaskFactory,
 	        JobManager jobManager,
-	        DocumentManager documentManager,
+	        FxmlDocumentManager documentManager,
 	        HudWindow hudWindow,
 	        ModifyObjectJob.Factory modifyObjectJobFactory) {
         super(contentPanelController);

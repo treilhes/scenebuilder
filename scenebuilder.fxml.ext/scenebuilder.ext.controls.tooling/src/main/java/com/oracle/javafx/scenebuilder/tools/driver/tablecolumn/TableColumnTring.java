@@ -33,14 +33,14 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.tablecolumn;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractGenericTring;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.dnd.DropTarget;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.tools.driver.tableview.TableViewDesignInfoX;
@@ -63,7 +63,7 @@ public class TableColumnTring extends AbstractGenericTring<Object> {
 
     public TableColumnTring(
             Content contentPanelController,
-            DocumentManager documentManager) {
+            FxmlDocumentManager documentManager) {
         super(contentPanelController, documentManager, Object.class);
 
     }

@@ -39,19 +39,14 @@ import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
-import com.oracle.javafx.scenebuilder.api.content.ModeManagerController;
 import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
-import com.oracle.javafx.scenebuilder.api.control.driver.DriverExtensionRegistry;
-import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
-import com.oracle.javafx.scenebuilder.api.control.inlineedit.SimilarInlineEditorBounds;
-import com.oracle.javafx.scenebuilder.api.control.pickrefiner.NoPickRefiner;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.dock.DockNameHelper;
 import com.oracle.javafx.scenebuilder.api.dock.SearchController;
 import com.oracle.javafx.scenebuilder.api.dock.ViewController;
-import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
@@ -75,27 +70,21 @@ public class ApiExtension extends AbstractExtension {
         return Arrays.asList(
                 ActionExtensionFactory.class,
                 ActionFactory.class,
-                DesignHierarchyMask.class,
-                DesignHierarchyMask.Factory.class,
                 DiscardGesture.class,
                 DiscardGesture.Factory.class,
+                DockNameHelper.class,
                 DockManager.DockManagerImpl.class,
                 DocumentManager.DocumentManagerImpl.class,
-                DriverExtensionRegistry.class,
-                GenericDriver.class,
                 I18N.class,
                 JobExtensionFactory.class,
                 MavenSetting.class,
                 MenuBuilder.class,
-                ModeManagerController.class,
                 NetworkManager.NetworkManagerImpl.class,
-                NoPickRefiner.class,
                 PreferencesContext.class,
                 SceneBuilderBeanFactory.class,
                 SceneBuilderManager.SceneBuilderManagerImpl.class,
                 SearchController.class,
                 Selection.class,
-                SimilarInlineEditorBounds.class,
                 ViewController.class,
                 ViewManager.ViewManagerImpl.class,
                 ViewMenuController.class

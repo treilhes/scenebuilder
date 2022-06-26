@@ -51,6 +51,7 @@ import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
 import com.oracle.javafx.scenebuilder.core.dock.DockPanelController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
 import com.oracle.javafx.scenebuilder.ui.controller.InnerDockManager.DividerPosition;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.BottomDividerVPosPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.LeftDividerHPosPreference;
@@ -421,7 +422,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     @Override
     public void updateStageTitle() {
         if (contentPanelHost != null) {
-            final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+            final OMDocument<?> fxomDocument = documentManager.omDocument().get();
             getStage().setTitle(FXOMDocumentUtils.makeTitle(fxomDocument));
         } // else controllerDidLoadFxml() will invoke me again
 

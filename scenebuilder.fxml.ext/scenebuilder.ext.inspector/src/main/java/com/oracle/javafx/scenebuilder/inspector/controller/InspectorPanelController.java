@@ -52,31 +52,32 @@ import java.util.Stack;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.scenebuilder.fxml.api.Inspector;
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Drag;
-import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.InlineEdit;
-import com.oracle.javafx.scenebuilder.api.Inspector;
-import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.api.css.CssPropAuthorInfo;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.dnd.Drag;
+import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
 import com.oracle.javafx.scenebuilder.api.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
+import com.oracle.javafx.scenebuilder.api.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertiesEditor;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor.LayoutFormat;
@@ -99,14 +100,13 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ValuePropertyMetadataClassComparator;
 import com.oracle.javafx.scenebuilder.core.metadata.util.ValuePropertyMetadataNameComparator;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
-import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.editors.control.GenericEditor;
 import com.oracle.javafx.scenebuilder.editors.control.ToggleGroupEditor;
+import com.oracle.javafx.scenebuilder.fxml.selection.job.ModifyCacheHintJob;
+import com.oracle.javafx.scenebuilder.fxml.selection.job.ModifySelectionJob;
 import com.oracle.javafx.scenebuilder.inspector.preferences.document.InspectorSectionIdPreference;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxIdJob;
 import com.oracle.javafx.scenebuilder.selection.SelectionStateImpl;
-import com.oracle.javafx.scenebuilder.selection.job.ModifyCacheHintJob;
-import com.oracle.javafx.scenebuilder.selection.job.ModifySelectionJob;
 import com.oracle.javafx.scenebuilder.tools.job.togglegroup.ModifySelectionToggleGroupJob;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
@@ -230,7 +230,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     private final MessageLogger messageLogger;
     private final InspectorSectionIdPreference inspectorSectionIdPreference;
 
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
     private final Drag drag;
     private final ModifyCacheHintJob.Factory modifyCacheHintJobFactory;
     private final ModifySelectionJob.Factory modifySelectionJobFactory;
@@ -248,7 +248,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
  // @formatter:off
     public InspectorPanelController(
             SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             Selection selection,
             InlineEdit inlineEdit,
             JobManager jobManager,

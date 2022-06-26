@@ -35,10 +35,11 @@ package com.oracle.javafx.scenebuilder.job.editor;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 /**
@@ -48,8 +49,8 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
  */
 public abstract class InlineSelectionJob extends InlineDocumentJob {
 
-    private AbstractSelectionGroup oldSelectionGroup;
-    private AbstractSelectionGroup newSelectionGroup;
+    private SelectionGroup oldSelectionGroup;
+    private SelectionGroup newSelectionGroup;
     private final Selection selection;
 
     // @formatter:off
@@ -66,11 +67,11 @@ public abstract class InlineSelectionJob extends InlineDocumentJob {
         return selection;
     }
 
-    protected final AbstractSelectionGroup getOldSelectionGroup() {
+    protected final SelectionGroup getOldSelectionGroup() {
         return oldSelectionGroup;
     }
 
-    protected abstract AbstractSelectionGroup getNewSelectionGroup();
+    protected abstract SelectionGroup getNewSelectionGroup();
 
     @Override
     public final void doExecute() {

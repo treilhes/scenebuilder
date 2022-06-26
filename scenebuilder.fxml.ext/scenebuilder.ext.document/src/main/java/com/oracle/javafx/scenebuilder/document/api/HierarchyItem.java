@@ -33,7 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.document.api;
 
-import com.oracle.javafx.scenebuilder.api.HierarchyMask;
+import org.scenebuilder.fxml.api.HierarchyMask;
+
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.scene.image.Image;

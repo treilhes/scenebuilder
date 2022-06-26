@@ -33,6 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.preview.actions;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -43,7 +44,6 @@ import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 
@@ -54,13 +54,13 @@ import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController
 public class SetPreviewSizeAction extends AbstractAction {
 
     private final PreviewWindowController previewWindowController;
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
 
     private Size size;
 
     public SetPreviewSizeAction(
             ActionExtensionFactory extensionFactory,
-            @Autowired DocumentManager documentManager,
+            @Autowired FxmlDocumentManager documentManager,
             @Autowired PreviewWindowController previewWindowController) {
         super(extensionFactory);
         this.documentManager = documentManager;

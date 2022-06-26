@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,13 +34,12 @@
 package com.oracle.javafx.scenebuilder.api.library;
 
 import java.net.URL;
-
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
 
 public interface LibraryItem {
 
-    FXOMDocument instantiate(ClassLoader classloader);
-	
+    OMDocument instantiate(ClassLoader classloader);
+
 	//Qualifier getQualifier();
 
 	String getName();

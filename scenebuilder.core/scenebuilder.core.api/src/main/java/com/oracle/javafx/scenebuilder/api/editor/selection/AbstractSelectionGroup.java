@@ -38,9 +38,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.api.job.Job;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
+import com.oracle.javafx.scenebuilder.om.api.OMObject;
 
 import javafx.scene.Node;
 
@@ -49,16 +49,15 @@ import javafx.scene.Node;
  *
  */
 public abstract class AbstractSelectionGroup implements SelectionGroup {
-    protected final Set<FXOMObject> items = new HashSet<>();
 
     @Override
-    public abstract FXOMObject getHitItem();
+    public abstract OMObject getHitItem();
     @Override
-    public abstract FXOMObject getAncestor();
+    public abstract OMObject getAncestor();
     @Override
-    public abstract boolean isValid(FXOMDocument fxomDocument);
+    public abstract boolean isValid(OMDocument fxomDocument);
     @Override
-    public abstract List<FXOMObject> getSiblings();
+    public abstract List<? extends OMObject> getSiblings();
 
     @Override
     public AbstractSelectionGroup clone() throws CloneNotSupportedException
@@ -67,15 +66,15 @@ public abstract class AbstractSelectionGroup implements SelectionGroup {
     }
 
     @Override
-    public Set<FXOMObject> getItems() {
-        return Collections.unmodifiableSet(items);
-    }
+    public abstract Set<? extends OMObject> getItems();
 
-    protected abstract Node getCheckedHitNode();
-    protected abstract Job makeDeleteJob();
-    protected abstract AbstractSelectionGroup toggle(AbstractSelectionGroup toggleGroup);
-    protected abstract boolean isSelected(AbstractSelectionGroup group);
-    protected abstract boolean isMovable();
-
+    @Override
+    public abstract Node getCheckedHitNode();
+    @Override
+    public abstract Job makeDeleteJob();
+    @Override
+    public abstract SelectionGroup toggle(SelectionGroup toggleGroup);
+    @Override
+    public abstract boolean isSelected(SelectionGroup group);
 
 }

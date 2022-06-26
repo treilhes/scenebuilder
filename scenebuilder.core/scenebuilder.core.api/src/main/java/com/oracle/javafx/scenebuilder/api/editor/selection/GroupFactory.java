@@ -36,10 +36,13 @@ package com.oracle.javafx.scenebuilder.api.editor.selection;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
 
-public class GroupFactory<T extends AbstractSelectionGroup> extends AbstractFactory<T> {
+public abstract class GroupFactory<T extends AbstractSelectionGroup> extends AbstractFactory<T> {
 
     public GroupFactory(SceneBuilderBeanFactory sbContext) {
         super(sbContext);
     }
+
+    public abstract <U extends Group> SelectionGroup getGroup(U group);
+
 
 }

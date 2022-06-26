@@ -7,7 +7,7 @@ open module scenebuilder.ext.welcome {
     exports com.oracle.javafx.scenebuilder.welcome.controller;
 
     requires scenebuilder.starter;
-    requires transitive scenebuilder.core.api;
+    requires transitive scenebuilder.fxml.api;
     requires transitive scenebuilder.core.extension.api;
     requires scenebuilder.ext.templates;
     requires scenebuilder.core.filesystem;

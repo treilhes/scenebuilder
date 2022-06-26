@@ -37,11 +37,11 @@ import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.scenebuilder.fxml.api.HierarchyMask;
+import org.scenebuilder.fxml.api.HierarchyMask.Accessory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.HierarchyMask;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;

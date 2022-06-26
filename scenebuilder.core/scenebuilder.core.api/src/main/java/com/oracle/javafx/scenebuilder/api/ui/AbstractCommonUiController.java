@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 import com.oracle.javafx.scenebuilder.api.di.FxmlController;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
+import com.oracle.javafx.scenebuilder.api.tooltheme.ToolStylesheetProvider;
 import com.oracle.javafx.scenebuilder.util.NodeUtils;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
@@ -64,7 +64,7 @@ public abstract class AbstractCommonUiController  {
     private Parent panelRoot;
 
     /** The tool stylesheet config. */
-    private StylesheetProvider toolStylesheetConfig;
+    private ToolStylesheetProvider toolStylesheetConfig;
 
     /**
      * Base constructor for invocation by the subclasses.
@@ -139,7 +139,7 @@ public abstract class AbstractCommonUiController  {
      *
      * @param newToolStylesheetConfig null or the new style sheet configuration to apply
      */
-    protected void toolStylesheetDidChange(StylesheetProvider newToolStylesheetConfig) {
+    protected void toolStylesheetDidChange(ToolStylesheetProvider newToolStylesheetConfig) {
 
         if (this.getClass().getName().contains("HierarchyPanelController")) {
             System.out.println();

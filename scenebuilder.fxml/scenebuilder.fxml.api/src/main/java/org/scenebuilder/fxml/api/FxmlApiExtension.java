@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,19 +37,42 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import org.scenebuilder.fxml.api.i18n.I18NFxmlApi;
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager.FxmlDocumentManagerImpl;
+
+import com.oracle.javafx.scenebuilder.api.content.ModeManagerController;
+import com.oracle.javafx.scenebuilder.api.control.driver.DriverExtensionRegistry;
+import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
+import com.oracle.javafx.scenebuilder.api.control.inlineedit.SimilarInlineEditorBounds;
+import com.oracle.javafx.scenebuilder.api.control.pickrefiner.NoPickRefiner;
+import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.fxml.preferences.global.ParentRingColorPreference;
 
 public class FxmlApiExtension extends AbstractExtension {
     @Override
     public UUID getId() {
         return UUID.fromString("06ae1f67-a8aa-49e3-abb5-4f108534578c");
     }
-    
+
     @Override
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
+                ParentRingColorPreference.class,
+                DesignHierarchyMask.class,
+                DesignHierarchyMask.Factory.class,
+
+                DriverExtensionRegistry.class,
+                GenericDriver.class,
+
+                ModeManagerController.class,
+
+                NoPickRefiner.class,
+
+                SimilarInlineEditorBounds.class,
+
+                FxmlDocumentManagerImpl.class,
                 I18NFxmlApi.class
             );
      // @formatter:on

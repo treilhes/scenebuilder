@@ -1,0 +1,45 @@
+<configuration>
+    <appender name="TIME_BASED_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${java.io.tmpdir}/scenebuilder-${version}.log</file>
+        <immediateFlush>false</immediateFlush>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${java.io.tmpdir}/scenebuilder-${version}.%i.%d{yyyy-MM-dd-HH-mm}.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>10</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{HH:mm:ss.SSS} [%thread][%X{scope}] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread][%X{scope}] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="async" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="TIME_BASED_FILE" />
+        <appender-ref ref="STDOUT" />
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>256</queueSize>
+        <neverBlock>false</neverBlock>
+        <includeCallerData>false</includeCallerData>
+    </appender>
+
+    <logger name="com.oracle.javafx.scenebuilder.ui.inlineedit" level="ERROR"/>
+    <logger name="com.oracle.javafx.scenebuilder.document.hierarchy" level="ERROR"/>
+    <logger name="com.oracle.javafx.scenebuilder.document.info" level="ERROR"/>
+    <logger name="com.oracle.javafx.scenebuilder.api.action" level="ERROR"/>
+    <logger name="com.oracle.javafx.scenebuilder.core.accelerator" level="ERROR"/>
+    <logger name="com.oracle.javafx.scenebuilder.ui" level="ERROR"/>
+
+    <root level="ERROR">
+        <!-- <appender-ref ref="async" /> -->
+        <appender-ref ref="TIME_BASED_FILE" />
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>

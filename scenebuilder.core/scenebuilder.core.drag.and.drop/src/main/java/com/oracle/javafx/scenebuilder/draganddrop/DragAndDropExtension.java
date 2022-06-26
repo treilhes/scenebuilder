@@ -38,10 +38,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.draganddrop.controller.DragController;
-import com.oracle.javafx.scenebuilder.draganddrop.droptarget.AccessoryDropTarget;
-import com.oracle.javafx.scenebuilder.draganddrop.droptarget.ContainerXYDropTarget;
-import com.oracle.javafx.scenebuilder.draganddrop.droptarget.ContainerZDropTargetBck;
-import com.oracle.javafx.scenebuilder.draganddrop.droptarget.RootDropTarget;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class DragAndDropExtension extends AbstractExtension {
@@ -54,15 +50,7 @@ public class DragAndDropExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-                AccessoryDropTarget.class,
-                AccessoryDropTarget.Factory.class,
-                ContainerXYDropTarget.class,
-                ContainerXYDropTarget.Factory.class,
-                ContainerZDropTargetBck.class,
-                ContainerZDropTargetBck.Factory.class,
-                DragController.class,
-                RootDropTarget.class,
-                RootDropTarget.Factory.class
+                DragController.class
             );
      // @formatter:on
     }

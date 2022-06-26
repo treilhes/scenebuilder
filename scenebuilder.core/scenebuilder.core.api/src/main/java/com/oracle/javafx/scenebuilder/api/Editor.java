@@ -64,10 +64,6 @@ public interface Editor {
 
     public ObservableValue<Boolean> pickModeEnabledProperty();
 
-//    public void textEditingSessionDidBegin(Callback<Void, Boolean> requestSessionEnd);
-//
-//    public void textEditingSessionDidEnd();
-
     public String getFxmlText(boolean wildcardImports);
 
     public void initialize();

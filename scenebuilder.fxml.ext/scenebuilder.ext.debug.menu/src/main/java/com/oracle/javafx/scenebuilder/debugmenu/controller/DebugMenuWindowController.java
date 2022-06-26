@@ -36,6 +36,7 @@ package com.oracle.javafx.scenebuilder.debugmenu.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -44,7 +45,6 @@ import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
@@ -70,13 +70,13 @@ public class DebugMenuWindowController extends AbstractFxmlWindowController {
     private FXOMDocument fxomDocument;
     private String documentName;
     private boolean dirty = false;
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
 
     public DebugMenuWindowController(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
             DocumentWindow document,
-            DocumentManager documentManager
+            FxmlDocumentManager documentManager
             ) {
         super(sceneBuilderManager, iconSetting, DebugMenuWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle(),
                 document); // NOI18N

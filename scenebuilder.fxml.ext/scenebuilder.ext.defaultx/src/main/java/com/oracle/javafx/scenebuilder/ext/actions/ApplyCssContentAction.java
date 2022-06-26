@@ -36,6 +36,7 @@ package com.oracle.javafx.scenebuilder.ext.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +45,6 @@ import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 
 @Component
@@ -54,9 +54,9 @@ public class ApplyCssContentAction extends AbstractAction implements InitWithDoc
 
     private ApplyCssContentConfig config;
 
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
 
-    public ApplyCssContentAction(ActionExtensionFactory extensionFactory, DocumentManager documentManager) {
+    public ApplyCssContentAction(ActionExtensionFactory extensionFactory, FxmlDocumentManager documentManager) {
         super(extensionFactory);
         this.documentManager = documentManager;
     }

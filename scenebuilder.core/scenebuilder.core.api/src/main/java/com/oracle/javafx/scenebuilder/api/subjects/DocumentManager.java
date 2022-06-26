@@ -34,16 +34,14 @@
 package com.oracle.javafx.scenebuilder.api.subjects;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
-import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractCommonUiController;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
 
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.ReplaySubject;
@@ -66,32 +64,28 @@ public interface DocumentManager {
      * The document has been closed if true
      */
     SubjectItem<Boolean> closed();
-    /**
-     * The current stylesheet configuration has changed.
-     * Because:<br/>
-     * - A userAgentStylesheet file has been set
-     * - A stylesheet file has been added
-     * - A stylesheet file has been removed
-     */
-    SubjectItem<StylesheetProvider> stylesheetConfig();
-    /**
-     * The current i18n configuration has changed.
-     * Because:<br/>
-     * - A property file has been added
-     * - A property file has been removed
-     */
-    SubjectItem<I18nResourceProvider> i18nResourceConfig();
+//    /**
+//     * The current stylesheet configuration has changed.
+//     * Because:<br/>
+//     * - A userAgentStylesheet file has been set
+//     * - A stylesheet file has been added
+//     * - A stylesheet file has been removed
+//     */
+//    SubjectItem<StylesheetProvider> stylesheetConfig();
+//    /**
+//     * The current i18n configuration has changed.
+//     * Because:<br/>
+//     * - A property file has been added
+//     * - A property file has been removed
+//     */
+//    SubjectItem<I18nResourceProvider> i18nResourceConfig();
     /**
      * The current fxomDocument has changed.
      * Because:<br/>
      * - An empty document is loaded
      * - An FXML file is loaded
      */
-    SubjectItem<FXOMDocument> fxomDocument();
-    /**
-     * The currently selected objects have changed.
-     */
-    SubjectItem<SelectionState> selectionDidChange();
+    SubjectItem<OMDocument> omDocument();
 
     /**
      * Revision is incremented each time the fxom document rebuilds the
@@ -102,11 +96,11 @@ public interface DocumentManager {
      * Revision is incremented each time the fxom document forces FX to
      * reload its stylesheets.
      */
-    SubjectItem<Integer> cssRevisionDidChange();
-//    /**
-//     * The current classloader has changed.
-//     */
-//    SubjectItem<ClassLoader> classLoaderDidChange();
+    //SubjectItem<Integer> cssRevisionDidChange();
+    /**
+     * The current classloader has changed.
+     */
+    SubjectItem<ClassLoader> classLoaderDidChange();
     /**
      * The main cycle of dependency injection loading is done
      * The document's dependencies have been loaded if true
@@ -118,6 +112,7 @@ public interface DocumentManager {
 
     @Component
     @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+    @Primary
     public class DocumentManagerImpl implements InitializingBean, DocumentManager {
 
         private DocumentSubjects subjects;
@@ -126,20 +121,20 @@ public interface DocumentManager {
         private final SubjectItem<Boolean> saved;
         private final SubjectItem<Boolean> closed;
         private final SubjectItem<Boolean> dependenciesLoaded;
-        private final SubjectItem<StylesheetProvider> stylesheetConfig;
-        private final SubjectItem<I18nResourceProvider> i18nResourceConfig;
-        private final SubjectItem<FXOMDocument> fxomDocument;
-        private final SubjectItem<SelectionState> selectionDidChange;
+        //private final SubjectItem<StylesheetProvider> stylesheetConfig;
+        //private final SubjectItem<I18nResourceProvider> i18nResourceConfig;
+        private final SubjectItem<OMDocument> omDocument;
+        //private final SubjectItem<SelectionState> selectionDidChange;
         private final SubjectItem<Integer> sceneGraphRevisionDidChange;
-        private final SubjectItem<Integer> cssRevisionDidChange;
+        //private final SubjectItem<Integer> cssRevisionDidChange;
         private final SubjectItem<ClassLoader> classLoaderDidChange;
         private final SubjectItem<AbstractCommonUiController> focused;
         private final SubjectItem<AbstractFxmlViewController> focusedView;
 
         private ChangeListener<? super Number> sceneGraphRevisionChangeListener =
                 (ob, o, n) -> sceneGraphRevisionDidChange().set(n.intValue());
-        private ChangeListener<? super Number> cssRevisionChangeListener =
-                (ob, o, n) -> cssRevisionDidChange().set(n.intValue());
+//        private ChangeListener<? super Number> cssRevisionChangeListener =
+//                (ob, o, n) -> cssRevisionDidChange().set(n.intValue());
 
         public DocumentManagerImpl() {
             subjects = new DocumentSubjects();
@@ -148,24 +143,24 @@ public interface DocumentManager {
             saved = new SubjectItem<Boolean>(subjects.getSaved()).set(false);
             closed = new SubjectItem<Boolean>(subjects.getClosed());
             dependenciesLoaded = new SubjectItem<Boolean>(subjects.getDependenciesLoaded()).set(false);
-            stylesheetConfig = new SubjectItem<StylesheetProvider>(subjects.getStylesheetConfig());
-            i18nResourceConfig = new SubjectItem<I18nResourceProvider>(subjects.getI18nResourceConfig());
+            //stylesheetConfig = new SubjectItem<StylesheetProvider>(subjects.getStylesheetConfig());
+            //i18nResourceConfig = new SubjectItem<I18nResourceProvider>(subjects.getI18nResourceConfig());
 
-            fxomDocument = new SubjectItem<FXOMDocument>(subjects.getFxomDocument(),
+            omDocument = new SubjectItem<OMDocument>(subjects.getFxomDocument(),
                     (o, n) -> {
                         if (o != null) {
                             o.sceneGraphRevisionProperty().removeListener(sceneGraphRevisionChangeListener);
-                            o.cssRevisionProperty().removeListener(cssRevisionChangeListener);
+                            //o.cssRevisionProperty().removeListener(cssRevisionChangeListener);
                         }
                         if (n != null) {
                             n.sceneGraphRevisionProperty().addListener(sceneGraphRevisionChangeListener);
-                            n.cssRevisionProperty().addListener(cssRevisionChangeListener);
+                            //n.cssRevisionProperty().addListener(cssRevisionChangeListener);
                         }
                     });
 
-            selectionDidChange = new SubjectItem<SelectionState>(subjects.getSelectionState());
+            //selectionDidChange = new SubjectItem<SelectionState>(subjects.getSelectionState());
             sceneGraphRevisionDidChange = new SubjectItem<Integer>(subjects.getSceneGraphRevisionDidChange());
-            cssRevisionDidChange = new SubjectItem<Integer>(subjects.getCssRevisionDidChange());
+            //cssRevisionDidChange = new SubjectItem<Integer>(subjects.getCssRevisionDidChange());
             classLoaderDidChange = new SubjectItem<ClassLoader>(subjects.getClassLoaderDidChange());
             focused = new SubjectItem<AbstractCommonUiController>(subjects.getFocused());
             focusedView = new SubjectItem<AbstractFxmlViewController>(subjects.getFocusedView());
@@ -190,40 +185,40 @@ public interface DocumentManager {
             return closed;
         }
 
-        @Override
-        public SubjectItem<StylesheetProvider> stylesheetConfig() {
-            return stylesheetConfig;
-        }
+//        @Override
+//        public SubjectItem<StylesheetProvider> stylesheetConfig() {
+//            return stylesheetConfig;
+//        }
+//
+//        @Override
+//        public SubjectItem<I18nResourceProvider> i18nResourceConfig() {
+//            return i18nResourceConfig;
+//        }
 
         @Override
-        public SubjectItem<I18nResourceProvider> i18nResourceConfig() {
-            return i18nResourceConfig;
+        public SubjectItem<OMDocument> omDocument() {
+            return omDocument;
         }
 
-        @Override
-        public SubjectItem<FXOMDocument> fxomDocument() {
-            return fxomDocument;
-        }
-
-        @Override
-        public SubjectItem<SelectionState> selectionDidChange() {
-            return selectionDidChange;
-        }
+//        @Override
+//        public SubjectItem<SelectionState> selectionDidChange() {
+//            return selectionDidChange;
+//        }
 
         @Override
         public SubjectItem<Integer> sceneGraphRevisionDidChange() {
             return sceneGraphRevisionDidChange;
         }
 
-        @Override
-        public SubjectItem<Integer> cssRevisionDidChange() {
-            return cssRevisionDidChange;
-        }
-
 //        @Override
-//        public SubjectItem<ClassLoader> classLoaderDidChange() {
-//            return classLoaderDidChange;
+//        public SubjectItem<Integer> cssRevisionDidChange() {
+//            return cssRevisionDidChange;
 //        }
+
+        @Override
+        public SubjectItem<ClassLoader> classLoaderDidChange() {
+            return classLoaderDidChange;
+        }
 
         @Override
         public SubjectItem<Boolean> dependenciesLoaded() {
@@ -247,13 +242,13 @@ public interface DocumentManager {
         private ReplaySubject<Boolean> saved;
         private ReplaySubject<Boolean> closed;
         private ReplaySubject<Boolean> dependenciesLoaded;
-        private ReplaySubject<StylesheetProvider> stylesheetConfig;
-        private ReplaySubject<I18nResourceProvider> i18nResourceConfig;
-        private ReplaySubject<FXOMDocument> fxomDocument;
-        private PublishSubject<SelectionState> selectionState;
+        //private ReplaySubject<StylesheetProvider> stylesheetConfig;
+        //private ReplaySubject<I18nResourceProvider> i18nResourceConfig;
+        private ReplaySubject<OMDocument> omDocument;
+        //private PublishSubject<SelectionState> selectionState;
 
         private PublishSubject<Integer> sceneGraphRevisionDidChange;
-        private PublishSubject<Integer> cssRevisionDidChange;
+        //private PublishSubject<Integer> cssRevisionDidChange;
         private ReplaySubject<ClassLoader> classLoaderDidChange;
 
         private ReplaySubject<AbstractCommonUiController> focused;
@@ -264,15 +259,15 @@ public interface DocumentManager {
             saved = wrap(DocumentSubjects.class, "saved", ReplaySubject.create(1)); // NOI18N
             closed = wrap(DocumentSubjects.class, "closed", ReplaySubject.create(1)); // NOI18N
             dependenciesLoaded = wrap(DocumentSubjects.class, "dependenciesLoaded", ReplaySubject.create(1)); // NOI18N
-            stylesheetConfig = wrap(DocumentSubjects.class, "stylesheetConfig", ReplaySubject.create(1)); // NOI18N
-            i18nResourceConfig = wrap(DocumentSubjects.class, "i18nResourceConfig", ReplaySubject.create(1)); // NOI18N
-            fxomDocument = wrap(DocumentSubjects.class, "fxomDocument", ReplaySubject.create(1)); // NOI18N
-            selectionState = wrap(DocumentSubjects.class, "selectionState", PublishSubject.create()); // NOI18N
+//            stylesheetConfig = wrap(DocumentSubjects.class, "stylesheetConfig", ReplaySubject.create(1)); // NOI18N
+//            i18nResourceConfig = wrap(DocumentSubjects.class, "i18nResourceConfig", ReplaySubject.create(1)); // NOI18N
+            omDocument = wrap(DocumentSubjects.class, "omDocument", ReplaySubject.create(1)); // NOI18N
+            //selectionState = wrap(DocumentSubjects.class, "selectionState", PublishSubject.create()); // NOI18N
             classLoaderDidChange = wrap(DocumentSubjects.class, "classLoaderDidChange", ReplaySubject.create(1)); // NOI18N
 
             sceneGraphRevisionDidChange = wrap(DocumentSubjects.class, "sceneGraphRevisionDidChange", // NOI18N
                     PublishSubject.create());
-            cssRevisionDidChange = wrap(DocumentSubjects.class, "cssRevisionDidChange", PublishSubject.create()); // NOI18N
+//            cssRevisionDidChange = wrap(DocumentSubjects.class, "cssRevisionDidChange", PublishSubject.create()); // NOI18N
             focused = wrap(DocumentSubjects.class, "focused", ReplaySubject.create(1)); // NOI18N
             focusedView = wrap(DocumentSubjects.class, "focusedView", ReplaySubject.create(1)); // NOI18N
         }
@@ -293,29 +288,29 @@ public interface DocumentManager {
             return dependenciesLoaded;
         }
 
-        public ReplaySubject<StylesheetProvider> getStylesheetConfig() {
-            return stylesheetConfig;
+//        public ReplaySubject<StylesheetProvider> getStylesheetConfig() {
+//            return stylesheetConfig;
+//        }
+//
+//        public ReplaySubject<I18nResourceProvider> getI18nResourceConfig() {
+//            return i18nResourceConfig;
+//        }
+
+        public ReplaySubject<OMDocument> getFxomDocument() {
+            return omDocument;
         }
 
-        public ReplaySubject<I18nResourceProvider> getI18nResourceConfig() {
-            return i18nResourceConfig;
-        }
-
-        public ReplaySubject<FXOMDocument> getFxomDocument() {
-            return fxomDocument;
-        }
-
-        public PublishSubject<SelectionState> getSelectionState() {
-            return selectionState;
-        }
+//        public PublishSubject<SelectionState> getSelectionState() {
+//            return selectionState;
+//        }
 
         public PublishSubject<Integer> getSceneGraphRevisionDidChange() {
             return sceneGraphRevisionDidChange;
         }
 
-        public PublishSubject<Integer> getCssRevisionDidChange() {
-            return cssRevisionDidChange;
-        }
+//        public PublishSubject<Integer> getCssRevisionDidChange() {
+//            return cssRevisionDidChange;
+//        }
 
         public ReplaySubject<ClassLoader> getClassLoaderDidChange() {
             return classLoaderDidChange;

@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.tools.driver.scene;
 
 import java.util.List;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +43,6 @@ import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
@@ -60,7 +60,7 @@ public class ScenePring extends AbstractNodePring<Node> {
     public ScenePring(
             SelectWithPringGesture.Factory selectWithPringGestureFactory,
             Content contentPanelController,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             DesignHierarchyMask.Factory maskFactory) {
         super( contentPanelController, documentManager, selectWithPringGestureFactory, Node.class);
         this.maskFactory = maskFactory;

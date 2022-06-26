@@ -36,7 +36,8 @@ package com.oracle.javafx.scenebuilder.document.hierarchy.item;
 import java.net.URL;
 import java.util.Objects;
 
-import com.oracle.javafx.scenebuilder.api.HierarchyMask;
+import org.scenebuilder.fxml.api.HierarchyMask;
+
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;

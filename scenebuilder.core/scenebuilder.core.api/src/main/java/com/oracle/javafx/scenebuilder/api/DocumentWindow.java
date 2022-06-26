@@ -52,6 +52,24 @@ public interface DocumentWindow extends SceneBuilderWindow {
     void setContentPane(Parent root);
     void setMessageBar(Parent root);
     void updateStageTitle();
+    void apply();
+    void track();
+    void untrack();
+
+    /**
+     * @return
+     */
+    Dock getLeftDock();
+
+    /**
+     * @return
+     */
+    Dock getRightDock();
+
+    /**
+     * @return
+     */
+    Dock getBottomDock();
 
 
 
@@ -78,43 +96,5 @@ public interface DocumentWindow extends SceneBuilderWindow {
         }
 
     }
-    void apply();
-    void track();
-    void untrack();
-
-//    /**
-//     *
-//     */
-//    void toggleMinimizedLeft();
-//
-//    /**
-//     *
-//     */
-//    void toggleMinimizedRight();
-//
-//    /**
-//     *
-//     */
-//    void toggleMinimizedBottom();
-
-    /**
-     * @return
-     */
-    Dock getLeftDock();
-
-    /**
-     * @return
-     */
-    Dock getRightDock();
-
-    /**
-     * @return
-     */
-    Dock getBottomDock();
-
-//    /**
-//     *
-//     */
-//    BooleanProperty leftDockVisibleProperty();
 
 }

@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Document;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
+import com.oracle.javafx.scenebuilder.api.tooltheme.ToolStylesheetProvider;
 
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.ReplaySubject;
@@ -57,7 +57,7 @@ public interface SceneBuilderManager {
 
     Subject<Document> documentScoped();
 
-    Subject<StylesheetProvider> stylesheetConfig();
+    Subject<ToolStylesheetProvider> stylesheetConfig();
 
     SubjectItem<ClassLoader> classloader();
 
@@ -81,7 +81,7 @@ public interface SceneBuilderManager {
         }
 
         @Override
-        public Subject<StylesheetProvider> stylesheetConfig() {
+        public Subject<ToolStylesheetProvider> stylesheetConfig() {
             return subjects.getStylesheetConfig();
         }
 
@@ -118,7 +118,7 @@ public interface SceneBuilderManager {
 
     public class SceneBuilderSubjects extends SubjectManager {
 
-        private ReplaySubject<StylesheetProvider> stylesheetConfig;
+        private ReplaySubject<ToolStylesheetProvider> stylesheetConfig;
         private PublishSubject<Boolean> closed;
         private PublishSubject<Document> documentOpened;
         private PublishSubject<Document> documentClosed;
@@ -136,7 +136,7 @@ public interface SceneBuilderManager {
             classloader = wrap(SceneBuilderSubjects.class, "classloader", ReplaySubject.create(1)); // NOI18N
         }
 
-        public ReplaySubject<StylesheetProvider> getStylesheetConfig() {
+        public ReplaySubject<ToolStylesheetProvider> getStylesheetConfig() {
             return stylesheetConfig;
         }
 

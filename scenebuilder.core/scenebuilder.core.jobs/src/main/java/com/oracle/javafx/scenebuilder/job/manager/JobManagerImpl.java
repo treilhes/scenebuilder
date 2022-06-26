@@ -42,11 +42,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.JobManager;
+import com.oracle.javafx.scenebuilder.api.job.JobPipeline;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.job.editor.reference.UpdateReferencesJob;
+
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -56,7 +57,6 @@ import javafx.beans.property.SimpleIntegerProperty;
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
 public class JobManagerImpl implements JobManager {
 
 	private static final int UNDO_STACK_MAX_SIZE = 50;
@@ -67,19 +67,19 @@ public class JobManagerImpl implements JobManager {
     private final SimpleIntegerProperty revision = new SimpleIntegerProperty();
     private boolean lock;
 
-    private final UpdateReferencesJob.Factory updateReferencesJobFactory;
+    private final JobPipeline jobPipeline;
 
 
     public JobManagerImpl(
-    		@Autowired DocumentManager documentManager,
-    		@Autowired UpdateReferencesJob.Factory updateReferencesJobFactory) {
+    		DocumentManager documentManager,
+    		@Autowired(required = false) JobPipeline jobPipeline) {
 
-        this.updateReferencesJobFactory = updateReferencesJobFactory;
+        this.jobPipeline = jobPipeline;
         this.undoStackMaxSize = UNDO_STACK_MAX_SIZE;
 
         revision.addListener((ob,o,n) -> documentManager.dirty().set(true));
 
-        documentManager.fxomDocument().subscribe(fxom -> clear());
+        documentManager.omDocument().subscribe(om -> clear());
     }
 
 
@@ -103,7 +103,7 @@ public class JobManagerImpl implements JobManager {
             throw new IllegalStateException("Pushing jobs from another job or a job manager listener is forbidden"); //NOCHECK
         }
 
-        final AbstractJob fixJob = updateReferencesJobFactory.getJob(job);
+        final AbstractJob fixJob = jobPipeline.buildPipeline(job);
         executeJob(fixJob);
         undoStack.add(0, fixJob);
         if (undoStack.size() > undoStackMaxSize) {

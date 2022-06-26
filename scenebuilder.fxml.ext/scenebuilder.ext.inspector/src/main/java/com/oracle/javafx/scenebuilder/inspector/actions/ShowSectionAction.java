@@ -33,12 +33,12 @@
  */
 package com.oracle.javafx.scenebuilder.inspector.actions;
 
+import org.scenebuilder.fxml.api.Inspector;
+import org.scenebuilder.fxml.api.Inspector.SectionId;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Inspector;
-import com.oracle.javafx.scenebuilder.api.Inspector.SectionId;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;

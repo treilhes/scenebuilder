@@ -38,6 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -46,11 +47,10 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.ContextMenu;
 import com.oracle.javafx.scenebuilder.api.InlineEdit;
-import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
@@ -86,7 +86,7 @@ public class HierarchyController implements Hierarchy {
 
     public static final String CSS_CLASS_HIERARCHY_PROMPT_LABEL = "hierarchy-prompt-label";
 
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
     private final Selection selection;
     private final InlineEdit inlineEdit;
     private final TreeItemFactory rootTreeItemFactory;
@@ -114,7 +114,7 @@ public class HierarchyController implements Hierarchy {
 
     public HierarchyController(
             ContextMenu contextMenu,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             HierarchyCellAssignment cellAssignments,
             HierarchyDNDController dndController,
             HierarchyParentRing parentRing,

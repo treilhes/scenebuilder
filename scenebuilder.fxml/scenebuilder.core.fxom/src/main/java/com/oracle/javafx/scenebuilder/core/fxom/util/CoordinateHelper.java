@@ -34,6 +34,7 @@
 package com.oracle.javafx.scenebuilder.core.fxom.util;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.om.api.SceneGraphObject;
 import com.sun.javafx.geometry.BoundsUtils;
 import com.sun.javafx.scene.NodeHelper;
 import com.sun.javafx.scene.SceneUtils;
@@ -46,11 +47,12 @@ import javafx.scene.SubScene;
 import javafx.scene.transform.Transform;
 
 /**
- * This class has been created has a workaround for the issue :
- * JDK-8262116 : Nodes used as clip or shape return invalid result for sceneToLocal/localToScene
- * When calculating position for nodes used as clip or as shape, the lack of parent
- * (getParent() return null) cause a calculation error. This class aims to solve this problem
- * until a valid fix is available
+ * This class has been created has a workaround for the issue : JDK-8262116 :
+ * Nodes used as clip or shape return invalid result for
+ * sceneToLocal/localToScene When calculating position for nodes used as clip or
+ * as shape, the lack of parent (getParent() return null) cause a calculation
+ * error. This class aims to solve this problem until a valid fix is available
+ *
  * @author ptreilhes
  */
 public class CoordinateHelper {
@@ -69,9 +71,11 @@ public class CoordinateHelper {
     }
 
     public static Point3D localToScene(FXOMObject fxomObject, Point3D localPoint) {
-        Node thisNode = (Node)fxomObject.getSceneGraphObject();
+        Node thisNode = fxomObject.getSceneGraphObject().getAs(Node.class);
         Point3D sceneXY = thisNode.localToParent(localPoint);
-        if (fxomObject.getParentObject() != null  && !(fxomObject.getParentObject().getSceneGraphObject() instanceof SubScene)) {
+
+        if (fxomObject.getParentObject() != null
+                && !(fxomObject.getParentObject().getSceneGraphObject().isInstanceOf(SubScene.class))) {
             sceneXY = localToScene(fxomObject.getParentObject(), sceneXY);
         }
         return sceneXY;
@@ -86,15 +90,18 @@ public class CoordinateHelper {
         return localToScene(fxomObject, localPoint.getX(), localPoint.getY(), rootScene);
     }
 
-    public static Point3D localToScene(FXOMObject fxomObject, double localX, double localY, double localZ, boolean rootScene) {
+    public static Point3D localToScene(FXOMObject fxomObject, double localX, double localY, double localZ,
+            boolean rootScene) {
         return localToScene(fxomObject, new Point3D(localX, localY, localZ), rootScene);
     }
 
     public static Point3D localToScene(FXOMObject fxomObject, Point3D localPoint, boolean rootScene) {
         Point3D sceneXY = localToScene(fxomObject, localPoint);
         if (rootScene) {
-            final SubScene subScene = NodeHelper.getSubScene((Node)fxomObject.getClosestMainGraphNode().getSceneGraphObject());
-            //final SubScene subScene = NodeHelper.getSubScene((Node)fxomObject.getSceneGraphObject());
+            final SubScene subScene = NodeHelper
+                    .getSubScene(fxomObject.getClosestMainGraphNode().getSceneGraphObject().getAs(Node.class));
+            // final SubScene subScene =
+            // NodeHelper.getSubScene((Node)fxomObject.getSceneGraphObject());
             if (subScene != null) {
                 sceneXY = SceneUtils.subSceneToScene(subScene, sceneXY);
             }
@@ -103,9 +110,10 @@ public class CoordinateHelper {
     }
 
     public static Bounds localToScene(FXOMObject fxomObject, Bounds bounds) {
-        Node thisNode = (Node)fxomObject.getSceneGraphObject();
+        Node thisNode = fxomObject.getSceneGraphObject().getAs(Node.class);
         Bounds newBounds = thisNode.localToParent(bounds);
-        if (fxomObject.getParentObject() != null && !(fxomObject.getParentObject().getSceneGraphObject() instanceof SubScene)) {
+        if (fxomObject.getParentObject() != null
+                && !(fxomObject.getParentObject().getSceneGraphObject().isInstanceOf(SubScene.class))) {
             newBounds = localToScene(fxomObject.getParentObject(), newBounds);
         }
         return newBounds;
@@ -115,14 +123,22 @@ public class CoordinateHelper {
         if (!rootScene) {
             return localToScene(fxomObject, localBounds);
         }
-        Point3D p1 = localToScene(fxomObject, localBounds.getMinX(), localBounds.getMinY(), localBounds.getMinZ(), true);
-        Point3D p2 = localToScene(fxomObject, localBounds.getMinX(), localBounds.getMinY(), localBounds.getMaxZ(), true);
-        Point3D p3 = localToScene(fxomObject, localBounds.getMinX(), localBounds.getMaxY(), localBounds.getMinZ(), true);
-        Point3D p4 = localToScene(fxomObject, localBounds.getMinX(), localBounds.getMaxY(), localBounds.getMaxZ(), true);
-        Point3D p5 = localToScene(fxomObject, localBounds.getMaxX(), localBounds.getMaxY(), localBounds.getMinZ(), true);
-        Point3D p6 = localToScene(fxomObject, localBounds.getMaxX(), localBounds.getMaxY(), localBounds.getMaxZ(), true);
-        Point3D p7 = localToScene(fxomObject, localBounds.getMaxX(), localBounds.getMinY(), localBounds.getMinZ(), true);
-        Point3D p8 = localToScene(fxomObject, localBounds.getMaxX(), localBounds.getMinY(), localBounds.getMaxZ(), true);
+        Point3D p1 = localToScene(fxomObject, localBounds.getMinX(), localBounds.getMinY(), localBounds.getMinZ(),
+                true);
+        Point3D p2 = localToScene(fxomObject, localBounds.getMinX(), localBounds.getMinY(), localBounds.getMaxZ(),
+                true);
+        Point3D p3 = localToScene(fxomObject, localBounds.getMinX(), localBounds.getMaxY(), localBounds.getMinZ(),
+                true);
+        Point3D p4 = localToScene(fxomObject, localBounds.getMinX(), localBounds.getMaxY(), localBounds.getMaxZ(),
+                true);
+        Point3D p5 = localToScene(fxomObject, localBounds.getMaxX(), localBounds.getMaxY(), localBounds.getMinZ(),
+                true);
+        Point3D p6 = localToScene(fxomObject, localBounds.getMaxX(), localBounds.getMaxY(), localBounds.getMaxZ(),
+                true);
+        Point3D p7 = localToScene(fxomObject, localBounds.getMaxX(), localBounds.getMinY(), localBounds.getMinZ(),
+                true);
+        Point3D p8 = localToScene(fxomObject, localBounds.getMaxX(), localBounds.getMinY(), localBounds.getMaxZ(),
+                true);
         return BoundsUtils.createBoundingBox(p1, p2, p3, p4, p5, p6, p7, p8);
     }
 
@@ -142,8 +158,10 @@ public class CoordinateHelper {
 
         Point2D tempPt = new Point2D(sceneX, sceneY);
 
-        //final SubScene subScene = NodeHelper.getSubScene((Node)fxomObject.getSceneGraphObject());
-        final SubScene subScene = NodeHelper.getSubScene((Node)fxomObject.getClosestMainGraphNode().getSceneGraphObject());
+        // final SubScene subScene =
+        // NodeHelper.getSubScene((Node)fxomObject.getSceneGraphObject());
+        final SubScene subScene = NodeHelper
+                .getSubScene(fxomObject.getClosestMainGraphNode().getSceneGraphObject().getAs(Node.class));
         if (subScene != null) {
             final Point2D ssCoord = SceneUtils.sceneToSubScenePlane(subScene, tempPt);
             if (ssCoord == null) {
@@ -165,9 +183,9 @@ public class CoordinateHelper {
     }
 
     public static Point3D sceneToLocal(FXOMObject fxomObject, Point3D scenePoint) {
-        Node thisNode = (Node)fxomObject.getSceneGraphObject();
+        Node thisNode = fxomObject.getSceneGraphObject().getAs(Node.class);
         if (fxomObject.getParentObject() != null
-                && !(fxomObject.getParentObject().getSceneGraphObject() instanceof SubScene)) {
+                && !(fxomObject.getParentObject().getSceneGraphObject().isInstanceOf(SubScene.class))) {
             scenePoint = sceneToLocal(fxomObject.getParentObject(), scenePoint);
         }
         return thisNode.parentToLocal(scenePoint);
@@ -201,22 +219,22 @@ public class CoordinateHelper {
     }
 
     public static boolean isHit(FXOMObject fxomObject, double sceneX, double sceneY) {
-        if (fxomObject.isNode()) {
-            Node node = (Node)fxomObject.getSceneGraphObject();
+        SceneGraphObject sgObject = fxomObject.getSceneGraphObject();
+        if (sgObject.isNode()) {
+            Node node = sgObject.getAs(Node.class);
             return localToScene(fxomObject, node.getBoundsInLocal(), true).contains(sceneX, sceneY);
         }
         return false;
     }
 
-
     public static Transform localToSceneTransform(FXOMObject fxomObject) {
 
-        Node node = (Node)fxomObject.getSceneGraphObject();
+        Node node = fxomObject.getSceneGraphObject().getAs(Node.class);
         Transform t = node.getLocalToParentTransform();
 
-        while(fxomObject.getParentObject() != null) {
+        while (fxomObject.getParentObject() != null) {
             fxomObject = fxomObject.getParentObject();
-            node = (Node)fxomObject.getSceneGraphObject();
+            node = fxomObject.getSceneGraphObject().getAs(Node.class);
             t = t.createConcatenation(node.getLocalToParentTransform());
         }
 
@@ -235,14 +253,15 @@ public class CoordinateHelper {
         return target.sceneToLocal(sceneBounds, true /* rootScene */);
     }
 
-    //TODO not deprecated so move this in another class
+    // TODO not deprecated so move this in another class
     public static Point2D localToLocal(FXOMObject source, double sourceX, double sourceY, Node target) {
-        final Point2D sceneXY = CoordinateHelper.localToScene(source, new Point2D(sourceX, sourceY), true /* rootScene */);
+        final Point2D sceneXY = CoordinateHelper.localToScene(source, new Point2D(sourceX, sourceY),
+                true /* rootScene */);
         // Use the CoordinateHelper alternative when created
         return target.sceneToLocal(sceneXY, true /* rootScene */);
     }
 
-    //TODO not deprecated so move this in another class, implementation needed
+    // TODO not deprecated so move this in another class, implementation needed
     public static Bounds localToLocal(FXOMObject source, Bounds sourceBounds, Node target) {
 //        final Bounds sceneBounds = source.localToScene(sourceBounds, true /* rootScene */);
 //        return target.sceneToLocal(sceneBounds, true /* rootScene */);

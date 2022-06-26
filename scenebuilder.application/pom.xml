@@ -72,7 +72,7 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.core.launcher</artifactId>
         </dependency>
-        <!-- Here starts non core dependencies but required for a core start
+        <!-- Here starts non core dependencies but required for a core start-->
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.glossary</artifactId>
@@ -92,11 +92,11 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.preference.editor</artifactId>
+            <artifactId>scenebuilder.core.ext.preference.editor</artifactId>
         </dependency>
-        -->
+        
 
-        <!-- Here starts optional dependencies but transitive
+        <!-- Here starts optional dependencies but transitive-->
 
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
@@ -107,9 +107,9 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.editors</artifactId>
         </dependency>
-        -->
+        
         <!-- Here starts optional dependencies -->
-        <!--
+        <!-- -->
 
 
         <dependency>
@@ -148,7 +148,7 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.extension.library</artifactId>
+            <artifactId>scenebuilder.core.ext.extension.library</artifactId>
         </dependency>
 
         <dependency>
@@ -190,15 +190,15 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.update.manager</artifactId>
+            <artifactId>scenebuilder.core.ext.update.manager</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.log.viewer</artifactId>
+            <artifactId>scenebuilder.core.ext.log.viewer</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.about</artifactId>
+            <artifactId>scenebuilder.core.ext.about</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
@@ -206,7 +206,7 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.scenicview</artifactId>
+            <artifactId>scenebuilder.core.ext.scenicview</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
@@ -224,7 +224,6 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.metadata.javafx15</artifactId>
         </dependency>
--->
 
         <!-- SCRIPT ENGINE javascript START -->
         <!-- https://mvnrepository.com/artifact/org.openjdk.nashorn/nashorn-core -->

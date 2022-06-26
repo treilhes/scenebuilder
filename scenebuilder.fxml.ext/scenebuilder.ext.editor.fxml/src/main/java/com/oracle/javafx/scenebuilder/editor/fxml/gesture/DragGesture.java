@@ -36,25 +36,25 @@ package com.oracle.javafx.scenebuilder.editor.fxml.gesture;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.Drag;
-import com.oracle.javafx.scenebuilder.api.DragSource;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.content.ModeManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
 import com.oracle.javafx.scenebuilder.api.content.mode.Layer;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
-import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.dnd.Drag;
+import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
+import com.oracle.javafx.scenebuilder.api.dnd.DropTarget;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.content.util.BoundsUtils;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -108,14 +108,14 @@ public class DragGesture extends AbstractGesture {
     private final ExternalDragSource.Factory externalDragSourceFactory;
     private final RootDropTarget.Factory rootDropTargetFactory;
 
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
 
     protected DragGesture(
             Content contentPanelController,
             Drag dragController,
             ModeManager modeManager,
             Driver driver,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             DesignHierarchyMask.Factory maskFactory,
             ExternalDragSource.Factory externalDragSourceFactory,
             RootDropTarget.Factory rootDropTargetFactory) {

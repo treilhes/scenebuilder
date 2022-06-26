@@ -91,7 +91,7 @@ open module scenebuilder.ext.controls.tooling {
     requires scenebuilder.core.jobs;
     requires scenebuilder.core.selection;
 //    requires org.slf4j;
-    requires transitive scenebuilder.core.api;
+    requires transitive scenebuilder.fxml.api;
     requires scenebuilder.core.extension.api;
 //    requires spring.beans;
 //    requires spring.context;

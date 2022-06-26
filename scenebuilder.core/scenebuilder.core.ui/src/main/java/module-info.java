@@ -44,9 +44,12 @@ open module scenebuilder.core.layout {
     exports com.oracle.javafx.scenebuilder.ui.message;
     exports com.oracle.javafx.scenebuilder.ui.selectionbar;
 
+    exports com.oracle.javafx.scenebuilder.core.dock;
+    exports com.oracle.javafx.scenebuilder.core.dock.preferences.document;
+
+
     requires scenebuilder.starter;
     requires transitive scenebuilder.core.api;
-    requires transitive scenebuilder.core.core;
     requires scenebuilder.core.extension.api;
     requires scenebuilder.core.filesystem;
     requires scenebuilder.core.selection;

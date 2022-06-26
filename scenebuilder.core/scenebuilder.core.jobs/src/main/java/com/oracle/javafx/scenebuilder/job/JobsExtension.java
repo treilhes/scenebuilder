@@ -39,44 +39,8 @@ import java.util.UUID;
 
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
-import com.oracle.javafx.scenebuilder.job.editor.FitToParentObjectJob;
-import com.oracle.javafx.scenebuilder.job.editor.PrunePropertiesJob;
-import com.oracle.javafx.scenebuilder.job.editor.RelocateSelectionJob;
-import com.oracle.javafx.scenebuilder.job.editor.UseComputedSizesObjectJob;
-import com.oracle.javafx.scenebuilder.job.editor.UsePredefinedSizeJob;
-import com.oracle.javafx.scenebuilder.job.editor.UseSizeJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxControllerJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxIdJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ReIndexObjectJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.RelocateNodeJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.RemoveCollectionItemJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.RemoveFxControllerJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.RemoveNodeJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.RemoveObjectJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyValueJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ReplaceObjectJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ReplacePropertyValueJobT;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.SetFxomRootJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ToggleFxRootJob;
-import com.oracle.javafx.scenebuilder.job.editor.reference.CombineExpressionReferenceJob;
-import com.oracle.javafx.scenebuilder.job.editor.reference.CombineIntrinsicReferenceJob;
-import com.oracle.javafx.scenebuilder.job.editor.reference.CombineReferenceJob;
-import com.oracle.javafx.scenebuilder.job.editor.reference.DeleteRefereeObjectJob;
-import com.oracle.javafx.scenebuilder.job.editor.reference.ExpandExpressionReferenceJob;
-import com.oracle.javafx.scenebuilder.job.editor.reference.ExpandIntrinsicReferenceJob;
-import com.oracle.javafx.scenebuilder.job.editor.reference.ExpandReferenceJob;
-import com.oracle.javafx.scenebuilder.job.editor.reference.FixToggleGroupExpressionReferenceJob;
-import com.oracle.javafx.scenebuilder.job.editor.reference.FixToggleGroupIntrinsicReferenceJob;
-import com.oracle.javafx.scenebuilder.job.editor.reference.FixToggleGroupReferenceJob;
-import com.oracle.javafx.scenebuilder.job.editor.reference.ReferencesUpdaterJob;
-import com.oracle.javafx.scenebuilder.job.editor.reference.UpdateReferencesJob;
 import com.oracle.javafx.scenebuilder.job.manager.JobManagerImpl;
-import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerHeightPreference;
-import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerWidthPreference;
 
 public class JobsExtension extends AbstractExtension {
 
@@ -89,81 +53,11 @@ public class JobsExtension extends AbstractExtension {
     public List<Class<?>> explicitClassToRegister() {
      // @formatter:off
         return Arrays.asList(
-                AddPropertyJob.class,
-                AddPropertyJob.Factory.class,
-                AddPropertyValueJob.class,
-                AddPropertyValueJob.Factory.class,
                 BatchJob.class,
                 BatchJob.Factory.class,
-                CombineExpressionReferenceJob.class,
-                CombineExpressionReferenceJob.Factory.class,
-                CombineIntrinsicReferenceJob.class,
-                CombineIntrinsicReferenceJob.Factory.class,
-                CombineReferenceJob.class,
-                CombineReferenceJob.Factory.class,
-                DeleteRefereeObjectJob.class,
-                DeleteRefereeObjectJob.Factory.class,
-                ExpandExpressionReferenceJob.class,
-                ExpandExpressionReferenceJob.Factory.class,
-                ExpandIntrinsicReferenceJob.class,
-                ExpandIntrinsicReferenceJob.Factory.class,
-                ExpandReferenceJob.class,
-                ExpandReferenceJob.Factory.class,
-                FitToParentObjectJob.class,
-                FitToParentObjectJob.Factory.class,
-                FixToggleGroupExpressionReferenceJob.class,
-                FixToggleGroupExpressionReferenceJob.Factory.class,
-                FixToggleGroupIntrinsicReferenceJob.class,
-                FixToggleGroupIntrinsicReferenceJob.Factory.class,
-                FixToggleGroupReferenceJob.class,
-                FixToggleGroupReferenceJob.Factory.class,
                 JobManagerImpl.class,
-                ModifyFxControllerJob.class,
-                ModifyFxControllerJob.Factory.class,
-                ModifyFxIdJob.class,
-                ModifyFxIdJob.Factory.class,
-                ModifyObjectJob.class,
-                ModifyObjectJob.Factory.class,
-                PrunePropertiesJob.class,
-                PrunePropertiesJob.Factory.class,
-                ReIndexObjectJob.class,
-                ReIndexObjectJob.Factory.class,
-                ReferencesUpdaterJob.class,
-                ReferencesUpdaterJob.Factory.class,
-                RelocateNodeJob.class,
-                RelocateNodeJob.Factory.class,
-                RelocateSelectionJob.class,
-                RelocateSelectionJob.Factory.class,
-                RemoveCollectionItemJob.class,
-                RemoveCollectionItemJob.Factory.class,
-                RemoveFxControllerJob.class,
-                RemoveFxControllerJob.Factory.class,
-                RemoveNodeJob.class,
-                RemoveNodeJob.Factory.class,
-                RemoveObjectJob.class,
-                RemoveObjectJob.Factory.class,
-                RemovePropertyJob.class,
-                RemovePropertyJob.Factory.class,
-                RemovePropertyValueJob.class,
-                RemovePropertyValueJob.Factory.class,
-                ReplaceObjectJob.class,
-                ReplaceObjectJob.Factory.class,
-                ReplacePropertyValueJobT.class,
-                ReplacePropertyValueJobT.Factory.class,
-                RootContainerHeightPreference.class,
-                RootContainerWidthPreference.class,
                 SetFxomRootJob.class,
-                SetFxomRootJob.Factory.class,
-                ToggleFxRootJob.class,
-                ToggleFxRootJob.Factory.class,
-                UpdateReferencesJob.class,
-                UpdateReferencesJob.Factory.class,
-                UseComputedSizesObjectJob.class,
-                UseComputedSizesObjectJob.Factory.class,
-                UsePredefinedSizeJob.class,
-                UsePredefinedSizeJob.Factory.class,
-                UseSizeJob.class,
-                UseSizeJob.Factory.class
+                SetFxomRootJob.Factory.class
             );
      // @formatter:on
     }

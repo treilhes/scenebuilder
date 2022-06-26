@@ -36,18 +36,18 @@ package com.oracle.javafx.scenebuilder.document.hierarchy.treeview;
 import java.net.URL;
 import java.util.List;
 
+import org.scenebuilder.fxml.api.HierarchyMask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.ErrorReport;
-import com.oracle.javafx.scenebuilder.api.ErrorReport.ErrorReportEntry;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.InlineEdit.Type;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
+import com.oracle.javafx.scenebuilder.api.error.ErrorReport;
+import com.oracle.javafx.scenebuilder.api.error.ErrorReportEntry;
 import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
 import com.oracle.javafx.scenebuilder.api.util.StringUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;

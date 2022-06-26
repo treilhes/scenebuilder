@@ -36,6 +36,7 @@ package com.oracle.javafx.scenebuilder.sourcegen.skeleton;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -46,7 +47,6 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
@@ -87,11 +87,11 @@ public class SkeletonViewController extends AbstractFxmlViewController {
     private FXOMDocument fxomDocument;
     private String documentName;
     private boolean dirty = true;
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
 
     public SkeletonViewController(
             SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             @Autowired DocumentWindow document,
             ViewMenuController viewMenuController) {
         super(scenebuilderManager, documentManager, viewMenuController, SkeletonViewController.class.getResource("SkeletonWindow.fxml"), I18N.getBundle());

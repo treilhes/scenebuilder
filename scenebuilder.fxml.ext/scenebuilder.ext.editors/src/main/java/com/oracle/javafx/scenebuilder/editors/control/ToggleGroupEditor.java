@@ -36,16 +36,16 @@ package com.oracle.javafx.scenebuilder.editors.control;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.scenebuilder.fxml.api.Documentation;
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Documentation;
-import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.core.editors.AutoSuggestEditor;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMFxIdIndex;
@@ -68,13 +68,13 @@ public class ToggleGroupEditor extends AutoSuggestEditor {
 
     List<String> suggestedTgs;
 
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
 
     public ToggleGroupEditor(
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem,
-            DocumentManager documentManager) {
+            FxmlDocumentManager documentManager) {
         super(dialog, documentation, fileSystem);
         this.documentManager = documentManager;
         initialize(new ArrayList<>());

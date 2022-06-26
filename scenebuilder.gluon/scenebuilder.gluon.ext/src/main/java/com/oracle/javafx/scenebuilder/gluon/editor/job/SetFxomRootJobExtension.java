@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,7 +39,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJobExtension;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJobExtension;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.SetFxomRootJob;
@@ -52,7 +53,11 @@ public class SetFxomRootJobExtension extends AbstractJobExtension<SetFxomRootJob
 
 	@Override
 	public void postExecute() {
-		WarnThemeAlert.showAlertIfRequired(themePreference, getExtendedJob().getNewRoot(), editorController.getOwnerWindow());
+	    assert getExtendedJob().getNewRoot() != null;
+	    assert getExtendedJob().getNewRoot() instanceof FXOMObject;
+
+	    FXOMObject newRoot = (FXOMObject)getExtendedJob().getNewRoot();
+		WarnThemeAlert.showAlertIfRequired(themePreference, newRoot, editorController.getOwnerWindow());
 	}
 
 }

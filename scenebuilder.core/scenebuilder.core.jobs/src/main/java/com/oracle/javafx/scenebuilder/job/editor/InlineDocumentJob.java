@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,11 +36,11 @@ package com.oracle.javafx.scenebuilder.job.editor;
 import java.util.Collections;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.CompositeJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.CompositeJob;
+import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
 
 /**
  * This Job updates the FXOM document at execution time. The selection is not
@@ -50,13 +51,13 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 public abstract class InlineDocumentJob extends CompositeJob {
 
     private List<AbstractJob> subJobs;
-    private final FXOMDocument fxomDocument;
+    private final OMDocument omDocument;
 
     protected InlineDocumentJob(
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager) {
         super(extensionFactory);
-        this.fxomDocument = documentManager.fxomDocument().get();
+        this.omDocument = documentManager.omDocument().get();
     }
 
     @Override
@@ -66,27 +67,27 @@ public abstract class InlineDocumentJob extends CompositeJob {
 
     @Override
     public void doExecute() {
-        fxomDocument.beginUpdate();
+        omDocument.beginUpdate();
         subJobs = Collections.unmodifiableList(makeAndExecuteSubJobs());
-        fxomDocument.endUpdate();
+        omDocument.endUpdate();
     }
 
     @Override
     public void doUndo() {
-        fxomDocument.beginUpdate();
+        omDocument.beginUpdate();
         for (int i = getSubJobs().size() - 1; i >= 0; i--) {
             getSubJobs().get(i).undo();
         }
-        fxomDocument.endUpdate();
+        omDocument.endUpdate();
     }
 
     @Override
     public void doRedo() {
-        fxomDocument.beginUpdate();
+        omDocument.beginUpdate();
         for (AbstractJob subJob : getSubJobs()) {
             subJob.redo();
         }
-        fxomDocument.endUpdate();
+        omDocument.endUpdate();
     }
 
     protected abstract List<AbstractJob> makeAndExecuteSubJobs();

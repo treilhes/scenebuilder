@@ -41,15 +41,15 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
+import com.oracle.javafx.scenebuilder.om.api.OMObject;
 
 
 /**
@@ -59,35 +59,32 @@ import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public final class UpdateSelectionJob extends AbstractJob {
 
-    private AbstractSelectionGroup oldSelectionGroup;
-    private AbstractSelectionGroup newSelectionGroup;
+    private SelectionGroup<OMDocument, OMObject> oldSelectionGroup;
+    private SelectionGroup<OMDocument, OMObject> newSelectionGroup;
 
-    private final FXOMDocument fxomDocument;
+    private final OMDocument fxomDocument;
     private final Selection selection;
-    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
 
     protected UpdateSelectionJob(
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
-            Selection selection,
-            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+            Selection selection) {
         super(extensionFactory);
-        this.fxomDocument = documentManager.fxomDocument().get();
+        this.fxomDocument = documentManager.omDocument().get();
         this.selection = selection;
-        this.objectSelectionGroupFactory = objectSelectionGroupFactory;
     }
 
-    protected void setJobParameters(AbstractSelectionGroup group) {
+    protected void setJobParameters(SelectionGroup<OMDocument, OMObject> group) {
         newSelectionGroup = group;
     }
-    protected void setJobParameters(Collection<FXOMObject> newSelectedObjects) {
-        assert newSelectedObjects != null; // But possibly empty
-        if (newSelectedObjects.isEmpty()) {
-            newSelectionGroup = null;
-        } else {
-            newSelectionGroup = objectSelectionGroupFactory.getGroup(newSelectedObjects, newSelectedObjects.iterator().next(), null);
-        }
-    }
+//    protected void setJobParameters(Collection<FXOMObject> newSelectedObjects) {
+//        assert newSelectedObjects != null; // But possibly empty
+//        if (newSelectedObjects.isEmpty()) {
+//            newSelectionGroup = null;
+//        } else {
+//            newSelectionGroup = objectSelectionGroupFactory.getGroup(newSelectedObjects, newSelectedObjects.iterator().next(), null);
+//        }
+//    }
 
     /*
      * Job
@@ -145,21 +142,21 @@ public final class UpdateSelectionJob extends AbstractJob {
          * @param group the selection group to select
          * @return the job to execute
          */
-        public UpdateSelectionJob getJob(AbstractSelectionGroup group) {
+        public UpdateSelectionJob getJob(SelectionGroup<OMDocument, OMObject> group) {
             return create(UpdateSelectionJob.class, j -> j.setJobParameters(group));
         }
 
-        /**
-         * Create an {@link  UpdateSelectionJob} job
-         * @param newSelectedObjects the objects {@link FXOMObject} to select
-         * @return the job to execute
-         */
-        public UpdateSelectionJob getJob(Collection<FXOMObject> newSelectedObjects) {
-            return create(UpdateSelectionJob.class, j -> j.setJobParameters(newSelectedObjects));
-        }
-
-        public UpdateSelectionJob getJob(FXOMObject fxomObject) {
-            return create(UpdateSelectionJob.class, j -> j.setJobParameters(List.of(fxomObject)));
-        }
+//        /**
+//         * Create an {@link  UpdateSelectionJob} job
+//         * @param newSelectedObjects the objects {@link FXOMObject} to select
+//         * @return the job to execute
+//         */
+//        public UpdateSelectionJob getJob(Collection<FXOMObject> newSelectedObjects) {
+//            return create(UpdateSelectionJob.class, j -> j.setJobParameters(newSelectedObjects));
+//        }
+//
+//        public UpdateSelectionJob getJob(FXOMObject fxomObject) {
+//            return create(UpdateSelectionJob.class, j -> j.setJobParameters(List.of(fxomObject)));
+//        }
     }
 }

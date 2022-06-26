@@ -36,20 +36,11 @@ package com.oracle.javafx.scenebuilder.core.clipboard.controller;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.InlineEdit;
-import com.oracle.javafx.scenebuilder.api.JobManager;
-import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardHandler;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.clipboard.internal.ClipboardEncoder;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.selection.job.CutSelectionJob;
-import com.oracle.javafx.scenebuilder.selection.job.PasteIntoJob;
-import com.oracle.javafx.scenebuilder.selection.job.PasteJob;
 
 import javafx.scene.Node;
 import javafx.scene.control.TextInputControl;
@@ -57,43 +48,20 @@ import javafx.scene.input.Clipboard;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-public class ClipboardController implements com.oracle.javafx.scenebuilder.api.clipboard.Clipboard {
+public abstract class ClipboardController implements com.oracle.javafx.scenebuilder.api.clipboard.Clipboard {
 
     private final DocumentWindow documentWindow;
-    //private final Editor editorController;
-    private final Content contentPanelController;
     private final InlineEdit inlineEdit;
     private final DocumentManager documentManager;
-    private final Selection selection;
-    private final ActionFactory actionFactory;
-    private final CutSelectionJob.Factory cutSelectionJobFactory;
-    private final PasteJob.Factory pasteJobFactory;
-    private final PasteIntoJob.Factory pasteIntoJobFactory;
-
-    private final JobManager jobManager;
 
     public ClipboardController(
             DocumentWindow documentWindow,
             InlineEdit inlineEdit,
-            Content contentPanelController,
-            DocumentManager documentManager,
-            Selection selection,
-            ActionFactory actionFactory,
-            CutSelectionJob.Factory cutSelectionJobFactory,
-            PasteJob.Factory pasteJobFactory,
-            PasteIntoJob.Factory pasteIntoJobFactory,
-            JobManager jobManager) {
+            DocumentManager documentManager) {
         super();
         this.documentWindow = documentWindow;
-        this.selection = selection;
-        this.contentPanelController = contentPanelController;
         this.inlineEdit = inlineEdit;
         this.documentManager = documentManager;
-        this.actionFactory = actionFactory;
-        this.pasteJobFactory = pasteJobFactory;
-        this.pasteIntoJobFactory = pasteIntoJobFactory;
-        this.cutSelectionJobFactory = cutSelectionJobFactory;
-        this.jobManager = jobManager;
     }
 
     @Override
@@ -111,10 +79,11 @@ public class ClipboardController implements com.oracle.javafx.scenebuilder.api.c
             ClipboardHandler cphandler = (ClipboardHandler)focusComponent;
             result = cphandler.canPerformCopy();
         } else {
-            result = selection.getGroup() instanceof ObjectSelectionGroup;
+            result = editorCanPerformCopy();
         }
         return result;
     }
+
 
     @Override
     public void performCopy() {
@@ -132,14 +101,13 @@ public class ClipboardController implements com.oracle.javafx.scenebuilder.api.c
             ClipboardHandler cphandler = (ClipboardHandler)focusComponent;
             cphandler.performCopy();
         } else {
-            assert selection.getGroup() instanceof ObjectSelectionGroup; // Because of (1)
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
-
-            final ClipboardEncoder encoder = new ClipboardEncoder(osg.getSortedItems());
-            assert encoder.isEncodable();
-            Clipboard.getSystemClipboard().setContent(encoder.makeEncoding());
+            editorPerformCopy();
         }
     }
+
+    public abstract boolean editorCanPerformCopy();
+
+    public abstract void editorPerformCopy();
 
     @Override
     public boolean canPerformCut() {
@@ -155,8 +123,7 @@ public class ClipboardController implements com.oracle.javafx.scenebuilder.api.c
             ClipboardHandler cphandler = (ClipboardHandler)focusComponent;
             result = cphandler.canPerformCut();
         } else {
-            final CutSelectionJob job = cutSelectionJobFactory.getJob();
-            result = job.isExecutable();
+            result = editorCanPerformCut();
         }
         return result;
     }
@@ -172,10 +139,13 @@ public class ClipboardController implements com.oracle.javafx.scenebuilder.api.c
             ClipboardHandler cphandler = (ClipboardHandler)focusComponent;
             cphandler.performCut();
         } else {
-            final CutSelectionJob job = cutSelectionJobFactory.getJob();
-            jobManager.push(job);
+            editorPerformCut();
         }
     }
+
+    public abstract boolean editorCanPerformCut();
+
+    public abstract void editorPerformCut();
 
     @Override
     public boolean canPerformPaste() {
@@ -190,8 +160,7 @@ public class ClipboardController implements com.oracle.javafx.scenebuilder.api.c
         } else if (inlineEdit.isTextInputControlEditing(focusOwner)) {
             result = Clipboard.getSystemClipboard().hasString();
         } else {
-            PasteJob job = pasteJobFactory.getJob();
-            result = job.isExecutable();
+            result = editorCanPerformPaste();
         }
         return result;
     }
@@ -209,20 +178,13 @@ public class ClipboardController implements com.oracle.javafx.scenebuilder.api.c
             final TextInputControl tic = inlineEdit.getTextInputControl(focusOwner);
             tic.paste();
         } else {
-            PasteJob job = pasteJobFactory.getJob();
-            jobManager.push(job);
+            editorPerformPaste();
         }
     }
 
-    @Override
-    public boolean canPerformPasteInto() {
-        return pasteIntoJobFactory.getJob().isExecutable();
-    }
+    public abstract boolean editorCanPerformPaste();
 
-    @Override
-    public void performPasteInto() {
-        pasteIntoJobFactory.getJob().execute();
-    }
+    public abstract void editorPerformPaste();
 
 
 }

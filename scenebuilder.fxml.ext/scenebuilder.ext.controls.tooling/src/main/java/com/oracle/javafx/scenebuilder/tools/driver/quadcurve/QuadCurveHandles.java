@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.tools.driver.quadcurve;
 
 import java.util.List;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +45,6 @@ import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
 import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractCurveHandles;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture;
 
@@ -78,7 +78,7 @@ public class QuadCurveHandles extends AbstractCurveHandles<QuadCurve> {
 
     public QuadCurveHandles(
             Content contentPanelController,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             DiscardGesture.Factory discardGestureFactory,
             EditCurveGesture.Factory editCurveGestureFactory) {
         super(contentPanelController, documentManager, discardGestureFactory, QuadCurve.class);

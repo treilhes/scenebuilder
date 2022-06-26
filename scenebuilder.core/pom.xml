@@ -25,5 +25,6 @@
         <module>scenebuilder.core.selection</module>
         <module>scenebuilder.core.ui</module>
         <module>scenebuilder.core.utils</module>
+        <module>scenebuilder.core.om</module>
     </modules>
 </project>

@@ -33,14 +33,14 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.tab;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractTring;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.dnd.DropTarget;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
@@ -62,7 +62,7 @@ public class TabTring extends AbstractTring<Tab> {
 
     public TabTring(
             Content contentPanelController,
-            DocumentManager documentManager) {
+            FxmlDocumentManager documentManager) {
         super(contentPanelController, documentManager, Tab.class);
     }
 

@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -54,7 +55,6 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractWindowController;
@@ -113,7 +113,7 @@ public class PreviewWindowController extends AbstractWindowController implements
 	private StylesheetProvider stylesheetConfig;
     private I18nResourceProvider resourceConfig;
     private FXOMDocument fxomDocument;
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
 
     /**
      * The type of Camera used by the Preview panel.
@@ -128,7 +128,7 @@ public class PreviewWindowController extends AbstractWindowController implements
             IconSetting iconSetting,
             Editor editorController,
             DocumentWindow document,
-            DocumentManager documentManager) {
+            FxmlDocumentManager documentManager) {
         super(sceneBuilderManager, iconSetting, document);
         this.editorController = editorController;
         this.documentManager = documentManager;

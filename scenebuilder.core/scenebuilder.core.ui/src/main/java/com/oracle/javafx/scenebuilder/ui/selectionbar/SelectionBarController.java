@@ -34,23 +34,29 @@
 package com.oracle.javafx.scenebuilder.ui.selectionbar;
 
 import java.net.URL;
+import java.util.Iterator;
+import java.util.LinkedList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.HierarchyMask;
-import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPanelController;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.api.ui.selbar.SelectionBarContentFactory;
+import com.oracle.javafx.scenebuilder.api.ui.selbar.SelectionBarContentFactory.BarItem;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
+import com.oracle.javafx.scenebuilder.om.api.OMObject;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -61,8 +67,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -73,38 +77,48 @@ import javafx.scene.layout.StackPane;
 @Lazy
 public class SelectionBarController extends AbstractFxmlPanelController {
 
+    private static final Logger logger = LoggerFactory.getLogger(SelectionBarController.class);
+
     private final DocumentManager documentManager;
-    private final Selection selection;
-    private final DesignHierarchyMask.Factory maskFactory;
+    private final Selection<OMDocument<OMObject>, OMObject> selection;
+    private final SelectionBarContentFactory barContentFactory;
 
     @FXML
     private HBox pathBox;
 
     private final Image selectionChevronImage;
 
+    private final boolean enabled;
+
     public SelectionBarController(
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
             JobManager jobManager,
-            Selection selection,
-            DesignHierarchyMask.Factory maskFactory) {
+            Selection<OMDocument<OMObject>, OMObject> selection,
+            @Autowired(required = false) SelectionBarContentFactory barContentFactory) {
         super(scenebuilderManager, documentManager, SelectionBarController.class.getResource("SelectionBar.fxml"), I18N.getBundle());
         this.documentManager = documentManager;
         this.selection = selection;
-        this.maskFactory = maskFactory;
+        this.barContentFactory = barContentFactory;
+        this.enabled = barContentFactory != null;
 
         // Initialize selection chevron image
         final URL selectionChevronURL = SelectionBarController.class.getResource("selection-chevron.png");
         assert selectionChevronURL != null;
         selectionChevronImage = new Image(selectionChevronURL.toExternalForm());
 
-        documentManager.fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
-        documentManager.sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
-        documentManager.selectionDidChange().subscribe(c -> editorSelectionDidChange());
-        jobManager.revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
+        if (enabled) {
+            documentManager.omDocument().subscribe(fd -> fxomDocumentDidChange(fd));
+            documentManager.sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
+            documentManager.selectionDidChange().subscribe(c -> editorSelectionDidChange());
+            jobManager.revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
+        } else {
+            logger.warn("No instance of {} provided, selection bar is disabled!", SelectionBarContentFactory.class);
+        }
+
     }
 
-    protected void fxomDocumentDidChange(FXOMDocument oldDocument) {
+    protected void fxomDocumentDidChange(OMDocument<?> oldDocument) {
         if (pathBox != null) {
             updateSelectionBar();
         }
@@ -148,16 +162,20 @@ public class SelectionBarController extends AbstractFxmlPanelController {
         if (selection.isEmpty()) {
             pathBox.getChildren().add(new Label(I18N.getString("selectionbar.no.selected")));
         } else {
-            if (selection.getGroup() instanceof ObjectSelectionGroup) {
-                final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
-                assert osg.getItems().isEmpty() == false;
+            final SelectionGroup<?, ?> osg = selection.getGroup();
+            assert osg.getItems().isEmpty() == false;
+            OMObject fxomObject = osg.getItems().iterator().next();
 
-                FXOMObject fxomObject = osg.getItems().iterator().next();
-                // Recursive error report for the leaf object only
-//                boolean recursive = true;
-                while (fxomObject != null) {
-                    final HierarchyMask mask = maskFactory.getMask(fxomObject);
-                    final String entryText = makeEntryText(mask);
+            LinkedList<OMObject> path = barContentFactory.buildOrderedPath(fxomObject);
+
+            if (path != null) {
+
+                Iterator<OMObject> it = path.iterator();
+
+                while (it.hasNext()) {
+                    OMObject pathItem = it.next();
+                    BarItem item = barContentFactory.buildItem(pathItem);
+                    final String entryText = item.getLabel();
                     final Hyperlink boxItem = new Hyperlink();
                     boxItem.setText(entryText);
                     final Node graphic;
@@ -181,53 +199,29 @@ public class SelectionBarController extends AbstractFxmlPanelController {
 //                        ((Label) graphic).setGraphic(iconsStack);
 //                        ((Label) graphic).setTooltip(iconsTooltip);
 //                    } else {
-                        graphic = new ImageView(mask.getClassNameIcon());
+                        graphic = item.getGraphic();
 //                    }
                     boxItem.setGraphic(graphic);
                     boxItem.setFocusTraversable(false);
                     boxItem.setUserData(fxomObject);
                     boxItem.setOnAction(hyperlinkHandler);
-                    pathBox.getChildren().add(0, boxItem);
+                    pathBox.getChildren().add(boxItem);
 
-                    // The last 2 box item should never show ellipsis
-                    if (pathBox.getChildren().size() <= 3) {
-                        boxItem.setMinWidth(Region.USE_PREF_SIZE);
-                        HBox.setHgrow(boxItem, Priority.ALWAYS);
-                    } else {
-                        boxItem.setMinWidth(graphic.getBoundsInLocal().getWidth());
-                    }
-
-                    fxomObject = mask.getParentFXOMObject();
-                    // Add selection chevron if needed
-                    if (fxomObject != null) {
+                 // Add selection chevron if needed
+                    if (it.hasNext()) {
                         // We cannot share the image view to avoid
                         // Children: duplicate children added
                         ImageView img = new ImageView(selectionChevronImage);
                         StackPane sp = new StackPane();
                         sp.getChildren().add(img);
                         sp.setMinWidth(selectionChevronImage.getWidth());
-                        pathBox.getChildren().add(0, sp);
+                        pathBox.getChildren().add(sp);
                     }
-                    // Non recursive error report for the parent
-//                    recursive = false;
                 }
-
             } else {
                 pathBox.getChildren().add(new Label(I18N.getString("selectionbar.not.object")));
             }
         }
-    }
-
-    private String makeEntryText(HierarchyMask mask) {
-        final StringBuilder result = new StringBuilder();
-
-        result.append(mask.getClassNameInfo());
-        final String description = mask.getSingleLineDescription();
-        if (description != null) {
-            result.append(" : "); //NOCHECK
-            result.append(description);
-        }
-        return result.toString();
     }
 
     private final EventHandler<ActionEvent> hyperlinkHandler = t -> {
@@ -238,10 +232,8 @@ public class SelectionBarController extends AbstractFxmlPanelController {
         hyperlink.setVisited(false);
     };
 
-    private void handleSelect(FXOMObject fxomObject) {
-
-        assert fxomObject.getFxomDocument() == documentManager.fxomDocument().get();
-
+    private void handleSelect(OMObject fxomObject) {
+        assert fxomObject.getFxomDocument() == documentManager.omDocument().get();
         selection.select(fxomObject);
     }
 

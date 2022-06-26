@@ -38,21 +38,35 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
+import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardDataFormat;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSourceFactory;
+import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
+import com.oracle.javafx.scenebuilder.om.api.OMObject;
+import com.oracle.javafx.scenebuilder.util.ClassUtils;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
@@ -73,19 +87,29 @@ import javafx.scene.input.Dragboard;
 public final class ExternalDragSource extends AbstractDragSource {
 
     private Dragboard dragboard;
-    private FXOMDocument targetDocument;
-    private List<FXOMObject> draggedObjects; // Initialized lazily
+    private OMDocument targetDocument;
+    private List<OMObject> draggedObjects; // Initialized lazily
     private List<File> inputFiles; // Initialized lazily
-    private boolean nodeOnly; // Iniitalized lazily
-    private boolean singleImageViewOnly; // Initiated lazily
-    private boolean singleTooltipOnly; // Initiated lazily
-    private boolean singleContextMenuOnly; // Initiated lazily
+//    private boolean nodeOnly; // Iniitalized lazily
+//    private boolean singleImageViewOnly; // Initiated lazily
+//    private boolean singleTooltipOnly; // Initiated lazily
+//    private boolean singleContextMenuOnly; // Initiated lazily
+
+    private boolean empty; // Initiated lazily
+    private boolean single; // Initiated lazily
+    private Class<?> singleType; // Initiated lazily
+
     private int errorCount;
     private Exception lastException;
+    private List<ClipboardDataFormat> dataFormats;
 
-    protected ExternalDragSource(DocumentManager documentManager, DocumentWindow ownerWindow) {
+    protected ExternalDragSource(
+            DocumentManager documentManager,
+            DocumentWindow ownerWindow,
+            @Autowired(required = false) List<ClipboardDataFormat> dataFormats) {
         super(ownerWindow.getScene().getWindow());
-        this.targetDocument = documentManager.fxomDocument().get();
+        this.targetDocument = documentManager.omDocument().get();
+        this.dataFormats = dataFormats;
         assert targetDocument != null;
     }
 
@@ -115,7 +139,19 @@ public final class ExternalDragSource extends AbstractDragSource {
 
 
     @Override
-    public List<FXOMObject> getDraggedObjects() {
+    public SelectionGroup<OMDocument, OMObject> getDraggedObjects() {
+
+        AtomicInteger errorCount = new AtomicInteger();
+        AtomicReference<Exception> lastException = new AtomicReference<>();
+
+         List<SelectionGroup<? extends OMDocument, ? extends OMObject>> draggedObjectsX = dataFormats.stream()
+            .filter(cpf -> cpf.hasDecodableContent(dragboard))
+            .map(cpf -> cpf.quietDecode(dragboard, e -> {
+                errorCount.incrementAndGet();
+                lastException.set(e);
+            }))
+            .collect(Collectors.toList());
+
         if (draggedObjects == null) {
             draggedObjects = new ArrayList<>();
             inputFiles = new ArrayList<>();
@@ -140,9 +176,9 @@ public final class ExternalDragSource extends AbstractDragSource {
             // We stack and shift them a little so that they are all visible.
             final Group group = new Group();
             double dxy = 0.0;
-            for (FXOMObject o : draggedObjects) {
-                if (o.getSceneGraphObject() instanceof Node) {
-                    final Node sceneGraphNode = (Node) o.getSceneGraphObject();
+            for (OMObject o : draggedObjects) {
+                if (o.getSceneGraphObject().isNode()) {
+                    final Node sceneGraphNode = o.getSceneGraphObject().getAs(Node.class);
                     sceneGraphNode.setLayoutX(dxy);
                     sceneGraphNode.setLayoutY(dxy);
                     dxy += 20.0;
@@ -155,32 +191,25 @@ public final class ExternalDragSource extends AbstractDragSource {
             group.applyCss();
             group.layout();
 
-            // Initialize singleImageView
-            if (draggedObjects.size() != 1) {
-                singleImageViewOnly = false;
-                singleTooltipOnly = false;
-                singleContextMenuOnly = false;
-            } else {
-                final FXOMObject draggedObject = getDraggedObjects().get(0);
-                if (draggedObject instanceof FXOMInstance) {
-                    final Object sceneGraphObject = draggedObject.getSceneGraphObject();
-                    singleImageViewOnly = sceneGraphObject instanceof ImageView;
-                    singleTooltipOnly = sceneGraphObject instanceof Tooltip;
-                    singleContextMenuOnly = sceneGraphObject instanceof ContextMenu;
-                } else {
-                    singleImageViewOnly = false;
-                    singleTooltipOnly = false;
-                    singleContextMenuOnly = false;
-                }
+            // Initialize
+            if (draggedObjects.isEmpty()) {
+                empty = true;
+            } else if (draggedObjects.size() == 1) {
+                empty = false;
+                single = true;
             }
+
+            singleType = ClassUtils.findSharedBaseClass(draggedObjects, o -> o.getSceneGraphObject().getObjectClass());
+
         }
 
         return draggedObjects;
     }
 
+
     @Override
-    public FXOMObject getHitObject() {
-        final FXOMObject result;
+    public OMObject getHitObject() {
+        final OMObject result;
 
         if (getDraggedObjects().isEmpty()) {
             result = null;
@@ -195,7 +224,7 @@ public final class ExternalDragSource extends AbstractDragSource {
     public double getHitX() {
         final double result;
 
-        final FXOMObject hitObject = getHitObject();
+        final OMObject hitObject = getHitObject();
         if (hitObject == null) {
             result = Double.NaN;
         } else if (hitObject.isNode()) {
@@ -292,6 +321,12 @@ public final class ExternalDragSource extends AbstractDragSource {
         }
 
         return nodeOnly;
+    }
+
+    @Override
+    public boolean isSingle() {
+        getDraggedObjects();
+        return single;
     }
 
     @Override

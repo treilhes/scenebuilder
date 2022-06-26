@@ -33,6 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.controller;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -43,7 +44,6 @@ import com.oracle.javafx.scenebuilder.api.Workspace;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
@@ -97,9 +97,9 @@ public class WorkspaceController implements Workspace{
 
     private FXOMDocument fxomDocument;
 
-	private final DocumentManager documentManager;
+	private final FxmlDocumentManager documentManager;
 
-    public WorkspaceController(DocumentManager documentManager) {
+    public WorkspaceController(FxmlDocumentManager documentManager) {
         this.documentManager = documentManager;
     }
 

@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.api.action;
 
-import com.oracle.javafx.scenebuilder.api.JobManager;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobFactory;
+import com.oracle.javafx.scenebuilder.api.job.JobManager;
 
 /**
  *

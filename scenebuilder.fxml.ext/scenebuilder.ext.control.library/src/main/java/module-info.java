@@ -64,10 +64,12 @@ open module scenebuilder.ext.control.library {
     requires scenebuilder.core.library;
     //requires org.slf4j;
     //requires scenebuilder.ext.sb;
-    requires transitive scenebuilder.core.api;
+    requires transitive scenebuilder.fxml.api;
+
     requires scenebuilder.core.extension.api;
     requires scenebuilder.core.filesystem;
     requires scenebuilder.ext.menu;
+
 //    requires spring.beans;
 //    requires spring.context;
 //    requires spring.core;

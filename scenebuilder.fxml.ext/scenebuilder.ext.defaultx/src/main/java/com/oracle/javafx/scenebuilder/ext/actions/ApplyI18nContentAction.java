@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +47,6 @@ import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
@@ -55,9 +55,9 @@ public class ApplyI18nContentAction extends AbstractAction implements InitWithDo
 
     private ApplyI18nContentConfig config;
 
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
 
-    public ApplyI18nContentAction(ActionExtensionFactory extensionFactory, DocumentManager documentManager) {
+    public ApplyI18nContentAction(ActionExtensionFactory extensionFactory, FxmlDocumentManager documentManager) {
         super(extensionFactory);
         this.documentManager = documentManager;
     }

@@ -38,13 +38,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import org.scenebuilder.fxml.api.HierarchyMask;
+import org.scenebuilder.fxml.api.HierarchyMask.Accessory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.HierarchyMask;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;

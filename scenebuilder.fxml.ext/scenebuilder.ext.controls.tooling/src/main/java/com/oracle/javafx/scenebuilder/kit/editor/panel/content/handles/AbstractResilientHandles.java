@@ -34,10 +34,11 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 
 import javafx.geometry.Point2D;
@@ -53,7 +54,7 @@ public abstract class AbstractResilientHandles<T> extends AbstractGenericHandles
     public AbstractResilientHandles(
             Driver driver,
             Content contentPanelController,
-            DocumentManager documentManager,
+            FxmlDocumentManager documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory,
             Class<T> sceneGraphObjectClass) {

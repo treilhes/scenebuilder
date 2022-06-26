@@ -43,25 +43,25 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.scenebuilder.fxml.api.Documentation;
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Documentation;
-import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
+import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue.Type;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
-import com.oracle.javafx.scenebuilder.core.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.util.URLUtils;
 
 import javafx.beans.value.ChangeListener;
@@ -106,12 +106,12 @@ public class StylesheetEditor extends InlineListEditor {
     private Type type;
     private URL fxmlFileLocation;
 	private final FileSystem fileSystem;
-	private final DocumentManager documentManager;
+	private final FxmlDocumentManager documentManager;
     public StylesheetEditor(
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem,
-            DocumentManager documentManager) {
+            FxmlDocumentManager documentManager) {
         super(dialog, documentation, fileSystem);
         this.fileSystem = fileSystem;
         this.documentManager = documentManager;

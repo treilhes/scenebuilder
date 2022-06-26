@@ -34,13 +34,13 @@
 
 package com.oracle.javafx.scenebuilder.tools.driver.node;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.control.outline.AbstractOutline;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
@@ -55,7 +55,7 @@ public class NodeOutline extends AbstractOutline<Node> {
 
     public NodeOutline(
             Content contentPanelController,
-            DocumentManager documentManager) {
+            FxmlDocumentManager documentManager) {
         super(contentPanelController, documentManager, Node.class);
     }
 

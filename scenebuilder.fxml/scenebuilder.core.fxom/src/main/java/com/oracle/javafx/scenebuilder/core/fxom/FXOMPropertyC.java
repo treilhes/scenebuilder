@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,10 +34,13 @@
 package com.oracle.javafx.scenebuilder.core.fxom;
 
 import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueElement;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.om.api.OMObject;
 
 /**
  *
@@ -96,8 +100,6 @@ public class FXOMPropertyC extends FXOMProperty {
     public GlueElement getGlueElement() {
         return getPropertyElement();
     }
-
-
 
     /*
      * FXOMProperty

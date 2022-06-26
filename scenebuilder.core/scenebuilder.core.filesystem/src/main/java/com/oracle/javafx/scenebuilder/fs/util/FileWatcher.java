@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -47,8 +48,6 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-
 /**
  *
  */
@@ -75,7 +74,7 @@ public class FileWatcher {
     public boolean hasTarget(Path target) {
         return targets.contains(target);
     }
-    
+
     public synchronized void addTarget(Path target) {
         assert target != null;
         assert targets.contains(target) == false;
@@ -189,16 +188,16 @@ public class FileWatcher {
                 if ((lastModifiedTime == null) && (newModifiedTime != null)) {
                     // target has been created
                     modifiedTimes.put(target, newModifiedTime);
-                    SbPlatform.runForDocumentLater(() -> delegate.fileWatcherDidWatchTargetCreation(target));
+                    delegate.fileWatcherDidWatchTargetCreation(target);
                 } else if ((lastModifiedTime != null) && (newModifiedTime == null)) {
                     // target has been deleted
                     modifiedTimes.remove(target);
-                    SbPlatform.runForDocumentLater(() -> delegate.fileWatcherDidWatchTargetDeletion(target));
+                    delegate.fileWatcherDidWatchTargetDeletion(target);
                 } else if (Objects.equals(lastModifiedTime, newModifiedTime) == false) {
                     // target has been modified
                     assert newModifiedTime != null;
                     modifiedTimes.put(target, newModifiedTime);
-                    SbPlatform.runForDocumentLater(() -> delegate.fileWatcherDidWatchTargetModification(target));
+                    delegate.fileWatcherDidWatchTargetModification(target);
                 }
             }
         }

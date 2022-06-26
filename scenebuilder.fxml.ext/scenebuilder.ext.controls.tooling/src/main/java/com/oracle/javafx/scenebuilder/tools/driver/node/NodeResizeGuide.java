@@ -33,6 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.node;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +43,6 @@ import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizeGuide;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
@@ -69,7 +69,7 @@ public class NodeResizeGuide extends AbstractResizeGuide<Node> {
     public NodeResizeGuide(
             DesignHierarchyMask.Factory maskFactory,
             Content contentPanelController,
-            DocumentManager documentManager) {
+            FxmlDocumentManager documentManager) {
         super(contentPanelController, documentManager, Node.class);
         this.maskFactory = maskFactory;
 

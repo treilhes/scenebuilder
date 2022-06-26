@@ -37,29 +37,29 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import org.scenebuilder.fxml.api.HierarchyMask;
+import org.scenebuilder.fxml.api.HierarchyMask.Accessory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DragSource;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
-import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTarget;
-import com.oracle.javafx.scenebuilder.api.control.droptarget.DropTargetFactory;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.dnd.AbstractDropTarget;
+import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
+import com.oracle.javafx.scenebuilder.api.dnd.DropTargetFactory;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
+import com.oracle.javafx.scenebuilder.fxml.selection.job.InsertAsAccessoryJob;
+import com.oracle.javafx.scenebuilder.fxml.selection.job.InsertAsSubComponentJob;
 import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ReIndexObjectJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemoveObjectJob;
-import com.oracle.javafx.scenebuilder.selection.job.InsertAsAccessoryJob;
-import com.oracle.javafx.scenebuilder.selection.job.InsertAsSubComponentJob;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;

@@ -15,5 +15,10 @@
       <module>scenebuilder.core.fxom</module>
       <module>scenebuilder.core.metadata</module>
     <module>scenebuilder.fxml.api</module>
+    <module>scenebuilder.fxml.core</module>
+    <module>scenebuilder.fxml.core.jobs</module>
+    <module>scenebuilder.fxml.core.selection</module>
+    <module>scenebuilder.fxml.core.drag.and.drop</module>
+    <module>scenebuilder.fxml.clipboard</module>
   </modules>
 </project>

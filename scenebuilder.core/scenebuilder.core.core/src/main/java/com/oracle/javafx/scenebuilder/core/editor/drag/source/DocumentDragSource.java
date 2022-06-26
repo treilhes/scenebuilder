@@ -39,12 +39,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.scenebuilder.fxml.api.HierarchyMask;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSourceFactory;
 import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;

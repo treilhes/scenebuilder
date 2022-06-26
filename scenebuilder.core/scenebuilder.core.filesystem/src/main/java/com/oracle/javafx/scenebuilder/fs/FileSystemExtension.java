@@ -40,12 +40,9 @@ import java.util.UUID;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.fs.controller.FileSystemController;
-import com.oracle.javafx.scenebuilder.fs.job.ImportFileJob;
-import com.oracle.javafx.scenebuilder.fs.job.IncludeFileJob;
 import com.oracle.javafx.scenebuilder.fs.preference.global.InitialDirectoryPreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsSizePreference;
-import com.oracle.javafx.scenebuilder.fs.preference.global.WildcardImportsPreference;
 
 public class FileSystemExtension extends AbstractExtension {
 
@@ -59,15 +56,10 @@ public class FileSystemExtension extends AbstractExtension {
      // @formatter:off
         return Arrays.asList(
                 FileSystemController.class,
-                ImportFileJob.class,
-                ImportFileJob.Factory.class,
-                IncludeFileJob.class,
-                IncludeFileJob.Factory.class,
                 InitialDirectoryPreference.class,
                 RecentItemsPreference.class,
                 RecentItemsSizePreference.class,
-                ClassLoaderController.class,
-                WildcardImportsPreference.class
+                ClassLoaderController.class
             );
      // @formatter:on
     }

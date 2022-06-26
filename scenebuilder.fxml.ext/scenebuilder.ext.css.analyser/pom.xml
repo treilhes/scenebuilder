@@ -12,6 +12,10 @@
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.fxml.api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.core.core</artifactId>
         </dependency>
         <dependency>

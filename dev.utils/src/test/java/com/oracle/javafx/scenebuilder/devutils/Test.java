@@ -46,15 +46,12 @@ public class Test extends AppTester {
 
     @Override
     public void start(Stage stage) {
-        int test = -23;
 
-        System.out.println(test);
-        System.out.println(+test);
-        System.out.println(test);
+        new TestFs().start(stage);
 
         //new TestAnim().start(stage);
-        //new TestContent().start(primaryStage);
-        //new TestContent2().start(primaryStage);
+        //new TestContent().start(stage);
+        //new TestContent2().start(stage);
         //new TestContent5().start(stage);
         //new TitlePaneBinding().start(stage);
         //new TableViewBinding().start(stage);
@@ -65,8 +62,9 @@ public class Test extends AppTester {
         //new TestExternalFile().start(stage, "C:\\SSDDrive\\git\\scenebuilder\\scenebuilder.core.fxom\\src\\test\\resources\\com\\oracle\\javafx\\scenebuilder\\core\\fxom\\fx\\comments.fxml");
         //new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\script.fxml");
         //new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\one.fxml");
-        String f = "C:\\SSDDrive\\git\\scenebuilder\\dev.utils\\src\\test\\resources\\com\\oracle\\javafx\\scenebuilder\\devutils\\tbview\\refOfIncludeWithButtons.fxml";
-        new TestExternalFile().start(stage, f);
+
+//        String f = ".\\src\\test\\resources\\com\\oracle\\javafx\\scenebuilder\\devutils\\tbview\\refOfIncludeWithButtons.fxml";
+//        new TestExternalFile().start(stage, f);
     }
 
     public static void main(String args[]) {

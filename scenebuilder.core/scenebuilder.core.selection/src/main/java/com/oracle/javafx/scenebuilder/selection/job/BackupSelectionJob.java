@@ -38,10 +38,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.editor.job.JobExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
@@ -53,7 +53,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public final class BackupSelectionJob extends AbstractJob {
 
-    private AbstractSelectionGroup oldSelectionGroup;
+    private SelectionGroup oldSelectionGroup;
 
     private final Selection selection;
 
@@ -98,7 +98,7 @@ public final class BackupSelectionJob extends AbstractJob {
     @Override
     public void doUndo() {
         selection.select(oldSelectionGroup);
-        assert selection.isValid(documentManager.fxomDocument().get());
+        assert selection.isValid(documentManager.omDocument().get());
     }
 
     @Override

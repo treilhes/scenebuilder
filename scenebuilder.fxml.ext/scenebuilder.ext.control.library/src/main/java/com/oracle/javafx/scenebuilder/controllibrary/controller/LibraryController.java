@@ -33,17 +33,17 @@
  */
 package com.oracle.javafx.scenebuilder.controllibrary.controller;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Drag;
-import com.oracle.javafx.scenebuilder.api.JobManager;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.dnd.Drag;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
+import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.controllibrary.drag.source.ControlLibraryDragSource;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryListCell;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryListItem;
@@ -76,7 +76,7 @@ public class LibraryController {
     public LibraryController(
             @Autowired JobManager jobManager,
             @Autowired Drag drag,
-            @Autowired @Lazy DocumentManager documentManager,
+            @Autowired @Lazy FxmlDocumentManager documentManager,
             ControlLibraryDragSource.Factory libraryDragSourceFactory,
             SetDocumentRootJob.Factory setDocumentRootJobFactory,
             InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory) {

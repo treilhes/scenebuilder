@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.draganddrop.controller;
 
-import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,19 +43,20 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Drag;
-import com.oracle.javafx.scenebuilder.api.DragSource;
-import com.oracle.javafx.scenebuilder.api.JobManager;
-import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.dnd.Drag;
+import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
+import com.oracle.javafx.scenebuilder.api.dnd.DropTarget;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.JobManager;
+import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.DocumentDragSource;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyPath;
-import com.oracle.javafx.scenebuilder.draganddrop.droptarget.RootDropTarget;
 import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
+import com.oracle.javafx.scenebuilder.om.api.DesignHierarchyPath;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
+import com.oracle.javafx.scenebuilder.om.api.OMObject;
 import com.oracle.javafx.scenebuilder.selection.job.BackupSelectionJob;
 import com.oracle.javafx.scenebuilder.selection.job.UpdateSelectionJob;
 
@@ -90,16 +91,20 @@ public class DragController implements Drag {
 
     private final Selection selection;
 
+    private final DocumentManager documentManager;
+
     // @formatter:off
     public DragController(
             Selection selection,
             JobManager jobManager,
+            DocumentManager documentManager,
             BackupSelectionJob.Factory backupSelectionJobFactory,
             UpdateSelectionJob.Factory updateSelectionJobFactory,
             BatchJob.Factory batchJobFactory) {
      // @formatter:on
         this.selection = selection;
         this.jobManager = jobManager;
+        this.documentManager = documentManager;
         this.backupSelectionJobFactory = backupSelectionJobFactory;
         this.updateSelectionJobFactory = updateSelectionJobFactory;
         this.batchJobFactory = batchJobFactory;
@@ -125,7 +130,7 @@ public class DragController implements Drag {
         backupSelectionJob = backupSelectionJobFactory.getJob();
         selection.clear();
 
-        logger.info("Drop session started for {} objects", dragSource.getDraggedObjects().size());
+        logger.info("Drop session started for {} objects", dragSource.getDraggedObjects().getItems().size());
     }
 
     @Override
@@ -167,7 +172,7 @@ public class DragController implements Drag {
             mouseTimer = null;
         }
 
-        logger.info("Drop session ended for {} objects", getDragSource().getDraggedObjects().size());
+        logger.info("Drop session ended for {} objects", getDragSource().getDraggedObjects().getItems().size());
 
         liveUpdater = null;
         backupSelectionJob = null;
@@ -209,20 +214,25 @@ public class DragController implements Drag {
         if (dropAccepted) {
             assert getDropTarget() != null;
             assert getDropTarget().acceptDragSource(getDragSource());
-            assert getDragSource().getDraggedObjects().isEmpty() == false;
+            assert getDragSource().getDraggedObjects().getItems().isEmpty() == false;
 
-            final FXOMObject firstObject = getDragSource().getDraggedObjects().get(0);
-            final FXOMObject currentParent = firstObject.getParentObject();
-            final FXOMObject nextParent = getDropTarget().getTargetObject();
+            final Set<OMObject> items = getDragSource().getDraggedObjects().getItems();
 
-            logger.debug("Drop accepted from {} to {} for {} objects",
-                    currentParent == null ? "null" : currentParent.getClass().getName(),
-                    nextParent == null ? "null" : nextParent.getClass().getName(),
-                    getDragSource().getDraggedObjects().size());
+            items.stream().findFirst().ifPresent(firstObject -> {
 
-            if ((currentParent == nextParent) && liveUpdateEnabled) {
-                liveUpdater.setDropTarget(newDropTarget);
-            }
+                final OMObject currentParent = firstObject.getParentObject();
+                final OMObject nextParent = getDropTarget().getTargetObject();
+
+                logger.debug("Drop accepted from {} to {} for {} objects",
+                        currentParent == null ? "null" : currentParent.getClass().getName(),
+                        nextParent == null ? "null" : nextParent.getClass().getName(),
+                        items.size());
+
+                if ((currentParent == nextParent) && liveUpdateEnabled) {
+                    liveUpdater.setDropTarget(newDropTarget);
+                }
+            });
+
         }
     }
 
@@ -319,15 +329,17 @@ public class DragController implements Drag {
         assert newDropTarget != null;
         boolean result;
 
-        if (newDropTarget instanceof RootDropTarget) {
+        OMDocument document = documentManager.omDocument().get();
+        //if (newDropTarget instanceof RootDropTarget) {
+        if (document == null || document.getFxomRoot() == null) {
             // dragSource is dragged over an empty document
             result = false;
         } else {
-            final List<FXOMObject> draggedObjects = getDragSource().getDraggedObjects();
+            final Set<? extends OMObject> draggedObjects = getDragSource().getDraggedObjects().getItems();
             final DesignHierarchyPath dropTargetPath = new DesignHierarchyPath(newDropTarget.getTargetObject());
 
             result = false;
-            for (FXOMObject draggedObject : draggedObjects) {
+            for (OMObject draggedObject : draggedObjects) {
                 final DesignHierarchyPath draggedObjectPath = new DesignHierarchyPath(draggedObject);
                 final DesignHierarchyPath commonPath = draggedObjectPath.getCommonPathWith(dropTargetPath);
                 // If one of the dragged objects is in the parent chain

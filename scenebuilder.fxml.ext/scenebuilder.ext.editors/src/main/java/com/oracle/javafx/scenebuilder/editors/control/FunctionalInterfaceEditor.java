@@ -39,17 +39,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.scenebuilder.fxml.api.Documentation;
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Documentation;
-import com.oracle.javafx.scenebuilder.api.FileSystem;
 import com.oracle.javafx.scenebuilder.api.Glossary;
 import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
+import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.editors.AutoSuggestEditor;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.util.JavaLanguage;
@@ -83,7 +83,7 @@ public class FunctionalInterfaceEditor extends AutoSuggestEditor {
     private List<String> suggestedMethods;
 
     private final Glossary glossary;
-    private final DocumentManager documentManager;
+    private final FxmlDocumentManager documentManager;
 
 
     public FunctionalInterfaceEditor(
@@ -91,7 +91,7 @@ public class FunctionalInterfaceEditor extends AutoSuggestEditor {
             Documentation documentation,
             FileSystem fileSystem,
             Glossary glossary,
-            DocumentManager documentManager
+            FxmlDocumentManager documentManager
             ) {
         super(dialog, documentation, fileSystem);
         this.glossary = glossary;

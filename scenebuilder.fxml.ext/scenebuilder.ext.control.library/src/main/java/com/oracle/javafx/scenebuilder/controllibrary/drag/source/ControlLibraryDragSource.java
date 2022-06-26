@@ -37,6 +37,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -47,7 +48,6 @@ import com.oracle.javafx.scenebuilder.api.dnd.DragSourceFactory;
 import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.AbstractDragSource;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.DragSourceShadow;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -77,7 +77,7 @@ public final class ControlLibraryDragSource extends AbstractDragSource {
     private FXOMObject libraryItemObject; // Populated lazily
     private List<FXOMObject> draggedObjects; // Opmization
 
-    protected ControlLibraryDragSource(DocumentManager documentManager, DocumentWindow ownerWindow) {
+    protected ControlLibraryDragSource(FxmlDocumentManager documentManager, DocumentWindow ownerWindow) {
         super(ownerWindow.getScene().getWindow());
         this.targetDocument = documentManager.fxomDocument().get();
         assert targetDocument != null;

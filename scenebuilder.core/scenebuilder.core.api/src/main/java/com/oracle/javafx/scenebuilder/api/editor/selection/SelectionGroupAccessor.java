@@ -33,24 +33,30 @@
  */
 package com.oracle.javafx.scenebuilder.api.editor.selection;
 
-import com.oracle.javafx.scenebuilder.api.editor.job.Job;
+import com.oracle.javafx.scenebuilder.api.job.Job;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
+import com.oracle.javafx.scenebuilder.om.api.OMObject;
 
 import javafx.scene.Node;
 
-public class SelectionGroupAccessor {
+public class SelectionGroupAccessor<D extends OMDocument, O extends OMObject> {
 
-    private AbstractSelectionGroup group;
+    protected SelectionGroup<D, O> group;
 
-    public SelectionGroupAccessor(AbstractSelectionGroup group) {
+    public SelectionGroupAccessor(SelectionGroup<D, O> group) {
         super();
         this.group = group;
+    }
+
+    protected SelectionGroup<D, O> getGroup() {
+        return this.group;
     }
 
     public Job makeDeleteJob() {
         return group == null ? null : group.makeDeleteJob();
     }
 
-    public boolean isSelected(AbstractSelectionGroup selectedGroup) {
+    public boolean isSelected(SelectionGroup<D, O> selectedGroup) {
         return group == null ? false : group.isSelected(selectedGroup);
     }
 
@@ -58,12 +64,8 @@ public class SelectionGroupAccessor {
         return group == null ? null : group.getCheckedHitNode();
     }
 
-    public AbstractSelectionGroup toggle(AbstractSelectionGroup toggleGroup) {
+    public SelectionGroup<D, O> toggle(SelectionGroup<D, O> toggleGroup) {
         return group == null ? null : group.toggle(toggleGroup);
-    }
-
-    public boolean isMovable() {
-        return group == null ? false : group.isMovable();
     }
 
 }

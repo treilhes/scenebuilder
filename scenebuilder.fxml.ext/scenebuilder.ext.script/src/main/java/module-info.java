@@ -9,7 +9,7 @@ open module scenebuilder.ext.script {
     exports org.scenebuilder.ext.script.i18n;
     exports org.scenebuilder.ext.script.preference.global;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive scenebuilder.fxml.api;
     requires transitive scenebuilder.core.extension.api;
 
     provides Extension with ScenebuilderScriptExtension;

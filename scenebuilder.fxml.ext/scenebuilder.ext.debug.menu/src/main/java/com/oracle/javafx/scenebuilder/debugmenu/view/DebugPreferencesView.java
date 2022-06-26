@@ -36,6 +36,7 @@ package com.oracle.javafx.scenebuilder.debugmenu.view;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -46,7 +47,6 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.Preference;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
@@ -84,7 +84,7 @@ public class DebugPreferencesView extends AbstractFxmlViewController {
      * @param fxmlURL
      * @param resources
      */
-    public DebugPreferencesView(SceneBuilderManager scenebuilderManager, DocumentManager documentManager,
+    public DebugPreferencesView(SceneBuilderManager scenebuilderManager, FxmlDocumentManager documentManager,
             ViewMenuController viewMenuController,
             List<ManagedGlobalPreference> globalPreferences,
             List<ManagedDocumentPreference> documentPreferences) {

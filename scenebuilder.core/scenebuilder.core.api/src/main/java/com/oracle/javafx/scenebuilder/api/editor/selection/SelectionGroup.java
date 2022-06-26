@@ -34,56 +34,59 @@
 package com.oracle.javafx.scenebuilder.api.editor.selection;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
+import com.oracle.javafx.scenebuilder.api.job.Job;
+import com.oracle.javafx.scenebuilder.om.api.OMDocument;
+import com.oracle.javafx.scenebuilder.om.api.OMObject;
+
+import javafx.scene.Node;
 
 /**
  * This interface must be implemented by classes expecting to represent a selection content
  */
 public interface SelectionGroup extends Cloneable {
     /**
-     * Get the latest clicked/hit item in the selected {@link FXOMObject} collection
+     * Get the latest clicked/hit item in the selected {@link OMObject} collection
      * @return the latest clicked/hit item
      */
-    public FXOMObject getHitItem();
+    public OMObject getHitItem();
     /**
-     * Get the common ancestor {@link FXOMObject} to all selected {@link FXOMObject}
+     * Get the common ancestor {@link OMObject} to all selected {@link OMObject}
      * or null if root is selected
-     * @return the common ancestor {@link FXOMObject}
+     * @return the common ancestor {@link OMObject}
      */
-    public FXOMObject getAncestor();
+    public OMObject getAncestor();
     /**
-     * A selection group is valid only if all the selected {@link FXOMObject} are part of the provided {@link FXOMDocument}
+     * A selection group is valid only if all the selected {@link OMObject} are part of the provided {@link OMDocument}
      * @param fxomDocument the owner document
-     * @return true if all the selected {@link FXOMObject} are part of the provided {@link FXOMDocument}
+     * @return true if all the selected {@link OMObject} are part of the provided {@link OMDocument}
      */
-    public boolean isValid(FXOMDocument fxomDocument);
+    public boolean isValid(OMDocument fxomDocument);
     /**
      * Get the collection of all the selected objects in the group
      * @return all the selected objects
      */
-    public Set<FXOMObject> getItems();
+    public Set<? extends OMObject> getItems();
     /**
      * If all the selected objects in the group are siblings it will return the selected
      * objects and all the remaining unselected siblings<br/>
      * <br/>
-     * What is a sibling object:<br/>
-     * - if part of a collection ( {@link FXOMPropertyC} ) : all other objects in the collection<br/>
-     * - if part of a single valued ( {@link FXOMPropertyT} ) : all other objects in parent {@link FXOMPropertyT} properties<br/>
+     * What is a sibling object:<br/> - it is up to the implementor to decide but selectNext and selectPrevious will use it to navigate by default
      * @return the complete list of siblings objects or an empty list if selected objects are not siblings
      */
-    List<FXOMObject> getSiblings();
+    List<? extends OMObject> getSiblings();
 
-    Set<? extends Object> getInnerItems();
+    SelectionGroup selectAll();
 
-    AbstractSelectionGroup selectAll();
-    AbstractSelectionGroup selectNext();
-    AbstractSelectionGroup selectPrevious();
+    SelectionGroup selectNext();
 
-    Map<String, FXOMObject> collectSelectedFxIds();
+    SelectionGroup selectPrevious();
+
+    SelectionGroup clone() throws CloneNotSupportedException;
+
+    Node getCheckedHitNode();
+    Job makeDeleteJob();
+    SelectionGroup toggle(SelectionGroup toggleGroup);
+    boolean isSelected(SelectionGroup group);
 }

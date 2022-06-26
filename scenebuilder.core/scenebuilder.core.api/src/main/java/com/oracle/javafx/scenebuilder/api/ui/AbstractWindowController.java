@@ -41,7 +41,7 @@ import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
+import com.oracle.javafx.scenebuilder.api.tooltheme.ToolStylesheetProvider;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.application.Platform;
@@ -80,7 +80,7 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
     private final boolean sizeToScene; // true by default
 
     /** The tool stylesheet config. */
-    private StylesheetProvider toolStylesheetConfig;
+    private ToolStylesheetProvider toolStylesheetConfig;
 
     private CloseHandler closeHandler;
     private FocusHandler focusHandler;
@@ -282,7 +282,7 @@ public abstract class AbstractWindowController implements SceneBuilderWindow {
      *
      * @param newToolStylesheetConfig null or the new style sheet configuration to apply
      */
-    protected void toolStylesheetDidChange(StylesheetProvider newToolStylesheetConfig) {
+    protected void toolStylesheetDidChange(ToolStylesheetProvider newToolStylesheetConfig) {
 
         if (root == null) { // nothing to style so return
             return;
