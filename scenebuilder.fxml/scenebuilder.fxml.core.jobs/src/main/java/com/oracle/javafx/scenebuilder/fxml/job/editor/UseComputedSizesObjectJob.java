@@ -40,7 +40,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
@@ -49,7 +49,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.fxml.job.editor.atomic.ModifyObjectJob;
 
@@ -69,14 +69,14 @@ import javafx.scene.layout.RowConstraints;
 public final class UseComputedSizesObjectJob extends BatchDocumentJob {
 
     private FXOMInstance fxomInstance;
-    private final Metadata metadata;
+    private final IMetadata metadata;
     private final ModifyObjectJob.Factory modifyObjectJobFactory;
 
  // @formatter:off
     protected UseComputedSizesObjectJob(
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
-            Metadata metadata,
+            IMetadata metadata,
             ModifyObjectJob.Factory modifyObjectJobFactory) {
     // @formatter:on
         super(extensionFactory, documentManager);

@@ -36,14 +36,14 @@ package com.oracle.javafx.scenebuilder.fxml.job.editor.atomic;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.util.AnchorUtils;
 import com.oracle.javafx.scenebuilder.util.MathUtils;
@@ -67,7 +67,7 @@ public final class RelocateNodeJob extends AbstractJob {
     private static final PropertyName bottomAnchorName = new PropertyName("bottomAnchor", AnchorPane.class); //NOCHECK
 
 
-    private final Metadata metadata;
+    private final IMetadata metadata;
 
     private FXOMInstance fxomInstance;
     private double oldLayoutX;
@@ -93,7 +93,7 @@ public final class RelocateNodeJob extends AbstractJob {
 
     protected RelocateNodeJob(
             JobExtensionFactory extensionFactory,
-            Metadata metadata) {
+            IMetadata metadata) {
         super(extensionFactory);
         this.metadata = metadata;
     }

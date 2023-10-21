@@ -38,13 +38,13 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetProvider;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.dnd.DropTarget;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.util.CoordinateHelper;
+import com.oracle.javafx.scenebuilder.core.dnd.droptarget.AccessoryDropTarget;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
-import com.oracle.javafx.scenebuilder.draganddrop.droptarget.AccessoryDropTarget;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;

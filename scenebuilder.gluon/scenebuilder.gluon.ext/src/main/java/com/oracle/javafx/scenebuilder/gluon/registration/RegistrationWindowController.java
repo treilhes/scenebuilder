@@ -45,11 +45,11 @@ import java.util.regex.Pattern;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
+import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.gluon.controller.TrackingController;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationEmailPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationHashPreference;
@@ -91,7 +91,7 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
     public RegistrationWindowController(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
-            DocumentWindow window,
+            EditorInstanceWindow window,
             TrackingController tracking,
             RegistrationHashPreference registrationHashPreference,
             RegistrationEmailPreference registrationEmailPreference,

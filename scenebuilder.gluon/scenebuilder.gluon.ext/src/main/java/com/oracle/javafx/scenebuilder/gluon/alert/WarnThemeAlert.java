@@ -33,8 +33,8 @@
 
 package com.oracle.javafx.scenebuilder.gluon.alert;
 
-import com.oracle.javafx.scenebuilder.api.alert.SBAlert;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.ui.alert.SBAlert;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;

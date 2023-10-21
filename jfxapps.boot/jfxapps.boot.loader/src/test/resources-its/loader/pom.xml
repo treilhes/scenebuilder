@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>it.core.loader</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>editors</module>
+        <module>app</module>
+    </modules>
+
+<properties>
+        <!-- compiler -->
+        <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
+        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <junit.version>5.7.0</junit.version>
+        <junit-platform.version>1.7.1</junit-platform.version>
+        <jackson.version>2.11.3</jackson.version>
+        <spring.boot.version>2.5.0</spring.boot.version>
+        <testfx.junit.version>4.0.16-alpha</testfx.junit.version>
+        <mockserver.jupiter.version>5.11.2</mockserver.jupiter.version>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.api</artifactId>
+            <version>17.0.0-SNAPSHOT</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.moditect.layrry/layrry-core -->
+        <dependency>
+            <groupId>org.moditect.layrry</groupId>
+            <artifactId>layrry-core</artifactId>
+            <version>1.0.0.Alpha2</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.starter</artifactId>
+            <version>17.0.0-SNAPSHOT</version>
+            </dependency>
+    </dependencies>
+    
+    <build><plugins>
+    <!-- Build KIT wherever parent is cleaned -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.plugin.version}</version>
+                    <configuration>
+                        <useIncrementalCompilation>false</useIncrementalCompilation>
+                        
+                    </configuration>
+                </plugin>
+                </plugins>
+                </build>
+</project>

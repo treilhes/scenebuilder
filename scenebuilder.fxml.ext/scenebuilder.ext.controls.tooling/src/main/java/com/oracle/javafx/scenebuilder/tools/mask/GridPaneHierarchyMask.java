@@ -39,7 +39,7 @@ import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.mask.AbstractHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.mask.MaskFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
@@ -49,7 +49,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 
 import javafx.scene.layout.GridPane;
@@ -67,7 +67,7 @@ public class GridPaneHierarchyMask extends AbstractHierarchyMask {
 
     private Accessory childrenAccessory;
 
-    public GridPaneHierarchyMask(Metadata metadata) {
+    public GridPaneHierarchyMask(IMetadata metadata) {
         super(metadata);
     }
 

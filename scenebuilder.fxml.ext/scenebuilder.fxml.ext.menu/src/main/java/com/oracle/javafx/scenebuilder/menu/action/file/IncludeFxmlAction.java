@@ -37,15 +37,15 @@ import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
-import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.fs.job.ImportFileJob;
 import com.oracle.javafx.scenebuilder.fs.job.IncludeFileJob;
@@ -73,7 +73,7 @@ public class IncludeFxmlAction extends AbstractFxmlAction {
     public IncludeFxmlAction(
             ActionExtensionFactory extensionFactory,
             FileSystem fileSystem,
-            DocumentWindow documentWindow,
+            EditorInstanceWindow documentWindow,
             JobManager jobManager,
             MessageLogger messageLogger,
             ImportFileJob.Factory importFileJobFactory,

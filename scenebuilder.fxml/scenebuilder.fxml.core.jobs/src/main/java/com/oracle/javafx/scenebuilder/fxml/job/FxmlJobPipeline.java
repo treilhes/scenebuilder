@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,16 +33,12 @@
  */
 package com.oracle.javafx.scenebuilder.fxml.job;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobPipeline;
+import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.fxml.job.editor.reference.UpdateReferencesJob;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Window
 public class FxmlJobPipeline implements JobPipeline {
 
     private final UpdateReferencesJob.Factory updateReferencesJobFactory;

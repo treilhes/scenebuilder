@@ -15,21 +15,21 @@
             <artifactId>scenebuilder.fxml.api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.jobs</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.jobs</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.selection</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.selection</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.drag.and.drop</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.drag.and.drop</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.menu</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.ext.menu</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>

@@ -44,20 +44,20 @@ import org.scenebuilder.fxml.api.Documentation;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.api.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.core.editors.AutoSuggestEditor;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
+import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
 
 import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
@@ -91,13 +91,13 @@ public class BoundedDoubleEditor extends AutoSuggestEditor {
     private int roundingFactor = 1; // no decimals
     private boolean updateFromTextField = false;
     private boolean updateFromSlider = false;
-    private final Metadata metadata;
+    private final IMetadata metadata;
 
     public BoundedDoubleEditor(
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem,
-            Metadata metadata) {
+            IMetadata metadata) {
         super(dialog, documentation, fileSystem);
         this.metadata = metadata;
         preInit(Type.DOUBLE, new ArrayList<>());

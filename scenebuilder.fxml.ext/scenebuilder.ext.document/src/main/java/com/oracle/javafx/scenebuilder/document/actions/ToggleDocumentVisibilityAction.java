@@ -38,11 +38,11 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.dock.DockViewController;
-import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.api.ui.dock.DockViewController;
+import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.document.api.DocumentPanel;
 import com.oracle.javafx.scenebuilder.menu.action.AbstractToggleViewVisibilityAction;
 

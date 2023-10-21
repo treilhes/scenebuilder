@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,48 +36,26 @@ package com.oracle.javafx.scenebuilder.menu.action;
 import java.io.IOException;
 import java.net.URL;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.oracle.javafx.scenebuilder.api.Document;
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.preferences.Preferences;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
+@Prototype
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 public class LoadUrlAction extends AbstractAction {
 
-    private final Document document;
-    private final DocumentWindow documentWindow;
-    private final Editor editor;
-    private final Preferences preferences;
+    private final FileSystem fileSystem;
 
     private URL fxmlURL;
     private boolean keepTrackOfLocation;
 
     protected LoadUrlAction(
-            @Autowired ActionExtensionFactory extensionFactory,
-            @Autowired Document document,
-            @Autowired DocumentWindow documentWindow,
-            @Autowired Preferences preferences,
-            @Autowired Editor editor
+            ActionExtensionFactory extensionFactory,
+            FileSystem fileSystem
             ) {
         super(extensionFactory);
-        this.document = document;
-        this.editor = editor;
-        this.preferences = preferences;
-        this.documentWindow = documentWindow;
+        this.fileSystem = fileSystem;
     }
 
     public void setKeepTrackOfLocation(boolean keepTrackOfLocation) {
@@ -104,21 +82,7 @@ public class LoadUrlAction extends AbstractAction {
     public ActionStatus doPerform() {
         assert fxmlURL != null;
         try {
-            final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
-            editor.setFxmlTextAndLocation(fxmlText, keepTrackOfLocation ? fxmlURL : null, false);
-            document.updateLoadFileTime();
-            documentWindow.updateStageTitle(); // No-op if fxml has not been loaded yet
-
-            documentWindow.untrack();
-            preferences.readFromJavaPreferences();
-
-            SbPlatform.runForDocumentLater(() -> {
-                documentWindow.apply();
-                documentWindow.track();
-            });
-            // TODO remove after checking the new watching system is operational in
-            // EditorController or in filesystem
-            // watchingController.update();
+            fileSystem.loadFromURL(fxmlURL, keepTrackOfLocation);
         } catch (IOException x) {
             throw new IllegalStateException(x);
         }

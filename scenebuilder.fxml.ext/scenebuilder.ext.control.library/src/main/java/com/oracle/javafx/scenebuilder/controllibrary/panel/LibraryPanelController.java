@@ -51,28 +51,28 @@ import java.util.TreeSet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.scenebuilder.fxml.api.SbEditor;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.dnd.Drag;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
-import com.oracle.javafx.scenebuilder.api.dock.Dock;
-import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
-import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
+import com.oracle.javafx.scenebuilder.api.ui.dock.Dock;
+import com.oracle.javafx.scenebuilder.api.ui.dock.ViewSearch;
+import com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.controllibrary.action.InsertControlAction;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
@@ -152,7 +152,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     private final Drag drag;
     private final LibraryController libraryController;
     private FXOMDocument fxomDocument;
-    private final Editor editorController;
+    private final SbEditor editorController;
 
     private final ViewSearch viewSearch;
     private final SceneBuilderBeanFactory sceneBuilderBeanFactory;
@@ -173,7 +173,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     public LibraryPanelController(
             SceneBuilderManager scenebuilderManager,
             FxmlDocumentManager documentManager,
-            Editor editor,
+            SbEditor editor,
             Dialog dialog,
             Drag drag,
             DisplayModePreference displayModePreference,
@@ -631,7 +631,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
 
                     @Override
                     public void run() {
-                        SbPlatform.runLater(() -> processImportJarFxml(droppedFileList));
+                        SbPlatform.runOnFxThread(() -> processImportJarFxml(droppedFileList));
                         // I don't need to use the timer later on so by
                         // cancelling it right here I'm sure free resources
                         // that otherwise would prevent the JVM from exiting.
@@ -809,7 +809,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
         return libList;
     }
 
-    public Editor getEditorController() {
+    public SbEditor getEditorController() {
         return editorController;
     }
 

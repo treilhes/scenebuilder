@@ -44,12 +44,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.scenebuilder.fxml.api.Documentation;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.Glossary;
-import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
+import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 
 @ExtendWith({ApplicationExtension.class, MockitoExtension.class})

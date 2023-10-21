@@ -33,11 +33,11 @@
  */
 package com.oracle.javafx.scenebuilder.api.control.rudder;
 
+import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
-import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.content.decoration.AbstractDecoration;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
-import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
 
 /**
  *

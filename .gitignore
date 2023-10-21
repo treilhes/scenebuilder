@@ -12,6 +12,7 @@ target/
 out/
 
 # Eclipse
+.factorypath
 .classpath
 .project
 .settings/

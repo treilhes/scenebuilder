@@ -43,8 +43,8 @@ import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.error.AbstractErrorCollector;
 import com.oracle.javafx.scenebuilder.api.error.ErrorReportEntry;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
@@ -64,11 +64,11 @@ public class AssetsErrorCollector extends AbstractErrorCollector implements Watc
     private final FxmlDocumentManager documentManager;
     private final Map<Path, CSSParsingReportImpl> cssParsingReports = new HashMap<>();
     private final FileSystem fileSystem;
-    private final DocumentWindow documentWindow;
+    private final EditorInstanceWindow documentWindow;
 
     public AssetsErrorCollector(
             FileSystem fileSystem,
-            DocumentWindow documentWindow,
+            EditorInstanceWindow documentWindow,
             FxmlDocumentManager documentManager,
             DesignHierarchyMask.Factory designHierarchyMaskFactory) {
         super();

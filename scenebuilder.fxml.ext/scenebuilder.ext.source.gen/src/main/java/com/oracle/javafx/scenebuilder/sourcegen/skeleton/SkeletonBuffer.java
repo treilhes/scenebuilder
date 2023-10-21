@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -14,7 +15,7 @@
  *  - Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the distribution.
- *  - Neither the name of Oracle Corporation nor the names of its
+ *  - Neither the name of Oracle Corporation and Gluon nor the names of its
  *    contributors may be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
@@ -39,6 +40,8 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
+import com.oracle.javafx.scenebuilder.core.fxom.collector.FxEventHandlerCollector;
+import com.oracle.javafx.scenebuilder.core.fxom.collector.FxIdCollector;
 import com.oracle.javafx.scenebuilder.sourcegen.util.eventnames.FindEventNamesUtil;
 
 class SkeletonBuffer {
@@ -95,7 +98,7 @@ class SkeletonBuffer {
     }
 
     private void constructFxIds(SkeletonContext.Builder builder) {
-        for (FXOMObject value : document.collectFxIds().values()) {
+        for (FXOMObject value : document.collect(FxIdCollector.fxIdsMap()).values()) {
             builder.addFxId(value);
         }
     }
@@ -104,7 +107,7 @@ class SkeletonBuffer {
         // need to initialize the internal events map
         FindEventNamesUtil.initializeEventsMap();
 
-        for (FXOMPropertyT eventHandler : document.getFxomRoot().collectEventHandlers()) {
+        for (FXOMPropertyT eventHandler : document.getFxomRoot().collect(FxEventHandlerCollector.allEventHandlers())) {
             builder.addEventHandler(eventHandler);
         }
     }

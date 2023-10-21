@@ -49,14 +49,14 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
-import com.oracle.javafx.scenebuilder.api.menu.Attachment;
-import com.oracle.javafx.scenebuilder.api.menu.ContextMenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.menu.ContextMenuItemProvider;
+import com.oracle.javafx.scenebuilder.api.ui.menu.Attachment;
+import com.oracle.javafx.scenebuilder.api.ui.menu.ContextMenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.menu.ContextMenuItemProvider;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
@@ -73,7 +73,7 @@ import javafx.scene.control.SeparatorMenuItem;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class ContextMenuController implements com.oracle.javafx.scenebuilder.api.ContextMenu {
+public class ContextMenuController implements com.oracle.javafx.scenebuilder.api.ui.menu.ContextMenu {
 
     private static final Logger logger = LoggerFactory.getLogger(ContextMenuController.class);
 

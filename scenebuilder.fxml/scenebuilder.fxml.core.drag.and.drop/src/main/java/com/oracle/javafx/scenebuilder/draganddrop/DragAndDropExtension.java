@@ -41,6 +41,7 @@ import com.oracle.javafx.scenebuilder.draganddrop.droptarget.AccessoryDropTarget
 import com.oracle.javafx.scenebuilder.draganddrop.droptarget.ContainerXYDropTarget;
 import com.oracle.javafx.scenebuilder.draganddrop.droptarget.ContainerZDropTargetBck;
 import com.oracle.javafx.scenebuilder.draganddrop.droptarget.RootDropTarget;
+import com.oracle.javafx.scenebuilder.draganddrop.source.DocumentDragSource;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class DragAndDropExtension extends AbstractExtension {
@@ -59,6 +60,8 @@ public class DragAndDropExtension extends AbstractExtension {
                 ContainerXYDropTarget.Factory.class,
                 ContainerZDropTargetBck.class,
                 ContainerZDropTargetBck.Factory.class,
+                DocumentDragSource.class,
+                DocumentDragSource.Factory.class,
                 RootDropTarget.class,
                 RootDropTarget.Factory.class
             );

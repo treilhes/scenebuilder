@@ -43,25 +43,25 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 
+import org.scenebuilder.fxml.api.SbEditor;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Document;
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.InlineEdit;
-import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert;
-import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert.ButtonID;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert.ButtonID;
+import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
+import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.fs.preference.global.WildcardImportsPreference;
 
@@ -71,21 +71,21 @@ import com.oracle.javafx.scenebuilder.fs.preference.global.WildcardImportsPrefer
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 public class SaveAction extends AbstractAction {
 
-    private final Document document;
+    private final EditorInstance document;
     private final InlineEdit inlineEdit;
     private final Dialog dialog;
-    private final DocumentWindow documentWindow;
+    private final EditorInstanceWindow documentWindow;
     private final MessageLogger messageLogger;
     private final WildcardImportsPreference wildcardImportsPreference;
-    private final Editor editor;
+    private final SbEditor editor;
     private final FxmlDocumentManager documentManager;
 
     public SaveAction(
             ActionExtensionFactory extensionFactory,
-            @Autowired Document document,
+            @Autowired EditorInstance document,
             @Autowired FxmlDocumentManager documentManager,
-            @Autowired DocumentWindow documentWindow,
-            @Autowired Editor editor,
+            @Autowired EditorInstanceWindow documentWindow,
+            @Autowired SbEditor editor,
             @Autowired InlineEdit inlineEdit,
             @Autowired Dialog dialog,
             @Autowired MessageLogger messageLogger,

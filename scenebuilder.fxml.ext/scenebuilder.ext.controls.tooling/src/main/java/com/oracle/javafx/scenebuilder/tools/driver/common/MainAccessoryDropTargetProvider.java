@@ -37,11 +37,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetProvider;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.dnd.DropTarget;
+import com.oracle.javafx.scenebuilder.core.dnd.droptarget.AccessoryDropTarget;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.draganddrop.droptarget.AccessoryDropTarget;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)

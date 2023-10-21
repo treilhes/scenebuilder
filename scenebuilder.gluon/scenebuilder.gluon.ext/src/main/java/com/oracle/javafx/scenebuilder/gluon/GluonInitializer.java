@@ -35,10 +35,10 @@ package com.oracle.javafx.scenebuilder.gluon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.WelcomeDialog;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.gluon.controller.GluonJarImportController;
 import com.oracle.javafx.scenebuilder.gluon.controller.RegistrationController;
@@ -76,13 +76,13 @@ public class GluonInitializer implements InitWithSceneBuilder {
         gluonJarImportController.startListeningLibrary();
         trackingController.sendTrackingStartupInfo();
 
-        SbPlatform.runLater(() -> {
+        SbPlatform.runOnFxThread(() -> {
             context.getBean(WelcomeDialog.class).getStage().setOnHidden(event -> {
-                updateController.showUpdateDialogIfRequired(context.getBean(DocumentWindow.class), () -> {
+                updateController.showUpdateDialogIfRequired(context.getBean(EditorInstanceWindow.class), () -> {
                     if (!Platform.isFxApplicationThread()) {
-                        SbPlatform.runLater(() -> registrationController.showRegistrationDialogIfRequired(context.getBean(DocumentWindow.class)));
+                        SbPlatform.runOnFxThread(() -> registrationController.showRegistrationDialogIfRequired(context.getBean(EditorInstanceWindow.class)));
                     } else {
-                        registrationController.showRegistrationDialogIfRequired(context.getBean(DocumentWindow.class));
+                        registrationController.showRegistrationDialogIfRequired(context.getBean(EditorInstanceWindow.class));
                     }
                 });
             });

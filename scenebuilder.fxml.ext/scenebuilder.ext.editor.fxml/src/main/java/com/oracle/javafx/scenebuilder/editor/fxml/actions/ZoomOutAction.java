@@ -37,14 +37,14 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.misc.Workspace;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
@@ -64,17 +64,17 @@ public class ZoomOutAction extends AbstractAction {
 
     public final static String ZOOM_OUT_MENU_ID = "zoomOutMenu"; //NOCHECK
 
-    private final Content content;
+    private final Workspace workspace;
 
-    public ZoomOutAction(ActionExtensionFactory extensionFactory, Content content) {
+    public ZoomOutAction(ActionExtensionFactory extensionFactory, Workspace workspace) {
         super(extensionFactory);
-        this.content = content;
+        this.workspace = workspace;
     }
 
     @Override
     public boolean canPerform() {
         boolean result;
-        final int currentScalingIndex = ZoomFeatureConfig.scalingTable.indexOf(content.getScaling());
+        final int currentScalingIndex = ZoomFeatureConfig.scalingTable.indexOf(workspace.getScaling());
         result = 0 <= currentScalingIndex - 1;
         return result;
     }
@@ -83,9 +83,9 @@ public class ZoomOutAction extends AbstractAction {
     public ActionStatus doPerform() {
         assert canPerform();
 
-        final int currentScalingIndex = ZoomFeatureConfig.scalingTable.indexOf(content.getScaling());
+        final int currentScalingIndex = ZoomFeatureConfig.scalingTable.indexOf(workspace.getScaling());
         final double newScaling = ZoomFeatureConfig.scalingTable.get(currentScalingIndex - 1);
-        content.setScaling(newScaling);
+        workspace.setScaling(newScaling);
 
         return ActionStatus.DONE;
     }

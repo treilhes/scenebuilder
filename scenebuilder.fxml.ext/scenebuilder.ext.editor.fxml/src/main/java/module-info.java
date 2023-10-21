@@ -47,7 +47,6 @@ open module scenebuilder.ext.editor.fxml {
 
     requires scenebuilder.starter;
     requires transitive scenebuilder.fxml.api;
-    requires transitive scenebuilder.core.core;
     requires scenebuilder.core.drag.and.drop;
 //    requires io.reactivex.rxjava2;
 //    requires java.logging;

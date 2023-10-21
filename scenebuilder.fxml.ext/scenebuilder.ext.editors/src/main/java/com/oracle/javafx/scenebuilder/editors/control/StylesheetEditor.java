@@ -49,12 +49,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.api.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -62,6 +61,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue.Type;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
+import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.util.URLUtils;
 
 import javafx.beans.value.ChangeListener;

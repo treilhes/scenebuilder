@@ -49,8 +49,6 @@ import org.springframework.context.ApplicationContext;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import com.oracle.javafx.scenebuilder.api.ContextMenu;
-import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.dnd.Drag;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
@@ -58,11 +56,13 @@ import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.ui.menu.ContextMenu;
+import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.DocumentDragSource;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyCellAssignment;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyController;
@@ -160,7 +160,7 @@ class DocumentUiTest {
     HierarchyParentRing parentRing;
 
     @Mock
-    Metadata metadata;
+    IMetadata metadata;
 
     //@Test
     void testForTest() {
@@ -202,7 +202,7 @@ class DocumentUiTest {
                             loader.getLocation(), loader.getController()), x); // NOI18N
         }
 
-        SbPlatform.runLater(() -> {
+        SbPlatform.runOnFxThread(() -> {
             controller.getRoot().getStylesheets().add("file:///C:/SSDDrive/git/scenebuilder/scenebuilder.ext.sb/src/main/resources/com/oracle/javafx/scenebuilder/sb/css/ThemeDark.css");
             Scene scene = new Scene(controller.getRoot(), 300, 600);
             stage.setScene(scene);
@@ -244,7 +244,7 @@ class DocumentUiTest {
                             loader.getLocation(), loader.getController()), x); // NOI18N
         }
 
-        SbPlatform.runLater(() -> {
+        SbPlatform.runOnFxThread(() -> {
             controller.getRoot().getStylesheets().add("file:///C:/SSDDrive/git/scenebuilder/scenebuilder.ext.sb/src/main/resources/com/oracle/javafx/scenebuilder/sb/css/ThemeDark.css");
             Scene scene = new Scene(controller.getRoot(), 300, 600);
             stage.setScene(scene);

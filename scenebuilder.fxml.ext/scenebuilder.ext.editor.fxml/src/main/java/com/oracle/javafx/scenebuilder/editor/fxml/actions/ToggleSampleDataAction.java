@@ -33,18 +33,18 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 
+import org.scenebuilder.fxml.api.SbEditor;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 @Component
@@ -61,12 +61,12 @@ public class ToggleSampleDataAction extends AbstractAction {
     public final static String MENU_ID = "toggleSampleDataMenu";
 
     private final FxmlDocumentManager documentManager;
-    private final Editor editor;
+    private final SbEditor editor;
 
     public ToggleSampleDataAction(
             ActionExtensionFactory extensionFactory,
             FxmlDocumentManager documentManager,
-            Editor editor) {
+            SbEditor editor) {
         super(extensionFactory);
         this.documentManager = documentManager;
         this.editor = editor;

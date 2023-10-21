@@ -44,9 +44,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.action.AbstractActionExtension;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem.WatchingCallback;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithDocument;
@@ -88,7 +88,7 @@ public class ApplyI18nContentWatchExtension extends AbstractActionExtension<Appl
         if (i18NResourcePreference.getValue() != null) {
             List<File> toWatch = i18NResourcePreference.getValue().stream().map(s -> new File(URI.create(s)))
                     .collect(Collectors.toList());
-            fileSystem.watch(context.getBean(DocumentWindow.class), toWatch, this);
+            fileSystem.watch(context.getBean(EditorInstanceWindow.class), toWatch, this);
         }
     }
 

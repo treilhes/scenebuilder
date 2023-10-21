@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.imagelibrary.panel;
 
-import com.oracle.javafx.scenebuilder.api.dock.View;
+import com.oracle.javafx.scenebuilder.api.ui.dock.View;
 
 /**
  * @author ptreilhes

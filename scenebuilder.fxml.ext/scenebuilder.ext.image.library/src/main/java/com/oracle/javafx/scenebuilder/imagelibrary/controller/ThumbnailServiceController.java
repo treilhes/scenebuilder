@@ -45,7 +45,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
@@ -92,7 +92,7 @@ public class ThumbnailServiceController implements DisposeWithSceneBuilder {
             if (view.getImage() != null && url.toExternalForm().equals(view.getImage().getUrl())) {
                 return;
             } else {
-                SbPlatform.runLater(() -> view.setImage(new Image(url.toExternalForm())));
+                SbPlatform.runOnFxThread(() -> view.setImage(new Image(url.toExternalForm())));
                 return;
             }
         }
@@ -116,7 +116,7 @@ public class ThumbnailServiceController implements DisposeWithSceneBuilder {
                     final CountDownLatch latch = new CountDownLatch(1);
                     final SimpleObjectProperty<WritableImage> imageProperty = new SimpleObjectProperty<>();
                     
-                    SbPlatform.runLater(() -> {
+                    SbPlatform.runOnFxThread(() -> {
                         WritableImage snapshot = node.snapshot(param, null);
                         
                         ImageView imageView = new ImageView(snapshot);
@@ -136,7 +136,7 @@ public class ThumbnailServiceController implements DisposeWithSceneBuilder {
                     URL newUrl = imageLibrary.getStore().getThumbnail(name, width, height);
                     
                     if (newUrl != null) {
-                        SbPlatform.runLater(() -> view.setImage(new Image(newUrl.toExternalForm())));
+                        SbPlatform.runOnFxThread(() -> view.setImage(new Image(newUrl.toExternalForm())));
                         return newUrl;
                     }
                     

@@ -4,31 +4,31 @@
     <artifactId>dev.utils</artifactId>
 
     <parent>
-        <groupId>com.gluonhq.scenebuilder</groupId>
+        <groupId>com.gluonhq.jfxapps</groupId>
         <artifactId>parent</artifactId>
         <version>17.0.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.api</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.sb</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.ext.sb</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.jobs</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.jobs</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.ext.editors</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.starter.test</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.app.starter.test</artifactId>
             <scope>test</scope>
         </dependency>
 

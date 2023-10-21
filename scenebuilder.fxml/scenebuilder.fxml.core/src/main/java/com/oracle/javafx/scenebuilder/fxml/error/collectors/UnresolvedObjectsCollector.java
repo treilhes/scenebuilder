@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,23 +33,23 @@
  */
 package com.oracle.javafx.scenebuilder.fxml.error.collectors;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import java.util.Optional;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+
 import com.oracle.javafx.scenebuilder.api.error.AbstractErrorCollector;
 import com.oracle.javafx.scenebuilder.api.error.ErrorReportEntry;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInclude;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.collector.FxIdCollector;
 import com.oracle.javafx.scenebuilder.fxml.error.FxmlErrorReportEntryImpl;
 import com.oracle.javafx.scenebuilder.fxml.error.Type;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@Window
 public class UnresolvedObjectsCollector extends AbstractErrorCollector {
 
     private final DesignHierarchyMask.Factory designHierarchyMaskFactory;
@@ -79,9 +79,11 @@ public class UnresolvedObjectsCollector extends AbstractErrorCollector {
                 sceneGraphObject = fxomIntrinsic.getSourceSceneGraphObject();
                 if (!(fxomObject instanceof FXOMInclude)) {
                     String reference = fxomIntrinsic.getSource();
-                    final FXOMObject referee = fxomIntrinsic.getFxomDocument().searchWithFxId(reference);
 
-                    if (referee == null) {
+                    Optional<FXOMObject> referee = fxomIntrinsic.getFxomDocument()
+                            .collect(FxIdCollector.findFirstById(reference));
+
+                    if (referee.isEmpty()) {
                         final ErrorReportEntry newEntry = new FxmlErrorReportEntryImpl(fxomObject,
                                 Type.UNRESOLVED_REFERENCE, designHierarchyMaskFactory);
                         result.add(fxomObject, newEntry);

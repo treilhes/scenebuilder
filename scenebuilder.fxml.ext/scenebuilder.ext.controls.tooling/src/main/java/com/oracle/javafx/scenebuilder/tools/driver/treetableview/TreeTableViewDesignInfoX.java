@@ -38,7 +38,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
+import com.oracle.javafx.scenebuilder.api.util.CoordinateHelper;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;

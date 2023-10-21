@@ -41,16 +41,16 @@ import java.util.Set;
 
 import org.scenebuilder.fxml.api.Documentation;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.css.CssPropAuthorInfo;
-import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert;
-import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert.ButtonID;
-import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert.ButtonID;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
+import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -47,33 +47,35 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.scenebuilder.fxml.api.SbEditor;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Documentation;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardHandler;
 import com.oracle.javafx.scenebuilder.api.css.CssInternal;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.dnd.Drag;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
-import com.oracle.javafx.scenebuilder.api.dock.Dock;
-import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
-import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
+import com.oracle.javafx.scenebuilder.api.ui.dock.Dock;
+import com.oracle.javafx.scenebuilder.api.ui.dock.ViewSearch;
+import com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.collector.SceneGraphCollector;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath.Item;
@@ -85,7 +87,6 @@ import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.Pro
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssValuePresenterFactory.CssValuePresenter;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.NodeCssState.CssProperty;
 import com.oracle.javafx.scenebuilder.cssanalyser.preferences.global.CssTableColumnsOrderingReversedPreference;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.util.NodeUtils;
 
 import javafx.animation.FadeTransition;
@@ -220,7 +221,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
 
     private Object selectedObject; // Can be either an FXOMObject (selection mode), or a Node (pick mode)
     private final Selection selection;
-    private final Editor editor;
+    private final SbEditor editor;
     private final Delegate applicationDelegate;
     private final ObjectProperty<NodeCssState> cssStateProperty = new SimpleObjectProperty<>();
 
@@ -232,7 +233,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     private final Drag drag;
 
     private final ViewSearch viewSearch;
-    private final Metadata metadata;
+    private final IMetadata metadata;
 
     /**
      * Should be implemented by the application.
@@ -253,9 +254,9 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     public CssPanelController(
             SceneBuilderManager scenebuilderManager,
             FxmlDocumentManager documentManager,
-            Metadata metadata,
+            IMetadata metadata,
             Selection selection,
-            Editor editor,
+            SbEditor editor,
             Delegate delegate,
             CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
             Drag drag,
@@ -760,7 +761,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     }
 
     private boolean isMultipleSelection() {
-        if (selection != null && selection.getGroup() instanceof ObjectSelectionGroup) {
+        if (selection != null && selection.getGroup() instanceof DefaultSelectionGroupFactory) {
             return selection.getGroup().getItems().size() > 1;
         } else {
             // GridSelectionGroup: consider the GridPane only
@@ -841,13 +842,13 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
 
     private Node getEnclosingNode(FXOMDocument fxomDoc, Node n) {
         Node node = n;
-        FXOMObject enclosingFXOMObj = fxomDoc.searchWithSceneGraphObject(node);
+        FXOMObject enclosingFXOMObj = fxomDoc.collect(SceneGraphCollector.findSceneGraphObject(node)).get();
         while (enclosingFXOMObj == null) {
             node = node.getParent();
             if (node == null) {
                 return null;
             }
-            enclosingFXOMObj = fxomDoc.searchWithSceneGraphObject(node);
+            enclosingFXOMObj = fxomDoc.collect(SceneGraphCollector.findSceneGraphObject(node)).get();
         }
         Object enclosingObj = enclosingFXOMObj.getSceneGraphObject();
         assert enclosingObj instanceof Node;
@@ -1616,7 +1617,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         if (selection == null) {
             return null;
         }
-        if (selection.getGroup() instanceof ObjectSelectionGroup) {
+        if (selection.getGroup() instanceof DefaultSelectionGroupFactory) {
             for (FXOMObject item : selection.getGroup().getItems()) {
                 if (item instanceof FXOMInstance) {
                     fxomInstance = (FXOMInstance) item;
@@ -2274,7 +2275,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         parent.getChildren().add(item);
     }
 
-    public Editor getEditorController() {
+    public SbEditor getEditorController() {
         return editor;
     }
 

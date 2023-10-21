@@ -47,7 +47,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -60,7 +60,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
@@ -81,7 +81,7 @@ public final class AddTooltipToSelectionJob extends BatchSelectionJob {
     private final FXOMDocument fxomDocument;
     private final SceneBuilderManager sceneBuilderManager;
     private final DesignHierarchyMask.Factory designMaskFactory;
-    private final Metadata metadata;
+    private final IMetadata metadata;
     private final InsertAsAccessoryJob.Factory insertAsAccessoryJobFactory;
     private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
 
@@ -91,7 +91,7 @@ public final class AddTooltipToSelectionJob extends BatchSelectionJob {
             SceneBuilderManager sceneBuilderManager,
             Selection selection,
             DesignHierarchyMask.Factory designMaskFactory,
-            Metadata metadata,
+            IMetadata metadata,
             InsertAsAccessoryJob.Factory insertAsAccessoryJobFactory,
             ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
         super(extensionFactory, documentManager, selection);

@@ -42,7 +42,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
@@ -53,7 +53,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
@@ -76,7 +76,7 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
 
     private final Selection selection;
     private final ModifyObjectJob.Factory modifyObjectJobFactory;
-    private final Metadata metadata;
+    private final IMetadata metadata;
 
     protected ValuePropertyMetadata propertyMetadata;
     protected Object newValue;
@@ -85,7 +85,7 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             Selection selection,
-            Metadata metadata,
+            IMetadata metadata,
             ModifyObjectJob.Factory modifyObjectJobFactory) {
         super(extensionFactory, documentManager);
         assert cacheHintPN.equals(propertyMetadata.getName());

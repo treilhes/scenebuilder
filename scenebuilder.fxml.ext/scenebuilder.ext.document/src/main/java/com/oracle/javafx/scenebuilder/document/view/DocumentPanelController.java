@@ -38,14 +38,14 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.dock.Dock;
-import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
-import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
+import com.oracle.javafx.scenebuilder.api.ui.dock.Dock;
+import com.oracle.javafx.scenebuilder.api.ui.dock.ViewSearch;
+import com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
 import com.oracle.javafx.scenebuilder.document.api.DocumentPanel;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyController;

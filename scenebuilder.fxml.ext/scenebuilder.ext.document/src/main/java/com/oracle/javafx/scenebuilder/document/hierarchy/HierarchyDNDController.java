@@ -40,13 +40,16 @@ import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.InlineEdit;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.dnd.Drag;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
 import com.oracle.javafx.scenebuilder.api.dnd.DropTarget;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
+import com.oracle.javafx.scenebuilder.core.dnd.droptarget.AccessoryDropTarget;
+import com.oracle.javafx.scenebuilder.core.dnd.droptarget.RootDropTarget;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.DocumentDragSource;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -59,9 +62,6 @@ import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
 import com.oracle.javafx.scenebuilder.document.hierarchy.item.HierarchyItemAccessory;
 import com.oracle.javafx.scenebuilder.document.hierarchy.item.HierarchyItemBase;
 import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeViewController;
-import com.oracle.javafx.scenebuilder.draganddrop.droptarget.AccessoryDropTarget;
-import com.oracle.javafx.scenebuilder.draganddrop.droptarget.RootDropTarget;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
@@ -804,9 +804,9 @@ System.out.println();
         }
 
         if (selection.isEmpty() == false) { // (1)
-            if (selection.getGroup() instanceof ObjectSelectionGroup) {
+            if (selection.getGroup() instanceof DefaultSelectionGroupFactory) {
                 // A set of regular component (ie fxom objects) are selected
-                final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
+                final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) selection.getGroup();
 
                 // Abort dragging an empty place holder
                 for (TreeItem<HierarchyItem> selectedTreeItem : selectedTreeItems) {

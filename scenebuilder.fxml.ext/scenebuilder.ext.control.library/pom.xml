@@ -15,26 +15,26 @@
             <artifactId>scenebuilder.fxml.api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.sb</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.ext.sb</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.jobs</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.jobs</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.library</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.library</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.filesystem</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.filesystem</artifactId>
         </dependency>
 
 
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.menu</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.ext.menu</artifactId>
         </dependency>
 
     </dependencies>

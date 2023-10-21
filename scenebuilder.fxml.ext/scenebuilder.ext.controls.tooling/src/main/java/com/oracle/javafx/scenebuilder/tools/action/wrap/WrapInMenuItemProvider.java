@@ -38,16 +38,16 @@ import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.menu.ContextMenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.menu.ContextMenuItemProvider;
-import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
-import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.menu.MenuItemProvider;
-import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
+import com.oracle.javafx.scenebuilder.api.ui.menu.ContextMenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.menu.ContextMenuItemProvider;
+import com.oracle.javafx.scenebuilder.api.ui.menu.DefaultMenu;
+import com.oracle.javafx.scenebuilder.api.ui.menu.MenuBuilder;
+import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemProvider;
+import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.SendBackwardAction;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.scene.control.Menu;
 
@@ -82,10 +82,10 @@ public class WrapInMenuItemProvider implements MenuItemProvider, ContextMenuItem
     @Override
     public List<ContextMenuItemAttachment> contextMenuItems() {
         Menu menu = menuBuilder.menu().withId(MENU_ID).withTitle(MENU_LABEL).build();
-        ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(menu, ObjectSelectionGroup.class, SendBackwardAction.MENU_ID, PositionRequest.AsNextSibling);
+        ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(menu, DefaultSelectionGroupFactory.class, SendBackwardAction.MENU_ID, PositionRequest.AsNextSibling);
         return List.of(
                 attachment,
-                ContextMenuItemAttachment.create(menuBuilder.separator().build(), ObjectSelectionGroup.class, MENU_ID, PositionRequest.AsPreviousSibling)
+                ContextMenuItemAttachment.create(menuBuilder.separator().build(), DefaultSelectionGroupFactory.class, MENU_ID, PositionRequest.AsPreviousSibling)
                 );
     }
 

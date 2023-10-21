@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -48,8 +48,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.GroupFactory;
 import com.oracle.javafx.scenebuilder.api.job.Job;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
@@ -58,10 +59,10 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
+import com.oracle.javafx.scenebuilder.core.fxom.collector.FxIdCollector;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.IntegerPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.DeleteGridSelectionJob;
 
 import javafx.scene.Node;
@@ -87,7 +88,7 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
     private final DesignHierarchyMask.Factory designHierarchyMaskFactory;
     private final DeleteGridSelectionJob.Factory deleteGridSelectionJobFactory;
     private final GridSelectionGroup.Factory gridSelectionGroupFactory;
-    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
+    private final DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory;
     private FXOMObject parentObject;
     private Type type;
     private final Set<Integer> indexes = new HashSet<>();
@@ -97,7 +98,7 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
             DesignHierarchyMask.Factory designHierarchyMaskFactory,
             DeleteGridSelectionJob.Factory deleteGridSelectionJobFactory,
             GridSelectionGroup.Factory gridSelectionGroupFactory,
-            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+            DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory) {
      // @formatter:on
         this.designHierarchyMaskFactory = designHierarchyMaskFactory;
         this.gridSelectionGroupFactory = gridSelectionGroupFactory;
@@ -543,7 +544,7 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
         // Collects fx:ids in selected objects and their descendants.
         final Map<String, FXOMObject> fxIdMap = new HashMap<>();
         for (FXOMObject selectedObject : collectSelectedObjects()) {
-            fxIdMap.putAll(selectedObject.collectFxIds());
+            fxIdMap.putAll(selectedObject.collect(FxIdCollector.fxIdsMap()));
         }
         return fxIdMap;
     }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,15 +33,13 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.gesture;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.ui.misc.Workspace;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 
 import javafx.scene.Node;
 import javafx.scene.input.InputEvent;
@@ -56,9 +55,11 @@ public class ZoomGesture extends AbstractGesture {
 
     private Observer observer;
 
-    protected ZoomGesture(
-            @Autowired @Lazy Content contentPanelController) {
-        super(contentPanelController);
+    private Workspace workspace;
+
+    protected ZoomGesture(Workspace workspace) {
+        super();
+        this.workspace = workspace;
     }
 
     /*
@@ -74,7 +75,7 @@ public class ZoomGesture extends AbstractGesture {
 
         this.observer = observer;
 
-        final Node glassLayer = contentPanelController.getGlassLayer();
+        final Node glassLayer = workspace.getGlassLayer();
         assert glassLayer.getOnZoom() == null;
         assert glassLayer.getOnZoomFinished() == null;
 
@@ -89,12 +90,12 @@ public class ZoomGesture extends AbstractGesture {
 
     private void updateContentPanelScaling(ZoomEvent e) {
         assert Double.isNaN(e.getZoomFactor()) == false;
-        final double scaling = contentPanelController.getScaling();
-        contentPanelController.setScaling(Math.min(5, scaling * e.getZoomFactor()));
+        final double scaling = workspace.getScaling();
+        workspace.setScaling(Math.min(5, scaling * e.getZoomFactor()));
     }
 
     private void performTermination() {
-        final Node glassLayer = contentPanelController.getGlassLayer();
+        final Node glassLayer = workspace.getGlassLayer();
         glassLayer.setOnZoom(null);
         glassLayer.setOnZoomFinished(null);
 

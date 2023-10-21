@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -50,6 +50,8 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
+import com.oracle.javafx.scenebuilder.core.fxom.collector.PropertyCollector;
+import com.oracle.javafx.scenebuilder.core.fxom.collector.SceneGraphCollector;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
@@ -91,14 +93,14 @@ public class FXOMUtils {
 
         final List<Path> targetPaths = new ArrayList<>();
 
-        for (FXOMPropertyT p : rootFxomObject.collectPropertiesT()) {
+        for (FXOMPropertyT p : rootFxomObject.collect(PropertyCollector.allSimpleProperties())) {
             final Path path = extractPath(p);
             if (path != null) {
                 targetPaths.add(path);
             }
         }
 
-        for (FXOMObject fxomObject : rootFxomObject.collectObjectWithSceneGraphObjectClass(URL.class)) {
+        for (FXOMObject fxomObject : rootFxomObject.collect(SceneGraphCollector.sceneGraphObjectByClass(URL.class))) {
             if (fxomObject instanceof FXOMInstance) {
                 final FXOMInstance urlInstance = (FXOMInstance) fxomObject;
                 final FXOMProperty valueProperty = urlInstance.getProperties().get(valueName);

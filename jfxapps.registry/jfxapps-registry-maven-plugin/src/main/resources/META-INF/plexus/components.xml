@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-set>
+  <components>
+    <component>
+      <role>org.codehaus.plexus.component.configurator.ComponentConfigurator</role>
+      <role-hint>jfxapps-mojo-component-configurator</role-hint>
+      <implementation>com.gluonhq.jfxapps.registry.plugin.JfxAppsRegistryConfigurator</implementation>
+    </component>
+  </components>
+</component-set>

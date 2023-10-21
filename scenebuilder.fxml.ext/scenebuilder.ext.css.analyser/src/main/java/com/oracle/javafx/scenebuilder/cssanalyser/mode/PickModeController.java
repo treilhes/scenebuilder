@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,20 +33,21 @@
  */
 package com.oracle.javafx.scenebuilder.cssanalyser.mode;
 
+import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.mode.AbstractModeController;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.collector.SceneGraphCollector;
 import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
 
 import javafx.event.EventHandler;
@@ -183,7 +184,7 @@ public class PickModeController extends AbstractModeController {
                 FXOMObject fxomObject = null;
                 Node node = hitNode;
                 while ((fxomObject == null) && (node != null)) {
-                    fxomObject = fxomRoot.searchWithSceneGraphObject(node);
+                    fxomObject = fxomRoot.collect(SceneGraphCollector.findSceneGraphObject(node)).get();
                     node = node.getParent();
                 }
                 hitObject = fxomObject;

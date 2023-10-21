@@ -25,16 +25,16 @@
             <artifactId>scenebuilder.fxml.api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.filesystem</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.filesystem</artifactId>
         </dependency>
+        <!--<dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.launcher</artifactId>
+        </dependency>-->
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.launcher</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.ext.menu</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.ext.menu</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.scenebuilder</groupId>

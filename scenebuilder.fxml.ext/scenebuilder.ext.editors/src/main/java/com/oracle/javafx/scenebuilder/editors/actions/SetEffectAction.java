@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.scenebuilder.fxml.api.SbEditor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,24 +45,23 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.control.effect.EffectProvider;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
-import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
-import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.menu.MenuItemProvider;
-import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.ui.menu.DefaultMenu;
+import com.oracle.javafx.scenebuilder.api.ui.menu.MenuBuilder;
+import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemProvider;
+import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.ModifySelectionJob;
@@ -78,11 +78,11 @@ public class SetEffectAction extends AbstractAction {
 
     private static Logger logger = LoggerFactory.getLogger(SetEffectAction.class);
 
-    private final DocumentWindow documentWindow;
+    private final EditorInstanceWindow documentWindow;
     private final JobManager jobManager;
     private final Selection selection;
     private final ModifySelectionJob.Factory modifySelectionJobFactory;
-    private final Metadata metadata;
+    private final IMetadata metadata;
 
     private Class<? extends Effect> effectClass;
 
@@ -90,11 +90,11 @@ public class SetEffectAction extends AbstractAction {
             ActionExtensionFactory extensionFactory,
             JobManager jobManager,
             Selection selection,
-            Metadata metadata,
+            IMetadata metadata,
             ModifySelectionJob.Factory modifySelectionJobFactory,
-            @Autowired Editor editor,
+            @Autowired SbEditor editor,
 
-            @Autowired @Lazy DocumentWindow documentWindow) {
+            @Autowired @Lazy EditorInstanceWindow documentWindow) {
         super(extensionFactory);
         this.jobManager = jobManager;
         this.selection = selection;

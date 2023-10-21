@@ -47,8 +47,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.oracle.javafx.scenebuilder.api.InlineEdit;
-import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.error.ErrorReport;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
@@ -56,6 +54,8 @@ import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
+import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.test.JfxInitializer;
 import com.oracle.javafx.scenebuilder.ui.controller.EditorController;

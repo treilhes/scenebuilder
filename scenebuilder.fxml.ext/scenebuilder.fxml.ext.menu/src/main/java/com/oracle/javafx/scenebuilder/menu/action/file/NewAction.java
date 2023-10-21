@@ -37,17 +37,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Document;
-import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
-import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.api.ui.menu.DefaultMenu;
+import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.menu.action.LoadBlankAction;
 
 @Component
@@ -66,14 +66,14 @@ public class NewAction extends AbstractAction {
 
     public final static String NEWFILE_MENU_ID = "newMenu";
 
-    private final Main main;
+    private final EditorInstancesManager main;
     private final ActionFactory actionFactory;
 
     public NewAction(
     // @formatter:off
             @Autowired ActionExtensionFactory extensionFactory,
             @Autowired ActionFactory actionFactory,
-            @Autowired Main main) {
+            @Autowired EditorInstancesManager main) {
     // @formatter:on
         super(extensionFactory);
         this.main = main;
@@ -87,7 +87,7 @@ public class NewAction extends AbstractAction {
 
     @Override
     public ActionStatus doPerform() {
-        final Document newWindow = main.makeNewDocument();
+        final EditorInstance newWindow = main.makeNewDocument();
         newWindow.openWindow();
         return actionFactory.create(LoadBlankAction.class).perform();
     }

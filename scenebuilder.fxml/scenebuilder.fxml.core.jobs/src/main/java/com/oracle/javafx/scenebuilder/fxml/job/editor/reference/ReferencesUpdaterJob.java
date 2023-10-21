@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -43,7 +43,7 @@ import java.util.Set;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.job.JobFactory;
@@ -60,6 +60,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMVirtual;
+import com.oracle.javafx.scenebuilder.core.fxom.collector.FxIdCollector;
 import com.oracle.javafx.scenebuilder.core.fxom.util.JavaLanguage;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
@@ -220,7 +221,7 @@ public final class ReferencesUpdaterJob extends InlineDocumentJob {
             // 2) else r is a strong reference
             // => we expand the reference
 
-            final FXOMObject declarer = fxomDocument.searchWithFxId(fxId);
+            final FXOMObject declarer = fxomDocument.collect(FxIdCollector.findFirstById(fxId)).orElse(null);
 
             // 0)
             if (FXOMNodes.isToggleGroupReference(r)) {

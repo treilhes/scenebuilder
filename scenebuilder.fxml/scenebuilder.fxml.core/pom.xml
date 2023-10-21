@@ -15,8 +15,13 @@
             <artifactId>scenebuilder.fxml.api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.starter.test</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.app.starter</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.app.starter.test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

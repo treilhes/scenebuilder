@@ -39,12 +39,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Document;
-import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.WelcomeDialog;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
+import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;
@@ -56,7 +56,7 @@ import com.oracle.javafx.scenebuilder.gluon.preferences.global.ImportedGluonJars
 @Lazy
 public class GluonJarImportController {
 
-    private final Main main;
+    private final EditorInstancesManager main;
     private final SceneBuilderBeanFactory context;
     private final ControlLibrary library;
     private final IconSetting iconSetting;
@@ -64,7 +64,7 @@ public class GluonJarImportController {
 
     public GluonJarImportController(
             @Autowired SceneBuilderBeanFactory context,
-            @Autowired Main main,
+            @Autowired EditorInstancesManager main,
             @Autowired ControlLibrary library,
             @Autowired IconSetting iconSetting,
             @Autowired ImportedGluonJarsPreference importedJarPreference
@@ -96,8 +96,8 @@ public class GluonJarImportController {
             }
 
             if (shouldShowImportGluonJarAlert) {
-                SbPlatform.runLater(() -> {
-                    Document dwc = main.getFrontDocumentWindow();
+                SbPlatform.runOnFxThread(() -> {
+                    EditorInstance dwc = main.getFrontDocumentWindow();
                     if (dwc == null) {
                         //TODO when started to fast will throw IndexOutOfBoundsException
                         dwc = main.getDocuments().get(0);

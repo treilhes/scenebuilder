@@ -35,14 +35,14 @@ package com.oracle.javafx.scenebuilder.api.control.handles;
 
 import java.net.URL;
 
+import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
-import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.Gesture;
+import com.oracle.javafx.scenebuilder.api.content.decoration.AbstractDecoration;
 import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture.Factory;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
-import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 
 import javafx.scene.Node;

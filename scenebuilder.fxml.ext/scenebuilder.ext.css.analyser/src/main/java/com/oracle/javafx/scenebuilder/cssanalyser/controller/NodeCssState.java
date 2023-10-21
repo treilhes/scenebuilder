@@ -47,7 +47,7 @@ import java.util.TreeSet;
 
 import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.CssPropertyState;
 import com.sun.javafx.scene.NodeHelper;
 
@@ -88,12 +88,12 @@ public class NodeCssState {
     private Map<MatchingRule, List<MatchingDeclaration>> matchingRules;
     private List<MatchingRule> sortedMatchingRules = new ArrayList<>();
     private Collection<CssProperty> props;
-    private final Metadata metadata;
+    private final IMetadata metadata;
 
     // private TestCssNode tsn;
 
     @SuppressWarnings("rawtypes")
-    protected NodeCssState(Metadata metadata, Map<StyleableProperty, List<Style>> map, Node node, FXOMObject fxomObject) {
+    protected NodeCssState(IMetadata metadata, Map<StyleableProperty, List<Style>> map, Node node, FXOMObject fxomObject) {
         this.metadata = metadata;
         this.map = map;
         this.node = node;
@@ -129,11 +129,11 @@ public class NodeCssState {
         private final ObjectProperty<CssContentMaker.PropertyState> fxmlModel = new SimpleObjectProperty<>();
         private CssContentMaker.PropertyState currentState;
 
-        CssProperty(Metadata metadata, NodeCssState nodeCssState, CssMetaData cssMeta, Node target, FXOMObject fxomObject) {
+        CssProperty(IMetadata metadata, NodeCssState nodeCssState, CssMetaData cssMeta, Node target, FXOMObject fxomObject) {
             this(metadata, nodeCssState, null, cssMeta, target, fxomObject);
         }
 
-        CssProperty(Metadata metadata, NodeCssState nodeCssState, CssProperty mainProperty, CssMetaData cssMeta, Node target,
+        CssProperty(IMetadata metadata, NodeCssState nodeCssState, CssProperty mainProperty, CssMetaData cssMeta, Node target,
                 FXOMObject fxomObject) {
             this.mainProperty = mainProperty;
             this.cssMeta = cssMeta;

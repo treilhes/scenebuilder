@@ -43,15 +43,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.WelcomeDialog;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
+import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsSizePreference;
 import com.oracle.javafx.scenebuilder.menu.action.OpenFilesAction;
@@ -79,7 +79,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     @FXML
     private Button emptyApp;
 
-    private final Main sceneBuilderApp;
+    private final EditorInstancesManager sceneBuilderApp;
 
 	private final RecentItemsPreference recentItemsPreference;
 
@@ -94,7 +94,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     private WelcomeDialogWindowController(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
-    		@Autowired Main sceneBuilderApp,
+    		@Autowired EditorInstancesManager sceneBuilderApp,
     		@Autowired ActionFactory actionFactory,
     		@Autowired IconSetting windowIconSetting,
     		@Autowired RecentItemsPreference recentItemsPreference,

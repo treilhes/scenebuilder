@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
+
+<!-- some comment1 , not supported actualy, that's why the test fails-->
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+    <!-- some comment2 -->
+   <fx:define>
+        <fx:include fx:id="referred1" source="referred1.fxml" />
+        <fx:include fx:id="referred2" source="referred2.fxml" />
+        <Button fx:id="somebutton" mnemonicParsing="false" text="somebutton" />
+        <Circle fx:id="circleblue" fill="DODGERBLUE" radius="300.0" stroke="BLACK" strokeType="INSIDE" />
+        <Circle fx:id="circleblue2" fill="DODGERBLUE" radius="300.0" stroke="BLACK" strokeType="INSIDE" />
+   </fx:define>
+   <children>
+      <!-- some comment3 -->
+      <Pane layoutX="200.0" layoutY="100.0" prefHeight="200.0" prefWidth="200.0" clip="$circleblue">
+         <children>
+            <!-- some comment4 -->
+            <Button mnemonicParsing="false" text="referrerx" />
+            <fx:reference fx:id="excluded" source="referred1" layoutX="100.0" layoutY="100.0">
+                <children>
+                  <!-- some comment5 -->
+                  <fx:reference source="referred2" layoutX="100.0" layoutY="100.0" clip="$circleblue2"/>
+               </children>
+            </fx:reference>
+            <fx:reference source="somebutton" layoutX="200.0" layoutY="100.0"/>
+         </children>
+      </Pane>
+   </children>
+</Pane>

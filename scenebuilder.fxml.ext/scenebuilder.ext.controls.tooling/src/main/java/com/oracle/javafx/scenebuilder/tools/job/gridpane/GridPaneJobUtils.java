@@ -39,9 +39,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup.Type;
 import com.oracle.javafx.scenebuilder.tools.mask.GridPaneHierarchyMask;
@@ -66,14 +66,14 @@ public class GridPaneJobUtils {
     static List<FXOMObject> getTargetGridPanes(final Selection selection) {
 
         final AbstractSelectionGroup asg = selection.getGroup();
-        assert asg instanceof ObjectSelectionGroup
+        assert asg instanceof DefaultSelectionGroupFactory
                 || asg instanceof GridSelectionGroup;
 
         final List<FXOMObject> result = new ArrayList<>();
 
         // Selection == GridPanes
-        if (asg instanceof ObjectSelectionGroup) {
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
+        if (asg instanceof DefaultSelectionGroupFactory) {
+            final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) asg;
             result.addAll(osg.getItems());
         } //
         // Selection == GridPane rows or columns
@@ -139,8 +139,8 @@ public class GridPaneJobUtils {
         boolean result;
         final AbstractSelectionGroup asg = selection.getGroup();
 
-        if (asg instanceof ObjectSelectionGroup) {
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
+        if (asg instanceof DefaultSelectionGroupFactory) {
+            final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) asg;
             result = true;
             for (FXOMObject obj : osg.getItems()) {
                 if ((obj.getSceneGraphObject() instanceof GridPane) == false) {

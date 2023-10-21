@@ -1,0 +1,65 @@
+{
+    "id": "00000000-0000-0000-0000-000000000000",
+    "content": {
+        "type": "maven",
+        "groupId": "com.gluonhq.scenebuilder",
+        "artifactId": "scenebuilder.core.api",
+        "version": "17.0.0-SNAPSHOT"
+    },
+    "state": "Loaded",
+    "extensions": [
+        {
+            "id": "d82c47c7-e3a7-483c-bb49-f1d3b086c2bf",
+            "content": {
+                "type": "maven",
+                "groupId": "com.gluonhq.scenebuilder",
+                "artifactId": "scenebuilder.core.preferences",
+                "version": "17.0.0-SNAPSHOT"
+            },
+            "state": "Loaded"
+        },
+        {
+            "id": "0f456500-a6d0-4438-8186-4d3de840b81b",
+            "content": {
+                "type": "maven",
+                "groupId": "com.gluonhq.scenebuilder",
+                "artifactId": "scenebuilder.core.filesystem",
+                "version": "17.0.0-SNAPSHOT"
+            },
+            "state": "Loaded"
+        },
+        {
+            "id": "cc8b28e8-b070-4cbd-8558-eff205a28cf1",
+            "content": {
+                "type": "maven",
+                "groupId": "com.gluonhq.scenebuilder",
+                "artifactId": "scenebuilder.core.ui",
+                "version": "17.0.0-SNAPSHOT"
+            },
+            "state": "Loaded"
+        }
+        
+    ],
+    "editors" : [
+        {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "content": {
+                "type": "maven",
+                "groupId": "com.gluonhq.scenebuilder",
+                "artifactId": "scenebuilder.app.manager.main",
+                "version": "17.0.0-SNAPSHOT"
+            },
+            "state": "Loaded"
+        },
+        {
+            "id": "00000000-0000-0000-0000-000000000002",
+            "content": {
+                "type": "maven",
+                "groupId": "com.gluonhq.scenebuilder",
+                "artifactId": "scenebuilder.app.fxmlrunner",
+                "version": "17.0.0-SNAPSHOT"
+            },
+            "state": "Loaded"
+        }
+    ]
+}

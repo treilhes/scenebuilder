@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.devutils;
 
-import com.oracle.javafx.scenebuilder.devutils.tbview.TestExternalFile;
+import com.oracle.javafx.scenebuilder.devutils.tbview.TestAnim;
 import com.oracle.javafx.scenebuilder.devutils.test.AppTester;
 
 import javafx.beans.property.DoubleProperty;
@@ -47,9 +47,9 @@ public class Test extends AppTester {
     @Override
     public void start(Stage stage) {
 
-        new TestFs().start(stage);
+        //new TestFs().start(stage);
 
-        //new TestAnim().start(stage);
+        new TestAnim().start(stage);
         //new TestContent().start(stage);
         //new TestContent2().start(stage);
         //new TestContent5().start(stage);
@@ -62,6 +62,8 @@ public class Test extends AppTester {
         //new TestExternalFile().start(stage, "C:\\SSDDrive\\git\\scenebuilder\\scenebuilder.core.fxom\\src\\test\\resources\\com\\oracle\\javafx\\scenebuilder\\core\\fxom\\fx\\comments.fxml");
         //new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\script.fxml");
         //new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\tmp\\one.fxml");
+
+        //new TestExternalFile().start(stage, "D:\\Dev\\eclipse\\scenebuilderx\\scenebuilder\\dev.utils\\src\\test\\resources\\com\\oracle\\javafx\\scenebuilder\\devutils\\all-jfx-containers.fxml");
 
 //        String f = ".\\src\\test\\resources\\com\\oracle\\javafx\\scenebuilder\\devutils\\tbview\\refOfIncludeWithButtons.fxml";
 //        new TestExternalFile().start(stage, f);

@@ -44,12 +44,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
+import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReport;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReportEntry;
@@ -87,7 +87,7 @@ public class ImageJarAnalysisReportController extends AbstractFxmlWindowControll
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
             ImageLibrary library,
-            DocumentWindow document) {
+            EditorInstanceWindow document) {
         super(sceneBuilderManager, iconSetting, ImageJarAnalysisReportController.class.getResource("JarAnalysisReport.fxml"),
                 I18N.getBundle(), document); // NOI18N
         this.library = library;

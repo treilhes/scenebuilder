@@ -42,9 +42,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.scenebuilder.fxml.api.Documentation;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.BooleanPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;

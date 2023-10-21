@@ -40,16 +40,16 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.menu.MenuBuilder;
-import com.oracle.javafx.scenebuilder.api.menu.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.menu.MenuItemProvider;
-import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.ui.menu.MenuBuilder;
+import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemProvider;
+import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.ui.misc.Workspace;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import javafx.scene.control.Menu;
@@ -64,12 +64,12 @@ public class ZoomAction extends AbstractAction {
     public final static String ZOOM_MENU_ID = "zoomMenu"; // NOCHECK
     public final static String ZOOM_PERCENT_MENU_ID = "zoomPercentMenu"; // NOCHECK
 
-    private final Content content;
+    private final Workspace workspace;
     private double scaleValue;
 
-    public ZoomAction(ActionExtensionFactory extensionFactory, Content content) {
+    public ZoomAction(ActionExtensionFactory extensionFactory, Workspace workspace) {
         super(extensionFactory);
-        this.content = content;
+        this.workspace = workspace;
 
     }
 
@@ -79,14 +79,14 @@ public class ZoomAction extends AbstractAction {
 
     @Override
     public boolean canPerform() {
-        return !MathUtils.equals(scaleValue, content.getScaling());
+        return !MathUtils.equals(scaleValue, workspace.getScaling());
     }
 
     @Override
     public ActionStatus doPerform() {
         assert canPerform();
 
-        content.setScaling(scaleValue);
+        workspace.setScaling(scaleValue);
 
         return ActionStatus.DONE;
     }

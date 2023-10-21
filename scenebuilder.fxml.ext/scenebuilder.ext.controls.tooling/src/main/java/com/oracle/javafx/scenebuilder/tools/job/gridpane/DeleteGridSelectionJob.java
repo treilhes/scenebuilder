@@ -43,15 +43,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.BatchSelectionJob;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
 
 import javafx.scene.layout.GridPane;
@@ -67,7 +67,7 @@ public final class DeleteGridSelectionJob extends BatchSelectionJob {
 
     private final DeleteColumnJob.Factory deleteColumnJobFactory;
     private final DeleteRowJob.Factory deleteRowJobFactory;
-    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
+    private final DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory;
 
     private FXOMObject targetGridPane;
 
@@ -78,7 +78,7 @@ public final class DeleteGridSelectionJob extends BatchSelectionJob {
             Selection selection,
             DeleteColumnJob.Factory deleteColumnJobFactory,
             DeleteRowJob.Factory deleteRowJobFactory,
-            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+            DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory) {
      // @formatter:on
         super(extensionFactory, documentManager, selection);
         this.deleteColumnJobFactory = deleteColumnJobFactory;

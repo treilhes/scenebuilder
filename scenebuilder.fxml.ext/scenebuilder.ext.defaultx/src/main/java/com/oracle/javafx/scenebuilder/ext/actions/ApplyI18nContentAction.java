@@ -44,7 +44,7 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 

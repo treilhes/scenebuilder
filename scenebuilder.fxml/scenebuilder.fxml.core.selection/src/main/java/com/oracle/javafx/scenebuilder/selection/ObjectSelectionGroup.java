@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -50,26 +50,27 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.api.editor.selection.Group;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.GroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
 import com.oracle.javafx.scenebuilder.api.job.Job;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.api.om.OMNodes;
+import com.oracle.javafx.scenebuilder.api.om.OMObject;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
+import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
+import com.oracle.javafx.scenebuilder.core.fxom.DesignHierarchyPath;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
+import com.oracle.javafx.scenebuilder.core.fxom.collector.FxIdCollector;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.fxml.api.selection.FxmlAbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.fxml.api.selection.FxmlSelectionGroup;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.DeleteObjectSelectionJob;
-import com.oracle.javafx.scenebuilder.om.api.DesignHierarchyPath;
-import com.oracle.javafx.scenebuilder.om.api.OMDocument;
-import com.oracle.javafx.scenebuilder.om.api.OMNodes;
-import com.oracle.javafx.scenebuilder.om.api.OMObject;
 
 import javafx.scene.Node;
 
@@ -78,9 +79,8 @@ import javafx.scene.Node;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-public class ObjectSelectionGroup extends FxmlAbstractSelectionGroup {
+@Prototype
+public class ObjectSelectionGroup implements FxmlSelectionGroup {
 
     /** The design mask factory. */
     private final DesignHierarchyMask.Factory designMaskFactory;
@@ -321,7 +321,7 @@ public class ObjectSelectionGroup extends FxmlAbstractSelectionGroup {
      * @return true, if is valid
      */
     @Override
-    public boolean isValid(OMDocument fxomDocument) {
+    public boolean isValid(FXOMDocument fxomDocument) {
         assert fxomDocument != null;
 
         boolean result;
@@ -531,7 +531,7 @@ public class ObjectSelectionGroup extends FxmlAbstractSelectionGroup {
                                 remaining.removeAll(selectedItems);
 
                                 if (list.size() != remaining.size()) {
-                                    throw new RuntimeException("Only single accessiry items must be selected");
+                                    throw new RuntimeException("Only single accessory items must be selected");
                                 }
                             }
                         })
@@ -549,12 +549,12 @@ public class ObjectSelectionGroup extends FxmlAbstractSelectionGroup {
 
 
     @Override
-    public AbstractSelectionGroup selectAll() {
+    public SelectionGroup selectAll() {
         return objectSelectionGroupFactory.getGroup(this.getSiblings());
     }
 
     @Override
-    public AbstractSelectionGroup selectNext() {
+    public SelectionGroup selectNext() {
         Set<FXOMObject> localIitems = this.getItems();
 
         if (localIitems.size() != 1) {
@@ -580,7 +580,7 @@ public class ObjectSelectionGroup extends FxmlAbstractSelectionGroup {
     }
 
     @Override
-    public AbstractSelectionGroup selectPrevious() {
+    public SelectionGroup selectPrevious() {
         Set<FXOMObject> localIitems = this.getItems();
 
         if (localIitems.size() != 1) {
@@ -615,7 +615,7 @@ public class ObjectSelectionGroup extends FxmlAbstractSelectionGroup {
         // Collects fx:ids in selected objects and their descendants.
         final Map<String, FXOMObject> fxIdMap = new HashMap<>();
         for (FXOMObject selectedObject : getItems()) {
-            fxIdMap.putAll(selectedObject.collectFxIds());
+            fxIdMap.putAll(selectedObject.collect(FxIdCollector.fxIdsMap()));
         }
         return fxIdMap;
     }
@@ -624,17 +624,16 @@ public class ObjectSelectionGroup extends FxmlAbstractSelectionGroup {
     /**
      * The Class Factory.
      */
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @Singleton
     @Lazy
-    public static class Factory extends GroupFactory<ObjectSelectionGroup> {
+    public static class Factory extends GroupFactory<ObjectSelectionGroup> implements DefaultSelectionGroupFactory {
 
         /**
          * Instantiates a new factory.
          *
          * @param sbContext the sb context
          */
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(SbContext sbContext) {
             super(sbContext);
         }
 
@@ -645,7 +644,6 @@ public class ObjectSelectionGroup extends FxmlAbstractSelectionGroup {
          * @param hitNode the hit node
          * @return the group
          */
-        @Override
         public ObjectSelectionGroup getGroup(FXOMObject fxomObject, Node hitNode) {
             return create(ObjectSelectionGroup.class, j -> j.setGroupParameters(fxomObject, hitNode));
         }
@@ -658,14 +656,8 @@ public class ObjectSelectionGroup extends FxmlAbstractSelectionGroup {
          * @param hitNode the hit node
          * @return the group
          */
-//        @Override
-//        public ObjectSelectionGroup getGroup(Collection<? extends FXOMObject> fxomObjects, FXOMObject hitItem, Node hitNode) {
-//            return create(ObjectSelectionGroup.class, j -> j.setGroupParameters(fxomObjects, hitItem, hitNode));
-//        }
-
-        @Override
-        public SelectionGroup getGroup(FxmlGroup group) {
-            return null;
+        public ObjectSelectionGroup getGroup(Collection<FXOMObject> fxomObjects, FXOMObject hitItem, Node hitNode) {
+            return create(ObjectSelectionGroup.class, j -> j.setGroupParameters(fxomObjects, hitItem, hitNode));
         }
 
         /**
@@ -687,6 +679,14 @@ public class ObjectSelectionGroup extends FxmlAbstractSelectionGroup {
          */
         public ObjectSelectionGroup getGroup(FXOMInstance fxomInstance) {
             return create(ObjectSelectionGroup.class, j -> j.setGroupParameters(fxomInstance, null));
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public SelectionGroup getGroup(Collection<? extends OMObject> fxomObjects, OMObject hitItem, Node hitNode) {
+            assert fxomObjects == null || fxomObjects.stream().allMatch(FXOMObject.class::isInstance);
+            assert hitItem == null || FXOMObject.class.isInstance(hitItem);
+            return this.getGroup((Collection<FXOMObject>)fxomObjects, (FXOMObject)hitItem, hitNode);
         }
 
     }

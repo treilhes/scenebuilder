@@ -38,10 +38,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.Inspector;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 
 /**
@@ -53,11 +53,11 @@ import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetada
 public class CssPanelDelegate extends CssPanelController.Delegate {
 
     private final Inspector inspectorController;
-    private final DocumentWindow documentWindowController;
+    private final EditorInstanceWindow documentWindowController;
 
     public CssPanelDelegate(
     		@Autowired Inspector inspectorController, 
-    		@Lazy @Autowired DocumentWindow documentWindowController) {
+    		@Lazy @Autowired EditorInstanceWindow documentWindowController) {
         this.inspectorController = inspectorController;
         this.documentWindowController = documentWindowController;
     }
@@ -76,7 +76,7 @@ public class CssPanelDelegate extends CssPanelController.Delegate {
 //        }
         
         // Need to delay the focus to the editor, so that the section is actually expanded first.
-        SbPlatform.runLater(() -> SbPlatform.runLater(() -> inspectorController.setFocusToEditor(propMeta)));
+        SbPlatform.runOnFxThread(() -> SbPlatform.runOnFxThread(() -> inspectorController.setFocusToEditor(propMeta)));
     }
 
 }

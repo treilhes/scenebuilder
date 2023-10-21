@@ -20,8 +20,8 @@
             <artifactId>scenebuilder.fxml.core.selection</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.starter.test</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.app.starter.test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

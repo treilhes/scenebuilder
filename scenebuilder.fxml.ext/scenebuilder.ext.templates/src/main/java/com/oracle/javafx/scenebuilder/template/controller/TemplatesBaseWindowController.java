@@ -44,11 +44,11 @@ import java.util.stream.Collectors;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
+import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.api.util.FXMLUtils;
 
 import javafx.fxml.FXML;

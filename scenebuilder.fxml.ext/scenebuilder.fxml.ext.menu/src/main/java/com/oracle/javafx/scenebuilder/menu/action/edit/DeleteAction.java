@@ -35,27 +35,27 @@ package com.oracle.javafx.scenebuilder.menu.action.edit;
 
 import java.util.Map;
 
+import org.scenebuilder.fxml.api.SbEditor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert;
-import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert.ButtonID;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
-import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.menu.annotation.ContextMenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert.ButtonID;
+import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.ContextMenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
@@ -88,19 +88,19 @@ public class DeleteAction extends AbstractAction {
     public final static String MENU_ID = "deleteMenu";
     public final static String TITLE = "menu.title.delete";
 
-    private final DocumentWindow documentWindow;
+    private final EditorInstanceWindow documentWindow;
     private final InlineEdit inlineEdit;
     private final Dialog dialog;
-    private final Editor editor;
+    private final SbEditor editor;
     private final JobManager jobManager;
     private final Selection selection;
     private final DeleteSelectionJob.Factory deleteSelectionJobFactory;
 
     public DeleteAction(
             ActionExtensionFactory extensionFactory,
-            DocumentWindow documentWindow,
+            EditorInstanceWindow documentWindow,
             InlineEdit inlineEdit,
-            Editor editor,
+            SbEditor editor,
             JobManager jobManager,
             Selection selection,
             Dialog dialog,

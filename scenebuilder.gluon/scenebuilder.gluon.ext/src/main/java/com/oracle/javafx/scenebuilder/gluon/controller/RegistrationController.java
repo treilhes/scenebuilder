@@ -36,8 +36,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationEmailPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationHashPreference;
 import com.oracle.javafx.scenebuilder.gluon.registration.RegistrationWindowController;
@@ -61,7 +61,7 @@ public class RegistrationController {
 
     }
 
-    public void showRegistrationDialogIfRequired(DocumentWindow dwc) {
+    public void showRegistrationDialogIfRequired(EditorInstanceWindow dwc) {
         String registrationHash = getRegistrationHash();
 
         if (registrationHash == null) {

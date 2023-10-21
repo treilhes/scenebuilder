@@ -33,19 +33,19 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.gridpane.gesture;
 
+import org.scenebuilder.fxml.api.Content;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseDragGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
 
 import javafx.scene.input.MouseEvent;
@@ -142,7 +142,7 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
                 selection.select(gridSelectionGroupFactory.getGroup(gridPaneInstance, feature, featureIndex));
             }
         } else { // Cases A and B
-            assert selection.getGroup() instanceof ObjectSelectionGroup;
+            assert selection.getGroup() instanceof DefaultSelectionGroupFactory;
             selection.select(gridSelectionGroupFactory.getGroup(gridPaneInstance, feature, featureIndex));
         }
     }

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="121.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Accordion AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <panes>
+                <TitledPane animated="false" expanded="false" text="untitled 1">
+                  <content>
+                        <ScrollPane fitToWidth="true">
+                           <content>
+                              <VBox fx:id="apiExtensionsBox">
+                                 <children>
+                                    <Button mnemonicParsing="false" prefHeight="153.0" prefWidth="172.0" text="Button" />
+                                    <Button mnemonicParsing="false" prefHeight="153.0" prefWidth="172.0" text="Button" />
+                                    <Button mnemonicParsing="false" prefHeight="153.0" prefWidth="172.0" text="Button" />
+                                    <Button mnemonicParsing="false" prefHeight="153.0" prefWidth="172.0" text="Button" />
+                                    <Button mnemonicParsing="false" prefHeight="153.0" prefWidth="172.0" text="Button" />
+                                    <Button mnemonicParsing="false" prefHeight="153.0" prefWidth="172.0" text="Button" />
+                                    <Button mnemonicParsing="false" prefHeight="153.0" prefWidth="172.0" text="Button" />
+                                    <Button mnemonicParsing="false" prefHeight="153.0" prefWidth="172.0" text="Button" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                  </content>
+                </TitledPane>
+                <TitledPane animated="false" text="untitled 2">
+                  <content>
+                        <ScrollPane fitToWidth="true">
+                           <content>
+                              <FlowPane fx:id="applicationsFlowPane" prefHeight="200.0" prefWidth="200.0">
+                                 <children>
+                                    <Button mnemonicParsing="false" prefHeight="153.0" prefWidth="172.0" text="Button" />
+                                    <Button mnemonicParsing="false" prefHeight="153.0" prefWidth="172.0" text="Button" />
+                                    <Button mnemonicParsing="false" prefHeight="153.0" prefWidth="172.0" text="Button" />
+                                    <Button mnemonicParsing="false" prefHeight="153.0" prefWidth="172.0" text="Button" />
+                                    <Button mnemonicParsing="false" prefHeight="153.0" prefWidth="172.0" text="Button" />
+                                    <Button mnemonicParsing="false" prefHeight="153.0" prefWidth="172.0" text="Button" />
+                                    <Button mnemonicParsing="false" prefHeight="153.0" prefWidth="172.0" text="Button" />
+                                    <Button mnemonicParsing="false" prefHeight="153.0" prefWidth="172.0" text="Button" />
+                                 </children>
+                              </FlowPane>
+                           </content>
+                        </ScrollPane>
+                  </content>
+                </TitledPane>
+              </panes>
+            </Accordion>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

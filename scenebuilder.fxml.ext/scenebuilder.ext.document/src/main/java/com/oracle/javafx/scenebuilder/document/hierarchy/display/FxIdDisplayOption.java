@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,12 +44,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.Glossary;
-import com.oracle.javafx.scenebuilder.api.MessageLogger;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
+import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.collector.FxIdCollector;
 import com.oracle.javafx.scenebuilder.document.api.AbstractDisplayOption;
 import com.oracle.javafx.scenebuilder.document.api.annotation.DisplayOptionName;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxIdJob;
@@ -153,7 +154,7 @@ public class FxIdDisplayOption extends AbstractDisplayOption {
 
             // Check duplicared fx ids
             //final FXOMDocument fxomDocument = editorController.getFxomDocument();
-            final Set<String> fxIds2 = fxomDocument.collectFxIds().keySet();
+            final Set<String> fxIds2 = fxomDocument.collect(FxIdCollector.fxIdsMap()).keySet();
             if (fxIds2.contains(fxId)) {
                 messageLogger.logWarningMessage("log.warning.duplicate.fxid", fxId);
             }

@@ -1,0 +1,38 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>jfxapps.core</artifactId>
+        <groupId>com.gluonhq.jfxapps</groupId>
+        <version>17.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jfxapps.core.starter.test</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.boot.starter.test</artifactId>
+        </dependency>
+        
+        <!--
+        https://mvnrepository.com/artifact/org.mock-server/mockserver-junit-jupiter -->
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-junit-jupiter</artifactId>
+            <version>5.15.0</version>
+        </dependency>
+        
+        <!-- Update this dependency after moving scenebuilder.ext.sb to other
+        module-->
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.ext.sb</artifactId>
+        </dependency>
+    </dependencies>
+</project>

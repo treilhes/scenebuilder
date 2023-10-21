@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.gluonhq.jfxapps</groupId>
+        <artifactId>jfxapps.app.fxmlrunner</artifactId>
+        <version>17.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>jfxapps.app.fxmlrunner.registry</artifactId>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps-registry-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-registry-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>jfxappsRegistry</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <format>json</format>
+                    <registry>
+                        <applications>
+                            <application>
+                                <uuid>feda298c-4a63-450d-8c59-8cb43241ba3d</uuid>
+                                <dependency>
+                                    <groupId>com.gluonhq.scenebuilder</groupId>
+                                    <version>${project.version}</version>
+                                    <artifactId>jfxapps.app.fxmlrunner.main</artifactId>
+                                </dependency>
+                                <description>
+                                    <icon>fxmlRunner64x64.png</icon>
+                                    <title>FXML Runner</title>
+                                    <text>App that run fxml files</text>
+                                </description>
+                            </application>
+                        </applications>
+                    </registry>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

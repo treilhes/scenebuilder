@@ -40,6 +40,7 @@ import java.util.List;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
@@ -47,7 +48,7 @@ import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
@@ -56,7 +57,6 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyValueJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ToggleFxRootJob;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 /**
  * Main class used for the wrap jobs using the new container SUB COMPONENT
@@ -68,7 +68,7 @@ public abstract class AbstractWrapInSubComponentJob extends AbstractWrapInJob {
     private final AddPropertyJob.Factory addPropertyJobFactory;
 
     public AbstractWrapInSubComponentJob(JobExtensionFactory extensionFactory, FxmlDocumentManager documentManager,
-            Selection selection, DesignHierarchyMask.Factory designMaskFactory, Metadata metadata,
+            Selection selection, DesignHierarchyMask.Factory designMaskFactory, IMetadata metadata,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             ToggleFxRootJob.Factory toggleFxRootJobFactory,
             ModifyFxControllerJob.Factory modifyFxControllerJobFactory,
@@ -77,7 +77,7 @@ public abstract class AbstractWrapInSubComponentJob extends AbstractWrapInJob {
             RemovePropertyJob.Factory removePropertyJobFactory,
             ModifyObjectJob.Factory modifyObjectJobFactory,
             AddPropertyJob.Factory addPropertyJobFactory,
-            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+            DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory) {
         super(extensionFactory, documentManager, selection, designMaskFactory, metadata, addPropertyValueJobFactory,
                 toggleFxRootJobFactory, modifyFxControllerJobFactory, setDocumentRootJobFactory, removePropertyValueJobFactory,
                 removePropertyJobFactory, modifyObjectJobFactory, objectSelectionGroupFactory);

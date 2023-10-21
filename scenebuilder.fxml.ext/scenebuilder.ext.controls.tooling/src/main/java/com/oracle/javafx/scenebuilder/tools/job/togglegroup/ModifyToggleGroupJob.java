@@ -42,7 +42,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
@@ -55,7 +55,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 import com.oracle.javafx.scenebuilder.core.fxom.util.JavaLanguage;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ToggleGroupPropertyMetadata;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
@@ -74,7 +74,7 @@ public final class ModifyToggleGroupJob extends BatchDocumentJob {
     private FXOMObject targetObject;
     private String toggleGroupId;
 
-    private final Metadata metadata;
+    private final IMetadata metadata;
 
     private final RemovePropertyJob.Factory removePropertyJobFactory;
 
@@ -83,7 +83,7 @@ public final class ModifyToggleGroupJob extends BatchDocumentJob {
     public ModifyToggleGroupJob(
             JobExtensionFactory extensionFactory,
             FxmlDocumentManager documentManager,
-            Metadata metadata,
+            IMetadata metadata,
             RemovePropertyJob.Factory removePropertyJobFactory,
             AddPropertyJob.Factory addPropertyJobFactory) {
         super(extensionFactory, documentManager);

@@ -40,7 +40,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTarget;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.DropTargetFactory;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
@@ -48,7 +48,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.DesignImage;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.ImagePropertyMetadata;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.UpdateSelectionJob;
@@ -65,7 +65,7 @@ import javafx.scene.image.ImageView;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public final class ImageViewDropTarget extends AbstractDropTarget {
 
-    private final Metadata metadata;
+    private final IMetadata metadata;
     private final BatchJob.Factory batchJobFactory;
     private final BackupSelectionJob.Factory backupSelectionJobFactory;
     private final ModifyObjectJob.Factory modifyObjectJobFactory;
@@ -75,7 +75,7 @@ public final class ImageViewDropTarget extends AbstractDropTarget {
 
     // @formatter:off
     protected ImageViewDropTarget(
-            Metadata metadata,
+            IMetadata metadata,
             BatchJob.Factory batchJobFactory,
             BackupSelectionJob.Factory backupSelectionJobFactory,
             ModifyObjectJob.Factory modifyObjectJobFactory,

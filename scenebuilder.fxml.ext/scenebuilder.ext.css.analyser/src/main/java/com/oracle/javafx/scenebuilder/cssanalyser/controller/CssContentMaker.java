@@ -43,7 +43,7 @@ import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.CssPropertyState.CssStyle;
@@ -121,7 +121,7 @@ public class CssContentMaker {
     }
 
     @SuppressWarnings("rawtypes")
-    public static <N extends Node> PropertyState modelValue(Metadata metadata, N node, CssMetaData<?, ?> cssMeta, FXOMObject fxomObject) {
+    public static <N extends Node> PropertyState modelValue(IMetadata metadata, N node, CssMetaData<?, ?> cssMeta, FXOMObject fxomObject) {
         PropertyState val = null;
 
         if (fxomObject == null) {
@@ -229,7 +229,7 @@ public class CssContentMaker {
         return style.contains(prop.getCssProperty());
     }
 
-    public static NodeCssState getCssState(Metadata metadata, Object selectedObject) {
+    public static NodeCssState getCssState(IMetadata metadata, Object selectedObject) {
         Node node = CssUtils.getSelectedNode(selectedObject);
         if (node == null) {
             return null;

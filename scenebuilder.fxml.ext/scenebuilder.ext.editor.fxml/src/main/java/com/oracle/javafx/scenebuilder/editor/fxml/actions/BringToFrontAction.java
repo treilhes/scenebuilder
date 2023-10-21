@@ -39,17 +39,17 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
-import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
-import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.menu.annotation.ContextMenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.api.ui.menu.DefaultMenu;
+import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.ContextMenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.BringToFrontJob;
 import com.oracle.javafx.scenebuilder.menu.action.file.RevealIncludedFxmlAction;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
@@ -63,7 +63,7 @@ import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
         label = BringToFrontAction.TITLE,
         positionRequest = PositionRequest.AsFirstChild)
 @ContextMenuItemAttachment(
-        selectionGroup = ObjectSelectionGroup.class,
+        selectionGroup = DefaultSelectionGroupFactory.class,
         id = BringToFrontAction.MENU_ID,
         targetMenuId = RevealIncludedFxmlAction.MENU_ID,
         label = BringToFrontAction.TITLE,

@@ -58,7 +58,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.ChildLabelMutation;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
@@ -82,13 +82,13 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
     private Accessory mainAccessory;
     private Set<ComponentPropertyMetadata> subComponents;
     private ComponentClassMetadata<?> componentClassMetadata;
-    private final Metadata metadata;
+    private final IMetadata metadata;
 
-    protected AbstractHierarchyMask(Metadata metadata) {
+    protected AbstractHierarchyMask(IMetadata metadata) {
         this.metadata = metadata;
     }
 
-    protected Metadata getMetadata() {
+    protected IMetadata getMetadata() {
         return metadata;
     }
 

@@ -37,20 +37,21 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.scenebuilder.fxml.api.Content;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractKeyGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
+import com.oracle.javafx.scenebuilder.api.ui.misc.Workspace;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.job.editor.RelocateSelectionJob;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -71,11 +72,11 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
     private double vectorY;
 
     protected MoveWithKeyGesture(
-            Content contentPanelController,
+            Workspace workspace,
             Selection selection,
     		JobManager jobManager,
     		RelocateSelectionJob.Factory relocateSelectionJobFactory) {
-        super(contentPanelController);
+        super(workspace);
         this.selection = selection;
         this.jobManager = jobManager;
         this.relocateSelectionJobFactory = relocateSelectionJobFactory;
@@ -93,9 +94,9 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
         final double moveX = extend * vectorX;
         final double moveY = extend * vectorY;
 
-        assert selection.getGroup() instanceof ObjectSelectionGroup; // Because (1)
-        final ObjectSelectionGroup osg
-                = (ObjectSelectionGroup) selection.getGroup();
+        assert selection.getGroup() instanceof DefaultSelectionGroupFactory; // Because (1)
+        final DefaultSelectionGroupFactory osg
+                = (DefaultSelectionGroupFactory) selection.getGroup();
 
         /*
          * Updates layoutX/layoutY of the selected scene graph objects.
@@ -112,10 +113,10 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
     protected void keyReleased() {
         keyPressed();
 
-        assert selection.getGroup() instanceof ObjectSelectionGroup; // Because (1)
+        assert selection.getGroup() instanceof DefaultSelectionGroupFactory; // Because (1)
 
-        final ObjectSelectionGroup osg
-                = (ObjectSelectionGroup) selection.getGroup();
+        final DefaultSelectionGroupFactory osg
+                = (DefaultSelectionGroupFactory) selection.getGroup();
 
         // Builds a RelocateSelectionJob
         final Map<FXOMObject, Point2D> locationMap = new HashMap<>();

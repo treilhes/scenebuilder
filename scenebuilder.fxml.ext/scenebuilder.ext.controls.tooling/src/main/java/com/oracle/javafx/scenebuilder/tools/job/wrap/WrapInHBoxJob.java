@@ -43,13 +43,14 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
@@ -58,7 +59,6 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyValueJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ToggleFxRootJob;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.tools.job.wrap.FXOMObjectCourseComparator.UnidimensionalComparator;
 
 import javafx.geometry.Orientation;
@@ -72,7 +72,7 @@ import javafx.scene.layout.HBox;
 public final class WrapInHBoxJob extends AbstractWrapInSubComponentJob {
 
     protected WrapInHBoxJob(JobExtensionFactory extensionFactory, FxmlDocumentManager documentManager,
-            Selection selection, DesignHierarchyMask.Factory designMaskFactory, Metadata metadata,
+            Selection selection, DesignHierarchyMask.Factory designMaskFactory, IMetadata metadata,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             ToggleFxRootJob.Factory toggleFxRootJobFactory,
             ModifyFxControllerJob.Factory modifyFxControllerJobFactory,
@@ -81,7 +81,7 @@ public final class WrapInHBoxJob extends AbstractWrapInSubComponentJob {
             RemovePropertyJob.Factory removePropertyJobFactory,
             ModifyObjectJob.Factory modifyObjectJobFactory,
             AddPropertyJob.Factory addPropertyJobFactory,
-            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+            DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory) {
         super(extensionFactory, documentManager, selection, designMaskFactory, metadata, addPropertyValueJobFactory,
                 toggleFxRootJobFactory, modifyFxControllerJobFactory, setDocumentRootJobFactory, removePropertyValueJobFactory,
                 removePropertyJobFactory, modifyObjectJobFactory, addPropertyJobFactory, objectSelectionGroupFactory);

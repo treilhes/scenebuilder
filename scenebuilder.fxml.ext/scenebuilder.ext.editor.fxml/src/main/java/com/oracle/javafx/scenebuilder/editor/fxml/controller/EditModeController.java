@@ -39,6 +39,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,13 +47,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.ContextMenu;
 import com.oracle.javafx.scenebuilder.api.Gesture;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
-import com.oracle.javafx.scenebuilder.api.InlineEdit;
-import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.content.mode.AbstractModeController;
 import com.oracle.javafx.scenebuilder.api.content.mode.Layer;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
@@ -65,27 +62,30 @@ import com.oracle.javafx.scenebuilder.api.control.Tring;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.api.control.outline.Outline;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractPring;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.dnd.Drag;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.ui.menu.ContextMenu;
+import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
+import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
+import com.oracle.javafx.scenebuilder.api.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.api.util.StringUtils;
+import com.oracle.javafx.scenebuilder.core.dnd.droptarget.RootDropTarget;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.draganddrop.droptarget.RootDropTarget;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.DragGesture;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.ZoomGesture;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse.SelectAndMoveGesture;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse.SelectWithMarqueeGesture;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key.MoveWithKeyGesture;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -408,8 +408,8 @@ public class EditModeController extends AbstractModeController implements Gestur
         final FXOMObject selectionAncestor = selection.getAncestor();
 
         // The code below handles selction of detached graph objects
-        if (!selection.isEmpty() && selection.getGroup() instanceof ObjectSelectionGroup) {
-            ObjectSelectionGroup selGroup = (ObjectSelectionGroup) selection.getGroup();
+        if (!selection.isEmpty() && selection.getGroup() instanceof DefaultSelectionGroupFactory) {
+            DefaultSelectionGroupFactory selGroup = (DefaultSelectionGroupFactory) selection.getGroup();
 
             if (selGroup.getItems().size() == 1 && selGroup.getHitItem().isViewable()
                     && selGroup.getHitItem().isDescendantOf(hitObject)
@@ -570,13 +570,17 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     private boolean inlineEditingDidRequestCommit(String newValue) {
         assert inlineEditedObject != null;
+        
+        // Using PrefixedValue PLAIN_STRING allow to consider special characters (such as @, %,...)
+        // as "standard" characters (i.e. to backslash them)
+        final String newPlainValue = new PrefixedValue(PrefixedValue.Type.PLAIN_STRING, newValue).toString();
 
         final HierarchyMask m = maskFactory.getMask(inlineEditedObject);
         final PropertyName propertyName = m.getPropertyNameForDescription();
         assert propertyName != null;
         final ValuePropertyMetadata vpm = m.getPropertyMetadata(propertyName);
 
-        final AbstractJob job = modifyObjectJobFactory.getJob(inlineEditedObject, vpm, newValue);
+        final AbstractJob job = modifyObjectJobFactory.getJob(inlineEditedObject, vpm, newPlainValue);
 
         if (job.isExecutable()) {
             jobManager.push(job);
@@ -608,8 +612,8 @@ public class EditModeController extends AbstractModeController implements Gestur
             e.consume();
             break;
         case ENTER:
-            if (selection.getGroup() instanceof ObjectSelectionGroup) {
-                final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
+            if (selection.getGroup() instanceof DefaultSelectionGroupFactory) {
+                final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) selection.getGroup();
                 if (osg.getItems().size() == 1) {
                     final HierarchyMask mask = maskFactory.getMask(osg.getSortedItems().get(0));
                     final FXOMObject nodeFxomObject = mask.getClosestFxNode();

@@ -43,20 +43,20 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Document;
-import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
+import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
 
 import javafx.application.Platform;
 
@@ -78,14 +78,14 @@ public class QuitScenebuilderAction extends AbstractAction {
 
     public final static String MENU_ID = "quitMenu";
 
-    private final Main main;
+    private final EditorInstancesManager main;
     private final Dialog dialog;
     private final ActionFactory actionFactory;
 
     public QuitScenebuilderAction(
             ActionExtensionFactory extensionFactory,
             ActionFactory actionFactory,
-            @Autowired Main main,
+            @Autowired EditorInstancesManager main,
             @Autowired Dialog dialog) {
         super(extensionFactory);
         this.main = main;
@@ -102,12 +102,12 @@ public class QuitScenebuilderAction extends AbstractAction {
     public ActionStatus doPerform() {
 
         // Check if an editing session is on going
-        if (main.getDocuments().stream().anyMatch(Document::isEditing)) {
+        if (main.getDocuments().stream().anyMatch(EditorInstance::isEditing)) {
             return ActionStatus.CANCELLED;
         }
 
         // Collects the documents with pending changes
-        final List<Document> pendingDocs = main.getDocuments().stream().filter(Document::isDocumentDirty)
+        final List<EditorInstance> pendingDocs = main.getDocuments().stream().filter(EditorInstance::isDocumentDirty)
                 .collect(Collectors.toList());
 
         // Notifies the user if some documents are dirty
@@ -119,7 +119,7 @@ public class QuitScenebuilderAction extends AbstractAction {
         }
 
         case 1: {
-            final Document dwc0 = pendingDocs.get(0);
+            final EditorInstance dwc0 = pendingDocs.get(0);
             ActionStatus result = SbPlatform.runForDocument(dwc0, () -> actionFactory.create(CloseFileAction.class).checkAndPerform());
             exitConfirmed = result == ActionStatus.DONE;
             break;

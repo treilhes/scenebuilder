@@ -33,13 +33,14 @@
  */
 package com.oracle.javafx.scenebuilder.gluon.editor.job;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.scenebuilder.fxml.api.SbEditor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJobExtension;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.SetFxomRootJob;
@@ -48,16 +49,22 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.SetFxomRootJob;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class SetFxomRootJobExtension extends AbstractJobExtension<SetFxomRootJob> {
 
-	@Autowired private Editor editorController;
-	@Autowired private ThemeDocumentPreference themePreference;
+    private final EditorInstanceWindow window;
+    private final ThemeDocumentPreference themePreference;
 
-	@Override
-	public void postExecute() {
-	    assert getExtendedJob().getNewRoot() != null;
-	    assert getExtendedJob().getNewRoot() instanceof FXOMObject;
+    public SetFxomRootJobExtension(EditorInstanceWindow window, ThemeDocumentPreference themePreference) {
+        super();
+        this.window = window;
+        this.themePreference = themePreference;
+    }
 
-	    FXOMObject newRoot = (FXOMObject)getExtendedJob().getNewRoot();
-		WarnThemeAlert.showAlertIfRequired(themePreference, newRoot, editorController.getOwnerWindow());
-	}
+    @Override
+    public void postExecute() {
+        assert getExtendedJob().getNewRoot() != null;
+        assert getExtendedJob().getNewRoot() instanceof FXOMObject;
+
+        FXOMObject newRoot = (FXOMObject) getExtendedJob().getNewRoot();
+        WarnThemeAlert.showAlertIfRequired(themePreference, newRoot, window.getStage());
+    }
 
 }

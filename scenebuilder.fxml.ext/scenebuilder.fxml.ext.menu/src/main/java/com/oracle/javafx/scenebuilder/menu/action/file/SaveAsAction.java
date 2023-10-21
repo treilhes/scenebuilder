@@ -40,29 +40,28 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.scenebuilder.fxml.api.SbEditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Document;
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.Editor;
-import com.oracle.javafx.scenebuilder.api.InlineEdit;
-import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert;
-import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert.ButtonID;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert.ButtonID;
+import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.menu.action.SaveAction;
 
@@ -83,26 +82,26 @@ public class SaveAsAction extends AbstractAction {
 
     public final static String MENU_ID = "saveAsMenu";
 
-    private final Document document;
+    private final EditorInstance document;
     private final InlineEdit inlineEdit;
     private final Dialog dialog;
-    private final DocumentWindow documentWindow;
+    private final EditorInstanceWindow documentWindow;
     private final FileSystem fileSystem;
     private final RecentItemsPreference recentItemsPreference;
-    private final Editor editor;
-    private final Main main;
+    private final SbEditor editor;
+    private final SbEditor main;
     private final ActionFactory actionFactory;
 
     public SaveAsAction(
             ActionExtensionFactory extensionFactory,
-            @Autowired Document document,
-            @Autowired DocumentWindow documentWindow,
-            @Autowired Editor editor,
+            @Autowired EditorInstance document,
+            @Autowired EditorInstanceWindow documentWindow,
+            @Autowired SbEditor editor,
             @Autowired InlineEdit inlineEdit,
             @Autowired Dialog dialog,
             @Autowired FileSystem fileSystem,
             @Autowired ActionFactory actionFactory,
-            @Autowired Main main,
+            @Autowired SbEditor main,
             @Autowired RecentItemsPreference recentItemsPreference) {
         super(extensionFactory);
         this.document = document;
@@ -193,7 +192,7 @@ public class SaveAsAction extends AbstractAction {
                 }
 
                 // Checks if fxmlFile is the name of an already opened document
-                final Document dwc = main.lookupDocument(newLocation);
+                final EditorInstance dwc = main.lookupDocument(newLocation);
                 if (dwc != null && dwc != this) {
                     final Path fxmlPath = Paths.get(fxmlFile.toString());
                     final String fileName = fxmlPath.getFileName().toString();

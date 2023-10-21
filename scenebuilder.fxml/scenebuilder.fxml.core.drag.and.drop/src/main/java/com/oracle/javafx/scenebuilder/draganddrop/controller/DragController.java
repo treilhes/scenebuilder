@@ -43,19 +43,18 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.control.DropTarget;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.dnd.Drag;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
+import com.oracle.javafx.scenebuilder.api.dnd.DropTarget;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
-import com.oracle.javafx.scenebuilder.core.editor.drag.source.DocumentDragSource;
+import com.oracle.javafx.scenebuilder.core.fxom.DesignHierarchyPath;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.metadata.util.DesignHierarchyPath;
 import com.oracle.javafx.scenebuilder.draganddrop.droptarget.RootDropTarget;
-import com.oracle.javafx.scenebuilder.fxml.selection.job.UpdateSelectionJob;
+import com.oracle.javafx.scenebuilder.draganddrop.source.DocumentDragSource;
 import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
 import com.oracle.javafx.scenebuilder.selection.job.BackupSelectionJob;
 
@@ -299,7 +298,7 @@ public class DragController implements Drag {
         mouseTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                SbPlatform.runForDocumentLater(() -> {
+                SbPlatform.runOnFxThreadWithActiveScope(() -> {
                     mouseTimer = null;
                     mouseDidStopMoving();
                 });

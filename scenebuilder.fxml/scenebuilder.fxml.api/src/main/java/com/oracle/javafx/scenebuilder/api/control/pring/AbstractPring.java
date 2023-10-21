@@ -33,12 +33,12 @@
  */
 package com.oracle.javafx.scenebuilder.api.control.pring;
 
+import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
-import com.oracle.javafx.scenebuilder.api.Content;
+import com.oracle.javafx.scenebuilder.api.content.decoration.AbstractDecoration;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.control.Pring;
-import com.oracle.javafx.scenebuilder.api.control.decoration.AbstractDecoration;
 
 import javafx.scene.Node;
 import javafx.scene.paint.Paint;

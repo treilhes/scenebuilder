@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,11 +37,12 @@ import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.error.AbstractErrorCollector;
 import com.oracle.javafx.scenebuilder.api.error.ErrorReportEntry;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
+import com.oracle.javafx.scenebuilder.core.fxom.collector.PropertyCollector;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.fxml.error.FxmlErrorReportEntryImpl;
 import com.oracle.javafx.scenebuilder.fxml.error.Type;
@@ -65,7 +66,7 @@ public class BindingExpressionCollector extends AbstractErrorCollector {
 
         final ErrorCollectorResult result = new ErrorCollectorResult();
 
-        for (FXOMPropertyT p : documentManager.fxomDocument().get().getFxomRoot().collectPropertiesT()) {
+        for (FXOMPropertyT p : documentManager.fxomDocument().get().getFxomRoot().collect(PropertyCollector.allSimpleProperties())) {
             final PrefixedValue pv = new PrefixedValue(p.getValue());
             if (pv.isBindingExpression()) {
                 final ErrorReportEntry newEntry = new FxmlErrorReportEntryImpl(p, Type.UNSUPPORTED_EXPRESSION,

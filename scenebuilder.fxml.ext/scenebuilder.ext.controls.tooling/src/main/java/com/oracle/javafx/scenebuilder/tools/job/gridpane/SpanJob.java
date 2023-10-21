@@ -41,8 +41,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
@@ -52,10 +53,9 @@ import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.tools.mask.GridPaneHierarchyMask;
 
 import javafx.scene.layout.GridPane;
@@ -78,7 +78,7 @@ public final class SpanJob extends BatchDocumentJob {
 
     private SpanAction spanAction;
     private final Selection selection;
-    private final Metadata metadata;
+    private final IMetadata metadata;
     private final ModifyObjectJob.Factory modifyObjectJobFactory;
     private final GridPaneHierarchyMask.Factory maskFactory;
 
@@ -87,7 +87,7 @@ public final class SpanJob extends BatchDocumentJob {
             JobExtensionFactory extensionFactory,
             FxmlDocumentManager documentManager,
             Selection selection,
-            Metadata metadata,
+            IMetadata metadata,
             ModifyObjectJob.Factory modifyObjectJobFactory,
             GridPaneHierarchyMask.Factory maskFactory) {
     // @formatter:on
@@ -108,14 +108,14 @@ public final class SpanJob extends BatchDocumentJob {
         final AbstractSelectionGroup selectionGroup = selection.getGroup();
 
         // Do we have an asset selected which is a standard one (not a grid) ?
-        if (selectionGroup instanceof ObjectSelectionGroup) {
+        if (selectionGroup instanceof DefaultSelectionGroupFactory) {
             // Is that asset enclosed in a grid ?
             if (selectionGroup.getAncestor() != null
                     && selectionGroup.getAncestor().getSceneGraphObject() instanceof GridPane) {
                 GridPaneHierarchyMask gridDHM = maskFactory.getMask(selectionGroup.getAncestor());
                 int columnCount = gridDHM.getColumnsSize();
                 int rowCount = gridDHM.getRowsSize();
-                List<FXOMObject> items = ((ObjectSelectionGroup)selectionGroup).getSortedItems();
+                List<FXOMObject> items = ((DefaultSelectionGroupFactory)selectionGroup).getSortedItems();
 
                 // Create a job for all items then check each is executable.
                 // As soon as one is not executable the job list is made empty

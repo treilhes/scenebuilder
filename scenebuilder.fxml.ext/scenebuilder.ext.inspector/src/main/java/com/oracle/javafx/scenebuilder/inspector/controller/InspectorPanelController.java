@@ -58,25 +58,25 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.InlineEdit;
-import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.api.css.CssPropAuthorInfo;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.dnd.Drag;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
-import com.oracle.javafx.scenebuilder.api.dock.Dock;
-import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
-import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
+import com.oracle.javafx.scenebuilder.api.ui.dock.Dock;
+import com.oracle.javafx.scenebuilder.api.ui.dock.ViewSearch;
+import com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
+import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
+import com.oracle.javafx.scenebuilder.api.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.api.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertiesEditor;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
@@ -91,8 +91,8 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
-import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
@@ -102,6 +102,7 @@ import com.oracle.javafx.scenebuilder.core.metadata.util.ValuePropertyMetadataNa
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
 import com.oracle.javafx.scenebuilder.editors.control.GenericEditor;
 import com.oracle.javafx.scenebuilder.editors.control.ToggleGroupEditor;
+import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.ModifyCacheHintJob;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.ModifySelectionJob;
 import com.oracle.javafx.scenebuilder.inspector.preferences.document.InspectorSectionIdPreference;
@@ -253,7 +254,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             InlineEdit inlineEdit,
             JobManager jobManager,
             MessageLogger messageLogger,
-            Metadata metadata,
+            IMetadata metadata,
             InspectorSectionIdPreference inspectorSectionIdPreference,
             Drag drag,
             PropertyEditorFactory propertyEditorFactory,
@@ -465,7 +466,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     protected void cssRevisionDidChange() {
 //        System.out.println("CSS changed.");
-        SbPlatform.runLater(() -> {
+        SbPlatform.runOnFxThread(() -> {
             if (!dragOnGoing) {
                 updateInspector();
             }

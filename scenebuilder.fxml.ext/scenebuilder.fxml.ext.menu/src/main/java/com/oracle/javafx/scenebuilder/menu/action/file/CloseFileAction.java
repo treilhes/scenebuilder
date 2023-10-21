@@ -38,20 +38,20 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Document;
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.panel.util.dialog.Alert;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
+import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
@@ -73,17 +73,17 @@ public class CloseFileAction extends AbstractAction {
     private final FxmlDocumentManager documentManager;
     private final InlineEdit inlineEdit;
     private final Dialog dialog;
-    private final DocumentWindow documentWindow;
+    private final EditorInstanceWindow documentWindow;
     private final ActionFactory actionFactory;
-    private final Document document;
+    private final EditorInstance document;
     private boolean force = false;
 
 
     public CloseFileAction(
             ActionExtensionFactory extensionFactory,
             FxmlDocumentManager documentManager,
-            Document document,
-            DocumentWindow documentWindow,
+            EditorInstance document,
+            EditorInstanceWindow documentWindow,
             InlineEdit inlineEdit,
             Dialog dialog,
             ActionFactory actionFactory) {

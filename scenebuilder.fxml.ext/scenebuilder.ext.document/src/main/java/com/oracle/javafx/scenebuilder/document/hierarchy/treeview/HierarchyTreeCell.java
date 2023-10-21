@@ -42,13 +42,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.InlineEdit;
-import com.oracle.javafx.scenebuilder.api.InlineEdit.Type;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
 import com.oracle.javafx.scenebuilder.api.error.ErrorReport;
 import com.oracle.javafx.scenebuilder.api.error.ErrorReportEntry;
 import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
+import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
+import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit.Type;
 import com.oracle.javafx.scenebuilder.api.util.StringUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
@@ -60,6 +60,7 @@ import com.oracle.javafx.scenebuilder.document.api.HierarchyPanel;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyCellAssignment;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyDNDController;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyDNDController.DroppingMouseLocation;
+import com.oracle.javafx.scenebuilder.ui.inlineedit.PrefixedValue;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyParentRing;
 
 import javafx.beans.value.ChangeListener;
@@ -380,6 +381,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         // false otherwise
         //----------------------------------------------------------------------
         final Callback<String, Boolean> requestCommit = newValue -> {
+            
             // 1) Check the input value is valid
             // 2) If valid, commit the new value and return true
             // 3) Otherwise, return false
@@ -387,9 +389,13 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
             // Item may be null when invoking UNDO while inline editing session is on going
             if (item != null) {
                 assert newValue != null;
-
+                
+                // Using PrefixedValue PLAIN_STRING allow to consider special characters (such as @, %,...)
+                // as "standard" characters (i.e. to backslash them)
+                final String newPlainValue = new PrefixedValue(PrefixedValue.Type.PLAIN_STRING, newValue).toString();
+                
                 final DisplayOption option = hierarchy.getDisplayOption();
-                option.setValue(mask, newValue);
+                option.setValue(mask, newPlainValue);
             }
             logger.debug("Validate new value of {}/{}", mask.getFxomObject(), mask.getFxomObject().hashCode());
             return true;

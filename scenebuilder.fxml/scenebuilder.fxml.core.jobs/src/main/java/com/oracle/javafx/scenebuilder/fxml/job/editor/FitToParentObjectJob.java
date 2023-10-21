@@ -43,7 +43,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
@@ -53,7 +53,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.fxml.job.editor.atomic.ModifyObjectJob;
 
@@ -81,7 +81,7 @@ public final class FitToParentObjectJob extends BatchDocumentJob {
     private FXOMProperty parentProperty;
     private FXOMElement parentInstance;
     private final ModifyObjectJob.Factory modifyObjectJobFactory;
-    private final Metadata metadata;
+    private final IMetadata metadata;
 
     private enum Sizing {
 
@@ -96,7 +96,7 @@ public final class FitToParentObjectJob extends BatchDocumentJob {
     protected FitToParentObjectJob(
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
-            Metadata metadata,
+            IMetadata metadata,
             ModifyObjectJob.Factory modifyObjectJobFactory) {
         super(extensionFactory, documentManager);
         this.metadata = metadata;

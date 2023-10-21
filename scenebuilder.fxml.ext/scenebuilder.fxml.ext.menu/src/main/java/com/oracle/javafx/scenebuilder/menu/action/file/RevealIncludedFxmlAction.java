@@ -36,21 +36,21 @@ package com.oracle.javafx.scenebuilder.menu.action.file;
 import java.io.File;
 import java.io.IOException;
 
+import org.scenebuilder.fxml.api.SbEditor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.menu.annotation.ContextMenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
+import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.ContextMenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 @Component
@@ -75,13 +75,13 @@ public class RevealIncludedFxmlAction extends AbstractAction {
     public final static String TITLE = "menu.title.reveal.included.default";
 
     private final FileSystem fileSystem;
-    private final Editor editor;
+    private final SbEditor editor;
     private final Dialog dialog;
 
     public RevealIncludedFxmlAction(
             ActionExtensionFactory extensionFactory,
             FileSystem fileSystem,
-            Editor editor,
+            SbEditor editor,
             Dialog dialog) {
         super(extensionFactory);
         this.fileSystem = fileSystem;

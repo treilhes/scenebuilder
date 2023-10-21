@@ -39,15 +39,15 @@ import org.springframework.stereotype.Component;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
-import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.menu.annotation.ContextMenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
+import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.ContextMenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.BringForwardJob;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
@@ -61,7 +61,7 @@ import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
         label = BringForwardAction.TITLE,
         positionRequest = PositionRequest.AsNextSibling)
 @ContextMenuItemAttachment(
-        selectionGroup = ObjectSelectionGroup.class,
+        selectionGroup = DefaultSelectionGroupFactory.class,
         id = BringForwardAction.MENU_ID,
         targetMenuId = SendToBackAction.MENU_ID,
         label = BringForwardAction.TITLE,

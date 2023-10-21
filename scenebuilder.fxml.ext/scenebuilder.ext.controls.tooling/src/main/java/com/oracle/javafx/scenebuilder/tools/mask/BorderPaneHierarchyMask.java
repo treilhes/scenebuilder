@@ -36,12 +36,12 @@ package com.oracle.javafx.scenebuilder.tools.mask;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.mask.AbstractHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.mask.MaskFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 
 /**
  *
@@ -62,7 +62,7 @@ public class BorderPaneHierarchyMask extends AbstractHierarchyMask {
     private Accessory rightAccessory;
     private Accessory centerAccessory;
 
-    public BorderPaneHierarchyMask(Metadata metadata) {
+    public BorderPaneHierarchyMask(IMetadata metadata) {
         super(metadata);
     }
 

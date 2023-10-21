@@ -41,10 +41,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.menu.MenuAttachment;
-import com.oracle.javafx.scenebuilder.api.menu.MenuProvider;
-import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.ui.menu.MenuAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.menu.MenuProvider;
+import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.debugmenu.controller.DebugMenuController;
 
 import javafx.scene.control.Menu;

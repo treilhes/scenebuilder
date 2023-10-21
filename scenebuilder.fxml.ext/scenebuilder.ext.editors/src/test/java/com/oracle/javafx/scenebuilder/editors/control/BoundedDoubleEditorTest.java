@@ -44,15 +44,15 @@ import org.mockito.Mockito;
 import org.scenebuilder.fxml.api.Documentation;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
+import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
 
 @ExtendWith(ApplicationExtension.class)
 public class BoundedDoubleEditorTest {
@@ -71,7 +71,7 @@ public class BoundedDoubleEditorTest {
     FileSystem fileSystem;
 
     @Mock
-    Metadata metadata;
+    IMetadata metadata;
 
     static DoublePropertyMetadata someDoubleProp() {
         return new CoordinateDoublePropertyMetadata.Builder()

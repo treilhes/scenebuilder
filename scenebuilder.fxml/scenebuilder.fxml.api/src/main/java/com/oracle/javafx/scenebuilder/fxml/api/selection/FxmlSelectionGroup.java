@@ -38,6 +38,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
+import com.oracle.javafx.scenebuilder.api.job.Job;
+import com.oracle.javafx.scenebuilder.api.om.OMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
@@ -69,7 +71,7 @@ public interface FxmlSelectionGroup extends SelectionGroup, Cloneable {
      * @param fxomDocument the owner document
      * @return true if all the selected {@link FXOMObject} are part of the provided {@link FXOMDocument}
      */
-    public boolean isValid(FXOMObject fxomDocument);
+    public boolean isValid(FXOMDocument fxomDocument);
     /**
      * Get the collection of all the selected objects in the group
      * @return all the selected objects
@@ -100,4 +102,11 @@ public interface FxmlSelectionGroup extends SelectionGroup, Cloneable {
 
     @Override
     FxmlSelectionGroup clone() throws CloneNotSupportedException;
+
+    /**
+     * Make delete job.
+     *
+     * @return the job
+     */
+    Job makeDeleteJob();
 }

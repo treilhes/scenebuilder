@@ -52,8 +52,6 @@ import com.oracle.javafx.scenebuilder.editor.fxml.actions.ZoomOutAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.controller.ContentPanelController;
 import com.oracle.javafx.scenebuilder.editor.fxml.controller.ContextMenuController;
 import com.oracle.javafx.scenebuilder.editor.fxml.controller.EditModeController;
-import com.oracle.javafx.scenebuilder.editor.fxml.controller.HudWindowController;
-import com.oracle.javafx.scenebuilder.editor.fxml.controller.WorkspaceController;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.DragGesture;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.ZoomGesture;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse.DebugMouseGesture;
@@ -64,6 +62,8 @@ import com.oracle.javafx.scenebuilder.editor.fxml.preferences.global.AlignmentGu
 import com.oracle.javafx.scenebuilder.editor.fxml.preferences.global.BackgroundImagePreference;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key.MoveWithKeyGesture;
+import com.oracle.javafx.scenebuilder.ui.controller.HudWindowController;
+import com.oracle.javafx.scenebuilder.ui.controller.WorkspaceController;
 
 public class FxmlEditorExtension extends AbstractExtension {
     @Override

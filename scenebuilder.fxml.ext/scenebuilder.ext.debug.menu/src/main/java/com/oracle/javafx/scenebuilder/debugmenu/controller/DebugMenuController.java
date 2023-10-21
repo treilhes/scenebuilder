@@ -37,21 +37,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.scenebuilder.fxml.api.Content;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.DebugMenu;
-import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.CompositeJob;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
-import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
+import com.oracle.javafx.scenebuilder.api.ui.menu.DebugMenu;
+import com.oracle.javafx.scenebuilder.api.ui.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
 import com.oracle.javafx.scenebuilder.job.editor.reference.UpdateReferencesJob;
 import com.oracle.javafx.scenebuilder.util.MathUtils;

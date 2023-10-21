@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.scenebuilder.fxml.api.SbEditor;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,15 +46,14 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.dock.ViewSearch;
-import com.oracle.javafx.scenebuilder.api.dock.annotation.ViewAttachment;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
+import com.oracle.javafx.scenebuilder.api.ui.dock.ViewSearch;
+import com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.fs.preference.global.WildcardImportsPreference;
@@ -94,7 +94,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
     private final FxmlDocumentManager documentManager;
     private final WildcardImportsPreference wildcardImportsPreference;
 
-    private final Editor editor;
+    private final SbEditor editor;
 
     private double scrollLeftSave;
     private double scrollTopSave;
@@ -104,7 +104,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
     public SourceViewWindowController(
             SceneBuilderManager scenebuilderManager,
             FxmlDocumentManager documentManager,
-            @Autowired Editor editor,
+            @Autowired SbEditor editor,
             @Autowired WildcardImportsPreference wildcardImportsPreference,
             ViewMenuController viewMenuController) {
         super(scenebuilderManager, documentManager, viewMenuController, SourceViewWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle());

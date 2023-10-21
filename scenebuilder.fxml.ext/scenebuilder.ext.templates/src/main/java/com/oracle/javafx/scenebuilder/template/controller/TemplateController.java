@@ -36,11 +36,11 @@ package com.oracle.javafx.scenebuilder.template.controller;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Document;
-import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.template.Template;
@@ -57,7 +57,7 @@ import com.oracle.javafx.scenebuilder.job.editor.UseSizeJob;
 @Component
 public class TemplateController {
 
-    private final Main main;
+    private final EditorInstancesManager main;
     private final SceneBuilderBeanFactory context;
     private final ActionFactory actionFactory;
     private final JobManager jobManager;
@@ -71,7 +71,7 @@ public class TemplateController {
     public TemplateController(
             SceneBuilderBeanFactory context,
             ActionFactory actionFactory,
-    		Main main,
+    		EditorInstancesManager main,
     		@Lazy JobManager jobManager,
     		UseSizeJob.Factory useSizeJobFactory) {
         this.context = context;
@@ -102,7 +102,7 @@ public class TemplateController {
      * @param template the template
      */
     public void loadTemplateInNewWindow(Template template) {
-        final Document newTemplateWindow = main.makeNewDocument();
+        final EditorInstance newTemplateWindow = main.makeNewDocument();
         loadTemplateInWindow(template, newTemplateWindow);
     }
 
@@ -112,7 +112,7 @@ public class TemplateController {
      * @param template the template
      */
     public void loadTemplateInCurrentWindow(Template template) {
-        loadTemplateInWindow(template, context.getBean(Document.class));
+        loadTemplateInWindow(template, context.getBean(EditorInstance.class));
     }
 
     /**
@@ -121,7 +121,7 @@ public class TemplateController {
      * @param template the template
      * @param document the document
      */
-    private void loadTemplateInWindow(Template template, Document document) {
+    private void loadTemplateInWindow(Template template, EditorInstance document) {
 
         if (template != null && template.getFxmlUrl() != null) {
             document.loadFromURL(template.getFxmlUrl(), false);

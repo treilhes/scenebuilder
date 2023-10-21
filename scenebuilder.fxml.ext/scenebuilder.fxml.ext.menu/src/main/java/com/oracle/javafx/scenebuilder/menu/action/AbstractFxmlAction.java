@@ -36,13 +36,13 @@ package com.oracle.javafx.scenebuilder.menu.action;
 import java.io.File;
 import java.util.Optional;
 
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
+import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
 import com.oracle.javafx.scenebuilder.fs.job.ImportFileJob;
 import com.oracle.javafx.scenebuilder.fs.job.IncludeFileJob;
 
@@ -52,7 +52,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 public abstract class AbstractFxmlAction extends AbstractAction {
 
     private final FileSystem fileSystem;
-    private final DocumentWindow documentWindow;
+    private final EditorInstanceWindow documentWindow;
     private final JobManager jobManager;
     private final MessageLogger messageLogger;
     private final ImportFileJob.Factory importFileJobFactory;
@@ -62,7 +62,7 @@ public abstract class AbstractFxmlAction extends AbstractAction {
     public AbstractFxmlAction(
             ActionExtensionFactory extensionFactory,
             FileSystem fileSystem,
-            DocumentWindow documentWindow,
+            EditorInstanceWindow documentWindow,
             JobManager jobManager,
             MessageLogger messageLogger,
             ImportFileJob.Factory importFileJobFactory,

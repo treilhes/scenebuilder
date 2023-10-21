@@ -12,12 +12,7 @@
 <?import javafx.scene.effect.GaussianBlur?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="512.0" prefWidth="868.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
-    <fx:script>
-        function testClick(event) {
-            java.lang.System.out.println('You clicked me!');
-            timeline.play();
-        }
-    </fx:script>
+    
     <children>
         <Circle fx:id="circleId" cache="true" cacheHint="SPEED" fill="#1d84e4" layoutX="210.0" layoutY="213.0" radius="100.0" stroke="BLACK" strokeType="INSIDE">
         <effect>
@@ -38,4 +33,10 @@
             </keyFrames>
         </Timeline>
     </fx:define>
+    <fx:script>
+        function testClick(event) {
+            java.lang.System.out.println('You clicked me!');
+            timeline.play();
+        }
+    </fx:script>
 </Pane>

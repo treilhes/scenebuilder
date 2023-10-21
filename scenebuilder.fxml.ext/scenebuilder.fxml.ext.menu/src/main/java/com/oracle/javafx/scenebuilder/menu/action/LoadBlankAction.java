@@ -35,18 +35,18 @@ package com.oracle.javafx.scenebuilder.menu.action;
 
 import java.io.IOException;
 
+import org.scenebuilder.fxml.api.SbEditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Document;
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
@@ -54,16 +54,16 @@ import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 public class LoadBlankAction extends AbstractAction {
 
-    private final Document document;
-    private final DocumentWindow documentWindow;
-    private final Editor editor;
+    private final EditorInstance document;
+    private final EditorInstanceWindow documentWindow;
+    private final SbEditor editor;
 
     public LoadBlankAction(
     // @formatter:off
             @Autowired ActionExtensionFactory extensionFactory,
-            @Autowired Document document,
-            @Autowired DocumentWindow documentWindow,
-            @Autowired Editor editor) {
+            @Autowired EditorInstance document,
+            @Autowired EditorInstanceWindow documentWindow,
+            @Autowired SbEditor editor) {
     // @formatter:on
         super(extensionFactory);
         this.document = document;

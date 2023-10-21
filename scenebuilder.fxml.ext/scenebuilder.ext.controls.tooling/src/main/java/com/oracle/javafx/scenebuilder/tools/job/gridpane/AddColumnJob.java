@@ -46,8 +46,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.BatchSelectionJob;
@@ -55,7 +56,6 @@ import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup.Type;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.GridPaneJobUtils.Position;
@@ -80,7 +80,7 @@ public final class AddColumnJob extends BatchSelectionJob {
     private final AddColumnConstraintsJob.Factory addColumnConstraintsJobFactory;
     private final ReIndexColumnContentJob.Factory reIndexColumnContentJobFactory;
     private final GridPaneHierarchyMask.Factory GridPaneHierarchyMask;
-    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
+    private final DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory;
     private final GridSelectionGroup.Factory gridSelectionGroupFactory;
     /**
      * Key = target GridPane instance<br/>
@@ -98,7 +98,7 @@ public final class AddColumnJob extends BatchSelectionJob {
             AddColumnConstraintsJob.Factory addColumnConstraintsJobFactory,
             ReIndexColumnContentJob.Factory reIndexColumnContentJobFactory,
             GridPaneHierarchyMask.Factory GridPaneHierarchyMask,
-            ObjectSelectionGroup.Factory objectSelectionGroupFactory,
+            DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory,
             GridSelectionGroup.Factory gridSelectionGroupFactory) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);

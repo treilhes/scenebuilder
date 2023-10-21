@@ -37,18 +37,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.HierarchyMask;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
-import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.HudWindow;
-import com.oracle.javafx.scenebuilder.api.content.ModeManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
 import com.oracle.javafx.scenebuilder.api.content.mode.Layer;
+import com.oracle.javafx.scenebuilder.api.content.mode.ModeManager;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.Relocater;
@@ -57,15 +56,17 @@ import com.oracle.javafx.scenebuilder.api.control.Resizer;
 import com.oracle.javafx.scenebuilder.api.control.Resizer.Feature;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.control.Shadow;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.api.ui.misc.HudWindow;
+import com.oracle.javafx.scenebuilder.api.ui.misc.Workspace;
+import com.oracle.javafx.scenebuilder.api.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.ResizingGuideController;
@@ -99,7 +100,7 @@ public class ResizeGesture extends AbstractMouseGesture {
     private boolean snapEnabled;
     private boolean guidesDisabled;
 	private final Driver driver;
-    private final Metadata metadata;
+    private final IMetadata metadata;
     private final DesignHierarchyMask.Factory designMaskFactory;
     private final ModifyObjectJob.Factory modifyObjectJobFactory;
 
@@ -118,19 +119,23 @@ public class ResizeGesture extends AbstractMouseGesture {
     private boolean matchWidth;
     private boolean matchHeight;
     private final JobManager jobManager;
+    private final HudWindow hud;
 
     protected ResizeGesture(
+            Workspace workspace,
+            HudWindow hud,
             Content contentPanelController,
-            Metadata metadata,
+            IMetadata metadata,
             Driver driver,
             JobManager jobManager,
             DesignHierarchyMask.Factory designMaskFactory,
             ModeManager modeManager,
             ModifyObjectJob.Factory modifyObjectJobFactory) {
-        super(contentPanelController);
+        super(workspace);
         this.metadata = metadata;
         this.driver = driver;
         this.jobManager = jobManager;
+        this.hud = hud;
         this.designMaskFactory = designMaskFactory;
         this.modifyObjectJobFactory = modifyObjectJobFactory;
 
@@ -148,7 +153,7 @@ public class ResizeGesture extends AbstractMouseGesture {
     }
 
     protected void setupGestureParameters(FXOMInstance fxomInstance, CardinalPoint tunable) {
-        assert fxomInstance.getSceneGraphObject() instanceof Node;
+        assert fxomInstance.getSceneGraphObject().isInstanceOf(Node.class);
         this.fxomInstance = fxomInstance;
         this.tunable = tunable;
     }
@@ -160,7 +165,7 @@ public class ResizeGesture extends AbstractMouseGesture {
 
     @Override
     public void start(InputEvent e, Observer observer) {
-        AbstractGesture.attachGesture((Node)fxomInstance.getSceneGraphObject(), this);
+        AbstractGesture.attachGesture(fxomInstance.getSceneGraphObject().getAs(Node.class), this);
         super.start(e, observer);
     }
 
@@ -168,7 +173,7 @@ public class ResizeGesture extends AbstractMouseGesture {
 
     @Override
     protected void performTermination() {
-        AbstractGesture.detachGesture((Node)fxomInstance.getSceneGraphObject(), this);
+        AbstractGesture.detachGesture(fxomInstance.getSceneGraphObject().getAs(Node.class), this);
         super.performTermination();
     }
 
@@ -183,7 +188,7 @@ public class ResizeGesture extends AbstractMouseGesture {
     protected void mouseDragStarted() {
         resizer = driver.makeResizer(fxomInstance);
         assert resizer != null;
-        assert resizer.getSceneGraphObject() == fxomInstance.getSceneGraphObject();
+        assert resizer.getSceneGraphObject() == fxomInstance.getSceneGraphObject().get();
 
         relocater = driver.makeRelocater(resizer.getFxomObject());
 
@@ -213,7 +218,7 @@ public class ResizeGesture extends AbstractMouseGesture {
 
         setRudderVisible(isSnapRequired());
         updateSceneGraphObjectSize();
-        contentPanelController.getHudWindowController().updatePopupLocation();
+        hud.updatePopupLocation();
         //updateShadow();
     }
 
@@ -300,7 +305,7 @@ public class ResizeGesture extends AbstractMouseGesture {
         }
         setRudderVisible(false);
         //hideShadow();
-        contentPanelController.getHudWindowController().closeWindow();
+        hud.closeWindow();
 
         handleLayer.enable();
         resizeGuideLayer.disable();
@@ -310,7 +315,7 @@ public class ResizeGesture extends AbstractMouseGesture {
         //resizer.getSceneGraphObject().getParent().layout();
 
         //support for detached graph (clip, shape,...)
-        ((Node)resizer.getFxomObject().getClosestMainGraphNode().getSceneGraphObject()).getParent().layout();
+        resizer.getFxomObject().getClosestMainGraphNode().getSceneGraphObject().getAs(Node.class).getParent().layout();
     }
 
 
@@ -328,7 +333,8 @@ public class ResizeGesture extends AbstractMouseGesture {
         }
 
         final Node sceneGraphObject = resizer.getSceneGraphObject();
-        Parent parentToLayout = (Parent)resizer.getFxomObject().getClosestMainGraphNode().getClosestParent().getSceneGraphObject();
+        Parent parentToLayout = resizer.getFxomObject().getClosestMainGraphNode().getClosestParent()
+                .getSceneGraphObject().getAs(Parent.class);
 
         parentToLayout.layout();
 
@@ -400,7 +406,7 @@ public class ResizeGesture extends AbstractMouseGesture {
         resizer.changeWidth(guidedLayoutBounds.getWidth());
         resizer.changeHeight(guidedLayoutBounds.getHeight());
         if (relocater != null) {
-            ((Parent)fxomInstance.getClosestParent().getSceneGraphObject()).layout();
+            fxomInstance.getClosestParent().getSceneGraphObject().getAs(Parent.class).layout();
             relocater.moveToLayoutX(newLayoutX, guidedLayoutBounds);
             relocater.moveToLayoutY(newLayoutY, guidedLayoutBounds);
         }
@@ -438,10 +444,6 @@ public class ResizeGesture extends AbstractMouseGesture {
 
 
     private void setupAndOpenHudWindow() {
-        final HudWindow hudWindowController
-                = contentPanelController.getHudWindowController();
-
-
         final int sizeRowCount = resizer.getPropertyNames().size();
         final int locationRowCount;
         if (relocater != null) {
@@ -449,27 +451,27 @@ public class ResizeGesture extends AbstractMouseGesture {
         } else {
             locationRowCount = 0;
         }
-        hudWindowController.setRowCount(sizeRowCount + locationRowCount);
+        hud.setRowCount(sizeRowCount + locationRowCount);
 
 
         final List<PropertyName> sizePropertyNames = resizer.getPropertyNames();
         for (int i = 0; i < sizeRowCount; i++) {
             final PropertyName pn = sizePropertyNames.get(i);
-            hudWindowController.setNameAtRowIndex(makeNameString(pn), i);
+            hud.setNameAtRowIndex(makeNameString(pn), i);
         }
 
         if (relocater != null) {
             final List<PropertyName> locationPropertyNames = relocater.getPropertyNames();
             for (int i = 0; i < locationRowCount; i++) {
                 final PropertyName pn = locationPropertyNames.get(i);
-                hudWindowController.setNameAtRowIndex(makeNameString(pn), sizeRowCount+i);
+                hud.setNameAtRowIndex(makeNameString(pn), sizeRowCount+i);
             }
         }
 
         updateHudWindow();
 
-        hudWindowController.setRelativePosition(tunable);
-        hudWindowController.openWindow((Node)resizer.getFxomObject().getClosestMainGraphNode().getSceneGraphObject());
+        hud.setRelativePosition(tunable);
+        hud.openWindow(resizer.getFxomObject().getClosestMainGraphNode().getSceneGraphObject().getAs(Node.class));
     }
 
     private String makeNameString(PropertyName pn) {
@@ -478,15 +480,13 @@ public class ResizeGesture extends AbstractMouseGesture {
 
 
     private void updateHudWindow() {
-        final HudWindow hudWindowController
-                = contentPanelController.getHudWindowController();
         final List<PropertyName> sizePropertyNames = resizer.getPropertyNames();
         final int sizeRowCount = sizePropertyNames.size();
 
         for (int i = 0; i < sizeRowCount; i++) {
             final PropertyName pn = sizePropertyNames.get(i);
             final String value = String.valueOf(resizer.getValue(pn));
-            hudWindowController.setValueAtRowIndex(value, i);
+            hud.setValueAtRowIndex(value, i);
         }
 
         if (relocater != null) {
@@ -495,7 +495,7 @@ public class ResizeGesture extends AbstractMouseGesture {
             for (int i = 0; i < locationRowCount; i++) {
                 final PropertyName pn = locationPropertyNames.get(i);
                 final String value = String.valueOf(relocater.getValue(pn));
-                hudWindowController.setValueAtRowIndex(value, sizeRowCount+i);
+                hud.setValueAtRowIndex(value, sizeRowCount+i);
             }
         }
     }
@@ -568,10 +568,9 @@ public class ResizeGesture extends AbstractMouseGesture {
         assert fxomObject != null;
 
         if (fxomObject != fxomInstance) {
-            if (fxomObject.getSceneGraphObject() instanceof Node) {
-                final Node sceneGraphNode = (Node) fxomObject.getSceneGraphObject();
-                resizingGuideController.addSampleBounds(sceneGraphNode);
-            }
+
+            fxomObject.getSceneGraphObject().getOptionalAs(Node.class)
+                .ifPresent(resizingGuideController::addSampleBounds);
 
             final HierarchyMask m = designMaskFactory.getMask(fxomObject);
             if (m.hasMainAccessory()) {

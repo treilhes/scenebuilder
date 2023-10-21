@@ -36,23 +36,23 @@ package com.oracle.javafx.scenebuilder.tools.driver.splitpane;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.scenebuilder.fxml.api.Content;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
-import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.HudWindow;
-import com.oracle.javafx.scenebuilder.api.content.ModeManager;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
 import com.oracle.javafx.scenebuilder.api.content.mode.Layer;
+import com.oracle.javafx.scenebuilder.api.content.mode.ModeManager;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
+import com.oracle.javafx.scenebuilder.api.ui.misc.HudWindow;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 
@@ -78,7 +78,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
     private double[] originalDividerPositions;
 
 	private final JobManager jobManager;
-	private final Metadata metadata;
+	private final IMetadata metadata;
     private final ModifyObjectJob.Factory modifyObjectJobFactory;
 
 	@SuppressWarnings("rawtypes")
@@ -86,7 +86,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
 
     protected AdjustDividerGesture(
     		Content content,
-    		Metadata metadata,
+    		IMetadata metadata,
     		JobManager jobManager,
     		ModeManager modeManager,
             ModifyObjectJob.Factory modifyObjectJobFactory) {

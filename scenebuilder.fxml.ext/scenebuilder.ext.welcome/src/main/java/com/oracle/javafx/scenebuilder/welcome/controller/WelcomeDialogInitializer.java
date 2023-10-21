@@ -35,9 +35,9 @@ package com.oracle.javafx.scenebuilder.welcome.controller;
 
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
 
 @Component
@@ -45,11 +45,11 @@ public class WelcomeDialogInitializer implements InitWithSceneBuilder {
 
 
     private final SceneBuilderBeanFactory context;
-    private final Main main;
+    private final EditorInstancesManager main;
 
     public WelcomeDialogInitializer(
             SceneBuilderBeanFactory context,
-            Main main) {
+            EditorInstancesManager main) {
         super();
         this.context = context;
         this.main = main;
@@ -62,7 +62,7 @@ public class WelcomeDialogInitializer implements InitWithSceneBuilder {
         // Unless we're on a Mac we're starting SB directly (fresh start)
         // so we're not opening any file and as such we should show the Welcome Dialog
         if (main.lookupUnusedDocument() != null) {
-            SbPlatform.runLater(() -> {
+            SbPlatform.runOnFxThread(() -> {
                 wdwc.getStage().show();
             });
         }

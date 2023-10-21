@@ -1,28 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.gluonhq.scenebuilder</groupId>
+    <groupId>com.gluonhq.jfxapps</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
     <version>17.0.0-SNAPSHOT</version>
     <name>Scene Builder</name>
-    <description>Scene Builder is a visual, drag n drop, layout tool for designing JavaFX application user interfaces</description>
+    <description>Scene Builder is a visual, drag n drop, layout tool for
+        designing JavaFX application user interfaces</description>
     <inceptionYear>2012</inceptionYear>
     <url>https://github.com/gluonhq/scenebuilder</url>
 
     <modules>
         <module>dev.utils</module>
+        <module>fxml.serializer</module>
+        <module>jfxapps.app</module>
+        <module>jfxapps.boot</module>
+        <module>jfxapps.core</module>
+        <module>jfxapps.core.ext</module>
+        <module>jfxapps.registry</module>
         <module>scenebuilder.application</module>
         <module>scenebuilder.application.core</module>
-        <module>scenebuilder.core</module>
-        <module>scenebuilder.core.ext</module>
         <module>scenebuilder.fxml</module>
         <module>scenebuilder.fxml.ext</module>
         <module>scenebuilder.gluon</module>
         <module>scenebuilder.maven</module>
         <module>scenebuilder.metadata.generator</module>
-        <module>scenebuilder.starter</module>
-        <module>scenebuilder.starter.test</module>
+        
     </modules>
 
     <properties>
@@ -32,15 +38,17 @@
 
         <!-- compiler -->
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
-        <maven.compiler.release>11</maven.compiler.release>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.release>17</maven.compiler.release>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <slf4j.version>2.0.6</slf4j.version>
+        <spring.version>6.0.4</spring.version>
+        <logback.version>1.4.5</logback.version>
         <junit.version>5.7.0</junit.version>
         <junit-platform.version>1.7.1</junit-platform.version>
-        <jackson.version>2.11.3</jackson.version>
-        <spring.boot.version>2.5.0</spring.boot.version>
+        <jackson.version>2.12.3</jackson.version>
         <testfx.junit.version>4.0.16-alpha</testfx.junit.version>
         <mockserver.jupiter.version>5.11.2</mockserver.jupiter.version>
     </properties>
@@ -58,112 +66,199 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- jfxapps.app -->
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.app.starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.app.starter.test</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <!-- jfxapps.boot -->
+            
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.boot.context</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.boot.loader</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.boot.main</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.boot.maven</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.boot.platform</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.boot.starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.boot.starter.test</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <!-- jfxapps.core -->
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.clipboard</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.drag.and.drop</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.error</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.extension.store</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.filesystem</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.fxom</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.jobs</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- <dependency>
+                <groupId>com.gluonhq.scenebuilder</groupId>
+                <artifactId>scenebuilder.core.launcher</artifactId>
+                <version>${project.version}</version>
+            </dependency>-->
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.library</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.metadata</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.preferences</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.selection</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.starter.test</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.ui</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.utils</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <!-- jfxapps.ext -->
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.ext.about</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.ext.certificate.manager</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.ext.extension.library</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.ext.log.viewer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.ext.menu</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.ext.preference.editor</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+             <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.ext.update.manager</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.ext.sb</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <!-- jfxapps.registry -->
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.registry.model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <!-- remaining -->
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.application</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.drag.and.drop</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.clipboard</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.extension.api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.extension.store</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.error</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.filesystem</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.fxom</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.jobs</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.launcher</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.om</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.selection</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.ui</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.utils</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.library</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.metadata</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.preferences</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.ext.menu</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.ext.certificate.manager</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+            
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.ext.editor.fxml</artifactId>
@@ -219,11 +314,7 @@
                 <artifactId>scenebuilder.ext.exporter</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.ext.extension.library</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+            
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.ext.glossary</artifactId>
@@ -249,26 +340,13 @@
                 <artifactId>scenebuilder.ext.inspector</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.ext.log.viewer</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.ext.preference.editor</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+            
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.ext.preview</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.ext.sb</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+            
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.ext.source.gen</artifactId>
@@ -284,16 +362,7 @@
                 <artifactId>scenebuilder.ext.templates</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.ext.update.manager</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.core.ext.about</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+           
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.ext.welcome</artifactId>
@@ -304,12 +373,6 @@
                 <artifactId>scenebuilder.core.ext.scenicview</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.starter</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.metadata.javafx15</artifactId>
@@ -339,36 +402,79 @@
                 <artifactId>scenebuilder.fxml.api</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.fxml.core</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.fxml.core.drag.and.drop</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.fxml.core.jobs</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>com.gluonhq.scenebuilder</groupId>
                 <artifactId>scenebuilder.fxml.core.selection</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
+            
+            
             <dependency>
-                <groupId>com.gluonhq.scenebuilder</groupId>
-                <artifactId>scenebuilder.starter.test</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-fxml</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-web</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-swing</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+
+            <!--https://mvnrepository.com/artifact/jakarta.inject/jakarta.inject-api -->
+            <dependency>
+                <groupId>jakarta.inject</groupId>
+                <artifactId>jakarta.inject-api</artifactId>
+                <version>2.0.1</version>
+            </dependency>
+            <!--
+            https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api -->
+            <dependency>
+                <groupId>jakarta.annotation</groupId>
+                <artifactId>jakarta.annotation-api</artifactId>
+                <version>2.1.1</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -400,14 +506,18 @@
                             <show>private</show>
                             <additionalOptions>
                                 <option>--add-exports</option>
-                                <option>javafx.graphics/com.sun.javafx.scene=scenebuilder.core</option>
+                                <option>
+                                    javafx.graphics/com.sun.javafx.scene=scenebuilder.core</option>
                                 <option>--add-exports</option>
-                                <option>javafx.graphics/com.sun.javafx.geometry=scenebuilder.core</option>
+                                <option>
+                                    javafx.graphics/com.sun.javafx.geometry=scenebuilder.core</option>
                                 <option>--add-exports</option>
-                                <option>javafx.graphics/com.sun.javafx.scene=scenebuilder.ext.css.analyser</option>
+                                <option>
+                                    javafx.graphics/com.sun.javafx.scene=scenebuilder.ext.css.analyser</option>
                             </additionalOptions>
-                            <!-- This property does not work for the aggregate goal, doc-files are not present in the generated
-                                javadoc, see workaround below -->
+                            <!-- This property does not work for the aggregate
+                            goal, doc-files are not present in the generated
+                            javadoc, see workaround below -->
                             <docfilessubdirs>true</docfilessubdirs>
                             <javadocDirectory>${basedir}/src/main/java</javadocDirectory>
                             <outputDirectory>${basedir}/docs/apidocs</outputDirectory>
@@ -426,8 +536,10 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <!-- Workaround for docfilessubdirs: this script copy doc-files content into javadoc output directory
-                            in github_pages -->
+                        <!-- Workaround for docfilessubdirs: this script copy
+                        doc-files content into javadoc output directory
+                            in
+                        github_pages -->
                         <groupId>org.codehaus.gmaven</groupId>
                         <artifactId>groovy-maven-plugin</artifactId>
                         <version>2.1.1</version>
@@ -457,7 +569,8 @@
                     <configuration>
                         <mainClass>${main.class.name}</mainClass>
                         <options>
-                            <option>--add-opens=javafx.fxml/javafx.fxml=ALL-UNNAMED</option>
+                            <option>
+                                --add-opens=javafx.fxml/javafx.fxml=ALL-UNNAMED</option>
                         </options>
                     </configuration>
                 </plugin>
@@ -471,17 +584,26 @@
                         <useIncrementalCompilation>false</useIncrementalCompilation>
                         <compilerArgs>
                             <arg>--add-exports</arg>
-                            <arg>javafx.graphics/com.sun.javafx.geometry=scenebuilder.core.fxom</arg>
+                            <arg>
+                                javafx.graphics/com.sun.javafx.geometry=scenebuilder.core.fxom</arg>
                             <arg>--add-exports</arg>
-                            <arg>javafx.graphics/com.sun.javafx.scene=scenebuilder.core.fxom</arg>
+                            <arg>
+                                javafx.graphics/com.sun.javafx.geometry=scenebuilder.core.api</arg>
                             <arg>--add-exports</arg>
-                            <arg>javafx.graphics/com.sun.javafx.scene=scenebuilder.core.api</arg>
+                            <arg>
+                                javafx.graphics/com.sun.javafx.scene=scenebuilder.core.fxom</arg>
                             <arg>--add-exports</arg>
-                            <arg>javafx.graphics/com.sun.javafx.scene=scenebuilder.fxml.api</arg>
+                            <arg>
+                                javafx.graphics/com.sun.javafx.scene=scenebuilder.core.api</arg>
                             <arg>--add-exports</arg>
-                            <arg>javafx.fxml/com.sun.javafx.fxml=scenebuilder.core.fxom</arg>
+                            <arg>
+                                javafx.graphics/com.sun.javafx.scene=scenebuilder.fxml.api</arg>
                             <arg>--add-exports</arg>
-                            <arg>javafx.graphics/com.sun.javafx.scene=scenebuilder.ext.css.analyser</arg>
+                            <arg>
+                                javafx.fxml/com.sun.javafx.fxml=scenebuilder.core.fxom</arg>
+                            <arg>--add-exports</arg>
+                            <arg>
+                                javafx.graphics/com.sun.javafx.scene=scenebuilder.ext.css.analyser</arg>
                         </compilerArgs>
                     </configuration>
                     <executions>
@@ -494,16 +616,19 @@
                             <configuration>
                                 <compilerArgs>
                                     <arg>--add-exports</arg>
-                                    <arg>javafx.graphics/com.sun.javafx.application=ALL-UNNAMED</arg>
+                                    <arg>
+                                        javafx.graphics/com.sun.javafx.application=ALL-UNNAMED</arg>
                                     <arg>--add-exports</arg>
-                                    <arg>javafx.base/com.sun.javafx.beans=spring.core</arg>
+                                    <arg>
+                                        javafx.base/com.sun.javafx.beans=spring.core</arg>
                                 </compilerArgs>
                             </configuration>
                         </execution>
                     </executions>
                 </plugin>
 
-                <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jar-plugin -->
+                <!--
+                https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jar-plugin -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
@@ -526,19 +651,20 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M5</version>
+                    <version>3.0.0-M8</version>
                     <configuration>
                         <useModulePath>false</useModulePath>
                         <argLine>
                             --illegal-access=permit
                         </argLine>
-                        <!-- <reuseForks>false</reuseForks> <forkCount>1</forkCount> -->
+                        <!-- <reuseForks>false</reuseForks>
+                        <forkCount>1</forkCount> -->
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.0.0-M5</version>
+                    <version>3.0.0-M8</version>
                     <configuration>
                         <useModulePath>false</useModulePath>
                         <argLine>
@@ -562,11 +688,25 @@
                                 <pluginExecution>
                                     <pluginExecutionFilter>
                                         <groupId>com.gluonhq.scenebuilder</groupId>
-                                        <artifactId>scenebuilder.metadata-maven-plugin</artifactId>
+                                        <artifactId>
+                                            scenebuilder.metadata-maven-plugin</artifactId>
                                         <versionRange>[1.0.0,)</versionRange>
                                         <goals>
                                             <goal>metadataSource</goal>
                                             <goal>metadataResource</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>com.gluonhq.jfxapps</groupId>
+                                        <artifactId>jfxapps-registry-maven-plugin</artifactId>
+                                        <versionRange>[1.0.0,)</versionRange>
+                                        <goals>
+                                            <goal>jfxappsRegistry</goal>
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
@@ -623,7 +763,8 @@
     <scm>
         <url>https://github.com/gluonhq/scenebuilder</url>
         <connection>scm:git:git://github.com/gluonhq/scenebuilder.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:gluonhq/scenebuilder.git</developerConnection>
+        <developerConnection>
+            scm:git:ssh://git@github.com:gluonhq/scenebuilder.git</developerConnection>
     </scm>
 
     <distributionManagement>

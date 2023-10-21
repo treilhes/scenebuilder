@@ -44,13 +44,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardDataFormat;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.api.om.OMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.om.api.OMDocument;
-import com.oracle.javafx.scenebuilder.om.api.OMObject;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.scene.input.Clipboard;
@@ -65,14 +65,11 @@ public class FileDataFormat implements ClipboardDataFormat {
     static final DataFormat FILE_DATA_FORMAT = DataFormat.FILES;
 
     private final FxmlDocumentManager documentManager;
-    private final ObjectSelectionGroup.Factory groupFactory;
 
     public FileDataFormat(
-            FxmlDocumentManager documentManager,
-            ObjectSelectionGroup.Factory groupFactory) {
+            FxmlDocumentManager documentManager) {
         super();
         this.documentManager = documentManager;
-        this.groupFactory = groupFactory;
     }
 
     public DataFormat getDataFormat() {
@@ -86,7 +83,7 @@ public class FileDataFormat implements ClipboardDataFormat {
     }
 
     @Override
-    public SelectionGroup<? extends OMDocument, ? extends OMObject> decode(Clipboard clipboard, Consumer<Exception> errorHandler) throws Exception {
+    public List<? extends OMObject> decode(Clipboard clipboard, Consumer<Exception> errorHandler) throws Exception {
 
         FXOMDocument targetDocument = documentManager.fxomDocument().get();
         assert targetDocument != null;
@@ -114,7 +111,7 @@ public class FileDataFormat implements ClipboardDataFormat {
             }
         }
 
-        return groupFactory.getGroup(result, null, null);
+        return result;
     }
 
 

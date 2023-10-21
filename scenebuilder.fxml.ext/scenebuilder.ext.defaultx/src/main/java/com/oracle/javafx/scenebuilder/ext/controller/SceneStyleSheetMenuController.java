@@ -42,12 +42,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
 import com.oracle.javafx.scenebuilder.ext.theme.document.UserStylesheetsPreference;
 
@@ -63,13 +63,13 @@ import javafx.stage.FileChooser;
 public class SceneStyleSheetMenuController {
 
     private final ActionFactory actionFactory;
-    private final DocumentWindow document;
+    private final EditorInstanceWindow document;
     private final FileSystem fileSystem;
     private final Dialog dialog;
     private final UserStylesheetsPreference userStylesheetsPreference;
 
     public SceneStyleSheetMenuController(@Autowired ActionFactory actionFactory,
-            @Autowired @Lazy DocumentWindow document, @Autowired FileSystem fileSystem, @Autowired Dialog dialog,
+            @Autowired @Lazy EditorInstanceWindow document, @Autowired FileSystem fileSystem, @Autowired Dialog dialog,
             @Autowired UserStylesheetsPreference userStylesheetsPreference) {
         this.actionFactory = actionFactory;
         this.document = document;

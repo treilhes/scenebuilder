@@ -42,8 +42,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.BatchSelectionJob;
@@ -55,7 +56,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
@@ -64,7 +65,6 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyValueJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ToggleFxRootJob;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -88,10 +88,10 @@ public final class UnwrapJob extends BatchSelectionJob {
     private final SetDocumentRootJob.Factory setDocumentRootJobFactory;
     private final ModifyFxControllerJob.Factory modifyFxControllerJobFactory;
     private final AddPropertyValueJob.Factory addPropertyValueJobFactory;
-    private final Metadata metadata;
+    private final IMetadata metadata;
     private final ModifyObjectJob.Factory modifyObjectJobFactory;
     private final WrapInJobFactory wrapInJobFactory;
-    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
+    private final DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory;
 
  // @formatter:off
     protected UnwrapJob(
@@ -106,9 +106,9 @@ public final class UnwrapJob extends BatchSelectionJob {
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             ModifyObjectJob.Factory modifyObjectJobFactory,
             DesignHierarchyMask.Factory designMaskFactory,
-            Metadata metadata,
+            IMetadata metadata,
             WrapInJobFactory wrapInJobFactory,
-            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+            DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);
         this.removePropertyJobFactory = removePropertyJobFactory;
@@ -133,10 +133,10 @@ public final class UnwrapJob extends BatchSelectionJob {
             return false;
         }
         final AbstractSelectionGroup asg = selection.getGroup();
-        if ((asg instanceof ObjectSelectionGroup) == false) {
+        if ((asg instanceof DefaultSelectionGroupFactory) == false) {
             return false;
         }
-        final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
+        final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) asg;
         if (osg.getItems().size() != 1) {
             return false;
         }
@@ -214,8 +214,8 @@ public final class UnwrapJob extends BatchSelectionJob {
 
             final Selection selection = getSelection();
             final AbstractSelectionGroup asg = selection.getGroup();
-            assert asg instanceof ObjectSelectionGroup; // Because of (1)
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
+            assert asg instanceof DefaultSelectionGroupFactory; // Because of (1)
+            final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) asg;
             assert osg.getItems().size() == 1; // Because of (1)
 
             // Retrieve the old container (container to unwrap)

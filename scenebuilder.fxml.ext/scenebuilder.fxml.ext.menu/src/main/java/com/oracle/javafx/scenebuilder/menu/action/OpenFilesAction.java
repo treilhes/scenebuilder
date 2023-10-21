@@ -40,12 +40,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Main;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 
 @Component
@@ -64,7 +64,7 @@ public class OpenFilesAction extends AbstractOpenFilesAction {
     protected OpenFilesAction(
             ActionExtensionFactory extensionFactory,
             Dialog dialog,
-            Main main,
+            EditorInstancesManager main,
             RecentItemsPreference recentItemsPreference,
             FileSystem fileSystem) {
      // @formatter:on

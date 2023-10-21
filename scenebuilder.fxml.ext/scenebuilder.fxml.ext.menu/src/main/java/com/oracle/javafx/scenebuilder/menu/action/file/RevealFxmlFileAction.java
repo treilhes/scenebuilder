@@ -44,17 +44,17 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
+import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 @Component
@@ -73,14 +73,14 @@ public class RevealFxmlFileAction extends AbstractAction {
     public final static String MENU_ID = "revealMenu";
 
     private final FxmlDocumentManager documentManager;
-    private final DocumentWindow documentWindow;
+    private final EditorInstanceWindow documentWindow;
     private final FileSystem fileSystem;
     private final Dialog dialog;
 
     public RevealFxmlFileAction(
             ActionExtensionFactory extensionFactory,
             @Autowired FxmlDocumentManager documentManager,
-            @Autowired DocumentWindow documentWindow,
+            @Autowired EditorInstanceWindow documentWindow,
             @Autowired FileSystem fileSystem,
             @Autowired Dialog dialog) {
         super(extensionFactory);

@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>it.core.loader</groupId>
+    <artifactId>api</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <parent>
+        <groupId>it.core.loader</groupId>
+        <artifactId>app</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <javafx.version>16</javafx.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.gluonhq.scenebuilder</groupId>
+            <artifactId>scenebuilder.starter</artifactId>
+            <version>17.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.moditect.layrry</groupId>
+            <artifactId>layrry-core</artifactId>
+            <version>1.0.0.Alpha2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.moditect.layrry</groupId>
+            <artifactId>layrry-platform</artifactId>
+            <version>1.0.0.Alpha2</version>
+        </dependency>
+    </dependencies>
+    
+</project>

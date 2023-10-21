@@ -44,7 +44,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 
@@ -54,10 +54,10 @@ public class DocumentationImpl implements Documentation {
 
     private final List<DocumentationUrlBuilder> urlBuilders;
     private final FileSystem fileSystem;
-    private final Metadata metadata;
+    private final IMetadata metadata;
 
     public DocumentationImpl(
-            @Autowired Metadata metadata,
+            @Autowired IMetadata metadata,
             @Autowired FileSystem fileSystem,
             @Autowired List<DocumentationUrlBuilder> urlBuilders
             ) {

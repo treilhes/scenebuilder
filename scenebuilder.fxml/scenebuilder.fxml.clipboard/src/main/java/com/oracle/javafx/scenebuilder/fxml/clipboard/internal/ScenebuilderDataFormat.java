@@ -42,14 +42,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardDataFormat;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
-import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
+import com.oracle.javafx.scenebuilder.api.om.OMObject;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMArchive;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.om.api.OMDocument;
-import com.oracle.javafx.scenebuilder.om.api.OMObject;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -64,14 +61,10 @@ public class ScenebuilderDataFormat implements ClipboardDataFormat {
 
     private final FxmlDocumentManager documentManager;
 
-    private final ObjectSelectionGroup.Factory groupFactory;
-
     public ScenebuilderDataFormat(
-            FxmlDocumentManager documentManager,
-            ObjectSelectionGroup.Factory groupFactory) {
+            FxmlDocumentManager documentManager) {
         super();
         this.documentManager = documentManager;
-        this.groupFactory = groupFactory;
     }
 
     public DataFormat getDataFormat() {
@@ -84,7 +77,7 @@ public class ScenebuilderDataFormat implements ClipboardDataFormat {
     }
 
     @Override
-    public SelectionGroup<? extends OMDocument, ? extends OMObject> decode(Clipboard clipboard, Consumer<Exception> errorHandler) throws Exception {
+    public List<? extends OMObject> decode(Clipboard clipboard, Consumer<Exception> errorHandler) throws Exception {
 
         FXOMDocument targetDocument = documentManager.fxomDocument().get();
         assert targetDocument != null;
@@ -108,7 +101,7 @@ public class ScenebuilderDataFormat implements ClipboardDataFormat {
             }
         }
 
-        return groupFactory.getGroup(result, null, null);
+        return result;
     }
 
     @Override

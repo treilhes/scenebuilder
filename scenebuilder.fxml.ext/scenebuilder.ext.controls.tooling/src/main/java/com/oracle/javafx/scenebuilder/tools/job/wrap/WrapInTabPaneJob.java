@@ -42,7 +42,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
@@ -52,7 +53,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
@@ -61,7 +62,6 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyValueJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ToggleFxRootJob;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -78,7 +78,7 @@ public final class WrapInTabPaneJob extends AbstractWrapInJob {
     private final AddPropertyValueJob.Factory addPropertyValueJobFactory;
 
     protected WrapInTabPaneJob(JobExtensionFactory extensionFactory, FxmlDocumentManager documentManager,
-            Selection selection, DesignHierarchyMask.Factory designMaskFactory, Metadata metadata,
+            Selection selection, DesignHierarchyMask.Factory designMaskFactory, IMetadata metadata,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             ToggleFxRootJob.Factory toggleFxRootJobFactory,
             ModifyFxControllerJob.Factory modifyFxControllerJobFactory,
@@ -87,7 +87,7 @@ public final class WrapInTabPaneJob extends AbstractWrapInJob {
             RemovePropertyJob.Factory removePropertyJobFactory,
             ModifyObjectJob.Factory modifyObjectJobFactory,
             AddPropertyJob.Factory addPropertyJobFactory,
-            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+            DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory) {
         super(extensionFactory, documentManager, selection, designMaskFactory, metadata, addPropertyValueJobFactory,
                 toggleFxRootJobFactory, modifyFxControllerJobFactory, setDocumentRootJobFactory, removePropertyValueJobFactory,
                 removePropertyJobFactory, modifyObjectJobFactory, objectSelectionGroupFactory);
@@ -103,8 +103,8 @@ public final class WrapInTabPaneJob extends AbstractWrapInJob {
         if (super.canWrapIn()) { // (1)
             // Can wrap in CONTENT property single selection only
             final Selection selection = getSelection();
-            assert selection.getGroup() instanceof ObjectSelectionGroup; // Because of (1)
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
+            assert selection.getGroup() instanceof DefaultSelectionGroupFactory; // Because of (1)
+            final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) selection.getGroup();
             result = osg.getItems().size() == 1;
         } else {
             result = false;

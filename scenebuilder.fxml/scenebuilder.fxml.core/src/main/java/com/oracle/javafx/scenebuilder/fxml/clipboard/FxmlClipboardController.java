@@ -33,18 +33,18 @@
  */
 package com.oracle.javafx.scenebuilder.fxml.clipboard;
 
+import org.scenebuilder.fxml.api.Content;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Content;
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardHandler;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
 import com.oracle.javafx.scenebuilder.core.clipboard.controller.ClipboardController;
 import com.oracle.javafx.scenebuilder.core.clipboard.internal.ClipboardEncoder;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.CutSelectionJob;
@@ -60,7 +60,7 @@ import javafx.scene.input.Clipboard;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class FxmlClipboardController extends ClipboardController {
 
-    private final DocumentWindow documentWindow;
+    private final EditorInstanceWindow documentWindow;
     //private final Editor editorController;
     private final Content contentPanelController;
     private final InlineEdit inlineEdit;
@@ -74,7 +74,7 @@ public class FxmlClipboardController extends ClipboardController {
     private final JobManager jobManager;
 
     public FxmlClipboardController(
-            DocumentWindow documentWindow,
+            EditorInstanceWindow documentWindow,
             InlineEdit inlineEdit,
             Content contentPanelController,
             DocumentManager documentManager,

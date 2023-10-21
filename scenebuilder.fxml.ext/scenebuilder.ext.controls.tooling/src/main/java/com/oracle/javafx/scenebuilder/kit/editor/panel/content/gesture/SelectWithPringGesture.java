@@ -33,16 +33,16 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture;
 
+import org.scenebuilder.fxml.api.Content;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseDragGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.scene.input.MouseEvent;
 
@@ -55,13 +55,13 @@ import javafx.scene.input.MouseEvent;
 public class SelectWithPringGesture extends AbstractMouseDragGesture {
 
     private final Selection selection;
-    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
+    private final DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory;
     private FXOMInstance fxomInstance;
 
     protected SelectWithPringGesture(
             Content contentPanelController,
             Selection selection,
-            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+            DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory) {
         super(contentPanelController);
         this.selection = selection;
         this.objectSelectionGroupFactory = objectSelectionGroupFactory;

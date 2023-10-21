@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,8 +37,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.control.pickrefiner.AbstractPickRefiner;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.collector.SceneGraphCollector;
 
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
@@ -49,9 +51,9 @@ public class TabPanePickRefiner extends AbstractPickRefiner {
 
     @Override
     public FXOMObject refinePick(Node hitNode, double sceneX, double sceneY, FXOMObject fxomObject) {
-        assert fxomObject.getSceneGraphObject() instanceof TabPane;
+        assert fxomObject.getSceneGraphObject().get() instanceof TabPane;
 
-        final TabPane tabPane = (TabPane) fxomObject.getSceneGraphObject();
+        final TabPane tabPane = fxomObject.getSceneGraphObject().getAs(TabPane.class);
         final TabPaneDesignInfoX di = new TabPaneDesignInfoX();
         final Tab tab = di.lookupTab(tabPane, sceneX, sceneY);
 
@@ -59,9 +61,9 @@ public class TabPanePickRefiner extends AbstractPickRefiner {
         if (tab == null) {
             result = fxomObject;
         } else {
-            result = fxomObject.searchWithSceneGraphObject(tab);
+            result = fxomObject.collect(SceneGraphCollector.findSceneGraphObject(tab)).get();
             assert result != null;
-            assert result.getSceneGraphObject() == tab;
+            assert result.getSceneGraphObject().get() == tab;
         }
 
         return result;

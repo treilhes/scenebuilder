@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,16 +39,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.scenebuilder.fxml.api.SbEditor;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
@@ -60,6 +59,8 @@ import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory.Propert
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.collector.FxIdCollector;
+import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxControllerJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ToggleFxRootJob;
 import com.oracle.javafx.scenebuilder.selection.SelectionStateImpl;
@@ -97,7 +98,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
     private ControllerClassEditor controllerClassEditor;
     private boolean controllerDidLoadFxmlOver = false;
     private final PropertyEditorFactorySession editorFactorysession;
-    private final Editor editor;
+    private final SbEditor editor;
     private final FxmlDocumentManager documentManager;
     private final Selection selection;
     private final JobManager jobManager;
@@ -107,7 +108,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
     public InfoPanelController(
             SceneBuilderManager scenebuilderManager,
             FxmlDocumentManager documentManager,
-    		Editor editor,
+    		SbEditor editor,
     		Selection selection,
     		JobManager jobManager,
     		PropertyEditorFactory propertyEditorFactory,
@@ -339,7 +340,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
                 switch(entryType) {
                     case FX_ID: {
                         final Map<String, FXOMObject> fxIds
-                                = fxomDocument.collectFxIds();
+                                = fxomDocument.collect(FxIdCollector.fxIdsMap());
                         for (Map.Entry<String, FXOMObject> e : fxIds.entrySet()) {
                             final String fxId = e.getKey();
                             final FXOMObject fxomObject = e.getValue();
@@ -508,7 +509,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
         if (controllerClassEditor != null) {
             // The listener on fxmlLocationProperty is called before the file
             // denoted by the location is created on disk, hence the runLater.
-            SbPlatform.runLater(() -> {
+            SbPlatform.runOnFxThread(() -> {
                 controllerClassEditor.setUpdateFromModel(true);
                 controllerClassEditor.reset(null, null);
                 controllerClassEditor.setUpdateFromModel(false);

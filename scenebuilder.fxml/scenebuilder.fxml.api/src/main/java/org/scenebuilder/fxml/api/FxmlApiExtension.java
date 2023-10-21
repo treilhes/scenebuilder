@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,23 +40,45 @@ import java.util.UUID;
 import org.scenebuilder.fxml.api.i18n.I18NFxmlApi;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager.FxmlDocumentManagerImpl;
 
-import com.oracle.javafx.scenebuilder.api.content.ModeManagerController;
+import com.oracle.javafx.scenebuilder.api.appmngr.annotation.EditorDescriptor;
 import com.oracle.javafx.scenebuilder.api.control.driver.DriverExtensionRegistry;
 import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
 import com.oracle.javafx.scenebuilder.api.control.inlineedit.SimilarInlineEditorBounds;
 import com.oracle.javafx.scenebuilder.api.control.pickrefiner.NoPickRefiner;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
+
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.fxml.preferences.global.ParentRingColorPreference;
+import com.oracle.javafx.scenebuilder.ui.controller.ModeManagerController;
+import com.oracle.javafx.scenebuilder.core.loader.extension.EditorExtension;
 
-public class FxmlApiExtension extends AbstractExtension {
+@EditorDescriptor(
+            label = "scenebuilder.app.label",
+            licence = "BSD",
+            licenceFile = "LICENSE",
+            description = "scenebuilder.app.description",
+            image = "scenebuilder.png",
+            imageX2 = "scenebuilder@2x.png",
+            extensions = {"?????"}
+        )
+
+public class FxmlApiExtension implements EditorExtension  {
+
+    public static final UUID ID = UUID.fromString("06ae1f67-a8aa-49e3-abb5-4f108534578c");
+
     @Override
     public UUID getId() {
-        return UUID.fromString("06ae1f67-a8aa-49e3-abb5-4f108534578c");
+        return ID;
+    }
+
+
+    @Override
+    public UUID getParentId() {
+        return EditorExtension.ROOT_ID;
     }
 
     @Override
-    public List<Class<?>> explicitClassToRegister() {
+    public List<Class<?>> localContextClasses() {
      // @formatter:off
         return Arrays.asList(
                 ParentRingColorPreference.class,
@@ -77,4 +99,5 @@ public class FxmlApiExtension extends AbstractExtension {
             );
      // @formatter:on
     }
+
 }

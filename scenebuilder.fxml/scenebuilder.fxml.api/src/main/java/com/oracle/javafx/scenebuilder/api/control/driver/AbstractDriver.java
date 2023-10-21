@@ -32,7 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.api.control.driver;
 
-import com.oracle.javafx.scenebuilder.api.Content;
+import org.scenebuilder.fxml.api.Content;
+
 import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.Handles;

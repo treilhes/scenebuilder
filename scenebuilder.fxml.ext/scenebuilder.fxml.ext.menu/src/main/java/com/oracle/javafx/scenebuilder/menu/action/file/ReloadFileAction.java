@@ -36,21 +36,21 @@ package com.oracle.javafx.scenebuilder.menu.action.file;
 import java.io.IOException;
 import java.net.URL;
 
+import org.scenebuilder.fxml.api.SbEditor;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Dialog;
-import com.oracle.javafx.scenebuilder.api.Document;
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 @Component
@@ -59,18 +59,18 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 public class ReloadFileAction extends AbstractAction {
 
-    private final Document document;
+    private final EditorInstance document;
     private final FxmlDocumentManager documentManager;
     private final Dialog dialog;
-    private final DocumentWindow documentWindow;
-    private final Editor editor;
+    private final EditorInstanceWindow documentWindow;
+    private final SbEditor editor;
 
     public ReloadFileAction(
             ActionExtensionFactory extensionFactory,
-            @Autowired Document document,
+            @Autowired EditorInstance document,
             @Autowired FxmlDocumentManager documentManager,
-            @Autowired DocumentWindow documentWindow,
-            @Autowired Editor editor,
+            @Autowired EditorInstanceWindow documentWindow,
+            @Autowired SbEditor editor,
             @Autowired Dialog dialog) {
         super(extensionFactory);
         this.document = document;

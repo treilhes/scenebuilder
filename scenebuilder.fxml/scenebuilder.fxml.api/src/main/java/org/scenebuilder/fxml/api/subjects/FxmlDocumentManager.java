@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -71,8 +71,9 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
+import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SubjectItem;
 import com.oracle.javafx.scenebuilder.api.subjects.SubjectManager;
@@ -81,7 +82,6 @@ import com.oracle.javafx.scenebuilder.api.ui.AbstractCommonUiController;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
-import com.oracle.javafx.scenebuilder.om.api.OMDocument;
 
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.ReplaySubject;
@@ -89,53 +89,7 @@ import javafx.beans.value.ChangeListener;
 
 public interface FxmlDocumentManager extends DocumentManager {
 
-    /**
-     * The current stylesheet configuration has changed. Because:<br/>
-     * - A userAgentStylesheet file has been set - A stylesheet file has been added
-     * - A stylesheet file has been removed
-     */
-    SubjectItem<StylesheetProvider> stylesheetConfig();
 
-    /**
-     * The current i18n configuration has changed. Because:<br/>
-     * - A property file has been added - A property file has been removed
-     */
-    SubjectItem<I18nResourceProvider> i18nResourceConfig();
-
-    /**
-     * Revision is incremented each time the fxom document forces FX to reload its
-     * stylesheets.
-     */
-    SubjectItem<Integer> cssRevisionDidChange();
-
-    /**
-     * The current fxomDocument has changed. Because:<br/>
-     * - An empty document is loaded - An FXML file is loaded
-     */
-    SubjectItem<FXOMDocument> fxomDocument();
-
-    SubjectItem<SelectionState> selectionDidChange();
-
-    @Override
-    SubjectItem<AbstractFxmlViewController> focusedView();
-
-    @Override
-    SubjectItem<AbstractCommonUiController> focused();
-
-    @Override
-    SubjectItem<Boolean> dependenciesLoaded();
-
-    @Override
-    SubjectItem<Integer> sceneGraphRevisionDidChange();
-
-    @Override
-    SubjectItem<Boolean> closed();
-
-    @Override
-    SubjectItem<Boolean> saved();
-
-    @Override
-    SubjectItem<Boolean> dirty();
 
     @Component
     @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
@@ -146,7 +100,7 @@ public interface FxmlDocumentManager extends DocumentManager {
         private FxomDocumentSubjects subjects;
 
         private final SubjectItem<SelectionState> selectionDidChange;
-        private final SubjectItem<StylesheetProvider> stylesheetConfig;
+        //private final SubjectItem<StylesheetProvider> stylesheetConfig;
         private final SubjectItem<I18nResourceProvider> i18nResourceConfig;
         private final SubjectItem<Integer> cssRevisionDidChange;
 
@@ -161,7 +115,7 @@ public interface FxmlDocumentManager extends DocumentManager {
 
             subjects = new FxomDocumentSubjects();
 
-            stylesheetConfig = new SubjectItem<StylesheetProvider>(subjects.getStylesheetConfig());
+            //stylesheetConfig = new SubjectItem<StylesheetProvider>(subjects.getStylesheetConfig());
             i18nResourceConfig = new SubjectItem<I18nResourceProvider>(subjects.getI18nResourceConfig());
             cssRevisionDidChange = new SubjectItem<Integer>(subjects.getCssRevisionDidChange());
             selectionDidChange = new SubjectItem<SelectionState>(subjects.getSelectionState());
@@ -175,9 +129,9 @@ public interface FxmlDocumentManager extends DocumentManager {
                 }
             });
 
-            this.documentManager.omDocument().subscribe(doc -> {
+            this.documentManager.fxomDocument().subscribe(doc -> {
                 if (FXOMDocument.class.isInstance(doc)) {
-                    fxomDocument.set((FXOMDocument) doc);
+                    fxomDocument.set(doc);
                 } else {
                     fxomDocument.set(null);
                 }
@@ -203,10 +157,10 @@ public interface FxmlDocumentManager extends DocumentManager {
             return documentManager.closed();
         }
 
-        @Override
-        public SubjectItem<StylesheetProvider> stylesheetConfig() {
-            return stylesheetConfig;
-        }
+//        @Override
+//        public SubjectItem<StylesheetProvider> stylesheetConfig() {
+//            return stylesheetConfig;
+//        }
 
         @Override
         public SubjectItem<I18nResourceProvider> i18nResourceConfig() {
@@ -254,8 +208,8 @@ public interface FxmlDocumentManager extends DocumentManager {
         }
 
         @Override
-        public SubjectItem<OMDocument> omDocument() {
-            return documentManager.omDocument();
+        public SubjectItem<OMDocument> fxomDocument() {
+            return documentManager.fxomDocument();
         }
 
 
@@ -264,22 +218,22 @@ public interface FxmlDocumentManager extends DocumentManager {
     public class FxomDocumentSubjects extends SubjectManager {
 
         private PublishSubject<SelectionState> selectionState;
-        private ReplaySubject<StylesheetProvider> stylesheetConfig;
+        //private ReplaySubject<StylesheetProvider> stylesheetConfig;
         private ReplaySubject<I18nResourceProvider> i18nResourceConfig;
         private PublishSubject<Integer> cssRevisionDidChange;
         private ReplaySubject<FXOMDocument> fxomDocument;
 
         public FxomDocumentSubjects() {
-            stylesheetConfig = wrap(FxomDocumentSubjects.class, "stylesheetConfig", ReplaySubject.create(1)); // NOI18N
+            //stylesheetConfig = wrap(FxomDocumentSubjects.class, "stylesheetConfig", ReplaySubject.create(1)); // NOI18N
             i18nResourceConfig = wrap(FxomDocumentSubjects.class, "i18nResourceConfig", ReplaySubject.create(1)); // NOI18N
             cssRevisionDidChange = wrap(FxomDocumentSubjects.class, "cssRevisionDidChange", PublishSubject.create()); // NOI18N
             selectionState = wrap(FxomDocumentSubjects.class, "selectionState", PublishSubject.create()); // NOI18N
             fxomDocument = wrap(FxomDocumentSubjects.class, "fxomDocument", ReplaySubject.create(1)); // NOI18N
         }
 
-        public ReplaySubject<StylesheetProvider> getStylesheetConfig() {
-            return stylesheetConfig;
-        }
+//        public ReplaySubject<StylesheetProvider> getStylesheetConfig() {
+//            return stylesheetConfig;
+//        }
 
         public ReplaySubject<I18nResourceProvider> getI18nResourceConfig() {
             return i18nResourceConfig;

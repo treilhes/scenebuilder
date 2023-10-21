@@ -37,12 +37,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
+import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 import javafx.application.ConditionalFeature;
@@ -66,7 +66,7 @@ public class JavaFxFeaturesWindowController extends AbstractFxmlWindowController
     public JavaFxFeaturesWindowController(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
-            DocumentWindow document) {
+            EditorInstanceWindow document) {
         super(sceneBuilderManager, iconSetting, JavaFxFeaturesWindowController.class.getResource("JavaFxFeaturesWindow.fxml"), I18N.getBundle(),
                 document); // NOI18N
     }

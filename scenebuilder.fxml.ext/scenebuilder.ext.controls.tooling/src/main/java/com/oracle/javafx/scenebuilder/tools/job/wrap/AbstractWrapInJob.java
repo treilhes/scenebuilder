@@ -42,6 +42,7 @@ import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.BatchSelectionJob;
@@ -53,7 +54,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
@@ -63,7 +64,6 @@ import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyValueJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ToggleFxRootJob;
 import com.oracle.javafx.scenebuilder.metadata.javafx.hidden.NodeMetadata;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -83,7 +83,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
     protected FXOMInstance oldContainer, newContainer;
     private final FXOMDocument fxomDocument;
     private final DesignHierarchyMask.Factory designMaskFactory;
-    private final Metadata metadata;
+    private final IMetadata metadata;
     private final AddPropertyValueJob.Factory addPropertyValueJobFactory;
     private final ToggleFxRootJob.Factory toggleFxRootJobFactory;
     private final ModifyFxControllerJob.Factory modifyFxControllerJobFactory;
@@ -91,14 +91,14 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
     private final RemovePropertyValueJob.Factory removePropertyValueJobFactory;
     private final RemovePropertyJob.Factory removePropertyJobFactory;
     private final ModifyObjectJob.Factory modifyObjectJobFactory;
-    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
+    private final DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory;
 
     public AbstractWrapInJob(
             JobExtensionFactory extensionFactory,
             FxmlDocumentManager documentManager,
             Selection selection,
             DesignHierarchyMask.Factory designMaskFactory,
-            Metadata metadata,
+            IMetadata metadata,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             ToggleFxRootJob.Factory toggleFxRootJobFactory,
             ModifyFxControllerJob.Factory modifyFxControllerJobFactory,
@@ -106,7 +106,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
             RemovePropertyValueJob.Factory removePropertyValueJobFactory,
             RemovePropertyJob.Factory removePropertyJobFactory,
             ModifyObjectJob.Factory modifyObjectJobFactory,
-            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+            DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory) {
         super(extensionFactory, documentManager, selection);
         this.fxomDocument = documentManager.fxomDocument().get();
         this.designMaskFactory = designMaskFactory;
@@ -129,10 +129,10 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
             return false;
         }
         final AbstractSelectionGroup asg = selection.getGroup();
-        if ((asg instanceof ObjectSelectionGroup) == false) {
+        if ((asg instanceof DefaultSelectionGroupFactory) == false) {
             return false;
         }
-        final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
+        final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) asg;
         if (osg.hasSingleParent() == false) {
             return false;
         }
@@ -166,8 +166,8 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
 
             final Selection selection = getSelection();
             final AbstractSelectionGroup asg = selection.getGroup();
-            assert asg instanceof ObjectSelectionGroup; // Because of (1)
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
+            assert asg instanceof DefaultSelectionGroupFactory; // Because of (1)
+            final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) asg;
 
             // Retrieve the old container
             oldContainer = (FXOMInstance) osg.getAncestor();

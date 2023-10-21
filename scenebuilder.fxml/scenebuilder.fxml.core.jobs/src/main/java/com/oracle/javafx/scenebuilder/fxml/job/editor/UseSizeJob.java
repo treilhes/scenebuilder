@@ -43,7 +43,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
@@ -54,7 +54,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.fxml.job.editor.atomic.ModifyObjectJob;
 
@@ -80,7 +80,7 @@ public final class UseSizeJob extends AbstractJob {
     private FXOMObject fxomObject;
 
     private final FXOMDocument fxomDocument;
-    private final Metadata metadata;
+    private final IMetadata metadata;
     private final ModifyObjectJob.Factory modifyObjectJobFactory;
     private final DesignHierarchyMask.Factory designMaskFactory;
 
@@ -88,7 +88,7 @@ public final class UseSizeJob extends AbstractJob {
     protected UseSizeJob(
             JobExtensionFactory extensionFactory,
             FxmlDocumentManager documentManager,
-            Metadata metadata,
+            IMetadata metadata,
             DesignHierarchyMask.Factory designMaskFactory,
             ModifyObjectJob.Factory modifyObjectJobFactory) {
      // @formatter:on

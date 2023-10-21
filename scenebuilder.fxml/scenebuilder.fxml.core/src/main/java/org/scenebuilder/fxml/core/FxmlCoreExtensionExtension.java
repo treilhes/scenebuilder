@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import org.scenebuilder.fxml.api.FxmlApiExtension;
 import org.scenebuilder.fxml.core.i18n.I18NFxmlCoreExtension;
 
 import com.oracle.javafx.scenebuilder.core.doc.DocumentationImpl;
@@ -44,21 +45,48 @@ import com.oracle.javafx.scenebuilder.core.editors.ControllerClassEditor;
 import com.oracle.javafx.scenebuilder.core.editors.CoreEditors;
 import com.oracle.javafx.scenebuilder.core.editors.FxIdEditor;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.core.loader.extension.OpenExtension;
+import com.oracle.javafx.scenebuilder.core.ui.action.CloseBottomDockAction;
+import com.oracle.javafx.scenebuilder.core.ui.action.CloseLeftDockAction;
+import com.oracle.javafx.scenebuilder.core.ui.action.CloseRightDockAction;
+import com.oracle.javafx.scenebuilder.core.ui.action.ToggleMinimizeBottomDockAction;
+import com.oracle.javafx.scenebuilder.core.ui.action.ToggleMinimizeLeftDockAction;
+import com.oracle.javafx.scenebuilder.core.ui.action.ToggleMinimizeRightDockAction;
+import com.oracle.javafx.scenebuilder.core.ui.preferences.document.BottomDividerVPosPreference;
+import com.oracle.javafx.scenebuilder.core.ui.preferences.document.LeftDividerHPosPreference;
+import com.oracle.javafx.scenebuilder.core.ui.preferences.document.RightDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.fs.job.ImportFileJob;
 import com.oracle.javafx.scenebuilder.fs.job.IncludeFileJob;
 import com.oracle.javafx.scenebuilder.fs.preference.global.WildcardImportsPreference;
 
-public class FxmlCoreExtensionExtension extends AbstractExtension {
+public class FxmlCoreExtensionExtension implements OpenExtension {
+
+    public static final UUID ID = UUID.fromString("26cd6a45-7750-4b3e-bbd2-018187df0c49");
+
     @Override
     public UUID getId() {
-        return UUID.fromString("26cd6a45-7750-4b3e-bbd2-018187df0c49");
+        return ID;
     }
 
     @Override
-    public List<Class<?>> explicitClassToRegister() {
+    public UUID getParentId() {
+        return FxmlApiExtension.ID;
+    }
+
+    @Override
+    public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
+                BottomDividerVPosPreference.class,
+                LeftDividerHPosPreference.class,
+                RightDividerHPosPreference.class,
+                CloseBottomDockAction.class,
+                CloseLeftDockAction.class,
+                CloseRightDockAction.class,
+                ToggleMinimizeBottomDockAction.class,
+                ToggleMinimizeLeftDockAction.class,
+                ToggleMinimizeRightDockAction.class,
+
                 ImportFileJob.class,
                 ImportFileJob.Factory.class,
                 IncludeFileJob.class,
@@ -76,4 +104,10 @@ public class FxmlCoreExtensionExtension extends AbstractExtension {
             );
      // @formatter:on
     }
+
+    @Override
+    public List<Class<?>> localContextClasses() {
+        return List.of();
+    }
+
 }

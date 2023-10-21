@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.gluonhq.jfxapps</groupId>
+        <artifactId>parent</artifactId>
+        <version>17.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>jfxapps.core</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>jfxapps.core.fxom</module>
+        
+        <module>jfxapps.core.api</module>
+        <module>jfxapps.core.metadata</module>
+        <module>jfxapps.core.ui</module>
+        <module>jfxapps.core.preferences</module>
+        
+        <module>jfxapps.core.clipboard</module>
+        <module>jfxapps.core.drag.and.drop</module>
+        <module>jfxapps.core.error</module>
+        <module>jfxapps.core.extension.store</module>
+        <module>jfxapps.core.filesystem</module>
+        <module>jfxapps.core.jobs</module>
+        <module>jfxapps.core.library</module>
+        <module>jfxapps.core.selection</module>
+        
+        <module>jfxapps.core.utils</module>
+        <module>jfxapps.core.accelerators</module>
+        <module>jfxapps.core.menu</module>
+        <module>jfxapps.core.guides</module>
+        <module>jfxapps.core.starter.test</module>
+        <module>jfxapps.core.starter</module>
+        <module>jfxapps.core.maven</module>
+
+        <module>jfxapps.core.appmngr</module>
+        <module>jfxapps.core.registry</module>
+    </modules>
+</project>

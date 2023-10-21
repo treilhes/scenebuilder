@@ -14,13 +14,10 @@
             <groupId>com.gluonhq.scenebuilder</groupId>
             <artifactId>scenebuilder.fxml.api</artifactId>
         </dependency>
+        
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.starter.test</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.starter.test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

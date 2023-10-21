@@ -41,23 +41,23 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.scenebuilder.fxml.api.SbEditor;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.DocumentWindow;
-import com.oracle.javafx.scenebuilder.api.Editor;
 import com.oracle.javafx.scenebuilder.api.Size;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
-import com.oracle.javafx.scenebuilder.api.settings.IconSetting;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractWindowController;
+import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.util.MathUtils;
@@ -89,7 +89,7 @@ import javafx.stage.Modality;
 @Lazy
 public class PreviewWindowController extends AbstractWindowController implements InitializingBean {
 
-    private final Editor editorController;
+    private final SbEditor editorController;
     private Timer timer = null;
     private final int WIDTH_WHEN_EMPTY = 320;
     private final int HEIGHT_WHEN_EMPTY = 200;
@@ -126,8 +126,8 @@ public class PreviewWindowController extends AbstractWindowController implements
     public PreviewWindowController(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
-            Editor editorController,
-            DocumentWindow document,
+            SbEditor editorController,
+            EditorInstanceWindow document,
             FxmlDocumentManager documentManager) {
         super(sceneBuilderManager, iconSetting, document);
         this.editorController = editorController;
@@ -269,7 +269,7 @@ public class PreviewWindowController extends AbstractWindowController implements
             public void run() {
             // JavaFX data should only be accessed on the JavaFX thread.
             // => we must wrap the code into a Runnable object and call the SbPlatform.runLater
-            SbPlatform.runLater(() -> {
+            SbPlatform.runOnFxThread(() -> {
                 String themeStyleSheetString = null;
                 if (fxomDocument != null) {
                     // We clone the FXOMDocument

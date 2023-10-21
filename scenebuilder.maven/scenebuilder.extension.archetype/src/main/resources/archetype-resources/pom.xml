@@ -18,8 +18,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
-            <artifactId>scenebuilder.core.api</artifactId>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.api</artifactId>
             <version>${scenebuilder.version}</version>
         </dependency>
         <dependency>

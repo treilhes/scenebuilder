@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.control.outline;
 
-import com.oracle.javafx.scenebuilder.api.control.Decoration;
+import com.oracle.javafx.scenebuilder.api.content.decoration.Decoration;
 
 import javafx.scene.Node;
 

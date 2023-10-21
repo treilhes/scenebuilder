@@ -33,23 +33,23 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse;
 
+import org.scenebuilder.fxml.api.Content;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseDragGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.dnd.Drag;
+import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
+import com.oracle.javafx.scenebuilder.api.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.DocumentDragSource;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.util.CoordinateHelper;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -184,10 +184,10 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
 
         if (selectedHitObject != null) {
 
-            assert selection.getGroup() instanceof ObjectSelectionGroup;
+            assert selection.getGroup() instanceof DefaultSelectionGroupFactory;
 
-            final ObjectSelectionGroup
-                    osg = (ObjectSelectionGroup) selection.getGroup();
+            final DefaultSelectionGroupFactory
+                    osg = (DefaultSelectionGroupFactory) selection.getGroup();
 
             if (osg.hasSingleParent()) {
 

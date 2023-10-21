@@ -32,6 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.api.control;
 
+import com.oracle.javafx.scenebuilder.api.content.decoration.Decoration;
+
 public interface ResizeGuide<T> extends Decoration<T> {
 
     T getSceneGraphObject();

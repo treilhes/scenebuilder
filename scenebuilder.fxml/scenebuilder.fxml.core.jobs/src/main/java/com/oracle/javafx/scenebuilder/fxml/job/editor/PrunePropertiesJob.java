@@ -40,7 +40,7 @@ import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
@@ -50,6 +50,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
+import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.fxml.job.editor.atomic.RemoveFxControllerJob;
 import com.oracle.javafx.scenebuilder.fxml.job.editor.atomic.RemovePropertyJob;
@@ -66,14 +67,14 @@ public final class PrunePropertiesJob extends BatchDocumentJob {
     private FXOMObject fxomObject;
     private FXOMObject targetParent;
 
-    private final Metadata metadata;
+    private final IMetadata metadata;
     private final RemovePropertyJob.Factory removePropertyJobFactory;
     private final RemoveFxControllerJob.Factory removeFxControllerJobFactory;
 
     protected PrunePropertiesJob(
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
-            Metadata metadata,
+            IMetadata metadata,
             RemovePropertyJob.Factory removePropertyJobFactory,
             RemoveFxControllerJob.Factory removeFxControllerJobFactory) {
         super(extensionFactory, documentManager);

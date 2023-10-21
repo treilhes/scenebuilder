@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,8 +37,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.api.control.pickrefiner.AbstractPickRefiner;
-import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.core.fxom.collector.SceneGraphCollector;
 
 import javafx.scene.Node;
 import javafx.scene.control.TableColumn;
@@ -49,19 +51,19 @@ public class TableViewPickRefiner extends AbstractPickRefiner {
 
     @Override
     public FXOMObject refinePick(Node hitNode, double sceneX, double sceneY, FXOMObject fxomObject) {
-        assert fxomObject.getSceneGraphObject() instanceof TableView;
+        assert fxomObject.getSceneGraphObject().get() instanceof TableView;
 
         final TableViewDesignInfoX di = new TableViewDesignInfoX();
-        final TableView<?> tv = (TableView<?>) fxomObject.getSceneGraphObject();
+        final TableView<?> tv = fxomObject.getSceneGraphObject().getAs(TableView.class);
         final TableColumn<?,?> tc = di.lookupColumn(tv, sceneX, sceneY);
         final FXOMObject result;
 
         if (tc == null) {
             result = fxomObject;
         } else {
-            result = fxomObject.searchWithSceneGraphObject(tc);
+            result = fxomObject.collect(SceneGraphCollector.findSceneGraphObject(tc)).get();
             assert result != null;
-            assert result.getSceneGraphObject() == tc;
+            assert result.getSceneGraphObject().get() == tc;
         }
 
         return result;

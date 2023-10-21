@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <fx:define>
+        <fx:include fx:id="referred1" source="referred1.fxml" />
+        <fx:include fx:id="referred2" source="referred2.fxml" />
+        <Button fx:id="somebutton" mnemonicParsing="false" text="somebutton" />
+        <Button fx:id="btnClip" mnemonicParsing="false" text="first" />
+        <Button fx:id="btnClip" mnemonicParsing="false" text="second" />
+        <Button fx:id="btnDefine" mnemonicParsing="false" text="first" />
+        <Button fx:id="btnDefine" mnemonicParsing="false" text="second" />
+   </fx:define>
+   <children>
+      <Pane layoutX="200.0" layoutY="100.0" prefHeight="200.0" prefWidth="200.0" clip="$btnClip">
+         <children>
+            <Button fx:id="btn" mnemonicParsing="false" text="first" />
+            <Button fx:id="btn" mnemonicParsing="false" text="second" />
+            <fx:reference fx:id="excluded" source="referred1" layoutX="100.0" layoutY="100.0">
+                <children>
+                  <fx:reference source="referred2" layoutX="100.0" layoutY="100.0"/>
+               </children>
+            </fx:reference>
+            <fx:reference source="somebutton" layoutX="200.0" layoutY="100.0"/>
+         </children>
+      </Pane>
+   </children>
+</Pane>

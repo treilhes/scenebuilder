@@ -1,0 +1,22 @@
+{
+    "id": "00000000-0000-0000-0000-000000000000",
+    "content": {
+        "type": "maven",
+        "groupId": "com.gluonhq.scenebuilder",
+        "artifactId": "scenebuilder.core.api",
+        "version": "17.0.0-SNAPSHOT"
+    },
+    "state": "Loaded",
+    "extensions": [
+        {
+            "id": "d82c47c7-e3a7-483c-bb49-f1d3b086c2bf",
+            "content": {
+                "type": "maven",
+                "groupId": "com.gluonhq.scenebuilder",
+                "artifactId": "scenebuilder.core.preferences",
+                "version": "17.0.0-SNAPSHOT"
+            },
+            "state": "Loaded"
+        }
+    ]
+}

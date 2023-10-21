@@ -35,10 +35,10 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles;
 
 import java.util.List;
 
+import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
-import com.oracle.javafx.scenebuilder.api.Content;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
