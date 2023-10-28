@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.api.ui.dock;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPanelController;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

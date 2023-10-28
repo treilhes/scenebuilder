@@ -41,6 +41,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
@@ -48,8 +50,6 @@ import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.shortcut.Accelerator;
 import com.oracle.javafx.scenebuilder.api.shortcut.AcceleratorProvider;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractCommonUiController;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 
 import javafx.scene.input.KeyCombination;
 

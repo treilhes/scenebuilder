@@ -44,6 +44,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
@@ -56,9 +59,6 @@ import com.oracle.javafx.scenebuilder.api.ui.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.menu.action.AbstractToggleViewVisibilityAction;
 
 import javafx.scene.control.Menu;

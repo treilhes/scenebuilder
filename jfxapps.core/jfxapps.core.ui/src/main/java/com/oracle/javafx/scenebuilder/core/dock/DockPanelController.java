@@ -44,6 +44,7 @@ import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
@@ -54,7 +55,6 @@ import com.oracle.javafx.scenebuilder.api.ui.dock.DockContext;
 import com.oracle.javafx.scenebuilder.api.ui.dock.DockType;
 import com.oracle.javafx.scenebuilder.api.ui.dock.View;
 import com.oracle.javafx.scenebuilder.api.ui.dock.ViewAttachment;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.DockMinimizedPreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockDockTypePreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;

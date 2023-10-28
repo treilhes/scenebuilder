@@ -33,6 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.app.manager.main.ui.cmp;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
@@ -44,7 +45,6 @@ import com.oracle.javafx.scenebuilder.app.manager.main.api.Model;
 import com.oracle.javafx.scenebuilder.app.manager.main.model.AppModel;
 import com.oracle.javafx.scenebuilder.app.manager.main.model.Application;
 import com.oracle.javafx.scenebuilder.app.manager.main.model.Extension;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
 
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;

@@ -1,8 +1,8 @@
 package com.oracle.javafx.scenebuilder.api.job;
 
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
 
 
 public class JobFactory<T extends AbstractJob> extends AbstractFactory<T> {

@@ -44,9 +44,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.action.AbstractActionExtension;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem.WatchingCallback;
 import com.oracle.javafx.scenebuilder.ext.controller.SceneStyleSheetMenuController;

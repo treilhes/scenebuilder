@@ -36,11 +36,11 @@ package com.oracle.javafx.scenebuilder.ui.dialog;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
 
 import javafx.stage.Window;
 

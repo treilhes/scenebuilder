@@ -39,12 +39,12 @@ import static com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest.AsNextS
 import java.util.Arrays;
 import java.util.List;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.ui.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuAttachment;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuProvider;
 import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 
 import javafx.scene.control.Menu;
 

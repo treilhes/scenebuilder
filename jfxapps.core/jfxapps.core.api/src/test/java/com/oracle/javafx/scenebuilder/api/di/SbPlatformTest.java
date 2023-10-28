@@ -46,9 +46,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import com.oracle.javafx.scenebuilder.core.context.Document;
-import com.oracle.javafx.scenebuilder.core.context.DocumentScope;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.Document;
+import com.gluonhq.jfxapps.boot.context.DocumentScope;
+import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.di.DocumentScopedObject;
+import com.gluonhq.jfxapps.boot.context.di.FakeDocument;
 
 import javafx.stage.Stage;
 

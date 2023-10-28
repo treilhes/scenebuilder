@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.library.maven.repository;
 
+import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
 import com.oracle.javafx.scenebuilder.api.maven.RepositoryManager;
-import com.oracle.javafx.scenebuilder.maven.client.api.Repository;
 
 public class RepositoryListItem {
 

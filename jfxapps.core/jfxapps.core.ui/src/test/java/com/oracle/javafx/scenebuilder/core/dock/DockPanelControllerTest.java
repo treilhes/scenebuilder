@@ -44,10 +44,10 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationExtension;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
 import com.oracle.javafx.scenebuilder.api.ui.dock.DockType;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.DockMinimizedPreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockDockTypePreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;

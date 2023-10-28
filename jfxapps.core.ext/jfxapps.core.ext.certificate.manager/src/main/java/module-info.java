@@ -31,8 +31,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.certmngr.CertificateManagerExtension;
-import com.oracle.javafx.scenebuilder.core.loader.extension.Extension;
 
 open module scenebuilder.core.ext.certificate.manager {
     exports com.oracle.javafx.scenebuilder.certmngr;

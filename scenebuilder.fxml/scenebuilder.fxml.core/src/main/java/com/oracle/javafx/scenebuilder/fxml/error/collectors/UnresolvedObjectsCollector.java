@@ -37,10 +37,10 @@ import java.util.Optional;
 
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.error.AbstractErrorCollector;
 import com.oracle.javafx.scenebuilder.api.error.ErrorReportEntry;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInclude;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;

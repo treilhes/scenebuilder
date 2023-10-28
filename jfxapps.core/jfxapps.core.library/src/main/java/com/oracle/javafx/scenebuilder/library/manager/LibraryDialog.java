@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.library.manager;
 
 import java.io.File;
 
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenArtifact;
 
 import javafx.collections.ObservableList;
 

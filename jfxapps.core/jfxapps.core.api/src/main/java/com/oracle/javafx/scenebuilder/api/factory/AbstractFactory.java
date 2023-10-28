@@ -38,7 +38,7 @@ import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.SbContext;
 
 public abstract class AbstractFactory<T> {
 

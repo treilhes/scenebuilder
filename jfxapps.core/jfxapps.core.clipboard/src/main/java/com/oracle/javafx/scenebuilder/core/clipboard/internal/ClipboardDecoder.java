@@ -41,8 +41,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardDataFormat;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.scene.input.Clipboard;

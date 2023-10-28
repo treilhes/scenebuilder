@@ -38,9 +38,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.ui.dock.View;
 import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
 
 import javafx.scene.control.ToggleGroup;
 

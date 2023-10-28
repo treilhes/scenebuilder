@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.fxml.job;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobPipeline;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.fxml.job.editor.reference.UpdateReferencesJob;
 
 @Window

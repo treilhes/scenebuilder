@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.api.subjects;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
 import com.oracle.javafx.scenebuilder.api.tooltheme.ToolStylesheetProvider;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
 
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.ReplaySubject;

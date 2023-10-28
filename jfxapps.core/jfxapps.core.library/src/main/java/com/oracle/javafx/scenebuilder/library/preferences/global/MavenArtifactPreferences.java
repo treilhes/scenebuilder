@@ -38,12 +38,12 @@ import java.util.prefs.Preferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultProvider;
 import com.oracle.javafx.scenebuilder.api.preferences.KeyProvider;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.type.ListItemObjectPreference;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenArtifact;
 
 @Prototype
 public class MavenArtifactPreferences extends ListItemObjectPreference<MavenArtifact> {

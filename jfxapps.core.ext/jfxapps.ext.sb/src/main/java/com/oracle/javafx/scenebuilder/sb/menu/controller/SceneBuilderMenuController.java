@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.sb.menu.controller;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 
 /**
  *

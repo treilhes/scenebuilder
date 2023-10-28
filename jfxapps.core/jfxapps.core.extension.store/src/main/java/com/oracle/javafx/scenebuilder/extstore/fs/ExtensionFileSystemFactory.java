@@ -41,10 +41,10 @@ import java.util.ServiceLoader.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.annotation.EditorSingleton;
+import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
-import com.oracle.javafx.scenebuilder.core.context.annotation.EditorSingleton;
-import com.oracle.javafx.scenebuilder.core.loader.extension.Extension;
 
 @EditorSingleton
 public class ExtensionFileSystemFactory {

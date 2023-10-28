@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.app.manager.main.metadata;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.app.manager.main.model.Application;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata.Visibility;
 import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.CharsetStringPropertyMetadata;

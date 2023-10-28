@@ -44,9 +44,9 @@ import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
 
 @Singleton
 public class PreferencesContext {

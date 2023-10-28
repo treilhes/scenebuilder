@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.library.api;
 
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.extstore.fs.ExtensionFileSystem;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferencesFactory;
 import com.oracle.javafx.scenebuilder.library.store.LibraryStoreController;

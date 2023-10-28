@@ -35,11 +35,11 @@ package com.oracle.javafx.scenebuilder.fs.preference.global;
 
 import java.io.File;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.platform.DefaultFolders;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.type.FilePreference;
-import com.oracle.javafx.scenebuilder.boot.platform.DefaultFolders;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
 
 @Singleton
 public class InitialDirectoryPreference extends FilePreference implements ManagedGlobalPreference {

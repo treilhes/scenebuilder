@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.app.manager.main.model;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.app.manager.main.api.Model;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
 
 @Singleton
 public class ModelController implements Model {

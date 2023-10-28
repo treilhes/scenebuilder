@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.api.maven;
 import java.io.File;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
 
 @FunctionalInterface
 public interface ArtefactHandler {

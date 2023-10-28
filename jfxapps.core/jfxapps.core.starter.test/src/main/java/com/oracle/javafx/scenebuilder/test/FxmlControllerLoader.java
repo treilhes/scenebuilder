@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.test;
 
-import com.oracle.javafx.scenebuilder.api.di.FxmlController;
+import com.gluonhq.jfxapps.boot.context.di.FxmlController;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.sb.tooltheme.DefaultToolThemesList;

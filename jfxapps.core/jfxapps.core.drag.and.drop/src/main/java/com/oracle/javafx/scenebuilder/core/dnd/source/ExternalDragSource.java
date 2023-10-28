@@ -47,14 +47,14 @@ import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Lazy;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardDataFormat;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSourceFactory;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.util.ClassUtils;

@@ -35,13 +35,13 @@ package com.oracle.javafx.scenebuilder.ui.controller;
 
 import java.util.List;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPopupController;
 import com.oracle.javafx.scenebuilder.api.ui.misc.HudWindow;
 import com.oracle.javafx.scenebuilder.core.content.util.LineEquation;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 
 import javafx.fxml.FXML;
 import javafx.geometry.BoundingBox;

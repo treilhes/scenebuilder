@@ -41,6 +41,8 @@ import java.util.Optional;
 
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
+import com.gluonhq.jfxapps.boot.context.DocumentScope;
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
@@ -59,8 +61,6 @@ import com.oracle.javafx.scenebuilder.api.ui.dock.DockViewController;
 import com.oracle.javafx.scenebuilder.api.ui.dock.View;
 import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
-import com.oracle.javafx.scenebuilder.core.context.DocumentScope;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 import jakarta.annotation.PostConstruct;

@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.maven;
 
-import com.oracle.javafx.scenebuilder.maven.client.api.Repository;
+import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
 
 import javafx.scene.Node;
 

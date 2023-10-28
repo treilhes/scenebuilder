@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.ui.message;
 
 import java.net.URL;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
@@ -42,7 +43,6 @@ import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPanelController;
 import com.oracle.javafx.scenebuilder.api.ui.misc.MessageBar;
 import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
 import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger.MessageEntry;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.ui.editor.messagelog.MessageLogEntry;
 
 import javafx.animation.FadeTransition;

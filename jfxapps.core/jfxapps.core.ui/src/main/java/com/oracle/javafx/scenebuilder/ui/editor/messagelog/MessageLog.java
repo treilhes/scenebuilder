@@ -41,10 +41,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;

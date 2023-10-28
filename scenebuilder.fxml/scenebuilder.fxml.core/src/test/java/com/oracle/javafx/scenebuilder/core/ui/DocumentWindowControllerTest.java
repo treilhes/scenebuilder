@@ -46,6 +46,8 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
+import com.gluonhq.jfxapps.boot.context.DocumentScope;
+import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
@@ -61,8 +63,6 @@ import com.oracle.javafx.scenebuilder.api.ui.dock.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.ui.dock.ViewContent;
 import com.oracle.javafx.scenebuilder.api.ui.dock.ViewController;
 import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
-import com.oracle.javafx.scenebuilder.core.context.DocumentScope;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.core.dock.DockPanelController;
 import com.oracle.javafx.scenebuilder.core.dock.DockTypeSplitH;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.DockMinimizedPreference;

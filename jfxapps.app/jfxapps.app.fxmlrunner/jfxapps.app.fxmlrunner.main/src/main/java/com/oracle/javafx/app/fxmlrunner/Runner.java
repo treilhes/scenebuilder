@@ -37,8 +37,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
-import com.oracle.javafx.scenebuilder.core.loader.OpenCommandEvent;
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.loader.OpenCommandEvent;
 
 import javafx.application.Application;
 

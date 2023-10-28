@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.function.Consumer;
 
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
 
 import javafx.collections.ObservableList;
 import javafx.scene.image.WritableImage;

@@ -35,12 +35,12 @@ package com.oracle.javafx.scenebuilder.sb.actions;
 
 import org.springframework.context.annotation.Lazy;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.action.AbstractActionExtension;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.tooltheme.ToolTheme;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.sb.preferences.global.ToolThemePreference;
 
 @Prototype

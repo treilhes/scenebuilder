@@ -48,7 +48,7 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.dnd.Drag;
 import com.oracle.javafx.scenebuilder.api.error.ErrorReport;
 import com.oracle.javafx.scenebuilder.api.error.ErrorReport.ErrorReportEntry;

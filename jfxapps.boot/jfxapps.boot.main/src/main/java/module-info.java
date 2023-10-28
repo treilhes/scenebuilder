@@ -1,10 +1,10 @@
-module scenebuilder.boot.main {
+module jfxapps.boot.main {
 
-    exports com.oracle.javafx.scenebuilder.boot.main;
-    opens com.oracle.javafx.scenebuilder.boot.main to info.picocli;
+    exports com.gluonhq.jfxapps.boot.main;
+    opens com.gluonhq.jfxapps.boot.main to info.picocli;
 
-    requires scenebuilder.boot.loader;
-    requires scenebuilder.boot.platform;
+    requires jfxapps.boot.loader;
+    requires jfxapps.boot.platform;
 
     requires org.slf4j;
     requires info.picocli;

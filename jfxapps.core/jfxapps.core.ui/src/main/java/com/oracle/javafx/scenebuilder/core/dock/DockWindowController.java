@@ -33,6 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.core.dock;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -42,7 +43,6 @@ import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.api.ui.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.ui.dock.DockNameHelper;
 import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
 
 import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.FXML;

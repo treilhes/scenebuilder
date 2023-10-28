@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.library.preferences.global;
 
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenClient;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.type.StringPreference;
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenClient;
 
 public class MavenRepositoryPathPreference extends StringPreference {
 

@@ -34,9 +34,9 @@ package com.oracle.javafx.scenebuilder.core.preferences.controller;
 
 import java.util.List;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.Preferences;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 
 /**
  * Defines preferences for Scene Builder App.

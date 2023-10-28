@@ -52,6 +52,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.DependsOn;
 
+import com.gluonhq.jfxapps.boot.context.DocumentScope;
+import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.EditorSingleton;
+import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
@@ -63,10 +67,6 @@ import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.api.ui.misc.UILogger;
-import com.oracle.javafx.scenebuilder.core.context.DocumentScope;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
-import com.oracle.javafx.scenebuilder.core.context.annotation.EditorSingleton;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Lazy;
 
 import jakarta.inject.Provider;
 import javafx.collections.FXCollections;

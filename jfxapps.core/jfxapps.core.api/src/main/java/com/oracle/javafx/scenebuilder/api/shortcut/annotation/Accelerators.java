@@ -38,7 +38,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 
 /**
  * @author ptreilhes

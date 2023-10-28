@@ -36,10 +36,10 @@ package com.oracle.javafx.scenebuilder.api.ui.dock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlController;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
 
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;

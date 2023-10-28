@@ -36,6 +36,7 @@ package com.oracle.javafx.scenebuilder.app.manager.main;
 import java.util.List;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.boot.loader.extension.EditorExtension;
 import com.oracle.javafx.scenebuilder.api.appmngr.annotation.EditorDescriptor;
 import com.oracle.javafx.scenebuilder.app.manager.main.api.ApplicationCard;
 import com.oracle.javafx.scenebuilder.app.manager.main.api.ExtensionCard;
@@ -43,7 +44,6 @@ import com.oracle.javafx.scenebuilder.app.manager.main.ui.ManagerUiTemplate;
 import com.oracle.javafx.scenebuilder.app.manager.main.ui.WindowIconSettings;
 import com.oracle.javafx.scenebuilder.app.manager.main.ui.cmp.ApplicationCardController;
 import com.oracle.javafx.scenebuilder.app.manager.main.ui.cmp.ExtensionCardController;
-import com.oracle.javafx.scenebuilder.core.loader.extension.EditorExtension;
 
 @EditorDescriptor(
             label = "manager.app.label",

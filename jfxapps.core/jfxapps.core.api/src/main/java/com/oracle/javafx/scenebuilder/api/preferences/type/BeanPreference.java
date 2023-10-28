@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.preferences.type;
 
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.preferences.Preference;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 

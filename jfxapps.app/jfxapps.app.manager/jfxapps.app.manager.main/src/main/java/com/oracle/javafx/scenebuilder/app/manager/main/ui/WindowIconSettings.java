@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.app.manager.main.ui;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
 
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;

@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.api.editor.selection;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
 
 public abstract class GroupFactory<T extends SelectionGroup> extends AbstractFactory<T> {
 

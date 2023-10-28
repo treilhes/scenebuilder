@@ -41,8 +41,8 @@ import java.util.Objects;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.control.relocater.AbstractRelocater;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.util.AnchorUtils;
 import com.oracle.javafx.scenebuilder.util.MathUtils;

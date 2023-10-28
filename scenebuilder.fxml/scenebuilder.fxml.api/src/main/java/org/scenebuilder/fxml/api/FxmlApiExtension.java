@@ -40,6 +40,7 @@ import java.util.UUID;
 import org.scenebuilder.fxml.api.i18n.I18NFxmlApi;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager.FxmlDocumentManagerImpl;
 
+import com.gluonhq.jfxapps.boot.loader.extension.EditorExtension;
 import com.oracle.javafx.scenebuilder.api.appmngr.annotation.EditorDescriptor;
 import com.oracle.javafx.scenebuilder.api.control.driver.DriverExtensionRegistry;
 import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
@@ -50,7 +51,6 @@ import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.fxml.preferences.global.ParentRingColorPreference;
 import com.oracle.javafx.scenebuilder.ui.controller.ModeManagerController;
-import com.oracle.javafx.scenebuilder.core.loader.extension.EditorExtension;
 
 @EditorDescriptor(
             label = "scenebuilder.app.label",

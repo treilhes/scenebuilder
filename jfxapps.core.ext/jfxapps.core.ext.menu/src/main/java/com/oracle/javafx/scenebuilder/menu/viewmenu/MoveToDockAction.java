@@ -41,6 +41,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
@@ -55,8 +57,6 @@ import com.oracle.javafx.scenebuilder.api.ui.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.ui.menu.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.ui.menu.ViewMenuItemProvider;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;

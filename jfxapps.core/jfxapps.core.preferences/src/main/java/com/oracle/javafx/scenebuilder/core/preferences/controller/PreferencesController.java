@@ -36,9 +36,9 @@ import java.util.List;
 
 import org.springframework.context.annotation.DependsOn;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.preferences.DocumentPreferencesNode;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
 
 /**
  * Defines preferences for Scene Builder App.

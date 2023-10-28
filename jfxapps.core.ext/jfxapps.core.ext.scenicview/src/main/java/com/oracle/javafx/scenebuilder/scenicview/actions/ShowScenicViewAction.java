@@ -33,6 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.scenicview.actions;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
@@ -40,8 +42,6 @@ import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.ui.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.scenicview.controller.ScenicViewStarter;
 
 @Prototype

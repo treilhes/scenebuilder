@@ -36,12 +36,12 @@ package com.oracle.javafx.scenebuilder.ui.inlineedit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.platform.OsPlatform;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractPopupController;
 import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
-import com.oracle.javafx.scenebuilder.boot.platform.OsPlatform;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Bounds;

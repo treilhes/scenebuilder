@@ -33,13 +33,13 @@
  */
 package com.oracle.javafx.scenebuilder.core.ui.action;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.menu.action.AbstractToggleMinimizeDockAction;
 import com.oracle.javafx.scenebuilder.menu.action.view.ToggleMinimizeLeftDockAction;
 

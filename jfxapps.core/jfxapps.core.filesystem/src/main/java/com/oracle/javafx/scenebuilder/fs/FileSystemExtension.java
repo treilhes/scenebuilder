@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.fs;
 import java.util.List;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.core.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.fs.controller.FileSystemController;
 import com.oracle.javafx.scenebuilder.fs.preference.document.PathPreference;

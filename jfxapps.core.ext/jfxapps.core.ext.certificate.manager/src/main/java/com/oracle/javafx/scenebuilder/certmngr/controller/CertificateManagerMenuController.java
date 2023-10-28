@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.certmngr.controller;
 
 import org.springframework.context.annotation.Lazy;
 
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 
 /**
  *

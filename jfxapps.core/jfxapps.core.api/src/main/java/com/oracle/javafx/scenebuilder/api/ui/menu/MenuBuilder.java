@@ -38,14 +38,14 @@ import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.shortcut.Accelerators;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractCommonUiController;
 import com.oracle.javafx.scenebuilder.api.ui.dock.View;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;

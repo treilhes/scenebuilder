@@ -35,9 +35,9 @@ package com.oracle.javafx.scenebuilder.api.subjects;
 
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.ui.dock.View;
 import com.oracle.javafx.scenebuilder.api.ui.dock.ViewAttachment;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.Subject;

@@ -42,9 +42,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.EditorSingleton;
 import com.oracle.javafx.scenebuilder.api.action.Action;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
-import com.oracle.javafx.scenebuilder.core.context.annotation.EditorSingleton;
 import com.oracle.javafx.scenebuilder.api.preferences.MapPreferences;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 

@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.core.dock.AnnotatedViewAttachmentProvider;
 import com.oracle.javafx.scenebuilder.core.dock.DockPanelController;
 import com.oracle.javafx.scenebuilder.core.dock.DockTypeAccordion;
@@ -50,7 +51,6 @@ import com.oracle.javafx.scenebuilder.core.dock.preferences.document.DockMinimiz
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockDockTypePreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastViewVisibilityPreference;
-import com.oracle.javafx.scenebuilder.core.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.ui.controller.DocumentController;
 import com.oracle.javafx.scenebuilder.ui.controller.DocumentWindowTracker;
 import com.oracle.javafx.scenebuilder.ui.controller.EditorInstancesController;

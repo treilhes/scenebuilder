@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.app.manager.main.metadata;
 
 import java.util.List;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.metadata.AbstractMetadata;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
 
 @Singleton

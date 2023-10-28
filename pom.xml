@@ -87,6 +87,11 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.boot.layer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.boot.loader</artifactId>
                 <version>${project.version}</version>
             </dependency>

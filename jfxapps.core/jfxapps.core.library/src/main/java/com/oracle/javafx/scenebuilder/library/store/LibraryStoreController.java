@@ -63,11 +63,11 @@ import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
 import com.oracle.javafx.scenebuilder.extstore.fs.ExtensionFileSystem;
 import com.oracle.javafx.scenebuilder.library.api.LibraryStore;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
 import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenArtifact;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

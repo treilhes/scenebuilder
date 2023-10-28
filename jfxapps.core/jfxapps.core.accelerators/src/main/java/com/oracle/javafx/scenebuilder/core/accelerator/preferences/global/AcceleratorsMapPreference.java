@@ -37,11 +37,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
+import com.gluonhq.jfxapps.boot.context.annotation.EditorSingleton;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.MapPreferences;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.core.context.annotation.EditorSingleton;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

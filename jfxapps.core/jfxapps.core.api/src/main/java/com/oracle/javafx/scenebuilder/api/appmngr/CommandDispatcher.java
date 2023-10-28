@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.api.appmngr;
 
 import org.springframework.context.ApplicationListener;
 
-import com.oracle.javafx.scenebuilder.core.loader.OpenCommandEvent;
+import com.gluonhq.jfxapps.boot.loader.OpenCommandEvent;
 
 public interface CommandDispatcher extends ApplicationListener<OpenCommandEvent> {
 

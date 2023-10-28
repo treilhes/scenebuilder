@@ -39,9 +39,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
 import com.oracle.javafx.scenebuilder.api.preferences.ListPreferences;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.maven.client.api.Repository;
 
 @Component
 public class MavenRepositoriesPreferences extends ListPreferences<MavenRepositoryPreferences, Repository> {

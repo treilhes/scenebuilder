@@ -42,6 +42,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
@@ -53,7 +54,6 @@ import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPanelController;
 import com.oracle.javafx.scenebuilder.api.ui.misc.SelectionBar;
 import com.oracle.javafx.scenebuilder.api.ui.selbar.SelectionBarContentFactory;
 import com.oracle.javafx.scenebuilder.api.ui.selbar.SelectionBarContentFactory.BarItem;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 

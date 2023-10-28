@@ -40,12 +40,12 @@ import java.util.UUID;
 import org.scenebuilder.fxml.api.FxmlApiExtension;
 import org.scenebuilder.fxml.core.i18n.I18NFxmlCoreExtension;
 
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.core.doc.DocumentationImpl;
 import com.oracle.javafx.scenebuilder.core.editors.ControllerClassEditor;
 import com.oracle.javafx.scenebuilder.core.editors.CoreEditors;
 import com.oracle.javafx.scenebuilder.core.editors.FxIdEditor;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
-import com.oracle.javafx.scenebuilder.core.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.core.ui.action.CloseBottomDockAction;
 import com.oracle.javafx.scenebuilder.core.ui.action.CloseLeftDockAction;
 import com.oracle.javafx.scenebuilder.core.ui.action.CloseRightDockAction;

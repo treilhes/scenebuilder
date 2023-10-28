@@ -46,9 +46,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.boot.platform.OsPlatform;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.boot.platform.OsPlatform;
 
 public interface FileSystem {
 

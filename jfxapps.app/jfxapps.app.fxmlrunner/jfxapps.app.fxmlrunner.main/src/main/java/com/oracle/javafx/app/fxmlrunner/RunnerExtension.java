@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.core.loader.extension.SealedExtension;
+import com.gluonhq.jfxapps.boot.loader.extension.SealedExtension;
 
 public class RunnerExtension implements SealedExtension {
 

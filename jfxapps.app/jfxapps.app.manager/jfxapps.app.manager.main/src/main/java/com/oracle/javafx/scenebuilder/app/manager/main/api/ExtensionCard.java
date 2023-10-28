@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.app.manager.main.api;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.app.manager.main.model.Extension;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
 
 import javafx.scene.Parent;
 

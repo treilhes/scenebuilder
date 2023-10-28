@@ -37,7 +37,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.core.loader.extension.EditorExtension;
+import com.gluonhq.jfxapps.boot.loader.extension.EditorExtension;
 
 public interface EditorDescriptor {
     EditorExtension getExtension();

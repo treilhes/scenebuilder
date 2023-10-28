@@ -45,6 +45,7 @@ import java.util.ResourceBundle;
 import org.scenebuilder.fxml.api.Editor;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
 import com.oracle.javafx.scenebuilder.api.error.ErrorReport;
@@ -57,7 +58,6 @@ import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMAssetIndex;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;

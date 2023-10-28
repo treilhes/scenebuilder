@@ -38,8 +38,8 @@ import java.util.prefs.Preferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.preferences.DocumentPreferencesNode;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
 
 @Singleton
 public class DocumentPreferencesNodeImpl implements DocumentPreferencesNode {

@@ -1,3 +1,3 @@
-module scenebuilder.boot.platform {
-    exports com.oracle.javafx.scenebuilder.boot.platform;
+module jfxapps.boot.platform {
+    exports com.gluonhq.jfxapps.boot.platform;
 }

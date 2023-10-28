@@ -37,10 +37,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.about.actions.ShowAboutAction;
 import com.oracle.javafx.scenebuilder.about.controller.AboutWindowController;
 import com.oracle.javafx.scenebuilder.about.i18n.I18NAbout;
-import com.oracle.javafx.scenebuilder.core.loader.extension.OpenExtension;
 
 public class AboutExtension implements OpenExtension {
     @Override

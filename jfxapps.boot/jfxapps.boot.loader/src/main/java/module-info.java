@@ -31,24 +31,26 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.oracle.javafx.scenebuilder.core.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 
 
-open module scenebuilder.boot.loader {
+open module jfxapps.boot.loader {
 
-    exports com.oracle.javafx.scenebuilder.core.loader;
-    exports com.oracle.javafx.scenebuilder.core.loader.content;
-    exports com.oracle.javafx.scenebuilder.core.loader.extension;
-    exports com.oracle.javafx.scenebuilder.core.loader.model;
+    exports com.gluonhq.jfxapps.boot.loader;
+    exports com.gluonhq.jfxapps.boot.loader.content;
+    exports com.gluonhq.jfxapps.boot.loader.extension;
+    exports com.gluonhq.jfxapps.boot.loader.model;
 
-    exports com.oracle.javafx.scenebuilder.core.loader.dev to scenebuilder.boot.main;
+    exports com.gluonhq.jfxapps.boot.loader.dev to jfxapps.boot.main;
 
-    requires transitive scenebuilder.boot.context;
-
+    requires transitive jfxapps.boot.context;
+    requires transitive jfxapps.boot.layer;
+    requires jfxapps.boot.maven;
+    
     requires org.slf4j;
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.annotation;
-    requires scenebuilder.boot.maven;
+    
     requires spring.context;
 
     uses Extension;

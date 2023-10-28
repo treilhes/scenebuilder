@@ -33,10 +33,10 @@
  */
 package com.oracle.javafx.scenebuilder.api.content.gesture;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.ui.misc.Workspace;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
 
 import javafx.scene.input.KeyEvent;
 

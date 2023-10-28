@@ -34,7 +34,7 @@
 
 package com.oracle.javafx.scenebuilder.library.manager;
 
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
 
 /**
  * List cell item in the JAR/FXML Library dialog.

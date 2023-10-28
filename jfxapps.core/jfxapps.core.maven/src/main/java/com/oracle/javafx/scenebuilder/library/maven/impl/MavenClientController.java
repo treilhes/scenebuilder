@@ -40,16 +40,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.boot.context.annotation.EditorSingleton;
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifactId;
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenClassifier;
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenClient;
+import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
+import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.core.context.annotation.EditorSingleton;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoryPathPreference;
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenArtifact;
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenArtifactId;
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenClassifier;
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenClient;
-import com.oracle.javafx.scenebuilder.maven.client.api.Repository;
-import com.oracle.javafx.scenebuilder.maven.client.api.RepositoryType;
 
 import jakarta.annotation.PostConstruct;
 import javafx.beans.property.BooleanProperty;

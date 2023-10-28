@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.action.editor;
 
-import com.oracle.javafx.scenebuilder.boot.platform.OsPlatform;
+import com.gluonhq.jfxapps.boot.platform.OsPlatform;
 
 import javafx.scene.input.MouseEvent;
 

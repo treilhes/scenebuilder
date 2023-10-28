@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.api.maven;
 
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.maven.client.api.RepositoryType;
+import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
 
 public interface RepositoryTypeProvider {
     Set<Class<? extends RepositoryType>> repositoryTypes();

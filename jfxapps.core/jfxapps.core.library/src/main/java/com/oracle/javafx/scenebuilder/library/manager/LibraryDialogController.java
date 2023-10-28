@@ -40,6 +40,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
@@ -52,12 +55,9 @@ import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.library.api.AbstractLibrary;
 import com.oracle.javafx.scenebuilder.library.api.LibraryStoreConfiguration;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenArtifact;
 
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;

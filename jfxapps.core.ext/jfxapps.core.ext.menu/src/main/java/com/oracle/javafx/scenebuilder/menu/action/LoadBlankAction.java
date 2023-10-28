@@ -33,11 +33,11 @@
  */
 package com.oracle.javafx.scenebuilder.menu.action;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
 
 @Prototype
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")

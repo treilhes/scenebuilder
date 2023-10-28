@@ -56,6 +56,8 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.library.Library;
@@ -64,11 +66,9 @@ import com.oracle.javafx.scenebuilder.api.library.Report;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.library.manager.ImportProgressDialogController;
 import com.oracle.javafx.scenebuilder.library.manager.LibraryDialogController;
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenArtifact;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;

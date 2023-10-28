@@ -45,15 +45,15 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.loader.OpenCommandEvent;
+import com.gluonhq.jfxapps.boot.loader.extension.EditorExtension;
 import com.oracle.javafx.scenebuilder.api.appmngr.CommandDispatcher;
 import com.oracle.javafx.scenebuilder.api.editors.EditorDescriptor;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
 import com.oracle.javafx.scenebuilder.api.editors.EditorsManager;
 import com.oracle.javafx.scenebuilder.api.javafx.JavafxThreadHolder;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
-import com.oracle.javafx.scenebuilder.core.loader.OpenCommandEvent;
-import com.oracle.javafx.scenebuilder.core.loader.extension.EditorExtension;
 
 @Singleton
 public class CommandDispatcherImpl implements CommandDispatcher{

@@ -33,11 +33,11 @@
  */
 package com.oracle.javafx.scenebuilder.core.clipboard.controller;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardHandler;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 
 import javafx.scene.Node;
 import javafx.scene.control.TextInputControl;

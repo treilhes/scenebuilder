@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.library.api;
 
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.oracle.javafx.scenebuilder.library.manager.LibraryDialog;
 
 public class LibraryDialogFactory {

@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
@@ -52,7 +53,6 @@ import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert;
 import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
 
 import javafx.application.Platform;
 

@@ -33,6 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.menu.viewmenu;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
@@ -42,7 +43,6 @@ import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.api.ui.dock.DockViewController;
 import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.ViewMenuItemAttachment;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
 
 @Prototype
 @ActionMeta(

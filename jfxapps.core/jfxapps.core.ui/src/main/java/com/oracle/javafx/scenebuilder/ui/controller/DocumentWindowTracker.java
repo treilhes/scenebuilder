@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.ui.controller;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.editors.WindowPreferenceTracker;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.MaximizedPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.StageHeightPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.StageWidthPreference;

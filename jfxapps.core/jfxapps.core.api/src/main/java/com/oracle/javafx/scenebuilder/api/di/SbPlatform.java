@@ -36,8 +36,8 @@ package com.oracle.javafx.scenebuilder.api.di;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import com.oracle.javafx.scenebuilder.core.context.Document;
-import com.oracle.javafx.scenebuilder.core.context.DocumentScope;
+import com.gluonhq.jfxapps.boot.context.Document;
+import com.gluonhq.jfxapps.boot.context.DocumentScope;
 
 import javafx.application.Platform;
 

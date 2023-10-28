@@ -35,15 +35,15 @@ package com.oracle.javafx.scenebuilder.core.dock;
 
 import java.util.Collection;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.ui.dock.DockContext;
 import com.oracle.javafx.scenebuilder.api.ui.dock.DockType;
 import com.oracle.javafx.scenebuilder.api.ui.dock.View;
 import com.oracle.javafx.scenebuilder.api.ui.dock.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.ui.dock.ViewController;
 import com.oracle.javafx.scenebuilder.api.util.FXMLUtils;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Lazy;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

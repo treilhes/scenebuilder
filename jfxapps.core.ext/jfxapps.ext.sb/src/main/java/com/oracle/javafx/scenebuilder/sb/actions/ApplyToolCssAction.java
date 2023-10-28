@@ -36,13 +36,13 @@ package com.oracle.javafx.scenebuilder.sb.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.tooltheme.ToolStylesheetProvider;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
 
 @Prototype
 @ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report")

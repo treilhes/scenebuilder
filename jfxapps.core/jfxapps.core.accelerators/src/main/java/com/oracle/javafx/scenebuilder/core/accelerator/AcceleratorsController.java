@@ -42,6 +42,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
@@ -54,7 +55,6 @@ import com.oracle.javafx.scenebuilder.api.ui.AbstractCommonUiController;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.accelerator.preferences.global.AcceleratorsMapPreference;
 import com.oracle.javafx.scenebuilder.core.accelerator.preferences.global.FocusedAcceleratorsMapPreference;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;

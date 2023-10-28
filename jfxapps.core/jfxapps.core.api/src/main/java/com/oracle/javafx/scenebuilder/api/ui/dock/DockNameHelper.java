@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 
 @Window
 public class DockNameHelper {

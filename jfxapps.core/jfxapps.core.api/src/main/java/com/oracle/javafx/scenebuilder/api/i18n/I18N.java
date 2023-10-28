@@ -40,8 +40,8 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import com.oracle.javafx.scenebuilder.core.context.annotation.PreferedConstructor;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.context.annotation.PreferedConstructor;
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 
 @Singleton("i18n")
 public class I18N {

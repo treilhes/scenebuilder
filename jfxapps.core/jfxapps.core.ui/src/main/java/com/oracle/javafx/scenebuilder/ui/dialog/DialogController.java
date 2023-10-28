@@ -33,16 +33,16 @@
  */
 package com.oracle.javafx.scenebuilder.ui.dialog;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert;
 import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
 
 import javafx.stage.Window;
 
-@com.oracle.javafx.scenebuilder.core.context.annotation.Window
+@com.gluonhq.jfxapps.boot.context.annotation.Window
 public class DialogController implements Dialog {
 
     private final SbContext context;

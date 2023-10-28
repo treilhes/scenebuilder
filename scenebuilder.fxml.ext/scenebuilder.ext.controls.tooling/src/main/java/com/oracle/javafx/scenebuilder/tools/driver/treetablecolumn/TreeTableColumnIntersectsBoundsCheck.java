@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.tools.driver.treetablecolumn;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.control.intersect.AbstractIntersectsBoundsCheck;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.tools.driver.treetableview.TreeTableViewDesignInfoX;
 

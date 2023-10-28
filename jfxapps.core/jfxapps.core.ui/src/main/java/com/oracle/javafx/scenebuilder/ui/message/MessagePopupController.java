@@ -33,10 +33,10 @@
  */
 package com.oracle.javafx.scenebuilder.ui.message;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractPopupController;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

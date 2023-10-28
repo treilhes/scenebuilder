@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.app.manager.main.ui;
 
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.editors.WindowPreferenceTracker;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -46,7 +47,6 @@ import com.oracle.javafx.scenebuilder.api.ui.menu.MenuBar;
 import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.app.manager.main.api.MainContent;
 import com.oracle.javafx.scenebuilder.app.manager.preferences.document.BottomDividerVPosPreference;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 
 import jakarta.inject.Provider;
 import javafx.event.EventHandler;

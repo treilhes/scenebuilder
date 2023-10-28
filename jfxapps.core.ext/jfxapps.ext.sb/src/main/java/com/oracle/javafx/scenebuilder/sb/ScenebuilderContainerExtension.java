@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.core.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.sb.actions.ApplyToolCssAction;
 import com.oracle.javafx.scenebuilder.sb.actions.ApplyToolCssPreferencesExtension;
 import com.oracle.javafx.scenebuilder.sb.actions.ApplyToolCssThemeExtension;

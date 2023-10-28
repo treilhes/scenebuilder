@@ -46,6 +46,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
@@ -56,8 +58,6 @@ import com.oracle.javafx.scenebuilder.api.ui.dock.DockViewController;
 import com.oracle.javafx.scenebuilder.api.ui.dock.View;
 import com.oracle.javafx.scenebuilder.api.ui.dock.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.ui.dock.ViewAttachmentProvider;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastViewVisibilityPreference;
 

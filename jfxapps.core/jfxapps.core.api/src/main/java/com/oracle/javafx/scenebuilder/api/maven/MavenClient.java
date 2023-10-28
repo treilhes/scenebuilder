@@ -36,10 +36,10 @@ package com.oracle.javafx.scenebuilder.api.maven;
 import java.util.List;
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenArtifact;
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenArtifactId;
-import com.oracle.javafx.scenebuilder.maven.client.api.Repository;
-import com.oracle.javafx.scenebuilder.maven.client.api.RepositoryType;
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifactId;
+import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
+import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
 
 import javafx.beans.property.BooleanProperty;
 

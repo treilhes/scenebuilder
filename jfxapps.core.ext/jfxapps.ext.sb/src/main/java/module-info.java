@@ -33,7 +33,7 @@
  */
 import java.net.spi.URLStreamHandlerProvider;
 
-import com.oracle.javafx.scenebuilder.core.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.sb.ScenebuilderContainerExtension;
 import com.oracle.javafx.scenebuilder.sb.spi.InMemoryFileURLStreamHandlerProvider;
 

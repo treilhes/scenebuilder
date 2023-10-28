@@ -1,9 +1,9 @@
-module scenebuilder.boot.context {
-    exports com.oracle.javafx.scenebuilder.core.context;
-    exports com.oracle.javafx.scenebuilder.core.context.annotation;
+module jfxapps.boot.context {
+    exports com.gluonhq.jfxapps.boot.context;
+    exports com.gluonhq.jfxapps.boot.context.annotation;
 
-    exports com.oracle.javafx.scenebuilder.core.context.impl to scenebuilder.boot.loader;
-    opens com.oracle.javafx.scenebuilder.core.context.internal to spring.core;
+    exports com.gluonhq.jfxapps.boot.context.impl to jfxapps.boot.loader;
+    opens com.gluonhq.jfxapps.boot.context.internal to spring.core;
 
     requires org.slf4j;
     requires spring.core;

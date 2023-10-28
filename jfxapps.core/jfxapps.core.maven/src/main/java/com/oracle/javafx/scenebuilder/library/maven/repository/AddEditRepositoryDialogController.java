@@ -38,6 +38,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
+import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.maven.MavenClient;
@@ -47,10 +50,7 @@ import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
 import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
-import com.oracle.javafx.scenebuilder.maven.client.api.Repository;
-import com.oracle.javafx.scenebuilder.maven.client.api.RepositoryType;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;

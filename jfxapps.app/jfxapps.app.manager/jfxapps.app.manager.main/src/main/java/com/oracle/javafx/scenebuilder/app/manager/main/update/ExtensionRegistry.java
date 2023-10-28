@@ -38,10 +38,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenArtifact;
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenClassifier;
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenClient;
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenClassifier;
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenClient;
 
 @Singleton
 public class ExtensionRegistry {

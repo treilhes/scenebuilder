@@ -38,7 +38,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
 
-import com.oracle.javafx.scenebuilder.core.context.Document;
+import com.gluonhq.jfxapps.boot.context.Document;
 
 public interface EditorInstance extends Document {
     //API validated

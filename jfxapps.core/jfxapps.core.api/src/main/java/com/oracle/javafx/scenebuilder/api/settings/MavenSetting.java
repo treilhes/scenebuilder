@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.api.settings;
 
 import java.io.File;
 
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 
 @Singleton
 public class MavenSetting extends AbstractSetting {

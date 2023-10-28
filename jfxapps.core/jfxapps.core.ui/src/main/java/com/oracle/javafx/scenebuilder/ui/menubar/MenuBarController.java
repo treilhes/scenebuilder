@@ -46,6 +46,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.DocumentScope;
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
@@ -57,8 +59,6 @@ import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuProvider;
 import com.oracle.javafx.scenebuilder.api.util.FXMLUtils;
-import com.oracle.javafx.scenebuilder.core.context.DocumentScope;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 
 import jakarta.annotation.PostConstruct;
 import javafx.collections.ObservableList;

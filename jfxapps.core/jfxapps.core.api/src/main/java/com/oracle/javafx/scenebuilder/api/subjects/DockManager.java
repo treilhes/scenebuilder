@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.api.subjects;
 
 import java.util.Collection;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.ui.dock.Dock;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.ReplaySubject;

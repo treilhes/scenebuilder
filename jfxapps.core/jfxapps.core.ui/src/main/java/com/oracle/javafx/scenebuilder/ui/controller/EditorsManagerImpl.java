@@ -44,12 +44,12 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.loader.ApplicationManager;
+import com.gluonhq.jfxapps.boot.loader.extension.EditorExtension;
 import com.oracle.javafx.scenebuilder.api.editors.EditorDescriptor;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
 import com.oracle.javafx.scenebuilder.api.editors.EditorsManager;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
-import com.oracle.javafx.scenebuilder.core.loader.ApplicationManager;
-import com.oracle.javafx.scenebuilder.core.loader.extension.EditorExtension;
 
 @Singleton
 public class EditorsManagerImpl implements EditorsManager {

@@ -36,10 +36,10 @@ package com.oracle.javafx.scenebuilder.core.dock.preferences.document;
 import java.util.HashMap;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.MapPreferences;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 
 
 @Window

@@ -16,5 +16,7 @@
     <module>jfxapps.boot.starter</module>
     <module>jfxapps.boot.starter.test</module>
     <module>jfxapps.boot.platform</module>
+    <module>jfxapps.boot.registry</module>
+    <module>jfxapps.boot.layer</module>
   </modules>
 </project>

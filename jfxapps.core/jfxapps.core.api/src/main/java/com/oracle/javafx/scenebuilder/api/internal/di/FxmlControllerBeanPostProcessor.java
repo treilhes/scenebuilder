@@ -38,8 +38,8 @@ import java.io.IOException;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
+import com.gluonhq.jfxapps.boot.context.annotation.EditorSingleton;
 import com.oracle.javafx.scenebuilder.api.di.FxmlController;
-import com.oracle.javafx.scenebuilder.core.context.annotation.EditorSingleton;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

@@ -35,11 +35,11 @@ package com.oracle.javafx.scenebuilder.ui.dialog;
 
 import java.net.URL;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.dialog.AbstractModalDialog;
 import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert;
 import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Prototype;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

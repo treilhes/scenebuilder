@@ -33,6 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.fs.preference.global;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
@@ -41,7 +42,6 @@ import com.oracle.javafx.scenebuilder.api.preferences.PreferenceEditorFactory;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.type.IntegerPreference;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Singleton;
 
 import javafx.scene.Parent;
 

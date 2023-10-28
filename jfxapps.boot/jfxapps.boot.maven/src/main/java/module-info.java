@@ -1,6 +1,6 @@
-module scenebuilder.boot.maven {
-    exports com.oracle.javafx.scenebuilder.maven.client.api;
-    exports com.oracle.javafx.scenebuilder.maven.client.type;
+module jfxapps.boot.maven {
+    exports com.gluonhq.jfxapps.boot.maven.client.api;
+    exports com.gluonhq.jfxapps.boot.maven.client.type;
 
     requires maven.resolver.provider;
 

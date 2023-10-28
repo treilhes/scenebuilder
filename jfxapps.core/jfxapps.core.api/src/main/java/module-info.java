@@ -31,8 +31,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.api.ApiExtension;
-import com.oracle.javafx.scenebuilder.core.loader.extension.Extension;
 
 open module scenebuilder.core.api {
 
@@ -47,7 +47,7 @@ open module scenebuilder.core.api {
     exports com.oracle.javafx.scenebuilder.api.content.gesture;
     exports com.oracle.javafx.scenebuilder.api.content.mode;
     exports com.oracle.javafx.scenebuilder.api.content.mode.annotation;
-    exports com.oracle.javafx.scenebuilder.api.di;
+    exports com.gluonhq.jfxapps.boot.context.di;
     exports com.oracle.javafx.scenebuilder.api.dnd;
     exports com.oracle.javafx.scenebuilder.api.ui.dock;
     exports com.oracle.javafx.scenebuilder.api.ui.dock.annotation;

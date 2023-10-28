@@ -37,8 +37,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardDataFormat;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.scene.image.ImageView;

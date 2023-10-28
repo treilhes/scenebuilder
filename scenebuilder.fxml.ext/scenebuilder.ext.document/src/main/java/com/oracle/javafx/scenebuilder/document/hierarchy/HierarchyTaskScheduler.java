@@ -42,8 +42,8 @@ import org.scenebuilder.fxml.api.HierarchyMask.Accessory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell.BorderSide;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;

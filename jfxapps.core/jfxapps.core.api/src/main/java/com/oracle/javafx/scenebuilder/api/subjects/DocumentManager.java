@@ -36,13 +36,13 @@ package com.oracle.javafx.scenebuilder.api.subjects;
 import java.nio.file.Path;
 import java.util.Map;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Primary;
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractCommonUiController;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Primary;
-import com.oracle.javafx.scenebuilder.core.context.annotation.Window;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 import io.reactivex.rxjava3.subjects.PublishSubject;

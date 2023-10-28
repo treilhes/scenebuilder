@@ -37,11 +37,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.certmngr.controller.CertificateManagerController;
 import com.oracle.javafx.scenebuilder.certmngr.controller.CertificateManagerMenuController;
 import com.oracle.javafx.scenebuilder.certmngr.controller.CertificateManagerWindowController;
 import com.oracle.javafx.scenebuilder.certmngr.i18n.I18NCertificateManager;
-import com.oracle.javafx.scenebuilder.core.loader.extension.OpenExtension;
 
 public class CertificateManagerExtension implements OpenExtension {
 

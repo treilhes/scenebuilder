@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.library.preferences.global;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
 import com.oracle.javafx.scenebuilder.api.preferences.ListPreferences;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.maven.client.api.MavenArtifact;
 
 @Component
 public class MavenArtifactsPreferences extends ListPreferences<MavenArtifactPreferences, MavenArtifact> {

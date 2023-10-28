@@ -37,9 +37,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.core.clipboard.controller.ClipboardController;
 import com.oracle.javafx.scenebuilder.core.clipboard.i18n.I18NClipboard;
-import com.oracle.javafx.scenebuilder.core.loader.extension.OpenExtension;
 
 public class ClipboardExtension implements OpenExtension {
     @Override

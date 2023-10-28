@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.core.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.logviewer.controller.LogViewerController;
 import com.oracle.javafx.scenebuilder.logviewer.i18n.I18NLogViewer;
 
