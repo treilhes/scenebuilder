@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.function.Consumer;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 
 import javafx.collections.ObservableList;
 import javafx.scene.image.WritableImage;
@@ -53,13 +53,13 @@ public interface LibraryStore {
     boolean load() throws IOException;
     boolean save() throws IOException;
 
-    ObservableList<MavenArtifact> getArtifacts();
+    ObservableList<UniqueArtifact> getArtifacts();
     ObservableList<Path> getFilesOrFolders();
 
-    boolean add(MavenArtifact artifact);
+    boolean add(UniqueArtifact artifact);
     boolean addAll(List<Path> path);
 
-    boolean remove(MavenArtifact artifact);
+    boolean remove(UniqueArtifact artifact);
     boolean remove(Path path);
 
     Path getRoot();

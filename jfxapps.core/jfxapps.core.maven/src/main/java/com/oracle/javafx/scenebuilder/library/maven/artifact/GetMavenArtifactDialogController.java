@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Window;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.maven.ArtefactHandler;
@@ -83,7 +83,7 @@ public class GetMavenArtifactDialogController extends AbstractFxmlWindowControll
     private TextField artifactIDTextfield;
 
     @FXML
-    private ComboBox<MavenArtifact> versionsCombo;
+    private ComboBox<UniqueArtifact> versionsCombo;
 
     @FXML
     private ProgressIndicator progress;
@@ -92,8 +92,8 @@ public class GetMavenArtifactDialogController extends AbstractFxmlWindowControll
     private Button installButton;
 
     private final MavenClient mavenClient;
-    private Service<ObservableList<MavenArtifact>> versionsService;
-    private final Service<MavenArtifact> installService;
+    private Service<ObservableList<UniqueArtifact>> versionsService;
+    private final Service<UniqueArtifact> installService;
     private final SceneBuilderWindow owner;
     private final MessageLogger messageLogger;
 
@@ -126,12 +126,12 @@ public class GetMavenArtifactDialogController extends AbstractFxmlWindowControll
         this.owner = owner;
         this.messageLogger = messageLogger;
 
-        versionsService = new Service<ObservableList<MavenArtifact>>() {
+        versionsService = new Service<ObservableList<UniqueArtifact>>() {
             @Override
-            protected Task<ObservableList<MavenArtifact>> createTask() {
-                return new Task<ObservableList<MavenArtifact>>() {
+            protected Task<ObservableList<UniqueArtifact>> createTask() {
+                return new Task<ObservableList<UniqueArtifact>>() {
                     @Override
-                    protected ObservableList<MavenArtifact> call() throws Exception {
+                    protected ObservableList<UniqueArtifact> call() throws Exception {
                         return FXCollections.observableArrayList(getVersions());
                     }
                 };
@@ -155,12 +155,12 @@ public class GetMavenArtifactDialogController extends AbstractFxmlWindowControll
             }
         });
 
-        installService = new Service<MavenArtifact>() {
+        installService = new Service<UniqueArtifact>() {
             @Override
-            protected Task<MavenArtifact> createTask() {
-                return new Task<MavenArtifact>() {
+            protected Task<UniqueArtifact> createTask() {
+                return new Task<UniqueArtifact>() {
                     @Override
-                    protected MavenArtifact call() throws Exception {
+                    protected UniqueArtifact call() throws Exception {
                         return resolveArtifacts();
                     }
                 };
@@ -170,9 +170,9 @@ public class GetMavenArtifactDialogController extends AbstractFxmlWindowControll
 
     @FXML
     public void initialize() {
-        Callback<ListView<MavenArtifact>, ListCell<MavenArtifact>> cellFactory = p -> new ListCell<MavenArtifact>() {
+        Callback<ListView<UniqueArtifact>, ListCell<UniqueArtifact>> cellFactory = p -> new ListCell<UniqueArtifact>() {
             @Override
-            protected void updateItem(MavenArtifact item, boolean empty) {
+            protected void updateItem(UniqueArtifact item, boolean empty) {
                 super.updateItem(item, empty);
                 if (item != null && !empty) {
                     if (item.getRepository() != null) {
@@ -215,8 +215,8 @@ public class GetMavenArtifactDialogController extends AbstractFxmlWindowControll
     public void openWindow(ArtefactHandler handler) {
         installService.stateProperty().addListener((obs, ov, nv) -> {
             if (nv.equals(Worker.State.SUCCEEDED)) {
-                final MavenArtifact mavenArtifact = getArtifact();
-                final MavenArtifact resolved = installService.getValue();
+                final UniqueArtifact mavenArtifact = getArtifact();
+                final UniqueArtifact resolved = installService.getValue();
 
                 boolean invalidResult = resolved == null || !resolved.hasPath()
                         || resolved.getDependencies().stream().anyMatch(d -> !d.hasPath());
@@ -298,14 +298,14 @@ public class GetMavenArtifactDialogController extends AbstractFxmlWindowControll
         versionsService.restart();
     }
 
-    private List<MavenArtifact> getVersions() {
+    private List<UniqueArtifact> getVersions() {
         String groupId = groupIDTextfield.getText();
         String artifactid = artifactIDTextfield.getText();
         return mavenClient.getAvailableVersions(groupId, artifactid);
     }
 
-    private MavenArtifact resolveArtifacts() {
-        MavenArtifact selected = getArtifact();
+    private UniqueArtifact resolveArtifacts() {
+        UniqueArtifact selected = getArtifact();
         return mavenClient.resolveWithDependencies(selected);
     }
 
@@ -314,7 +314,7 @@ public class GetMavenArtifactDialogController extends AbstractFxmlWindowControll
     }
 
     private String getArtifactCoordinates() {
-        MavenArtifact selected = getArtifact();
+        UniqueArtifact selected = getArtifact();
         if (selected != null) {
             return selected.getCoordinates();
         } else {
@@ -322,7 +322,7 @@ public class GetMavenArtifactDialogController extends AbstractFxmlWindowControll
         }
     }
 
-    private MavenArtifact getArtifact() {
+    private UniqueArtifact getArtifact() {
         return versionsCombo.getSelectionModel().getSelectedItem();
     }
 

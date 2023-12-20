@@ -282,13 +282,13 @@ public class EditorUtils {
 
     public static AnimationTimer doEndOfFrame(final Runnable callback) {
         AnimationTimer timer = new NextFrameTimer(callback, 0);
-        timer.start();
+        timer.startApplication();
         return timer;
     }
 
     public static AnimationTimer doNextFrame(final Runnable callback) {
         AnimationTimer timer = new NextFrameTimer(callback);
-        timer.start();
+        timer.startApplication();
         return timer;
     }
 

@@ -33,63 +33,56 @@
  */
 package com.gluonhq.jfxapps.boot.loader.internal;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-import com.gluonh.jfxapps.boot.layer.Layer;
-import com.gluonh.jfxapps.boot.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
 import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.layer.Layer;
+import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.loader.ApplicationManager;
 import com.gluonhq.jfxapps.boot.loader.BootException;
 import com.gluonhq.jfxapps.boot.loader.ExtensionReport;
 import com.gluonhq.jfxapps.boot.loader.OpenCommandEvent;
 import com.gluonhq.jfxapps.boot.loader.ProgressListener;
-import com.gluonhq.jfxapps.boot.loader.content.ExtensionContentProvider;
-import com.gluonhq.jfxapps.boot.loader.content.ExtensionValidation;
-import com.gluonhq.jfxapps.boot.loader.extension.EditorExtension;
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
 import com.gluonhq.jfxapps.boot.loader.internal.layer.LayerBootstraper;
 import com.gluonhq.jfxapps.boot.loader.model.AbstractExtension;
 import com.gluonhq.jfxapps.boot.loader.model.Application;
-import com.gluonhq.jfxapps.boot.loader.model.Editor;
+import com.gluonhq.jfxapps.boot.loader.model.ApplicationExtension;
+import com.gluonhq.jfxapps.boot.loader.model.JfxApps;
+import com.gluonhq.jfxapps.boot.loader.model.JfxAppsExtension;
 import com.gluonhq.jfxapps.boot.loader.model.LoadState;
-import com.gluonhq.jfxapps.boot.loader.model.ModelStore;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifactId;
+import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryClient;
+import com.gluonhq.jfxapps.boot.registry.RegistryManager;
+import com.gluonhq.jfxapps.registry.model.Registry;
+
+import jakarta.annotation.PostConstruct;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class ApplicationManagerImpl.
  */
+@Component
 public class ApplicationManagerImpl implements ApplicationManager {
-
-    /** The Constant DEFAULT_APPLICATION_FILE. */
-    private final static String DEFAULT_APPLICATION_FILE = "./application.json";
 
     /** The Constant logger. */
     private final static Logger logger = LoggerFactory.getLogger(ApplicationManagerImpl.class);
 
-    /** The store. */
-    private final ModelStore store;
-
     /** The layer manager. */
-    //private final ApplicationUpdater updater;
     private final ModuleLayerManager layerManager;
+
+    /** The registry manager. */
+    private final RegistryManager registryManager;
 
     /** The contexts. */
     private final ContextBootstraper contexts;
@@ -97,24 +90,89 @@ public class ApplicationManagerImpl implements ApplicationManager {
     /** The layers. */
     private final LayerBootstraper layers;
 
+    private final LoaderMappers mappers;
+
     /** The application. */
-    private Application application = null;
+    private JfxApps appContainer = null;
 
     /** The state. */
     private Map<UUID, ExtensionReport> state = new HashMap<>();
 
+    private final RepositoryClient repositoryClient;
+
     /**
      * Instantiates a new application manager impl.
      *
-     * @param root the root
+     * @param layerManager
+     * @param contexts
+     * @param layers
      */
-    public ApplicationManagerImpl(Path root) {
+    protected ApplicationManagerImpl(RegistryManager registryManager, ModuleLayerManager layerManager,
+            ContextBootstraper contexts, LayerBootstraper layers, LoaderMappers mappers,
+            RepositoryClient repositoryClient) {
         super();
-        this.layerManager = ModuleLayerManager.get();
-        //this.updater = new ApplicationUpdaterImpl(root);
-        this.contexts = new ContextBootstraper(this.layerManager);
-        this.layers = new LayerBootstraper(root, this.layerManager);
-        this.store = new ModelStore();
+        this.layerManager = layerManager;
+        this.registryManager = registryManager;
+        this.contexts = contexts;
+        this.layers = layers;
+        this.mappers = mappers;
+        this.repositoryClient = repositoryClient;
+    }
+
+    @PostConstruct
+    public void init() {
+        appContainer = buildJfxAppsState();
+    }
+
+    private void recurseExtension(com.gluonhq.jfxapps.registry.model.Extension source,
+            com.gluonhq.jfxapps.boot.loader.model.Extension target) {
+        source.getExtensions().forEach(src -> {
+            var sub = new com.gluonhq.jfxapps.boot.loader.model.Extension(src.getUuid(),
+                    mappers.map(src.getDependency(), repositoryClient));
+            target.addExtension(sub);
+            recurseExtension(src, sub);
+        });
+    }
+
+    private JfxApps buildJfxAppsState() {
+        Registry bootRegistry = registryManager.bootRegistry();
+
+        if (bootRegistry.getApplications().size() != 1) {
+            throw new RuntimeException("Boot registry contains more or less than 1 application");
+        }
+
+        if (bootRegistry.getExtensions().size() > 0) {
+            logger.warn("Boot registry extensions are ignored by default and won't be loaded");
+        }
+
+        var bootApp = bootRegistry.getApplications().iterator().next();
+
+        if (!Extension.ROOT_ID.equals(bootApp.getUuid())) {
+            logger.error("Invalid boot application uuid, expected {} but was {}", Extension.ROOT_ID, bootApp.getUuid());
+            throw new RuntimeException("Invalid boot application uuid");
+        }
+
+        JfxApps target = new JfxApps(bootApp.getUuid(), mappers.map(bootApp.getDependency(), repositoryClient));
+
+        bootApp.getExtensions().forEach(e -> {
+            var appExt = new JfxAppsExtension(e.getUuid(), mappers.map(e.getDependency(), repositoryClient));
+            target.addExtension(appExt);
+            recurseExtension(e, appExt);
+        });
+
+        var registry = registryManager.installedRegistry();
+        registry.getApplications().forEach(app -> {
+            Application targetApp = new Application(app.getUuid(), mappers.map(app.getDependency(), repositoryClient));
+            target.addApplication(targetApp);
+
+            app.getExtensions().forEach(e -> {
+                var appExt = new ApplicationExtension(e.getUuid(), mappers.map(e.getDependency(), repositoryClient));
+                targetApp.addExtension(appExt);
+                recurseExtension(e, appExt);
+            });
+        });
+
+        return target;
     }
 
     /**
@@ -123,85 +181,56 @@ public class ApplicationManagerImpl implements ApplicationManager {
      * @return the application state
      */
     @Override
-    public Application getApplicationState() {
-        return application == null ? null : application.clone();
+    public JfxApps getState() {
+        return appContainer == null ? null : appContainer.clone();
     }
 
-    /**
-     * Sets the application.
-     *
-     * @param application the new application
-     */
-    //@Override
-    public void setApplication(Application application) {
-        this.application = application;
-    }
-
-    /**
-     * Load application state.
-     */
     @Override
-    public void loadApplicationState() {
-        try (InputStream input = new FileInputStream(DEFAULT_APPLICATION_FILE)){
-            loadApplicationStatte(input);
-        } catch (FileNotFoundException e) {
-            logger.error("Application file not found : {}", DEFAULT_APPLICATION_FILE, e);
-        } catch (IOException e) {
-            logger.error("Error while loading application file : {}", DEFAULT_APPLICATION_FILE, e);
-        }
-    }
-
-    /**
-     * Load application statte.
-     *
-     * @param jsonStream the json stream
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    @Override
-    public void loadApplicationStatte(InputStream jsonStream) throws IOException {
-        this.application = this.store.read(jsonStream);
-    }
-
-    /**
-     * Load application state.
-     *
-     * @param registries the registries
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    @Override
-    public void loadApplicationState(List<MavenArtifactId> registries) throws IOException {
-        // TODO Auto-generated method stub
-
-    }
-
-    /**
-     * Save application.
-     */
-    //@Override
-    public void saveApplication() {
-        try {
-            this.store.write(Path.of(DEFAULT_APPLICATION_FILE), getApplicationState());
-        } catch (IOException e) {
-            logger.error("Unable to save application to json file {}", DEFAULT_APPLICATION_FILE, e);
-        }
-    }
-
-    /**
-     * Checks for saved application state.
-     *
-     * @return true, if successful
-     */
-    @Override
-    public boolean hasSavedApplicationState() {
-        return Files.exists(Path.of(DEFAULT_APPLICATION_FILE));
-    }
-
-    /**
-     * Load.
-     */
-    @Override
-    public void load() {
+    public void start() throws BootException {
         load(null);
+        start(null);
+    }
+
+    /**
+     * Start editor.
+     *
+     * @param editorId the editor id
+     */
+    @Override
+    public void startApplication(UUID editorId) {
+        loadApplication(editorId, null);
+        startApplication(editorId, null);
+    }
+
+    /**
+     * Stop.
+     */
+    @Override
+    public void stop() {
+        appContainer.getApplications().forEach(e -> stopApplication(e.getId()));
+        stopExtensionTree(Set.of(appContainer));
+        unload();
+    }
+
+    /**
+     * Stop editor.
+     *
+     * @param editorId the editor id
+     */
+    @Override
+    public void stopApplication(UUID editorId) {
+
+        Optional<Application> optionalEditor = appContainer.getApplications().stream()
+                .filter(e -> e.getId().equals(editorId)).findAny();
+        Application editor = optionalEditor.orElseThrow();
+
+        if (!contexts.exists(editor)) {
+            logger.warn("Editor context does not exists for {}", editor.getId());
+            return;
+        }
+
+        stopExtensionTree(Set.of(editor));
+        unloadApplication(editorId);
     }
 
     /**
@@ -209,8 +238,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
      *
      * @param progressListener the progress listener
      */
-    @Override
-    public void load(ProgressListener progressListener) {
+    private void load(ProgressListener progressListener) {
 
         logger.info("Loading root layer");
 
@@ -218,17 +246,17 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
         Layer appLayer = null;
         try {
-            appLayer = layers.load(null, application, listener);
+            appLayer = layers.load(null, appContainer, listener);
         } catch (Throwable e) {
-            application.setLoadState(LoadState.Error);
-            reportOf(application.getId()).error("Loading error", e);
+            appContainer.setLoadState(LoadState.Error);
+            reportOf(appContainer.getId()).error("Loading error", e);
         }
         logger.info("Loading root layer done");
 
         if (appLayer != null) {
-            application.setLoadState(LoadState.Loaded);
-            loadExtensionTree(appLayer, application.getExtensions(), listener);
-            loadExtensionTree(appLayer, application.getEditors(), listener);
+            appContainer.setLoadState(LoadState.Loaded);
+            loadExtensionTree(appLayer, appContainer.getExtensions(), listener);
+            loadExtensionTree(appLayer, appContainer.getApplications(), listener);
         }
 
     }
@@ -236,27 +264,19 @@ public class ApplicationManagerImpl implements ApplicationManager {
     /**
      * Load editor.
      *
-     * @param editorId the editor id
-     */
-    public void loadEditor(UUID editorId) {
-        loadEditor(editorId, null);
-    }
-
-    /**
-     * Load editor.
-     *
-     * @param editorId the editor id
+     * @param editorId         the editor id
      * @param progressListener the progress listener
      */
-    public void loadEditor(UUID editorId, ProgressListener progressListener) {
+    public void loadApplication(UUID editorId, ProgressListener progressListener) {
 
         MultipleProgressListener listener = new MultipleProgressListener(progressListener);
 
-        Layer appLayer = layers.get(application.getId());
+        Layer appLayer = layers.get(appContainer.getId());
 
         if (appLayer != null) {
-            Optional<Editor> optionalEditor = application.getEditors().stream().filter(e -> e.getId().equals(editorId)).findAny();
-            Editor editor = optionalEditor.orElseThrow();
+            Optional<Application> optionalEditor = appContainer.getApplications().stream()
+                    .filter(e -> e.getId().equals(editorId)).findAny();
+            Application editor = optionalEditor.orElseThrow();
             loadExtensionTree(appLayer, Set.of(editor), listener);
         }
 
@@ -265,11 +285,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
     /**
      * Load extension tree.
      *
-     * @param parentLayer the parent layer
-     * @param extensionSet the extension set
+     * @param parentLayer      the parent layer
+     * @param extensionSet     the extension set
      * @param progressListener the progress listener
      */
-    private void loadExtensionTree(Layer parentLayer, Set<? extends AbstractExtension<?>> extensionSet, MultipleProgressListener progressListener) {
+    private void loadExtensionTree(Layer parentLayer, Set<? extends AbstractExtension<?>> extensionSet,
+            MultipleProgressListener progressListener) {
         extensionSet.forEach(ext -> {
             if (ext.getLoadState() != LoadState.Deleted || ext.getLoadState() != LoadState.Disabled) {
                 logger.info("Loading extension layer {}", ext.getId());
@@ -291,34 +312,19 @@ public class ApplicationManagerImpl implements ApplicationManager {
         });
     }
 
-
-    /**
-     * Start.
-     *
-     * @throws BootException the boot exception
-     */
-    @Override
-    public void start() throws BootException {
-        if (application == null) {
-            loadApplicationState();
-        }
-        start(null);
-    }
-
     /**
      * Start.
      *
      * @param progressListener the progress listener
      * @throws BootException the boot exception
      */
-    @Override
-    public void start(ProgressListener progressListener) throws BootException {
+    private void start(ProgressListener progressListener) throws BootException {
 
         MultipleProgressListener listener = new MultipleProgressListener(progressListener);
 
-         // start app root
-        if (application.getLoadState() == LoadState.Loaded && !contexts.exists(application)) {
-            startExtensionTree(null, Set.of(application), listener);
+        // start app root
+        if (appContainer.getLoadState() == LoadState.Loaded && !contexts.exists(appContainer)) {
+            startExtensionTree(null, Set.of(appContainer), listener);
         } else {
             logger.error("Application layer not loaded");
         }
@@ -332,24 +338,14 @@ public class ApplicationManagerImpl implements ApplicationManager {
     /**
      * Start editor.
      *
-     * @param editorId the editor id
-     */
-    @Override
-    public void startEditor(UUID editorId) {
-        startEditor(editorId, null);
-    }
-
-    /**
-     * Start editor.
-     *
-     * @param editorId the editor id
+     * @param editorId         the editor id
      * @param progressListener the progress listener
      */
-    @Override
-    public void startEditor(UUID editorId, ProgressListener progressListener) {
+    public void startApplication(UUID editorId, ProgressListener progressListener) {
 
-        Optional<Editor> optionalEditor = application.getEditors().stream().filter(e -> e.getId().equals(editorId)).findAny();
-        Editor editor = optionalEditor.orElseThrow();
+        Optional<Application> optionalEditor = appContainer.getApplications().stream()
+                .filter(e -> e.getId().equals(editorId)).findAny();
+        Application editor = optionalEditor.orElseThrow();
 
         MultipleProgressListener listener = new MultipleProgressListener(progressListener);
 
@@ -358,7 +354,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
             return;
         }
 
-        SbContext parentContext = contexts.get(application);
+        SbContext parentContext = contexts.get(appContainer);
         startExtensionTree(parentContext, Set.of(editor), listener);
 
     }
@@ -366,11 +362,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
     /**
      * Start extension tree.
      *
-     * @param parentContext the parent context
-     * @param extensionSet the extension set
+     * @param parentContext    the parent context
+     * @param extensionSet     the extension set
      * @param progressListener the progress listener
      */
-    private void startExtensionTree(SbContext parentContext, Set<? extends AbstractExtension<?>> extensionSet, MultipleProgressListener progressListener) {
+    private void startExtensionTree(SbContext parentContext, Set<? extends AbstractExtension<?>> extensionSet,
+            MultipleProgressListener progressListener) {
         extensionSet.forEach(ext -> {
             try {
                 List<Object> singletonInstances = List.of(this);
@@ -383,35 +380,6 @@ public class ApplicationManagerImpl implements ApplicationManager {
             }
         });
 
-    }
-
-    /**
-     * Stop.
-     */
-    @Override
-    public void stop() {
-        application.getEditors().forEach(e -> stopEditor(e.getId()));
-        stopExtensionTree(Set.of(application));
-    }
-
-
-    /**
-     * Stop editor.
-     *
-     * @param editorId the editor id
-     */
-    @Override
-    public void stopEditor(UUID editorId) {
-
-        Optional<Editor> optionalEditor = application.getEditors().stream().filter(e -> e.getId().equals(editorId)).findAny();
-        Editor editor = optionalEditor.orElseThrow();
-
-        if (!contexts.exists(editor)) {
-            logger.warn("Editor context does not exists for {}", editor.getId());
-            return;
-        }
-
-        stopExtensionTree(Set.of(editor));
     }
 
     /**
@@ -430,23 +398,21 @@ public class ApplicationManagerImpl implements ApplicationManager {
     /**
      * Unload.
      */
-    @Override
     public void unload() {
-        application.getEditors().forEach(e -> unloadEditor(e.getId()));
-        unloadExtensionTree(Set.of(application));
+        appContainer.getApplications().forEach(e -> unloadApplication(e.getId()));
+        unloadExtensionTree(Set.of(appContainer));
     }
-
 
     /**
      * Unload editor.
      *
      * @param editorId the editor id
      */
-    @Override
-    public void unloadEditor(UUID editorId) {
+    public void unloadApplication(UUID editorId) {
 
-        Optional<Editor> optionalEditor = application.getEditors().stream().filter(e -> e.getId().equals(editorId)).findAny();
-        Editor editor = optionalEditor.orElseThrow();
+        Optional<Application> optionalEditor = appContainer.getApplications().stream()
+                .filter(e -> e.getId().equals(editorId)).findAny();
+        Application editor = optionalEditor.orElseThrow();
 
         if (!contexts.exists(editor)) {
             logger.warn("Editor context does not exists for {}", editor.getId());
@@ -480,16 +446,15 @@ public class ApplicationManagerImpl implements ApplicationManager {
      *
      * @param extensionId the extension id
      */
-    @Override
-    public void remove(UUID extensionId) {
+    private void remove(UUID extensionId) {
 
-        Map<UUID, AbstractExtension<?>> flattened = flatten(application);
+        Map<UUID, AbstractExtension<?>> flattened = flatten(appContainer);
 
         AbstractExtension<?> extension = flattened.get(extensionId);
 
         if (extension != null) {
             extension.setLoadState(LoadState.Deleted);
-            //stopExtensionTree(Set.of(extension));
+            // stopExtensionTree(Set.of(extension));
             unloadExtensionTree(Set.of(extension));
         } else {
             logger.warn("Extension not found for {}", extensionId);
@@ -501,8 +466,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
      *
      * @param extensionId the extension id
      */
-    @Override
-    public void disable(UUID extensionId) {
+    private void disable(UUID extensionId) {
 //        Application application = updater.getLoaded();
 //        Map<UUID, AbstractExtension<?>> flattened = flatten(application);
 //
@@ -519,39 +483,27 @@ public class ApplicationManagerImpl implements ApplicationManager {
     }
 
     /**
-     * Adds the.
-     *
-     * @param provider the provider
-     * @param validation the validation
-     */
-    @Override
-    public void add(ExtensionContentProvider provider, ExtensionValidation validation) {
-        //layerManager.
-
-    }
-
-
-    /**
      * Flatten.
      *
      * @param application the application
      * @return the map
      */
-    private static Map<UUID, AbstractExtension<?>> flatten(Application application) {
+    private static Map<UUID, AbstractExtension<?>> flatten(JfxApps application) {
         Map<UUID, AbstractExtension<?>> flattened = new HashMap<>();
         flattened.put(application.getId(), application);
         flatten(flattened, application.getExtensions());
-        flatten(flattened, application.getEditors());
+        flatten(flattened, application.getApplications());
         return flattened;
     }
 
     /**
      * Flatten.
      *
-     * @param flattened the flattened
+     * @param flattened    the flattened
      * @param extensionSet the extension set
      */
-    private static void flatten(Map<UUID, AbstractExtension<?>> flattened, Set<? extends AbstractExtension<?>> extensionSet) {
+    private static void flatten(Map<UUID, AbstractExtension<?>> flattened,
+            Set<? extends AbstractExtension<?>> extensionSet) {
         extensionSet.forEach(ext -> {
             flattened.put(ext.getId(), ext);
             flatten(flattened, ext.getExtensions());
@@ -569,16 +521,15 @@ public class ApplicationManagerImpl implements ApplicationManager {
         return reportOf(id);
     }
 
-
     /**
      * Log state.
      */
     public void logState() {
-        Application application = getApplicationState();
+        JfxApps application = getState();
 
         printState(application);
 
-        application.getEditors().forEach(this::printState);
+        application.getApplications().forEach(this::printState);
     }
 
     /**
@@ -644,28 +595,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
     }
 
     /**
-     * Gets the editors.
-     *
-     * @return the editors
-     */
-    @Override
-    public Set<EditorExtension> getEditors() {
-        Layer appLayer = layers.get(Extension.ROOT_ID);
-        return appLayer.getChildren().stream()
-                .flatMap(l -> l.loadService(Extension.class).stream())
-                .filter(EditorExtension.class::isInstance)
-                .map(EditorExtension.class::cast)
-                .collect(Collectors.toSet());
-    }
-
-    /**
      * Gets the context.
      *
      * @param extensionId the extension id
      * @return the context
      */
-    @Override
-    public Optional<SbContext> getContext(UUID extensionId) {
+    private Optional<SbContext> getContext(UUID extensionId) {
         return Optional.ofNullable(contexts.get(extensionId));
     }
 
@@ -676,17 +611,20 @@ public class ApplicationManagerImpl implements ApplicationManager {
      */
     @Override
     public void send(OpenCommandEvent parameters) {
-        if (parameters.getTarget() == null) {
-            send(Extension.ROOT_ID, parameters);
-        } else {
-            send(parameters.getTarget(), parameters);
+
+        UUID target = Extension.ROOT_ID;
+
+        if (parameters.getTarget() != null) {
+            target = parameters.getTarget();
         }
+
+        send(target, parameters);
     }
 
     /**
      * Send.
      *
-     * @param editorId the editor id
+     * @param editorId   the editor id
      * @param parameters the parameters
      */
     private void send(UUID editorId, OpenCommandEvent parameters) {

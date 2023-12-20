@@ -33,11 +33,10 @@
  */
 package com.gluonhq.jfxapps.boot.loader.internal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -48,18 +47,23 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.gluonh.jfxapps.boot.layer.Layer;
-import com.gluonh.jfxapps.boot.layer.LayerNotFoundException;
-import com.gluonh.jfxapps.boot.layer.ModuleLayerManager;
+import com.gluonhq.jfxapps.boot.context.ContextManager;
 import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.EditorSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.layer.Layer;
+import com.gluonhq.jfxapps.boot.layer.LayerNotFoundException;
+import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.loader.extension.SealedExtension;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
+import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper.ServiceLoader;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -76,72 +80,55 @@ class ContextBootstraperTest {
     @Mock
     ModuleLayerManager layerManager;
 
+    @Mock
+    ContextManager contextManager;
+
+    /** The parent layer id. */
+    UUID parentId = UUID.randomUUID();
+
+    /** The parent model extension. */
+    @Mock
+    com.gluonhq.jfxapps.boot.loader.model.Extension parentExtensionModel;
+
     /** The parent layer. */
     @Mock
     Layer parentLayer;
 
-    /** The parent model extension. */
-    @Mock
-    com.gluonhq.jfxapps.boot.loader.model.Extension parentModelExtension;
-
     /** The parent extension. */
     @Mock
-    OpenExtension parentExtension;
+    OpenExtension parentExtensionLoaded;
 
-    /** The ext layer. */
-    @Mock
-    Layer extLayer;
+    /** The ext layer id. */
+    UUID childId = UUID.randomUUID();
 
     /** The child model extension. */
     @Mock
-    com.gluonhq.jfxapps.boot.loader.model.Extension childModelExtension;
+    com.gluonhq.jfxapps.boot.loader.model.Extension childExtensionModel;
+
+    /** The ext layer. */
+    @Mock
+    Layer childExtensionLayer;
 
     /** The child extension. */
     @Mock
-    OpenExtension childExtension;
+    OpenExtension childExtensionLoaded;
 
-    /** The parent layer id. */
-    UUID parentLayerId = UUID.randomUUID();
+    @Mock
+    SealedExtension sealedChildExtensionLoaded;
 
-    /** The ext layer id. */
-    UUID extLayerId = UUID.randomUUID();
+    @Mock
+    SbContext ctx;
 
-    /**
-     * Mock parent layer and components.
-     */
-    private void mockParentLayerAndComponents() {
-        Mockito.when(layerManager.get(parentLayerId)).thenReturn(parentLayer);
-        Mockito.when(parentLayer.loadService(Extension.class)).thenReturn(Set.of(parentExtension));
-        Mockito.when(parentLayer.getId()).thenReturn(parentLayerId);
-        Mockito.when(parentExtension.localContextClasses()).thenReturn(List.of(LocalParentComponent.class));
-        Mockito.when(parentExtension.getId()).thenReturn(parentLayerId);
-        Mockito.when(parentExtension.getParentId()).thenReturn(Extension.ROOT_ID);
-        Mockito.when(parentModelExtension.getId()).thenReturn(parentLayerId);
-    }
-
-    /**
-     * Mock child layer and components.
-     */
-    private void mockChildLayerAndComponents() {
-        Mockito.when(layerManager.get(extLayerId)).thenReturn(extLayer);
-        Mockito.when(extLayer.loadService(Extension.class)).thenReturn(Set.of(childExtension));
-        Mockito.lenient().when(extLayer.getId()).thenReturn(extLayerId);
-        Mockito.lenient().when(childExtension.localContextClasses()).thenReturn(List.of(LocalChildComponent.class));
-        Mockito.when(childExtension.exportedContextClasses()).thenReturn(List.of(ExportedChildComponent.class));
-        Mockito.when(childExtension.getId()).thenReturn(extLayerId);
-        Mockito.when(childExtension.getParentId()).thenReturn(parentLayerId);
-        Mockito.when(childModelExtension.getId()).thenReturn(extLayerId);
-        Mockito.when(parentModelExtension.getExtensions()).thenReturn(Set.of(childModelExtension));
-    }
-
+    @Mock
+    ServiceLoader loader;
     /**
      * Must throw if module layer parent layer does not exists.
      */
     @Test
     void must_throw_if_module_layer_parentLayer_does_not_exists() {
         Assertions.assertThrows(LayerNotFoundException.class, () -> {
-            ContextBootstraper ctxBoot = new ContextBootstraper(layerManager);
-            ctxBoot.create(null, parentModelExtension, null, null);
+            ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
+            ctxBoot.create(null, parentExtensionModel, null, null, loader);
         });
     }
 
@@ -150,11 +137,11 @@ class ContextBootstraperTest {
      */
     @Test
     void must_throw_if_module_layer_of_extensions_does_not_exists() {
-        Mockito.when(parentModelExtension.getId()).thenReturn(parentLayerId);
+        when(parentExtensionModel.getId()).thenReturn(parentId);
 
         Assertions.assertThrows(LayerNotFoundException.class, () -> {
-            ContextBootstraper ctxBoot = new ContextBootstraper(layerManager);
-            ctxBoot.create(null, parentModelExtension, null, null);
+            ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
+            ctxBoot.create(null, parentExtensionModel, null, null, loader);
         });
     }
 
@@ -164,16 +151,36 @@ class ContextBootstraperTest {
      * @throws Exception the exception
      */
     @Test
-    void must_create_a_parent_context_with_local_component() throws Exception {
+    void must_create_a_context_with_declared_local_component() throws Exception {
 
-        mockParentLayerAndComponents();
-        mockChildLayerAndComponents();
+        // the parent layer exists and is accessible
+        when(layerManager.get(parentId)).thenReturn(parentLayer);
 
-        ContextBootstraper ctxBoot = new ContextBootstraper(layerManager);
-        SbContext ctx = ctxBoot.create(null, parentModelExtension, null, null);
+        // the parent layer contains one extension
+        when(loader.loadService(parentLayer, Extension.class)).thenReturn(Set.of(parentExtensionLoaded));
 
-        assertNotNull(ctx);
-        assertNotNull(ctx.getBean(LocalParentComponent.class));
+        // the extension loaded expose local classes to load
+        when(parentExtensionLoaded.localContextClasses()).thenReturn(List.of(LocalParentComponent.class));
+
+        // the extension descriptor, the layer and the extension loaded share the same id
+        when(parentExtensionModel.getId()).thenReturn(parentId);
+        when(parentLayer.getId()).thenReturn(parentId);
+        when(parentExtensionLoaded.getId()).thenReturn(parentId);
+
+        // the extension loaded is a top level one
+        when(parentExtensionLoaded.getParentId()).thenReturn(Extension.ROOT_ID);
+
+        // test
+
+        ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
+
+        ctxBoot.create(null, parentExtensionModel, null, null, loader);
+
+        ArgumentCaptor<Class<?>[]> contextClassesCaptor = ArgumentCaptor.forClass(Class[].class);
+
+        verify(contextManager).create(any(), any(), contextClassesCaptor.capture(), any(), any());
+
+        assertThat(List.of(contextClassesCaptor.getValue())).containsExactlyInAnyOrder(LocalParentComponent.class);
     }
 
     /**
@@ -184,17 +191,114 @@ class ContextBootstraperTest {
     @Test
     void must_create_a_child_context_with_local_component() throws Exception {
 
-        mockParentLayerAndComponents();
-        mockChildLayerAndComponents();
+     // the child layer exists and is accessible
+        when(layerManager.get(childId)).thenReturn(childExtensionLayer);
 
-        ContextBootstraper ctxBoot = new ContextBootstraper(layerManager);
-        SbContext ctx = ctxBoot.create(null, parentModelExtension, null, null);
-        SbContext ctxChild = ctxBoot.create(ctx, childModelExtension, null, null);
+        // the child layer contains one extension
+        when(loader.loadService(childExtensionLayer, Extension.class)).thenReturn(Set.of(childExtensionLoaded));
 
-        assertNotNull(ctx);
-        assertNotNull(ctxChild);
-        assertNotNull(ctxChild.getBean(LocalChildComponent.class));
-        assertEquals(ctx, ctxChild.getParent());
+        // the extension loaded expose local classes to load
+        when(childExtensionLoaded.localContextClasses()).thenReturn(List.of(LocalChildComponent.class));
+
+        // the extension loaded expose exportable classes to load
+        when(childExtensionLoaded.exportedContextClasses()).thenReturn(List.of(ExportedChildComponent.class));
+
+        // the extension descriptor, the layer and the extension loaded share the same id
+        when(childExtensionLayer.getId()).thenReturn(childId);
+        when(childExtensionLoaded.getId()).thenReturn(childId);
+        when(childExtensionModel.getId()).thenReturn(childId);
+
+        // the extension loaded is a child of parent
+        when(childExtensionLoaded.getParentId()).thenReturn(parentId);
+
+        when(ctx.getId()).thenReturn(parentId);
+
+        //test
+
+        ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
+
+        ctxBoot.create(ctx, childExtensionModel, null, null, loader);
+
+        ArgumentCaptor<Class<?>[]> contextClassesCaptor = ArgumentCaptor.forClass(Class[].class);
+
+        verify(contextManager).create(any(), any(), contextClassesCaptor.capture(), any(), any());
+
+        assertThat(List.of(contextClassesCaptor.getValue())).containsExactlyInAnyOrder(LocalChildComponent.class);
+    }
+
+    @Test
+    void must_create_a_child_context_without_parent_window_and_editorsingleton_components_for_sealed_extensions() throws Exception {
+
+     // the child layer exists and is accessible
+        when(layerManager.get(childId)).thenReturn(childExtensionLayer);
+
+        // the child layer contains one extension
+        when(loader.loadService(childExtensionLayer, Extension.class)).thenReturn(Set.of(childExtensionLoaded));
+
+        // the extension loaded expose local classes to load
+        when(childExtensionLoaded.localContextClasses()).thenReturn(List.of(LocalChildComponent.class));
+
+        // the extension loaded expose exportable classes to load
+        when(childExtensionLoaded.exportedContextClasses()).thenReturn(List.of(ExportedChildComponent.class));
+
+        // the extension descriptor, the layer and the extension loaded share the same id
+        when(childExtensionLayer.getId()).thenReturn(childId);
+        when(childExtensionLoaded.getId()).thenReturn(childId);
+        when(childExtensionModel.getId()).thenReturn(childId);
+
+        // the extension loaded is a child of parent
+        when(childExtensionLoaded.getParentId()).thenReturn(parentId);
+
+        when(ctx.getId()).thenReturn(parentId);
+
+        //test
+
+        ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
+
+        ctxBoot.create(ctx, childExtensionModel, null, null, loader);
+
+        ArgumentCaptor<Class<?>[]> contextClassesCaptor = ArgumentCaptor.forClass(Class[].class);
+
+        verify(contextManager).create(any(), any(), contextClassesCaptor.capture(), any(), any());
+
+        assertThat(List.of(contextClassesCaptor.getValue())).containsExactlyInAnyOrder(LocalChildComponent.class);
+    }
+
+
+    @Test
+    void must_create_a_child_context_with_parent_window_and_editorsingleton_components_for_sealed_extensions() throws Exception {
+
+     // the child layer exists and is accessible
+        when(layerManager.get(childId)).thenReturn(childExtensionLayer);
+
+        // the child layer contains one extension
+        when(loader.loadService(childExtensionLayer, Extension.class)).thenReturn(Set.of(sealedChildExtensionLoaded));
+
+        // the extension loaded expose local classes to load
+        when(sealedChildExtensionLoaded.localContextClasses()).thenReturn(List.of(LocalChildComponent.class));
+
+        // the extension descriptor, the layer and the extension loaded share the same id
+        when(childExtensionLayer.getId()).thenReturn(childId);
+        when(sealedChildExtensionLoaded.getId()).thenReturn(childId);
+        when(childExtensionModel.getId()).thenReturn(childId);
+
+        // the extension loaded is a child of parent
+        when(sealedChildExtensionLoaded.getParentId()).thenReturn(parentId);
+
+        when(ctx.getId()).thenReturn(parentId);
+        when(ctx.getRegisteredClasses()).thenReturn(new Class<?>[] {LocalParentComponent.class, WindowParentComponent.class, EditorSingletonParentComponent.class});
+
+        //test
+
+        ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
+
+        ctxBoot.create(ctx, childExtensionModel, null, null, loader);
+
+        ArgumentCaptor<Class<?>[]> contextClassesCaptor = ArgumentCaptor.forClass(Class[].class);
+
+        verify(contextManager).create(any(), any(), contextClassesCaptor.capture(), any(), any());
+
+        assertThat(List.of(contextClassesCaptor.getValue())).containsExactlyInAnyOrder(LocalChildComponent.class, WindowParentComponent.class, EditorSingletonParentComponent.class);
     }
 
     /**
@@ -205,20 +309,58 @@ class ContextBootstraperTest {
     @Test
     void only_exported_classes_from_child_must_be_loaded_in_context() throws Exception {
 
-        mockParentLayerAndComponents();
-        mockChildLayerAndComponents();
+        // the parent layer exists and is accessible
+        when(layerManager.get(parentId)).thenReturn(parentLayer);
 
-        ContextBootstraper ctxBoot = new ContextBootstraper(layerManager);
-        SbContext ctx = ctxBoot.create(null, parentModelExtension, null, null);
+        // the parent layer contains one extension
+        when(loader.loadService(parentLayer, Extension.class)).thenReturn(Set.of(parentExtensionLoaded));
 
+        // the extension loaded expose local classes to load
+        when(parentExtensionLoaded.localContextClasses()).thenReturn(List.of(LocalParentComponent.class));
 
-        assertNotNull(ctx);
+        // the extension descriptor, the layer and the extension loaded share the same id
+        when(parentExtensionModel.getId()).thenReturn(parentId);
+        when(parentLayer.getId()).thenReturn(parentId);
+        when(parentExtensionLoaded.getId()).thenReturn(parentId);
 
-        assertNotNull(ctx.getBean(LocalParentComponent.class));
-        assertNotNull(ctx.getBean(ExportedChildComponent.class));
-        // LocalChildComponent is local to child so must not be accessible in parent
-        //Assertions.assertThrows(NoSuchBeanDefinitionException.class, () -> ctx.getBean(LocalChildComponent.class));
-        Assertions.assertThrows(Exception.class, () -> ctx.getBean(LocalChildComponent.class));
+        // the extension loaded is a top level one
+        when(parentExtensionLoaded.getParentId()).thenReturn(Extension.ROOT_ID);
+
+     // the child layer exists and is accessible
+        when(layerManager.get(childId)).thenReturn(childExtensionLayer);
+
+        // the child layer contains one extension
+        when(loader.loadService(childExtensionLayer, Extension.class)).thenReturn(Set.of(childExtensionLoaded));
+
+        // the extension loaded expose local classes to load
+        when(childExtensionLoaded.localContextClasses()).thenReturn(List.of(LocalChildComponent.class));
+
+        // the extension loaded expose exportable classes to load
+        when(childExtensionLoaded.exportedContextClasses()).thenReturn(List.of(ExportedChildComponent.class));
+
+        // the extension descriptor, the layer and the extension loaded share the same id
+        when(childExtensionLoaded.getId()).thenReturn(childId);
+        when(childExtensionModel.getId()).thenReturn(childId);
+
+        // the extension loaded is a child of parent
+        when(childExtensionLoaded.getParentId()).thenReturn(parentId);
+
+        // the parent extension model has a child
+        when(parentExtensionModel.getExtensions()).thenReturn(Set.of(childExtensionModel));
+
+        //test
+
+        ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
+
+        ctxBoot.create(null, parentExtensionModel, null, null, loader);
+
+        ArgumentCaptor<Class<?>[]> contextClassesCaptor = ArgumentCaptor.forClass(Class[].class);
+
+        verify(contextManager).create(any(), any(), contextClassesCaptor.capture(), any(), any());
+
+        assertThat(List.of(contextClassesCaptor.getValue())).contains(LocalParentComponent.class, ExportedChildComponent.class);
+
+        assertThat(List.of(contextClassesCaptor.getValue())).doesNotContain(LocalChildComponent.class);
     }
 
     /**
@@ -227,20 +369,31 @@ class ContextBootstraperTest {
      * @throws Exception the exception
      */
     @Test
-    void already_created_contexts_must_be_accessible() throws Exception {
+    void exists_call_must_check_context_exist() throws Exception {
 
-        mockParentLayerAndComponents();
-        mockChildLayerAndComponents();
+        ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
 
-        ContextBootstraper ctxBoot = new ContextBootstraper(layerManager);
-        SbContext ctx = ctxBoot.create(null, parentModelExtension, null, null);
-        SbContext ctxChild = ctxBoot.create(ctx, childModelExtension, null, null);
+        ctxBoot.exists(parentExtensionModel);
 
-        assertTrue(ctxBoot.exists(parentModelExtension));
-        assertTrue(ctxBoot.exists(childModelExtension));
-        assertEquals(ctx, ctxBoot.get(parentModelExtension));
-        assertEquals(ctxChild, ctxBoot.get(childModelExtension));
+        verify(contextManager).exists(parentExtensionModel.getId());
     }
+
+    /**
+     * Already created contexts must be accessible.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    void get_call_must_get_context() throws Exception {
+
+        ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
+
+        ctxBoot.get(parentExtensionModel);
+
+        verify(contextManager).get(parentExtensionModel.getId());
+
+    }
+
 
     /**
      * Already created contexts must be cleared and closed.
@@ -248,26 +401,14 @@ class ContextBootstraperTest {
      * @throws Exception the exception
      */
     @Test
-    void already_created_contexts_must_be_cleared_and_closed() throws Exception {
+    void clear_call_must_clear_context() throws Exception {
 
-        mockParentLayerAndComponents();
-        mockChildLayerAndComponents();
-
-        ContextBootstraper ctxBoot = new ContextBootstraper(layerManager);
-        SbContext ctx = ctxBoot.create(null, parentModelExtension, null, null);
-        SbContext ctxChild = ctxBoot.create(ctx, childModelExtension, null, null);
+        ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
 
         ctxBoot.clear();
 
-        assertFalse(ctxBoot.exists(parentModelExtension));
-        assertFalse(ctxBoot.exists(childModelExtension));
-        assertNull(ctxBoot.get(parentModelExtension));
-        assertNull(ctxBoot.get(childModelExtension));
+        verify(contextManager).clear();
 
-        assertFalse(ctx.isActive());
-        assertFalse(ctx.isRunning());
-        assertFalse(ctxChild.isActive());
-        assertFalse(ctxChild.isRunning());
     }
 
     /**
@@ -276,44 +417,48 @@ class ContextBootstraperTest {
      * @throws Exception the exception
      */
     @Test
-    void already_created_contexts_must_be_closed() throws Exception {
+    void close_call_must_close_context() throws Exception {
 
-        mockParentLayerAndComponents();
-        mockChildLayerAndComponents();
+        ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
 
-        ContextBootstraper ctxBoot = new ContextBootstraper(layerManager);
-        SbContext ctx = ctxBoot.create(null, parentModelExtension, null, null);
-        SbContext ctxChild = ctxBoot.create(ctx, childModelExtension, null, null);
+        ctxBoot.close(parentExtensionModel);
 
-        ctxBoot.close(parentModelExtension);
-        ctxBoot.close(childModelExtension);
+        verify(contextManager).close(parentExtensionModel.getId());
 
-        assertFalse(ctxBoot.exists(parentModelExtension));
-        assertFalse(ctxBoot.exists(childModelExtension));
-        assertNull(ctxBoot.get(parentModelExtension));
-        assertNull(ctxBoot.get(childModelExtension));
-
-        assertFalse(ctx.isActive());
-        assertFalse(ctx.isRunning());
-        assertFalse(ctxChild.isActive());
-        assertFalse(ctxChild.isRunning());
     }
 
     /**
      * The Class LocalParentComponent.
      */
     @Singleton
-    static class LocalParentComponent {}
+    static class LocalParentComponent {
+    }
+
+    /**
+     * The Class LocalParentComponent.
+     */
+    @Window
+    static class WindowParentComponent {
+    }
+
+    /**
+     * The Class LocalParentComponent.
+     */
+    @EditorSingleton
+    static class EditorSingletonParentComponent {
+    }
 
     /**
      * The Class LocalChildComponent.
      */
     @Singleton
-    static class LocalChildComponent {}
+    static class LocalChildComponent {
+    }
 
     /**
      * The Class ExportedChildComponent.
      */
     @Singleton
-    static class ExportedChildComponent {}
+    static class ExportedChildComponent {
+    }
 }

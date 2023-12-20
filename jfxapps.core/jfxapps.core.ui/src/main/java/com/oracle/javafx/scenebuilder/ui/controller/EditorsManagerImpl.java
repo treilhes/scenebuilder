@@ -45,7 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.gluonhq.jfxapps.boot.loader.ApplicationManager;
+import com.gluonhq.jfxapps.boot.layer.ApplicationManager;
 import com.gluonhq.jfxapps.boot.loader.extension.EditorExtension;
 import com.oracle.javafx.scenebuilder.api.editors.EditorDescriptor;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
@@ -85,7 +85,7 @@ public class EditorsManagerImpl implements EditorsManager {
 
         UUID extensionId = editorDescriptor.getExtension().getId();
 
-        applicationManager.startEditor(extensionId);
+        applicationManager.startApplication(extensionId);
 
         Optional<EditorInstancesManager> editor = applicationManager.getContext(extensionId)
                 .map(c -> c.getBean(EditorInstancesManager.class));
@@ -115,7 +115,7 @@ public class EditorsManagerImpl implements EditorsManager {
 
         if (canStop) {
             loadedEditors.remove(editorExtension);
-            applicationManager.stopEditor(editorExtension.getId());
+            applicationManager.stopApplication(editorExtension.getId());
             notifyEditorClosed(editor);
         }
     }

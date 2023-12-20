@@ -1,0 +1,1 @@
+package com.gluonhq.jfxapps.boot.maven.client.repository;

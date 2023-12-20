@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.boot.platform.OsPlatform;
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
@@ -133,10 +133,10 @@ public interface FileSystem {
      */
     default void open(String path) throws IOException {
         List<String> args = new ArrayList<>();
-        if (OsPlatform.IS_MAC) {
+        if (JfxAppsPlatform.IS_MAC) {
             args.add("open"); //NOCHECK
             args.add(path);
-        } else if (OsPlatform.IS_WINDOWS) {
+        } else if (JfxAppsPlatform.IS_WINDOWS) {
             args.add("cmd"); //NOCHECK
             args.add("/c"); //NOCHECK
             args.add("start"); //NOCHECK
@@ -146,7 +146,7 @@ public interface FileSystem {
             }
 
             args.add(path);
-        } else if (OsPlatform.IS_LINUX) {
+        } else if (JfxAppsPlatform.IS_LINUX) {
             // xdg-open does fine on Ubuntu, which is a Debian.
             // I've no idea how it does with other Linux flavors.
             args.add("xdg-open"); //NOCHECK
@@ -169,14 +169,14 @@ public interface FileSystem {
     default void revealInFileBrowser(File filePath) throws IOException {
         List<String> args = new ArrayList<>();
         String path = filePath.toURI().toURL().toExternalForm();
-        if (OsPlatform.IS_MAC) {
+        if (JfxAppsPlatform.IS_MAC) {
             args.add("open"); //NOCHECK
             args.add("-R"); //NOCHECK
             args.add(path);
-        } else if (OsPlatform.IS_WINDOWS) {
+        } else if (JfxAppsPlatform.IS_WINDOWS) {
             args.add("explorer"); //NOCHECK
             args.add("/select," + path); //NOCHECK
-        } else if (OsPlatform.IS_LINUX) {
+        } else if (JfxAppsPlatform.IS_LINUX) {
             // nautilus does fine on Ubuntu, which is a Debian.
             // I've no idea how it does with other Linux flavors.
             args.add("nautilus"); //NOCHECK

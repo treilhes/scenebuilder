@@ -36,12 +36,12 @@ package com.oracle.javafx.scenebuilder.library.preferences.global;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.oracle.javafx.scenebuilder.api.preferences.ListPreferences;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 
 @Component
-public class MavenArtifactsPreferences extends ListPreferences<MavenArtifactPreferences, MavenArtifact> {
+public class MavenArtifactsPreferences extends ListPreferences<MavenArtifactPreferences, UniqueArtifact> {
 
 	// NODE
 	protected static final String NODE_NAME = "ARTIFACTS"; //NOCHECK
@@ -162,7 +162,7 @@ public class MavenArtifactsPreferences extends ListPreferences<MavenArtifactPref
 //    }
 
 
-    public MavenArtifactPreferences getRecordArtifact(MavenArtifact mavenArtifact) {
+    public MavenArtifactPreferences getRecordArtifact(UniqueArtifact mavenArtifact) {
     	return getRecord(mavenArtifact);
     }
 

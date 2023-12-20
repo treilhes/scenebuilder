@@ -37,21 +37,26 @@ import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 open module jfxapps.boot.loader {
 
     exports com.gluonhq.jfxapps.boot.loader;
+    exports com.gluonhq.jfxapps.boot.loader.config;
     exports com.gluonhq.jfxapps.boot.loader.content;
     exports com.gluonhq.jfxapps.boot.loader.extension;
     exports com.gluonhq.jfxapps.boot.loader.model;
 
-    exports com.gluonhq.jfxapps.boot.loader.dev to jfxapps.boot.main;
-
     requires transitive jfxapps.boot.context;
     requires transitive jfxapps.boot.layer;
     requires jfxapps.boot.maven;
-    
+    requires jfxapps.boot.platform;
+    requires jfxapps.boot.registry;
+
     requires org.slf4j;
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.annotation;
-    
+
     requires spring.context;
+    requires spring.boot;
+    requires jakarta.annotation;
+    requires org.mapstruct;
+    requires java.compiler;
 
     uses Extension;
 }

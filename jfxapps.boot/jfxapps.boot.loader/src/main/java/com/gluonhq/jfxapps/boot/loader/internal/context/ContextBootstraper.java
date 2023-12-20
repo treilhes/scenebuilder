@@ -42,15 +42,16 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-import com.gluonh.jfxapps.boot.layer.Layer;
-import com.gluonh.jfxapps.boot.layer.LayerNotFoundException;
-import com.gluonh.jfxapps.boot.layer.ModuleLayerManager;
+import com.gluonhq.jfxapps.boot.context.ContextManager;
 import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
 import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.gluonhq.jfxapps.boot.context.annotation.EditorSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.Window;
-import com.gluonhq.jfxapps.boot.context.impl.ContextManager;
+import com.gluonhq.jfxapps.boot.layer.Layer;
+import com.gluonhq.jfxapps.boot.layer.LayerNotFoundException;
+import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.loader.extension.ExtensionValidator;
 import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
@@ -61,6 +62,7 @@ import com.gluonhq.jfxapps.boot.loader.model.AbstractExtension;
 /**
  * The Class ContextBootstraper.
  */
+@Component
 public class ContextBootstraper {
 
     /** The Constant logger. */
@@ -72,14 +74,25 @@ public class ContextBootstraper {
     /** The layer manager. */
     private final ModuleLayerManager layerManager;
 
+    private static final ServiceLoader DEFAULT_LOADER = new ServiceLoader() {
+        @Override
+        public <T> Set<T> loadService(Layer layer, Class<T> serviceClass) {
+            return java.util.ServiceLoader.load(layer.getModuleLayer(), serviceClass).stream()
+                    .map(java.util.ServiceLoader.Provider::get)
+                    .filter(e -> e.getClass().getModule().getLayer().equals(layer.getModuleLayer()))
+                    .collect(Collectors.toSet());
+        }
+    };
+
+
     /**
      * Instantiates a new context bootstraper.
      *
      * @param layerManager the layer manager
      */
-    public ContextBootstraper(ModuleLayerManager layerManager) {
+    public ContextBootstraper(ModuleLayerManager layerManager, ContextManager contextManager) {
         super();
-        this.contextManager = new ContextManager();
+        this.contextManager = contextManager;
         this.layerManager = layerManager;
     }
 
@@ -113,6 +126,10 @@ public class ContextBootstraper {
         return contextManager.exists(extension.getId());
     }
 
+    public SbContext create(SbContext parent, AbstractExtension<?> extension, List<Object> singletonInstances,
+            MultipleProgressListener progressListener) throws InvalidExtensionException, LayerNotFoundException {
+        return create(parent, extension, singletonInstances, progressListener, DEFAULT_LOADER);
+    }
     /**
      * Creates the.
      *
@@ -125,10 +142,11 @@ public class ContextBootstraper {
      * @throws LayerNotFoundException    the layer not found exception
      */
     public SbContext create(SbContext parent, AbstractExtension<?> extension, List<Object> singletonInstances,
-            MultipleProgressListener progressListener) throws InvalidExtensionException, LayerNotFoundException {
+            MultipleProgressListener progressListener, ServiceLoader loader) throws InvalidExtensionException, LayerNotFoundException {
         UUID layerId = extension.getId();
         UUID parentContextId = parent == null ? null : parent.getId();
 
+        // get children extensions
         Set<UUID> extensionIds = extension.getExtensions().stream().map(e -> e.getId()).collect(Collectors.toSet());
 
         Layer currentLayer = layerManager.get(layerId);
@@ -143,7 +161,7 @@ public class ContextBootstraper {
 
         for (UUID id : extensionIds) {
             try {
-                childrenExportedClasses.addAll(findExportedClasses(layerId, id));
+                childrenExportedClasses.addAll(findExportedClasses(loader, layerId, id));
             } catch (LayerNotFoundException e) {
                 logger.error("Unable to find layer for child extension {}", id, e);
             } catch (InvalidExtensionException e) {
@@ -151,13 +169,13 @@ public class ContextBootstraper {
             }
         }
 
-        extensionLocalClasses.addAll(findLocalClasses(parentContextId, currentLayer));
+        extensionLocalClasses.addAll(findLocalClasses(loader, parentContextId, currentLayer));
 
         classes.addAll(childrenExportedClasses);
         classes.addAll(extensionLocalClasses);
 
         if (parent != null) { // get classes from parent with @EditorSingleton annotation
-            boolean isSealed = currentLayer.loadService(Extension.class).stream()
+            boolean isSealed = loader.loadService(currentLayer, Extension.class).stream()
                     .anyMatch(SealedExtension.class::isInstance);
             if (isSealed) {
                 Set<Class<?>> deportedClasses = Arrays.stream(parent.getRegisteredClasses())
@@ -200,7 +218,7 @@ public class ContextBootstraper {
      * @throws LayerNotFoundException    the layer not found exception
      * @throws InvalidExtensionException the invalid extension exception
      */
-    private Set<Class<?>> findExportedClasses(UUID parentId, UUID extensionId)
+    private Set<Class<?>> findExportedClasses(ServiceLoader loader, UUID parentId, UUID extensionId)
             throws LayerNotFoundException, InvalidExtensionException {
 
         Layer layer = layerManager.get(extensionId);
@@ -210,7 +228,7 @@ public class ContextBootstraper {
         }
 
         try {
-            return layer.loadService(Extension.class).stream().filter(OpenExtension.class::isInstance)
+            return loader.loadService(layer, Extension.class).stream().filter(OpenExtension.class::isInstance)
                     .map(OpenExtension.class::cast).peek(e -> validateExtension(e, extensionId, parentId))
                     .flatMap(e -> e.exportedContextClasses().stream()).collect(Collectors.toSet());
 
@@ -228,10 +246,10 @@ public class ContextBootstraper {
      * @throws LayerNotFoundException    the layer not found exception
      * @throws InvalidExtensionException the invalid extension exception
      */
-    private Set<Class<?>> findLocalClasses(UUID parentId, Layer layer)
+    private Set<Class<?>> findLocalClasses(ServiceLoader loader, UUID parentId, Layer layer)
             throws LayerNotFoundException, InvalidExtensionException {
         try {
-            return layer.loadService(Extension.class).stream().peek(e -> validateExtension(e, layer.getId(), parentId))
+            return loader.loadService(layer, Extension.class).stream().peek(e -> validateExtension(e, layer.getId(), parentId))
                     .flatMap(e -> e.localContextClasses().stream()).collect(Collectors.toSet());
         } catch (InvalidExtensionException.Unchecked e) {
             throw new InvalidExtensionException(e);
@@ -277,5 +295,10 @@ public class ContextBootstraper {
      */
     public void close(AbstractExtension<?> extension) {
         contextManager.close(extension.getId());
+    }
+
+    @FunctionalInterface
+    public interface ServiceLoader {
+        <T> Set<T> loadService(Layer layer, Class<T> serviceClass);
     }
 }

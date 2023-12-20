@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.api.maven;
 import java.io.File;
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 
 @FunctionalInterface
 public interface ArtefactHandler {
-    public boolean handle(MavenArtifact artifact, List<File> files);
+    public boolean handle(UniqueArtifact artifact, List<File> files);
 }

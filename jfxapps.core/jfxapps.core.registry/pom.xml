@@ -6,4 +6,42 @@
     <version>17.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>jfxapps.core.registry</artifactId>
+  
+  <build>
+        <plugins>
+            <plugin>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps-registry-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-registry-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>jfxappsRegistry</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <format>json</format>
+                    <registry>
+                        <applications>
+                            <application>
+                                <uuid>00000000-0000-0000-0000-000000000000</uuid>
+                                <dependency>
+                                    <groupId>com.gluonhq.jfxapps</groupId>
+                                    <artifactId>jfxapps.core.api</artifactId>
+                                    <version>${project.version}</version>
+                                </dependency>
+                                <description>
+                                    <icon>fxmlRunner64x64.png</icon>
+                                    <title>FXML Runner</title>
+                                    <text>App that run fxml files</text>
+                                </description>
+                            </application>
+                        </applications>
+                    </registry>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

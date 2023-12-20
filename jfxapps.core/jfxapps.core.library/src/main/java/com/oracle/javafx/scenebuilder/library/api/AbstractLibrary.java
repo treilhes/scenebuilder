@@ -57,7 +57,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.SbContext;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.library.Library;
@@ -172,7 +172,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
 
     public abstract String getLibraryId();
 
-    public abstract Explorer<MavenArtifact, R> newArtifactExplorer();
+    public abstract Explorer<UniqueArtifact, R> newArtifactExplorer();
 
     public abstract Explorer<Path, R> newFolderExplorer();
 
@@ -193,7 +193,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
     public abstract void lock(List<Path> pathes);
 
     private void exploreStore() {
-        final List<MavenArtifact> artifacts = new ArrayList<>(store.getArtifacts());
+        final List<UniqueArtifact> artifacts = new ArrayList<>(store.getArtifacts());
         final List<Path> fileOrFolders = new ArrayList<>(store.getFilesOrFolders());
 
         Stream<Task<List<R>>> artifactStream = artifacts.stream()
@@ -504,7 +504,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
         }
     }
 
-    public boolean performAddArtifact(MavenArtifact artifact) {
+    public boolean performAddArtifact(UniqueArtifact artifact) {
 
         List<Task<List<R>>> taskList = List.of(artifact).stream()
                 .filter(ma -> JAVAFX_MODULES.stream().noneMatch(ma.getArtifactId()::startsWith))
@@ -525,7 +525,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
         lock(listFilesOrFolders);
     }
 
-    public void performRemoveArtifact(MavenArtifact artifact) {
+    public void performRemoveArtifact(UniqueArtifact artifact) {
         List<Path> files = artifact.toJarList();
         unlock(files);
         doThenReLoad(() -> getStore().remove(artifact));
@@ -536,7 +536,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
         performAddFilesOrFolders(listFilesOrFolders);
     }
 
-    public void performEditArtifact(MavenArtifact artifact) {
+    public void performEditArtifact(UniqueArtifact artifact) {
         performAddArtifact(artifact);
     }
 

@@ -41,10 +41,10 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.gluonhq.jfxapps.boot.context.annotation.EditorSingleton;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifactId;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenClassifier;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenClient;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.Classifier;
+import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryClient;
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
 import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
@@ -58,7 +58,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 @EditorSingleton
 public class MavenClientController implements com.oracle.javafx.scenebuilder.api.maven.MavenClient {
 
-    private MavenClient client;
+    private RepositoryClient client;
     private final MavenRepositoriesPreferences repositoryPreferences;
     private final MavenRepositoryPathPreference repositoryPathPreference;
     private final BooleanProperty searching = new SimpleBooleanProperty();
@@ -77,41 +77,41 @@ public class MavenClientController implements com.oracle.javafx.scenebuilder.api
     @PostConstruct
     protected void postContruct() {
         if (repositoryPreferences == null && repositoryPathPreference == null) {
-            client = MavenClient.newDefaultClient(MavenClient.getDefaultUserM2Repository());
+            client = RepositoryClient.newDefaultClient(RepositoryClient.getDefaultUserM2Repository());
         } else {
             List<Repository> prefs = repositoryPreferences.getRepositories();
             File repoPath = new File(repositoryPathPreference.getValue());
-            client = MavenClient.newClient(repoPath, prefs);
+            client = RepositoryClient.newClient(repoPath, prefs);
         }
     }
 
     @Override
-    public List<MavenArtifact> getAvailableVersions(String groupId, String artifactId) {
+    public List<UniqueArtifact> getAvailableVersions(String groupId, String artifactId) {
         return client.getAvailableVersions(groupId, artifactId);
     }
 
-    public List<MavenArtifact> getAvailableVersions(String groupId, String artefactId, boolean onlyRelease) {
+    public List<UniqueArtifact> getAvailableVersions(String groupId, String artefactId, boolean onlyRelease) {
         return client.getAvailableVersions(groupId, artefactId, onlyRelease);
     }
 
-    public Optional<MavenArtifact> getLatestVersion(String groupId, String artefactId) {
+    public Optional<UniqueArtifact> getLatestVersion(String groupId, String artefactId) {
         return client.getLatestVersion(groupId, artefactId);
     }
 
-    public Optional<MavenArtifact> getLatestVersion(String groupId, String artefactId, boolean onlyRelease) {
+    public Optional<UniqueArtifact> getLatestVersion(String groupId, String artefactId, boolean onlyRelease) {
         return client.getLatestVersion(groupId, artefactId, onlyRelease);
     }
 
-    public Optional<Path> resolve(MavenArtifact artifact, MavenClassifier classifier) {
+    public Optional<Path> resolve(UniqueArtifact artifact, Classifier classifier) {
         return client.resolve(artifact, classifier);
     }
 
-    public Map<MavenClassifier, Optional<Path>> resolve(MavenArtifact artifact, List<MavenClassifier> classifiers) {
+    public Map<Classifier, Optional<Path>> resolve(UniqueArtifact artifact, List<Classifier> classifiers) {
         return client.resolve(artifact, classifiers);
     }
 
     @Override
-    public MavenArtifact resolveWithDependencies(MavenArtifact artifact) {
+    public UniqueArtifact resolveWithDependencies(UniqueArtifact artifact) {
         return client.resolveWithDependencies(artifact);
     }
 
@@ -147,9 +147,9 @@ public class MavenClientController implements com.oracle.javafx.scenebuilder.api
     }
 
     @Override
-    public Set<MavenArtifactId> search(String query) {
+    public Set<Artifact> search(String query) {
         SbPlatform.runOnFxThread(() -> searching.set(true));
-        Set<MavenArtifactId> result = client.search(query);
+        Set<Artifact> result = client.search(query);
         SbPlatform.runOnFxThread(() -> searching.set(false));
         return result;
     }

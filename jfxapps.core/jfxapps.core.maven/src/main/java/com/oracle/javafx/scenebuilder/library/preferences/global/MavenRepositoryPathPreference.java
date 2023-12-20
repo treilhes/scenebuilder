@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.library.preferences.global;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenClient;
+import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryClient;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.type.StringPreference;
 
@@ -43,6 +43,6 @@ public class MavenRepositoryPathPreference extends StringPreference {
     protected static final String NODE_NAME = "M2REPO"; //NOCHECK
 
     public MavenRepositoryPathPreference(PreferencesContext preferencesContext) {
-        super(preferencesContext, NODE_NAME, MavenClient.getDefaultUserM2Repository().getAbsolutePath());
+        super(preferencesContext, NODE_NAME, RepositoryClient.getDefaultUserM2Repository().getAbsolutePath());
     }
 }

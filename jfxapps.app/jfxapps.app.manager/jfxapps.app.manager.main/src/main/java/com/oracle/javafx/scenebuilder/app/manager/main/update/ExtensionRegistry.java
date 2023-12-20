@@ -39,9 +39,9 @@ import java.util.List;
 import java.util.Optional;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenClassifier;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenClient;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.Classifier;
+import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryClient;
 
 @Singleton
 public class ExtensionRegistry {
@@ -50,9 +50,9 @@ public class ExtensionRegistry {
 
     private List<String> groupIds;
 
-    private final MavenClient mavenClient;
+    private final RepositoryClient mavenClient;
 
-    public ExtensionRegistry(MavenClient mavenClient) {
+    public ExtensionRegistry(RepositoryClient mavenClient) {
         this.mavenClient = mavenClient;
         groupIds = new ArrayList<>();
     }
@@ -60,13 +60,13 @@ public class ExtensionRegistry {
 
     private List<?> load() {
         for (String groupId:groupIds) {
-            MavenArtifact registryArtifact = MavenArtifact.builder()
+            UniqueArtifact registryArtifact = UniqueArtifact.builder()
                     .withGroupId(groupId)
                     .withArtifactId(REGISTRY_ARTIFACT_ID)
                     .build();
 
-            Optional<MavenArtifact> latest = mavenClient.getLatestVersion(groupId, groupId, true);
-            Optional<Path> path = latest.map(a -> mavenClient.resolve(a, MavenClassifier.DEFAULT)).get();
+            Optional<UniqueArtifact> latest = mavenClient.getLatestVersion(groupId, groupId, true);
+            Optional<Path> path = latest.map(a -> mavenClient.resolve(a, Classifier.DEFAULT)).get();
 
 
         }

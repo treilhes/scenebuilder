@@ -43,14 +43,14 @@ import java.nio.file.Paths;
 
 import org.junit.Test;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 
 public class DialogListItemComparatorTest {
 
     private DialogListItemComparator classUnderTest = new DialogListItemComparator();
 
-    private static MavenArtifact artifactOf(String coordinates) {
-        return MavenArtifact.builder().withCoordinates(coordinates).build();
+    private static UniqueArtifact artifactOf(String coordinates) {
+        return UniqueArtifact.builder().withCoordinates(coordinates).build();
     }
     @Test
     public void testSortingOrArifactItems() {

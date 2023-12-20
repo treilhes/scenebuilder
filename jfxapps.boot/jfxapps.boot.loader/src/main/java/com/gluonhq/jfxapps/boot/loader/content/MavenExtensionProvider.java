@@ -49,17 +49,13 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gluonhq.jfxapps.boot.loader.dev.DevelopmentMode;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenClient;
+import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryClient;
+import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 
 public class MavenExtensionProvider implements ExtensionContentProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(MavenExtensionProvider.class);
-
-    private static final String M2_TEMP_FOLDER = "C:/Users/ptreilhes/.m2/repository";
-
-    private static final boolean LIST_ALSO_SNAPSHOTS = false;
 
     @JsonProperty("groupId")
     private String groupId;
@@ -71,14 +67,12 @@ public class MavenExtensionProvider implements ExtensionContentProvider {
     private String version;
 
     @JsonIgnore
-    private MavenArtifact mavenArtifact;
+    private UniqueArtifact mavenArtifact;
 
     @JsonIgnore
-    private MavenArtifact resolvedArtifact;
+    private ResolvedArtifact resolvedArtifact;
 
-    public MavenExtensionProvider() {
-        super();
-    }
+    private RepositoryClient repositoryClient;
 
     public MavenExtensionProvider(String groupId, String artifactId, String version) {
         super();
@@ -87,23 +81,9 @@ public class MavenExtensionProvider implements ExtensionContentProvider {
         this.version = version;
     }
 
-    private MavenClient newMavenClient() {
-        File tmpRepo = new File(M2_TEMP_FOLDER);
-        if (!tmpRepo.exists()) {
-            tmpRepo.mkdirs();
-        }
-        MavenClient mc = MavenClient.newDefaultClient(new File(M2_TEMP_FOLDER));
-
-        if (DevelopmentMode.isActive()) {
-            mc.favorizeLocalResolution();
-        }
-
-        return mc;
-    }
-
     private void resolveArtefact() {
         if (mavenArtifact == null) {
-            mavenArtifact = MavenArtifact.builder().withGroupId(groupId).withArtifactId(artifactId).withVersion(version)
+            mavenArtifact = UniqueArtifact.builder().withArtifact(groupId, artifactId).withVersion(version)
                     .build();
         }
     }
@@ -112,8 +92,7 @@ public class MavenExtensionProvider implements ExtensionContentProvider {
         resolveArtefact();
 
         if (resolvedArtifact == null) {
-            MavenClient mc = newMavenClient();
-            resolvedArtifact = mc.resolveWithDependencies(mavenArtifact);
+            resolvedArtifact = repositoryClient.resolveWithDependencies(mavenArtifact).orElse(null);
         }
     }
 
@@ -126,10 +105,6 @@ public class MavenExtensionProvider implements ExtensionContentProvider {
     @Override
     public boolean isUpToDate(Path targetFolder) {
         resolveArtefactDependencies();
-
-        if (DevelopmentMode.isActive()) {
-            return false;
-        }
 
         Predicate<Path> m2AndLocalMatches = p -> Utils.isFileUpToDate(p, targetFolder.resolve(p.getFileName()));
 
@@ -146,24 +121,11 @@ public class MavenExtensionProvider implements ExtensionContentProvider {
 
         List<Path> content = Files.list(targetFolder).collect(Collectors.toList());
 
-        Set<MavenArtifact> artifacts = new HashSet<>();
+        Set<ResolvedArtifact> artifacts = new HashSet<>();
         artifacts.add(resolvedArtifact);
         artifacts.addAll(resolvedArtifact.getDependencies());
 
-        for (MavenArtifact artifact:artifacts) {
-
-            if (DevelopmentMode.isActive()) {
-                // look for localy built classes
-                Path path = DevelopmentMode.findModuleClassesFolder(artifact.getArtifactId());
-
-                if (path != null && Files.exists(path)) {
-                    FolderExtensionProvider folderProvider = new FolderExtensionProvider(path.toFile());
-                    Path target = targetFolder.resolve(artifact.getArtifactId());
-                    folderProvider.update(target);
-                    content.remove(target);
-                    continue;
-                }
-            }
+        for (ResolvedArtifact artifact:artifacts) {
 
             //just update from maven
             Path source = artifact.getPath();
@@ -221,6 +183,14 @@ public class MavenExtensionProvider implements ExtensionContentProvider {
 
     protected void setVersion(String version) {
         this.version = version;
+    }
+
+    public RepositoryClient getRepositoryClient() {
+        return repositoryClient;
+    }
+
+    public void setRepositoryClient(RepositoryClient repositoryClient) {
+        this.repositoryClient = repositoryClient;
     }
 
 }

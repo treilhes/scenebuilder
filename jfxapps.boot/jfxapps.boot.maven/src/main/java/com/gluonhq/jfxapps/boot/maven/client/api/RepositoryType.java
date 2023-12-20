@@ -43,7 +43,7 @@ public interface RepositoryType{
 
     boolean validate(Repository repository);
 
-    Set<MavenArtifactId> getCoordinates(Repository repository, String query);
+    Set<Artifact> getCoordinates(Repository repository, String query);
 
     default Builder newClientBuilder(Repository repository) {
 

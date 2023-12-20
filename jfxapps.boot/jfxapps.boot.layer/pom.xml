@@ -20,4 +20,59 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    
+    <properties>
+        <skip.integration.test>false</skip.integration.test>
+    </properties>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <skipITs>${skip.integration.test}</skipITs>
+                            <!-- maven does not include the current module, test below will fail. Ok in IDE -->
+                            <excludes>
+                                <exclude>com.gluonhq.jfxapps.boot.layer.internal.LayerLifecycleIT</exclude>
+                            </excludes>
+                        </configuration>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-invoker-plugin</artifactId>
+                <version>3.2.2</version>
+                <configuration>
+                    <projectsDirectory>${basedir}/src/test/resources-its</projectsDirectory>
+                    <pomIncludes>
+                        <pomInclude>common/pom.xml</pomInclude>
+                    </pomIncludes>
+                    <streamLogs>true</streamLogs>
+                    <goals>
+                        <goal>clean</goal>
+                        <goal>install</goal>
+                    </goals>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>forked-install</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>install</goal>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <skipInvocation>${skip.integration.test}</skipInvocation>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

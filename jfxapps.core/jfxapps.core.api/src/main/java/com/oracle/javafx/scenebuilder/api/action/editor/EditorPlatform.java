@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.action.editor;
 
-import com.gluonhq.jfxapps.boot.platform.OsPlatform;
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 
 import javafx.scene.input.MouseEvent;
 
@@ -42,7 +42,7 @@ import javafx.scene.input.MouseEvent;
  *
  * @treatAsPrivate
  */
-public class EditorPlatform implements OsPlatform {
+public class EditorPlatform implements JfxAppsPlatform {
 
 //    /**
 //     * Spring bean condition, True if current platform is running Linux.

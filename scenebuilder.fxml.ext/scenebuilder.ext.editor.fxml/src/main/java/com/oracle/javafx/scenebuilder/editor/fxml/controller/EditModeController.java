@@ -701,7 +701,7 @@ public class EditModeController extends AbstractModeController implements Gestur
 
             stopListeningToInputEvents();
             activeGesture = gesture;
-            gesture.start(e, this);
+            gesture.startApplication(e, this);
 
             // Note that some gestures may terminates immediately.
             // So activeGesture may have switch back to null.

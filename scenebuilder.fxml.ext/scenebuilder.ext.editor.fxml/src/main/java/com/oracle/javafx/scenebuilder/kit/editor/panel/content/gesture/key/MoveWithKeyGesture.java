@@ -155,7 +155,7 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
      */
     @Override
     public void start(InputEvent e, Observer observer) {
-        super.start(e, observer);
+        super.startApplication(e, observer);
 
         switch(getFirstKeyPressedEvent().getCode()) {
             case DOWN:

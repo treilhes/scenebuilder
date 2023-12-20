@@ -7,6 +7,11 @@
         <version>17.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>jfxapps.boot.loader</artifactId>
+    
+    <properties>
+        <skip.integration.test>false</skip.integration.test>
+    </properties>
+    
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
@@ -19,6 +24,14 @@
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.maven</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.boot.registry</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.boot.platform</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
@@ -37,7 +50,7 @@
                 <executions>
                     <execution>
                         <configuration>
-                            <skipITs>true</skipITs>
+                            <skipITs>${skip.integration.test}</skipITs>
                         </configuration>
                         <goals>
                             <goal>integration-test</goal>
@@ -53,13 +66,7 @@
                     <!--<projectsDirectory>${basedir}/src/test/resources-its/com/oracle/javafx/scenebuilder/core</projectsDirectory>-->
                     <projectsDirectory>${basedir}/src/test/resources-its</projectsDirectory>
                     <pomIncludes>
-                        <pomInclude>common/pom.xml</pomInclude>
-                        <pomInclude>app-root/pom.xml</pomInclude>
-                        <!--<pomInclude>loader/pom.xml</pomInclude>-->
-                        <pomInclude>module/pom.xml</pomInclude>
-                        <pomInclude>automatic-modul/pom.xml</pomInclude>
-                        <pomInclude>classpath/pom.xml</pomInclude>
-                        <pomInclude>module-with-dependency/pom.xml</pomInclude>
+                        <pomInclude>common-loader/pom.xml</pomInclude>
                     </pomIncludes>
                     <streamLogs>true</streamLogs>
                     <goals>
@@ -76,7 +83,7 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <skipInvocation>true</skipInvocation>
+                            <skipInvocation>${skip.integration.test}</skipInvocation>
                         </configuration>
                     </execution>
                 </executions>

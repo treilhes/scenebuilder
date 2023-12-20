@@ -42,9 +42,10 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.gluonhq.jfxapps.boot.context.ContextManager;
 import com.gluonhq.jfxapps.boot.context.DocumentScope;
 import com.gluonhq.jfxapps.boot.context.SbContext;
-import com.gluonhq.jfxapps.boot.context.impl.ContextManager;
+import com.gluonhq.jfxapps.boot.context.impl.ContextManagerImpl;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -61,7 +62,7 @@ public class DocumentScopeTest {
      */
     @BeforeEach
     void setupContext() {
-        ContextManager mng = new ContextManager();
+        ContextManager mng = new ContextManagerImpl();
         Class<?>[] classes = { FakeDocument.class, DocumentScopedObject.class };
         this.context = mng.create(null, UUID.randomUUID(), classes, List.of(), null);
     }

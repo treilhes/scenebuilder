@@ -12,11 +12,14 @@
     <module>jfxapps.boot.loader</module>
     <module>jfxapps.boot.context</module>
     <module>jfxapps.boot.maven</module>
+    <module>jfxapps.boot.maven.am</module>
     <module>jfxapps.boot.main</module>
     <module>jfxapps.boot.starter</module>
     <module>jfxapps.boot.starter.test</module>
     <module>jfxapps.boot.platform</module>
     <module>jfxapps.boot.registry</module>
     <module>jfxapps.boot.layer</module>
+    <module>jfxapps.boot.jpa</module>
+    
   </modules>
 </project>

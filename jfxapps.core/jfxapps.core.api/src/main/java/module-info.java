@@ -47,7 +47,7 @@ open module scenebuilder.core.api {
     exports com.oracle.javafx.scenebuilder.api.content.gesture;
     exports com.oracle.javafx.scenebuilder.api.content.mode;
     exports com.oracle.javafx.scenebuilder.api.content.mode.annotation;
-    exports com.gluonhq.jfxapps.boot.context.di;
+    exports com.oracle.javafx.scenebuilder.api.di;
     exports com.oracle.javafx.scenebuilder.api.dnd;
     exports com.oracle.javafx.scenebuilder.api.ui.dock;
     exports com.oracle.javafx.scenebuilder.api.ui.dock.annotation;
@@ -99,10 +99,11 @@ open module scenebuilder.core.api {
     //requires transitive scenebuilder.core.extension.api;
     //requires transitive scenebuilder.core.om;
 
-    requires transitive scenebuilder.boot.loader;
-    requires transitive scenebuilder.boot.platform;
-    requires transitive scenebuilder.boot.context;
-    requires transitive scenebuilder.boot.maven;
+    requires transitive jfxapps.boot.loader;
+    requires transitive jfxapps.boot.platform;
+    requires transitive jfxapps.boot.maven;
+    //requires transitive scenebuilder.boot.context;
+
     requires transitive scenebuilder.core.utils;
     requires transitive scenebuilder.core.fxom;
     requires transitive scenebuilder.core.metadata;

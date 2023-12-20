@@ -1,9 +1,12 @@
 module jfxapps.boot.context {
     exports com.gluonhq.jfxapps.boot.context;
     exports com.gluonhq.jfxapps.boot.context.annotation;
+    exports com.gluonhq.jfxapps.boot.context.config;
 
-    exports com.gluonhq.jfxapps.boot.context.impl to jfxapps.boot.loader;
+    exports com.gluonhq.jfxapps.boot.context.impl to spring.beans;
+
     opens com.gluonhq.jfxapps.boot.context.internal to spring.core;
+    opens com.gluonhq.jfxapps.boot.context.config to spring.core;
 
     requires org.slf4j;
     requires spring.core;

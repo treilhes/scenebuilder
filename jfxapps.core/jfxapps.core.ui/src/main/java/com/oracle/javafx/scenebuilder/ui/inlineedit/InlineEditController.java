@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Window;
-import com.gluonhq.jfxapps.boot.platform.OsPlatform;
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractPopupController;
@@ -264,7 +264,7 @@ public class InlineEditController implements InlineEdit{
     }
 
     private boolean isModifierDown(KeyEvent ke) {
-        if (OsPlatform.IS_MAC) {
+        if (JfxAppsPlatform.IS_MAC) {
             return ke.isMetaDown();
         } else {
             // Should cover Windows, Solaris, Linux

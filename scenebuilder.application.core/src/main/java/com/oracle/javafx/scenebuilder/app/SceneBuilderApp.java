@@ -45,7 +45,7 @@ public class SceneBuilderApp {
      */
 	public static void main(String[] args) {
 	    //System.setProperty("polyglot.js.nashorn-compat", "true"); // NOCHECK
-        SceneBuilderBootstrap.start(args);
+        SceneBuilderBootstrap.startApplication(args);
 	}
 
 }

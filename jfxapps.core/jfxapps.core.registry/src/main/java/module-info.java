@@ -1,0 +1,2 @@
+module jfxapps.core.registry {
+}

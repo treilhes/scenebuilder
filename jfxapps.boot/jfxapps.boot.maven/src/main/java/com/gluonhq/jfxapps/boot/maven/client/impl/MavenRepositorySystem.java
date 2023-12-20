@@ -39,13 +39,14 @@ import static org.eclipse.aether.repository.RepositoryPolicy.UPDATE_POLICY_ALWAY
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
@@ -56,13 +57,15 @@ import org.eclipse.aether.AbstractRepositoryListener;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositoryEvent;
 import org.eclipse.aether.RepositorySystem;
-import org.eclipse.aether.artifact.Artifact;
+//import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.graph.DependencyFilter;
 import org.eclipse.aether.impl.DefaultServiceLocator;
+import org.eclipse.aether.installation.InstallRequest;
+import org.eclipse.aether.installation.InstallationException;
 import org.eclipse.aether.metadata.DefaultMetadata;
 import org.eclipse.aether.metadata.Metadata;
 import org.eclipse.aether.repository.ArtifactRepository;
@@ -90,9 +93,12 @@ import org.eclipse.aether.version.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenClassifier;
+import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.Classifier;
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
+import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryManager;
+import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 
 public class MavenRepositorySystem {
 
@@ -112,21 +118,20 @@ public class MavenRepositorySystem {
 
     private final File userM2Repository;
 
-    private final Map<String, Repository> repositories = new HashMap<>();
-    private final Map<String, RemoteRepository> remoteRepositories = new HashMap<>();
+    private final RepositoryManager repositoryManager;
+
+    // private final Map<String, Repository> repositories = new HashMap<>();
+    // private final Map<String, RemoteRepository> remoteRepositories = new
+    // HashMap<>();
 
     private boolean offline = false;
 
-    public MavenRepositorySystem(File userM2RepositoryFolder, List<Repository> repositories) {
+    public MavenRepositorySystem(File userM2RepositoryFolder, RepositoryManager repositoryManager) {
 
         this.userM2Repository = userM2RepositoryFolder;
         this.localRepo = new LocalRepository(userM2Repository);
-        if (repositories != null) {
-            repositories.stream().filter(r -> r != null).peek(r -> this.repositories.put(r.getId(), r))
-                    .map(this::createRepository).forEach(r -> this.remoteRepositories.put(r.getId(), r));
-        } else {
-            offline = true;
-        }
+        this.repositoryManager = repositoryManager;
+        this.offline = repositoryManager == null;
         initRepositorySystem();
     }
 
@@ -178,15 +183,14 @@ public class MavenRepositorySystem {
     }
 
     private List<RemoteRepository> getRepositories() {
-        final List<RemoteRepository> list = new ArrayList<>();
-        list.addAll(remoteRepositories.values().stream().collect(Collectors.toList()));
-        return list;
+        return repositoryManager.repositories().stream().map(this::toRemoteRepository).map(Optional::get)
+                .filter(Objects::nonNull).toList();
     }
 
-    private VersionRangeResult findVersionRangeResult(MavenArtifact artifact) {
-        String coordinates = MavenArtifact.getCoordinates(artifact.getGroupId(), artifact.getArtifactId(),
+    private VersionRangeResult findVersionRangeResult(Artifact artifact) {
+        String coordinates = UniqueArtifact.getCoordinates(artifact.getGroupId(), artifact.getArtifactId(),
                 ALL_VERSION_SEARCH);
-        Artifact localArtifact = new DefaultArtifact(coordinates);
+        DefaultArtifact localArtifact = new DefaultArtifact(coordinates);
 
         VersionRangeRequest rangeRequest = new VersionRangeRequest();
         rangeRequest.setArtifact(localArtifact);
@@ -200,7 +204,7 @@ public class MavenRepositorySystem {
         return null;
     }
 
-    public List<MavenArtifact> findVersions(MavenArtifact artifact) {
+    public List<UniqueArtifact> findVersions(Artifact artifact) {
         VersionRangeResult result = findVersionRangeResult(artifact);
 
         return (result == null) ? new ArrayList<>()
@@ -208,7 +212,7 @@ public class MavenRepositorySystem {
                         .collect(Collectors.toList());
     }
 
-    public List<MavenArtifact> findReleases(MavenArtifact artifact) {
+    public List<UniqueArtifact> findReleases(Artifact artifact) {
         VersionRangeResult result = findVersionRangeResult(artifact);
 
         return (result == null) ? new ArrayList<>()
@@ -217,7 +221,7 @@ public class MavenRepositorySystem {
                         .map(v -> toLocalizedArtifact(result, artifact, v)).collect(Collectors.toList());
     }
 
-    public Optional<MavenArtifact> findLatestVersion(MavenArtifact artifact) {
+    public Optional<UniqueArtifact> findLatestVersion(Artifact artifact) {
         VersionRangeResult result = findVersionRangeResult(artifact);
         Version version = result.getHighestVersion();
 
@@ -228,7 +232,7 @@ public class MavenRepositorySystem {
         return Optional.of(toLocalizedArtifact(result, artifact, version));
     }
 
-    public Optional<MavenArtifact> findLatestRelease(MavenArtifact artifact) {
+    public Optional<UniqueArtifact> findLatestRelease(Artifact artifact) {
         VersionRangeResult result = findVersionRangeResult(artifact);
 
         if (result != null) {
@@ -241,11 +245,14 @@ public class MavenRepositorySystem {
         }
     }
 
-    private void cleanMetadata(Artifact artifact) {
+    private void cleanMetadata(DefaultArtifact artifact) {
+
         final String path = localRepo.getBasedir().getAbsolutePath() + File.separator
                 + artifact.getGroupId().replaceAll("\\.", Matcher.quoteReplacement(File.separator)) + File.separator
                 + artifact.getArtifactId() + File.separator;
+
         final DefaultMetadata metadata = new DefaultMetadata("maven-metadata.xml", Metadata.Nature.RELEASE);
+
         getRepositories().stream()
                 .map(r -> session.getLocalRepositoryManager().getPathForRemoteMetadata(metadata, r, "")).forEach(s -> {
                     File file = new File(path + s);
@@ -259,32 +266,36 @@ public class MavenRepositorySystem {
                 });
     }
 
-    public Map<MavenClassifier, Optional<Path>> resolveArtifacts(MavenArtifact artifact,
-            List<MavenClassifier> classifiers) {
+    public Optional<ResolvedArtifact> resolveArtifact(UniqueArtifact artifact) {
+        final RemoteRepository remoteRepository = toRemoteRepository(artifact.getRepository()).orElse(null);
+        return resolveArtifact(remoteRepository, artifact);
+    }
 
-        final RemoteRepository remoteRepository;
+    public Map<Classifier, Optional<ResolvedArtifact>> resolveArtifacts(UniqueArtifact artifact,
+            List<Classifier> classifiers) {
 
-        if (artifact.isResolved()) {
-            Repository repository = artifact.getRepository();
-            remoteRepository = remoteRepositories.get(repository.getId());
-        } else {
-            remoteRepository = null;
-        }
+        final RemoteRepository remoteRepository = toRemoteRepository(artifact.getRepository()).orElse(null);
 
-        Map<MavenClassifier, Optional<Path>> result = new HashMap<>();
+        Map<Classifier, Optional<ResolvedArtifact>> result = new HashMap<>();
 
-        classifiers.forEach(c -> result.put(c, resolveArtifactClassifier(remoteRepository, artifact, c)));
+        classifiers.forEach(c -> {
+
+            UniqueArtifact a = UniqueArtifact.builder().withArtifact(artifact.getArtifact()).withClassifier(c)
+                    .withVersion(artifact.getVersion()).withRepository(artifact.getRepository()).build();
+
+            result.put(c, resolveArtifact(remoteRepository, a));
+        });
 
         return result;
 
     }
 
-    private Optional<Path> resolveArtifactClassifier(RemoteRepository remoteRepository, MavenArtifact artifact,
-            MavenClassifier classifier) {
+    private Optional<ResolvedArtifact> resolveArtifact(RemoteRepository remoteRepository, UniqueArtifact artifact) {
 
-        String groupId = artifact.getGroupId();
-        String artefactId = artifact.getArtifactId();
+        String groupId = artifact.getArtifact().getGroupId();
+        String artefactId = artifact.getArtifact().getArtifactId();
         String version = artifact.getVersion();
+        Classifier classifier = artifact.getClassifier();
 
         DefaultArtifact localArtifact = new DefaultArtifact(groupId, artefactId, classifier.getClassifier(),
                 classifier.getExtension(), version);
@@ -296,23 +307,28 @@ public class MavenRepositorySystem {
         try {
             ArtifactResult result = system.resolveArtifact(session, artifactRequest);
             if (result != null && result.getExceptions().isEmpty()) {
-                return Optional.of(result.getArtifact().getFile().toPath());
+
+                ResolvedArtifact resolved = ResolvedArtifact.builder().withArtifact(artifact)
+                        .withPath(result.getArtifact().getFile().toPath()).build();
+
+                return Optional.of(resolved);
             } else {
                 result.getExceptions().forEach(ex -> logger.error("", ex));
             }
 
         } catch (ArtifactResolutionException ex) {
+            // logger.error("", ex);
         }
         return Optional.empty();
 
     }
 
-    public MavenArtifact resolveWithDependencies(MavenArtifact artifact) {
+    public Optional<ResolvedArtifact> resolveWithDependencies(UniqueArtifact artifact) {
 
-        String groupId = artifact.getGroupId();
-        String artefactId = artifact.getArtifactId();
+        String groupId = artifact.getArtifact().getGroupId();
+        String artefactId = artifact.getArtifact().getArtifactId();
         String version = artifact.getVersion();
-        MavenClassifier def = MavenClassifier.DEFAULT;
+        Classifier def = artifact.getClassifier();
 
         DefaultArtifact localArtifact = new DefaultArtifact(groupId, artefactId, def.getClassifier(),
                 def.getExtension(), version);
@@ -328,39 +344,43 @@ public class MavenRepositorySystem {
                     .getArtifactResults();
 
             ArtifactResult main = artifactResults.get(0);
-            List<MavenArtifact> dependencies = new ArrayList<>();
+            List<ResolvedArtifact> dependencies = new ArrayList<>();
 
             artifactResults.stream().skip(1) // exclude jar itself
                     .forEach(a -> {
-                        Artifact lArtefact = a.getArtifact();
+                        var lArtifact = a.getArtifact();
 
-                        MavenClassifier classifier = new MavenClassifier(lArtefact.getClassifier(), null);
-                        MavenArtifact mArtefact = MavenArtifact.builder()
-                                .withGroupId(lArtefact.getGroupId())
-                                .withArtifactId(lArtefact.getArtifactId())
-                                .withVersion(lArtefact.getVersion())
-                                .withPath(lArtefact.getFile().toPath())
-                                .withClassifier(classifier)
-                                .build();
+                        var classifier = Classifier.builder().withClassifier(lArtifact.getClassifier())
+                                .withExtension(lArtifact.getExtension()).build();
 
+                        var id = Artifact.builder().withGroupId(lArtifact.getGroupId())
+                                .withArtifactId(lArtifact.getArtifactId()).build();
+
+                        var unique = UniqueArtifact.builder().withArtifact(id).withClassifier(classifier)
+                                .withVersion(lArtifact.getVersion()).build();
+
+                        ResolvedArtifact mArtefact = ResolvedArtifact.builder().withArtifact(unique)
+                                .withPath(lArtifact.getFile().toPath()).build();
 
                         dependencies.add(mArtefact);
                     });
 
-            MavenArtifact mainArtifact = MavenArtifact.builder()
-                    .withArtifact(artifact)
-                    .withPath(main.getArtifact().getFile().toPath())
-                    .withDependencies(dependencies)
-                    .build();
+            ResolvedArtifact mainArtifact = ResolvedArtifact.builder().withArtifact(artifact)
+                    .withPath(main.getArtifact().getFile().toPath()).withDependencies(dependencies).build();
 
-            return mainArtifact;
+            return Optional.of(mainArtifact);
         } catch (Exception ex) {
             logger.error("", ex);
         }
-        return null;
+        return Optional.empty();
     }
 
-    private RemoteRepository createRepository(Repository repository) {
+    private Optional<RemoteRepository> toRemoteRepository(Repository repository) {
+
+        if (repository == null) {
+            return Optional.empty();
+        }
+
         Authentication auth = null;
         if (repository.getUser() != null && !repository.getUser().isEmpty() && repository.getPassword() != null
                 && !repository.getPassword().isEmpty()) {
@@ -370,7 +390,7 @@ public class MavenRepositorySystem {
 
         RepositoryPolicy releasePolicy = new RepositoryPolicy();
 
-        //TODO allow local search only for dev env
+        // TODO allow local search only for dev env
 //        RepositoryPolicy snapshotPolicy = repository.getContentType() != Content.RELEASE || this.favorizeLocalResolution
 //                ? new RepositoryPolicy(true, UPDATE_POLICY_NEVER, UPDATE_POLICY_NEVER)
 //                : new RepositoryPolicy(true, UPDATE_POLICY_ALWAYS, CHECKSUM_POLICY_IGNORE);
@@ -379,11 +399,16 @@ public class MavenRepositorySystem {
 
         final RemoteRepository repo = new RemoteRepository.Builder(repository.getId(), "default", repository.getURL())
                 .setReleasePolicy(releasePolicy).setSnapshotPolicy(snapshotPolicy).setAuthentication(auth).build();
-        return repo;
+
+        return Optional.of(repo);
+    }
+
+    private Optional<Repository> toRepository(RemoteRepository repository) {
+        return repository == null ? Optional.empty() : repositoryManager.get(repository.getId());
     }
 
     public String validateRepository(Repository repository) {
-        RemoteRepository remoteRepository = createRepository(repository);
+        RemoteRepository remoteRepository = toRemoteRepository(repository).orElse(null);
 
         ArtifactRequest artifactRequest = new ArtifactRequest();
         artifactRequest.setArtifact(new DefaultArtifact("test:test:1.0"));
@@ -400,18 +425,41 @@ public class MavenRepositorySystem {
         return "";
     }
 
-    private MavenArtifact toLocalizedArtifact(VersionRangeResult result, MavenArtifact artifact, Version version) {
+    private UniqueArtifact toLocalizedArtifact(VersionRangeResult result, Artifact artifact, Version version) {
         ArtifactRepository repo = result.getRepository(version);
-        Repository repository = repositories.get(repo.getId());
 
-        if (repository == null) {
-            repository = Repository.builder().withId(repo.getId()).build();
-        }
+        Repository repository = repositoryManager.get(repo.getId()).orElse(null);
 
-        return MavenArtifact.builder()
-                .withRepository(repository)
-                .withArtifact(artifact)
+        return UniqueArtifact.builder().withRepository(repository).withArtifact(artifact)
                 .withVersion(version.toString()).build();
+    }
+
+    public boolean install(ResolvedArtifact artifact) {
+
+        var ua = artifact.getUniqueArtifact();
+        var a = ua.getArtifact();
+
+        String groupId = a.getGroupId();
+        String artefactId = a.getArtifactId();
+        String version = ua.getVersion();
+        File file = artifact.getPath().toFile();
+
+        Classifier classifier = ua.getClassifier();
+        String ext = classifier.getExtension();
+        String classif = classifier.getClassifier();
+
+        var mArtifact = new DefaultArtifact(groupId, artefactId, classif, ext, version, Collections.emptyMap(), file);
+
+        var request = new InstallRequest();
+        request.addArtifact(mArtifact);
+
+        try {
+            system.install(session, request);
+        } catch (InstallationException e) {
+            logger.error("Unable to push artifact to local repository", e);
+            return false;
+        }
+        return true;
     }
 
 }

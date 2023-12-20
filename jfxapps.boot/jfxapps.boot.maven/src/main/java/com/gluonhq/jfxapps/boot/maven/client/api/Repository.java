@@ -47,10 +47,6 @@ public class Repository {
     private String password;
     private Content contentType = Content.SNAPSHOT_RELEASE;
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
     private Repository(Builder builder) {
         this.id = builder.id;
         this.type = builder.type;
@@ -117,6 +113,11 @@ public class Repository {
             return false;
         return true;
     }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
 
     public static class Builder {
         private String id;

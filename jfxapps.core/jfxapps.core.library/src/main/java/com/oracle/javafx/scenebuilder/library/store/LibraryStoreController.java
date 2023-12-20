@@ -63,7 +63,7 @@ import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.oracle.javafx.scenebuilder.extstore.fs.ExtensionFileSystem;
 import com.oracle.javafx.scenebuilder.library.api.LibraryStore;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;
@@ -85,7 +85,7 @@ public class LibraryStoreController implements LibraryStore, Runnable {
     private final MavenArtifactsPreferences mavenArtifactsPreferences;
     private final ExtensionFileSystem extensionFileSystem;
 
-    private final ObservableList<MavenArtifact> artifacts = FXCollections.observableArrayList();
+    private final ObservableList<UniqueArtifact> artifacts = FXCollections.observableArrayList();
     private final ObservableList<Path> filesOrFolders = FXCollections.observableArrayList();
     private final Properties configuration = new Properties();
 
@@ -171,7 +171,7 @@ public class LibraryStoreController implements LibraryStore, Runnable {
     public boolean load() throws IOException {
 System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
         List<Path> localFilesAndFolders = new ArrayList<>();
-        List<MavenArtifact> localArtifacts = new ArrayList<>();
+        List<UniqueArtifact> localArtifacts = new ArrayList<>();
 
         localArtifacts.addAll(mavenArtifactsPreferences.getRecords().values().stream().map(ma -> ma.getValue())
                 .collect(Collectors.toList()));
@@ -281,7 +281,7 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
     }
 
     @Override
-    public ObservableList<MavenArtifact> getArtifacts() {
+    public ObservableList<UniqueArtifact> getArtifacts() {
         return artifacts;
     }
 
@@ -364,7 +364,7 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
 //    }
 
     @Override
-    public boolean add(MavenArtifact artifact) {
+    public boolean add(UniqueArtifact artifact) {
         try {
             mavenArtifactsPreferences.getRecord(artifact);
             mavenArtifactsPreferences.writeToJavaPreferences();
@@ -406,7 +406,7 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
     }
 
     @Override
-    public boolean remove(MavenArtifact artifact) {
+    public boolean remove(UniqueArtifact artifact) {
         try {
             mavenArtifactsPreferences.removeArtifact(artifact.getCoordinates());
             mavenArtifactsPreferences.writeToJavaPreferences();

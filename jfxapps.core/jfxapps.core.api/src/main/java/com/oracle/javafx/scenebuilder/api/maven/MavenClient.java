@@ -36,8 +36,8 @@ package com.oracle.javafx.scenebuilder.api.maven;
 import java.util.List;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifactId;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
 import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
 
@@ -45,11 +45,11 @@ import javafx.beans.property.BooleanProperty;
 
 public interface MavenClient {
 
-    List<MavenArtifact> getAvailableVersions(String groupId, String artifactId);
+    List<UniqueArtifact> getAvailableVersions(String groupId, String artifactId);
 
-    MavenArtifact resolveWithDependencies(MavenArtifact artifact);
+    UniqueArtifact resolveWithDependencies(UniqueArtifact artifact);
 
-    Set<MavenArtifactId> search(String query);
+    Set<Artifact> search(String query);
 
     BooleanProperty searchingProperty();
 

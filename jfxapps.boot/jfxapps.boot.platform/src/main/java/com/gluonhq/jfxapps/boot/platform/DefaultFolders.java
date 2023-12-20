@@ -38,7 +38,7 @@ import java.util.UUID;
 
 public class DefaultFolders {
 
-    public static String APP_FOLDER_NAME = "Scene BuilderX";
+    public static String APP_FOLDER_NAME = "JfxApps";
 
     public static File USER_HOME = new File(System.getProperty("user.home")); //NOCHECK
 
@@ -54,15 +54,15 @@ public class DefaultFolders {
         if (applicationDataFolder == null) {
             final String appName = APP_FOLDER_NAME; //NOCHECK
 
-            if (OsPlatform.IS_WINDOWS) {
+            if (JfxAppsPlatform.IS_WINDOWS) {
                 applicationDataFolder
                         = new File(System.getenv("APPDATA") + "\\" + appName); //NOCHECK
-            } else if (OsPlatform.IS_MAC) {
+            } else if (JfxAppsPlatform.IS_MAC) {
                 applicationDataFolder
                         = new File(System.getProperty("user.home") //NOCHECK
                         + "/Library/Application Support/" //NOCHECK
                         + appName);
-            } else if (OsPlatform.IS_LINUX) {
+            } else if (JfxAppsPlatform.IS_LINUX) {
                 applicationDataFolder
                         = new File(System.getProperty("user.home") + "/.scenebuilder"); //NOCHECK
             }

@@ -1,0 +1,38 @@
+jfxapps:
+  platform:
+    rootPath: .
+  registry:
+    boot:
+      groupId: com.gluonhq.jfxapps
+      artifactId: jfxapps.core.registry
+#    defaults:
+#      manager:
+#        groupId: com.gluonhq.jfxapps
+#        artifactId: jfxapps.app.manager.registry
+#        mandatory: true
+  #    scenebuilderx:
+  #      groupId:
+  #      artifactId:
+#      devtools:
+#        groupId: com.gluonhq.jfxapps
+#        artifactId: jfxapps.devtools.registry
+
+#dynamic port
+server:
+  port: 0
+
+spring:
+  jpa:
+    hibernate:
+      naming: 
+        physical-strategy: com.gluonhq.jfxapps.boot.jpa.ModuleAwarePhysicalNamingStrategyStandardImpl
+        implicit-strategy: com.gluonhq.jfxapps.boot.jpa.ModuleAwareImplicitNamingStrategyLegacyJpaImpl
+      ddl-auto: update
+
+  datasource:
+    driverClassName: org.h2.Driver
+#    url: jdbc:h2:mem:jfxapps;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:file:./jfxapps-h2-db
+    username: sa
+    password: ""
+

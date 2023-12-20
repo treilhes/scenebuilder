@@ -166,7 +166,7 @@ public class ResizeGesture extends AbstractMouseGesture {
     @Override
     public void start(InputEvent e, Observer observer) {
         AbstractGesture.attachGesture(fxomInstance.getSceneGraphObject().getAs(Node.class), this);
-        super.start(e, observer);
+        super.startApplication(e, observer);
     }
 
 

@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.library.manager;
 
 import java.io.File;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 
 import javafx.collections.ObservableList;
@@ -45,6 +45,6 @@ public interface LibraryDialog extends SceneBuilderWindow {
     boolean load();
     boolean save();
 
-    ObservableList<MavenArtifact> getArtifacts();
+    ObservableList<UniqueArtifact> getArtifacts();
     ObservableList<File> getFilesOrFolders();
 }

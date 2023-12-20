@@ -50,7 +50,7 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifactId;
+import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
 import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
 
@@ -64,7 +64,7 @@ public class Maven implements RepositoryType {
     }
 
     @Override
-    public Set<MavenArtifactId> getCoordinates(Repository repository, String query) {
+    public Set<Artifact> getCoordinates(Repository repository, String query) {
         final HttpClient httpClient = newClientBuilder(repository).build();
 
         String searchUrl = toApiUrl(repository.getURL());
@@ -88,7 +88,7 @@ public class Maven implements RepositoryType {
                                 .map(doc -> doc.getString("id", ""))
                                 .distinct()
                                 .map(gav -> gav.split(":"))
-                                .map(gav -> MavenArtifactId.builder().withGroupId(gav[0]).withArtifactId(gav[1]).build())
+                                .map(gav -> Artifact.builder().withGroupId(gav[0]).withArtifactId(gav[1]).build())
                                 .collect(Collectors.toSet());
                     }
                 }

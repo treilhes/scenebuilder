@@ -34,7 +34,7 @@
 
 package com.oracle.javafx.scenebuilder.library.manager;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 
 /**
  * List cell item in the JAR/FXML Library dialog.
@@ -42,9 +42,9 @@ import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
 public class ArtifactDialogListItem implements DialogListItem {
 
     private final LibraryDialogController libraryDialogController;
-    private final MavenArtifact mavenArtifact;
+    private final UniqueArtifact mavenArtifact;
 
-    public ArtifactDialogListItem(LibraryDialogController libraryDialogController, MavenArtifact mavenArtifact) {
+    public ArtifactDialogListItem(LibraryDialogController libraryDialogController, UniqueArtifact mavenArtifact) {
         this.libraryDialogController = libraryDialogController;
         this.mavenArtifact = mavenArtifact;
     }
@@ -58,7 +58,7 @@ public class ArtifactDialogListItem implements DialogListItem {
         return mavenArtifact.getCoordinates();
     }
 
-    public MavenArtifact getMavenArtifact() {
+    public UniqueArtifact getMavenArtifact() {
         return mavenArtifact;
     }
 }

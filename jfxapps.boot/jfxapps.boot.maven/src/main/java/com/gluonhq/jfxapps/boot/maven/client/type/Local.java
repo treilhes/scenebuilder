@@ -41,14 +41,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifactId;
+import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
 import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
 
 public class Local implements RepositoryType {
 
+    /**
+     * search in local repository jar artefacts with groupId or artifactId containing the search term
+     * groupId or artifactId are extracted from folders name
+     */
     @Override
-    public Set<MavenArtifactId> getCoordinates(Repository repository, String query) {
+    public Set<Artifact> getCoordinates(Repository repository, String query) {
         String m2 = repository.getURL();
 
         try {
@@ -71,7 +75,7 @@ public class Local implements RepositoryType {
                     .filter(gav -> gav != null && gav.contains(query))
                     .distinct()
                     .map(gav -> gav.split(":"))
-                    .map(gav -> MavenArtifactId.builder().withGroupId(gav[0]).withArtifactId(gav[1]).build())
+                    .map(gav -> Artifact.builder().withGroupId(gav[0]).withArtifactId(gav[1]).build())
                     .collect(Collectors.toSet());
         } catch (IOException ex) { }
         return null;

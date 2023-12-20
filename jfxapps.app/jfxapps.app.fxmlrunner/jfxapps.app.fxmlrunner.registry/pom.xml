@@ -14,7 +14,6 @@
             <plugin>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps-registry-maven-plugin</artifactId>
-                <version>${project.version}</version>
                 <executions>
                     <execution>
                         <id>generate-registry-resources</id>

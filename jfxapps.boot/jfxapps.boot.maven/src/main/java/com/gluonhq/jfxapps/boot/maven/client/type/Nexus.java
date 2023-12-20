@@ -51,7 +51,7 @@ import javax.json.JsonReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifactId;
+import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
 import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
 
@@ -75,7 +75,7 @@ public class Nexus implements RepositoryType {
     }
 
     @Override
-    public Set<MavenArtifactId> getCoordinates(Repository repository, String query) {
+    public Set<Artifact> getCoordinates(Repository repository, String query) {
 
         String url = repository.getURL();
         String base = url.substring(0, url.indexOf("/content"));
@@ -100,7 +100,7 @@ public class Nexus implements RepositoryType {
                     first = false;
                     totalCount = Math.min(obj.getInt("totalCount", 0), MAX_RESULTS); //NOCHECK
                     if (totalCount > ITEMS_ITERATION) {
-                        Set<MavenArtifactId> coordinates = new HashSet<>(processRequest(obj));
+                        Set<Artifact> coordinates = new HashSet<>(processRequest(obj));
                         while (totalCount > ITEMS_ITERATION) {
                             iteration += 1;
                             coordinates.addAll(getCoordinates(repository, query)
@@ -121,7 +121,7 @@ public class Nexus implements RepositoryType {
         return null;
     }
 
-    private Set<MavenArtifactId> processRequest(JsonObject obj) {
+    private Set<Artifact> processRequest(JsonObject obj) {
         if (obj != null && !obj.isEmpty() && obj.containsKey("data")) { //NOCHECK
             JsonArray docResults = obj.getJsonArray("data"); //NOCHECK
             return docResults.getValuesAs(JsonObject.class)
@@ -135,7 +135,7 @@ public class Nexus implements RepositoryType {
         return null;
     }
 
-    private MavenArtifactId toMavenArtifactId(JsonObject doc) {
+    private Artifact toMavenArtifactId(JsonObject doc) {
         String groupId = doc.getString("groupId", "");
         String artifactId = doc.getString("artifactId", "");
 
@@ -145,7 +145,7 @@ public class Nexus implements RepositoryType {
         if (artifactId == null) {
             System.out.println();
         }
-        return MavenArtifactId.builder()
+        return Artifact.builder()
                 .withGroupId(groupId)
                 .withArtifactId(artifactId)
                 .build();

@@ -61,7 +61,7 @@ public class LogReader {
         logEncoder = new PatternLayoutEncoder();
         logEncoder.setContext(logCtx);
         logEncoder.setPattern("%-12date{YYYY-MM-dd HH:mm:ss.SSS} %-5level - %msg%n");
-        logEncoder.start();
+        logEncoder.startApplication();
 
         cyclicAppender = new CyclicBufferAppender<ILoggingEvent>();
         cyclicAppender.setMaxSize(maxLines);
@@ -72,7 +72,7 @@ public class LogReader {
     }
 
     public void startUpdateThread() {
-        cyclicAppender.start();
+        cyclicAppender.startApplication();
         updateTimer = new Timer();
         updateTimer.schedule(createTimerTask(), 0, 100);
     }

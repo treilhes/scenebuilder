@@ -10,12 +10,13 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
+import com.gluonhq.jfxapps.boot.context.ContextManager;
 import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.context.annotation.PreferedConstructor;
 import com.gluonhq.jfxapps.boot.context.annotation.Primary;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.gluonhq.jfxapps.boot.context.impl.ContextManager;
+import com.gluonhq.jfxapps.boot.context.impl.ContextManagerImpl;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Provider;
@@ -29,7 +30,7 @@ class SbContextFrameworkTest {
 
     @Test
     void test_injection_feature_optional() {
-        ContextManager mng = new ContextManager();
+        ContextManager mng = new ContextManagerImpl();
         Class<?>[] classes = { OptionalFeature.class };
         SbContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
         assertNotNull(ctx.getBean(OptionalFeature.class));
@@ -37,7 +38,7 @@ class SbContextFrameworkTest {
 
     @Test
     void test_injection_feature_generic() {
-        ContextManager mng = new ContextManager();
+        ContextManager mng = new ContextManagerImpl();
         Class<?>[] classes = { Component1.class, Component2.class, Component3.class, GenericFeature.class};
         SbContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
         assertNotNull(ctx.getBean(GenericFeature.class));
@@ -45,7 +46,7 @@ class SbContextFrameworkTest {
 
     @Test
     void test_injection_feature_list() {
-        ContextManager mng = new ContextManager();
+        ContextManager mng = new ContextManagerImpl();
         Class<?>[] classes = { Component1.class, Component2.class, Component3.class, ListFeature.class};
         SbContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
         assertNotNull(ctx.getBean(ListFeature.class));
@@ -53,7 +54,7 @@ class SbContextFrameworkTest {
 
     @Test
     void test_injection_feature_lazy_injection() {
-        ContextManager mng = new ContextManager();
+        ContextManager mng = new ContextManagerImpl();
         Class<?>[] classes = { Component1.class, Component2.class, Component3.class, LazyInjectionFeature.class };
         SbContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
         assertNotNull(ctx.getBean(LazyInjectionFeature.class));
@@ -61,7 +62,7 @@ class SbContextFrameworkTest {
 
     @Test
     void test_injection_feature_multiple_constructor() {
-        ContextManager mng = new ContextManager();
+        ContextManager mng = new ContextManagerImpl();
         Class<?>[] classes = { Component1.class, MultiConstructorFeature.class };
         SbContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
         assertNotNull(ctx.getBean(MultiConstructorFeature.class));
@@ -69,7 +70,7 @@ class SbContextFrameworkTest {
 
     @Test
     void test_injection_feature_primary() {
-        ContextManager mng = new ContextManager();
+        ContextManager mng = new ContextManagerImpl();
         Class<?>[] classes = { PrimaryComponent.class, SecondaryComponent.class, PrimaryInjectionFeature.class };
         SbContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
         assertNotNull(ctx.getBean(PrimaryInjectionFeature.class));
@@ -77,7 +78,7 @@ class SbContextFrameworkTest {
 
     @Test
     void test_injection_feature_lazy_initialization() {
-        ContextManager mng = new ContextManager();
+        ContextManager mng = new ContextManagerImpl();
         Class<?>[] classes = { LazyInitComponent.class, LazyInitFeature.class };
         SbContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
         LazyInitFeature lif = ctx.getBean(LazyInitFeature.class);

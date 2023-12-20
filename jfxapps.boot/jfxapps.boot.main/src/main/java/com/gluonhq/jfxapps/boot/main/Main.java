@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import com.gluonhq.jfxapps.boot.main.command.StartCommand;
-import com.gluonhq.jfxapps.boot.platform.OsPlatform;
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 
 import picocli.CommandLine;
 
@@ -48,7 +48,7 @@ public class Main {
     public static void main(String[] args) {
 
         // Fix Start: Github Issue #301
-        if (OsPlatform.IS_MAC) {
+        if (JfxAppsPlatform.IS_MAC) {
             args = filterMacPsn(args);
         }
 

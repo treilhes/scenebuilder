@@ -33,32 +33,82 @@
  */
 package com.gluonhq.jfxapps.boot.registry;
 
+import java.io.IOException;
+import java.util.Collection;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
+import com.gluonhq.jfxapps.registry.model.Application;
+import com.gluonhq.jfxapps.registry.model.Extension;
 import com.gluonhq.jfxapps.registry.model.Registry;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Interface RegistryManager.
+ * The Interface RegistryManager manage the registries. A {@link Registry} is a
+ * maven artifact containing a list of available {@link Application} and also a
+ * list of optional {@link Extension}.<br/>
+ * <br/>
+ * A registry source is provided as a {@link UniqueArtifact} which will be used
+ * as a base version. If the registry source does not specify a version the
+ * latest available one is used<br/>
+ * <br/>
+ * Three type of registry ({@link RegistryType}) exists:<br/>
+ * <br/>
+ * {@link RegistryType.Mandatory}<br/>
+ * * All applications in those registries will be installed by default. Optional
+ * extensions will still need user validation to install<br/>
+ * {@link RegistryType.Fixed}<br/>
+ * * When one of the component (application or extension) is installed/updated
+ * the registry version will be fixed/frozen which means all components
+ * (application or extension) from this registry will use the same version.<br/>
+ * {@link RegistryType.Normal}<br/>
+ * * Default type for registries<br/>
+ * <br/>
  */
 public interface RegistryManager {
 
+    public enum RegistryType {
+        /**
+         * All applications in those registries will be installed by default. Optional
+         * extensions will still need user validation to install
+         */
+        Mandatory,
+        /**
+         * When one of the component (application or extension) is installed/updated the
+         * registry version will be fixed/frozen which means all components (application
+         * or extension) from this registry will use the same version.
+         */
+        Fixed,
+        /**
+         * Default type for registries
+         */
+        Normal
+    }
+
     /**
      * Load registries already retrieved from network.
+     *
+     * @throws IOException
      */
-    void initRegistry();
-    
+    void loadState() throws IOException;
+
     /**
      * Load the registry artifact from maven, store it and load it.
      *
      * @param artifact the artifact
      * @return the registry
      */
-    Registry load(MavenArtifact artifact);
+    Registry load(UniqueArtifact artifact);
 
     /**
-     * Delete.
+     * get registry by id.
+     *
+     * @param registryId the registry id
+     * @return true, if successful
+     */
+    Registry get(UUID registryId);
+
+    /**
+     * Delete a loaded registry.
      *
      * @param registry the registry
      * @return true, if successful
@@ -66,10 +116,27 @@ public interface RegistryManager {
     boolean delete(Registry registry);
 
     /**
-     * Delete.
+     * Delete a loaded registry by id.
      *
      * @param registryId the registry id
      * @return true, if successful
      */
-    boolean delete(UUID registryId);
+    default boolean delete(UUID registryId) {
+        Registry registry = get(registryId);
+        return delete(registry);
+    }
+
+    /**
+     * List loaded registries
+     *
+     * @return the unmodifiable registry list
+     */
+    Collection<Registry> list();
+
+    Registry installedRegistry();
+
+    Registry installableRegistry();
+
+    Registry bootRegistry();
+
 }

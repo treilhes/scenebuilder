@@ -1,0 +1,38 @@
+jfxapps:
+  platform:
+    rootPath: ./target
+  registry:
+    snapshotsAllowed: true
+  repository:
+    directory: ${user.home}/.m2/repository
+    redirectionsEnabled: false
+    redirect:
+      - groupId: com.gluonhq.jfxapps
+        artifactId: jfxapps.core.registry
+        path: ../../jfxapps.core/jfxapps.core.registry/target/classes
+#        path: ../../jfxapps.core/jfxapps.core.registry/target/jfxapps.core.registry-17.0.0-SNAPSHOT.jar
+      - groupId: com.gluonhq.jfxapps
+        artifactId: jfxapps.core.api
+        path: ../../jfxapps.core/jfxapps.core.api/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: jfxapps.core.fxom
+        path: ../../jfxapps.core/jfxapps.core.fxom/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: jfxapps.core.metadata
+        path: ../../jfxapps.core/jfxapps.core.metadata/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: jfxapps.core.utils
+        path: ../../jfxapps.core/jfxapps.core.utils/target/classes
+        
+server:
+  port: 8080
+
+spring:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    show-sql: true
+  datasource:
+    url: jdbc:h2:file:./target/jfxapps-h2-db
+  

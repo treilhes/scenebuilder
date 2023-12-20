@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 
 import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
@@ -115,7 +115,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     private final FileSystem fileSystem;
     private final SbContext context;
 
-    private final ListChangeListener<? super MavenArtifact> artifactListener = c -> loadLibraryList();
+    private final ListChangeListener<? super UniqueArtifact> artifactListener = c -> loadLibraryList();
     private final ListChangeListener<? super Path> fileOrFolderListener = c -> loadLibraryList();
 
     private AbstractLibrary<?, ?> library;
@@ -366,7 +366,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
         messageLogger.logInfoMessage(key, I18N.getBundle(), args);
     }
 
-    private void updatePreferences(MavenArtifact mavenArtifact) {
+    private void updatePreferences(UniqueArtifact mavenArtifact) {
         if (mavenArtifact == null) {
             return;
         }

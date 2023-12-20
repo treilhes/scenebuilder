@@ -34,16 +34,10 @@
 package com.gluonhq.jfxapps.boot.main.command;
 
 import java.io.File;
-import java.io.InputStream;
 import java.nio.file.Path;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.gluonhq.jfxapps.boot.loader.ApplicationManager;
-import com.gluonhq.jfxapps.boot.loader.OpenCommandEvent;
-import com.gluonhq.jfxapps.boot.loader.dev.DevelopmentMode;
-import com.gluonhq.jfxapps.boot.main.Main;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -66,22 +60,18 @@ public class RunFxmlCommand implements Runnable {
 
     @Override
     public void run() {
-        if (devMode) {
-            DevelopmentMode.setActive(true);
-            DevelopmentMode.addMavenProjectDirectory(Path.of(".").resolve("../.."));
-        }
 
         logger.info("running fxml file : {}", fxmlFile.getAbsolutePath());
 
-        ApplicationManager appManager =  ApplicationManager.get(root);
-
-        try (InputStream bootStream = Main.class.getResourceAsStream(RUNNER_APPLICATION)){
-            appManager.loadApplicationStatte(bootStream);
-            appManager.load();
-            appManager.start();
-            appManager.send(new OpenCommandEvent(null, fxmlFile));
-        } catch (Exception e) {
-            logger.error("Unable to load the default bootable application definition", e);
-        }
+//        ApplicationManager appManager =  ApplicationManager.get(root);
+//
+//        try (InputStream bootStream = Main.class.getResourceAsStream(RUNNER_APPLICATION)){
+//            appManager.loadApplicationStatte(bootStream);
+//            appManager.load();
+//            appManager.start();
+//            appManager.send(new OpenCommandEvent(null, fxmlFile));
+//        } catch (Exception e) {
+//            logger.error("Unable to load the default bootable application definition", e);
+//        }
     }
 }

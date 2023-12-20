@@ -39,14 +39,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultProvider;
 import com.oracle.javafx.scenebuilder.api.preferences.KeyProvider;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.type.ListItemObjectPreference;
 
 @Prototype
-public class MavenArtifactPreferences extends ListItemObjectPreference<MavenArtifact> {
+public class MavenArtifactPreferences extends ListItemObjectPreference<UniqueArtifact> {
 
     private final static Logger logger = LoggerFactory.getLogger(MavenArtifactPreferences.class);
 
@@ -57,19 +57,19 @@ public class MavenArtifactPreferences extends ListItemObjectPreference<MavenArti
     public final static String FILTER = "filter";
     public final static String PATH = "path";
 
-    public MavenArtifactPreferences(PreferencesContext preferencesContext, String name, MavenArtifact defaultValue) {
+    public MavenArtifactPreferences(PreferencesContext preferencesContext, String name, UniqueArtifact defaultValue) {
         super(preferencesContext, name, defaultValue);
     }
 
-    public static KeyProvider<MavenArtifact> keyProvider() {
+    public static KeyProvider<UniqueArtifact> keyProvider() {
         return (m) -> m.getCoordinates();
     }
 
     public static DefaultProvider<MavenArtifactPreferences> defaultProvider() {
-        return (pc, name) -> new MavenArtifactPreferences(pc, name, MavenArtifact.builder().build());
+        return (pc, name) -> new MavenArtifactPreferences(pc, name, UniqueArtifact.builder().build());
     }
 
-    public static boolean isValid(MavenArtifact object) {
+    public static boolean isValid(UniqueArtifact object) {
         boolean valid = true;
 
         if (object == null) {
@@ -97,7 +97,7 @@ public class MavenArtifactPreferences extends ListItemObjectPreference<MavenArti
     }
 
     @Override
-    public String computeKey(MavenArtifact object) {
+    public String computeKey(UniqueArtifact object) {
         return keyProvider().newKey(object);
     }
 
@@ -107,7 +107,7 @@ public class MavenArtifactPreferences extends ListItemObjectPreference<MavenArti
         assert node != null;
         assert getValue().getCoordinates() != null;
 
-        MavenArtifact mavenArtifact = getValue();
+        UniqueArtifact mavenArtifact = getValue();
 
         String[] items = mavenArtifact.getCoordinates().split(":");
         node.put(GROUPID, items[0]);
@@ -120,7 +120,7 @@ public class MavenArtifactPreferences extends ListItemObjectPreference<MavenArti
         assert key != null;
         assert node != null;
 
-        MavenArtifact mavenArtifact = MavenArtifact.builder()
+        UniqueArtifact mavenArtifact = UniqueArtifact.builder()
                 .withGroupId(node.get(GROUPID, null))
                 .withArtifactId(node.get(ARTIFACTID, null))
                 .withVersion(node.get(VERSION, null))

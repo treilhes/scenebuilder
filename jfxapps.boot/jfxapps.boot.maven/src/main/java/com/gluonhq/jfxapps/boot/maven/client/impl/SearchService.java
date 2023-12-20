@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifactId;
+import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
 import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
 
@@ -62,7 +62,7 @@ public class SearchService {
 //        searching.set(false);
     }
 
-    public Set<MavenArtifactId> search(String query, List<Repository> repositories) {
+    public Set<Artifact> search(String query, List<Repository> repositories) {
 
         logger.info("Searching '{}' on {} repositories [{}]", query, repositories.size(), repositories);
 
@@ -72,9 +72,9 @@ public class SearchService {
             return t ;
         });
 
-        Set<MavenArtifactId> result = new ConcurrentSkipListSet<>();
+        Set<Artifact> result = new ConcurrentSkipListSet<>();
 
-        Set<Future<Set<MavenArtifactId>>> futures = repositories.stream()
+        Set<Future<Set<Artifact>>> futures = repositories.stream()
             .map(r -> createSearchTask(query, r))
             .map(c -> exec.submit(c))
             .collect(Collectors.toSet());
@@ -93,12 +93,12 @@ public class SearchService {
         return result;
     }
 
-    private Callable<Set<MavenArtifactId>> createSearchTask(String query, Repository repo) {
+    private Callable<Set<Artifact>> createSearchTask(String query, Repository repo) {
         return () -> {
             logger.info("Searching on repository {} with type {}", repo.getName(), repo.getType().getSimpleName());
 
             RepositoryType search = repo.getType().getConstructor().newInstance();
-            Set<MavenArtifactId> result = search.getCoordinates(repo, query);
+            Set<Artifact> result = search.getCoordinates(repo, query);
 
             logger.info("Search on repository {} with type {} returned {} items", repo.getName(), repo.getType().getSimpleName(), result.size());
             return result;

@@ -34,9 +34,7 @@
 package com.gluonhq.jfxapps.boot.main.command;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,14 +45,14 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
 
 import com.gluonhq.jfxapps.boot.loader.ApplicationManager;
 import com.gluonhq.jfxapps.boot.loader.OpenCommandEvent;
-import com.gluonhq.jfxapps.boot.loader.dev.DevelopmentMode;
-import com.gluonhq.jfxapps.boot.main.Main;
+import com.gluonhq.jfxapps.boot.main.config.BootConfig;
+import com.gluonhq.jfxapps.boot.main.config.BootHandler;
 import com.gluonhq.jfxapps.boot.main.util.MessageBox;
 import com.gluonhq.jfxapps.boot.main.util.MessageBoxMessage;
-import com.gluonhq.jfxapps.boot.main.util.MessageBoxNotificationHandler;
 import com.gluonhq.jfxapps.boot.platform.DefaultFolders;
 
 import picocli.CommandLine.Command;
@@ -67,16 +65,8 @@ public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMes
 
     private static MessageBox<MessageBoxMessage> messageBox;
 
-    private final static String BOOT_APPLICATION = "/boot.json";
-
-    @Option(names = {"--dev", "-d"}, description = "Enable development mode, project extensions sources are resolved localy using classes folder")
-    private boolean devMode;
-
     @Option(names = {"--root", "-r"}, defaultValue = "./target", description = "Extensions download folder")
     private Path root;
-
-    @Option(names = {"--boot", "-b"}, description = "Custom json boot file")
-    private File bootFile;
 
     @Option(names = {"--app", "-a"}, description = "target application uuid")
     private UUID targetApplication;
@@ -98,45 +88,10 @@ public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMes
             logger.error("Unable to initialize the message box", e);
         }
 
-        if (devMode) {
-            DevelopmentMode.setActive(true);
-            DevelopmentMode.addMavenProjectDirectory(Path.of(".").resolve("../../scenebuilder.core"));
-            DevelopmentMode.addMavenProjectDirectory(Path.of(".").resolve("../../scenebuilder.app"));
-            DevelopmentMode.addMavenProjectDirectory(Path.of(".").resolve("../../scenebuilder.app/scenebuilder.app.manager"));
-        }
+        var ctx = SpringApplication.run(BootConfig.class, new String[0]);
+        var bootHandler = ctx.getBean(BootHandler.class);
+        bootHandler.boot(targetApplication, files, new String[0]);
 
-        appManager =  ApplicationManager.get(root);
-
-        if (appManager.hasSavedApplicationState()) {
-            appManager.loadApplicationState();
-        } else {
-            try (InputStream bootStream = bootFile == null ? Main.class.getResourceAsStream(BOOT_APPLICATION) : new FileInputStream(bootFile)){
-                appManager.loadApplicationStatte(bootStream);
-            } catch (IOException e) {
-                logger.error("Unable to load the default bootable application definition", e);
-            }
-        }
-
-        try {
-            appManager.load();
-            appManager.start();
-
-            if (targetApplication != null) {
-                appManager.startEditor(targetApplication);
-            }
-
-            if (files != null && !files.isEmpty()) {
-                for (File file:files) {
-                    appManager.send(new OpenCommandEvent(targetApplication, file));
-                }
-            } else {
-                appManager.send(new OpenCommandEvent(targetApplication, null));
-            }
-
-
-        } catch (Exception e) {
-            logger.error("Unable to start the application", e);
-        }
     }
 
 
@@ -182,7 +137,7 @@ public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMes
     public void messageBoxDidGetMessage(MessageBoxMessage message) {
         try {
             if (message.getTargetApplication() != null) {
-                appManager.startEditor(message.getTargetApplication());
+                appManager.startApplication(message.getTargetApplication());
             }
 
             if (message.getFiles() != null && !message.getFiles().isEmpty()) {

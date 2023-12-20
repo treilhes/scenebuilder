@@ -9,13 +9,14 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Bean;
 
+import com.gluonhq.jfxapps.boot.context.ContextManager;
 import com.gluonhq.jfxapps.boot.context.Document;
 import com.gluonhq.jfxapps.boot.context.DocumentScope;
 import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.gluonhq.jfxapps.boot.context.annotation.Window;
-import com.gluonhq.jfxapps.boot.context.impl.ContextManager;
+import com.gluonhq.jfxapps.boot.context.impl.ContextManagerImpl;
 
 /**
  * In case of switching the dependency injection framework, those tests exhibit some of the needed features of the new framework
@@ -25,7 +26,7 @@ class SbContextScopeTest {
 
     @Test
     void ensure_singleton_scope_return_same_instance() {
-        ContextManager mng = new ContextManager();
+        ContextManager mng = new ContextManagerImpl();
 
         Class<?>[] classes = { Singleton1.class, Singleton2.class };
         SbContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
@@ -45,7 +46,7 @@ class SbContextScopeTest {
 
     @Test
     void ensure_named_singleton_return_same_instance() {
-        ContextManager mng = new ContextManager();
+        ContextManager mng = new ContextManagerImpl();
 
         Class<?>[] classes = { QualifiedSingleton1.class, QualifiedSingleton2.class };
         SbContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
@@ -64,7 +65,7 @@ class SbContextScopeTest {
 
     @Test
     void ensure_prototype_scope_return_different_instances() {
-        ContextManager mng = new ContextManager();
+        ContextManager mng = new ContextManagerImpl();
 
         Class<?>[] classes = { Prototype1.class, Prototype2.class };
         SbContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
@@ -84,7 +85,7 @@ class SbContextScopeTest {
 
     @Test
     void ensure_window_scope_return_rightly_scoped_instances() {
-        ContextManager mng = new ContextManager();
+        ContextManager mng = new ContextManagerImpl();
 
         Class<?>[] classes = { MainWindow.class, WindowComponent.class };
         SbContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
@@ -118,7 +119,7 @@ class SbContextScopeTest {
 
     @Test
     void ensure_singleton_scope_return_singleton_scoped_instances_from_bean_list() {
-        ContextManager mng = new ContextManager();
+        ContextManager mng = new ContextManagerImpl();
 
         Class<?>[] classes = { BeanList.class, WindowComponent.class, MainWindow.class };
         SbContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
@@ -142,7 +143,7 @@ class SbContextScopeTest {
 
     @Test
     void ensure_window_scope_return_window_scoped_instances_from_bean_list() {
-        ContextManager mng = new ContextManager();
+        ContextManager mng = new ContextManagerImpl();
 
         Class<?>[] classes = { BeanList.class, WindowComponent.class, MainWindow.class };
         SbContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);

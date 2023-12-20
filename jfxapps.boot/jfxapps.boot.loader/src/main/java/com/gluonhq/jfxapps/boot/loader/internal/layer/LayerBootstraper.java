@@ -40,19 +40,21 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-import com.gluonh.jfxapps.boot.layer.InvalidLayerException;
-import com.gluonh.jfxapps.boot.layer.Layer;
-import com.gluonh.jfxapps.boot.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
+import com.gluonhq.jfxapps.boot.layer.InvalidLayerException;
+import com.gluonhq.jfxapps.boot.layer.Layer;
+import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.loader.content.ExtensionContentProvider;
 import com.gluonhq.jfxapps.boot.loader.model.AbstractExtension;
 import com.gluonhq.jfxapps.boot.loader.model.LoadState;
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LayerBootstraper.
  */
+@Component
 public class LayerBootstraper {
 
     /** The Constant logger. */
@@ -60,7 +62,7 @@ public class LayerBootstraper {
 
     /** The layer manager. */
     private final ModuleLayerManager layerManager;
-    
+
     /** The root. */
     private final Path root;
 
@@ -70,10 +72,10 @@ public class LayerBootstraper {
      * @param root the root
      * @param layerManager the layer manager
      */
-    public LayerBootstraper(Path root, ModuleLayerManager layerManager) {
+    public LayerBootstraper(JfxAppsPlatform platform, ModuleLayerManager layerManager) {
         super();
         this.layerManager = layerManager;
-        this.root = root;
+        this.root = platform.rootPath();
     }
 
     /**
@@ -132,7 +134,7 @@ public class LayerBootstraper {
                 }
                 logger.info("Layer files are up to date {}", extension.getId());
 
-                layer = layerManager.create(parent, extension.getId(), path);
+                layer = layerManager.create(parent, extension.getId(), null, path);
                 if (layer != null) {
                     extension.setLoadState(LoadState.Loaded);
                 }

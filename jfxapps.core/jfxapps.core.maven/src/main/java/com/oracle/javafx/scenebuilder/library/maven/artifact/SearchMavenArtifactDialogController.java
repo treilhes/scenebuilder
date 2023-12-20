@@ -45,8 +45,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifact;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifactId;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.maven.ArtefactHandler;
@@ -92,10 +92,10 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
     private Button searchButton;
 
     @FXML
-    private ListView<MavenArtifactId> resultsListView;
+    private ListView<Artifact> resultsListView;
 
     @FXML
-    private ComboBox<MavenArtifact> versionsCombo;
+    private ComboBox<UniqueArtifact> versionsCombo;
 
     @FXML
     private ProgressIndicator progress;
@@ -108,10 +108,10 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
 
     private final MavenClient mavenClient;
     private final MessageLogger messageLogger;
-    private Service<ObservableSet<MavenArtifactId>> searchService;
-    private Service<ObservableList<MavenArtifact>> versionsService;
-    private final Service<MavenArtifact> installService;
-    private MavenArtifactId artifact;
+    private Service<ObservableSet<Artifact>> searchService;
+    private Service<ObservableList<UniqueArtifact>> versionsService;
+    private final Service<UniqueArtifact> installService;
+    private Artifact artifact;
     private final SceneBuilderWindow owner;
     private String lastLoadedKey = null;
 
@@ -132,24 +132,24 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
         this.owner = owner;
         this.messageLogger = messageLogger;
 
-        searchService = new Service<ObservableSet<MavenArtifactId>>() {
+        searchService = new Service<ObservableSet<Artifact>>() {
             @Override
-            protected Task<ObservableSet<MavenArtifactId>> createTask() {
-                return new Task<ObservableSet<MavenArtifactId>>() {
+            protected Task<ObservableSet<Artifact>> createTask() {
+                return new Task<ObservableSet<Artifact>>() {
                     @Override
-                    protected ObservableSet<MavenArtifactId> call() throws Exception {
+                    protected ObservableSet<Artifact> call() throws Exception {
                         return FXCollections.observableSet(getArtifacts());
                     }
                 };
             }
         };
 
-        versionsService = new Service<ObservableList<MavenArtifact>>() {
+        versionsService = new Service<ObservableList<UniqueArtifact>>() {
             @Override
-            protected Task<ObservableList<MavenArtifact>> createTask() {
-                return new Task<ObservableList<MavenArtifact>>() {
+            protected Task<ObservableList<UniqueArtifact>> createTask() {
+                return new Task<ObservableList<UniqueArtifact>>() {
                     @Override
-                    protected ObservableList<MavenArtifact> call() throws Exception {
+                    protected ObservableList<UniqueArtifact> call() throws Exception {
                         return FXCollections.observableArrayList(getVersions());
                     }
                 };
@@ -179,12 +179,12 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
             }
         });
 
-        installService = new Service<MavenArtifact>() {
+        installService = new Service<UniqueArtifact>() {
             @Override
-            protected Task<MavenArtifact> createTask() {
-                return new Task<MavenArtifact>() {
+            protected Task<UniqueArtifact> createTask() {
+                return new Task<UniqueArtifact>() {
                     @Override
-                    protected MavenArtifact call() throws Exception {
+                    protected UniqueArtifact call() throws Exception {
                         return resolveArtifacts();
                     }
                 };
@@ -194,9 +194,9 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
 
     @FXML
     public void initialize() {
-        Callback<ListView<MavenArtifact>, ListCell<MavenArtifact>> cellFactory = p -> new ListCell<MavenArtifact>() {
+        Callback<ListView<UniqueArtifact>, ListCell<UniqueArtifact>> cellFactory = p -> new ListCell<UniqueArtifact>() {
             @Override
-            protected void updateItem(MavenArtifact item, boolean empty) {
+            protected void updateItem(UniqueArtifact item, boolean empty) {
                 super.updateItem(item, empty);
                 if (item != null && !empty) {
                     if (item.getRepository() != null) {
@@ -241,8 +241,8 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
         installService.stateProperty().addListener((obs, ov, nv) -> {
             if (ov.equals(Worker.State.RUNNING)) {
                 if (nv.equals(Worker.State.SUCCEEDED)) {
-                    final MavenArtifact mavenArtifact = getArtifact();
-                    final MavenArtifact resolved = installService.getValue();
+                    final UniqueArtifact mavenArtifact = getArtifact();
+                    final UniqueArtifact resolved = installService.getValue();
 
                     boolean invalidResult = resolved == null || !resolved.hasPath()
                             || resolved.getDependencies().stream().anyMatch(d -> !d.hasPath());
@@ -292,9 +292,9 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
             }
         });
 
-        resultsListView.setCellFactory(p -> new ListCell<MavenArtifactId>() {
+        resultsListView.setCellFactory(p -> new ListCell<Artifact>() {
             @Override
-            protected void updateItem(MavenArtifactId item, boolean empty) {
+            protected void updateItem(Artifact item, boolean empty) {
                 super.updateItem(item, empty);
                 if (item != null && !empty) {
 //                    String suffix = "";
@@ -375,19 +375,19 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
         versionsService.restart();
     }
 
-    private Set<MavenArtifactId> getArtifacts() {
+    private Set<Artifact> getArtifacts() {
         String searchTerm = searchTextfield.getText();
         return mavenClient.search(searchTerm);
     }
 
-    private List<MavenArtifact> getVersions() {
+    private List<UniqueArtifact> getVersions() {
         String groupId = artifact.getGroupId();
         String artifactid = artifact.getArtifactId();
         return mavenClient.getAvailableVersions(groupId, artifactid);
     }
 
-    private MavenArtifact resolveArtifacts() {
-        MavenArtifact selected = getArtifact();
+    private UniqueArtifact resolveArtifacts() {
+        UniqueArtifact selected = getArtifact();
         return mavenClient.resolveWithDependencies(selected);
     }
 
@@ -396,7 +396,7 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
     }
 
     private String getArtifactCoordinates() {
-        MavenArtifact selected = getArtifact();
+        UniqueArtifact selected = getArtifact();
         if (selected != null) {
             return selected.getCoordinates();
         } else {
@@ -404,7 +404,7 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
         }
     }
 
-    private MavenArtifact getArtifact() {
+    private UniqueArtifact getArtifact() {
         return versionsCombo.getSelectionModel().getSelectedItem();
     }
 

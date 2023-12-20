@@ -35,12 +35,16 @@ package com.gluonhq.jfxapps.boot.maven.client.search;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenArtifactId;
-import com.gluonhq.jfxapps.boot.maven.client.api.MavenClient;
+import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
 import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
 import com.gluonhq.jfxapps.boot.maven.client.preset.MavenPresets;
@@ -52,14 +56,30 @@ class RepositoryTypeTest {
 
     private static final String searchTerm = "gluon";
 
+    @TempDir
+    Path tempRepoDir;
+
     @Test
     void must_return_results_with_local() {
         Repository repo = Repository.builder().withId(MavenPresets.LOCAL)
-                .withURL(MavenClient.getDefaultUserM2Repository().toString()).build();
-        RepositoryType search = new Local();
-        Set<MavenArtifactId> result = search.getCoordinates(repo, searchTerm);
+                .withURL(tempRepoDir.toString()).build();
 
-        assertTrue(result != null && result.size() > 0);
+        List<File> matches = List.of(
+                new File(tempRepoDir.toFile(), String.format("some/%s/path/some.artifact/1.0.0/x.jar", searchTerm)),
+                new File(tempRepoDir.toFile(), String.format("some/other/path/%s.artifact/1.0.0/x.jar", searchTerm))
+                );
+
+        matches.forEach(f -> {
+            f.getParentFile().mkdirs();
+            try {
+                f.createNewFile();
+            } catch (IOException e) {}
+        });
+
+        RepositoryType search = new Local();
+        Set<Artifact> result = search.getCoordinates(repo, searchTerm);
+
+        assertTrue(result != null && result.size() == matches.size());
         assertTrue(result.stream().allMatch(r -> r.getGroupId() != null));
         assertTrue(result.stream().allMatch(r -> r.getArtifactId() != null));
     }
@@ -69,7 +89,7 @@ class RepositoryTypeTest {
         Repository repo = MavenPresets.getPresetRepositories().stream()
                 .filter(r -> r.getId().equals(MavenPresets.MAVEN)).findFirst().get();
         RepositoryType search = new Maven();
-        Set<MavenArtifactId> result = search.getCoordinates(repo, searchTerm);
+        Set<Artifact> result = search.getCoordinates(repo, searchTerm);
 
         assertTrue(result != null && result.size() > 0);
         assertTrue(result.stream().allMatch(r -> r.getGroupId() != null));
@@ -81,7 +101,7 @@ class RepositoryTypeTest {
         Repository repo = MavenPresets.getPresetRepositories().stream()
                 .filter(r -> r.getId().equals(MavenPresets.SONATYPE)).findFirst().get();
         RepositoryType search = new Nexus();
-        Set<MavenArtifactId> result = search.getCoordinates(repo, searchTerm);
+        Set<Artifact> result = search.getCoordinates(repo, searchTerm);
 
         assertTrue(result != null && result.size() > 0);
         assertTrue(result.stream().allMatch(r -> r.getGroupId() != null));
@@ -93,7 +113,7 @@ class RepositoryTypeTest {
         Repository repo = MavenPresets.getPresetRepositories().stream()
                 .filter(r -> r.getId().equals(MavenPresets.GLUON_NEXUS)).findFirst().get();
         RepositoryType search = new Nexus();
-        Set<MavenArtifactId> result = search.getCoordinates(repo, searchTerm);
+        Set<Artifact> result = search.getCoordinates(repo, searchTerm);
 
         assertTrue(result != null && result.size() > 0);
         assertTrue(result.stream().allMatch(r -> r.getGroupId() != null));
