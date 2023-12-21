@@ -5,8 +5,8 @@ open module scenebuilder.core.maven {
     exports com.oracle.javafx.scenebuilder.library.preferences.global;
     exports com.oracle.javafx.scenebuilder.library.maven.repository;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
     requires jakarta.annotation;
-    requires scenebuilder.boot.maven;
+    requires jfxapps.boot.maven;
 
 }

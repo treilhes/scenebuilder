@@ -28,11 +28,5 @@
             <version>5.15.0</version>
         </dependency>
         
-        <!-- Update this dependency after moving scenebuilder.ext.sb to other
-        module-->
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.ext.sb</artifactId>
-        </dependency>
     </dependencies>
 </project>

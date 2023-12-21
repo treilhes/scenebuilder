@@ -40,7 +40,7 @@ open module scenebuilder.core.extension.store {
     exports com.oracle.javafx.scenebuilder.extstore.fs;
     exports com.oracle.javafx.scenebuilder.extstore.i18n;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
 
     provides Extension with ExtensionStoreExtension;
 

@@ -42,10 +42,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
-import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.gluonhq.jfxapps.boot.maven.client.config.RepositoryConfig.Redirect;
 import com.gluonhq.jfxapps.boot.maven.client.model.Repository;
-import com.gluonhq.jfxapps.boot.mavenam.Dependency;
 
 @Mapper(componentModel = "spring")
 public interface RepositoryMapper {
@@ -67,12 +65,6 @@ public interface RepositoryMapper {
     @Mapping(target = "withArtifact.withArtifact.withArtifactId", source = "artifactId")
     @Mapping(target = "withPath", source = "path", qualifiedByName = "fileToPath")
     ResolvedArtifact map(Redirect redirect);
-
-    @Mapping(target = "withArtifact.withGroupId", source = "groupId")
-    @Mapping(target = "withArtifact.withArtifactId", source = "artifactId")
-    @Mapping(target = "withVersion", source = "version")
-    @Mapping(target = "withClassifier.withClassifier", source = "classifier")
-    UniqueArtifact map(Dependency dependency);
 
     @Named("fileToPath")
     public static Path fileToPath(File file) {

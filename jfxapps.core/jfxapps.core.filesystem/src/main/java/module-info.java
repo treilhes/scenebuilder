@@ -40,10 +40,10 @@ open module scenebuilder.core.filesystem {
     exports com.oracle.javafx.scenebuilder.fs.controller;
     exports com.oracle.javafx.scenebuilder.fs;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
     requires org.slf4j;
     requires jakarta.inject;
-    requires scenebuilder.boot.platform;
+    requires jfxapps.boot.platform;
 
     provides Extension with FileSystemExtension;
 }

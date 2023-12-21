@@ -47,7 +47,7 @@ open module scenebuilder.ext.sb {
 
     exports com.oracle.javafx.scenebuilder.sb.css;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
     requires spring.beans;
 
     provides Extension with ScenebuilderContainerExtension;

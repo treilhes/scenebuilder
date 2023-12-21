@@ -44,8 +44,8 @@ open module scenebuilder.core.library {
 
     //opens com.oracle.javafx.scenebuilder.library.preferences.global to spring.core;
 
-    requires transitive scenebuilder.core.api;
-    requires transitive scenebuilder.boot.maven;
+    requires transitive jfxapps.core.api;
+    requires transitive jfxapps.boot.maven;
 
     requires scenebuilder.core.extension.store;
     requires scenebuilder.core.filesystem;

@@ -38,7 +38,7 @@ open module scenebuilder.core.preferences {
     exports com.oracle.javafx.scenebuilder.core.preferences;
     exports com.oracle.javafx.scenebuilder.core.preferences.i18n;
 
-    requires scenebuilder.core.api;
+    requires jfxapps.core.api;
     requires org.slf4j;
     requires spring.context;
 

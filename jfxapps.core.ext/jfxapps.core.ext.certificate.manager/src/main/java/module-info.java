@@ -40,7 +40,7 @@ open module scenebuilder.core.ext.certificate.manager {
     exports com.oracle.javafx.scenebuilder.certmngr.i18n;
     exports com.oracle.javafx.scenebuilder.certmngr.tls;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
 
     provides Extension with CertificateManagerExtension;
 }

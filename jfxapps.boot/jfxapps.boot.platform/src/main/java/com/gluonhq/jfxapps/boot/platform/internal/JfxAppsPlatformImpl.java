@@ -35,6 +35,7 @@ package com.gluonhq.jfxapps.boot.platform.internal;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -91,4 +92,6 @@ public class JfxAppsPlatformImpl implements JfxAppsPlatform {
         }
         return target;
     }
+
+
 }

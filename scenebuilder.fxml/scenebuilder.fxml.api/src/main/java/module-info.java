@@ -66,7 +66,7 @@ open module scenebuilder.fxml.api {
 
     exports com.oracle.javafx.scenebuilder.fxml.api.selection;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
     requires transitive scenebuilder.core.extension.api;
     requires transitive scenebuilder.core.fxom;
     requires transitive scenebuilder.core.metadata;

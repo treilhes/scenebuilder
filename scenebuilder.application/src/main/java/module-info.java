@@ -39,7 +39,7 @@ open module scenebuilder.application {
     exports com.oracle.javafx.scenebuilder.app.i18n;
     exports com.oracle.javafx.scenebuilder.app;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
     requires scenebuilder.core.launcher;
 
     //requires org.openjdk.nashorn;

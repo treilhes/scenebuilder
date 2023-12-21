@@ -38,7 +38,7 @@ open module scenebuilder.core.accelerators {
     exports com.oracle.javafx.scenebuilder.accelerators;
     exports com.oracle.javafx.scenebuilder.accelerators.i18n;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
 
     provides Extension with AcceleratorsExtension;
 }

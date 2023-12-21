@@ -39,7 +39,7 @@ open module scenebuilder.core.error {
     exports com.oracle.javafx.scenebuilder.core.error.i18n;
     exports com.oracle.javafx.scenebuilder.core.error.report;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
 
     provides Extension with ErrorExtension;
 }

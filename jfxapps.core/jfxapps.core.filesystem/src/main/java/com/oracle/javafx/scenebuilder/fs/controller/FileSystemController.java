@@ -55,7 +55,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Window;
-import com.gluonhq.jfxapps.boot.platform.internal.JfxAppsPlatformImpl;
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
@@ -254,12 +254,12 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
     @Override
     public File getMessageBoxFolder() {
-        return JfxAppsPlatformImpl.getMessageBoxFolder();
+        return JfxAppsPlatform.getMessageBoxFolder();
     }
 
     @Override
     public File getApplicationDataFolder() {
-        return JfxAppsPlatformImpl.getApplicationDataFolder();
+        return JfxAppsPlatform.getApplicationDataFolder();
     }
 
 

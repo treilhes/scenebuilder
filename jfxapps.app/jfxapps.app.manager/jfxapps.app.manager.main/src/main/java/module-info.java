@@ -40,8 +40,8 @@ module scenebuilder.app.manager.main {
     opens com.oracle.javafx.scenebuilder.app.manager.main.ui to scenebuilder.boot.context, javafx.fxml;
     opens com.oracle.javafx.scenebuilder.app.manager.main.ui.cmp to scenebuilder.boot.context, javafx.fxml;
 
-    requires scenebuilder.boot.loader;
-    requires scenebuilder.core.api;
+    requires jfxapps.boot.loader;
+    requires jfxapps.core.api;
     requires jakarta.inject;
     requires scenebuilder.core.metadata;
 

@@ -33,21 +33,12 @@
  */
 package com.gluonhq.jfxapps.boot.maven.client.impl;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Primary;
@@ -62,7 +53,6 @@ import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.gluonhq.jfxapps.boot.maven.client.config.RepositoryConfig;
 import com.gluonhq.jfxapps.boot.maven.client.config.RepositoryConfig.Redirect;
-import com.gluonhq.jfxapps.boot.mavenam.PomDependencyReader;
 
 /**
  * When the property jfxapps.repository.redirect is provided, this component is engaged

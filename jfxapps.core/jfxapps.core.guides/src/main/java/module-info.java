@@ -38,7 +38,7 @@ open module scenebuilder.core.guides {
     exports com.oracle.javafx.scenebuilder.guides;
     exports com.oracle.javafx.scenebuilder.guides.i18n;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
 
     provides Extension with GuidesExtension;
 }

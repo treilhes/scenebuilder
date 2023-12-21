@@ -48,7 +48,7 @@ open module scenebuilder.fxml.core.jobs {
 //    requires javafx.graphics;
 //    requires javafx.web;
 //    requires org.slf4j;
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
     requires transitive scenebuilder.core.core;
     requires scenebuilder.core.extension.api;
 //    requires spring.beans;

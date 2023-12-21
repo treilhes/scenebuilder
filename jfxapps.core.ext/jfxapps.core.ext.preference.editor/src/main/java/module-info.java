@@ -40,7 +40,7 @@ open module scenebuilder.ext.preference.editor {
     exports com.oracle.javafx.scenebuilder.prefedit;
     exports com.oracle.javafx.scenebuilder.prefedit.controller;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
     requires scenebuilder.ext.editors;
     requires scenebuilder.ext.menu;
 

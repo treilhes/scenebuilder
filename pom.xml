@@ -616,13 +616,13 @@
                         javafx.graphics/com.sun.javafx.geometry=scenebuilder.core.fxom</arg>
                             <arg>--add-exports</arg>
                             <arg>
-                        javafx.graphics/com.sun.javafx.geometry=scenebuilder.core.api</arg>
+                        javafx.graphics/com.sun.javafx.geometry=jfxapps.core.api</arg>
                             <arg>--add-exports</arg>
                             <arg>
                         javafx.graphics/com.sun.javafx.scene=scenebuilder.core.fxom</arg>
                             <arg>--add-exports</arg>
                             <arg>
-                        javafx.graphics/com.sun.javafx.scene=scenebuilder.core.api</arg>
+                        javafx.graphics/com.sun.javafx.scene=jfxapps.core.api</arg>
                             <arg>--add-exports</arg>
                             <arg>
                         javafx.graphics/com.sun.javafx.scene=scenebuilder.fxml.api</arg>

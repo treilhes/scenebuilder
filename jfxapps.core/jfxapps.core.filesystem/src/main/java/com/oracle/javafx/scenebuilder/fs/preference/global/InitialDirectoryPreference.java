@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.fs.preference.global;
 import java.io.File;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.gluonhq.jfxapps.boot.platform.internal.JfxAppsPlatformImpl;
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.type.FilePreference;
@@ -50,7 +50,7 @@ public class InitialDirectoryPreference extends FilePreference implements Manage
      *                                                                         *
      **************************************************************************/
     public static final String PREFERENCE_KEY = "initialDirectory"; //NOCHECK
-    public static final File PREFERENCE_DEFAULT_VALUE = JfxAppsPlatformImpl.USER_HOME;
+    public static final File PREFERENCE_DEFAULT_VALUE = JfxAppsPlatform.USER_HOME;
 
 	public InitialDirectoryPreference(PreferencesContext preferencesContext) {
 		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);

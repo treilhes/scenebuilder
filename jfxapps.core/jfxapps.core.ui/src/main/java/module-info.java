@@ -47,7 +47,7 @@ open module scenebuilder.core.layout {
     exports com.oracle.javafx.scenebuilder.core.dock;
     exports com.oracle.javafx.scenebuilder.core.dock.preferences.document;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
     requires jakarta.inject;
     requires jakarta.annotation;
     requires spring.context;

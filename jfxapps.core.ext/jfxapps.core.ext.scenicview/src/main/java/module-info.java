@@ -38,7 +38,7 @@ open module scenebuilder.ext.scenicview {
     exports com.oracle.javafx.scenebuilder.scenicview;
     exports com.oracle.javafx.scenebuilder.scenicview.i18n;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
     requires org.scenicview.scenicview;
 
     provides Extension with ScenicViewExtension;

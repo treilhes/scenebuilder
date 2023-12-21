@@ -32,7 +32,7 @@ open module jfxapps.boot.maven {
     requires java.compiler;
     requires spring.boot;
     requires spring.boot.autoconfigure;
-    requires jfxapps.boot.maven.am;
+
     //requires maven.model;
     //requires plexus.utils;
 }

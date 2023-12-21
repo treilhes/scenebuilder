@@ -33,10 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.test;
 
-import com.gluonhq.jfxapps.boot.context.di.FxmlController;
+import com.oracle.javafx.scenebuilder.api.di.FxmlController;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.util.FXMLUtils;
-import com.oracle.javafx.scenebuilder.sb.tooltheme.DefaultToolThemesList;
 
 import javafx.scene.Parent;
 
@@ -88,11 +87,11 @@ public class FxmlControllerLoader {
             FxmlControllerLoader.load(controller);
 
             if (sbm != null && darkTheme) {
-                sbm.stylesheetConfig().onNext(new DefaultToolThemesList.Dark());
+                //sbm.stylesheetConfig().onNext(new DefaultToolThemesList.Dark());
             }
 
             if (sbm != null && defaulTheme) {
-                sbm.stylesheetConfig().onNext(new DefaultToolThemesList.Default());
+                //sbm.stylesheetConfig().onNext(new DefaultToolThemesList.Default());
             }
 
             return controller;

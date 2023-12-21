@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.api.ApiExtension;
 
-open module scenebuilder.core.api {
+open module jfxapps.core.api {
 
     exports com.oracle.javafx.scenebuilder.api;
     exports com.oracle.javafx.scenebuilder.api.action;

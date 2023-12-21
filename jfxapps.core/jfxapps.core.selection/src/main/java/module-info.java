@@ -39,7 +39,7 @@ open module scenebuilder.core.selection {
     exports com.oracle.javafx.scenebuilder.selection.i18n;
     exports com.oracle.javafx.scenebuilder.selection.job;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
     requires transitive scenebuilder.core.jobs;
 
     provides Extension with SelectionExtension;

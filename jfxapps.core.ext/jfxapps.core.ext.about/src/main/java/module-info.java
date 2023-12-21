@@ -40,7 +40,7 @@ open module scenebuilder.ext.about {
     exports com.oracle.javafx.scenebuilder.about.actions;
     exports com.oracle.javafx.scenebuilder.about.controller;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
 
     provides Extension with AboutExtension;
 }

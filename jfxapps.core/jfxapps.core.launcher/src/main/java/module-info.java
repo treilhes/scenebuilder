@@ -41,7 +41,7 @@ open module scenebuilder.core.launcher {
     exports com.oracle.javafx.scenebuilder.launcher.app;
 
     requires scenebuilder.starter;
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
     requires scenebuilder.core.filesystem;
 
     provides Extension with LauncherExtension;

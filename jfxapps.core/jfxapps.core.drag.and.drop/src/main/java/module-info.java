@@ -39,7 +39,7 @@ open module scenebuilder.core.drag.and.drop{
     exports com.oracle.javafx.scenebuilder.core.dnd.controller;
     exports com.oracle.javafx.scenebuilder.core.dnd.source;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
     requires scenebuilder.core.jobs;
     requires scenebuilder.core.selection;
 

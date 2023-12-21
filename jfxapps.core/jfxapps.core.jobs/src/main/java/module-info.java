@@ -39,7 +39,7 @@ open module scenebuilder.core.jobs {
     exports com.oracle.javafx.scenebuilder.job.editor;
     exports com.oracle.javafx.scenebuilder.job.editor.atomic;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
 
     provides Extension with JobsExtension;
 }

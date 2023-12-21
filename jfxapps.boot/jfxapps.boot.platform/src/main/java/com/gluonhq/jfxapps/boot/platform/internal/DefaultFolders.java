@@ -31,8 +31,59 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.app.manager.main.update;
+package com.gluonhq.jfxapps.boot.platform.internal;
 
-public class Registry {
+import java.io.File;
+import java.util.UUID;
+
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+
+public class DefaultFolders {
+
+    public static String APP_FOLDER_NAME = "JfxApps";
+
+    private static File messageBoxFolder;
+
+    private static File applicationDataFolder;
+
+
+	private DefaultFolders() {}
+
+    public static synchronized File getApplicationDataFolder() {
+
+        if (applicationDataFolder == null) {
+            final String appName = APP_FOLDER_NAME; //NOCHECK
+
+            if (JfxAppsPlatform.IS_WINDOWS) {
+                applicationDataFolder
+                        = new File(System.getenv("APPDATA") + "\\" + appName); //NOCHECK
+            } else if (JfxAppsPlatform.IS_MAC) {
+                applicationDataFolder
+                        = new File(System.getProperty("user.home") //NOCHECK
+                        + "/Library/Application Support/" //NOCHECK
+                        + appName);
+            } else if (JfxAppsPlatform.IS_LINUX) {
+                applicationDataFolder
+                        = new File(System.getProperty("user.home") + "/.scenebuilder"); //NOCHECK
+            }
+        }
+
+        assert applicationDataFolder != null;
+
+        return applicationDataFolder;
+    }
+
+    public static synchronized File getUserExtensionsFolder(UUID extensionId) {
+        return new File(getApplicationDataFolder(), extensionId.toString()); //NOCHECK
+    }
+
+    public static synchronized File getMessageBoxFolder() {
+
+        if (messageBoxFolder == null) {
+            messageBoxFolder = new File(getApplicationDataFolder(), "/MB"); //NOCHECK
+        }
+
+        return messageBoxFolder;
+    }
 
 }

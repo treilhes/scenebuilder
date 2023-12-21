@@ -53,7 +53,7 @@ import com.gluonhq.jfxapps.boot.main.config.BootConfig;
 import com.gluonhq.jfxapps.boot.main.config.BootHandler;
 import com.gluonhq.jfxapps.boot.main.util.MessageBox;
 import com.gluonhq.jfxapps.boot.main.util.MessageBoxMessage;
-import com.gluonhq.jfxapps.boot.platform.DefaultFolders;
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -104,13 +104,13 @@ public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMes
         assert messageBox == null;
 
         try {
-            Files.createDirectories(DefaultFolders.getMessageBoxFolder().toPath());
+            Files.createDirectories(JfxAppsPlatform.getMessageBoxFolder().toPath());
         } catch (FileAlreadyExistsException x) {
             // Fine
         }
 
         final boolean result;
-        messageBox = new MessageBox<>(DefaultFolders.getMessageBoxFolder(), MessageBoxMessage.class, 1000 /* ms */);
+        messageBox = new MessageBox<>(JfxAppsPlatform.getMessageBoxFolder(), MessageBoxMessage.class, 1000 /* ms */);
 
         // Fix End
         if (messageBox.grab(delegate)) {

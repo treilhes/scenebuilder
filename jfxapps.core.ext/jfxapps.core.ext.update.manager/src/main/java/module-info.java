@@ -38,7 +38,7 @@ open module scenebuilder.ext.update.manager {
     exports com.oracle.javafx.scenebuilder.updatemgr.i18n;
     exports com.oracle.javafx.scenebuilder.updatemgr;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
     //requires spring.context;
 
     provides Extension with UpdateManagerExtension;

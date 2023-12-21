@@ -39,7 +39,7 @@ open module scenebuilder.ext.log.viewer {
     exports com.oracle.javafx.scenebuilder.logviewer.controller;
     exports com.oracle.javafx.scenebuilder.logviewer;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
 
     requires ch.qos.logback.core;
     requires ch.qos.logback.classic;

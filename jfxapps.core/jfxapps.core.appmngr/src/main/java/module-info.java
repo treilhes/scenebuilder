@@ -36,7 +36,7 @@ module scenebuilder.core.appmngr {
     exports com.oracle.javafx.scenebuilder.core.appmngr.impl;
     exports com.oracle.javafx.scenebuilder.core.appmngr;
 
-    requires scenebuilder.core.api;
+    requires jfxapps.core.api;
 
     provides Extension with AppManagerExtension;
 }

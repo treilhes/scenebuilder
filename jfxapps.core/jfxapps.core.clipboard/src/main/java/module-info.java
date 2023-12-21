@@ -38,7 +38,7 @@ open module scenebuilder.core.clipboard {
     exports com.oracle.javafx.scenebuilder.core.clipboard;
     exports com.oracle.javafx.scenebuilder.core.clipboard.i18n;
 
-    requires scenebuilder.core.api;
+    requires jfxapps.core.api;
 
     provides Extension with ClipboardExtension;
 }

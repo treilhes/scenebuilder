@@ -31,6 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.oracle.javafx.app.fxmlrunner.RunnerExtension;
 
@@ -41,8 +42,8 @@ module scenebuilder.app.fxmlrunner {
 
     requires jakarta.annotation;
     requires org.slf4j;
-    requires scenebuilder.boot.context;
-    requires scenebuilder.boot.loader;
+    requires jfxapps.boot.context;
+    requires jfxapps.boot.loader;
     requires javafx.graphics;
     requires javafx.fxml;
     requires java.scripting;

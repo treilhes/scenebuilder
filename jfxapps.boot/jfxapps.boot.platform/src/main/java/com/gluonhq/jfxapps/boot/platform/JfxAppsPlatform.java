@@ -36,6 +36,9 @@ package com.gluonhq.jfxapps.boot.platform;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Locale;
+import java.util.UUID;
+
+import com.gluonhq.jfxapps.boot.platform.internal.DefaultFolders;
 
 public interface JfxAppsPlatform {
 
@@ -55,6 +58,22 @@ public interface JfxAppsPlatform {
      * True if current platform is running Windows.
      */
     public static final boolean IS_WINDOWS = osName.contains("windows"); //NOCHECK
+
+    public static final File USER_HOME = new File(System.getProperty("user.home")); //NOCHECK
+
+    public static File getApplicationDataFolder() {
+        return DefaultFolders.getApplicationDataFolder();
+    }
+
+
+    public static File getUserExtensionsFolder(UUID extensionId) {
+        return DefaultFolders.getUserExtensionsFolder(extensionId);
+    }
+
+
+    public static File getMessageBoxFolder() {
+        return DefaultFolders.getMessageBoxFolder();
+    }
 
     File defaultUserM2Repository();
 

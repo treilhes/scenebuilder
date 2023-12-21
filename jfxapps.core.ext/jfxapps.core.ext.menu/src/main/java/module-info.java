@@ -42,7 +42,7 @@ open module scenebuilder.core.ext.menu {
     exports com.oracle.javafx.scenebuilder.menu.action.view;
     exports com.oracle.javafx.scenebuilder.menu.i18n;
 
-    requires transitive scenebuilder.core.api;
+    requires transitive jfxapps.core.api;
     requires transitive scenebuilder.core.filesystem;
 
     provides Extension with DefaultMenuExtension;
