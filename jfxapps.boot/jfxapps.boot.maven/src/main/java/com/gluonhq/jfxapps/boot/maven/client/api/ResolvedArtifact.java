@@ -44,7 +44,8 @@ import java.util.stream.Collectors;
 
 public class ResolvedArtifact implements Comparable<ResolvedArtifact> {
 
-    private final static Comparator<ResolvedArtifact> comparator = Comparator.comparing(ResolvedArtifact::getUniqueArtifact);
+    private final static Comparator<ResolvedArtifact> comparator = Comparator
+            .comparing(ResolvedArtifact::getUniqueArtifact);
 
     private final UniqueArtifact uniqueArtifact;
     private final Path path;
@@ -84,9 +85,7 @@ public class ResolvedArtifact implements Comparable<ResolvedArtifact> {
         List<Path> files = new ArrayList<>();
         files.add(getPath());
         if (!getDependencies().isEmpty()) {
-            files.addAll(getDependencies().stream()
-                    .map(ResolvedArtifact::getPath)
-                    .collect(Collectors.toList()));
+            files.addAll(getDependencies().stream().map(ResolvedArtifact::getPath).collect(Collectors.toList()));
         }
         return files;
     }
@@ -107,6 +106,11 @@ public class ResolvedArtifact implements Comparable<ResolvedArtifact> {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "ResolvedArtifact [uniqueArtifact=" + uniqueArtifact + ", path=" + path + "]";
+    }
+
     public static class Builder {
 
         private Path path;
@@ -122,10 +126,12 @@ public class ResolvedArtifact implements Comparable<ResolvedArtifact> {
             this.path = path;
             return this;
         }
+
         public Builder withDependencies(List<ResolvedArtifact> dependencies) {
             this.dependencies.addAll(dependencies);
             return this;
         }
+
         public ResolvedArtifact build() {
             return new ResolvedArtifact(this);
         }

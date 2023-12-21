@@ -12,7 +12,6 @@
     <module>jfxapps.boot.loader</module>
     <module>jfxapps.boot.context</module>
     <module>jfxapps.boot.maven</module>
-    <module>jfxapps.boot.maven.am</module>
     <module>jfxapps.boot.main</module>
     <module>jfxapps.boot.starter</module>
     <module>jfxapps.boot.starter.test</module>

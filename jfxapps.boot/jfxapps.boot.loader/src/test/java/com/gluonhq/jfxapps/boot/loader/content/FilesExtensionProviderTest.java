@@ -16,7 +16,7 @@ import com.gluonhq.jfxapps.boot.loader.content.FileExtensionProvider;
 
 
 
-class FileExtensionProviderTest {
+class FilesExtensionProviderTest {
 
     private static File resourceFolder = new File("./src/test/resources/com/oracle/javafx/scenebuilder/core/loader/content");
     private static File file1 = new File(resourceFolder, "somefile1.txt");
@@ -27,7 +27,7 @@ class FileExtensionProviderTest {
 
     @Test
     void must_detect_need_update() {
-        FileExtensionProvider fep = new FileExtensionProvider(Set.of(file1, file2));
+        var fep = new FilesExtensionProvider(Set.of(file1, file2));
         assertFalse(fep.isUpToDate(storeDir));
     }
 
@@ -35,13 +35,13 @@ class FileExtensionProviderTest {
     void must_detect_dont_need_update() throws IOException {
         Files.copy(file1.toPath(), storeDir.resolve(file1.getName()));
         Files.copy(file2.toPath(), storeDir.resolve(file2.getName()));
-        FileExtensionProvider fep = new FileExtensionProvider(Set.of(file1, file2));
+        var fep = new FilesExtensionProvider(Set.of(file1, file2));
         assertTrue(fep.isUpToDate(storeDir));
     }
 
     @Test
     void must_update_target_folder() throws IOException {
-        FileExtensionProvider fep = new FileExtensionProvider(Set.of(file1, file2));
+        var fep = new FilesExtensionProvider(Set.of(file1, file2));
         assertTrue(fep.update(storeDir));
         assertTrue(Files.exists(storeDir.resolve(file1.getName())));
         assertTrue(Files.exists(storeDir.resolve(file2.getName())));
@@ -50,7 +50,7 @@ class FileExtensionProviderTest {
 
     @Test
     void source_content_must_be_valid() throws IOException {
-        FileExtensionProvider fep = new FileExtensionProvider(Set.of(file1, file2));
+        var fep = new FilesExtensionProvider(Set.of(file1, file2));
         assertTrue(fep.isValid());
     }
 }

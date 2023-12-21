@@ -30,11 +30,6 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.registry.model</artifactId>
         </dependency>
-        <!-- Seems like the dependency below is needed by eclipse to understand this automatic module must be loaded -->
-        <!--<dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.boot.maven.am</artifactId>
-        </dependency>-->
         <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
         <dependency>
             <groupId>ch.qos.logback</groupId>

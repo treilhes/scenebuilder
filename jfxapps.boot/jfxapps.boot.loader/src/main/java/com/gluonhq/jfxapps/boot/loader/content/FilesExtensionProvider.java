@@ -31,25 +31,45 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.mavenam;
+package com.gluonhq.jfxapps.boot.loader.content;
 
-import java.io.InputStream;
-import java.util.Collections;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+public class FilesExtensionProvider implements ExtensionContentProvider {
 
+    private final Set<File> files;
+    private final List<FileExtensionProvider> aggregate;
 
-public class PomDependencyReader {
-
-    public static List<Dependency> read(InputStream input) {
-        try {
-            MavenXpp3Reader reader = new MavenXpp3Reader();
-            Model model = reader.read(input);
-            return model.getDependencies().stream().map(Mappers.INSTANCE::map).toList();
-        } catch (Exception e) {
-            return Collections.emptyList();
-        }
+    public FilesExtensionProvider(Set<File> files) {
+        this.files = new HashSet<>(files);
+        this.aggregate = files.stream().map(FileExtensionProvider::new).toList();
     }
+
+    @Override
+    public boolean isUpToDate(Path targetFolder) {
+        return aggregate.stream().allMatch(p -> p.isUpToDate(targetFolder));
+    }
+
+    @Override
+    public boolean update(Path targetFolder) throws IOException {
+        for (var p:aggregate) {
+            p.update(targetFolder);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isValid() {
+        return aggregate.stream().allMatch(ExtensionContentProvider::isValid);
+    }
+
+    public Set<File> getFiles() {
+        return files;
+    }
+
 }

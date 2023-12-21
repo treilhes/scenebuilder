@@ -37,11 +37,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import java.util.function.Predicate;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -74,6 +73,8 @@ public class MavenExtensionProvider implements ExtensionContentProvider {
 
     private RepositoryClient repositoryClient;
 
+    private final Map<ResolvedArtifact, ExtensionContentProvider> aggregate = new HashMap<>();
+
     public MavenExtensionProvider(String groupId, String artifactId, String version) {
         super();
         this.groupId = groupId;
@@ -93,9 +94,20 @@ public class MavenExtensionProvider implements ExtensionContentProvider {
 
         if (resolvedArtifact == null) {
             resolvedArtifact = repositoryClient.resolveWithDependencies(mavenArtifact).orElse(null);
+            buildAggregate(resolvedArtifact);
         }
     }
 
+    private void buildAggregate(ResolvedArtifact artifact) {
+
+        Function<Path, ExtensionContentProvider> setupProvider = (p) -> Files.isDirectory(p) ? new FolderExtensionProvider(p)
+                : new FileExtensionProvider(p);
+
+        aggregate.put(artifact, setupProvider.apply(artifact.getPath()));
+
+        artifact.getDependencies().forEach(d -> aggregate.put(d, setupProvider.apply(d.getPath())));
+
+    }
     @Override
     public boolean isValid() {
         resolveArtefact();
@@ -106,11 +118,18 @@ public class MavenExtensionProvider implements ExtensionContentProvider {
     public boolean isUpToDate(Path targetFolder) {
         resolveArtefactDependencies();
 
-        Predicate<Path> m2AndLocalMatches = p -> Utils.isFileUpToDate(p, targetFolder.resolve(p.getFileName()));
+        boolean upToDate = true;
 
-        boolean upToDate = m2AndLocalMatches.test(resolvedArtifact.getPath()) &&
-                resolvedArtifact.getDependencies().stream()
-                .allMatch(d -> m2AndLocalMatches.test(d.getPath()));
+        for (var entry:aggregate.entrySet()) {
+            var artifactId = entry.getKey().getUniqueArtifact().getArtifact().getArtifactId();
+            var provider = entry.getValue();
+
+            upToDate &= switch(provider) {
+                case FileExtensionProvider file -> file.isUpToDate(targetFolder);
+                case FolderExtensionProvider folder -> folder.isUpToDate(targetFolder.resolve(artifactId));
+                default -> throw new IllegalArgumentException("Unexpected value: " + provider);
+            };
+        }
 
         return upToDate;
     }
@@ -119,26 +138,27 @@ public class MavenExtensionProvider implements ExtensionContentProvider {
     public boolean update(Path targetFolder) throws IOException {
         resolveArtefactDependencies();
 
-        List<Path> content = Files.list(targetFolder).collect(Collectors.toList());
+        List<Path> obsoleteContent = Files.list(targetFolder).collect(Collectors.toList());
 
-        Set<ResolvedArtifact> artifacts = new HashSet<>();
-        artifacts.add(resolvedArtifact);
-        artifacts.addAll(resolvedArtifact.getDependencies());
+        for (var entry:aggregate.entrySet()) {
+            var artifactId = entry.getKey().getUniqueArtifact().getArtifact().getArtifactId();
+            var provider = entry.getValue();
 
-        for (ResolvedArtifact artifact:artifacts) {
-
-            //just update from maven
-            Path source = artifact.getPath();
-            Path target = targetFolder.resolve(source.getFileName());
-            if (!Utils.isFileUpToDate(source, target)) {
-                logger.debug("Copying dependency to {}", target);
-                Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
-            }
-            content.remove(target);
-
+            switch(provider) {
+                case FileExtensionProvider file -> {
+                    file.update(targetFolder);
+                    obsoleteContent.remove(targetFolder.resolve(file.getFile().getName()));
+                }
+                case FolderExtensionProvider folder -> {
+                    Path path = targetFolder.resolve(artifactId);
+                    folder.update(path);
+                    obsoleteContent.remove(path);
+                }
+                default -> throw new IllegalArgumentException("Unexpected value: " + provider);
+            };
         }
 
-        content.forEach(p -> {
+        obsoleteContent.forEach(p -> {
             try {
                 logger.debug("Cleaning obsolete dependency {}", p);
                 if (!deleteDirectory(p.toFile())) {

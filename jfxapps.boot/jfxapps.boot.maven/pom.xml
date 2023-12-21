@@ -18,10 +18,6 @@
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.boot.maven.am</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.platform</artifactId>
         </dependency>
 

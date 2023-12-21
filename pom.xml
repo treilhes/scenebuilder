@@ -33,15 +33,15 @@
 
     <properties>
 
-        <javafx.version>16</javafx.version>
+        <javafx.version>21.0.1</javafx.version>
         <aether.version>1.1.0</aether.version>
         <charm.glisten.version>5.0.0-jdk9</charm.glisten.version>
 
         <!-- compiler -->
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
-        <maven.compiler.release>17</maven.compiler.release>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <slf4j.version>2.0.6</slf4j.version>
@@ -110,11 +110,6 @@
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.boot.maven</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.boot.maven.am</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -130,61 +130,29 @@ public class RedirectedRepositoryClientImpl implements RepositoryClient {
 
         Optional<ResolvedArtifact> redirect = findMatch(artifact.getArtifact()).map(mappers::map);
 
-        if (redirect.isEmpty()) {
-            return client.resolveWithDependencies(artifact);
+        Optional<ResolvedArtifact> resolved = client.resolveWithDependencies(artifact);
+
+        if (resolved.isEmpty()) { // not found in repo
+            return redirect;
         }
 
-        var target = redirect.get();
-        var path = target.getPath();
-        var groupId = artifact.getArtifact().getGroupId();
-        var artifactId = artifact.getArtifact().getArtifactId();
+        // redirect dependencies
+        var redirectedDependencies = new ArrayList<ResolvedArtifact>();
 
-        String pomResource =String.format("META-INF/maven/%s/%s/pom.xml",groupId, artifactId);
+        resolved.ifPresent(ra -> ra.getDependencies().forEach(d -> {
+            Optional<ResolvedArtifact> raRedirect = findMatch(d.getUniqueArtifact().getArtifact()).map(mappers::map);
+            redirectedDependencies.add(raRedirect.orElse(d));
+        }));
 
+        var source = redirect.orElse(resolved.get());
 
-        Set<ResolvedArtifact> dependencies = new HashSet<>();
+        var target = Optional.of(ResolvedArtifact.builder()
+                .withArtifact(source.getUniqueArtifact())
+                .withPath(source.getPath())
+                .withDependencies(redirectedDependencies).build());
 
-        try (var pomStream = Files.isDirectory(path) ? pomStreamFromFolder(path, pomResource) : pomStreamFromJar(path, pomResource) ) {
-            var pomDependencies = PomDependencyReader.read(pomStream);
-            pomDependencies.stream()
-                .filter(d -> !"test".equals(d.scope()))
-                .filter(d -> !"system".equals(d.scope()))
-                .filter(d -> !"provided".equals(d.scope()))
-                .map(mappers::map)
-                .map(this::resolveWithDependencies)
-                .forEach(o -> dependencies.add(o.orElseThrow()));
-
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        };
-
-        return Optional.of(ResolvedArtifact.builder()
-                .withArtifact(target.getUniqueArtifact())
-                .withPath(target.getPath())
-                .withDependencies(new ArrayList<>(dependencies)).build());
+        return target;
     }
-
-    private InputStream pomStreamFromJar(Path path, String pomResource)
-            throws IOException, FileNotFoundException {
-        try (FileInputStream fis = new FileInputStream(path.toFile());
-                ZipInputStream zip = new ZipInputStream(fis)) {
-            ZipEntry next = zip.getNextEntry();
-            while (next != null) {
-                if (pomResource.equals(next.getName())) {
-                    return zip;
-                }
-                next = zip.getNextEntry();
-            }
-        }
-        return null;
-    }
-
-    private FileInputStream pomStreamFromFolder(Path path, String pomResource)
-            throws FileNotFoundException {
-        return new FileInputStream(path.resolve(pomResource).toFile());
-    }
-
 
 
     @Override
