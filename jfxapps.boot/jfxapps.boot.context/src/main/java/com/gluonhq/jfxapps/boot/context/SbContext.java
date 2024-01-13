@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,6 +35,7 @@ package com.gluonhq.jfxapps.boot.context;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -95,6 +96,8 @@ public interface SbContext {
     <T> T getBean(Class<T> cls, Object... parameters);
 
     Class<?>[] getRegisteredClasses();
+
+    <T> Map<String, T> getBeansOfType(Class<T> cls);
 
 
 

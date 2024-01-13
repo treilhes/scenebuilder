@@ -35,10 +35,10 @@ package com.oracle.javafx.scenebuilder.certmngr;
 
 import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
+import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithApplication;
 
 @Singleton
-public class CertificateManagerInitializer implements InitWithSceneBuilder {
+public class CertificateManagerInitializer implements InitWithApplication {
 
        public CertificateManagerInitializer(
             SbContext context

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -56,11 +56,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
@@ -123,6 +124,8 @@ public class LayerImpl implements Layer {
 
     private List<Path> paths;
 
+    private WeakReference<ClassLoader> classloader;
+
     /**
      * Instantiates a new layer impl.
      *
@@ -143,6 +146,11 @@ public class LayerImpl implements Layer {
         this.children = new HashSet<>();
         this.moduleReferences = new HashMap<>();
         moduleReferences.forEach((k, v) -> this.moduleReferences.put(k, new WeakReference<ModuleReference>(v)));
+
+        var clsLoader = moduleLayer.modules().stream().map(m -> m.getClassLoader()).filter(Objects::nonNull)
+                .findFirst().orElse(this.getClass().getClassLoader());
+
+        this.classloader = new WeakReference<ClassLoader>(clsLoader);
     }
 
     /**
@@ -270,12 +278,12 @@ public class LayerImpl implements Layer {
     }
 
     /**
-     * Unlock layer.
+     * Unlock layer. This method is not reliable due to the non deterministic nature of gc collection
      *
      * @return the future
      */
     @Override
-    public Future<Boolean> unlockLayer() {
+    public boolean unlockLayer() {
 
         jars().forEach(this::trickToClearJarFileCache);
 
@@ -283,9 +291,10 @@ public class LayerImpl implements Layer {
         this.moduleLayer.clear();
         this.moduleReferences.clear();
 
+        System.gc();
+
         FutureTask<Boolean> task = new FutureTask<>(() -> {
-            int maxAttempts = 5;
-            while (maxAttempts > 0) {
+            while (true) {
                 logger.debug("checking layer lock state");
                 try {
 
@@ -299,7 +308,6 @@ public class LayerImpl implements Layer {
                     if (jars().stream().filter(onlyJarsInTempDirectory()).anyMatch(LayerImpl::fileLockedCheck)) {
                         logger.debug("layer unlock check failed");
                         Thread.sleep(200);
-                        maxAttempts--;
                     } else {
                         logger.debug("layer unlocked");
                         return true;
@@ -310,12 +318,17 @@ public class LayerImpl implements Layer {
                     return false;
                 }
             }
-            return false;
         });
 
         new Thread(task).start();
 
-        return task;
+        try {
+            return task.get(30000, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            task.cancel(true);
+        }
+
+        return false;
     }
 
     /**
@@ -486,6 +499,11 @@ public class LayerImpl implements Layer {
     public String toString() {
         return "LayerImpl [id=" + id + ", directory=" + tempDirectory + ", children=" + children
                 + "]";
+    }
+
+    @Override
+    public ClassLoader getLoader() {
+        return classloader.get();
     }
 
 

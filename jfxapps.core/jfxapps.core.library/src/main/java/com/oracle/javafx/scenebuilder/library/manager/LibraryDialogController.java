@@ -43,10 +43,11 @@ import java.util.stream.Stream;
 import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
+import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.library.LibraryArtifact;
 import com.oracle.javafx.scenebuilder.api.maven.GetMavenArtifactDialog;
 import com.oracle.javafx.scenebuilder.api.maven.RepositoryManager;
 import com.oracle.javafx.scenebuilder.api.maven.SearchMavenArtifactDialog;
@@ -115,7 +116,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     private final FileSystem fileSystem;
     private final SbContext context;
 
-    private final ListChangeListener<? super UniqueArtifact> artifactListener = c -> loadLibraryList();
+    private final ListChangeListener<? super LibraryArtifact> artifactListener = c -> loadLibraryList();
     private final ListChangeListener<? super Path> fileOrFolderListener = c -> loadLibraryList();
 
     private AbstractLibrary<?, ?> library;
@@ -128,6 +129,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     private final RepositoryManager repositoryManager;
     private final SearchMavenArtifactDialog searchMavenArtifactDialog;
     private final GetMavenArtifactDialog getMavenArtifactDialog;
+    private final LibraryMappers mappers;
 
     public LibraryDialogController(
             SceneBuilderManager sceneBuilderManager,
@@ -136,11 +138,12 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
             MessageLogger messageLogger,
             MavenSetting mavenSetting,
             MavenArtifactsPreferences mavenPreferences,
-            EditorInstanceWindow document,
+            InstanceWindow document,
             FileSystem fileSystem,
             RepositoryManager repositoryManager,
             SearchMavenArtifactDialog searchMavenArtifactDialog,
-            GetMavenArtifactDialog getMavenArtifactDialog) {
+            GetMavenArtifactDialog getMavenArtifactDialog,
+            LibraryMappers mappers) {
         super(sceneBuilderManager, iconSetting, LibraryDialogController.class.getResource("LibraryDialog.fxml"), I18N.getBundle(),
                 document); // NOI18N
         this.owner = document.getStage();
@@ -154,6 +157,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
         this.repositoryManager = repositoryManager;
         this.searchMavenArtifactDialog = searchMavenArtifactDialog;
         this.getMavenArtifactDialog = getMavenArtifactDialog;
+        this.mappers = mappers;
     }
 
     public void initForLibrary(AbstractLibrary<?, ?> library) {
@@ -294,12 +298,12 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
             // releaseLocks();
 
             // Update record artifact
-            mavenPreferences.getRecordArtifact(m).writeToJavaPreferences();
+            mavenPreferences.getRecordArtifact(mappers.map(m)).writeToJavaPreferences();
 
             // startWatching();
             // enableLocks();
 
-            logInfoMessage("log.user.maven.installed", m.getCoordinates());
+            logInfoMessage("log.user.maven.installed", m.getUniqueArtifact().getCoordinates());
             return true;
         });
 
@@ -316,12 +320,12 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
             // releaseLocks();
 
             // Update record artifact
-            mavenPreferences.getRecordArtifact(m).writeToJavaPreferences();
+            mavenPreferences.getRecordArtifact(mappers.map(m)).writeToJavaPreferences();
 
             // startWatching();
             // enableLocks();
 
-            logInfoMessage("log.user.maven.installed", m.getCoordinates());
+            logInfoMessage("log.user.maven.installed", m.getUniqueArtifact().getCoordinates());
             return true;
         });
 
@@ -366,7 +370,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
         messageLogger.logInfoMessage(key, I18N.getBundle(), args);
     }
 
-    private void updatePreferences(UniqueArtifact mavenArtifact) {
+    private void updatePreferences(LibraryArtifact mavenArtifact) {
         if (mavenArtifact == null) {
             return;
         }

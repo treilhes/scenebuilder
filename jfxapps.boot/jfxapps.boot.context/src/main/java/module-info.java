@@ -14,6 +14,9 @@ module jfxapps.boot.context {
     requires spring.beans;
     requires spring.expression;
     requires spring.aop;
+
+    requires org.aspectj.weaver;
+
     requires jakarta.inject;
     requires jakarta.annotation;
     requires java.desktop;

@@ -45,7 +45,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.boot.context.DocumentScope;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
+import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
@@ -73,7 +73,7 @@ class WorkspaceControllerTest {
     private DocumentManager dm = new DocumentManager.DocumentManagerImpl();
 
     @Mock
-    private EditorInstance scopedDocument;
+    private ApplicationInstance scopedDocument;
 
     @Mock
     private FXOMDocument omDocument;

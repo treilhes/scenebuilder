@@ -53,10 +53,8 @@ import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
 import com.oracle.javafx.scenebuilder.library.maven.impl.MavenClientController;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
 import com.oracle.javafx.scenebuilder.test.FxmlControllerLoader;
-import com.oracle.javafx.scenebuilder.test.TestStages;
 
 import javafx.scene.Parent;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 @ExtendWith({ ApplicationExtension.class, MockitoExtension.class })
@@ -66,7 +64,7 @@ class GetMavenArtifactDialogControllerTest {
         I18N.initForTest();
     }
 
-    private MavenClientController mc = new MavenClientController(null, null);
+    private MavenClientController mc = new MavenClientController(null, null, null, null, null);
 
     private SceneBuilderManager sbm = new SceneBuilderManager.SceneBuilderManagerImpl();
 

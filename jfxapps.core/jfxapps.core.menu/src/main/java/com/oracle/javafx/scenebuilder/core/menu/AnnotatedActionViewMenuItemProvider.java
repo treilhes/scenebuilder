@@ -42,7 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.SbContext;
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuBuilder;
 import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
@@ -52,7 +52,7 @@ import com.oracle.javafx.scenebuilder.api.ui.menu.ViewMenuItemProvider;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 
-@Window
+@ApplicationInstanceSingleton
 public class AnnotatedActionViewMenuItemProvider implements ViewMenuItemProvider {
 
     private static Logger logger = LoggerFactory.getLogger(AnnotatedActionViewMenuItemProvider.class);

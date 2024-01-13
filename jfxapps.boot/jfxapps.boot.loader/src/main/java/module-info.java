@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -57,6 +57,15 @@ open module jfxapps.boot.loader {
     requires jakarta.annotation;
     requires org.mapstruct;
     requires java.compiler;
+    requires jakarta.persistence;
+    requires spring.data.jpa;
+    requires spring.boot.autoconfigure;
+    requires spring.aop;
+    requires spring.beans;
+
+    //not required, but loaded for future use
+    requires spring.web;
+    requires jfxapps.spring.core.patch.link;
 
     uses Extension;
 }

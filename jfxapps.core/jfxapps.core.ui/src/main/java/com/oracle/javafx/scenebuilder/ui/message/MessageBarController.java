@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.ui.message;
 
 import java.net.URL;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
@@ -61,7 +61,7 @@ import javafx.util.Duration;
 /**
  *
  */
-@Window
+@ApplicationInstanceSingleton
 public class MessageBarController extends AbstractFxmlPanelController implements MessageBar{
 
     @FXML

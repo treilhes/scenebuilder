@@ -42,7 +42,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
@@ -103,7 +103,7 @@ public class MoveToDockAction extends AbstractAction {
         return ActionStatus.DONE;
     }
 
-    @Window
+    @ApplicationInstanceSingleton
     public class MenuProvider implements ViewMenuItemProvider {
 
         private final ActionFactory actionFactory;

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,6 +33,8 @@
  */
 package com.gluonhq.jfxapps.boot.context.impl;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +43,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.comparator.Comparators;
 
 import com.gluonhq.jfxapps.boot.context.ContextManager;
 import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
@@ -70,16 +73,25 @@ public class ContextManagerImpl implements ContextManager {
 
     @Override
     public SbContext create(UUID parentContextId, UUID contextId, Class<?>[] classes, List<Object> singletonInstances, MultipleProgressListener progressListener) {
+        return create(parentContextId, contextId, null, classes, singletonInstances, progressListener);
+    }
+
+    @Override
+    public SbContext create(UUID parentContextId, UUID contextId, ClassLoader loader, Class<?>[] classes, List<Object> singletonInstances, MultipleProgressListener progressListener) {
 
         SbContextImpl parent = contexts.get(parentContextId);
 
-        SbContextImpl context = new SbContextImpl(contextId);
+        SbContextImpl context = new SbContextImpl(contextId, loader);
 
         if (parent != null) {
             context.setParent(parent);
         }
 
         logger.info("Loading context {} with parent {} using {} classes", contextId, parentContextId, classes.length);
+
+        if (logger.isDebugEnabled()) {
+            Arrays.stream(classes).sorted(Comparator.comparing(Class::getName)).forEach(c -> logger.debug("Loaded {}", c));
+        }
 
         if (progressListener != null) {
             context.addProgressListener(progressListener);

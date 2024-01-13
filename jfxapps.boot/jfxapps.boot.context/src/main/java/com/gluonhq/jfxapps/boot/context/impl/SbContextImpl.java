@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,6 +36,7 @@ package com.gluonhq.jfxapps.boot.context.impl;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -67,9 +68,14 @@ public class SbContextImpl implements SbContext  {
     private Class<?>[] registeredClasses;
 
     public SbContextImpl(UUID id) {
-        this.id = id;
+        this(id, null);
+    }
+
+    public SbContextImpl(UUID contextId, ClassLoader loader) {
+        this.id = contextId;
         this.beanFactory = new SbBeanFactoryImpl();
         this.context = new AnnotationConfigApplicationContext(this.beanFactory);
+        this.context.setClassLoader(loader);
 
         registerSingleton(this);
     }
@@ -108,6 +114,11 @@ public class SbContextImpl implements SbContext  {
     @Override
     public String[] getBeanDefinitionNames() {
         return context.getBeanDefinitionNames();
+    }
+
+    @Override
+    public <T> Map<String, T> getBeansOfType(Class<T> cls) {
+        return context.getBeansOfType(cls);
     }
 
     @Override

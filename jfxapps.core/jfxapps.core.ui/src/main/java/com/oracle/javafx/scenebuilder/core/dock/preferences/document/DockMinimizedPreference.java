@@ -36,13 +36,13 @@ package com.oracle.javafx.scenebuilder.core.dock.preferences.document;
 import java.util.HashMap;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.MapPreferences;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 
 
-@Window
+@ApplicationInstanceSingleton
 public class DockMinimizedPreference extends MapPreferences<UUID, Boolean> implements ManagedDocumentPreference {
 
     /***************************************************************************

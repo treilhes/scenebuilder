@@ -56,7 +56,7 @@ open module scenebuilder.core.fxom {
 //    requires java.desktop;
     requires org.slf4j;
 
-    requires scenebuilder.core.utils;
+    requires jfxapps.core.utils;
     requires java.scripting;
     requires javafx.fxml;
     requires javafx.controls;

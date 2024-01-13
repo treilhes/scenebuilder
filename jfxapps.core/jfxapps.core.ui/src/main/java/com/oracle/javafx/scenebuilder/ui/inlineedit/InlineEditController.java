@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.ui.inlineedit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
@@ -67,7 +67,7 @@ import javafx.util.Callback;
  * Controller used to in line edit nodes. The inline edit controller will
  * display TextInputControl within a popup window.
  */
-@Window
+@ApplicationInstanceSingleton
 public class InlineEditController implements InlineEdit{
 
     private final static Logger logger = LoggerFactory.getLogger(InlineEditController.class);

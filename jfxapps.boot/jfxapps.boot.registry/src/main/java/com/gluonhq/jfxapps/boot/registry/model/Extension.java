@@ -48,10 +48,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Version;
 
-@Entity
+@Entity(name = "JFXAPPS_BOOT_REGISTRY_EXTENSION")
 public class Extension {
 
     @Id

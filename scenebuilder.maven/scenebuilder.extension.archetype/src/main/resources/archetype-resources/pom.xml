@@ -23,7 +23,7 @@
             <version>${scenebuilder.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
+            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>scenebuilder.starter.test</artifactId>
             <version>${scenebuilder.version}</version>
             <scope>test</scope>

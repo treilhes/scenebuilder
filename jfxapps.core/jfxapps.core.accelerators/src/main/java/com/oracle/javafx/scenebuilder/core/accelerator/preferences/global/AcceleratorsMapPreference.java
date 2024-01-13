@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-import com.gluonhq.jfxapps.boot.context.annotation.EditorSingleton;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.MapPreferences;
@@ -48,7 +48,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.input.KeyCombination;
 
 
-@EditorSingleton
+@ApplicationSingleton
 public class AcceleratorsMapPreference extends MapPreferences<Class<? extends Action>, ObservableList<KeyCombination>> implements ManagedGlobalPreference {
 
     /***************************************************************************

@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- <parent>
         <artifactId>parent</artifactId>
-        <groupId>com.gluonhq.scenebuilder</groupId>
+        <groupId>com.gluonhq.jfxapps</groupId>
         <version>17.0.0-SNAPSHOT</version>
     </parent> -->
 
-    <groupId>com.gluonhq.scenebuilder</groupId>
+    <groupId>com.gluonhq.jfxapps</groupId>
     <artifactId>scenebuilder.extension.archetype</artifactId>
     <version>17.0.0-SNAPSHOT</version>
     <packaging>maven-archetype</packaging>

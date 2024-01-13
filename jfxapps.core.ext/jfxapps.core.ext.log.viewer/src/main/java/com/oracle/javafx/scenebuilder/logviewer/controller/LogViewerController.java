@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
@@ -58,7 +58,7 @@ import javafx.scene.input.DataFormat;
 /**
  *
  */
-@Window
+@ApplicationInstanceSingleton
 @ViewAttachment(name = LogViewerController.VIEW_NAME, id = LogViewerController.VIEW_ID,
     icon = "ViewIconLog.png", iconX2 = "ViewIconLog@2x.png")
 public class LogViewerController extends AbstractFxmlViewController {

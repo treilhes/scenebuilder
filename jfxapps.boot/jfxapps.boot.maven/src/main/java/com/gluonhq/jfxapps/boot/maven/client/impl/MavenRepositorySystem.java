@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,8 +37,6 @@ import static org.eclipse.aether.repository.RepositoryPolicy.CHECKSUM_POLICY_IGN
 import static org.eclipse.aether.repository.RepositoryPolicy.UPDATE_POLICY_ALWAYS;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,7 +55,7 @@ import org.eclipse.aether.AbstractRepositoryListener;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositoryEvent;
 import org.eclipse.aether.RepositorySystem;
-//import org.eclipse.aether.artifact.Artifact;
+
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
@@ -66,8 +64,6 @@ import org.eclipse.aether.graph.DependencyFilter;
 import org.eclipse.aether.impl.DefaultServiceLocator;
 import org.eclipse.aether.installation.InstallRequest;
 import org.eclipse.aether.installation.InstallationException;
-import org.eclipse.aether.metadata.DefaultMetadata;
-import org.eclipse.aether.metadata.Metadata;
 import org.eclipse.aether.repository.ArtifactRepository;
 import org.eclipse.aether.repository.Authentication;
 import org.eclipse.aether.repository.LocalRepository;
@@ -120,23 +116,19 @@ public class MavenRepositorySystem {
 
     private final RepositoryManager repositoryManager;
 
-    // private final Map<String, Repository> repositories = new HashMap<>();
-    // private final Map<String, RemoteRepository> remoteRepositories = new
-    // HashMap<>();
-
     private boolean offline = false;
 
-    public MavenRepositorySystem(File userM2RepositoryFolder, RepositoryManager repositoryManager) {
+    public MavenRepositorySystem(File repositoryFolder, RepositoryManager repositoryManager, boolean offline) {
 
-        this.userM2Repository = userM2RepositoryFolder;
+        this.userM2Repository = repositoryFolder;
         this.localRepo = new LocalRepository(userM2Repository);
         this.repositoryManager = repositoryManager;
-        this.offline = repositoryManager == null;
+        this.offline = repositoryManager == null ? true : offline;
         initRepositorySystem();
     }
 
     public MavenRepositorySystem(File repositoryFolder) {
-        this(repositoryFolder, null);
+        this(repositoryFolder, null, true);
     }
 
     private void initRepositorySystem() {
@@ -159,6 +151,7 @@ public class MavenRepositorySystem {
 
         session = MavenRepositorySystemUtils.newSession();
         session.setOffline(offline);
+        logger.info("Resolution is set to offline: {}", offline);
         session.setLocalRepositoryManager(system.newLocalRepositoryManager(session, localRepo));
         session.setIgnoreArtifactDescriptorRepositories(true);
         session.setTransferListener(new AbstractTransferListener() {
@@ -195,9 +188,15 @@ public class MavenRepositorySystem {
         VersionRangeRequest rangeRequest = new VersionRangeRequest();
         rangeRequest.setArtifact(localArtifact);
         rangeRequest.setRepositories(getRepositories());
+
         try {
             VersionRangeResult result = system.resolveVersionRange(session, rangeRequest);
-            cleanMetadata(localArtifact);
+
+            if (offline) {
+                filterLocalresultOnly(result, localArtifact);
+            }
+
+            // cleanMetadata(localArtifact);
             return result;
         } catch (VersionRangeResolutionException ex) {
         }
@@ -245,25 +244,19 @@ public class MavenRepositorySystem {
         }
     }
 
-    private void cleanMetadata(DefaultArtifact artifact) {
+    private void filterLocalresultOnly(VersionRangeResult result, DefaultArtifact artifact) {
+        var it = result.getVersions().listIterator();
+        while (it.hasNext()) {
+            var v = it.next();
 
-        final String path = localRepo.getBasedir().getAbsolutePath() + File.separator
-                + artifact.getGroupId().replaceAll("\\.", Matcher.quoteReplacement(File.separator)) + File.separator
-                + artifact.getArtifactId() + File.separator;
+            final String path = localRepo.getBasedir().getAbsolutePath() + File.separator
+                    + artifact.getGroupId().replaceAll("\\.", Matcher.quoteReplacement(File.separator)) + File.separator
+                    + artifact.getArtifactId() + File.separator + v;
 
-        final DefaultMetadata metadata = new DefaultMetadata("maven-metadata.xml", Metadata.Nature.RELEASE);
-
-        getRepositories().stream()
-                .map(r -> session.getLocalRepositoryManager().getPathForRemoteMetadata(metadata, r, "")).forEach(s -> {
-                    File file = new File(path + s);
-                    if (file.exists()) {
-                        try {
-                            Files.delete(file.toPath());
-                            Files.delete(new File(path + s + ".sha1").toPath());
-                        } catch (IOException ex) {
-                        }
-                    }
-                });
+            if (!new File(path).exists()) {
+                it.remove();
+            }
+        }
     }
 
     public Optional<ResolvedArtifact> resolveArtifact(UniqueArtifact artifact) {
@@ -317,7 +310,7 @@ public class MavenRepositorySystem {
             }
 
         } catch (ArtifactResolutionException ex) {
-            // logger.error("", ex);
+            logger.error("", ex);
         }
         return Optional.empty();
 
@@ -344,6 +337,19 @@ public class MavenRepositorySystem {
                     .getArtifactResults();
 
             ArtifactResult main = artifactResults.get(0);
+
+            if (artifactResults.size() == 1 && offline) {
+                // ensure pom is present to allow dependencies resolution or return empty
+                var pom = UniqueArtifact.builder()
+                        .withArtifact(artifact.getGroupId(), artifact.getArtifactId())
+                        .withVersion(artifact.getVersion())
+                        .withRepository(artifact.getRepository())
+                        .withClassifier(Classifier.POM).build();
+                if (resolveArtifact(pom).isEmpty()) {
+                    return Optional.empty();
+                }
+            }
+
             List<ResolvedArtifact> dependencies = new ArrayList<>();
 
             artifactResults.stream().skip(1) // exclude jar itself
@@ -390,21 +396,12 @@ public class MavenRepositorySystem {
 
         RepositoryPolicy releasePolicy = new RepositoryPolicy();
 
-        // TODO allow local search only for dev env
-//        RepositoryPolicy snapshotPolicy = repository.getContentType() != Content.RELEASE || this.favorizeLocalResolution
-//                ? new RepositoryPolicy(true, UPDATE_POLICY_NEVER, UPDATE_POLICY_NEVER)
-//                : new RepositoryPolicy(true, UPDATE_POLICY_ALWAYS, CHECKSUM_POLICY_IGNORE);
-
         RepositoryPolicy snapshotPolicy = new RepositoryPolicy(true, UPDATE_POLICY_ALWAYS, CHECKSUM_POLICY_IGNORE);
 
         final RemoteRepository repo = new RemoteRepository.Builder(repository.getId(), "default", repository.getURL())
                 .setReleasePolicy(releasePolicy).setSnapshotPolicy(snapshotPolicy).setAuthentication(auth).build();
 
         return Optional.of(repo);
-    }
-
-    private Optional<Repository> toRepository(RemoteRepository repository) {
-        return repository == null ? Optional.empty() : repositoryManager.get(repository.getId());
     }
 
     public String validateRepository(Repository repository) {

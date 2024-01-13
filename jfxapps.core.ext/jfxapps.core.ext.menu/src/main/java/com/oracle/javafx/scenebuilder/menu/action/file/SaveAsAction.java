@@ -45,9 +45,9 @@ import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
+import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
+import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
+import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
@@ -80,21 +80,21 @@ public class SaveAsAction extends AbstractAction {
     private final DocumentManager documentManager;
     private final InlineEdit inlineEdit;
     private final Dialog dialog;
-    private final EditorInstanceWindow documentWindow;
+    private final InstanceWindow documentWindow;
     private final FileSystem fileSystem;
     private final RecentItemsPreference recentItemsPreference;
-    private final EditorInstancesManager main;
+    private final InstancesManager main;
     private final ActionFactory actionFactory;
 
     public SaveAsAction(
             ActionExtensionFactory extensionFactory,
             DocumentManager documentManager,
-            EditorInstanceWindow documentWindow,
+            InstanceWindow documentWindow,
             InlineEdit inlineEdit,
             Dialog dialog,
             FileSystem fileSystem,
             ActionFactory actionFactory,
-            EditorInstancesManager main,
+            InstancesManager main,
             RecentItemsPreference recentItemsPreference) {
         super(extensionFactory);
         this.documentManager = documentManager;
@@ -184,7 +184,7 @@ public class SaveAsAction extends AbstractAction {
                 }
 
                 // Checks if fxmlFile is the name of an already opened document
-                final EditorInstance dwc = main.lookupDocument(newLocation);
+                final ApplicationInstance dwc = main.lookupInstance(newLocation);
                 if (dwc != null && dwc != this) {
                     final Path fxmlPath = Paths.get(fxmlFile.toString());
                     final String fileName = fxmlPath.getFileName().toString();

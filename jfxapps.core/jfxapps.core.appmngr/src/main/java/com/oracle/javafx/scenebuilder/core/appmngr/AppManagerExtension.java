@@ -38,7 +38,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.oracle.javafx.scenebuilder.core.appmngr.impl.CommandDispatcherImpl;
+import com.oracle.javafx.scenebuilder.core.appmngr.impl.CommandHandlerImpl;
+import com.oracle.javafx.scenebuilder.core.appmngr.impl.InstancesControllerImpl;
 
 public class AppManagerExtension implements OpenExtension {
 
@@ -63,7 +64,8 @@ public class AppManagerExtension implements OpenExtension {
     public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
-                CommandDispatcherImpl.class
+                CommandHandlerImpl.class,
+                InstancesControllerImpl.class
             );
      // @formatter:on
     }

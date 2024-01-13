@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,6 +39,11 @@ open module jfxapps.core.api {
     exports com.oracle.javafx.scenebuilder.api;
     exports com.oracle.javafx.scenebuilder.api.action;
     exports com.oracle.javafx.scenebuilder.api.action.editor;
+
+    exports com.oracle.javafx.scenebuilder.api.application;
+    exports com.oracle.javafx.scenebuilder.api.application.annotation;
+    exports com.oracle.javafx.scenebuilder.api.application.lifecycle;
+
     exports com.oracle.javafx.scenebuilder.api.ui.alert;
     exports com.oracle.javafx.scenebuilder.api.clipboard;
 
@@ -53,7 +58,6 @@ open module jfxapps.core.api {
     exports com.oracle.javafx.scenebuilder.api.ui.dock.annotation;
     exports com.oracle.javafx.scenebuilder.api.editor.images;
     exports com.oracle.javafx.scenebuilder.api.editor.selection;
-    exports com.oracle.javafx.scenebuilder.api.editors;
     exports com.oracle.javafx.scenebuilder.api.error;
     exports com.oracle.javafx.scenebuilder.api.factory;
     exports com.oracle.javafx.scenebuilder.api.fs;
@@ -61,7 +65,7 @@ open module jfxapps.core.api {
     exports com.oracle.javafx.scenebuilder.api.job;
     exports com.oracle.javafx.scenebuilder.api.launcher;
     exports com.oracle.javafx.scenebuilder.api.library;
-    exports com.oracle.javafx.scenebuilder.api.lifecycle;
+
     exports com.oracle.javafx.scenebuilder.api.maven;
     exports com.oracle.javafx.scenebuilder.api.metadata;
     exports com.oracle.javafx.scenebuilder.api.ui;
@@ -92,9 +96,8 @@ open module jfxapps.core.api {
     exports com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.rotator;
     exports com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.slider;
 
-    exports com.oracle.javafx.scenebuilder.api.appmngr;
-    exports com.oracle.javafx.scenebuilder.api.appmngr.annotation;
-    exports com.oracle.javafx.scenebuilder.api.javafx;
+
+    exports com.oracle.javafx.scenebuilder.api.application.javafx;
     //requires transitive scenebuilder.starter;
     //requires transitive scenebuilder.core.extension.api;
     //requires transitive scenebuilder.core.om;
@@ -104,7 +107,7 @@ open module jfxapps.core.api {
     requires transitive jfxapps.boot.maven;
     //requires transitive scenebuilder.boot.context;
 
-    requires transitive scenebuilder.core.utils;
+    requires transitive jfxapps.core.utils;
     requires transitive scenebuilder.core.fxom;
     requires transitive scenebuilder.core.metadata;
 
@@ -127,6 +130,8 @@ open module jfxapps.core.api {
     requires spring.context;
     requires jakarta.inject;
     requires jakarta.annotation;
+
+    requires org.aspectj.weaver;
 
     provides Extension with ApiExtension;
 }

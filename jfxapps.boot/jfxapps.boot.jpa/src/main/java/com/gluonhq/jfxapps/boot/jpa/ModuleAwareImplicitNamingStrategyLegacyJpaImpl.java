@@ -34,9 +34,9 @@
 package com.gluonhq.jfxapps.boot.jpa;
 
 import org.hibernate.boot.model.naming.EntityNaming;
-import org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl;
+import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
 
-public class ModuleAwareImplicitNamingStrategyLegacyJpaImpl extends ImplicitNamingStrategyLegacyJpaImpl {
+public class ModuleAwareImplicitNamingStrategyLegacyJpaImpl extends ImplicitNamingStrategyJpaCompliantImpl {
 
     /**
      * serial version

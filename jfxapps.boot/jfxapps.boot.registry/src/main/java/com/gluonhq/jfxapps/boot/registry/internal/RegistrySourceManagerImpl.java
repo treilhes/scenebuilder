@@ -61,7 +61,7 @@ public class RegistrySourceManagerImpl implements RegistrySourceManager {
     @PostConstruct
     protected void init() {
         // init if empty
-        if (repository.findAll().isEmpty()) {
+        if (repository.count() == 0) {
             config.getDefaults().values().forEach(v -> repository.save(mappers.map(v)));
         }
     }

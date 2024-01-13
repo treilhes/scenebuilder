@@ -37,4 +37,9 @@ import java.util.UUID;
 
 public interface EditorExtension extends SealedExtension {
     public final static UUID MANAGER_APP_ID = UUID.fromString("00000000-0000-0000-0000-000000000001");
+
+    @Override
+    default UUID getParentId() {
+        return ROOT_ID;
+    }
 }

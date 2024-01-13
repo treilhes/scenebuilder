@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.api.subjects;
 
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.ui.dock.View;
 import com.oracle.javafx.scenebuilder.api.ui.dock.ViewAttachment;
 
@@ -129,7 +129,7 @@ public interface ViewManager {
 
     }
 
-    @Window
+    @ApplicationInstanceSingleton
     public class ViewManagerImpl implements ViewManager {
 
         private ViewSubjects subjects;

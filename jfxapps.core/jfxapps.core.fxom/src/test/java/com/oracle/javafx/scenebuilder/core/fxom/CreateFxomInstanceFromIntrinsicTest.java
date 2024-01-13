@@ -37,10 +37,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junitpioneer.jupiter.SetSystemProperty;
 
 /**
  * Unit test for {@link FXOMIntrinsic#createFxomInstanceFromIntrinsic()}
  */
+@SetSystemProperty(key = "javafx.allowjs", value = "true")
 public class CreateFxomInstanceFromIntrinsicTest {
 
     private static FXOMIntrinsic fxomIntrinsic;

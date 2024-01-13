@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,12 +36,9 @@ package com.oracle.javafx.scenebuilder.extlibrary.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.boot.context.SbContext;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
+import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
@@ -56,8 +53,7 @@ import javafx.scene.input.DataFormat;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 public class ExtensionLibraryWindowController extends AbstractFxmlWindowController {
 
@@ -70,7 +66,7 @@ public class ExtensionLibraryWindowController extends AbstractFxmlWindowControll
     public ExtensionLibraryWindowController(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
-            EditorInstanceWindow document
+            InstanceWindow document
             ) {
         super(sceneBuilderManager, iconSetting, ExtensionLibraryWindowController.class.getResource("ExtensionLibraryWindow.fxml"), I18N.getBundle(),
                 document); // NOI18N

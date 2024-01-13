@@ -1,13 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.gluonhq.jfxapps</groupId>
-    <artifactId>jfxapps.core</artifactId>
-    <version>17.0.0-SNAPSHOT</version>
-  </parent>
-  <artifactId>jfxapps.core.registry</artifactId>
-  
-  <build>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.gluonhq.jfxapps</groupId>
+        <artifactId>jfxapps.core</artifactId>
+        <version>17.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>jfxapps.core.registry</artifactId>
+
+    <build>
         <plugins>
             <plugin>
                 <groupId>com.gluonhq.jfxapps</groupId>
@@ -37,6 +39,43 @@
                                     <title>FXML Runner</title>
                                     <text>App that run fxml files</text>
                                 </description>
+                                <extensions>
+                                    <extension>
+                                        <uuid>9ea8a33c-7743-43b0-9273-9d744b82b898</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>jfxapps.core.appmngr</artifactId>
+                                            <version>${project.version}</version>
+                                        </dependency>
+                                    </extension>
+                                    
+                                    <!-- secondary boot -->
+                                    <extension>
+                                        <uuid>0f456500-a6d0-4438-8186-4d3de840b81b</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>jfxapps.core.filesystem</artifactId>
+                                            <version>${project.version}</version>
+                                        </dependency>
+                                    </extension>
+                                    <extension>
+                                        <uuid>d82c47c7-e3a7-483c-bb49-f1d3b086c2bf</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>jfxapps.core.preferences</artifactId>
+                                            <version>${project.version}</version>
+                                        </dependency>
+                                    </extension>
+                                    <extension>
+                                        <uuid>cc8b28e8-b070-4cbd-8558-eff205a28cf1</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>jfxapps.core.ui</artifactId>
+                                            <version>${project.version}</version>
+                                        </dependency>
+                                    </extension>
+                                    
+                                </extensions>
                             </application>
                         </applications>
                     </registry>

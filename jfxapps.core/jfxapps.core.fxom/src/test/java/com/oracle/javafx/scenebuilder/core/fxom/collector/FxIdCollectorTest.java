@@ -41,6 +41,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junitpioneer.jupiter.SetSystemProperty;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
@@ -53,6 +54,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 @ExtendWith(ApplicationExtension.class)
+@SetSystemProperty(key = "javafx.allowjs", value = "true")
 class FxIdCollectorTest {
 
     @Start

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,16 +39,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.ContextManager;
 import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
 import com.gluonhq.jfxapps.boot.context.SbContext;
-import com.gluonhq.jfxapps.boot.context.annotation.EditorSingleton;
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.layer.Layer;
 import com.gluonhq.jfxapps.boot.layer.LayerNotFoundException;
 import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
@@ -83,7 +85,6 @@ public class ContextBootstraper {
                     .collect(Collectors.toSet());
         }
     };
-
 
     /**
      * Instantiates a new context bootstraper.
@@ -130,6 +131,7 @@ public class ContextBootstraper {
             MultipleProgressListener progressListener) throws InvalidExtensionException, LayerNotFoundException {
         return create(parent, extension, singletonInstances, progressListener, DEFAULT_LOADER);
     }
+
     /**
      * Creates the.
      *
@@ -142,7 +144,8 @@ public class ContextBootstraper {
      * @throws LayerNotFoundException    the layer not found exception
      */
     public SbContext create(SbContext parent, AbstractExtension<?> extension, List<Object> singletonInstances,
-            MultipleProgressListener progressListener, ServiceLoader loader) throws InvalidExtensionException, LayerNotFoundException {
+            MultipleProgressListener progressListener, ServiceLoader loader)
+            throws InvalidExtensionException, LayerNotFoundException {
         UUID layerId = extension.getId();
         UUID parentContextId = parent == null ? null : parent.getId();
 
@@ -174,6 +177,9 @@ public class ContextBootstraper {
         classes.addAll(childrenExportedClasses);
         classes.addAll(extensionLocalClasses);
 
+        //classes.add(AnnotationAwareAspectJAutoProxyCreator.class);
+        classes.add(AnnotationAwareAspectJAutoProxyCreatorInv.class);
+
         if (parent != null) { // get classes from parent with @EditorSingleton annotation
             boolean isSealed = loader.loadService(currentLayer, Extension.class).stream()
                     .anyMatch(SealedExtension.class::isInstance);
@@ -187,7 +193,8 @@ public class ContextBootstraper {
 
         Class<?>[] classesToRegister = classes.toArray(new Class[0]);
 
-        SbContext context = contextManager.create(parentContextId, layerId, classesToRegister, singletonInstances,
+        ClassLoader classloader = currentLayer.getLoader();
+        SbContext context = contextManager.create(parentContextId, layerId, classloader, classesToRegister, singletonInstances,
                 progressListener);
 
         return context;
@@ -200,10 +207,10 @@ public class ContextBootstraper {
      * @return true, if successful
      */
     private boolean acceptClassInSealedExtension(Class<?> cls) {
-        if (cls.getDeclaredAnnotationsByType(EditorSingleton.class).length > 0) {
+        if (cls.getDeclaredAnnotationsByType(ApplicationSingleton.class).length > 0) {
             return true;
         }
-        if (cls.getDeclaredAnnotationsByType(Window.class).length > 0) {
+        if (cls.getDeclaredAnnotationsByType(ApplicationInstanceSingleton.class).length > 0) {
             return true;
         }
         return false;
@@ -228,8 +235,11 @@ public class ContextBootstraper {
         }
 
         try {
-            return loader.loadService(layer, Extension.class).stream().filter(OpenExtension.class::isInstance)
-                    .map(OpenExtension.class::cast).peek(e -> validateExtension(e, extensionId, parentId))
+            return loader.loadService(layer, Extension.class).stream()
+                    .filter(OpenExtension.class::isInstance)
+                    .map(OpenExtension.class::cast)
+                    .peek(e -> validateExtension(e, extensionId, parentId))
+                    .peek(e -> e.initializeModule(layer))
                     .flatMap(e -> e.exportedContextClasses().stream()).collect(Collectors.toSet());
 
         } catch (InvalidExtensionException.Unchecked e) {
@@ -249,8 +259,10 @@ public class ContextBootstraper {
     private Set<Class<?>> findLocalClasses(ServiceLoader loader, UUID parentId, Layer layer)
             throws LayerNotFoundException, InvalidExtensionException {
         try {
-            return loader.loadService(layer, Extension.class).stream().peek(e -> validateExtension(e, layer.getId(), parentId))
-                    .flatMap(e -> e.localContextClasses().stream()).collect(Collectors.toSet());
+            return loader.loadService(layer, Extension.class).stream()
+                    .peek(e -> validateExtension(e, layer.getId(), parentId))
+                    .flatMap(e -> Stream.concat(Stream.of(e.getClass()), e.localContextClasses().stream()))
+                    .collect(Collectors.toSet());
         } catch (InvalidExtensionException.Unchecked e) {
             throw new InvalidExtensionException(e);
         }

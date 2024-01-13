@@ -44,7 +44,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Version;
 
-@Entity
+@Entity(name = "JFXAPPS_BOOT_REGISTRY_REGISTRY")
 public class Registry {
 
     @Id

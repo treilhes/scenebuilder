@@ -63,10 +63,9 @@ public class MavenRepositoryClientImpl implements RepositoryClient {
     private final RepositoryConfig config;
     private final SearchService searchService;
 
-    private MavenRepositorySystem onlineMaven;
-    private MavenRepositorySystem offlineMaven;
     private MavenRepositorySystem maven;
     private File repositoryFolder;
+    private boolean offline;
 
 
 
@@ -76,30 +75,32 @@ public class MavenRepositoryClientImpl implements RepositoryClient {
         this.repositoryFolder = config.getDirectory() != null ? config.getDirectory() : platform.defaultUserM2Repository();
         this.repositoryManager = repositoryManager;
         this.searchService = new SearchService();
-        this.offlineMaven = new MavenRepositorySystem(repositoryFolder);
-        this.onlineMaven = new MavenRepositorySystem(repositoryFolder, repositoryManager);
-        this.maven = onlineMaven;
+        this.offline = false;
+        this.maven = new MavenRepositorySystem(repositoryFolder, repositoryManager, this.offline);
     }
 
-    private MavenRepositoryClientImpl(MavenRepositoryClientImpl client, List<Repository> repositories) {
+    private MavenRepositoryClientImpl(MavenRepositoryClientImpl client, RepositoryManager repositoryManager, File storage, boolean offline) {
         super();
         this.config = client.config;
-        this.repositoryFolder = client.repositoryFolder;
-        this.repositoryManager = RepositoryManager.readOnlyManager(repositories);
+        this.repositoryFolder = storage != null ? storage : client.repositoryFolder;
+        this.repositoryManager = repositoryManager;
         this.searchService = client.searchService;
-        this.offlineMaven = new MavenRepositorySystem(repositoryFolder);
-        this.onlineMaven = new MavenRepositorySystem(repositoryFolder, repositoryManager);
-        this.maven = onlineMaven;
+        this.maven = new MavenRepositorySystem(repositoryFolder, repositoryManager, offline);
+    }
+
+    @Override
+    public RepositoryClient withLocalOnly() {
+        return new MavenRepositoryClientImpl(this, this.repositoryManager,  this.repositoryFolder, true);
     }
 
     @Override
     public RepositoryClient withRepositories(List<Repository> repositories) {
-        return new MavenRepositoryClientImpl(this, repositories);
+        return new MavenRepositoryClientImpl(this, RepositoryManager.readOnlyManager(repositories),  this.repositoryFolder, false);
     }
 
     @Override
-    public void favorizeLocalResolution() {
-        this.maven = offlineMaven;
+    public RepositoryClient withLocalPath(File path) {
+        return new MavenRepositoryClientImpl(this, this.repositoryManager,  path, this.offline);
     }
 
     @Override
@@ -137,6 +138,12 @@ public class MavenRepositoryClientImpl implements RepositoryClient {
     }
 
     @Override
+    public Map<Classifier, Optional<ResolvedArtifact>> resolve(ResolvedArtifact artifact, List<Classifier> classifiers) {
+        return maven.resolveArtifacts(artifact.getUniqueArtifact(), classifiers);
+    }
+
+
+    @Override
     public Optional<ResolvedArtifact> resolve(UniqueArtifact artifact) {
         return maven.resolveArtifact(artifact);
     }
@@ -144,6 +151,11 @@ public class MavenRepositoryClientImpl implements RepositoryClient {
     @Override
     public Optional<ResolvedArtifact> resolveWithDependencies(UniqueArtifact artifact) {
         return maven.resolveWithDependencies(artifact);
+    }
+
+    @Override
+    public Optional<ResolvedArtifact> resolveWithDependencies(ResolvedArtifact artifact) {
+        return maven.resolveWithDependencies(artifact.getUniqueArtifact());
     }
 
     @Override

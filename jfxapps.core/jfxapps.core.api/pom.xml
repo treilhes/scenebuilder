@@ -28,6 +28,11 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.boot.maven</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.fxom</artifactId>
         </dependency>
         <dependency>
@@ -43,24 +48,7 @@
             <artifactId>jfxapps.core.extension.api</artifactId>
         </dependency>-->
         <!-- JavaFX -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-swing</artifactId>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.pdfsam.rxjava3/rxjavafx -->
-        <dependency>
-            <groupId>org.pdfsam.rxjava3</groupId>
-            <artifactId>rxjavafx</artifactId>
-            <version>3.0.2</version>
-        </dependency>
+        
         
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
@@ -82,5 +70,12 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.starter</artifactId>
         </dependency>-->
+        
+        <!-- https://mvnrepository.com/artifact/org.pdfsam.rxjava3/rxjavafx -->
+        <dependency>
+            <groupId>org.pdfsam.rxjava3</groupId>
+            <artifactId>rxjavafx</artifactId>
+            <version>3.0.2</version>
+        </dependency>
     </dependencies>
 </project>

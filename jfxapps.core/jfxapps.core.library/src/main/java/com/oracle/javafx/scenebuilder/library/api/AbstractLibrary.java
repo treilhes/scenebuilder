@@ -59,12 +59,13 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
+import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithDocument;
+import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithApplication;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.library.Library;
+import com.oracle.javafx.scenebuilder.api.library.LibraryArtifact;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
 import com.oracle.javafx.scenebuilder.api.library.Report;
-import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
-import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.library.manager.ImportProgressDialogController;
@@ -90,7 +91,7 @@ import javafx.concurrent.Worker.State;
  *
  */
 public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
-        implements Library<R, I>, InitWithSceneBuilder, InitWithDocument {
+        implements Library<R, I>, InitWithApplication, InitWithDocument {
 
     private final static Logger logger = LoggerFactory.getLogger(AbstractLibrary.class);
 
@@ -142,7 +143,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
                 store.startWatching();
             }
 
-            List<Path> sources = store.getArtifacts().stream().flatMap(ma -> ma.toJarList().stream())
+            List<Path> sources = store.getArtifacts().stream().flatMap(ma -> ma.getJarList().stream())
                     .collect(Collectors.toList());
             sources.addAll(store.getFilesOrFolders());
             sources.add(store.getFilesFolder());
@@ -172,7 +173,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
 
     public abstract String getLibraryId();
 
-    public abstract Explorer<UniqueArtifact, R> newArtifactExplorer();
+    public abstract Explorer<LibraryArtifact, R> newArtifactExplorer();
 
     public abstract Explorer<Path, R> newFolderExplorer();
 
@@ -193,7 +194,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
     public abstract void lock(List<Path> pathes);
 
     private void exploreStore() {
-        final List<UniqueArtifact> artifacts = new ArrayList<>(store.getArtifacts());
+        final List<LibraryArtifact> artifacts = new ArrayList<>(store.getArtifacts());
         final List<Path> fileOrFolders = new ArrayList<>(store.getFilesOrFolders());
 
         Stream<Task<List<R>>> artifactStream = artifacts.stream()
@@ -504,7 +505,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
         }
     }
 
-    public boolean performAddArtifact(UniqueArtifact artifact) {
+    public boolean performAddArtifact(LibraryArtifact artifact) {
 
         List<Task<List<R>>> taskList = List.of(artifact).stream()
                 .filter(ma -> JAVAFX_MODULES.stream().noneMatch(ma.getArtifactId()::startsWith))
@@ -525,8 +526,8 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
         lock(listFilesOrFolders);
     }
 
-    public void performRemoveArtifact(UniqueArtifact artifact) {
-        List<Path> files = artifact.toJarList();
+    public void performRemoveArtifact(LibraryArtifact artifact) {
+        List<Path> files = artifact.getJarList();
         unlock(files);
         doThenReLoad(() -> getStore().remove(artifact));
         lock(files);
@@ -536,7 +537,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
         performAddFilesOrFolders(listFilesOrFolders);
     }
 
-    public void performEditArtifact(UniqueArtifact artifact) {
+    public void performEditArtifact(LibraryArtifact artifact) {
         performAddArtifact(artifact);
     }
 

@@ -10,6 +10,7 @@
 
     <springProfile name="dev">
         <logger name="com.gluonhq" level="DEBUG"/>
+        <logger name="org.springframework.aop" level="DEBUG"/>
         
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>

@@ -112,10 +112,10 @@ class FXOMLoader implements LoadListener {
 
         if (loaderCapabilitiesManagers.size() == 0
                 || loaderCapabilitiesManagers.stream().anyMatch(l -> l.isStaticLoadingEnabled())) {
-            logger.info("Loading document with scripts/bindings/eventHandlers disabled");
+            logger.debug("Loading document with scripts/bindings/eventHandlers disabled");
             FXOMLoader.setStaticLoad(fxmlLoader, true);
         } else {
-            logger.info("Loading document with scripts/bindings/eventHandlers enabled");
+            logger.debug("Loading document with scripts/bindings/eventHandlers enabled");
         }
 
         final Charset utf8 = Charset.forName("UTF-8");// NOCHECK

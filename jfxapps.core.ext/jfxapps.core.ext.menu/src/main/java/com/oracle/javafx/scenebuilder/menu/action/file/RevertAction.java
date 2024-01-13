@@ -38,8 +38,8 @@ import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
+import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert;
@@ -61,17 +61,17 @@ public class RevertAction extends AbstractAction {
 
     public final static String MENU_ID = "revertMenu";
 
-    private final EditorInstance document;
+    private final ApplicationInstance document;
     private final DocumentManager documentManager;
     private final Dialog dialog;
-    private final EditorInstanceWindow documentWindow;
+    private final InstanceWindow documentWindow;
     private final ActionFactory actionFactory;
 
     public RevertAction(
             ActionExtensionFactory extensionFactory,
-            EditorInstance document,
+            ApplicationInstance document,
             DocumentManager documentManager,
-            EditorInstanceWindow documentWindow,
+            InstanceWindow documentWindow,
             Dialog dialog,
             ActionFactory actionFactory) {
         super(extensionFactory);

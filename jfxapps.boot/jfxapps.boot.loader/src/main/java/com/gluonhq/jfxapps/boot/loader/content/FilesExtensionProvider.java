@@ -57,7 +57,7 @@ public class FilesExtensionProvider implements ExtensionContentProvider {
 
     @Override
     public boolean update(Path targetFolder) throws IOException {
-        for (var p:aggregate) {
+        for (var p : aggregate) {
             p.update(targetFolder);
         }
         return true;
@@ -70,6 +70,11 @@ public class FilesExtensionProvider implements ExtensionContentProvider {
 
     public Set<File> getFiles() {
         return files;
+    }
+
+    @Override
+    public String toString() {
+        return "FilesExtensionProvider [files=" + files + "]";
     }
 
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,46 +39,44 @@ import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.oracle.javafx.scenebuilder.api.library.LibraryArtifact;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionLibraryFilter;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionReport;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionReportEntry;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.library.api.Explorer;
-import com.oracle.javafx.scenebuilder.library.maven.MavenArtifact;
 
 import javafx.concurrent.Task;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-public class ExtensionMavenArtifactExplorer implements Explorer<MavenArtifact, ExtensionReport> {
+@ApplicationSingleton
+public class ExtensionMavenArtifactExplorer implements Explorer<LibraryArtifact, ExtensionReport> {
 
     private final static Logger logger = LoggerFactory.getLogger(ExtensionMavenArtifactExplorer.class);
 
     private final ClassLoaderController classLoaderController;
-    private final List<ExtensionLibraryFilter> filters;
+    private final Optional<List<ExtensionLibraryFilter>> filters;
 
     public ExtensionMavenArtifactExplorer(
-            @Autowired ClassLoaderController classLoaderController,
-            @Autowired(required = false) List<ExtensionLibraryFilter> filters) {
+            ClassLoaderController classLoaderController,
+            Optional<List<ExtensionLibraryFilter>> filters) {
         super();
         this.classLoaderController = classLoaderController;
         this.filters = filters;
     }
 
     @Override
-    public Task<List<ExtensionReport>> explore(MavenArtifact source) {
+    public Task<List<ExtensionReport>> explore(LibraryArtifact source) {
 
         return new Task<List<ExtensionReport>>() {
 
@@ -85,7 +84,7 @@ public class ExtensionMavenArtifactExplorer implements Explorer<MavenArtifact, E
             protected List<ExtensionReport> call() throws Exception {
                 final List<ExtensionReport> res = new ArrayList<>();
 
-                List<Path> files = source.toJarList();
+                List<Path> files = source.getJarList();
 
                 // The classloader takes in addition all already existing
                 // jar files stored in the user lib dir.
@@ -98,14 +97,15 @@ public class ExtensionMavenArtifactExplorer implements Explorer<MavenArtifact, E
                         List<ExtensionReportEntry> entries = new ArrayList<>();
                         try (JarFile jarFile = new JarFile(f.toFile())) {
                             JarEntry entry = jarFile.getJarEntry(ExtensionExplorerUtil.EXTENSION_SERVICE_FILE);
-                            
+
                             if (entry != null) {
                                 try (InputStreamReader isr = new InputStreamReader(jarFile.getInputStream(entry));
                                      BufferedReader br = new BufferedReader(isr)) {
                                     String className = null;
                                     while((className = br.readLine()) != null) {
                                         if (!className.isEmpty()) {
-                                            ExtensionReportEntry reportEntry = ExtensionExplorerUtil.exploreEntry(classLoader, className, filters);
+                                            ExtensionReportEntry reportEntry = ExtensionExplorerUtil
+                                                    .exploreEntry(classLoader, className, filters.orElse(List.of()));
                                             if (reportEntry != null) {
                                                 entries.add(reportEntry);
                                             }

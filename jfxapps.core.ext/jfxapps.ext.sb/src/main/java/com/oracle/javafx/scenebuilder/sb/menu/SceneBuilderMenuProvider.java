@@ -38,8 +38,8 @@ import java.util.List;
 
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemProvider;
@@ -51,7 +51,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 
-@Window
+@ApplicationInstanceSingleton
 public class SceneBuilderMenuProvider implements MenuItemProvider {
 
     private final static String FILE_MENU_ID = "fileMenu";
@@ -70,7 +70,7 @@ public class SceneBuilderMenuProvider implements MenuItemProvider {
         List<MenuItemAttachment> menus = new ArrayList<>();
         menus.add(new CloseWindowAttachment());
 
-        if (!EditorPlatform.IS_MAC) {
+        if (!JfxAppsPlatform.IS_MAC) {
             menus.add(new ExitSceneBuilderAttachment());
         }
         return menus;

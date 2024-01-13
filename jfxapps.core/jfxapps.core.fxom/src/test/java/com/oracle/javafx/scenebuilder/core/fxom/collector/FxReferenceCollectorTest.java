@@ -40,6 +40,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junitpioneer.jupiter.SetSystemProperty;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
@@ -54,6 +55,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.testutil.FxmlUtil;
 import javafx.stage.Stage;
 
 @ExtendWith(ApplicationExtension.class)
+@SetSystemProperty(key = "javafx.allowjs", value = "true")
 class FxReferenceCollectorTest {
 
     @Start

@@ -115,12 +115,21 @@ public class AbstractExtension<T extends AbstractExtension<Extension>> implement
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AbstractExtension other = (AbstractExtension) obj;
+        AbstractExtension<?> other = (AbstractExtension<?>) obj;
         return Objects.equals(extensions, other.extensions) && Objects.equals(id, other.id);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected AbstractExtension<T> clone() throws CloneNotSupportedException {
         return (AbstractExtension<T>) super.clone();
     }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + " [id=" + id + ", contentProvider=" + contentProvider + ", loadState=" + loadState
+                + "]";
+    }
+
+
 }

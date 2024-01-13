@@ -38,7 +38,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.job.JobPipeline;
@@ -50,7 +50,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 /**
  * @treatAsPrivate
  */
-@Window
+@ApplicationInstanceSingleton
 public class JobManagerImpl implements JobManager {
 
 	private static final int UNDO_STACK_MAX_SIZE = 50;

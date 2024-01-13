@@ -33,14 +33,14 @@
  */
 package com.oracle.javafx.scenebuilder.sb.menu.controller;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 
 /**
  *
  */
-@Window
+@ApplicationInstanceSingleton
 public class SceneBuilderMenuController {
 
     private final DocumentManager documentManager;

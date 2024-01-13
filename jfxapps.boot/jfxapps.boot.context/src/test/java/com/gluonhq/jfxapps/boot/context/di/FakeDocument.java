@@ -34,13 +34,13 @@
 package com.gluonhq.jfxapps.boot.context.di;
 
 import com.gluonhq.jfxapps.boot.context.Document;
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class FakeDocument.
  */
-@Window
+@ApplicationInstanceSingleton
 public class FakeDocument implements Document {
 
     /** The document scoped object. */

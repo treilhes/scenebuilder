@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.api.subjects;
 
 import java.util.Collection;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.ui.dock.Dock;
 
 import io.reactivex.rxjava3.subjects.PublishSubject;
@@ -52,7 +52,7 @@ public interface DockManager {
 
     Subject<Collection<Dock>> availableDocks();
 
-    @Window
+    @ApplicationInstanceSingleton
     public class DockManagerImpl implements DockManager {
 
         private DockSubjects subjects;

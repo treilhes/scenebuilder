@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,14 +35,16 @@ package com.oracle.javafx.scenebuilder.core.fxom;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.SetSystemProperty;
 
 import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 /**
  * Unit test for {@link FXOMIntrinsic#addIntrinsicProperty(FXOMDocument)}
  */
+@SetSystemProperty(key = "javafx.allowjs", value = "true")
 public class AddIntrinsicPropertyTest {
 
     private static final String CHARSET_PROPERTY_NAME = "charset";
@@ -53,7 +55,7 @@ public class AddIntrinsicPropertyTest {
     private static PropertyName charsetPropertyName;
     private static PropertyName sourcePropertyName;
 
-    @BeforeClass
+    @BeforeAll
     public static void initialize() {
         prepareTestData();
     }

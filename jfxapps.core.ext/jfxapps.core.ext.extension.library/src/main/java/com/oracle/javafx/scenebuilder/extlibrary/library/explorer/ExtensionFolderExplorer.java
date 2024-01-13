@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,14 +42,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionLibraryFilter;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionReport;
@@ -58,17 +57,17 @@ import com.oracle.javafx.scenebuilder.library.api.Explorer;
 
 import javafx.concurrent.Task;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+@ApplicationSingleton
 public class ExtensionFolderExplorer implements Explorer<Path, ExtensionReport> {
 
     private final static Logger logger = LoggerFactory.getLogger(ExtensionFolderExplorer.class);
 
     private final ClassLoaderController classLoaderController;
-    private final List<ExtensionLibraryFilter> filters;
+    private final Optional<List<ExtensionLibraryFilter>> filters;
 
-    public ExtensionFolderExplorer(@Autowired ClassLoaderController classLoaderController,
-            @Autowired(required = false) List<ExtensionLibraryFilter> filters) {
+    public ExtensionFolderExplorer(
+            ClassLoaderController classLoaderController,
+            Optional<List<ExtensionLibraryFilter>> filters) {
         super();
         this.classLoaderController = classLoaderController;
         this.filters = filters;
@@ -88,7 +87,7 @@ public class ExtensionFolderExplorer implements Explorer<Path, ExtensionReport> 
                 try (URLClassLoader classLoader = classLoaderController.copyClassLoader(List.of(source))) {
 
                     logger.info(I18N.getString("log.info.explore.folder", source));
-                    
+
                     List<ExtensionReportEntry> entries = new ArrayList<>();
                     File serviceFile = source.resolve(ExtensionExplorerUtil.EXTENSION_SERVICE_FILE).toFile();
                     try (FileInputStream serviceFileStream = new FileInputStream(serviceFile);
@@ -97,14 +96,15 @@ public class ExtensionFolderExplorer implements Explorer<Path, ExtensionReport> 
                         String className = null;
                         while((className = br.readLine()) != null) {
                             if (!className.isEmpty()) {
-                                ExtensionReportEntry reportEntry = ExtensionExplorerUtil.exploreEntry(classLoader, className, filters);
+                                ExtensionReportEntry reportEntry = ExtensionExplorerUtil.exploreEntry(classLoader,
+                                        className, filters.orElse(List.of()));
                                 if (reportEntry != null) {
                                     entries.add(reportEntry);
                                 }
                             }
                         }
                     }
-                
+
                     StringBuilder sb = new StringBuilder(
                             I18N.getString("log.info.explore.folder.results", source.getFileName()));
                     sb.append("\n");

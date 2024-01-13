@@ -46,9 +46,9 @@ import org.slf4j.LoggerFactory;
 
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
+import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
+import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
@@ -59,13 +59,13 @@ public abstract class AbstractOpenFilesAction extends AbstractAction {
 
     private final Dialog dialog;
     private final RecentItemsPreference recentItemsPreference;
-    private final EditorInstancesManager main;
+    private final InstancesManager main;
 
     // @formatter:off
     public AbstractOpenFilesAction(
             ActionExtensionFactory extensionFactory,
             Dialog dialog,
-            EditorInstancesManager main,
+            InstancesManager main,
             RecentItemsPreference recentItemsPreference) {
      // @formatter:on
         super(extensionFactory);
@@ -79,27 +79,27 @@ public abstract class AbstractOpenFilesAction extends AbstractAction {
         assert fxmlFiles != null;
         assert fxmlFiles.isEmpty() == false;
 
-        final Map<File, EditorInstance> documents = new HashMap<>();
+        final Map<File, ApplicationInstance> documents = new HashMap<>();
 
         final Map<File, IOException> exceptions = new HashMap<>();
 
         //build dependency injections first
         for (File fxmlFile : fxmlFiles) {
                 try {
-                    final EditorInstance dwc = main.lookupDocument(fxmlFile.toURI().toURL());
+                    final ApplicationInstance dwc = main.lookupInstance(fxmlFile.toURI().toURL());
                     if (dwc != null) {
                         // fxmlFile is already opened
                         dwc.getDocumentWindow().getStage().toFront();
                     } else {
                         // Open fxmlFile
-                        final EditorInstance hostWindow;
-                        final EditorInstance unusedWindow = main.lookupUnusedDocument(documents.values());
+                        final ApplicationInstance hostWindow;
+                        final ApplicationInstance unusedWindow = main.lookupUnusedInstance(documents.values());
                         if (unusedWindow != null) {
                             logger.info("Assign {} to unused document", fxmlFile.getName());
                             hostWindow = unusedWindow;
                         } else {
                             logger.info("Assign {} to new document", fxmlFile.getName());
-                            hostWindow = main.makeNewDocument();
+                            hostWindow = main.newInstance();
                         }
                         documents.put(fxmlFile, hostWindow);
                     }
@@ -114,9 +114,9 @@ public abstract class AbstractOpenFilesAction extends AbstractAction {
         SbPlatform.runOnFxThread(() -> {
 
 
-            for (Entry<File, EditorInstance> entry:documents.entrySet()) {
+            for (Entry<File, ApplicationInstance> entry:documents.entrySet()) {
                 File file = entry.getKey();
-                EditorInstance hostWindow = entry.getValue();
+                ApplicationInstance hostWindow = entry.getValue();
                 hostWindow.onFocus();
                 //SbPlatform.runForDocument(hostWindow, () -> {
                     try {

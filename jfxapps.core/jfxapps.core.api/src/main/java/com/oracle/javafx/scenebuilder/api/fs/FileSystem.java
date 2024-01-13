@@ -47,8 +47,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 
 public interface FileSystem {
 
@@ -106,12 +105,12 @@ public interface FileSystem {
      */
     void updateNextInitialDirectory(File chosenFile);
 
-    void watch(EditorInstanceWindow document, List<File> files, WatchingCallback callback);
+    void watch(InstanceWindow document, List<File> files, WatchingCallback callback);
 
-    void watch(EditorInstanceWindow document, Set<Path> files, WatchingCallback callback);
+    void watch(InstanceWindow document, Set<Path> files, WatchingCallback callback);
 
 	void unwatch(Object key);
-	void unwatchDocument(EditorInstanceWindow document);
+	void unwatchDocument(InstanceWindow document);
 
 	void stopWatcher();
 

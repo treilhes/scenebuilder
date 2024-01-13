@@ -9,4 +9,5 @@ module jfxapps.boot.platform {
     requires spring.boot;
     requires spring.context;
     requires spring.beans;
+    requires spring.core;
 }

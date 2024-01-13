@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,18 +41,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
+import com.oracle.javafx.scenebuilder.api.application.lifecycle.DisposeWithApplication;
+import com.oracle.javafx.scenebuilder.api.library.LibraryArtifact;
 import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
-import com.oracle.javafx.scenebuilder.api.lifecycle.DisposeWithSceneBuilder;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.misc.UILogger;
 import com.oracle.javafx.scenebuilder.extlibrary.ExtensionLibraryExtension;
@@ -68,16 +68,16 @@ import com.oracle.javafx.scenebuilder.library.api.Explorer;
 import com.oracle.javafx.scenebuilder.library.api.LibraryDialogFactory;
 import com.oracle.javafx.scenebuilder.library.api.LibraryStoreFactory;
 import com.oracle.javafx.scenebuilder.library.api.Transform;
-import com.oracle.javafx.scenebuilder.library.maven.MavenArtifact;
 import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
+
+import jakarta.annotation.PostConstruct;
 
 /**
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryItemImpl> implements InitializingBean, DisposeWithSceneBuilder{
+@ApplicationSingleton
+public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryItemImpl> implements DisposeWithApplication{
 
     public final static List<String> HANDLED_JAVA_EXTENSIONS = List.of("jar");
     public final static List<String> HANDLED_FILE_EXTENSIONS = List.of("jar");
@@ -95,9 +95,9 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
 
 	private UILogger uiLogger;
 
-    private final List<LibraryFilter> filters;
+    private final Optional<List<LibraryFilter>> filters;
 
-    private final SceneBuilderBeanFactory context;
+    private final SbContext context;
 
     private final ExtensionFileExplorer controlFileExplorer;
 
@@ -117,25 +117,27 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
     /*
      * Public
      */
+    // @formatter:off
     protected ExtensionLibrary(
-            @Autowired SceneBuilderBeanFactory context,
-            @Autowired ExtensionBuiltinLibrary builtinLibrary,
-            @Autowired ExtensionLibraryDialogConfiguration libraryDialogConfiguration,
-            @Autowired ExtensionFileSystemFactory extFactory,
-            @Autowired LibraryDialogFactory libraryDialogFactory,
-            @Autowired LibraryStoreFactory libraryStoreFactory,
-            @Autowired ClassLoaderController classLoaderController,
-            @Autowired UILogger logger,
-            @Autowired SceneBuilderManager sceneBuilderManager,
-            @Autowired ExtensionFileExplorer controlFileExplorer,
-            @Autowired ExtensionFolderExplorer controlFolderExplorer,
-            @Autowired ExtensionMavenArtifactExplorer controlMavenArtifactExplorer,
-            @Autowired(required = false) List<LibraryFilter> filters) {
+            SbContext context,
+            ExtensionBuiltinLibrary builtinLibrary,
+            ExtensionLibraryDialogConfiguration libraryDialogConfiguration,
+            ExtensionFileSystemFactory extFactory,
+            LibraryDialogFactory libraryDialogFactory,
+            LibraryStoreFactory libraryStoreFactory,
+            ClassLoaderController classLoaderController,
+            UILogger logger,
+            SceneBuilderManager sceneBuilderManager,
+            ExtensionFileExplorer controlFileExplorer,
+            ExtensionFolderExplorer controlFolderExplorer,
+            ExtensionMavenArtifactExplorer controlMavenArtifactExplorer,
+            Optional<List<LibraryFilter>> filters) {
         super(context,sceneBuilderManager,
                 classLoaderController,
                 libraryStoreFactory.getStore(LIBRARY_ID, extFactory.get(ExtensionLibraryExtension.class)),
                 libraryDialogConfiguration
                 );
+     // @formatter:on
         this.context = context;
         this.classLoaderController = classLoaderController;
         this.uiLogger = logger;
@@ -153,7 +155,7 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
         return LIBRARY_ID;
     }
 
-    @Override
+    @PostConstruct
 	public void afterPropertiesSet() throws Exception {
 
         getItems().addAll(builtinLibrary.getItems());
@@ -161,7 +163,7 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
 	}
 
     @Override
-    public Explorer<MavenArtifact, ExtensionReport> newArtifactExplorer(){
+    public Explorer<LibraryArtifact, ExtensionReport> newArtifactExplorer(){
         return controlMavenArtifactExplorer;
     }
     @Override
@@ -353,7 +355,7 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
 
     @Override
     public List<LibraryFilter> getFilters() {
-        return filters;
+        return filters.orElse(List.of());
     }
 
     @Override

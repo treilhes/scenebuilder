@@ -1,10 +1,211 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.gluonhq.jfxapps</groupId>
-    <artifactId>jfxapps.app</artifactId>
-    <version>17.0.0-SNAPSHOT</version>
-  </parent>
-  <artifactId>jfxapps.app.scenebuilder</artifactId>
-  <packaging>pom</packaging>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.gluonhq.jfxapps</groupId>
+        <artifactId>jfxapps.app</artifactId>
+        <version>17.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>jfxapps.app.scenebuilder</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>scenebuilder.app</module>
+        <module>scenebuilder.ext</module>
+        <module>scenebuilder.gluon</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- scenebuilder.app -->
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.app.starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.app.starter.test</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.clipboard</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.drag.and.drop</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.javafx.customization</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.jobs</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.main</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.metadata.javafx15</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.metadata.gluon5</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.selection</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- scenebuilder;ext -->
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.editor.fxml</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.editor.script</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.control.library</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.controls</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.controls.tooling</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.css.analyser</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.debug.menu</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.defaultx</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.document</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.editors</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.exporter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.glossary</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.gluon</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.help.features</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.image.library</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.inspector</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.preview</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.script</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.source.gen</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.source.view</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.templates</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.welcome</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

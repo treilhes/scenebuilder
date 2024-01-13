@@ -75,4 +75,9 @@ public class FileExtensionProvider implements ExtensionContentProvider {
         return file;
     }
 
+    @Override
+    public String toString() {
+        return "FileExtensionProvider [file=" + file + "]";
+    }
+
 }

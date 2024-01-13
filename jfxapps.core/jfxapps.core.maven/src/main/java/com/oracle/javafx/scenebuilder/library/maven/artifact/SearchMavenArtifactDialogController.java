@@ -34,19 +34,16 @@
 package com.oracle.javafx.scenebuilder.library.maven.artifact;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
+import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.maven.ArtefactHandler;
@@ -110,7 +107,7 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
     private final MessageLogger messageLogger;
     private Service<ObservableSet<Artifact>> searchService;
     private Service<ObservableList<UniqueArtifact>> versionsService;
-    private final Service<UniqueArtifact> installService;
+    private final Service<ResolvedArtifact> installService;
     private Artifact artifact;
     private final SceneBuilderWindow owner;
     private String lastLoadedKey = null;
@@ -179,12 +176,12 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
             }
         });
 
-        installService = new Service<UniqueArtifact>() {
+        installService = new Service<ResolvedArtifact>() {
             @Override
-            protected Task<UniqueArtifact> createTask() {
-                return new Task<UniqueArtifact>() {
+            protected Task<ResolvedArtifact> createTask() {
+                return new Task<ResolvedArtifact>() {
                     @Override
-                    protected UniqueArtifact call() throws Exception {
+                    protected ResolvedArtifact call() throws Exception {
                         return resolveArtifacts();
                     }
                 };
@@ -242,7 +239,7 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
             if (ov.equals(Worker.State.RUNNING)) {
                 if (nv.equals(Worker.State.SUCCEEDED)) {
                     final UniqueArtifact mavenArtifact = getArtifact();
-                    final UniqueArtifact resolved = installService.getValue();
+                    final ResolvedArtifact resolved = installService.getValue();
 
                     boolean invalidResult = resolved == null || !resolved.hasPath()
                             || resolved.getDependencies().stream().anyMatch(d -> !d.hasPath());
@@ -257,7 +254,7 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
                                 .map(p -> p.getPath().toFile())
                                 .collect(Collectors.toList()));
 
-                        handler.handle(mavenArtifact, files);
+                        handler.handle(resolved, files);
 
                         this.onCloseRequest();
                     }
@@ -386,9 +383,9 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
         return mavenClient.getAvailableVersions(groupId, artifactid);
     }
 
-    private UniqueArtifact resolveArtifacts() {
+    private ResolvedArtifact resolveArtifacts() {
         UniqueArtifact selected = getArtifact();
-        return mavenClient.resolveWithDependencies(selected);
+        return mavenClient.resolveWithDependencies(selected).get();
     }
 
     private void logInfoMessage(String key, Object... args) {

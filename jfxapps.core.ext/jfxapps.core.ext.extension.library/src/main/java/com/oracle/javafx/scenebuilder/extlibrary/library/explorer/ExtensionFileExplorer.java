@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,6 +40,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -49,6 +51,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionLibraryFilter;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionReport;
@@ -59,19 +62,18 @@ import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
 
 import javafx.concurrent.Task;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+@ApplicationSingleton
 public class ExtensionFileExplorer implements Explorer<Path, ExtensionReport> {
-    
+
     private final static Logger logger = LoggerFactory.getLogger(ExtensionFileExplorer.class);
-    
-    private final List<ExtensionLibraryFilter> filters;
+
+    private final Optional<List<ExtensionLibraryFilter>> filters;
 
     private final ClassLoaderController classLoaderController;
 
     public ExtensionFileExplorer(
-            @Autowired ClassLoaderController classLoaderController,
-            @Autowired(required = false) List<ExtensionLibraryFilter> filters
+            ClassLoaderController classLoaderController,
+            Optional<List<ExtensionLibraryFilter>> filters
             ) {
         super();
         this.filters = filters;
@@ -115,30 +117,30 @@ public class ExtensionFileExplorer implements Explorer<Path, ExtensionReport> {
     */
     @Override
     public Task<List<ExtensionReport>> explore(Path source) {
-        
+
         assert Files.isRegularFile(source);
-        
+
         return new Task<List<ExtensionReport>>() {
 
             @Override
             protected List<ExtensionReport> call() throws Exception {
                 final List<ExtensionReport> res = new ArrayList<>();
-                
+
                 try (URLClassLoader classLoader = classLoaderController.copyClassLoader(List.of(source))) {
                     if (LibraryUtil.isJarPath(source)) {
                         logger.info(I18N.getString("log.info.explore.jar", source));
-                        
+
                         List<ExtensionReportEntry> entries = new ArrayList<>();
                         try (JarFile jarFile = new JarFile(source.toFile())) {
                             JarEntry entry = jarFile.getJarEntry(ExtensionExplorerUtil.EXTENSION_SERVICE_FILE);
-                            
+
                             if (entry != null) {
                                 try (InputStreamReader isr = new InputStreamReader(jarFile.getInputStream(entry));
                                      BufferedReader br = new BufferedReader(isr)) {
                                     String className = null;
                                     while((className = br.readLine()) != null) {
                                         if (!className.isEmpty()) {
-                                            ExtensionReportEntry reportEntry = ExtensionExplorerUtil.exploreEntry(classLoader, className, filters);
+                                            ExtensionReportEntry reportEntry = ExtensionExplorerUtil.exploreEntry(classLoader, className, filters.orElse(List.of()));
                                             if (reportEntry != null) {
                                                 entries.add(reportEntry);
                                             }
@@ -147,11 +149,11 @@ public class ExtensionFileExplorer implements Explorer<Path, ExtensionReport> {
                                 }
                             }
                         }
-                        
-                        
+
+
                         StringBuilder sb = new StringBuilder(I18N.getString("log.info.explore.jar.results", source.getFileName()));
                         sb.append("\n");
-                        
+
                         if (entries.isEmpty()) {
                             sb.append("> ").append(I18N.getString("log.info.explore.no.results"));
                         } else {
@@ -159,21 +161,21 @@ public class ExtensionFileExplorer implements Explorer<Path, ExtensionReport> {
                         }
                         logger.info(sb.toString());
                         logger.info(I18N.getString("log.info.explore.end", source));
-                        
-                        
+
+
                         ExtensionReport report = new ExtensionReport(source);
                         report.getEntries().addAll(entries);
                         res.add(report);
                     }
                 }
-                
-                
-                
+
+
+
                 return res;
-            
+
             }
         };
     }
-    
-    
+
+
 }

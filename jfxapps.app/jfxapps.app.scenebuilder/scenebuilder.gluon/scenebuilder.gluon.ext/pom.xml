@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>scenebuilder.ext.gluon</artifactId>
+    
+    <parent>
+        <groupId>com.gluonhq.jfxapps</groupId>
+        <artifactId>scenebuilder.gluon</artifactId>
+        <version>17.0.0-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <charm.glisten.version>5.0.0-jdk9</charm.glisten.version>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.jobs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>scenebuilder.ext.controls</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>scenebuilder.ext.defaultx</artifactId>
+        </dependency>
+        <!-- temp -->
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>scenebuilder.ext.control.library</artifactId>
+        </dependency>
+        
+        <!-- Gluon Charm Glisten -->
+        <dependency>
+            <groupId>com.gluonhq</groupId>
+            <artifactId>charm-glisten</artifactId>
+            <version>${charm.glisten.version}</version>
+        </dependency>
+    </dependencies>
+</project>

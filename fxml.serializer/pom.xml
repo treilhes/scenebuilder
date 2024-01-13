@@ -19,7 +19,7 @@
             <artifactId>spring-context</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
+            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>scenebuilder.metadata.javafx15</artifactId>
         </dependency>
         <dependency>

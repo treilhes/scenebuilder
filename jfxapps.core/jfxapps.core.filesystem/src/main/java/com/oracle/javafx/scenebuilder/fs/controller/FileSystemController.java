@@ -54,10 +54,10 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.CombinedResourceBundle;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
@@ -73,7 +73,7 @@ import com.oracle.javafx.scenebuilder.fs.util.FileWatcher;
 
 import jakarta.inject.Provider;
 
-@Window
+@ApplicationInstanceSingleton
 public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
     private final static Logger logger = LoggerFactory.getLogger(FileSystemController.class);
@@ -83,7 +83,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     private final Provider<PathPreference> pathPreference;
     private final WildcardImportsPreference wildcardImportsPreference;
 
-    private final Map<EditorInstanceWindow, List<Object>> documentWatchKeys = new HashMap<>();
+    private final Map<InstanceWindow, List<Object>> documentWatchKeys = new HashMap<>();
     private final Map<Object, List<Path>> watchedFiles = new HashMap<>();
     private final Map<Path, List<WatchingCallback>> watchCallbacks = new HashMap<>();
 
@@ -129,13 +129,13 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     }
 
     @Override
-    public void watch(EditorInstanceWindow document, Set<Path> files, WatchingCallback callback) {
+    public void watch(InstanceWindow document, Set<Path> files, WatchingCallback callback) {
         List<File> fileList = files.stream().map(p -> p.toFile()).collect(Collectors.toList());
         watch(document, fileList, callback);
     }
 
     @Override
-    public void watch(EditorInstanceWindow document, List<File> files, WatchingCallback callback) {
+    public void watch(InstanceWindow document, List<File> files, WatchingCallback callback) {
         Object key = callback.getOwnerKey();
 
         List<Object> documentKeys = documentWatchKeys.get(document);
@@ -196,7 +196,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     }
 
     @Override
-    public void unwatchDocument(EditorInstanceWindow document) {
+    public void unwatchDocument(InstanceWindow document) {
         List<Object> keys = documentWatchKeys.get(document);
         if (keys != null) {
             keys.forEach(this::unwatch);

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,6 +36,7 @@ package com.oracle.javafx.scenebuilder.core.fxom.fx.include;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junitpioneer.jupiter.SetSystemProperty;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
@@ -48,6 +50,7 @@ import javafx.stage.Stage;
  * Unit test for {@link FXOMScript}
  */
 @ExtendWith(ApplicationExtension.class)
+@SetSystemProperty(key = "javafx.allowjs", value = "true")
 public class FxomFxIncludeTagTest {
 
     private static final boolean FAILURE_EXPECTED = true;

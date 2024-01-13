@@ -34,12 +34,14 @@
 package com.oracle.javafx.scenebuilder.api.maven;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
 import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
+import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
 
 import javafx.beans.property.BooleanProperty;
 
@@ -47,7 +49,7 @@ public interface MavenClient {
 
     List<UniqueArtifact> getAvailableVersions(String groupId, String artifactId);
 
-    UniqueArtifact resolveWithDependencies(UniqueArtifact artifact);
+    Optional<ResolvedArtifact> resolveWithDependencies(UniqueArtifact artifact);
 
     Set<Artifact> search(String query);
 

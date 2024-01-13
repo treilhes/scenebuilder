@@ -38,8 +38,8 @@ import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
+import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
+import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.api.ui.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
@@ -61,14 +61,14 @@ public class NewAction extends AbstractAction {
 
     public final static String NEWFILE_MENU_ID = "newMenu";
 
-    private final EditorInstancesManager main;
+    private final InstancesManager main;
     private final ActionFactory actionFactory;
 
     public NewAction(
     // @formatter:off
             ActionExtensionFactory extensionFactory,
             ActionFactory actionFactory,
-            EditorInstancesManager main) {
+            InstancesManager main) {
     // @formatter:on
         super(extensionFactory);
         this.main = main;
@@ -82,7 +82,7 @@ public class NewAction extends AbstractAction {
 
     @Override
     public ActionStatus doPerform() {
-        final EditorInstance newWindow = main.makeNewDocument();
+        final ApplicationInstance newWindow = main.newInstance();
         newWindow.openWindow();
         return actionFactory.create(LoadBlankAction.class).perform();
     }

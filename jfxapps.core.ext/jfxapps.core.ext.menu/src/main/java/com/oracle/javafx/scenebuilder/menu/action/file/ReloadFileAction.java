@@ -39,7 +39,7 @@ import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
@@ -52,14 +52,14 @@ public class ReloadFileAction extends AbstractAction {
 
     private final DocumentManager documentManager;
     private final Dialog dialog;
-    private final EditorInstanceWindow documentWindow;
+    private final InstanceWindow documentWindow;
     private final FileSystem fileSystem;
 
     public ReloadFileAction(
             ActionExtensionFactory extensionFactory,
             FileSystem fileSystem,
             DocumentManager documentManager,
-            EditorInstanceWindow documentWindow,
+            InstanceWindow documentWindow,
             Dialog dialog) {
         super(extensionFactory);
         this.documentManager = documentManager;

@@ -35,7 +35,7 @@
 package com.oracle.javafx.scenebuilder.scenicview.controller;
 
 import com.gluonhq.jfxapps.boot.context.SbContext;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 
 /**
  * @treatAsPrivate
@@ -49,6 +49,6 @@ public class ScenicViewStarter implements Runnable {
 
         @Override
         public void run() {
-                org.scenicview.ScenicView.show(context.getBean(EditorInstanceWindow.class).getScene());
+                org.scenicview.ScenicView.show(context.getBean(InstanceWindow.class).getScene());
         }
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,10 +40,11 @@ import java.util.UUID;
 import com.gluonhq.jfxapps.boot.loader.extension.SealedExtension;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
+import com.oracle.javafx.scenebuilder.api.application.javafx.internal.JavafxThreadBootstrapper;
 import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
+import com.oracle.javafx.scenebuilder.api.di.FxThreadAspect;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.internal.di.FxmlControllerBeanPostProcessor;
-import com.oracle.javafx.scenebuilder.api.internal.javafx.JavafxThreadBootstrapper;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.init.DocumentPreferencesNodeImpl;
@@ -77,6 +78,9 @@ public class ApiExtension implements SealedExtension {
     @Override
     public List<Class<?>> localContextClasses() {
         return Arrays.asList(
+                //FxThreadConfig.class,
+                FxThreadAspect.class,
+
                 FxmlControllerBeanPostProcessor.class,
                 JavafxThreadBootstrapper.class,
                 ActionExtensionFactory.class,

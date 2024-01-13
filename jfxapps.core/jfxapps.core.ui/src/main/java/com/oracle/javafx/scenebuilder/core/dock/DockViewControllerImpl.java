@@ -47,9 +47,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.SbContext;
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
-import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
+import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
 import com.oracle.javafx.scenebuilder.api.subjects.ViewManager.DockRequest;
@@ -64,7 +64,7 @@ import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastViewVis
 /**
  *
  */
-@Window
+@ApplicationInstanceSingleton
 public class DockViewControllerImpl implements InitWithDocument, DockViewController {
 
     private final static Logger logger = LoggerFactory.getLogger(DockViewControllerImpl.class);

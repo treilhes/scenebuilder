@@ -33,10 +33,19 @@
  */
 package com.gluonhq.jfxapps.boot.loader.internal;
 
+import java.util.Objects;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.gluonhq.jfxapps.boot.loader.content.MavenExtensionProvider;
+import com.gluonhq.jfxapps.boot.loader.internal.model.Extension;
+import com.gluonhq.jfxapps.boot.loader.internal.model.State;
+import com.gluonhq.jfxapps.boot.loader.model.Application;
+import com.gluonhq.jfxapps.boot.loader.model.ApplicationExtension;
+import com.gluonhq.jfxapps.boot.loader.model.JfxApps;
+import com.gluonhq.jfxapps.boot.loader.model.JfxAppsExtension;
+import com.gluonhq.jfxapps.boot.loader.model.LoadState;
 import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryClient;
 import com.gluonhq.jfxapps.registry.model.Dependency;
 
@@ -45,4 +54,109 @@ public interface LoaderMappers {
 
     @Mapping(target = "repositoryClient", source = "repository")
     MavenExtensionProvider map(Dependency dependency, RepositoryClient repository);
+
+    @Mapping(target = "repositoryClient", source = "repository")
+    MavenExtensionProvider map(com.gluonhq.jfxapps.boot.loader.internal.model.Application application,
+            RepositoryClient repository);
+
+    @Mapping(target = "repositoryClient", source = "repository")
+    MavenExtensionProvider map(Extension root, RepositoryClient repository);
+
+    LoadState map(State state);
+
+    State map(LoadState state);
+
+    default JfxApps mapToJfxApps(com.gluonhq.jfxapps.registry.model.Application app, RepositoryClient repository) {
+        var r = new JfxApps(app.getUuid(), map(app.getDependency(), repository));
+        if (Objects.nonNull(app.getExtensions())) {
+            app.getExtensions().forEach(c -> r.addExtension(mapToJfxAppsExtension(c, repository)));
+        }
+        return r;
+    }
+
+    default JfxApps mapToJfxApps(com.gluonhq.jfxapps.boot.loader.internal.model.Application app,
+            RepositoryClient repository) {
+        var r = new JfxApps(app.getId(), map(app, repository));
+        r.setLoadState(map(app.getState()));
+        if (Objects.nonNull(app.getExtensions())) {
+            app.getExtensions().forEach(c -> r.addExtension(mapToJfxAppsExtension(c, repository)));
+        }
+        return r;
+    }
+
+    default Application mapToApplication(com.gluonhq.jfxapps.registry.model.Application app,
+            RepositoryClient repository) {
+        var r = new Application(app.getUuid(), map(app.getDependency(), repository));
+        if (Objects.nonNull(app.getExtensions())) {
+            app.getExtensions().forEach(c -> r.addExtension(mapToApplicationExtension(c, repository)));
+        }
+        return r;
+    }
+
+    default Application mapToApplication(com.gluonhq.jfxapps.boot.loader.internal.model.Application app,
+            RepositoryClient repository) {
+        var r = new Application(app.getId(), map(app, repository));
+        r.setLoadState(map(app.getState()));
+        if (Objects.nonNull(app.getExtensions())) {
+            app.getExtensions().forEach(c -> r.addExtension(mapToApplicationExtension(c, repository)));
+        }
+        return r;
+    }
+
+    default JfxAppsExtension mapToJfxAppsExtension(com.gluonhq.jfxapps.registry.model.Extension ext,
+            RepositoryClient repository) {
+        var r = new JfxAppsExtension(ext.getUuid(), map(ext.getDependency(), repository));
+        if (Objects.nonNull(ext.getExtensions())) {
+            ext.getExtensions().forEach(c -> r.addExtension(mapToExtension(c, repository)));
+        }
+        return r;
+    }
+
+    default JfxAppsExtension mapToJfxAppsExtension(Extension ext, RepositoryClient repository) {
+        var r = new JfxAppsExtension(ext.getId(), map(ext, repository));
+        r.setLoadState(map(ext.getState()));
+        if (Objects.nonNull(ext.getExtensions())) {
+            ext.getExtensions().forEach(c -> r.addExtension(mapToExtension(c, repository)));
+        }
+        return r;
+    }
+
+    default ApplicationExtension mapToApplicationExtension(com.gluonhq.jfxapps.registry.model.Extension ext,
+            RepositoryClient repository) {
+        var r = new ApplicationExtension(ext.getUuid(), map(ext.getDependency(), repository));
+        if (Objects.nonNull(ext.getExtensions())) {
+            ext.getExtensions().forEach(c -> r.addExtension(mapToExtension(c, repository)));
+        }
+        return r;
+    }
+
+    default ApplicationExtension mapToApplicationExtension(Extension ext, RepositoryClient repository) {
+        var r = new ApplicationExtension(ext.getId(), map(ext, repository));
+        r.setLoadState(map(ext.getState()));
+        if (Objects.nonNull(ext.getExtensions())) {
+            ext.getExtensions().forEach(c -> r.addExtension(mapToExtension(c, repository)));
+        }
+        return r;
+    }
+
+    default com.gluonhq.jfxapps.boot.loader.model.Extension mapToExtension(
+            com.gluonhq.jfxapps.registry.model.Extension ext, RepositoryClient repository) {
+        var r = new com.gluonhq.jfxapps.boot.loader.model.Extension(ext.getUuid(),
+                map(ext.getDependency(), repository));
+        if (Objects.nonNull(ext.getExtensions())) {
+            ext.getExtensions().forEach(c -> r.addExtension(mapToExtension(c, repository)));
+        }
+        return r;
+    }
+
+    default com.gluonhq.jfxapps.boot.loader.model.Extension mapToExtension(
+            com.gluonhq.jfxapps.boot.loader.internal.model.Extension ext, RepositoryClient repository) {
+        var r = new com.gluonhq.jfxapps.boot.loader.model.Extension(ext.getId(), map(ext, repository));
+        r.setLoadState(map(ext.getState()));
+        if (Objects.nonNull(ext.getExtensions())) {
+            ext.getExtensions().forEach(c -> r.addExtension(mapToExtension(c, repository)));
+        }
+        return r;
+    }
+
 }

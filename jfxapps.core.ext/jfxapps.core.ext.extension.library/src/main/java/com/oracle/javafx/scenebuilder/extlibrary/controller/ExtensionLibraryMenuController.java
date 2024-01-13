@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,27 +33,22 @@
  */
 package com.oracle.javafx.scenebuilder.extlibrary.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionLibrary;
 
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 public class ExtensionLibraryMenuController {
 
     private final ExtensionLibrary extensionLibrary;
 
-    public ExtensionLibraryMenuController(
-    		@Autowired ExtensionLibrary extensionLibrary) {
-    	this.extensionLibrary = extensionLibrary;
+    public ExtensionLibraryMenuController(ExtensionLibrary extensionLibrary) {
+        this.extensionLibrary = extensionLibrary;
     }
 
     public void performOpenExtensionLibraryWindow() {

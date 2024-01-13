@@ -38,7 +38,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Version;
 
-@Entity
+@Entity(name = "JFXAPPS_BOOT_REGISTRY_REGISTRY_SOURCE")
 @IdClass(RegistrySource.RegistrySourceId.class)
 public class RegistrySource {
 

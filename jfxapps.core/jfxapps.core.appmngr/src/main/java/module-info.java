@@ -32,11 +32,12 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.core.appmngr.AppManagerExtension;
 
-module scenebuilder.core.appmngr {
+open module scenebuilder.core.appmngr {
     exports com.oracle.javafx.scenebuilder.core.appmngr.impl;
     exports com.oracle.javafx.scenebuilder.core.appmngr;
 
-    requires jfxapps.core.api;
+    requires transitive jfxapps.core.api;
+    requires jakarta.inject;
 
     provides Extension with AppManagerExtension;
 }

@@ -58,7 +58,8 @@ public class BootHandler {
     }
 
     public void boot(UUID application, List<File> files, String[] args) {
-        System.out.println("XXXXXXXXXXXXXXXXXX BBOOOOOOOTTTTT XXXXXXXXXXXXXXXXX");
+        logger.info("Booting jfxapps core");
+        long start = System.currentTimeMillis();
 
         try {
             appManager.start();
@@ -78,5 +79,8 @@ public class BootHandler {
             logger.error("Unable to boot application", e);
 
         }
+
+        long end = System.currentTimeMillis();
+        logger.info("Booted Core in {} seconds", (end - start) / 1000.0 );
     }
 }

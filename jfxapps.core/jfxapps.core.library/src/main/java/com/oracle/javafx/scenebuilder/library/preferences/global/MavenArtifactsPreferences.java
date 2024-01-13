@@ -37,11 +37,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
+import com.oracle.javafx.scenebuilder.api.library.LibraryArtifact;
 import com.oracle.javafx.scenebuilder.api.preferences.ListPreferences;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 
 @Component
-public class MavenArtifactsPreferences extends ListPreferences<MavenArtifactPreferences, UniqueArtifact> {
+public class MavenArtifactsPreferences extends ListPreferences<MavenArtifactPreferences, LibraryArtifact> {
 
 	// NODE
 	protected static final String NODE_NAME = "ARTIFACTS"; //NOCHECK
@@ -162,7 +163,7 @@ public class MavenArtifactsPreferences extends ListPreferences<MavenArtifactPref
 //    }
 
 
-    public MavenArtifactPreferences getRecordArtifact(UniqueArtifact mavenArtifact) {
+    public MavenArtifactPreferences getRecordArtifact(LibraryArtifact mavenArtifact) {
     	return getRecord(mavenArtifact);
     }
 

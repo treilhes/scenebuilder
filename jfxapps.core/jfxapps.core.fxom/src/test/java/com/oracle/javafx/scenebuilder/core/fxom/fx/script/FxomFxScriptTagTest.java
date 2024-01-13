@@ -41,9 +41,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.io.IOException;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junitpioneer.jupiter.SetSystemProperty;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
@@ -60,6 +62,7 @@ import javafx.stage.Stage;
  * Unit test for {@link FXOMScript}
  */
 @ExtendWith(ApplicationExtension.class)
+@SetSystemProperty(key = "javafx.allowjs", value = "true")
 public class FxomFxScriptTagTest {
 
     private static final boolean FAILURE_EXPECTED = true;
@@ -93,6 +96,11 @@ public class FxomFxScriptTagTest {
 
     @Start
     private void start(Stage stage) {
+    }
+
+    @Before
+    public void init() {
+        System.setProperty("javafx.allowjs", "true");
     }
 
     @ParameterizedTest

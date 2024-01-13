@@ -48,7 +48,7 @@
                             <application>
                                 <uuid>feda298c-4a63-450d-8c59-8cb43241ba3d</uuid>
                                 <dependency>
-                                    <groupId>com.gluonhq.scenebuilder</groupId>
+                                    <groupId>com.gluonhq.jfxapps</groupId>
                                     <version>${project.version}</version>
                                     <artifactId>jfxapps.app.fxmlrunner.main</artifactId>
                                 </dependency>

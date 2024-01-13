@@ -44,7 +44,7 @@ open module scenebuilder.core.metadata {
     exports com.oracle.javafx.scenebuilder.core.metadata.property.value.paint;
 
     requires transitive scenebuilder.core.fxom;
-    requires scenebuilder.core.utils;
+    requires jfxapps.core.utils;
 
     requires javafx.graphics;
     requires javafx.controls;

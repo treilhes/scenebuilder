@@ -60,7 +60,7 @@ public class RepositoryManagerImpl implements RepositoryManager {
     @PostConstruct
     protected void init() {
         // init if empty
-        if (jpaRepository.findAll().isEmpty()) {
+        if (jpaRepository.count() == 0) {
             jpaRepository.saveAll(mapper.mapApi(MavenPresets.getPresetRepositories()));
         }
     }

@@ -11,8 +11,6 @@
 
     <properties>
         <resolver.version>1.9.4</resolver.version>
-        <junit.version>5.7.0</junit.version>
-        <junit-platform.version>1.7.1</junit-platform.version>
     </properties>
 
     <dependencies>

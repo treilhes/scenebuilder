@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.gluonhq.jfxapps</groupId>
@@ -7,11 +9,7 @@
         <version>17.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>jfxapps.boot.loader</artifactId>
-    
-    <properties>
-        <skip.integration.test>false</skip.integration.test>
-    </properties>
-    
+
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
@@ -43,51 +41,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <configuration>
-                            <skipITs>${skip.integration.test}</skipITs>
-                        </configuration>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-invoker-plugin</artifactId>
-                <version>3.2.2</version>
-                <configuration>
-                    <!--<projectsDirectory>${basedir}/src/test/resources-its/com/oracle/javafx/scenebuilder/core</projectsDirectory>-->
-                    <projectsDirectory>${basedir}/src/test/resources-its</projectsDirectory>
-                    <pomIncludes>
-                        <pomInclude>common-loader/pom.xml</pomInclude>
-                    </pomIncludes>
-                    <streamLogs>true</streamLogs>
-                    <goals>
-                        <goal>clean</goal>
-                        <goal>install</goal>
-                    </goals>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>forked-install</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>install</goal>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <skipInvocation>${skip.integration.test}</skipInvocation>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+
 </project>

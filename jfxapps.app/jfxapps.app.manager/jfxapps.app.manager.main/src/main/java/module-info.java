@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,14 +31,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import com.gluonhq.jfxapps.app.manager.main.ManagerAppExtension;
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.oracle.javafx.scenebuilder.app.manager.main.ManagerAppExtension;
 
-module scenebuilder.app.manager.main {
-    exports com.oracle.javafx.scenebuilder.app.manager.main;
+open module jfxapps.app.manager.main {
+    exports com.gluonhq.jfxapps.app.manager.main;
+    exports com.gluonhq.jfxapps.app.manager.main.api;
 
-    opens com.oracle.javafx.scenebuilder.app.manager.main.ui to scenebuilder.boot.context, javafx.fxml;
-    opens com.oracle.javafx.scenebuilder.app.manager.main.ui.cmp to scenebuilder.boot.context, javafx.fxml;
+    //opens com.oracle.javafx.scenebuilder.app.manager.main.api to jfxapps.boot.context, javafx.fxml;
+    //opens com.oracle.javafx.scenebuilder.app.manager.main.ui to jfxapps.boot.context, javafx.fxml;
+    //opens com.oracle.javafx.scenebuilder.app.manager.main.ui.cmp to jfxapps.boot.context, javafx.fxml;
 
     requires jfxapps.boot.loader;
     requires jfxapps.core.api;

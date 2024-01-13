@@ -111,6 +111,18 @@ public class ResolvedArtifact implements Comparable<ResolvedArtifact> {
         return "ResolvedArtifact [uniqueArtifact=" + uniqueArtifact + ", path=" + path + "]";
     }
 
+    public String getVersion() {
+        return uniqueArtifact.getVersion();
+    }
+
+    public String getGroupId() {
+        return uniqueArtifact.getGroupId();
+    }
+
+    public String getArtifactId() {
+        return uniqueArtifact.getArtifactId();
+    }
+
     public static class Builder {
 
         private Path path;

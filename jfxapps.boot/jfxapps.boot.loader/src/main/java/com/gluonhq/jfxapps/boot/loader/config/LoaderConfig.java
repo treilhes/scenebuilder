@@ -33,15 +33,19 @@
  */
 package com.gluonhq.jfxapps.boot.loader.config;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import com.gluonhq.jfxapps.boot.loader.internal.ApplicationManagerImpl;
-import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
-import com.gluonhq.jfxapps.boot.loader.internal.layer.LayerBootstraper;
+import com.gluonhq.jfxapps.boot.loader.internal._Component;
+import com.gluonhq.jfxapps.boot.loader.internal.model._Model;
+import com.gluonhq.jfxapps.boot.loader.internal.repository._Repository;
 
 @Configuration
-@ComponentScan(basePackageClasses = {ApplicationManagerImpl.class, ContextBootstraper.class, LayerBootstraper.class})
+@EntityScan(basePackageClasses = _Model.class)
+@EnableJpaRepositories(basePackageClasses = _Repository.class)
+@ComponentScan(basePackageClasses = _Component.class)
 public class LoaderConfig {
 
 }

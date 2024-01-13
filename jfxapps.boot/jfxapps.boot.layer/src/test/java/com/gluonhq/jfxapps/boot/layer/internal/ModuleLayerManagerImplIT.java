@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,7 +37,6 @@ import static com.gluonhq.jfxapps.boot.layer.TestUtils.copy;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -46,6 +45,7 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Spy;
 
@@ -113,8 +113,8 @@ class ModuleLayerManagerImplIT {
      * @throws Exception the exception
      */
     @Test
-    void must_delete_the_root_layer() throws Exception {
-        Path subDir = rootDir.resolve("must_delete_the_root_layer");
+    void must_delete_the_root_layer(TestInfo testInfo) throws Exception {
+        Path subDir = rootDir.resolve(testInfo.getDisplayName());
         Files.createDirectory(subDir);
 
         copy(subDir, Constants.IT_MODULE_JAR);
@@ -135,10 +135,10 @@ class ModuleLayerManagerImplIT {
      * @throws Exception the exception
      */
     @Test
-    void must_create_the_root_extension_layer() throws Exception {
+    void must_create_the_root_extension_layer(TestInfo testInfo) throws Exception {
 
-        Path rootLayerDir = rootDir.resolve("must_create_the_root_extension_layer");
-        Path extDir = rootDir.resolve("must_create_the_root_extension_layer_ext");
+        Path rootLayerDir = rootDir.resolve(testInfo.getDisplayName() + "_root");
+        Path extDir = rootDir.resolve(testInfo.getDisplayName() + "_ext");
         Files.createDirectory(rootLayerDir);
         Files.createDirectory(extDir);
 
@@ -155,8 +155,8 @@ class ModuleLayerManagerImplIT {
      * @throws Exception the exception
      */
     @Test
-    void must_delete_the_root_extension__layer() throws Exception {
-        Path subDir = rootDir.resolve("must_delete_the_root_layer");
+    void must_delete_the_root_extension__layer(TestInfo testInfo) throws Exception {
+        Path subDir = rootDir.resolve(testInfo.getDisplayName());
         Files.createDirectory(subDir);
 
         copy(subDir, Constants.IT_MODULE_JAR);

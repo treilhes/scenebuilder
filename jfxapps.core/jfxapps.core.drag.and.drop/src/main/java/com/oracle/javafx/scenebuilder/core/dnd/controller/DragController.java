@@ -40,7 +40,7 @@ import java.util.TimerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.dnd.Drag;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
@@ -66,7 +66,7 @@ import javafx.scene.input.TransferMode;
 /**
  *
  */
-@Window
+@ApplicationInstanceSingleton
 public class DragController implements Drag {
 
     private static final Logger logger = LoggerFactory.getLogger(DragController.class);

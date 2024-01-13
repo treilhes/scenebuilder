@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.registry.model;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -46,7 +47,7 @@ public class Extension {
     private UUID uuid;
     private Dependency dependency;
     private Description description;
-    private Set<Extension> extensions;
+    private Set<Extension> extensions = new HashSet<>();
 
     public Extension(UUID uuid, Dependency dependency, Description description, Set<Extension> extensions) {
         this.uuid = uuid;

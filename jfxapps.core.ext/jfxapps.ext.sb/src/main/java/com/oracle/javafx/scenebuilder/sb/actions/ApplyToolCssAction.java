@@ -40,7 +40,7 @@ import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
+import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.tooltheme.ToolStylesheetProvider;
 

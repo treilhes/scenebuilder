@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -48,8 +48,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
@@ -315,15 +313,8 @@ class LayerImplIT {
 
         assertNotNull(o);
 
-        boolean unlocked = false;
-
         // refs exist so must be locked
-        Future<Boolean> processing = layer.unlockLayer();
-        try {
-            unlocked = processing.get(500, TimeUnit.MILLISECONDS);
-        } catch (Exception e) {
-            processing.cancel(true);
-        }
+        boolean unlocked = layer.unlockLayer();
 
         assertTrue(!unlocked);
 
@@ -333,12 +324,7 @@ class LayerImplIT {
         constructor = null;
 
         // refs not exist so must be locked
-        processing = layer.unlockLayer();
-        try {
-            unlocked = processing.get(500, TimeUnit.MILLISECONDS);
-        } catch (Exception e) {
-            processing.cancel(true);
-        }
+        unlocked = layer.unlockLayer();
 
         assertTrue(unlocked, "Layer must be unlocked/deletable");
 

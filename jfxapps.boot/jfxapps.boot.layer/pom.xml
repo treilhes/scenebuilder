@@ -10,6 +10,11 @@
     <artifactId>jfxapps.boot.layer</artifactId>
 
     <dependencies>
+        
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>spring.core.patch.link</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.starter</artifactId>

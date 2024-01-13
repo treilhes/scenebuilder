@@ -7,16 +7,27 @@ jfxapps:
     directory: ${user.home}/.m2/repository
     redirectionsEnabled: true
     redirect:
-#      - groupId: com.gluonhq.jfxapps
-#        artifactId: jfxapps.core.registry
-#        path: ../../jfxapps.core/jfxapps.core.registry/target/classes
-##        path: ../../jfxapps.core/jfxapps.core.registry/target/jfxapps.core.registry-17.0.0-SNAPSHOT.jar
       - groupId: com.gluonhq.jfxapps
         artifactId: jfxapps.core.api
         path: ../../jfxapps.core/jfxapps.core.api/target/classes
       - groupId: com.gluonhq.jfxapps
+        artifactId: jfxapps.core.appmngr
+        path: ../../jfxapps.core/jfxapps.core.appmngr/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: jfxapps.core.ui
+        path: ../../jfxapps.core/jfxapps.core.ui/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: jfxapps.core.filesystem
+        path: ../../jfxapps.core/jfxapps.core.filesystem/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: jfxapps.core.preferences
+        path: ../../jfxapps.core/jfxapps.core.preferences/target/classes
+      - groupId: com.gluonhq.jfxapps
         artifactId: jfxapps.core.utils
         path: ../../jfxapps.core/jfxapps.core.utils/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: jfxapps.app.manager.main
+        path: ../../jfxapps.app/jfxapps.app.manager/jfxapps.app.manager.main/target/classes
 
         
 server:
@@ -30,4 +41,3 @@ spring:
     show-sql: true
   datasource:
     url: jdbc:h2:file:./target/jfxapps-h2-db
-  

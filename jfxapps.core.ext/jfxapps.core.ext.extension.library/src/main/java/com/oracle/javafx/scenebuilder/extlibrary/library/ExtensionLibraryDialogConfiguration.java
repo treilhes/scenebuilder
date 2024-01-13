@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,7 +36,6 @@ package com.oracle.javafx.scenebuilder.extlibrary.library;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.SbContext;
@@ -57,16 +56,16 @@ public class ExtensionLibraryDialogConfiguration implements LibraryStoreConfigur
 
     private final ClassLoaderController classLoaderController;
     private LibraryStore store;
-    private SceneBuilderBeanFactory context;
+    private SbContext context;
 
     // @formatter:off
     public ExtensionLibraryDialogConfiguration(
-            @Autowired SceneBuilderBeanFactory context,
-            @Autowired LibraryStoreFactory libraryStoreFactory,
-            @Autowired ClassLoaderController classLoaderController,
-            @Autowired FileSystem fileSystem,
-            @Autowired ExtensionFileSystemFactory extFactory,
-            @Autowired Dialog dialog) {
+            SbContext context,
+            LibraryStoreFactory libraryStoreFactory,
+            ClassLoaderController classLoaderController,
+            FileSystem fileSystem,
+            ExtensionFileSystemFactory extFactory,
+            Dialog dialog) {
      // @formatter:on
         this.context = context;
         this.classLoaderController = classLoaderController;

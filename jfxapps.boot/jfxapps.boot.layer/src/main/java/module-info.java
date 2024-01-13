@@ -38,8 +38,10 @@ open module jfxapps.boot.layer {
 
     //opens com.gluonhq.jfxapps.boot.layer.config to spring.core;
 
+    requires spring.core;
     requires spring.context;
     requires spring.beans;
     requires org.slf4j;
+    requires jfxapps.spring.core.patch.link;
 
 }

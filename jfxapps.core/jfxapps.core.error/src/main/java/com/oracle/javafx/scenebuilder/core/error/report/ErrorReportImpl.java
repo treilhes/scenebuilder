@@ -43,7 +43,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.error.ErrorCollector;
 import com.oracle.javafx.scenebuilder.api.error.ErrorReport;
 import com.oracle.javafx.scenebuilder.api.error.ErrorReportEntry;
@@ -54,7 +54,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
  *
  *
  */
-@Window
+@ApplicationInstanceSingleton
 public class ErrorReportImpl implements ErrorReport {
 
     private final Map<FXOMObject, List<ErrorReportEntry>> documentErrors = new HashMap<>();

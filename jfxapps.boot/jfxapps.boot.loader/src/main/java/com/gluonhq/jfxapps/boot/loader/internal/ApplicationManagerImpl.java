@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -53,18 +53,14 @@ import com.gluonhq.jfxapps.boot.loader.BootException;
 import com.gluonhq.jfxapps.boot.loader.ExtensionReport;
 import com.gluonhq.jfxapps.boot.loader.OpenCommandEvent;
 import com.gluonhq.jfxapps.boot.loader.ProgressListener;
+import com.gluonhq.jfxapps.boot.loader.StateProvider;
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
 import com.gluonhq.jfxapps.boot.loader.internal.layer.LayerBootstraper;
 import com.gluonhq.jfxapps.boot.loader.model.AbstractExtension;
 import com.gluonhq.jfxapps.boot.loader.model.Application;
-import com.gluonhq.jfxapps.boot.loader.model.ApplicationExtension;
 import com.gluonhq.jfxapps.boot.loader.model.JfxApps;
-import com.gluonhq.jfxapps.boot.loader.model.JfxAppsExtension;
 import com.gluonhq.jfxapps.boot.loader.model.LoadState;
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryClient;
-import com.gluonhq.jfxapps.boot.registry.RegistryManager;
-import com.gluonhq.jfxapps.registry.model.Registry;
 
 import jakarta.annotation.PostConstruct;
 
@@ -81,16 +77,11 @@ public class ApplicationManagerImpl implements ApplicationManager {
     /** The layer manager. */
     private final ModuleLayerManager layerManager;
 
-    /** The registry manager. */
-    private final RegistryManager registryManager;
-
     /** The contexts. */
     private final ContextBootstraper contexts;
 
     /** The layers. */
     private final LayerBootstraper layers;
-
-    private final LoaderMappers mappers;
 
     /** The application. */
     private JfxApps appContainer = null;
@@ -98,7 +89,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
     /** The state. */
     private Map<UUID, ExtensionReport> state = new HashMap<>();
 
-    private final RepositoryClient repositoryClient;
+    private final StateProvider stateProvider;
+
+    private boolean started = false;
 
     /**
      * Instantiates a new application manager impl.
@@ -107,72 +100,18 @@ public class ApplicationManagerImpl implements ApplicationManager {
      * @param contexts
      * @param layers
      */
-    protected ApplicationManagerImpl(RegistryManager registryManager, ModuleLayerManager layerManager,
-            ContextBootstraper contexts, LayerBootstraper layers, LoaderMappers mappers,
-            RepositoryClient repositoryClient) {
+    protected ApplicationManagerImpl(ModuleLayerManager layerManager, ContextBootstraper contexts,
+            LayerBootstraper layers, StateProvider stateProvider) {
         super();
         this.layerManager = layerManager;
-        this.registryManager = registryManager;
         this.contexts = contexts;
         this.layers = layers;
-        this.mappers = mappers;
-        this.repositoryClient = repositoryClient;
+        this.stateProvider = stateProvider;
     }
 
     @PostConstruct
     public void init() {
-        appContainer = buildJfxAppsState();
-    }
-
-    private void recurseExtension(com.gluonhq.jfxapps.registry.model.Extension source,
-            com.gluonhq.jfxapps.boot.loader.model.Extension target) {
-        source.getExtensions().forEach(src -> {
-            var sub = new com.gluonhq.jfxapps.boot.loader.model.Extension(src.getUuid(),
-                    mappers.map(src.getDependency(), repositoryClient));
-            target.addExtension(sub);
-            recurseExtension(src, sub);
-        });
-    }
-
-    private JfxApps buildJfxAppsState() {
-        Registry bootRegistry = registryManager.bootRegistry();
-
-        if (bootRegistry.getApplications().size() != 1) {
-            throw new RuntimeException("Boot registry contains more or less than 1 application");
-        }
-
-        if (bootRegistry.getExtensions().size() > 0) {
-            logger.warn("Boot registry extensions are ignored by default and won't be loaded");
-        }
-
-        var bootApp = bootRegistry.getApplications().iterator().next();
-
-        if (!Extension.ROOT_ID.equals(bootApp.getUuid())) {
-            logger.error("Invalid boot application uuid, expected {} but was {}", Extension.ROOT_ID, bootApp.getUuid());
-            throw new RuntimeException("Invalid boot application uuid");
-        }
-
-        JfxApps target = new JfxApps(bootApp.getUuid(), mappers.map(bootApp.getDependency(), repositoryClient));
-
-        bootApp.getExtensions().forEach(e -> {
-            var appExt = new JfxAppsExtension(e.getUuid(), mappers.map(e.getDependency(), repositoryClient));
-            target.addExtension(appExt);
-            recurseExtension(e, appExt);
-        });
-
-        var registry = registryManager.installedRegistry();
-        registry.getApplications().forEach(app -> {
-            Application targetApp = new Application(app.getUuid(), mappers.map(app.getDependency(), repositoryClient));
-            target.addApplication(targetApp);
-
-            app.getExtensions().forEach(e -> {
-                var appExt = new ApplicationExtension(e.getUuid(), mappers.map(e.getDependency(), repositoryClient));
-                targetApp.addExtension(appExt);
-                recurseExtension(e, appExt);
-            });
-        });
-
-        return target;
+        appContainer = stateProvider.bootState();
     }
 
     /**
@@ -187,8 +126,13 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void start() throws BootException {
-        load(null);
-        start(null);
+        if (!isStarted()) {
+            load(null);
+            start(null);
+            started = true;
+        } else {
+            logger.warn("JfxApps already started bypassing start");
+        }
     }
 
     /**
@@ -248,6 +192,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         try {
             appLayer = layers.load(null, appContainer, listener);
         } catch (Throwable e) {
+            logger.error("Unable to load layer", e);
             appContainer.setLoadState(LoadState.Error);
             reportOf(appContainer.getId()).error("Loading error", e);
         }
@@ -256,7 +201,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
         if (appLayer != null) {
             appContainer.setLoadState(LoadState.Loaded);
             loadExtensionTree(appLayer, appContainer.getExtensions(), listener);
-            loadExtensionTree(appLayer, appContainer.getApplications(), listener);
+
+            // applications musn't be loaded automaticaly, but it is convenient for now
+            // loadExtensionTree(appLayer, appContainer.getApplications(), listener);
         }
 
     }
@@ -338,24 +285,24 @@ public class ApplicationManagerImpl implements ApplicationManager {
     /**
      * Start editor.
      *
-     * @param editorId         the editor id
+     * @param applicationId    the application id
      * @param progressListener the progress listener
      */
-    public void startApplication(UUID editorId, ProgressListener progressListener) {
+    public void startApplication(UUID applicationId, ProgressListener progressListener) {
 
-        Optional<Application> optionalEditor = appContainer.getApplications().stream()
-                .filter(e -> e.getId().equals(editorId)).findAny();
-        Application editor = optionalEditor.orElseThrow();
+        Optional<Application> optionalApplication = appContainer.getApplications().stream()
+                .filter(e -> e.getId().equals(applicationId)).findAny();
+        Application app = optionalApplication.orElseThrow();
 
         MultipleProgressListener listener = new MultipleProgressListener(progressListener);
 
-        if (contexts.exists(editor)) {
-            logger.warn("Extension context already exists for {}", editor.getId());
+        if (contexts.exists(app)) {
+            logger.warn("Extension context already exists for {}", app.getId());
             return;
         }
 
         SbContext parentContext = contexts.get(appContainer);
-        startExtensionTree(parentContext, Set.of(editor), listener);
+        startExtensionTree(parentContext, Set.of(app), listener);
 
     }
 
@@ -541,35 +488,44 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
         Layer layer = layerManager.get(ext.getId());
 
-        logger.info("{} : {}", ext.getClass().getName(), ext.getId());
-        logger.info("> state : {}", ext.getLoadState());
-        logger.info("> layer : {}", layer);
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(String.format("%s : %s", ext.getClass().getName(), ext.getId())).append("\n");
+        builder.append(String.format("> state : %s", ext.getLoadState())).append("\n");
+        builder.append(String.format("> layer : %s", layer)).append("\n");
 
         if (layer != null) {
             layer.jars().forEach(j -> {
-                logger.info(">> jar : {}", j.getFileName().toString());
+                builder.append(String.format(">> jar : %s", j.getFileName())).append("\n");;
             });
             layer.modules().forEach(m -> {
-                logger.info(">> module : {}", m.get().getName());
+                builder.append(String.format(">> module : %s", m.get().getName())).append("\n");;
             });
             layer.automaticModules().forEach(m -> {
-                logger.info(">> auto : {}", m.get().getName());
+                builder.append(String.format(">> auto : %s", m.get().getName())).append("\n");;
             });
             layer.unnamedModules().forEach(m -> {
-                logger.info(">> unnamed : {}", m.get().getName());
+                builder.append(String.format(">> unnamed : %s", m.get().getName())).append("\n");;
             });
         } else {
-            reportOf(ext.getId()).getThrowable().ifPresent(e -> logger.error(">> error : {}", e.getMessage(), e));
+            reportOf(ext.getId()).getThrowable().ifPresent(e -> builder.append(String.format(">> error : %s", e.getMessage(), e)).append("\n"));
         }
 
         SbContext ctx = contexts.get(ext);
 
-        logger.info("> context : {}", ctx);
+        builder.append(String.format("> context : %s", ctx)).append("\n");
         if (ctx != null) {
-            logger.info(">> beans : {}", ctx.getBeanDefinitionNames().length);
+            builder.append(String.format(">> beans : %s", ctx.getBeanDefinitionNames().length)).append("\n");
+
+            for (String name:ctx.getBeanDefinitionNames()) {
+                builder.append(String.format("      %s", name)).append("\n");
+            }
+
         } else {
-            reportOf(ext.getId()).getThrowable().ifPresent(e -> logger.error(">> error : {}", e.getMessage(), e));
+            reportOf(ext.getId()).getThrowable().ifPresent(e -> builder.append(String.format(">> error : %s", e.getMessage(), e)).append("\n"));
         }
+
+        logger.info("State of {}: \n{}", ext, builder);
 
         ext.getExtensions().forEach(this::printState);
     }
@@ -630,4 +586,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
     private void send(UUID editorId, OpenCommandEvent parameters) {
         getContext(editorId).ifPresent(c -> c.publishEvent(parameters));
     }
+
+    public boolean isStarted() {
+        return started;
+    }
+
 }

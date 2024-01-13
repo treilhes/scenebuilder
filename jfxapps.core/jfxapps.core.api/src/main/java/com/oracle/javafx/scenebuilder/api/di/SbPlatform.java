@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,6 +34,8 @@
 package com.oracle.javafx.scenebuilder.api.di;
 
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
 import java.util.function.Supplier;
 
 import com.gluonhq.jfxapps.boot.context.Document;
@@ -42,6 +44,14 @@ import com.gluonhq.jfxapps.boot.context.DocumentScope;
 import javafx.application.Platform;
 
 public final class SbPlatform {
+
+    private static UUID activeScope() {
+        return DocumentScope.getActiveScopeUUID();
+    }
+
+    private static UUID documentScope(Document scopedDocument) {
+        return DocumentScope.getScopeId(scopedDocument);
+    }
 
     /**
      * Same as {@link Platform#runOnFxThread(Runnable)}
@@ -59,8 +69,7 @@ public final class SbPlatform {
      * @param runnable the code to run
      */
     public static void runOnFxThreadWithScope(Document scopedDocument, Runnable runnable) {
-        UUID documentUuid = DocumentScope.getScopeId(scopedDocument);
-        runOnFxThreadWithScope(documentUuid, runnable);
+        runOnFxThreadWithScope(documentScope(scopedDocument), runnable);
     }
     /**
      * Execute the runnable later on the fx thread
@@ -76,6 +85,27 @@ public final class SbPlatform {
         });
     }
 
+    public static <T> FutureTask<T> callOnFxThreadWithScope(Document scopedDocument, Callable<T> callable) {
+        return callOnFxThreadWithScope(documentScope(scopedDocument), callable);
+    }
+    public static <T> FutureTask<T> callOnFxThreadWithScope(UUID scopedDocument, Callable<T> callable) {
+        if (scopedDocument == null) {
+            throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
+        }
+        final FutureTask<T> task = new FutureTask<>(callable);
+        Platform.runLater(() -> DocumentScope.executeRunnable(task, scopedDocument));
+        return task;
+    }
+
+    /**
+     * Same as {@link Platform#runOnFxThread(Runnable)} but will also ensure execution
+     * with the currently active {@link Document} scope
+     * @param runnable
+     */
+    public static <T> FutureTask<T> callOnFxThreadWithActiveScope(Callable<T> callable) {
+        return callOnFxThreadWithScope(activeScope(), callable);
+    }
+
 
     /**
      * Execute the runnable on the same thread ensuring an unchanging scope
@@ -84,13 +114,11 @@ public final class SbPlatform {
      * @param runnable       the code to run
      */
     public static void runWithScope(Document scopedDocument, Runnable runnable) {
-        UUID documentUuid = DocumentScope.getScopeId(scopedDocument);
-        runWithScope(documentUuid, runnable);
+        runWithScope(documentScope(scopedDocument), runnable);
     }
 
     public static <T> T runWithScope(Document scopedDocument, Supplier<T> runnable) {
-        UUID documentUuid = DocumentScope.getScopeId(scopedDocument);
-        return runWithScope(documentUuid, runnable);
+        return runWithScope(documentScope(scopedDocument), runnable);
     }
 
     /**
@@ -120,9 +148,7 @@ public final class SbPlatform {
      * @param runnable       the code to run
      */
     public static void runOnThreadWithScope(Document scopedDocument, Runnable runnable) {
-        UUID documentUuid = DocumentScope.getScopeId(scopedDocument);
-        runOnThreadWithScope(documentUuid, runnable);
-
+        runOnThreadWithScope(documentScope(scopedDocument), runnable);
     }
 
     /**
@@ -148,6 +174,6 @@ public final class SbPlatform {
      * @param runnable
      */
     public static void runOnFxThreadWithActiveScope(Runnable runnable) {
-        runOnFxThreadWithScope(DocumentScope.getActiveScopeUUID(), runnable);
+        runOnFxThreadWithScope(activeScope(), runnable);
     }
 }

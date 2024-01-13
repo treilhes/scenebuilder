@@ -5,17 +5,14 @@ jfxapps:
     boot:
       groupId: com.gluonhq.jfxapps
       artifactId: jfxapps.core.registry
-#    defaults:
-#      manager:
-#        groupId: com.gluonhq.jfxapps
-#        artifactId: jfxapps.app.manager.registry
-#        mandatory: true
-  #    scenebuilderx:
-  #      groupId:
-  #      artifactId:
-#      devtools:
-#        groupId: com.gluonhq.jfxapps
-#        artifactId: jfxapps.devtools.registry
+    defaults:
+      mandatory:
+        groupId: com.gluonhq.jfxapps
+        artifactId: jfxapps.app.registry.mandatory
+        mandatory: true
+      optionals:
+        groupId: com.gluonhq.jfxapps
+        artifactId: jfxapps.app.registry.optional
 
 #dynamic port
 server:

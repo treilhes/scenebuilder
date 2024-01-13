@@ -42,10 +42,10 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.oracle.javafx.scenebuilder.api.action.Action;
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.preferences.Preference;
 import com.oracle.javafx.scenebuilder.api.shortcut.Accelerator;
 import com.oracle.javafx.scenebuilder.api.shortcut.AcceleratorProvider;
@@ -77,7 +77,7 @@ import javafx.scene.input.KeyCombination.ModifierValue;
  * focused items preference by using
  * {@link FocusedAcceleratorsMapPreference.Factory}
  */
-@Window
+@ApplicationInstanceSingleton
 public class AcceleratorsController implements Accelerators {
 
     private static final Logger logger = LoggerFactory.getLogger(AcceleratorsController.class);
@@ -87,14 +87,14 @@ public class AcceleratorsController implements Accelerators {
     private final Optional<List<AcceleratorProvider>> acceleratorProviders;
 
     private DocumentManager documentManager;
-    private EditorInstanceWindow documentWindow;
+    private InstanceWindow documentWindow;
 
     private Map<Action, List<KeyCombination>> defaultGlobalAccelerators = new HashMap<>();
     private Map<Class<? extends AbstractCommonUiController>, Map<Action, List<KeyCombination>>> defaultFocusedAccelerators = new HashMap<>();
 
     public AcceleratorsController(
             DocumentManager documentManager,
-            EditorInstanceWindow documentWindow,
+            InstanceWindow documentWindow,
             AcceleratorsMapPreference acceleratorsMapPreference,
             FocusedAcceleratorsMapPreference.Factory focusedAcceleratorsMapPreferenceFactory,
             Optional<List<AcceleratorProvider>> acceleratorProviders) {
@@ -212,7 +212,7 @@ public class AcceleratorsController implements Accelerators {
     }
 
     private KeyCombination handleCtrlToMetaOnMacOs(KeyCombination keyCombination) {
-        if (EditorPlatform.IS_MAC && keyCombination.getControl() == ModifierValue.DOWN) {
+        if (JfxAppsPlatform.IS_MAC && keyCombination.getControl() == ModifierValue.DOWN) {
             // if shortcut contains a CTRL then change it with META
             String acceleratorStr = keyCombination.getDisplayText();
             return KeyCombination.valueOf(acceleratorStr.replace(KeyCode.CONTROL.getName(), KeyCode.META.getName()));

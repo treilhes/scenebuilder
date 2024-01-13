@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.boot.maven.client.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +56,8 @@ import com.gluonhq.jfxapps.boot.maven.client.config.RepositoryConfig;
 import com.gluonhq.jfxapps.boot.maven.client.config.RepositoryConfig.Redirect;
 
 /**
- * When the property jfxapps.repository.redirect is provided, this component is engaged
+ * When the property jfxapps.repository.redirect is provided, this component is
+ * engaged
  *
  */
 @Component
@@ -84,6 +86,17 @@ public class RedirectedRepositoryClientImpl implements RepositoryClient {
     public RepositoryClient withRepositories(List<Repository> repositories) {
         return new RedirectedRepositoryClientImpl(config, mappers,
                 (MavenRepositoryClientImpl) client.withRepositories(repositories));
+    }
+
+    @Override
+    public RepositoryClient withLocalPath(File path) {
+        return new RedirectedRepositoryClientImpl(config, mappers,
+                (MavenRepositoryClientImpl) client.withLocalPath(path));
+    }
+
+    @Override
+    public RepositoryClient withLocalOnly() {
+        return new RedirectedRepositoryClientImpl(config, mappers, (MavenRepositoryClientImpl) client.withLocalOnly());
     }
 
     @Override
@@ -136,14 +149,16 @@ public class RedirectedRepositoryClientImpl implements RepositoryClient {
 
         var source = redirect.orElse(resolved.get());
 
-        var target = Optional.of(ResolvedArtifact.builder()
-                .withArtifact(source.getUniqueArtifact())
-                .withPath(source.getPath())
-                .withDependencies(redirectedDependencies).build());
+        var target = Optional.of(ResolvedArtifact.builder().withArtifact(source.getUniqueArtifact())
+                .withPath(source.getPath()).withDependencies(redirectedDependencies).build());
 
         return target;
     }
 
+    @Override
+    public Optional<ResolvedArtifact> resolveWithDependencies(ResolvedArtifact artifact) {
+        return this.resolveWithDependencies(artifact.getUniqueArtifact());
+    }
 
     @Override
     public Map<Classifier, Optional<ResolvedArtifact>> resolve(UniqueArtifact artifact, List<Classifier> classifiers) {
@@ -156,8 +171,9 @@ public class RedirectedRepositoryClientImpl implements RepositoryClient {
     }
 
     @Override
-    public void favorizeLocalResolution() {
-        client.favorizeLocalResolution();
+    public Map<Classifier, Optional<ResolvedArtifact>> resolve(ResolvedArtifact artifact,
+            List<Classifier> classifiers) {
+        return this.resolve(artifact.getUniqueArtifact(), classifiers);
     }
 
     @Override

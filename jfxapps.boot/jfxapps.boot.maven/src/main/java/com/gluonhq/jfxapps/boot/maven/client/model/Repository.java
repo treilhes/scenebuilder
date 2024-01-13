@@ -54,7 +54,7 @@ public class Repository {
     private String login;
     private String password;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Content contentType = Content.SNAPSHOT_RELEASE;
 
     public Repository() {

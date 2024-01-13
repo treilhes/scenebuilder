@@ -10,15 +10,16 @@
     <artifactId>jfxapps.core.starter</artifactId>
 
     <dependencies>
+
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.api</artifactId>
         </dependency>
-        <dependency> 
+        <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.loader</artifactId>
         </dependency>
-        <dependency> 
+        <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.platform</artifactId>
         </dependency>
@@ -26,5 +27,11 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.context</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.javafx.starter</artifactId>
+        </dependency>
+        
     </dependencies>
 </project>

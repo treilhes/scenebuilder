@@ -44,6 +44,7 @@ import java.util.List;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junitpioneer.jupiter.SetSystemProperty;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
@@ -60,6 +61,7 @@ import javafx.stage.Stage;
  * Unit test for {@link FXOMComment}
  */
 @ExtendWith(ApplicationExtension.class)
+@SetSystemProperty(key = "javafx.allowjs", value = "true")
 public class FxomFxCommentTagTest {
 
     private static final boolean FAILURE_EXPECTED = true;

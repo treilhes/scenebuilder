@@ -41,7 +41,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.dialog.AbstractModalDialog;
@@ -60,7 +60,7 @@ import javafx.stage.Stage;
 /**
  *
  */
-@Window
+@ApplicationInstanceSingleton
 public class ImportProgressDialogController extends AbstractModalDialog {
 
     private static final Logger logger = LoggerFactory.getLogger(ImportProgressDialogController.class);

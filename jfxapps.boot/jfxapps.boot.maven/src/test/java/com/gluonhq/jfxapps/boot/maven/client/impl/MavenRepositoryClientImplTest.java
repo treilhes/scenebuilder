@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,6 +33,9 @@
  */
 package com.gluonhq.jfxapps.boot.maven.client.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
@@ -72,6 +75,10 @@ class MavenRepositoryClientImplTest {
 
     private static final Artifact testArtifact = Artifact.builder().withGroupId(testGroupId)
             .withArtifactId(testArtifactId).build();
+
+    private static final Artifact testArtifactWithDependency = Artifact.builder().withGroupId("ch.qos.logback")
+            .withArtifactId("logback-classic").build();
+
 
     @TempDir
     File tempRepoDir;
@@ -205,4 +212,53 @@ class MavenRepositoryClientImplTest {
 
     }
 
+    @Test
+    void shouldResolveFromLocalRepository() throws URISyntaxException {
+
+        int[] index = {20,40,60};
+
+        var available = client.getAvailableVersions(testArtifactWithDependency);
+
+        assertTrue(available.size() > 60);
+
+        client.resolve(available.get(index[0])); // only jar
+
+        var artifact = available.get(index[1]);
+        var a = UniqueArtifact.builder()
+                .withArtifact(artifact.getGroupId(), artifact.getArtifactId())
+                .withVersion(artifact.getVersion())
+                .withClassifier(Classifier.POM).build();
+        client.resolve(available.get(index[1]));
+        client.resolve(a); // jar and pom
+
+        client.resolveWithDependencies(available.get(index[2])); // jar, pom and dependencies
+
+
+        // turn off network resolution
+        var c = client.withLocalOnly();
+
+        var availableLocaly = c.getAvailableVersions(testArtifactWithDependency);
+        assertTrue(availableLocaly.size() == index.length);
+
+        // 0 : only jar
+        assertTrue(c.resolveWithDependencies(availableLocaly.get(0)).isEmpty());
+
+        // 1 : jar and pom but missing dependencies
+        assertTrue(c.resolveWithDependencies(availableLocaly.get(1)).isEmpty());
+
+        // 2 : jar pom and dependencies
+        var local = availableLocaly.get(2);
+        var latestLocal = c.getLatestVersion(testArtifactWithDependency);
+        var localWithDep = c.resolveWithDependencies(local).orElse(null);
+
+        // localy resolved
+        assertNotNull(localWithDep);
+        // localy resolved with dependency
+        assertTrue(!localWithDep.getDependencies().isEmpty());
+        // local latest
+        assertEquals(local, latestLocal.orElse(null));
+
+
+
+    }
 }

@@ -42,7 +42,7 @@ import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
 
 import javafx.stage.Window;
 
-@com.gluonhq.jfxapps.boot.context.annotation.Window
+@com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton
 public class DialogController implements Dialog {
 
     private final SbContext context;

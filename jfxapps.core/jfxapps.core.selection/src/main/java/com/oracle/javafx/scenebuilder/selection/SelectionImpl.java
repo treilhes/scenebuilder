@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.selection;
 
 import java.util.Objects;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
@@ -53,7 +53,7 @@ import javafx.scene.Node;
  *
  *
  */
-@Window
+@ApplicationInstanceSingleton
 public class SelectionImpl implements Selection {
 
     private SelectionGroup group;

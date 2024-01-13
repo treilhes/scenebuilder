@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,6 +40,7 @@ import java.lang.module.ModuleReference;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -47,8 +48,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -79,28 +78,13 @@ public class ModuleLayerManagerImpl implements ModuleLayerManager {
     /** The Constant INVALID_LAYER. */
     private static final String INVALID_LAYER = "invalid layer : %s";
 
-    /** The instance. */
-    private static ModuleLayerManager INSTANCE;
-
     /** The layers. */
     private Map<UUID, Layer> layers = new HashMap<>();
 
     /**
-     * Gets the.
-     *
-     * @return the module layer manager
-     */
-    public static ModuleLayerManager get() {
-        if (Objects.isNull(INSTANCE)) {
-            INSTANCE = new ModuleLayerManagerImpl();
-        }
-        return INSTANCE;
-    }
-
-    /**
      * Instantiates a new module layer manager impl.
      */
-    ModuleLayerManagerImpl() {
+    public ModuleLayerManagerImpl() {
         super();
     }
 
@@ -128,13 +112,10 @@ public class ModuleLayerManagerImpl implements ModuleLayerManager {
         if (layers.containsKey(layerId)) {
             throw new InvalidLayerException(String.format(DUPLICATE_LAYER, layerId));
         }
-        // this.getClass().getSuperclass().getModule()
+
         try {
             List<ModuleLayer> parentLayers = parent == null ? List.of(ModuleLayer.boot())
                     : List.of(parent.getModuleLayer());
-            // List<ModuleLayer> parentLayers = parent == null ?
-            // List.of(this.getClass().getModule().getLayer()) :
-            // List.of(parent.getModuleLayer());
 
             if (logger.isDebugEnabled()) {
                 String strList = parentLayers.stream().flatMap(ml -> ml.modules().stream()).map(Module::getName)
@@ -222,16 +203,10 @@ public class ModuleLayerManagerImpl implements ModuleLayerManager {
             logger.warn("Unknown layer {}", layer.getId());
         } else {
             layers.remove(layer.getId());
+            layer.getParents().forEach(l -> l.getChildren().remove(l));
         }
 
-        boolean unlocked = false;
-
-        Future<Boolean> processing = layer.unlockLayer();
-        try {
-            unlocked = processing.get(500, TimeUnit.MILLISECONDS);
-        } catch (Exception e) {
-            processing.cancel(true);
-        }
+        boolean unlocked = layer.unlockLayer();
 
         if (!unlocked) {
             logger.warn("Layer is still in use {} (possible class leak), trying delete", layer.getId());
@@ -328,6 +303,7 @@ public class ModuleLayerManagerImpl implements ModuleLayerManager {
             Configuration layerConfig = Configuration.resolve(finder, parentConfigurations, ModuleFinder.of(),
                     foundModules);
 
+
             ModuleLayer moduleLayer = ModuleLayer.defineModulesWithOneLoader(layerConfig, parents, scl).layer();
 
             return new ModuleLayerWithRef(moduleLayer, moduleReferences);
@@ -416,4 +392,22 @@ public class ModuleLayerManagerImpl implements ModuleLayerManager {
 
     }
 
+    @Override
+    public void logLayers() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("BOOT").append("\n");
+        ModuleLayer.boot().modules().stream().sorted(Comparator.comparing(Module::getName)).forEach(m -> builder.append(m.getName()).append("\n"));
+
+        builder.append("ROOT").append("\n");
+        var root = get(Layer.ROOT_ID);
+        logLayer(root, 0, builder);
+
+        logger.info("Layers created and module tree \n {}", builder);
+    }
+
+    public void logLayer(Layer layer, int lvl, StringBuilder builder) {
+        builder.append(" ".repeat(lvl * 3)).append(">>>").append(layer.getId()).append("\n");
+        layer.allModules().stream().sorted(Comparator.comparing(Module::getName)).forEach(m -> builder.append(" ".repeat(lvl * 3)).append(m.getName()).append("\n"));
+        layer.getChildren().forEach(l -> logLayer(l, lvl + 1, builder));
+    }
 }

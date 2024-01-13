@@ -44,9 +44,9 @@ import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
+import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
+import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert;
@@ -72,14 +72,14 @@ public class QuitScenebuilderAction extends AbstractAction {
 
     public final static String MENU_ID = "quitMenu";
 
-    private final EditorInstancesManager main;
+    private final InstancesManager main;
     private final Dialog dialog;
     private final ActionFactory actionFactory;
 
     public QuitScenebuilderAction(
             ActionExtensionFactory extensionFactory,
             ActionFactory actionFactory,
-            EditorInstancesManager main,
+            InstancesManager main,
             Dialog dialog) {
         super(extensionFactory);
         this.main = main;
@@ -96,12 +96,12 @@ public class QuitScenebuilderAction extends AbstractAction {
     public ActionStatus doPerform() {
 
         // Check if an editing session is on going
-        if (main.getDocuments().stream().anyMatch(EditorInstance::isEditing)) {
+        if (main.getInstances().stream().anyMatch(ApplicationInstance::isEditing)) {
             return ActionStatus.CANCELLED;
         }
 
         // Collects the documents with pending changes
-        final List<EditorInstance> pendingDocs = main.getDocuments().stream().filter(EditorInstance::isDocumentDirty)
+        final List<ApplicationInstance> pendingDocs = main.getInstances().stream().filter(ApplicationInstance::isDocumentDirty)
                 .collect(Collectors.toList());
 
         // Notifies the user if some documents are dirty
@@ -113,7 +113,7 @@ public class QuitScenebuilderAction extends AbstractAction {
         }
 
         case 1: {
-            final EditorInstance dwc0 = pendingDocs.get(0);
+            final ApplicationInstance dwc0 = pendingDocs.get(0);
             ActionStatus result = SbPlatform.runWithScope(dwc0, () -> actionFactory.create(CloseFileAction.class).checkAndPerform());
             exitConfirmed = result == ActionStatus.DONE;
             break;

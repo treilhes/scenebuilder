@@ -51,10 +51,8 @@ import com.oracle.javafx.scenebuilder.core.dock.preferences.document.DockMinimiz
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockDockTypePreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastViewVisibilityPreference;
-import com.oracle.javafx.scenebuilder.ui.controller.DocumentController;
-import com.oracle.javafx.scenebuilder.ui.controller.DocumentWindowTracker;
-import com.oracle.javafx.scenebuilder.ui.controller.EditorInstancesController;
-import com.oracle.javafx.scenebuilder.ui.controller.EditorsManagerImpl;
+import com.oracle.javafx.scenebuilder.ui.controller.ApplicationInstanceController;
+import com.oracle.javafx.scenebuilder.ui.controller.ApplicationWindowTracker;
 import com.oracle.javafx.scenebuilder.ui.dialog.AlertDialog;
 import com.oracle.javafx.scenebuilder.ui.dialog.DialogController;
 import com.oracle.javafx.scenebuilder.ui.dialog.ErrorDialog;
@@ -94,14 +92,14 @@ public class BaseUiExtension implements OpenExtension {
                 AlertDialog.class,
 
                 DialogController.class,
-                DocumentController.class,
-                EditorsManagerImpl.class,
+                ApplicationInstanceController.class,
+                //EditorsManagerImpl.class,
                 ErrorDialog.class,
                 //temp EditorController.class,
                 I18NLayout.class,
                 InlineEditController.class,
 
-                EditorInstancesController.class,
+                //EditorInstancesController.class,
                 MaximizedPreference.class,
                 MenuBarController.class,
                 MessageBarController.class,
@@ -130,7 +128,7 @@ public class BaseUiExtension implements OpenExtension {
                 LastDockDockTypePreference.class,
                 LastDockUuidPreference.class,
                 LastViewVisibilityPreference.class,
-                DocumentWindowTracker.class
+                ApplicationWindowTracker.class
             );
      // @formatter:on
     }

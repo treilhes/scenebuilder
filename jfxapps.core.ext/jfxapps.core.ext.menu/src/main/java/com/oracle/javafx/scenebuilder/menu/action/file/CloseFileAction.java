@@ -38,8 +38,8 @@ import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
+import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
@@ -67,17 +67,17 @@ public class CloseFileAction extends AbstractAction {
     private final DocumentManager documentManager;
     private final InlineEdit inlineEdit;
     private final Dialog dialog;
-    private final EditorInstanceWindow documentWindow;
+    private final InstanceWindow documentWindow;
     private final ActionFactory actionFactory;
-    private final EditorInstance document;
+    private final ApplicationInstance document;
     private boolean force = false;
 
 
     public CloseFileAction(
             ActionExtensionFactory extensionFactory,
             DocumentManager documentManager,
-            EditorInstance document,
-            EditorInstanceWindow documentWindow,
+            ApplicationInstance document,
+            InstanceWindow documentWindow,
             InlineEdit inlineEdit,
             Dialog dialog,
             ActionFactory actionFactory) {

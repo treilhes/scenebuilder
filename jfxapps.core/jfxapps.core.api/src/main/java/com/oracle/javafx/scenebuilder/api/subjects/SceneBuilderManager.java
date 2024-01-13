@@ -34,7 +34,7 @@
 package com.oracle.javafx.scenebuilder.api.subjects;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
+import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
 import com.oracle.javafx.scenebuilder.api.tooltheme.ToolStylesheetProvider;
 
 import io.reactivex.rxjava3.subjects.PublishSubject;
@@ -47,11 +47,11 @@ public interface SceneBuilderManager {
 
     Subject<Boolean> closed();
 
-    Subject<EditorInstance> documentOpened();
+    Subject<ApplicationInstance> documentOpened();
 
-    Subject<EditorInstance> documentClosed();
+    Subject<ApplicationInstance> documentClosed();
 
-    Subject<EditorInstance> documentScoped();
+    Subject<ApplicationInstance> documentScoped();
 
     Subject<ToolStylesheetProvider> stylesheetConfig();
 
@@ -82,17 +82,17 @@ public interface SceneBuilderManager {
         }
 
         @Override
-        public Subject<EditorInstance> documentOpened() {
+        public Subject<ApplicationInstance> documentOpened() {
             return subjects.getDocumentOpened();
         }
 
         @Override
-        public Subject<EditorInstance> documentClosed() {
+        public Subject<ApplicationInstance> documentClosed() {
             return subjects.getDocumentClosed();
         }
 
         @Override
-        public Subject<EditorInstance> documentScoped() {
+        public Subject<ApplicationInstance> documentScoped() {
             return subjects.getDocumentScoped();
         }
 
@@ -111,9 +111,9 @@ public interface SceneBuilderManager {
 
         private ReplaySubject<ToolStylesheetProvider> stylesheetConfig;
         private PublishSubject<Boolean> closed;
-        private PublishSubject<EditorInstance> documentOpened;
-        private PublishSubject<EditorInstance> documentClosed;
-        private ReplaySubject<EditorInstance> documentScoped;
+        private PublishSubject<ApplicationInstance> documentOpened;
+        private PublishSubject<ApplicationInstance> documentClosed;
+        private ReplaySubject<ApplicationInstance> documentScoped;
         private ReplaySubject<Boolean> debugMode;
         private ReplaySubject<ClassLoader> classloader;
 
@@ -135,15 +135,15 @@ public interface SceneBuilderManager {
             return closed;
         }
 
-        public PublishSubject<EditorInstance> getDocumentOpened() {
+        public PublishSubject<ApplicationInstance> getDocumentOpened() {
             return documentOpened;
         }
 
-        public PublishSubject<EditorInstance> getDocumentClosed() {
+        public PublishSubject<ApplicationInstance> getDocumentClosed() {
             return documentClosed;
         }
 
-        public ReplaySubject<EditorInstance> getDocumentScoped() {
+        public ReplaySubject<ApplicationInstance> getDocumentScoped() {
             return documentScoped;
         }
 

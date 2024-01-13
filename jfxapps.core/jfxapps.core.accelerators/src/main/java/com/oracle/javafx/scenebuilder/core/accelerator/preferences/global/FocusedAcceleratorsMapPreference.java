@@ -43,7 +43,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.SbContext;
-import com.gluonhq.jfxapps.boot.context.annotation.EditorSingleton;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.preferences.MapPreferences;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
@@ -110,7 +110,7 @@ public class FocusedAcceleratorsMapPreference extends MapPreferences<Class<? ext
         }
     }
 
-    @EditorSingleton
+    @ApplicationSingleton
     public static final class Factory {
 
         private final Map<Class<?>, FocusedAcceleratorsMapPreference> cache = new HashMap<>();

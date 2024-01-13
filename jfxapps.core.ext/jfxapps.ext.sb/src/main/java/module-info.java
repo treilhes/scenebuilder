@@ -38,14 +38,12 @@ import com.oracle.javafx.scenebuilder.sb.ScenebuilderContainerExtension;
 import com.oracle.javafx.scenebuilder.sb.spi.InMemoryFileURLStreamHandlerProvider;
 
 open module scenebuilder.ext.sb {
-    exports com.oracle.javafx.scenebuilder.sb.menu;
-    exports com.oracle.javafx.scenebuilder.sb.actions;
-    exports com.oracle.javafx.scenebuilder.sb.menu.controller;
     exports com.oracle.javafx.scenebuilder.sb;
+    exports com.oracle.javafx.scenebuilder.sb.actions;
+    exports com.oracle.javafx.scenebuilder.sb.menu;
+    exports com.oracle.javafx.scenebuilder.sb.menu.controller;
     exports com.oracle.javafx.scenebuilder.sb.preferences.global;
     exports com.oracle.javafx.scenebuilder.sb.tooltheme;
-
-    exports com.oracle.javafx.scenebuilder.sb.css;
 
     requires transitive jfxapps.core.api;
     requires spring.beans;

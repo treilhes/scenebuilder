@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,12 +36,9 @@ package com.oracle.javafx.scenebuilder.extlibrary.menu;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemProvider;
@@ -49,18 +47,17 @@ import com.oracle.javafx.scenebuilder.extlibrary.controller.ExtensionLibraryMenu
 
 import javafx.scene.control.MenuItem;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 public class ExtensionLibraryMenuProvider implements MenuItemProvider {
 
     private final static String HELP_MENU_ID = "helpMenu";
     private final static String SHOW_EXTENSION_LIBRARY_WINDOW_ID = "manageExtension";
-    
+
     private final ExtensionLibraryMenuController extensionLibraryMenuController;
 
     public ExtensionLibraryMenuProvider(
-            @Autowired  @Lazy ExtensionLibraryMenuController extensionLibraryMenuController
+            @Lazy ExtensionLibraryMenuController extensionLibraryMenuController
             ) {
         this.extensionLibraryMenuController = extensionLibraryMenuController;
     }

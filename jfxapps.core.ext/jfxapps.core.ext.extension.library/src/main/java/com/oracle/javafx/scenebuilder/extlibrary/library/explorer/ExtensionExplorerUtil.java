@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,7 +39,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionLibraryFilter;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionReportEntry;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionReportEntry.SubStatus;
@@ -46,9 +47,9 @@ import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionReportEntry.Su
 public class ExtensionExplorerUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(ExtensionExplorerUtil.class);
-    
+
     public final static String EXTENSION_SERVICE_FILE = "META-INF/services/com.oracle.javafx.scenebuilder.extension.Extension";
-    
+
     private ExtensionExplorerUtil() {}
 
     public static ExtensionReportEntry exploreEntry(ClassLoader classLoader, String className, List<ExtensionLibraryFilter> filters) {
@@ -56,7 +57,7 @@ public class ExtensionExplorerUtil {
             return null;
         }
         filters = filters == null ? new ArrayList<>() : filters;
-        
+
         ExtensionReportEntry.Status status;
         ExtensionReportEntry.SubStatus subStatus = SubStatus.NONE;
         Throwable entryException;
@@ -99,8 +100,8 @@ public class ExtensionExplorerUtil {
         if (entryException != null) {
             logger.warn("Exception while exploring class {}", className, entryException);
         }
-        
+
         return new ExtensionReportEntry(className, status, subStatus, entryException, entryClass, className);
     }
-        
+
 }

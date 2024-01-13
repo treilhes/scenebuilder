@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
@@ -238,7 +238,7 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
     // Preview Background Color we'd better have them focus traversable hence
     // this method.
     public void setButtonsFocusTraversable() {
-        if (EditorPlatform.IS_MAC) {
+        if (JfxAppsPlatform.IS_MAC) {
             getOKButton().setFocusTraversable(true);
             getCancelButton().setFocusTraversable(true);
             getActionButton().setFocusTraversable(true);
@@ -332,7 +332,7 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
     private static URL getContainerFxmlURL() {
         final String fxmlName;
 
-        if (EditorPlatform.IS_WINDOWS) {
+        if (JfxAppsPlatform.IS_WINDOWS) {
             fxmlName = "AbstractModalDialogW.fxml";
         } else {
             fxmlName = "AbstractModalDialogM.fxml";
@@ -405,21 +405,21 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
         if (showDefaultButton) {
             switch(defaultButtonID) {
                 case OK:
-                    if (EditorPlatform.IS_MAC && ! focusTraversableButtons) {
+                    if (JfxAppsPlatform.IS_MAC && ! focusTraversableButtons) {
                         getOKButton().setDefaultButton(true);
                     } else {
                         getOKButton().requestFocus();
                     }
                     break;
                 case CANCEL:
-                    if (EditorPlatform.IS_MAC && ! focusTraversableButtons) {
+                    if (JfxAppsPlatform.IS_MAC && ! focusTraversableButtons) {
                         getCancelButton().setDefaultButton(true);
                     } else {
                         getCancelButton().requestFocus();
                     }
                     break;
                 case ACTION:
-                    if (EditorPlatform.IS_MAC && ! focusTraversableButtons) {
+                    if (JfxAppsPlatform.IS_MAC && ! focusTraversableButtons) {
                         getActionButton().setDefaultButton(true);
                     } else {
                         getActionButton().requestFocus();

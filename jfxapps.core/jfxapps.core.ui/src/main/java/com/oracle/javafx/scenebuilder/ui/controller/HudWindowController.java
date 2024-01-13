@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.ui.controller;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
@@ -60,7 +60,7 @@ import javafx.stage.WindowEvent;
  * Shows dynamic sizing informations while dragging the resizing handle
  * @treatAsPrivate
  */
-@Window
+@ApplicationInstanceSingleton
 public class HudWindowController extends AbstractFxmlPopupController implements HudWindow {
 
     public static final String NAME_LABEL_ID_FORMAT = "name_%s";

@@ -1,4 +1,4 @@
-module scenebuilder.core.utils {
+module jfxapps.core.utils {
     exports com.oracle.javafx.scenebuilder.util;
     exports com.oracle.javafx.scenebuilder.core.content.util;
 

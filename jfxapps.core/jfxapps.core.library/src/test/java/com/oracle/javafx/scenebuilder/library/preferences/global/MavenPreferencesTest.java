@@ -44,7 +44,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
+import com.oracle.javafx.scenebuilder.api.library.LibraryArtifact;
 import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
 
 class MavenPreferencesTest extends AbstractPreferencesTest {
@@ -59,22 +59,22 @@ class MavenPreferencesTest extends AbstractPreferencesTest {
         });
     }
 
-    private static UniqueArtifact artifactOf(String coordinates) {
-        return UniqueArtifact.builder().withCoordinates(coordinates).build();
+    private static LibraryArtifact artifactOf(String coordinates) {
+        return new LibraryArtifact(coordinates);
     }
 
-    private static UniqueArtifact validObject = artifactOf("xxx:xxx:xxx");
-    private static UniqueArtifact validObject2 = artifactOf("xxx:yyy:xxx");
-    private static UniqueArtifact validObject3 = artifactOf("xxx:zzz:xxx");
+    private static LibraryArtifact validObject = artifactOf("xxx:xxx:xxx");
+    private static LibraryArtifact validObject2 = artifactOf("xxx:yyy:xxx");
+    private static LibraryArtifact validObject3 = artifactOf("xxx:zzz:xxx");
 
-    private static UniqueArtifact invalidFieldsObject = artifactOf("xxx:xxx");
-    private static UniqueArtifact invalidCoordinatesObject = artifactOf("xxx");
+    private static LibraryArtifact invalidFieldsObject = artifactOf("xxx:xxx");
+    private static LibraryArtifact invalidCoordinatesObject = artifactOf("xxx");
 
-    protected static Stream<UniqueArtifact> provideValidObjects() {
+    protected static Stream<LibraryArtifact> provideValidObjects() {
         return Stream.of(validObject, validObject2, validObject3);
     }
 
-    protected static Stream<UniqueArtifact> provideInvalidObjects() {
+    protected static Stream<LibraryArtifact> provideInvalidObjects() {
         return Stream.of(invalidFieldsObject, invalidCoordinatesObject);
     }
 
@@ -96,7 +96,7 @@ class MavenPreferencesTest extends AbstractPreferencesTest {
 
     @ParameterizedTest
     @MethodSource("provideValidObjects")
-    void shouldCreateRecord(UniqueArtifact artifact, TestInfo testInfo) throws Exception {
+    void shouldCreateRecord(LibraryArtifact artifact, TestInfo testInfo) throws Exception {
         MavenArtifactsPreferences mp = new MavenArtifactsPreferences(globalPreferenceContext);
         mp.getRecord(artifact).writeToJavaPreferences();
 
@@ -106,7 +106,7 @@ class MavenPreferencesTest extends AbstractPreferencesTest {
 
     @ParameterizedTest
     @MethodSource("provideValidObjects")
-    void shouldCreateDocumentRecord(UniqueArtifact artifact, TestInfo testInfo) throws Exception {
+    void shouldCreateDocumentRecord(LibraryArtifact artifact, TestInfo testInfo) throws Exception {
         MavenArtifactsPreferences mp = new MavenArtifactsPreferences(documentPreferenceContext);
         mp.getRecord(artifact).writeToJavaPreferences();
 
@@ -118,7 +118,7 @@ class MavenPreferencesTest extends AbstractPreferencesTest {
 
     @ParameterizedTest
     @MethodSource("provideInvalidObjects")
-    public void shouldNotCreateRecord(UniqueArtifact artifact, TestInfo testInfo) throws Exception {
+    public void shouldNotCreateRecord(LibraryArtifact artifact, TestInfo testInfo) throws Exception {
         MavenArtifactsPreferences mp = new MavenArtifactsPreferences(globalPreferenceContext);
         mp.getRecord(artifact).writeToJavaPreferences();
 
@@ -128,7 +128,7 @@ class MavenPreferencesTest extends AbstractPreferencesTest {
 
     @ParameterizedTest
     @MethodSource("provideInvalidObjects")
-    public void shouldNotCreateDocumentRecord(UniqueArtifact artifact, TestInfo testInfo) throws Exception {
+    public void shouldNotCreateDocumentRecord(LibraryArtifact artifact, TestInfo testInfo) throws Exception {
         MavenArtifactsPreferences mp = new MavenArtifactsPreferences(documentPreferenceContext);
         mp.getRecord(artifact).writeToJavaPreferences();
 
@@ -143,7 +143,7 @@ class MavenPreferencesTest extends AbstractPreferencesTest {
         MavenArtifactsPreferences mp = new MavenArtifactsPreferences(globalPreferenceContext);
         mp.getRecord(validObject).writeToJavaPreferences();
 
-        UniqueArtifact loaded = mp.getRecord(mp.getKeyProvider().newKey(validObject)).getValue();
+        LibraryArtifact loaded = mp.getRecord(mp.getKeyProvider().newKey(validObject)).getValue();
 
         assertTrue(validObject.equals(loaded), "MavenArtifact objects should be equals");
     }
@@ -153,7 +153,7 @@ class MavenPreferencesTest extends AbstractPreferencesTest {
         MavenArtifactsPreferences mp = new MavenArtifactsPreferences(documentPreferenceContext);
         mp.getRecord(validObject).writeToJavaPreferences();
 
-        UniqueArtifact loaded = mp.getRecord(mp.getKeyProvider().newKey(validObject)).getValue();
+        LibraryArtifact loaded = mp.getRecord(mp.getKeyProvider().newKey(validObject)).getValue();
 
         assertTrue(validObject.equals(loaded), "MavenArtifact objects should be equals");
     }

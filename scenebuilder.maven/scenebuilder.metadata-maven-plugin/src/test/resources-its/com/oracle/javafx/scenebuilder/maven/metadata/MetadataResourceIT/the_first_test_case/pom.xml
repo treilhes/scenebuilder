@@ -12,7 +12,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.gluonhq.scenebuilder</groupId>
+                <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.metadata-maven-plugin</artifactId>
                 <version>@project.version@</version>
                 <executions>

@@ -47,7 +47,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 
-import com.gluonhq.jfxapps.boot.loader.ApplicationManager;
 import com.gluonhq.jfxapps.boot.loader.OpenCommandEvent;
 import com.gluonhq.jfxapps.boot.main.config.BootConfig;
 import com.gluonhq.jfxapps.boot.main.config.BootHandler;
@@ -74,7 +73,7 @@ public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMes
     @Option(names = {"--files", "-f"}, description = "list of files to open")
     private List<File> files;
 
-    private ApplicationManager appManager;
+    private BootHandler bootHandler;
 
     @Override
     public void run() {
@@ -89,7 +88,7 @@ public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMes
         }
 
         var ctx = SpringApplication.run(BootConfig.class, new String[0]);
-        var bootHandler = ctx.getBean(BootHandler.class);
+        bootHandler = ctx.getBean(BootHandler.class);
         bootHandler.boot(targetApplication, files, new String[0]);
 
     }
@@ -136,17 +135,7 @@ public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMes
     @Override
     public void messageBoxDidGetMessage(MessageBoxMessage message) {
         try {
-            if (message.getTargetApplication() != null) {
-                appManager.startApplication(message.getTargetApplication());
-            }
-
-            if (message.getFiles() != null && !message.getFiles().isEmpty()) {
-                for (String file:message.getFiles()) {
-                    appManager.send(new OpenCommandEvent(targetApplication, new File(file)));
-                }
-            } else {
-                appManager.send(new OpenCommandEvent(targetApplication, null));
-            }
+            bootHandler.boot(targetApplication, files, new String[0]);
         } catch (Exception e) {
             logger.error("Unable to execute the message {} the application", message, e);
         }

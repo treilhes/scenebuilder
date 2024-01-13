@@ -53,8 +53,8 @@ public class JfxApps extends AbstractExtension<JfxAppsExtension> {
         return Collections.unmodifiableSet(applications);
     }
 
-    protected void setApplications(Set<Application> editors) {
-        this.applications = editors;
+    protected void setApplications(Set<Application> applications) {
+        this.applications = applications;
     }
 
     public void addApplication(Application editor) {

@@ -8,6 +8,8 @@
   <artifactId>jfxapps.app</artifactId>
   <packaging>pom</packaging>
   <modules>
+      <module>jfxapps.app.registry.mandatory</module>
+      <module>jfxapps.app.registry.optional</module>
       <module>jfxapps.app.fxmlrunner</module>
       <module>jfxapps.app.manager</module>
       <module>jfxapps.app.scenebuilder</module>

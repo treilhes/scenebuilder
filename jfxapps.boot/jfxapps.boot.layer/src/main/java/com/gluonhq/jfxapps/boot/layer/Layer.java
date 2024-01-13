@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -54,6 +54,8 @@ import java.util.concurrent.Future;
  * The Interface Layer.
  */
 public interface Layer {
+
+    public final static UUID ROOT_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
     /**
      * Gets the id.
@@ -126,7 +128,7 @@ public interface Layer {
      *
      * @return the future
      */
-    Future<Boolean> unlockLayer();
+    boolean unlockLayer();
 
     /**
      * Gets the parents.
@@ -148,6 +150,8 @@ public interface Layer {
      * @throws IOException
      */
     boolean clean() throws IOException;
+
+    ClassLoader getLoader();
 
     /**
      * Gets the class from a module using the following pattern
@@ -256,4 +260,6 @@ public interface Layer {
         enumeration.asIterator().forEachRemaining(l::add);
         return l;
     }
+
+
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.ui.BaseUiExtension;
 
-open module scenebuilder.core.layout {
+open module jfxapps.core.ui {
     exports com.oracle.javafx.scenebuilder.ui.preferences.document;
     exports com.oracle.javafx.scenebuilder.ui.editor.messagelog;
     exports com.oracle.javafx.scenebuilder.ui.menubar;
@@ -51,6 +51,7 @@ open module scenebuilder.core.layout {
     requires jakarta.inject;
     requires jakarta.annotation;
     requires spring.context;
+    requires spring.beans;
     //requires scenebuilder.core.selection;
 
     provides Extension with BaseUiExtension;

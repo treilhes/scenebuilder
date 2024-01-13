@@ -46,7 +46,7 @@ import org.springframework.context.annotation.Lazy;
 
 import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
@@ -78,7 +78,7 @@ public class ToggleViewVisibilityAction extends AbstractToggleViewVisibilityActi
         super(extensionFactory, dockViewController);
     }
 
-    @Window
+    @ApplicationInstanceSingleton
     public class ViewMenuProvider implements MenuItemProvider {
 
         public final static String MENU_ID = "showViewsMenuItem";

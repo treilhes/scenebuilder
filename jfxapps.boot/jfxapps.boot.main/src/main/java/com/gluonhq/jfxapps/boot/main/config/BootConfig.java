@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,6 +34,7 @@
 package com.gluonhq.jfxapps.boot.main.config;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 
 import com.gluonhq.jfxapps.boot.context.config.ContextConfig;
@@ -44,6 +45,7 @@ import com.gluonhq.jfxapps.boot.platform.config.PlatformConfig;
 import com.gluonhq.jfxapps.boot.registry.config.RegistryConfig;
 
 @SpringBootApplication
+@EnableAspectJAutoProxy
 @Import({RegistryConfig.class, ContextConfig.class, LoaderConfig.class, LayerConfig.class, PlatformConfig.class, RepositoryConfig.class})
 public class BootConfig {
 

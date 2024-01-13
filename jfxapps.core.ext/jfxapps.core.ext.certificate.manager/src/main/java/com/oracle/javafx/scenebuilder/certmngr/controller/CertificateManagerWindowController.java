@@ -41,7 +41,7 @@ import org.springframework.context.annotation.Lazy;
 
 import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
@@ -93,7 +93,7 @@ public class CertificateManagerWindowController extends AbstractFxmlWindowContro
         networkManager.trustRequest().observeOn(JavaFxScheduler.platform()).subscribe(certificates -> {
             pendingCertificates.add(certificates);
             if (!this.getStage().isShowing()) {
-                this.getStage(true).initOwner(context.getBean(EditorInstanceWindow.class).getStage());
+                this.getStage(true).initOwner(context.getBean(InstanceWindow.class).getStage());
                 this.openWindow();
             }
         });

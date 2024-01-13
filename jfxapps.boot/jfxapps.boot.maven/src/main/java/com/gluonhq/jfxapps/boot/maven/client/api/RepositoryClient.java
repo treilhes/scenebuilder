@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.boot.maven.client.api;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,31 +42,32 @@ import java.util.Set;
 public interface RepositoryClient {
 
     public enum Scope {
-        RELEASE,
-        RELEASE_SNAPHOT
+        RELEASE, RELEASE_SNAPHOT
     }
-//    public static MavenClient newDefaultClient(File repositoryFolder) {
-//        return new MavenClientImpl(repositoryFolder, MavenPresets.getPresetRepositories());
-//    }
-//
-//    public static MavenClient newClient(File repositoryFolder, List<Repository> repositories) {
-//        return new MavenClientImpl(repositoryFolder, repositories);
-//    }
+
+    RepositoryClient withLocalPath(File path);
 
     RepositoryClient withRepositories(List<Repository> repositories);
 
+    RepositoryClient withLocalOnly();
+
     List<UniqueArtifact> getAvailableVersions(Artifact artifact);
+
     List<UniqueArtifact> getAvailableVersions(Artifact artifact, Scope scope);
 
     Optional<UniqueArtifact> getLatestVersion(Artifact artifact);
+
     Optional<UniqueArtifact> getLatestVersion(Artifact artifact, Scope scope);
 
     Optional<ResolvedArtifact> resolve(UniqueArtifact artifact);
+
     Optional<ResolvedArtifact> resolveWithDependencies(UniqueArtifact artifact);
+
+    Optional<ResolvedArtifact> resolveWithDependencies(ResolvedArtifact artifact);
 
     Map<Classifier, Optional<ResolvedArtifact>> resolve(UniqueArtifact artifact, List<Classifier> classifiers);
 
-    void favorizeLocalResolution();
+    Map<Classifier, Optional<ResolvedArtifact>> resolve(ResolvedArtifact artifact, List<Classifier> classifiers);
 
     boolean deployToLocalRepository(ResolvedArtifact artifact);
 
@@ -76,6 +78,5 @@ public interface RepositoryClient {
     Set<Artifact> search(String query);
 
     Set<Class<? extends RepositoryType>> repositoryTypes();
-
 
 }

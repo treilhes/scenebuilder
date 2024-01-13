@@ -42,37 +42,7 @@ import javafx.scene.input.MouseEvent;
  *
  * @treatAsPrivate
  */
-public class EditorPlatform implements JfxAppsPlatform {
-
-//    /**
-//     * Spring bean condition, True if current platform is running Linux.
-//     */
-//    public static final class IS_LINUX_CONDITION implements Condition {
-//		@Override
-//		public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-//			return EditorPlatform.IS_LINUX;
-//		}
-//   }
-//
-//    /**
-//     * Spring bean condition, True if current platform is running Mac.
-//     */
-//    public static final class IS_MAC_CONDITION implements Condition {
-//		@Override
-//		public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-//			return EditorPlatform.IS_MAC;
-//		}
-//   }
-//
-//    /**
-//     * Spring bean condition, True if current platform is running Windows.
-//     */
-//    public static final class IS_WINDOWS_CONDITION implements Condition {
-//		@Override
-//		public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-//			return EditorPlatform.IS_MAC;
-//		}
-//   }
+public class EditorPlatform {
 
     //TODO this is not the best place for this constant
     /**
@@ -97,18 +67,8 @@ public class EditorPlatform implements JfxAppsPlatform {
      * @return true if the modifier key for non-continuous selection is down.
      */
     public static boolean isNonContinousSelectKeyDown(MouseEvent e) {
-        return IS_MAC ? e.isMetaDown(): e.isControlDown();
+        return JfxAppsPlatform.IS_MAC ? e.isMetaDown(): e.isControlDown();
     }
-
-    /**
-     * Returns true if the jvm is running with assertions enabled.
-     *
-     * @return true if the jvm is running with assertions enabled.
-     */
-    public static boolean isAssertionEnabled() {
-        return EditorPlatform.class.desiredAssertionStatus();
-    }
-
 
 
 }

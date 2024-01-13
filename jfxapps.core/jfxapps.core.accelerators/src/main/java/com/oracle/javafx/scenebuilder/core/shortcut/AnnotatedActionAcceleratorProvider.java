@@ -42,18 +42,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.SbContext;
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.shortcut.Accelerator;
 import com.oracle.javafx.scenebuilder.api.shortcut.AcceleratorProvider;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractCommonUiController;
 
 import javafx.scene.input.KeyCombination;
 
-@Window
+@ApplicationInstanceSingleton
 public class AnnotatedActionAcceleratorProvider implements AcceleratorProvider {
 
     private static Logger logger = LoggerFactory.getLogger(AnnotatedActionAcceleratorProvider.class);
@@ -110,7 +110,7 @@ public class AnnotatedActionAcceleratorProvider implements AcceleratorProvider {
             for (com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator annotation : annotations) {
 
                 final String rawAccelerator;
-                if (EditorPlatform.IS_MAC && !annotation.macosAccelerator().isBlank()) {
+                if (JfxAppsPlatform.IS_MAC && !annotation.macosAccelerator().isBlank()) {
                     rawAccelerator = annotation.macosAccelerator();
                 } else {
                     rawAccelerator = annotation.accelerator().isBlank() ? null : annotation.accelerator();

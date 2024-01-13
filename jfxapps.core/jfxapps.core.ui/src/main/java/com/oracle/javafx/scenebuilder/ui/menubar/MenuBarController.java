@@ -47,10 +47,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.DocumentScope;
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
+import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.menu.Attachment;
@@ -76,7 +75,7 @@ import javafx.scene.layout.StackPane;
 /**
  *
  */
-@Window
+@com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton
 //@Conditional(EditorPlatform.IS_MAC_CONDITION.class)
 public class MenuBarController implements com.oracle.javafx.scenebuilder.api.ui.menu.MenuBar {
     private final static Logger logger = LoggerFactory.getLogger(MenuBarController.class);
@@ -94,13 +93,13 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.ui.
     private final Optional<List<MenuProvider>> menuProviders;
     private final Optional<List<MenuItemProvider>> menuItemProviders;
 
-    private final EditorInstancesManager main;
+    private final InstancesManager main;
 
     public MenuBarController(
             SceneBuilderManager sceneBuilderManager,
             Optional<List<MenuProvider>> menuProviders,
             Optional<List<MenuItemProvider>> menuItemProviders,
-            EditorInstancesManager main) {
+            InstancesManager main) {
         this.sceneBuilderManager = sceneBuilderManager;
         this.menuProviders = menuProviders;
         this.menuItemProviders = menuItemProviders;
@@ -501,7 +500,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.ui.
          * On Mac, move the menu bar on the desktop and remove the Quit item from the
          * File menu
          */
-        if (EditorPlatform.IS_MAC) {
+        if (JfxAppsPlatform.IS_MAC) {
             menuBar.setUseSystemMenuBar(true);
             // SB-269
             menuBar.useSystemMenuBarProperty().addListener((obs, ov, nv) -> {
@@ -528,21 +527,21 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.ui.
     private void handleOnWindowMenuValidation() {
         windowMenu.getItems().clear();
 
-        final List<EditorInstance> documentWindowControllers = main.getDocuments();
+        final List<ApplicationInstance> documentWindowControllers = main.getInstances();
         if (documentWindowControllers.isEmpty()) {
             // Adds the "No window" menu item
             windowMenu.getItems().add(makeWindowMenuItem(null));
         } else {
-            final List<EditorInstance> sortedControllers = new ArrayList<>(documentWindowControllers);
-            Collections.sort(sortedControllers, new EditorInstance.TitleComparator());
+            final List<ApplicationInstance> sortedControllers = new ArrayList<>(documentWindowControllers);
+            Collections.sort(sortedControllers, new ApplicationInstance.TitleComparator());
 
-            for (EditorInstance dwc : sortedControllers) {
+            for (ApplicationInstance dwc : sortedControllers) {
                 windowMenu.getItems().add(makeWindowMenuItem(dwc));
             }
         }
     }
 
-    private MenuItem makeWindowMenuItem(final EditorInstance dwc) {
+    private MenuItem makeWindowMenuItem(final ApplicationInstance dwc) {
         final RadioMenuItem result = new RadioMenuItem();
         if (dwc != null) {
             result.setText(dwc.getDocumentWindow().getStage().getTitle());
@@ -560,10 +559,10 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.ui.
 
     private static class WindowMenuEventHandler implements EventHandler<ActionEvent> {
 
-        private final EditorInstance dwc;
+        private final ApplicationInstance dwc;
         private final SceneBuilderManager sceneBuilderManager;
 
-        public WindowMenuEventHandler(EditorInstance dwc, SceneBuilderManager sceneBuilderManager) {
+        public WindowMenuEventHandler(ApplicationInstance dwc, SceneBuilderManager sceneBuilderManager) {
             this.dwc = dwc;
             this.sceneBuilderManager = sceneBuilderManager;
         }

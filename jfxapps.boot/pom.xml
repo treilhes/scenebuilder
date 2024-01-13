@@ -19,6 +19,7 @@
     <module>jfxapps.boot.registry</module>
     <module>jfxapps.boot.layer</module>
     <module>jfxapps.boot.jpa</module>
-    
+
+    <module>jfxapps.boot.jpms.patches</module>
   </modules>
 </project>

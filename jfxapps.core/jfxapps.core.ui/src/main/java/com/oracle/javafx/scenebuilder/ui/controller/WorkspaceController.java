@@ -88,7 +88,7 @@ import javafx.util.Duration;
 /**
  *
  */
-@com.gluonhq.jfxapps.boot.context.annotation.Window
+@com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton
 public class WorkspaceController extends AbstractFxmlPanelController implements Workspace {
 
     private static Logger logger = LoggerFactory.getLogger(WorkspaceController.class);

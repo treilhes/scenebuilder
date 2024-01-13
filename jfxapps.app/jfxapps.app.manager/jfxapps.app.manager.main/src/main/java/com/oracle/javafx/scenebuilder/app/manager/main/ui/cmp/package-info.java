@@ -1,1 +1,0 @@
-package com.oracle.javafx.scenebuilder.app.manager.main.ui.cmp;

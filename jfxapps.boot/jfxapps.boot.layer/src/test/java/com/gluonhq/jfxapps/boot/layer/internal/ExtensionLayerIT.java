@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -72,7 +72,7 @@ class ExtensionLayerIT {
     @Test
     void extension_must_access_class_in_root_layer(TestInfo testInfo) throws Exception {
 
-        Path rootLayerDir = rootDir.resolve(testInfo.getDisplayName());
+        Path rootLayerDir = rootDir.resolve(testInfo.getDisplayName() + "_root");
         Path extDir = rootDir.resolve(testInfo.getDisplayName() + "_ext");
         Files.createDirectory(rootLayerDir);
         Files.createDirectory(extDir);
@@ -94,7 +94,7 @@ class ExtensionLayerIT {
     @Test
     void extension_must_access_class_in_extension_layer(TestInfo testInfo) throws Exception {
 
-        Path rootLayerDir = rootDir.resolve(testInfo.getDisplayName());
+        Path rootLayerDir = rootDir.resolve(testInfo.getDisplayName() + "_root");
         Path extDir = rootDir.resolve(testInfo.getDisplayName() + "_ext");
         Files.createDirectory(rootLayerDir);
         Files.createDirectory(extDir);
@@ -116,7 +116,7 @@ class ExtensionLayerIT {
     @Test
     void root_layer_must_not_access_class_in_extension_layer(TestInfo testInfo) throws Exception {
 
-        Path rootLayerDir = rootDir.resolve(testInfo.getDisplayName());
+        Path rootLayerDir = rootDir.resolve(testInfo.getDisplayName() + "_root");
         Path extDir = rootDir.resolve(testInfo.getDisplayName() + "_ext");
         Files.createDirectory(rootLayerDir);
         Files.createDirectory(extDir);

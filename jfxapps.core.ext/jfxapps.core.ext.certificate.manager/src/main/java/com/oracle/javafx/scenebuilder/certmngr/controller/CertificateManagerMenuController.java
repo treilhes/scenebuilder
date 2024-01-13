@@ -35,12 +35,12 @@ package com.oracle.javafx.scenebuilder.certmngr.controller;
 
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 
 /**
  *
  */
-@Window
+@ApplicationInstanceSingleton
 public class CertificateManagerMenuController {
 
     private final CertificateManagerWindowController featuresWindowController;

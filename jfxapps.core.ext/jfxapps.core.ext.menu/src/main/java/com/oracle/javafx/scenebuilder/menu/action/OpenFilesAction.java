@@ -39,7 +39,7 @@ import java.util.List;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
+import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
@@ -58,7 +58,7 @@ public class OpenFilesAction extends AbstractOpenFilesAction {
     protected OpenFilesAction(
             ActionExtensionFactory extensionFactory,
             Dialog dialog,
-            EditorInstancesManager main,
+            InstancesManager main,
             RecentItemsPreference recentItemsPreference,
             FileSystem fileSystem) {
      // @formatter:on

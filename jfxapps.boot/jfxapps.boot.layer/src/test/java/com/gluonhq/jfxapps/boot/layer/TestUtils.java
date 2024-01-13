@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,6 +38,9 @@ import java.lang.reflect.Constructor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.gluonhq.jfxapps.boot.layer.Layer;
 
 // TODO: Auto-generated Javadoc
@@ -46,6 +49,7 @@ import com.gluonhq.jfxapps.boot.layer.Layer;
  */
 public final class TestUtils {
 
+    private static final Logger logger = LoggerFactory.getLogger(TestUtils.class);
     /**
      * Instantiates a new test utils.
      */
@@ -62,7 +66,11 @@ public final class TestUtils {
      */
     public static void copy(Path target, Path jarPath) {
         try {
-            Files.copy(jarPath, target.resolve(jarPath.getFileName()));
+            var targetPath = target.resolve(jarPath.getFileName());
+
+            logger.info("Copying {} to {}", jarPath, targetPath);
+
+            Files.copy(jarPath, targetPath);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

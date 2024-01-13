@@ -43,9 +43,9 @@ import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstance;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstancesManager;
+import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
+import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
+import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
@@ -61,22 +61,22 @@ import com.oracle.javafx.scenebuilder.fs.preference.global.WildcardImportsPrefer
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 public class SaveAction extends AbstractAction {
 
-    private final EditorInstance document;
+    private final ApplicationInstance document;
     private final InlineEdit inlineEdit;
     private final Dialog dialog;
-    private final EditorInstanceWindow documentWindow;
+    private final InstanceWindow documentWindow;
     private final MessageLogger messageLogger;
-    private final EditorInstancesManager editor;
+    private final InstancesManager editor;
     private final DocumentManager documentManager;
     private final FileSystem fileSystem;
 
     // @formatter:off
     public SaveAction(
             ActionExtensionFactory extensionFactory,
-            EditorInstance document,
+            ApplicationInstance document,
             DocumentManager documentManager,
-            EditorInstanceWindow documentWindow,
-            EditorInstancesManager editor,
+            InstanceWindow documentWindow,
+            InstancesManager editor,
             InlineEdit inlineEdit,
             Dialog dialog,
             MessageLogger messageLogger,

@@ -38,38 +38,70 @@ import java.nio.file.Path;
 import java.util.Locale;
 import java.util.UUID;
 
+import org.springframework.context.annotation.Condition;
+import org.springframework.context.annotation.ConditionContext;
+import org.springframework.core.type.AnnotatedTypeMetadata;
+
 import com.gluonhq.jfxapps.boot.platform.internal.DefaultFolders;
 
 public interface JfxAppsPlatform {
 
-    public static final String osName = System.getProperty("os.name").toLowerCase(Locale.ROOT); //NOCHECK
+    public static final String osName = System.getProperty("os.name").toLowerCase(Locale.ROOT); // NOCHECK
 
     /**
      * True if current platform is running Linux.
      */
-    public static final boolean IS_LINUX = osName.contains("linux"); //NOCHECK
+    public static final boolean IS_LINUX = osName.contains("linux"); // NOCHECK
 
     /**
      * True if current platform is running Mac OS X.
      */
-    public static final boolean IS_MAC = osName.contains("mac"); //NOCHECK
+    public static final boolean IS_MAC = osName.contains("mac"); // NOCHECK
 
     /**
      * True if current platform is running Windows.
      */
-    public static final boolean IS_WINDOWS = osName.contains("windows"); //NOCHECK
+    public static final boolean IS_WINDOWS = osName.contains("windows"); // NOCHECK
 
-    public static final File USER_HOME = new File(System.getProperty("user.home")); //NOCHECK
+    /**
+     * Spring bean condition, True if current platform is running Linux.
+     */
+    public static final class IS_LINUX_CONDITION implements Condition {
+        @Override
+        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+            return IS_LINUX;
+        }
+    }
+
+    /**
+     * Spring bean condition, True if current platform is running Mac.
+     */
+    public static final class IS_MAC_CONDITION implements Condition {
+        @Override
+        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+            return IS_MAC;
+        }
+    }
+
+    /**
+     * Spring bean condition, True if current platform is running Windows.
+     */
+    public static final class IS_WINDOWS_CONDITION implements Condition {
+        @Override
+        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+            return IS_WINDOWS;
+        }
+    }
+
+    public static final File USER_HOME = new File(System.getProperty("user.home")); // NOCHECK
 
     public static File getApplicationDataFolder() {
         return DefaultFolders.getApplicationDataFolder();
     }
 
-
     public static File getUserExtensionsFolder(UUID extensionId) {
         return DefaultFolders.getUserExtensionsFolder(extensionId);
     }
-
 
     public static File getMessageBoxFolder() {
         return DefaultFolders.getMessageBoxFolder();
@@ -85,4 +117,12 @@ public interface JfxAppsPlatform {
 
     File defaultTempM2Repository();
 
+    /**
+     * Returns true if the jvm is running with assertions enabled.
+     *
+     * @return true if the jvm is running with assertions enabled.
+     */
+    public static boolean isAssertionEnabled() {
+        return JfxAppsPlatform.class.desiredAssertionStatus();
+    }
 }

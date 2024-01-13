@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,6 +36,12 @@ package com.gluonhq.jfxapps.boot.loader.extension;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.gluonhq.jfxapps.boot.layer.Layer;
+import com.gluonhq.jfxapps.spring.core.patch.PatchLink;
+
 /**
  * Some rules about extensions <br>
  * - Only one extension in the jar <br>
@@ -47,7 +53,9 @@ import java.util.UUID;
  */
 public sealed interface Extension permits OpenExtension, SealedExtension {
 
-    public final static UUID ROOT_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+    final static Logger logger = LoggerFactory.getLogger(Extension.class);
+
+    final static UUID ROOT_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
     UUID getId();
 
@@ -55,6 +63,13 @@ public sealed interface Extension permits OpenExtension, SealedExtension {
 
     List<Class<?>> localContextClasses();
 
+    public default void initializeModule(Layer layer) {
+        var module = this.getClass().getModule();
+
+        logger.info("Add read to spring.core for {}", module.getName());
+
+        PatchLink.addRead(module);
+    }
 //    InputStream getLicense();
 //
 //    InputStream getDescription();

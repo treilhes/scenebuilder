@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,6 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.library.preferences.global;
 
+import java.util.Objects;
 import java.util.prefs.Preferences;
 
 import org.slf4j.Logger;
@@ -40,13 +41,14 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
+import com.oracle.javafx.scenebuilder.api.library.LibraryArtifact;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultProvider;
 import com.oracle.javafx.scenebuilder.api.preferences.KeyProvider;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.type.ListItemObjectPreference;
 
 @Prototype
-public class MavenArtifactPreferences extends ListItemObjectPreference<UniqueArtifact> {
+public class MavenArtifactPreferences extends ListItemObjectPreference<LibraryArtifact> {
 
     private final static Logger logger = LoggerFactory.getLogger(MavenArtifactPreferences.class);
 
@@ -57,38 +59,39 @@ public class MavenArtifactPreferences extends ListItemObjectPreference<UniqueArt
     public final static String FILTER = "filter";
     public final static String PATH = "path";
 
-    public MavenArtifactPreferences(PreferencesContext preferencesContext, String name, UniqueArtifact defaultValue) {
+    public MavenArtifactPreferences(PreferencesContext preferencesContext, String name, LibraryArtifact defaultValue) {
         super(preferencesContext, name, defaultValue);
     }
 
-    public static KeyProvider<UniqueArtifact> keyProvider() {
+    public static KeyProvider<LibraryArtifact> keyProvider() {
         return (m) -> m.getCoordinates();
     }
 
     public static DefaultProvider<MavenArtifactPreferences> defaultProvider() {
-        return (pc, name) -> new MavenArtifactPreferences(pc, name, UniqueArtifact.builder().build());
+        return (pc, name) -> new MavenArtifactPreferences(pc, name, new LibraryArtifact());
     }
 
-    public static boolean isValid(UniqueArtifact object) {
-        boolean valid = true;
-
+    public static boolean isValid(LibraryArtifact object) {
         if (object == null) {
             logger.error("MavenArtifact can't be null");
             return false;
         }
-        if (object.getCoordinates() == null) {
-            logger.error("MavenArtifact coordinates can't be null or empty");
-            valid &= false;
-        } else {
-            String[] items = object.getCoordinates().split(":");
-            if (items.length != 3) {
-                logger.error("Wrong MavenArtifact coordinates format, it must be \"groupId:artifactId:version\" but it is \"{}\"",
-                        object.getCoordinates());
-                valid &= false;
-            }
+
+        if (Objects.isNull(object.getGroupId()) || object.getGroupId().isEmpty()) {
+            logger.error("GroupId coordinates can't be null or empty");
+            return false;
         }
 
-        return valid;
+        if (Objects.isNull(object.getArtifactId()) || object.getArtifactId().isEmpty()) {
+            logger.error("ArtifactId coordinates can't be null or empty");
+            return false;
+        }
+
+        if (Objects.isNull(object.getVersion()) || object.getVersion().isEmpty()) {
+            logger.error("Version coordinates can't be null or empty");
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -97,7 +100,7 @@ public class MavenArtifactPreferences extends ListItemObjectPreference<UniqueArt
     }
 
     @Override
-    public String computeKey(UniqueArtifact object) {
+    public String computeKey(LibraryArtifact object) {
         return keyProvider().newKey(object);
     }
 
@@ -107,7 +110,7 @@ public class MavenArtifactPreferences extends ListItemObjectPreference<UniqueArt
         assert node != null;
         assert getValue().getCoordinates() != null;
 
-        UniqueArtifact mavenArtifact = getValue();
+        LibraryArtifact mavenArtifact = getValue();
 
         String[] items = mavenArtifact.getCoordinates().split(":");
         node.put(GROUPID, items[0]);
@@ -120,11 +123,10 @@ public class MavenArtifactPreferences extends ListItemObjectPreference<UniqueArt
         assert key != null;
         assert node != null;
 
-        UniqueArtifact mavenArtifact = UniqueArtifact.builder()
-                .withGroupId(node.get(GROUPID, null))
-                .withArtifactId(node.get(ARTIFACTID, null))
-                .withVersion(node.get(VERSION, null))
-                .build();
+        LibraryArtifact mavenArtifact = new LibraryArtifact();
+        mavenArtifact.setGroupId(node.get(GROUPID, null));
+        mavenArtifact.setArtifactId(node.get(ARTIFACTID, null));
+        mavenArtifact.setVersion(node.get(VERSION, null));
 
         setValue(mavenArtifact);
     }

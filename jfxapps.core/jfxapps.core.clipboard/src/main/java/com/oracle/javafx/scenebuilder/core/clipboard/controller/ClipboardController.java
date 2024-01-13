@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.core.clipboard.controller;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardHandler;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
 
@@ -43,15 +43,15 @@ import javafx.scene.Node;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.Clipboard;
 
-@Window
+@ApplicationInstanceSingleton
 public abstract class ClipboardController implements com.oracle.javafx.scenebuilder.api.clipboard.Clipboard {
 
-    private final EditorInstanceWindow documentWindow;
+    private final InstanceWindow documentWindow;
     private final InlineEdit inlineEdit;
     private final DocumentManager documentManager;
 
     public ClipboardController(
-            EditorInstanceWindow documentWindow,
+            InstanceWindow documentWindow,
             InlineEdit inlineEdit,
             DocumentManager documentManager) {
         super();

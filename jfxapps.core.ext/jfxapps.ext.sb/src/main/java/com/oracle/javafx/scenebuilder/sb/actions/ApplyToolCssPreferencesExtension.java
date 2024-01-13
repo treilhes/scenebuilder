@@ -49,7 +49,7 @@ import org.springframework.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.action.AbstractActionExtension;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
-import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
+import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.tooltheme.CssPreference;
 import com.oracle.javafx.scenebuilder.api.tooltheme.CssPreference.CssProperty;
 import com.oracle.javafx.scenebuilder.sb.spi.InMemoryFileRegistry;

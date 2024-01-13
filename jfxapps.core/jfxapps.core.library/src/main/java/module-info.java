@@ -53,6 +53,8 @@ open module scenebuilder.core.library {
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.annotation;
     requires spring.beans;
+    requires org.mapstruct;
+    requires java.compiler;
 
 
     provides Extension with LibraryExtension;

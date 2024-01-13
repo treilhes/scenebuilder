@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,13 +31,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package com.oracle.javafx.scenebuilder.extlibrary;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.extlibrary.controller.ExtensionLibraryMenuController;
 import com.oracle.javafx.scenebuilder.extlibrary.controller.ExtensionLibraryWindowController;
 import com.oracle.javafx.scenebuilder.extlibrary.i18n.I18NExtensionLibrary;
@@ -51,14 +52,27 @@ import com.oracle.javafx.scenebuilder.extlibrary.library.explorer.ExtensionFolde
 import com.oracle.javafx.scenebuilder.extlibrary.library.explorer.ExtensionMavenArtifactExplorer;
 import com.oracle.javafx.scenebuilder.extlibrary.menu.ExtensionLibraryMenuProvider;
 
-public class ExtensionLibraryExtension extends AbstractExtension {
+public class ExtensionLibraryExtension implements OpenExtension {
+
+    public final static UUID ID = UUID.fromString("12337440-1d43-4cee-9a37-6b6b4aa8dca1");
+
     @Override
     public UUID getId() {
-        return com.oracle.javafx.scenebuilder.extension.ExtensionLibrary.ID;
+        return ID;
     }
 
     @Override
-    public List<Class<?>> explicitClassToRegister() {
+    public UUID getParentId() {
+        return OpenExtension.ROOT_ID;
+    }
+
+    @Override
+    public List<Class<?>> localContextClasses() {
+        return List.of();
+    }
+
+    @Override
+    public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
                 ExtensionBuiltinLibrary.class,

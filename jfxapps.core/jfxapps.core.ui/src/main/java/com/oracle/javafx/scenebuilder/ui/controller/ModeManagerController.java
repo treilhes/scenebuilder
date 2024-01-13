@@ -42,7 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.SbContext;
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.content.mode.AbstractModeController;
 import com.oracle.javafx.scenebuilder.api.content.mode.Mode;
 import com.oracle.javafx.scenebuilder.api.content.mode.ModeDescriptor;
@@ -51,7 +51,7 @@ import com.oracle.javafx.scenebuilder.api.content.mode.ModeProvider;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
-@Window
+@ApplicationInstanceSingleton
 public class ModeManagerController implements ModeManager {
 
     private Logger logger = LoggerFactory.getLogger(ModeManagerController.class);

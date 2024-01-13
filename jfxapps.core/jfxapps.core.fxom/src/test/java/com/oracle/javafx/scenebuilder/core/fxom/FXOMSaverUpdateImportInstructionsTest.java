@@ -49,9 +49,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.junitpioneer.jupiter.SetSystemProperty;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
@@ -64,6 +66,7 @@ import javafx.stage.Stage;
  * Unit test for {@link FXOMSaver#updateImportInstructions(FXOMDocument)}.
  */
 @ExtendWith(ApplicationExtension.class)
+@SetSystemProperty(key = "javafx.allowjs", value = "true")
 public class FXOMSaverUpdateImportInstructionsTest {
 
     @TempDir
@@ -71,11 +74,6 @@ public class FXOMSaverUpdateImportInstructionsTest {
 
     private static FXOMDocument fxomDocument;
     private static FXOMSaver serviceUnderTest;
-
-//    @BeforeClass
-//    public static void initialize() {
-//        JfxInitializer.initialize();
-//    }
 
     @Start
     private void start(Stage stage) {
@@ -216,17 +214,26 @@ public class FXOMSaverUpdateImportInstructionsTest {
 
     @Test
     public void testImportsWithComments() {
+
+        System.setProperty("javafx.allowjs", "true");
+
+        System.out.println("javafx.allowjs : " + System.getProperty("javafx.allowjs"));
         setupTestCase(FxmlTestInfo.HEADER_WITH_NOT_ONLY_IMPORTS);
+        System.out.println("javafx.allowjs : " + System.getProperty("javafx.allowjs"));
+        final int NUMBER_OF_FIRST_LEVEL_ELEMENTS = 6;
 
         Set<String> imports = new TreeSet<>();
         fxomDocument.getFxomRoot().collect(DeclaredClassCollector.all()).forEach(dc -> {
             imports.add(dc.getName());
         });
+        System.out.println("javafx.allowjs : " + System.getProperty("javafx.allowjs"));
+        assertEquals("comment line should not be removed", NUMBER_OF_FIRST_LEVEL_ELEMENTS,
+                fxomDocument.getGlue().getContent().size());
 
-        assertEquals("comment line should not be removed", 6, fxomDocument.getGlue().getContent().size());
-
-        assertTrue("second glue node should be a comment", fxomDocument.getGlue().getContent().get(1) instanceof GlueComment);
-        assertTrue("fifth glue node should be a comment", fxomDocument.getGlue().getContent().get(4) instanceof GlueComment);
+        assertTrue("second glue node should be a comment",
+                fxomDocument.getGlue().getContent().get(1) instanceof GlueComment);
+        assertTrue("fifth glue node should be a comment",
+                fxomDocument.getGlue().getContent().get(4) instanceof GlueComment);
 
         assertTrue("fxml does not contain javafx.scene.control.ComboBox",
                 imports.contains("javafx.scene.control.ComboBox"));

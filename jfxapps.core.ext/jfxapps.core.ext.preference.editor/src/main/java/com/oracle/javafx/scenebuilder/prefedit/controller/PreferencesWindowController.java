@@ -39,9 +39,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
@@ -65,7 +65,7 @@ import javafx.stage.Modality;
 /**
  * Preferences window controller.
  */
-@Window
+@ApplicationInstanceSingleton
 public class PreferencesWindowController extends AbstractFxmlWindowController {
 
     private static final int PREFERENCE_MAX_HEIGHT = 700;
@@ -90,7 +90,7 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
     public PreferencesWindowController(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
-            EditorInstanceWindow documentWindowController,
+            InstanceWindow documentWindowController,
             List<ManagedGlobalPreference> globalPreferences,
             List<ManagedDocumentPreference> documentPreferences) {
         super(sceneBuilderManager, iconSetting, PreferencesWindowController.class.getResource("Preferences.fxml"),

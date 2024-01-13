@@ -22,10 +22,10 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.jobs</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.gluonhq.scenebuilder</groupId>
+        <!--<dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>scenebuilder.ext.editors</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.app.starter.test</artifactId>

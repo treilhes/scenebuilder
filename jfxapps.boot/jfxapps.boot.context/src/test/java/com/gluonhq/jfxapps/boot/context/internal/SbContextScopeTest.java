@@ -15,7 +15,7 @@ import com.gluonhq.jfxapps.boot.context.DocumentScope;
 import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.context.impl.ContextManagerImpl;
 
 /**
@@ -214,10 +214,10 @@ class SbContextScopeTest {
         }
     }
 
-    @Window
+    @ApplicationInstanceSingleton
     static class WindowComponent {}
 
-    @Window
+    @ApplicationInstanceSingleton
     static class MainWindow implements Document {
         WindowComponent windowComponent;
 
@@ -234,7 +234,7 @@ class SbContextScopeTest {
         public final static String DOCUMENT_NAME2 = "myWindowComponent4";
 
         //@Bean
-        @Window
+        @ApplicationInstanceSingleton
         public Main mainComponent() {
             return new Main();
         }
@@ -250,18 +250,18 @@ class SbContextScopeTest {
         }
 
         @Bean(DOCUMENT_NAME1)
-        @Window
+        @ApplicationInstanceSingleton
         public WindowComponent windowComponent3() {
             return new WindowComponent();
         }
 
         @Bean(DOCUMENT_NAME2)
-        @Window
+        @ApplicationInstanceSingleton
         public WindowComponent windowComponent4() {
             return new WindowComponent();
         }
 
-        @Window
+        @ApplicationInstanceSingleton
         static class Main implements Document{
 
             public Main() {

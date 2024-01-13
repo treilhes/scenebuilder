@@ -50,9 +50,9 @@ import org.springframework.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.context.SbContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardDataFormat;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSourceFactory;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
@@ -93,7 +93,7 @@ public final class ExternalDragSource extends AbstractDragSource {
 
     protected ExternalDragSource(
             DocumentManager documentManager,
-            EditorInstanceWindow ownerWindow,
+            InstanceWindow ownerWindow,
             Optional<List<ClipboardDataFormat>> dataFormats) {
         super(ownerWindow.getScene().getWindow());
         this.targetDocument = documentManager.fxomDocument().get();

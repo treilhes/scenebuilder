@@ -37,9 +37,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 
-@Window
+@ApplicationInstanceSingleton
 public class DockNameHelper {
 
     private int windowNumber = 1;

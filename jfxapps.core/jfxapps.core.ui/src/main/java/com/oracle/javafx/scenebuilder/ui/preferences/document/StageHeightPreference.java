@@ -33,12 +33,12 @@
  */
 package com.oracle.javafx.scenebuilder.ui.preferences.document;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.type.DoublePreference;
 
-@Window
+@ApplicationInstanceSingleton
 public class StageHeightPreference extends DoublePreference implements ManagedDocumentPreference {
 
 	public static final String PREFERENCE_KEY = "height"; //NOCHECK

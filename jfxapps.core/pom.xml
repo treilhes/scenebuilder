@@ -38,5 +38,6 @@
 
         <module>jfxapps.core.appmngr</module>
         <module>jfxapps.core.registry</module>
+        <module>jfxapps.javafx.starter</module>
     </modules>
 </project>

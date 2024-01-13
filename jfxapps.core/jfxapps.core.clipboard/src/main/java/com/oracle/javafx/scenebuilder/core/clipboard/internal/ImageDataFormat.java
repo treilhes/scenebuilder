@@ -37,7 +37,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardDataFormat;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
@@ -46,7 +46,7 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 
-@Window
+@ApplicationInstanceSingleton
 public class ImageDataFormat implements ClipboardDataFormat {
 
     @Override

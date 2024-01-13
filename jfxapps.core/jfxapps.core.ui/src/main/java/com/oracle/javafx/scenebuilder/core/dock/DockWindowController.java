@@ -34,8 +34,8 @@
 package com.oracle.javafx.scenebuilder.core.dock;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
@@ -68,7 +68,7 @@ public class DockWindowController extends AbstractFxmlWindowController {
     public DockWindowController(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
-            EditorInstanceWindow documentWindow,
+            InstanceWindow documentWindow,
             DockPanelController dockPanelController,
             DockManager dockManager,
             DockNameHelper dockNameHelper) {
@@ -101,7 +101,7 @@ public class DockWindowController extends AbstractFxmlWindowController {
 
         // Add a border to the Windows app, because of the specific window decoration on
         // Windows.
-        if (EditorPlatform.IS_WINDOWS) {
+        if (JfxAppsPlatform.IS_WINDOWS) {
             getRoot().getStyleClass().add("windows-document-decoration");// NOI18N
         }
 

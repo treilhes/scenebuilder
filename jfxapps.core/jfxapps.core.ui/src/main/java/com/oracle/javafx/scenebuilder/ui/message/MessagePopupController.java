@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.ui.message;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractPopupController;
@@ -45,7 +45,7 @@ import javafx.stage.WindowEvent;
 /**
  *
  */
-@Window
+@ApplicationInstanceSingleton
 public class MessagePopupController extends AbstractPopupController {
 
     private final MessagePanelController messagePanelController;

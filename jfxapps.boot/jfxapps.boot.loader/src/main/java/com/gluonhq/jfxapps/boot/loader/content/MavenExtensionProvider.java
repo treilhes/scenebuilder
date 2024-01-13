@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -84,8 +84,7 @@ public class MavenExtensionProvider implements ExtensionContentProvider {
 
     private void resolveArtefact() {
         if (mavenArtifact == null) {
-            mavenArtifact = UniqueArtifact.builder().withArtifact(groupId, artifactId).withVersion(version)
-                    .build();
+            mavenArtifact = UniqueArtifact.builder().withArtifact(groupId, artifactId).withVersion(version).build();
         }
     }
 
@@ -100,14 +99,15 @@ public class MavenExtensionProvider implements ExtensionContentProvider {
 
     private void buildAggregate(ResolvedArtifact artifact) {
 
-        Function<Path, ExtensionContentProvider> setupProvider = (p) -> Files.isDirectory(p) ? new FolderExtensionProvider(p)
-                : new FileExtensionProvider(p);
+        Function<Path, ExtensionContentProvider> setupProvider = (
+                p) -> Files.isDirectory(p) ? new FolderExtensionProvider(p) : new FileExtensionProvider(p);
 
         aggregate.put(artifact, setupProvider.apply(artifact.getPath()));
 
         artifact.getDependencies().forEach(d -> aggregate.put(d, setupProvider.apply(d.getPath())));
 
     }
+
     @Override
     public boolean isValid() {
         resolveArtefact();
@@ -120,14 +120,14 @@ public class MavenExtensionProvider implements ExtensionContentProvider {
 
         boolean upToDate = true;
 
-        for (var entry:aggregate.entrySet()) {
+        for (var entry : aggregate.entrySet()) {
             var artifactId = entry.getKey().getUniqueArtifact().getArtifact().getArtifactId();
             var provider = entry.getValue();
 
-            upToDate &= switch(provider) {
-                case FileExtensionProvider file -> file.isUpToDate(targetFolder);
-                case FolderExtensionProvider folder -> folder.isUpToDate(targetFolder.resolve(artifactId));
-                default -> throw new IllegalArgumentException("Unexpected value: " + provider);
+            upToDate &= switch (provider) {
+            case FileExtensionProvider file -> file.isUpToDate(targetFolder);
+            case FolderExtensionProvider folder -> folder.isUpToDate(targetFolder.resolve(artifactId));
+            default -> throw new IllegalArgumentException("Unexpected value: " + provider);
             };
         }
 
@@ -140,22 +140,23 @@ public class MavenExtensionProvider implements ExtensionContentProvider {
 
         List<Path> obsoleteContent = Files.list(targetFolder).collect(Collectors.toList());
 
-        for (var entry:aggregate.entrySet()) {
+        for (var entry : aggregate.entrySet()) {
             var artifactId = entry.getKey().getUniqueArtifact().getArtifact().getArtifactId();
             var provider = entry.getValue();
 
-            switch(provider) {
-                case FileExtensionProvider file -> {
-                    file.update(targetFolder);
-                    obsoleteContent.remove(targetFolder.resolve(file.getFile().getName()));
-                }
-                case FolderExtensionProvider folder -> {
-                    Path path = targetFolder.resolve(artifactId);
-                    folder.update(path);
-                    obsoleteContent.remove(path);
-                }
-                default -> throw new IllegalArgumentException("Unexpected value: " + provider);
-            };
+            switch (provider) {
+            case FileExtensionProvider file -> {
+                file.update(targetFolder);
+                obsoleteContent.remove(targetFolder.resolve(file.getFile().getName()));
+            }
+            case FolderExtensionProvider folder -> {
+                Path path = targetFolder.resolve(artifactId);
+                folder.update(path);
+                obsoleteContent.remove(path);
+            }
+            default -> throw new IllegalArgumentException("Unexpected value: " + provider);
+            }
+            ;
         }
 
         obsoleteContent.forEach(p -> {
@@ -211,6 +212,12 @@ public class MavenExtensionProvider implements ExtensionContentProvider {
 
     public void setRepositoryClient(RepositoryClient repositoryClient) {
         this.repositoryClient = repositoryClient;
+    }
+
+    @Override
+    public String toString() {
+        return "MavenExtensionProvider [groupId=" + groupId + ", artifactId=" + artifactId + ", version=" + version
+                + ", resolvedArtifact=" + resolvedArtifact + "]";
     }
 
 }

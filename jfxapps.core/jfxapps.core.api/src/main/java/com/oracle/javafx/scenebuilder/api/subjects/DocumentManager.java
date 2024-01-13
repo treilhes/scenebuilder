@@ -37,7 +37,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Primary;
-import com.gluonhq.jfxapps.boot.context.annotation.Window;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
@@ -129,7 +129,7 @@ public interface DocumentManager {
      */
     SubjectItem<Map<Path, String>> filesystemUpdate();
 
-    @Window
+    @ApplicationInstanceSingleton
     @Primary
     public class DocumentManagerImpl implements DocumentManager {
 
