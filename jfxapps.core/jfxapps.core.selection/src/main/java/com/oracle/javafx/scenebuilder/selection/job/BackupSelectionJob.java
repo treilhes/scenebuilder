@@ -37,7 +37,7 @@ package com.oracle.javafx.scenebuilder.selection.job;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
@@ -115,7 +115,7 @@ public final class BackupSelectionJob extends AbstractJob {
 
     @Singleton
     public static class Factory extends JobFactory<BackupSelectionJob> {
-        public Factory(SbContext sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

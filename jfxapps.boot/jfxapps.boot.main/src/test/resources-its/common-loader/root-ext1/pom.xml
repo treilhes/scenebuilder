@@ -8,15 +8,19 @@
     <artifactId>root-ext1</artifactId>
     <dependencies>
         <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.boot.loader</artifactId>
-            <version>17.0.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>it.boot.loader</groupId>
             <artifactId>root</artifactId>
             <version>1.0.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.boot.main</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.boot.starter</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -38,14 +38,14 @@ import java.util.UUID;
 
 public interface ContextManager {
 
-    SbContext get(UUID contextId);
+    JfxAppContext get(UUID contextId);
 
     boolean exists(UUID contextId);
 
-    SbContext create(UUID parentContextId, UUID contextId, Class<?>[] classes, List<Object> singletonInstances,
+    JfxAppContext create(UUID parentContextId, UUID contextId, Class<?>[] classes, List<Object> singletonInstances,
             MultipleProgressListener progressListener);
 
-    SbContext create(UUID parentContextId, UUID contextId, ClassLoader loader, Class<?>[] classes, List<Object> singletonInstances,
+    JfxAppContext create(UUID parentContextId, UUID contextId, ClassLoader loader, Class<?>[] classes, List<Object> singletonInstances,
             MultipleProgressListener progressListener);
 
     void clear();

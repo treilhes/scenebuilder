@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,7 +34,11 @@
 package com.gluonhq.jfxapps.boot.jpa;
 
 import org.hibernate.boot.model.naming.EntityNaming;
+import org.hibernate.boot.model.naming.Identifier;
+import org.hibernate.boot.model.naming.ImplicitCollectionTableNameSource;
+import org.hibernate.boot.model.naming.ImplicitEntityNameSource;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
+import org.hibernate.boot.spi.MetadataBuildingContext;
 
 public class ModuleAwareImplicitNamingStrategyLegacyJpaImpl extends ImplicitNamingStrategyJpaCompliantImpl {
 
@@ -43,6 +47,24 @@ public class ModuleAwareImplicitNamingStrategyLegacyJpaImpl extends ImplicitNami
      */
     private static final long serialVersionUID = 1L;
 
+    @Override
+    public Identifier determinePrimaryTableName(ImplicitEntityNameSource source) {
+        // TODO Auto-generated method stub
+        return super.determinePrimaryTableName(source);
+    }
+
+    @Override
+    public Identifier determineCollectionTableName(ImplicitCollectionTableNameSource source) {
+        // TODO Auto-generated method stub
+        return super.determineCollectionTableName(source);
+    }
+
+    @Override
+    protected Identifier toIdentifier(String stringForm, MetadataBuildingContext buildingContext) {
+        // TODO Auto-generated method stub
+        return super.toIdentifier(stringForm, buildingContext);
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -50,15 +72,10 @@ public class ModuleAwareImplicitNamingStrategyLegacyJpaImpl extends ImplicitNami
      */
     @Override
     protected String transformEntityName(EntityNaming entityNaming) {
-        try {
-            String defaultName = super.transformEntityName(entityNaming);
-            String clsName = entityNaming.getClassName();
-            Class<?> cls = Class.forName(clsName);
-            String moduleName = cls.getModule().getName().replace(".", "_");
-            return String.format("%s_%s", moduleName, defaultName);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Entity class not found", e);
-        }
+        String defaultName = super.transformEntityName(entityNaming);
+        String clsName = entityNaming.getClassName();
+        String packageName = clsName.substring(0, clsName.lastIndexOf(".")).replace(".","_");
+        return String.format("%s_%s", packageName, defaultName);
     }
 
 }

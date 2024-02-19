@@ -45,6 +45,15 @@
             <artifactId>jakarta.annotation-api</artifactId>
         </dependency>
 
+        <!--
+        https://mvnrepository.com/artifact/jakarta.enterprise/jakarta.enterprise.cdi-api -->
+        <!--<dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <version>4.1.0-M1</version>
+        </dependency>-->
+
+
         <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
         <dependency>
             <groupId>com.h2database</groupId>

@@ -10,13 +10,11 @@
     <artifactId>jfxapps.boot.jpa</artifactId>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+        <!-- https://mvnrepository.com/artifact/com.h2database/h2 
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>2.2.224</version>
-        </dependency>
-
+        </dependency>-->
 
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>

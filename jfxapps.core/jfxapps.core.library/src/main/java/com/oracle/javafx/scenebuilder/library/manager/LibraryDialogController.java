@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
@@ -114,7 +114,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     // TODO may be replaced by editorcontroller after moving
     // libraryPanelController.copyFilesToUserLibraryDir(files)
     private final FileSystem fileSystem;
-    private final SbContext context;
+    private final JfxAppContext context;
 
     private final ListChangeListener<? super LibraryArtifact> artifactListener = c -> loadLibraryList();
     private final ListChangeListener<? super Path> fileOrFolderListener = c -> loadLibraryList();
@@ -134,7 +134,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     public LibraryDialogController(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
-            SbContext context,
+            JfxAppContext context,
             MessageLogger messageLogger,
             MavenSetting mavenSetting,
             MavenArtifactsPreferences mavenPreferences,

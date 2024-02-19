@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.certmngr;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithApplication;
 
@@ -41,7 +41,7 @@ import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithApplicat
 public class CertificateManagerInitializer implements InitWithApplication {
 
        public CertificateManagerInitializer(
-            SbContext context
+            JfxAppContext context
         ) {
         super();
     }

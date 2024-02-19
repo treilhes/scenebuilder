@@ -33,14 +33,14 @@
  */
 package com.oracle.javafx.scenebuilder.api.action;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
 
 @Singleton
 public final class ActionFactory extends AbstractFactory<Action> {
 
-    public ActionFactory(SbContext sbContext) {
+    public ActionFactory(JfxAppContext sbContext) {
         super(sbContext);
     }
 

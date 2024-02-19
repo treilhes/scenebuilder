@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.ui.dialog;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
@@ -51,14 +51,14 @@ import javafx.stage.Window;
 @Prototype
 public class ErrorDialog extends AlertDialog {
 
-    private final SbContext context;
+    private final JfxAppContext context;
 
     private String debugInfo;
 
     protected ErrorDialog(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
-            SbContext context,
+            JfxAppContext context,
             Window owner) {
         super(sceneBuilderManager, iconSetting, owner);
         this.context = context;

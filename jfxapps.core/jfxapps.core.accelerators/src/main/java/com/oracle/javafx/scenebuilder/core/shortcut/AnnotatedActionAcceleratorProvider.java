@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
@@ -58,13 +58,13 @@ public class AnnotatedActionAcceleratorProvider implements AcceleratorProvider {
 
     private static Logger logger = LoggerFactory.getLogger(AnnotatedActionAcceleratorProvider.class);
 
-    private final SbContext context;
+    private final JfxAppContext context;
     private final ActionFactory actionFactory;
 
     private List<Accelerator> acceleratorsCache;
 
     public AnnotatedActionAcceleratorProvider(
-            SbContext context,
+            JfxAppContext context,
             ActionFactory actionFactory) {
         super();
         this.context = context;

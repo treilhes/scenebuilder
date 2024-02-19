@@ -33,12 +33,12 @@
  */
 package com.oracle.javafx.scenebuilder.api.dnd;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
 
 public class DragSourceFactory<T extends DragSource> extends AbstractFactory<T> {
 
-    public DragSourceFactory(SbContext sbContext) {
+    public DragSourceFactory(JfxAppContext sbContext) {
         super(sbContext);
     }
 

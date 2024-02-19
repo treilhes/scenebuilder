@@ -44,7 +44,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
 import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
 import com.oracle.javafx.scenebuilder.api.ui.dock.DockType;
@@ -61,7 +61,7 @@ class DockPanelControllerTest {
     private DockManager dockManager = new DockManager.DockManagerImpl();
 
     @Mock
-    private SbContext context;
+    private JfxAppContext context;
     @Mock
     private LastDockUuidPreference lastDockUuidPreference;
     @Mock

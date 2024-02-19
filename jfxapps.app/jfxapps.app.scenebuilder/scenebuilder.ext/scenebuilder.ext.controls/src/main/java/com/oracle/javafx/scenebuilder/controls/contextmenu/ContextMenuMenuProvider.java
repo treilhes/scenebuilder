@@ -37,7 +37,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemProvider;
 import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;

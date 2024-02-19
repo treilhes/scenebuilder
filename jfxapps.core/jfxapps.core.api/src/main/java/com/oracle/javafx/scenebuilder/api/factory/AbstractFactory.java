@@ -38,15 +38,15 @@ import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 
 public abstract class AbstractFactory<T> {
 
     private static Logger logger = LoggerFactory.getLogger(AbstractFactory.class);
 
-    protected final SbContext sbContext;
+    protected final JfxAppContext sbContext;
 
-    public AbstractFactory(SbContext sbContext) {
+    public AbstractFactory(JfxAppContext sbContext) {
         super();
         this.sbContext = sbContext;
     }

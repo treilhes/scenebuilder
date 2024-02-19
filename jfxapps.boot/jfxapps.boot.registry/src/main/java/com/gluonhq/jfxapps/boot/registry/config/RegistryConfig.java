@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,6 +40,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.gluonhq.jfxapps.boot.registry.RegistryArtifact;
@@ -52,6 +53,7 @@ import com.gluonhq.jfxapps.boot.registry.repository._Repository;
 @EntityScan(basePackageClasses = _Model.class)
 @EnableJpaRepositories(basePackageClasses = _Repository.class)
 @ComponentScan(basePackageClasses = _Component.class)
+@Profile("!it")
 public class RegistryConfig {
 
     private RegistryArtifact boot;

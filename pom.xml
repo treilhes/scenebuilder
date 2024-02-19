@@ -33,6 +33,10 @@
         <maven.compiler.release>21</maven.compiler.release>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
+
+        <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
+        <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
+        <maven-surefire-plugin.version>${maven-failsafe-plugin.version}</maven-surefire-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <spring.boot.version>3.2.1</spring.boot.version>
@@ -85,6 +89,16 @@
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>spring.core.patch.link</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>org.hibernate.orm.core.patch</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>org.hibernate.orm.core.patch.link</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -375,29 +389,6 @@
         </profile>
     </profiles>
     <build>
-        <plugins>
-            <!--<plugin>
-                <groupId>org.commonjava.maven.plugins</groupId>
-                <artifactId>directory-maven-plugin</artifactId>
-                <version>0.1</version>
-                <executions>
-                    <execution>
-                        <id>directories</id>
-                        <goals>
-                            <goal>directory-of</goal>
-                        </goals>
-                        <phase>initialize</phase>
-                        <configuration>
-                            <property>spring.core.patch.path</property>
-                            <project>
-                                <groupId>com.gluonhq.jfxapps</groupId>
-                                <artifactId>spring.core.patch</artifactId>
-                            </project>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>-->
-        </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -418,6 +409,11 @@
                     </configuration>
                 </plugin>
 
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven-dependency-plugin.version}</version>
+                </plugin>
                 <!-- Build KIT wherever parent is cleaned -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -504,36 +500,28 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M8</version>
+                    <version>${maven-surefire-plugin.version}</version>
                     <configuration>
-
                         <systemPropertyVariables>
                             <javafx.allowjs>true</javafx.allowjs>
                         </systemPropertyVariables>
                         <useModulePath>false</useModulePath>
-
                         <argLine>
                             --illegal-access=permit
-                            --patch-module
-                            spring.core=D:/Dev/eclipse/scenebuilderx/scenebuilder/jfxapps.boot/jfxapps.boot.jpms.patches/spring.core.patch/target/spring.core.patch-17.0.0-SNAPSHOT.jar
                         </argLine>
-                        <!-- <reuseForks>false</reuseForks>
-                        <forkCount>1</forkCount> -->
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.2.1</version>
+                    <version>${maven-failsafe-plugin.version}</version>
                     <configuration>
                         <systemPropertyVariables>
                             <javafx.allowjs>true</javafx.allowjs>
                         </systemPropertyVariables>
-                        <useModulePath>false</useModulePath>
+                        <useModulePath>true</useModulePath>
                         <argLine>
                             --illegal-access=permit
-                            --patch-module
-                            spring.core=D:/Dev/eclipse/scenebuilderx/scenebuilder/jfxapps.boot/jfxapps.boot.jpms.patches/spring.core.patch/target/spring.core.patch-17.0.0-SNAPSHOT.jar
                         </argLine>
                     </configuration>
                 </plugin>

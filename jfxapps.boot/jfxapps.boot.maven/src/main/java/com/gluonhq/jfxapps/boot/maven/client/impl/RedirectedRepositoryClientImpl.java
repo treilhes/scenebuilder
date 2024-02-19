@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,10 +41,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
 import com.gluonhq.jfxapps.boot.maven.client.api.Classifier;
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
@@ -55,22 +51,15 @@ import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.gluonhq.jfxapps.boot.maven.client.config.RepositoryConfig;
 import com.gluonhq.jfxapps.boot.maven.client.config.RepositoryConfig.Redirect;
 
-/**
- * When the property jfxapps.repository.redirect is provided, this component is
- * engaged
- *
- */
-@Component
-@Primary
-@ConditionalOnProperty(prefix = RepositoryConfig.PREFIX, name = "redirectionsEnabled")
+
 public class RedirectedRepositoryClientImpl implements RepositoryClient {
 
-    private final MavenRepositoryClientImpl client;
+    private final RepositoryClient client;
     private final RepositoryConfig config;
     private final RepositoryMapper mappers;
 
     public RedirectedRepositoryClientImpl(RepositoryConfig config, RepositoryMapper mappers,
-            MavenRepositoryClientImpl client) {
+            RepositoryClient client) {
         super();
         this.config = config;
         this.mappers = mappers;
@@ -85,18 +74,18 @@ public class RedirectedRepositoryClientImpl implements RepositoryClient {
     @Override
     public RepositoryClient withRepositories(List<Repository> repositories) {
         return new RedirectedRepositoryClientImpl(config, mappers,
-                (MavenRepositoryClientImpl) client.withRepositories(repositories));
+                client.withRepositories(repositories));
     }
 
     @Override
     public RepositoryClient withLocalPath(File path) {
         return new RedirectedRepositoryClientImpl(config, mappers,
-                (MavenRepositoryClientImpl) client.withLocalPath(path));
+                client.withLocalPath(path));
     }
 
     @Override
     public RepositoryClient withLocalOnly() {
-        return new RedirectedRepositoryClientImpl(config, mappers, (MavenRepositoryClientImpl) client.withLocalOnly());
+        return new RedirectedRepositoryClientImpl(config, mappers, client.withLocalOnly());
     }
 
     @Override

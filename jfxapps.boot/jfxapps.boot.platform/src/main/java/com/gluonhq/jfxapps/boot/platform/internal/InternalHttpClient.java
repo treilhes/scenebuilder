@@ -1,0 +1,452 @@
+/*
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
+ * All rights reserved. Use is subject to license terms.
+ *
+ * This file is available and licensed under the following license:
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  - Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *  - Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the distribution.
+ *  - Neither the name of Oracle Corporation and Gluon nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package com.gluonhq.jfxapps.boot.platform.internal;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+import java.net.ProxySelector;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpClient.Version;
+import java.net.http.HttpHeaders;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandler;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.util.Optional;
+import java.util.UUID;
+
+import javax.net.ssl.SSLSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gluonhq.jfxapps.boot.platform.InternalRestClient;
+
+@Component
+public class InternalHttpClient implements InternalRestClient {
+
+    private static final Logger logger = LoggerFactory.getLogger(InternalHttpClient.class);
+
+    private final static String SERVLET_PATH_PROP = "${spring.mvc.servlet.path:}";
+    private final static String CONTEXT_PATH_PROP = "${server.servlet.context-path:}";
+
+    private static final ObjectMapper mapper = new ObjectMapper();
+
+    private final ServerProperties serverProperties;
+    private final String basePath;
+
+    protected InternalHttpClient(ServerProperties serverProperties,
+            @Value(InternalHttpClient.SERVLET_PATH_PROP) String servletPath,
+            @Value(InternalHttpClient.CONTEXT_PATH_PROP) String contextPath) {
+        this.serverProperties = serverProperties;
+        this.basePath = ((StringUtils.hasText(contextPath) ? "/" + contextPath : "") + (StringUtils.hasText(servletPath) ? "/" + servletPath : "")).replaceAll("/+", "/");
+    }
+
+    private String createUri(UUID uuid, String path) {
+        int serverPort = serverProperties.getPort();
+        return String.format("http://localhost:%s%s/%s/%s", serverPort, basePath, uuid == null ? DEFAULT_PATH : uuid.toString(), path);
+    }
+
+    private HttpRequest.Builder newRequest(URI uri) {
+        return HttpRequest.newBuilder().uri(uri);
+    }
+
+    private HttpClient.Builder newClient() {
+        return HttpClient.newBuilder().authenticator(new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("username", "password".toCharArray());
+            }
+        }).proxy(ProxySelector.getDefault());
+    }
+
+    @Override
+    public HttpResponse<String> get(UUID uuid, String path)
+            throws URISyntaxException, IOException, InterruptedException {
+        return get(uuid, path, null, String.class);
+    }
+
+    @Override
+    public <RESP> HttpResponse<RESP> get(UUID uuid, String path, BodyHandler<RESP> handler)
+            throws URISyntaxException, IOException, InterruptedException {
+        return get(uuid, path, null, handler);
+    }
+
+    @Override
+    public <RESP> HttpResponse<RESP> get(UUID uuid, String path, Class<RESP> result)
+            throws URISyntaxException, IOException, InterruptedException {
+        return get(uuid, path, null, result);
+    }
+
+    @Override
+    public <DATA, RESP> HttpResponse<RESP> get(UUID uuid, String path, RequestConfig customization,
+            Class<RESP> resultClass) throws URISyntaxException, IOException, InterruptedException {
+
+        RequestConfig finalCustomization = getCustomization(customization);
+
+        return request(uuid, path, finalCustomization, resultClass);
+    }
+
+    @Override
+    public <DATA, RESP> HttpResponse<RESP> get(UUID uuid, String path, RequestConfig customization,
+            BodyHandler<RESP> handler) throws URISyntaxException, IOException, InterruptedException {
+
+        RequestConfig finalCustomization = getCustomization(customization);
+
+        return request(uuid, path, finalCustomization, handler);
+    }
+
+    private <DATA> RequestConfig getCustomization(RequestConfig customization) throws JsonProcessingException {
+        RequestConfig localCustomization = customization == null ? r -> r : customization;
+        RequestConfig getCustomization = r -> r.GET();
+        RequestConfig finalCustomization = localCustomization.andThen(getCustomization);
+        return finalCustomization;
+    }
+
+
+    @Override
+    public HttpResponse<String> post(UUID uuid, String path)
+            throws URISyntaxException, IOException, InterruptedException {
+        return post(uuid, path, null, null, String.class);
+    }
+
+    @Override
+    public <RESP> HttpResponse<RESP> post(UUID uuid, String path, BodyHandler<RESP> handler)
+            throws URISyntaxException, IOException, InterruptedException {
+        return post(uuid, path, null, null, handler);
+    }
+
+    @Override
+    public <RESP> HttpResponse<RESP> post(UUID uuid, String path, Class<RESP> result)
+            throws URISyntaxException, IOException, InterruptedException {
+        return post(uuid, path, null, null, result);
+    }
+
+    @Override
+    public <DATA, RESP> HttpResponse<RESP> post(UUID uuid, String path, DATA posted, Class<RESP> result)
+            throws URISyntaxException, IOException, InterruptedException {
+        return post(uuid, path, null, posted, result);
+    }
+
+    @Override
+    public <DATA> HttpResponse<String> post(UUID uuid, String path, DATA posted)
+            throws URISyntaxException, IOException, InterruptedException {
+        return post(uuid, path, null, posted, String.class);
+    }
+
+    @Override
+    public <DATA, RESP> HttpResponse<RESP> post(UUID uuid, String path, DATA posted, BodyHandler<RESP> handler)
+            throws URISyntaxException, IOException, InterruptedException {
+        return post(uuid, path, null, posted, handler);
+    }
+
+    @Override
+    public <DATA> HttpResponse<String> post(UUID uuid, String path, RequestConfig customization, DATA posted)
+            throws URISyntaxException, IOException, InterruptedException {
+        return post(uuid, path, customization, posted, String.class);
+    }
+
+    @Override
+    public <DATA, RESP> HttpResponse<RESP> post(UUID uuid, String path, RequestConfig customization, DATA posted,
+            Class<RESP> resultClass) throws URISyntaxException, IOException, InterruptedException {
+
+        RequestConfig finalCustomization = postCustomization(customization, posted);
+
+        return request(uuid, path, finalCustomization, resultClass);
+    }
+
+    @Override
+    public <DATA, RESP> HttpResponse<RESP> post(UUID uuid, String path, RequestConfig customization, DATA posted,
+            BodyHandler<RESP> handler) throws URISyntaxException, IOException, InterruptedException {
+
+        RequestConfig finalCustomization = postCustomization(customization, posted);
+
+        return request(uuid, path, finalCustomization, handler);
+    }
+
+    private <DATA> RequestConfig postCustomization(RequestConfig customization, DATA posted) throws JsonProcessingException {
+        RequestConfig localCustomization = customization == null ? r -> r : customization;
+
+        RequestConfig postCustomization = switch (posted) {
+
+        case null -> (r) -> r.POST(HttpRequest.BodyPublishers.noBody());
+
+        case String s -> r -> r.POST(HttpRequest.BodyPublishers.ofString(s));
+
+        default -> {
+            String json = mapper.writeValueAsString(posted);
+            yield r -> r.POST(HttpRequest.BodyPublishers.ofString(json));
+        }
+        };
+        RequestConfig finalCustomization = localCustomization.andThen(postCustomization);
+        return finalCustomization;
+    }
+
+    @Override
+    public HttpResponse<String> put(UUID uuid, String path)
+            throws URISyntaxException, IOException, InterruptedException {
+        return put(uuid, path, null, null, String.class);
+    }
+
+    @Override
+    public <RESP> HttpResponse<RESP> put(UUID uuid, String path, BodyHandler<RESP> handler)
+            throws URISyntaxException, IOException, InterruptedException {
+        return put(uuid, path, null, null, handler);
+    }
+
+    @Override
+    public <RESP> HttpResponse<RESP> put(UUID uuid, String path, Class<RESP> result)
+            throws URISyntaxException, IOException, InterruptedException {
+        return put(uuid, path, null, null, result);
+    }
+
+    @Override
+    public <DATA, RESP> HttpResponse<RESP> put(UUID uuid, String path, DATA posted, Class<RESP> result)
+            throws URISyntaxException, IOException, InterruptedException {
+        return put(uuid, path, null, posted, result);
+    }
+
+    @Override
+    public <DATA> HttpResponse<String> put(UUID uuid, String path, DATA posted)
+            throws URISyntaxException, IOException, InterruptedException {
+        return put(uuid, path, null, posted, String.class);
+    }
+
+    @Override
+    public <DATA, RESP> HttpResponse<RESP> put(UUID uuid, String path, DATA posted, BodyHandler<RESP> handler)
+            throws URISyntaxException, IOException, InterruptedException {
+        return put(uuid, path, null, posted, handler);
+    }
+
+    @Override
+    public <DATA> HttpResponse<String> put(UUID uuid, String path, RequestConfig customization, DATA posted)
+            throws URISyntaxException, IOException, InterruptedException {
+        return put(uuid, path, customization, posted, String.class);
+    }
+
+    @Override
+    public <DATA, RESP> HttpResponse<RESP> put(UUID uuid, String path, RequestConfig customization, DATA posted,
+            Class<RESP> resultClass) throws URISyntaxException, IOException, InterruptedException {
+
+        RequestConfig finalCustomization = putCustomization(customization, posted);
+
+        return request(uuid, path, finalCustomization, resultClass);
+    }
+
+    @Override
+    public <DATA, RESP> HttpResponse<RESP> put(UUID uuid, String path, RequestConfig customization, DATA posted,
+            BodyHandler<RESP> handler) throws URISyntaxException, IOException, InterruptedException {
+
+        RequestConfig finalCustomization = putCustomization(customization, posted);
+
+        return request(uuid, path, finalCustomization, handler);
+    }
+
+    private <DATA> RequestConfig putCustomization(RequestConfig customization, DATA posted) throws JsonProcessingException {
+        RequestConfig localCustomization = customization == null ? r -> r : customization;
+
+        RequestConfig putCustomization = switch (posted) {
+
+        case null -> (r) -> r.PUT(HttpRequest.BodyPublishers.noBody());
+
+        case String s -> r -> r.PUT(HttpRequest.BodyPublishers.ofString(s));
+
+        default -> {
+            String json = mapper.writeValueAsString(posted);
+            yield r -> r.PUT(HttpRequest.BodyPublishers.ofString(json));
+        }
+        };
+
+        RequestConfig finalCustomization = localCustomization.andThen(putCustomization);
+        return finalCustomization;
+    }
+
+    @Override
+    public HttpResponse<String> delete(UUID uuid, String path)
+            throws URISyntaxException, IOException, InterruptedException {
+        return delete(uuid, path, null, String.class);
+    }
+
+    @Override
+    public <RESP> HttpResponse<RESP> delete(UUID uuid, String path, BodyHandler<RESP> handler)
+            throws URISyntaxException, IOException, InterruptedException {
+        return delete(uuid, path, null, handler);
+    }
+
+    @Override
+    public <RESP> HttpResponse<RESP> delete(UUID uuid, String path, Class<RESP> result)
+            throws URISyntaxException, IOException, InterruptedException {
+        return delete(uuid, path, null, result);
+    }
+
+    @Override
+    public <DATA, RESP> HttpResponse<RESP> delete(UUID uuid, String path, RequestConfig customization,
+            Class<RESP> resultClass) throws URISyntaxException, IOException, InterruptedException {
+
+        RequestConfig finalCustomization = deleteCustomization(customization);
+
+        return request(uuid, path, finalCustomization, resultClass);
+    }
+
+    @Override
+    public <DATA, RESP> HttpResponse<RESP> delete(UUID uuid, String path, RequestConfig customization,
+            BodyHandler<RESP> handler) throws URISyntaxException, IOException, InterruptedException {
+
+        RequestConfig finalCustomization = deleteCustomization(customization);
+
+        return request(uuid, path, finalCustomization, handler);
+    }
+
+    private <DATA> RequestConfig deleteCustomization(RequestConfig customization) throws JsonProcessingException {
+        RequestConfig localCustomization = customization == null ? r -> r : customization;
+        RequestConfig getCustomization = r -> r.DELETE();
+        RequestConfig finalCustomization = localCustomization.andThen(getCustomization);
+        return finalCustomization;
+    }
+
+    @Override
+    public <DATA, RESP> HttpResponse<RESP> request(UUID uuid, String path, RequestConfig customization, Class<RESP> resultClass)
+            throws URISyntaxException, IOException, InterruptedException {
+
+        @SuppressWarnings("unchecked")
+        BodyHandler<RESP> handler = switch (resultClass.getName()) {
+        case null -> null;
+        case "java.lang.String" -> (BodyHandler<RESP>) BodyHandlers.ofString();
+        default -> createJsonBodyHandler(resultClass);
+        };
+
+        return request(uuid, path, customization, handler);
+
+    }
+
+    @Override
+    public <DATA, RESP> HttpResponse<RESP> request(UUID uuid, String path, RequestConfig customization, BodyHandler<RESP> handler)
+            throws URISyntaxException, IOException, InterruptedException {
+
+        String uri = createUri(uuid, path);
+
+        logger.info("Requesting {} with customization {}", uri, customization);
+
+        customization = customization == null ? r -> r : customization;
+
+        HttpRequest request = customization.apply(newRequest(new URI(uri))).build();
+
+        HttpResponse<RESP> response;
+        try {
+            response = newClient().build().send(request, handler);
+        } catch (IOException e) {
+            if (e.getCause() instanceof JsonResponseException jsonEx) {
+                var r = new HttpResponse<String>() {
+
+                    @Override
+                    public int statusCode() {
+                        return jsonEx.getResponse().statusCode();
+                    }
+
+                    @Override
+                    public HttpRequest request() {
+                        return request;
+                    }
+
+                    @Override
+                    public Optional<HttpResponse<String>> previousResponse() {
+                        return Optional.empty();
+                    }
+
+                    @Override
+                    public HttpHeaders headers() {
+                        return jsonEx.getResponse().headers();
+                    }
+
+                    @Override
+                    public String body() {
+                        return jsonEx.getBody();
+                    }
+
+                    @Override
+                    public Optional<SSLSession> sslSession() {
+                        return Optional.empty();
+                    }
+
+                    @Override
+                    public URI uri() {
+                        return request.uri();
+                    }
+
+                    @Override
+                    public Version version() {
+                        return jsonEx.getResponse().version();
+                    }
+
+                };
+                throw new RequestException(r, e);
+            } else {
+                throw e;
+            }
+
+        }
+
+        return response;
+    }
+
+    private static <RESP> BodyHandler<RESP> createJsonBodyHandler(Class<RESP> target) throws JsonResponseException {
+        return responseInfo -> {
+
+            HttpResponse.BodySubscriber<String> upstream = BodyHandlers.ofString().apply(responseInfo);
+
+            return HttpResponse.BodySubscribers.mapping(upstream, (String body) -> {
+                try {
+                    return body == null || body.isEmpty() ? null : mapper.readValue(body, target);
+                } catch (JsonParseException e) {
+                    throw new JsonResponseException(responseInfo, body, e);
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            });
+        };
+    }
+
+
+}

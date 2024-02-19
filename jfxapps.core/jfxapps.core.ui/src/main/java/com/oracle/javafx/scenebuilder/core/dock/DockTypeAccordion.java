@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.core.dock;
 import java.util.Arrays;
 import java.util.Collection;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.ui.dock.DockContext;
@@ -60,11 +60,11 @@ public class DockTypeAccordion implements DockType<TitledPane> {
 
     private final static String VIEW_SOURCE = "TitledPane.fxml";
 
-    private final SbContext context;
+    private final JfxAppContext context;
 
     private ObjectProperty<DockContext<TitledPane>> focusedProperty;
 
-    public DockTypeAccordion(SbContext context) {
+    public DockTypeAccordion(JfxAppContext context) {
         this.context = context;
     }
 

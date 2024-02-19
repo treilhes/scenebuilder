@@ -48,7 +48,7 @@ import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.boot.context.Document;
 import com.gluonhq.jfxapps.boot.context.DocumentScope;
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 
 import javafx.stage.Stage;
 
@@ -56,7 +56,7 @@ import javafx.stage.Stage;
 // TODO maybe add some multithreaded tests
 public class SbPlatformTest {
 
-    private SbContext context;
+    private JfxAppContext context;
 
     /**
      * Will be called with {@code @Before} semantics, i. e. before each test method.
@@ -71,7 +71,7 @@ public class SbPlatformTest {
     @BeforeEach
     void setupContext() {
         Class<?>[] classes = { FakeDocument.class, DocumentScopedObject.class };
-        this.context = SbContext.fromScratch(classes);
+        this.context = JfxAppContext.fromScratch(classes);
     }
 
     @Test

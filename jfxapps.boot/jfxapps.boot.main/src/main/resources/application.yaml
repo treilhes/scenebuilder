@@ -20,12 +20,16 @@ server:
 
 spring:
   jpa:
+    properties:
+      hibernate:
+        id:
+          db_structure_naming_strategy: com.gluonhq.jfxapps.boot.jpa.ModuleAwareImplicitDatabaseObjectNamingStrategyImpl
     hibernate:
       naming: 
         physical-strategy: com.gluonhq.jfxapps.boot.jpa.ModuleAwarePhysicalNamingStrategyStandardImpl
         implicit-strategy: com.gluonhq.jfxapps.boot.jpa.ModuleAwareImplicitNamingStrategyLegacyJpaImpl
       ddl-auto: update
-
+#    open-in-view: false
   datasource:
     driverClassName: org.h2.Driver
 #    url: jdbc:h2:mem:jfxapps;DB_CLOSE_ON_EXIT=FALSE

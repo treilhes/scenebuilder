@@ -46,7 +46,7 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -77,7 +77,7 @@ class RepositoryManagerControllerTest {
     private MavenClient mc;
 
     @Mock
-    private SbContext context;
+    private JfxAppContext context;
 
     @Mock
     private IconSetting is;

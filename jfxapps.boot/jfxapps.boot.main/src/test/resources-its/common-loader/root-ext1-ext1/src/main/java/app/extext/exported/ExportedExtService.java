@@ -35,10 +35,10 @@ package app.extext.exported;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 
-import app.ext.api.ExtService;
+import app.ext.api.JfxAppsService;
 
 @Singleton
-public class ExportedExtService implements ExtService {
+public class ExportedExtService implements JfxAppsService {
 
     @Override
     public void someMethod() {

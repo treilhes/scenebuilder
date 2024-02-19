@@ -37,15 +37,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 
 @Singleton
 public class JobExtensionFactory {
 
-	private final SbContext sbContext;
+	private final JfxAppContext sbContext;
 
-    public JobExtensionFactory(SbContext sbContext) {
+    public JobExtensionFactory(JfxAppContext sbContext) {
         super();
         this.sbContext = sbContext;
     }

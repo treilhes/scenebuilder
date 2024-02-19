@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.core.dock;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 
@@ -43,7 +43,7 @@ import javafx.geometry.Orientation;
 @Lazy
 public class DockTypeSplitH extends AbstractDockTypeSplit {
 
-    public DockTypeSplitH(SbContext context) {
+    public DockTypeSplitH(JfxAppContext context) {
         super(context, Orientation.HORIZONTAL);
     }
 

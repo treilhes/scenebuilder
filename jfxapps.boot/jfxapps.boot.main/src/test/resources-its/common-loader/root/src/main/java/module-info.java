@@ -33,22 +33,38 @@
  */
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 
-import app.root.RootExtension;
+import app.root.JfxAppsExtension;
 
-module it.app.root {
+open module it.app.root {
 
     exports app.root;
     exports app.root.api;
-    opens app.root.internal to spring.beans;
+    exports app.root.aspect;
+    exports app.root.config;
+    exports app.root.rest;
 
     requires jfxapps.boot.loader;
+    requires jfxapps.boot.jpa;
+
+
     requires org.aspectj.weaver;
     requires spring.web;
+    requires spring.webmvc;
     requires spring.context;
     requires spring.boot.autoconfigure;
     requires spring.data.jpa;
     requires spring.data.commons;
     requires jakarta.persistence;
+    requires spring.core;
+    requires spring.boot;
+    requires org.apache.tomcat.embed.core;
+    requires spring.beans;
+    requires org.hibernate.orm.core;
+    requires org.hibernate.validator;
+    requires jakarta.validation;
+    requires spring.aop;
+    requires spring.tx;
+    //requires jakarta.transaction;
 
-    provides Extension with RootExtension;
+    provides Extension with JfxAppsExtension;
 }

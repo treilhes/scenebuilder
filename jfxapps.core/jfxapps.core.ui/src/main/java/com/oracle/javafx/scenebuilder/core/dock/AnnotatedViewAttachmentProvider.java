@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.api.ui.dock.ViewAttachment;
@@ -53,11 +53,11 @@ public class AnnotatedViewAttachmentProvider implements ViewAttachmentProvider {
 
     private static Logger logger = LoggerFactory.getLogger(AnnotatedViewAttachmentProvider.class);
 
-    private final SbContext context;
+    private final JfxAppContext context;
 
     private List<ViewAttachment> viewsCache;
 
-    public AnnotatedViewAttachmentProvider(SbContext context) {
+    public AnnotatedViewAttachmentProvider(JfxAppContext context) {
         super();
         this.context = context;
     }

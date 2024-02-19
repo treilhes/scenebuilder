@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,7 +33,9 @@
  */
 package com.gluonhq.jfxapps.boot.jpa;
 
+import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl;
+import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment;
 
 public class ModuleAwarePhysicalNamingStrategyStandardImpl extends PhysicalNamingStrategyStandardImpl {
 
@@ -41,6 +43,30 @@ public class ModuleAwarePhysicalNamingStrategyStandardImpl extends PhysicalNamin
      * serial version
      */
     private static final long serialVersionUID = 1L;
+
+    @Override
+    public Identifier toPhysicalTypeName(Identifier logicalName, JdbcEnvironment jdbcEnvironment) {
+        var identifier = super.toPhysicalTypeName(logicalName, jdbcEnvironment);
+        return identifier;
+    }
+
+    @Override
+    public Identifier toPhysicalSchemaName(Identifier logicalName, JdbcEnvironment context) {
+        var identifier = super.toPhysicalSchemaName(logicalName, context);
+        return identifier;
+    }
+
+    @Override
+    public Identifier toPhysicalTableName(Identifier logicalName, JdbcEnvironment context) {
+        var identifier = super.toPhysicalTableName(logicalName, context);
+        return identifier;
+    }
+
+    @Override
+    public Identifier toPhysicalSequenceName(Identifier logicalName, JdbcEnvironment context) {
+        var identifier = super.toPhysicalSequenceName(logicalName, context);
+        return identifier;
+    }
 
 
 }

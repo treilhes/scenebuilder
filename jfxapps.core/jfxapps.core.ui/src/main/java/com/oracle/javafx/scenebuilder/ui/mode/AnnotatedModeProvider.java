@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.content.mode.AbstractModeController;
 import com.oracle.javafx.scenebuilder.api.content.mode.ModeDescriptor;
@@ -52,11 +52,11 @@ public class AnnotatedModeProvider implements ModeProvider {
 
     private static Logger logger = LoggerFactory.getLogger(AnnotatedModeProvider.class);
 
-    private final SbContext context;
+    private final JfxAppContext context;
 
     private List<ModeDescriptor> modesCache;
 
-    public AnnotatedModeProvider(SbContext context) {
+    public AnnotatedModeProvider(JfxAppContext context) {
         super();
         this.context = context;
     }

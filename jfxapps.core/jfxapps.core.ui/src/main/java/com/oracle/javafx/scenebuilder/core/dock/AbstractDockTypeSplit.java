@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.core.dock;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.oracle.javafx.scenebuilder.api.ui.dock.DockContext;
 import com.oracle.javafx.scenebuilder.api.ui.dock.DockType;
 import com.oracle.javafx.scenebuilder.api.ui.dock.View;
@@ -56,13 +56,13 @@ public abstract class AbstractDockTypeSplit implements DockType<Node> {
 
     private final static String VIEW_SOURCE = "View.fxml";
 
-    private final SbContext context;
+    private final JfxAppContext context;
 
     private final Orientation orientation;
 
     private ObjectProperty<DockContext<Node>> focusedProperty;
 
-    public AbstractDockTypeSplit(SbContext context, Orientation orientation) {
+    public AbstractDockTypeSplit(JfxAppContext context, Orientation orientation) {
         this.context = context;
         this.orientation = orientation;
     }

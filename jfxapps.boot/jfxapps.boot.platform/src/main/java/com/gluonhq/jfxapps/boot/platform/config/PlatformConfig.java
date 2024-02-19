@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,11 +39,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import com.gluonhq.jfxapps.boot.platform.internal.JfxAppsPlatformImpl;
+import com.gluonhq.jfxapps.boot.platform.internal.InternalHttpClient;
+import com.gluonhq.jfxapps.boot.platform.internal._Internal;
 
 @Configuration
 @ConfigurationProperties(prefix = "jfxapps.platform")
-@ComponentScan(basePackageClasses = JfxAppsPlatformImpl.class)
+@ComponentScan(basePackageClasses = {_Internal.class})
 public class PlatformConfig {
 
     private Path rootPath;

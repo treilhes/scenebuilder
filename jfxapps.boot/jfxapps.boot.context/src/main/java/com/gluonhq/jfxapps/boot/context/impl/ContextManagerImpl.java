@@ -42,27 +42,30 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import org.springframework.util.comparator.Comparators;
 
 import com.gluonhq.jfxapps.boot.context.ContextManager;
 import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 
 @Component
 public class ContextManagerImpl implements ContextManager {
 
     private static final Logger logger = LoggerFactory.getLogger(ContextManagerImpl.class);
 
-    private final Map<UUID, SbContextImpl> contexts;
+    private final Map<UUID, JfxAppContextImpl> contexts;
 
-    public ContextManagerImpl() {
+    private final ApplicationContext bootContext;
+
+    public ContextManagerImpl(ApplicationContext bootContext) {
         super();
+        this.bootContext = bootContext;
         this.contexts = new HashMap<>();
     }
 
     @Override
-    public SbContext get(UUID contextId) {
+    public JfxAppContext get(UUID contextId) {
         return contexts.get(contextId);
     }
 
@@ -72,19 +75,21 @@ public class ContextManagerImpl implements ContextManager {
     }
 
     @Override
-    public SbContext create(UUID parentContextId, UUID contextId, Class<?>[] classes, List<Object> singletonInstances, MultipleProgressListener progressListener) {
+    public JfxAppContext create(UUID parentContextId, UUID contextId, Class<?>[] classes, List<Object> singletonInstances, MultipleProgressListener progressListener) {
         return create(parentContextId, contextId, null, classes, singletonInstances, progressListener);
     }
 
     @Override
-    public SbContext create(UUID parentContextId, UUID contextId, ClassLoader loader, Class<?>[] classes, List<Object> singletonInstances, MultipleProgressListener progressListener) {
+    public JfxAppContext create(UUID parentContextId, UUID contextId, ClassLoader loader, Class<?>[] classes, List<Object> singletonInstances, MultipleProgressListener progressListener) {
 
-        SbContextImpl parent = contexts.get(parentContextId);
+        JfxAppContextImpl parent = contexts.get(parentContextId);
 
-        SbContextImpl context = new SbContextImpl(contextId, loader);
+        JfxAppContextImpl context = new JfxAppContextImpl(contextId, loader);
 
         if (parent != null) {
             context.setParent(parent);
+        } else {
+            context.setParent(bootContext);
         }
 
         logger.info("Loading context {} with parent {} using {} classes", contextId, parentContextId, classes.length);
@@ -116,13 +121,13 @@ public class ContextManagerImpl implements ContextManager {
 
     @Override
     public void clear() {
-        contexts.values().forEach(SbContextImpl::close);
+        contexts.values().forEach(JfxAppContextImpl::close);
         contexts.clear();
     }
 
     @Override
     public void close(UUID id) {
-        SbContextImpl ctx = contexts.remove(id);
+        JfxAppContextImpl ctx = contexts.remove(id);
 
         if (ctx != null) {
             ctx.close();

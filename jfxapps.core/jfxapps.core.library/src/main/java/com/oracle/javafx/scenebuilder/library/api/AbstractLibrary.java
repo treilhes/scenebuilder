@@ -56,7 +56,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithDocument;
@@ -114,7 +114,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
 
     private final ClassLoaderController classLoaderController;
 
-    private final SbContext context;
+    private final JfxAppContext context;
 
     private final LibraryStoreConfiguration dialogConfiguration;
 
@@ -122,7 +122,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
      * Public
      */
 
-    public AbstractLibrary(SbContext context, SceneBuilderManager sceneBuilderManager,
+    public AbstractLibrary(JfxAppContext context, SceneBuilderManager sceneBuilderManager,
             ClassLoaderController classLoaderController, LibraryStore store,
             LibraryStoreConfiguration dialogConfiguration) {
         this.context = context;

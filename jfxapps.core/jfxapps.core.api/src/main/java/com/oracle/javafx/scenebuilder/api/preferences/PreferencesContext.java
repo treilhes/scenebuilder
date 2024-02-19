@@ -44,7 +44,7 @@ import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
 
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
@@ -54,7 +54,7 @@ public class PreferencesContext {
     private static final String HASH_PATH_SEPARATOR = "-"; // NOCHECK
     public static final String DEFAULT_DOCUMENT_NODE = "<<<empty>>>"; // NOCHECK
 
-    private final SbContext context;
+    private final JfxAppContext context;
 
     private final RootPreferencesNode rootNode;
 
@@ -62,7 +62,7 @@ public class PreferencesContext {
 
     // @formatter:off
     public PreferencesContext(
-            SbContext context,
+            JfxAppContext context,
             RootPreferencesNode rootNode,
             DocumentPreferencesNode documentsNode) {
      // @formatter:on

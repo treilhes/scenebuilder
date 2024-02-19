@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.DependsOn;
 
 import com.gluonhq.jfxapps.boot.context.DocumentScope;
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
 import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
@@ -81,7 +81,7 @@ public class InstancesControllerImpl implements InstancesManager {
 
     //private static MainController singleton;
 
-    private SbContext context;
+    private JfxAppContext context;
 
     //private IconSetting windowIconSetting;
 
@@ -102,7 +102,7 @@ public class InstancesControllerImpl implements InstancesManager {
     private final Provider<Optional<List<DisposeWithApplication>>> finalizations;
 
     public InstancesControllerImpl(
-            SbContext context,
+            JfxAppContext context,
             //IconSetting windowIconSetting,
             //FileSystem fileSystem,
             Provider<Dialog> dialog,

@@ -45,7 +45,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import org.testfx.matcher.control.LabeledMatchers;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
@@ -68,7 +68,7 @@ class AlertDialogTest {
     private IconSetting is;
 
     @Mock
-    private SbContext context;
+    private JfxAppContext context;
 
     private Stage stage;
 

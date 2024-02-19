@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.sb.actions;
 
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.action.AbstractActionExtension;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
@@ -47,11 +47,11 @@ import com.oracle.javafx.scenebuilder.sb.preferences.global.ToolThemePreference;
 public class ApplyToolCssThemeExtension extends AbstractActionExtension<ApplyToolCssAction> implements InitWithDocument {
 
 	private final ToolThemePreference toolThemePreference;
-	private final SbContext context;
+	private final JfxAppContext context;
 	private final ActionFactory actionFactory;
 
 	public ApplyToolCssThemeExtension(
-			SbContext context,
+			JfxAppContext context,
 			ActionFactory actionFactory,
 			@Lazy ToolThemePreference toolThemePreference
 			) {

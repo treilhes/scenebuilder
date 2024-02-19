@@ -37,15 +37,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 
 @Singleton
 public class ActionExtensionFactory {
 
-	private final SbContext sbContext;
+	private final JfxAppContext sbContext;
 
-    public ActionExtensionFactory(SbContext sbContext) {
+    public ActionExtensionFactory(JfxAppContext sbContext) {
         super();
         this.sbContext = sbContext;
     }

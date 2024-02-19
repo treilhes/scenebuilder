@@ -38,7 +38,7 @@ import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.action.Action;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
@@ -63,12 +63,12 @@ public class MenuBuilder {
 
     private final ActionFactory actionFactory;
     private final Accelerators acceleratorsController;
-    private final SbContext context;
+    private final JfxAppContext context;
 
     public MenuBuilder(
             ActionFactory actionFactory,
             Accelerators acceleratorsController,
-            SbContext context) {
+            JfxAppContext context) {
         super();
         this.actionFactory = actionFactory;
         this.acceleratorsController = acceleratorsController;

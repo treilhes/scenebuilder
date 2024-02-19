@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.application.javafx.JavafxThreadHolder;
 
@@ -51,7 +51,7 @@ public class JavafxThreadBootstrapper implements ApplicationListener<StageReadyE
 
     private final static Logger logger = LoggerFactory.getLogger(JavafxThreadBootstrapper.class);
 
-    private static SbContext localContext;
+    private static JfxAppContext localContext;
 
     private static Application javafxApplication;
 
@@ -61,7 +61,7 @@ public class JavafxThreadBootstrapper implements ApplicationListener<StageReadyE
 
     private Stage primaryStage;
 
-    public JavafxThreadBootstrapper(SbContext context) {
+    public JavafxThreadBootstrapper(JfxAppContext context) {
         localContext = context;
     }
 

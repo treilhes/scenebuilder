@@ -37,11 +37,9 @@ import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 
 import app.editor.EditorExtension;
 
-module it.app.editor {
+open module it.app.editor {
     exports app.editor;
     exports app.editor.api;
-
-    opens app.editor.internal to spring.beans;
 
     requires jfxapps.boot.loader;
     requires it.app.root;

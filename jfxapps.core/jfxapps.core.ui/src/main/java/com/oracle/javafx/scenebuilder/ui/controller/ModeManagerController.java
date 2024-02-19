@@ -41,7 +41,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.content.mode.AbstractModeController;
 import com.oracle.javafx.scenebuilder.api.content.mode.Mode;
@@ -62,12 +62,12 @@ public class ModeManagerController implements ModeManager {
     private AbstractModeController currentMode = null;
 
     private final List<ModeProvider> modeProviders;
-    private final SbContext context;
+    private final JfxAppContext context;
 
     Class<? extends FXOMDocument> currentDocumentClass = null;
 
     public ModeManagerController(
-            SbContext context,
+            JfxAppContext context,
             DocumentManager documentManager,
             List<ModeProvider> modeProviders
             ) {

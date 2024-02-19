@@ -34,7 +34,7 @@
 package com.gluonhq.jfxapps.app.manager.main.api;
 
 import com.gluonhq.jfxapps.app.manager.main.model.Application;
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 
 import javafx.scene.Parent;
@@ -46,9 +46,9 @@ public interface ApplicationCard {
     @Singleton
     public class Factory {
 
-        private final SbContext context;
+        private final JfxAppContext context;
 
-        protected Factory(SbContext context) {
+        protected Factory(JfxAppContext context) {
             this.context = context;
         }
         public ApplicationCard get(Application application) {

@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.job.editor.atomic;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
@@ -130,7 +130,7 @@ public final class SetFxomRootJob extends AbstractJob {
 
 	@Singleton
     public static class Factory extends JobFactory<SetFxomRootJob> {
-        public Factory(SbContext sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
         /**

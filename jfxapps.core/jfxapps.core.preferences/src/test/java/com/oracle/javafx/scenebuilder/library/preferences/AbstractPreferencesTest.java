@@ -47,7 +47,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 import javafx.beans.property.SimpleIntegerProperty;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.oracle.javafx.scenebuilder.api.preferences.DocumentPreferencesNode;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
@@ -93,7 +93,7 @@ class AbstractPreferencesTest {
 
     public static PreferencesContext testGlobalPreferencesContext(TestInfo testInfo) {
 
-        SbContext context = Mockito.mock(SbContext.class);
+        JfxAppContext context = Mockito.mock(JfxAppContext.class);
 
         return new PreferencesContext(context, testRootNode(testInfo.getTestMethod().get().getName()),
                 testDocumentNode(testInfo.getTestMethod().get().getName())) {
@@ -112,7 +112,7 @@ class AbstractPreferencesTest {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        SbContext context = Mockito.mock(SbContext.class);
+        JfxAppContext context = Mockito.mock(JfxAppContext.class);
 
         DocumentManager documentManager = new DocumentManager.DocumentManagerImpl();
         FXOMDocument document = Mockito.mock(FXOMDocument.class);

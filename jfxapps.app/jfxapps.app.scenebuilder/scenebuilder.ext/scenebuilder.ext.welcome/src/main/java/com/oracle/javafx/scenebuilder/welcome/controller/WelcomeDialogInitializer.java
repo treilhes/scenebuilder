@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.welcome.controller;
 
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
 import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithApplication;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;

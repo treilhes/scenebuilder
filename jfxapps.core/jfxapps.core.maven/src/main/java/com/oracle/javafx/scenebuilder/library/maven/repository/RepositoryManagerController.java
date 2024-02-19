@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.library.maven.repository;
 
 import java.util.stream.Collectors;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
@@ -71,7 +71,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController im
 
     private final MavenClient mavenClient;
     private final AddEditRepositoryDialogController repositoryDialogController;
-    private final SbContext context;
+    private final JfxAppContext context;
 
 
     // @formatter:off
@@ -79,7 +79,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController im
             MavenClient mavenClient,
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
-            SbContext context,
+            JfxAppContext context,
             MessageLogger messageLogger,
             AddEditRepositoryDialogController repositoryDialogController,
             SceneBuilderWindow owner) {

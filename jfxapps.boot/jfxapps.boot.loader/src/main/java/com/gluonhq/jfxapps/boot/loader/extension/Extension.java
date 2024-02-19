@@ -69,6 +69,7 @@ public sealed interface Extension permits OpenExtension, SealedExtension {
         logger.info("Add read to spring.core for {}", module.getName());
 
         PatchLink.addRead(module);
+        com.gluonhq.jfxapps.hibernate.core.patch.PatchLink.addRead(module);
     }
 //    InputStream getLicense();
 //

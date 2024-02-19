@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.extstore.fs.ExtensionFileSystemFactory;
@@ -56,11 +56,11 @@ public class ExtensionLibraryDialogConfiguration implements LibraryStoreConfigur
 
     private final ClassLoaderController classLoaderController;
     private LibraryStore store;
-    private SbContext context;
+    private JfxAppContext context;
 
     // @formatter:off
     public ExtensionLibraryDialogConfiguration(
-            SbContext context,
+            JfxAppContext context,
             LibraryStoreFactory libraryStoreFactory,
             ClassLoaderController classLoaderController,
             FileSystem fileSystem,

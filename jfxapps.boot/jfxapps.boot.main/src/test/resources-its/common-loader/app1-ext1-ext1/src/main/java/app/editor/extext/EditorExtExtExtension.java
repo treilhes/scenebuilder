@@ -39,8 +39,10 @@ import java.util.UUID;
 import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 
 import app.editor.ext.EditorExtExtension;
+import app.editor.extext.config.EditorExtExtConfig;
 import app.editor.extext.exported.ExportedEditorExtService;
 import app.editor.extext.internal.LocalEditorExtExtService;
+import app.editor.extext.test.AspectTest;
 
 
 public class EditorExtExtExtension implements OpenExtension {
@@ -59,7 +61,7 @@ public class EditorExtExtExtension implements OpenExtension {
 
     @Override
     public List<Class<?>> localContextClasses() {
-        return List.of(LocalEditorExtExtService.class);
+        return List.of(LocalEditorExtExtService.class,EditorExtExtConfig.class, AspectTest.class);
     }
 
     @Override

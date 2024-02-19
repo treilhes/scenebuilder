@@ -33,16 +33,16 @@
  */
 package com.oracle.javafx.scenebuilder.api.preferences.type;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.oracle.javafx.scenebuilder.api.preferences.Preference;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 
 public abstract class BeanPreference<T> extends ObjectPreference<Class<T>> {
 
-    private final SbContext context;
+    private final JfxAppContext context;
 
     public BeanPreference(PreferencesContext preferencesContext, String name, Class<T> defaultValue,
-            SbContext context) {
+            JfxAppContext context) {
         super(preferencesContext, name, defaultValue);
         this.context = context;
     }

@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.scenicview.actions;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
@@ -55,11 +55,11 @@ public class ShowScenicViewAction extends AbstractAction {
 
     public final static String SCENICVIEW_MENU_ID = "scenicMenu"; //NOCHECK
 
-    private final SbContext context;
+    private final JfxAppContext context;
 
     public ShowScenicViewAction(
             ActionExtensionFactory extensionFactory,
-            SbContext context) {
+            JfxAppContext context) {
         super(extensionFactory);
         this.context = context;
     }

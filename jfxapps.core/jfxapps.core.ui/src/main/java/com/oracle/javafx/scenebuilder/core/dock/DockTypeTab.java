@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.core.dock;
 
 import java.util.Collection;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.ui.dock.DockContext;
@@ -59,11 +59,11 @@ public class DockTypeTab implements DockType<Tab> {
 
     private final static String VIEW_SOURCE = "Tab.fxml";
 
-    private final SbContext context;
+    private final JfxAppContext context;
 
     private ObjectProperty<DockContext<Tab>> focusedProperty;
 
-    public DockTypeTab(SbContext context) {
+    public DockTypeTab(JfxAppContext context) {
         this.context = context;
     }
 

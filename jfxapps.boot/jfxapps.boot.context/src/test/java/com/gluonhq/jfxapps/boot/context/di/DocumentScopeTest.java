@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,10 +41,11 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
 
 import com.gluonhq.jfxapps.boot.context.ContextManager;
 import com.gluonhq.jfxapps.boot.context.DocumentScope;
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.impl.ContextManagerImpl;
 
 // TODO: Auto-generated Javadoc
@@ -55,14 +56,15 @@ import com.gluonhq.jfxapps.boot.context.impl.ContextManagerImpl;
 public class DocumentScopeTest {
 
     /** The context. */
-    private SbContext context;
+    private JfxAppContext context;
 
+    private ApplicationContext bootContext = null;
     /**
      * Setup context.
      */
     @BeforeEach
     void setupContext() {
-        ContextManager mng = new ContextManagerImpl();
+        ContextManager mng = new ContextManagerImpl(bootContext);
         Class<?>[] classes = { FakeDocument.class, DocumentScopedObject.class };
         this.context = mng.create(null, UUID.randomUUID(), classes, List.of(), null);
     }

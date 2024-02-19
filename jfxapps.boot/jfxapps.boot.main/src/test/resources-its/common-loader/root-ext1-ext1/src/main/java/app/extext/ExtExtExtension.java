@@ -38,12 +38,13 @@ import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 
-import app.ext.ExtExtension;
 import app.extext.exported.ExportedExtService;
 import app.extext.internal.LocalExtExtServiceComponent;
 
 
 public class ExtExtExtension implements OpenExtension {
+
+    private static final UUID PARENT_ID = app.ext.JfxAppsExtension.ID;
 
     public final static UUID ID = UUID.fromString("00000000-0000-0000-0000-000000000011");
 
@@ -54,7 +55,7 @@ public class ExtExtExtension implements OpenExtension {
 
     @Override
     public UUID getParentId() {
-        return ExtExtension.ID;
+        return PARENT_ID;
     }
 
     @Override

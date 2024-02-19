@@ -61,12 +61,47 @@
 
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <useModulePath>true</useModulePath>
+                    <argLine>
+                        --illegal-access=permit
+                        --patch-module
+                        spring.core=${com.gluonhq.jfxapps:spring.core.patch:jar}
+                        --patch-module
+                        org.hibernate.orm.core=${com.gluonhq.jfxapps:org.hibernate.orm.core.patch:jar}
+                    </argLine>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <executions>
                     <execution>
                         <configuration>
                             <skipITs>${skip.integration.test}</skipITs>
+                            <useModulePath>true</useModulePath>
+                            <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+                            <argLine>
+                                --illegal-access=permit
+                                --patch-module
+		                        spring.core=${com.gluonhq.jfxapps:spring.core.patch:jar}
+		                        --patch-module
+		                        org.hibernate.orm.core=${com.gluonhq.jfxapps:org.hibernate.orm.core.patch:jar}
+                            </argLine>
                         </configuration>
                         <goals>
                             <goal>integration-test</goal>
@@ -79,7 +114,6 @@
                 <artifactId>maven-invoker-plugin</artifactId>
                 <version>3.2.2</version>
                 <configuration>
-                    <!--<projectsDirectory>${basedir}/src/test/resources-its/com/oracle/javafx/scenebuilder/core</projectsDirectory>-->
                     <projectsDirectory>${basedir}/src/test/resources-its</projectsDirectory>
                     <pomIncludes>
                         <pomInclude>common-loader/pom.xml</pomInclude>

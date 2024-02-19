@@ -39,7 +39,7 @@ import java.util.Stack;
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
@@ -68,13 +68,13 @@ public class CertificateManagerWindowController extends AbstractFxmlWindowContro
 
     private X509Certificate[] currentCertificates = null;
 
-    private final SbContext context;
+    private final JfxAppContext context;
 
     public CertificateManagerWindowController(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
             NetworkManager networManager,
-            SbContext context) {
+            JfxAppContext context) {
         super(sceneBuilderManager, iconSetting, CertificateManagerWindowController.class.getResource("CertificateManagerWindow.fxml"), I18N.getBundle(),
                 null); // NOI18N
         this.networkManager = networManager;

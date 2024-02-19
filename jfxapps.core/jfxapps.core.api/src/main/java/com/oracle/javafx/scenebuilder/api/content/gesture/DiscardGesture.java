@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.content.gesture;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.ui.misc.Workspace;
@@ -89,7 +89,7 @@ public class DiscardGesture extends AbstractMouseGesture {
 
     @Singleton
     public static class Factory extends GestureFactory<DiscardGesture> {
-        public Factory(SbContext sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
         public DiscardGesture getGesture() {

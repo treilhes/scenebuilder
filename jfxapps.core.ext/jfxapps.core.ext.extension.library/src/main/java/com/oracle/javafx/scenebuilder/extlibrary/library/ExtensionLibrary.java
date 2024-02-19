@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.oracle.javafx.scenebuilder.api.application.lifecycle.DisposeWithApplication;
 import com.oracle.javafx.scenebuilder.api.library.LibraryArtifact;
@@ -97,7 +97,7 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
 
     private final Optional<List<LibraryFilter>> filters;
 
-    private final SbContext context;
+    private final JfxAppContext context;
 
     private final ExtensionFileExplorer controlFileExplorer;
 
@@ -119,7 +119,7 @@ public class ExtensionLibrary extends AbstractLibrary<ExtensionReport, LibraryIt
      */
     // @formatter:off
     protected ExtensionLibrary(
-            SbContext context,
+            JfxAppContext context,
             ExtensionBuiltinLibrary builtinLibrary,
             ExtensionLibraryDialogConfiguration libraryDialogConfiguration,
             ExtensionFileSystemFactory extFactory,

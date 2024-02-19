@@ -47,7 +47,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.boot.context.DocumentScope;
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.oracle.javafx.scenebuilder.api.editors.ApplicationInstance;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
@@ -101,7 +101,7 @@ class DocumentWindowControllerTest {
     private DockManager dockManager = new DockManager.DockManagerImpl();
 
     @Mock
-    private SbContext context;
+    private JfxAppContext context;
 
     @Mock
     private ApplicationInstanceSingleton scopedDocument;

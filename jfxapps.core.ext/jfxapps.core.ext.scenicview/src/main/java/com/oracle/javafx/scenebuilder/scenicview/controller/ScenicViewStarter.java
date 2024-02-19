@@ -34,16 +34,16 @@
 
 package com.oracle.javafx.scenebuilder.scenicview.controller;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 
 /**
  * @treatAsPrivate
  */
 public class ScenicViewStarter implements Runnable {
-        private final SbContext context;
+        private final JfxAppContext context;
 
-        public ScenicViewStarter(SbContext context) {
+        public ScenicViewStarter(JfxAppContext context) {
             this.context = context;
         }
 

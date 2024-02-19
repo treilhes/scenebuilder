@@ -52,7 +52,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.gluonhq.jfxapps.boot.context.ContextManager;
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
@@ -117,7 +117,7 @@ class ContextBootstraperTest {
     SealedExtension sealedChildExtensionLoaded;
 
     @Mock
-    SbContext ctx;
+    JfxAppContext ctx;
 
     @Mock
     ServiceLoader loader;

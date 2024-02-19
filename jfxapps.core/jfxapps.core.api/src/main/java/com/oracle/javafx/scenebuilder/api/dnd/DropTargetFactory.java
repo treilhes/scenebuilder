@@ -33,11 +33,11 @@
  */
 package com.oracle.javafx.scenebuilder.api.dnd;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
 
 public class DropTargetFactory<T extends AbstractDropTarget> extends AbstractFactory<T> {
-    public DropTargetFactory(SbContext sbContext) {
+    public DropTargetFactory(JfxAppContext sbContext) {
         super(sbContext);
     }
 }

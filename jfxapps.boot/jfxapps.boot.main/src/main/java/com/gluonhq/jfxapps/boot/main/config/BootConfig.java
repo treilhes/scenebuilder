@@ -36,6 +36,7 @@ package com.gluonhq.jfxapps.boot.main.config;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.gluonhq.jfxapps.boot.context.config.ContextConfig;
 import com.gluonhq.jfxapps.boot.layer.config.LayerConfig;
@@ -46,6 +47,7 @@ import com.gluonhq.jfxapps.boot.registry.config.RegistryConfig;
 
 @SpringBootApplication
 @EnableAspectJAutoProxy
+@EnableWebMvc
 @Import({RegistryConfig.class, ContextConfig.class, LoaderConfig.class, LayerConfig.class, PlatformConfig.class, RepositoryConfig.class})
 public class BootConfig {
 

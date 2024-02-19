@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuAttachment;
@@ -60,13 +60,13 @@ public class AnnotatedActionMenuItemProvider implements MenuItemProvider, MenuPr
 
     private static Logger logger = LoggerFactory.getLogger(AnnotatedActionMenuItemProvider.class);
 
-    private final SbContext context;
+    private final JfxAppContext context;
     private final MenuBuilder builder;
 
     private List<MenuItemAttachment> menuItemsCache;
     private List<MenuAttachment> menuCache;
 
-    public AnnotatedActionMenuItemProvider(SbContext context,
+    public AnnotatedActionMenuItemProvider(JfxAppContext context,
             MenuBuilder menuBuilder) {
         super();
         this.context = context;

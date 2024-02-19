@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
 import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithDocument;
@@ -69,7 +69,7 @@ public class DockViewControllerImpl implements InitWithDocument, DockViewControl
 
     private final static Logger logger = LoggerFactory.getLogger(DockViewControllerImpl.class);
 
-    private final SbContext context;
+    private final JfxAppContext context;
     private final DockManager dockManager;
     private final ViewManager viewManager;
     private final LastDockUuidPreference lastDockUuidPreference;
@@ -82,7 +82,7 @@ public class DockViewControllerImpl implements InitWithDocument, DockViewControl
     private final LastViewVisibilityPreference lastViewVisibilityPreference;
 
     public DockViewControllerImpl(
-            SbContext context,
+            JfxAppContext context,
             DockManager dockManager,
             ViewManager viewManager,
             DockWindowFactory dockWindowFactory,

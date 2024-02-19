@@ -35,13 +35,11 @@ import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 
 import app.editor.ext.EditorExtExtension;
 
-module it.app.editor.ext {
+open module it.app.editor.ext {
 
     exports app.editor.ext;
     exports app.editor.ext.api;
     exports app.editor.ext.exported;
-
-    opens app.editor.ext.internal to spring.beans;
 
     requires jfxapps.boot.loader;
     requires it.app.editor;

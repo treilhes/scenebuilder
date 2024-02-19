@@ -35,12 +35,10 @@ import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 
 import app.extext.ExtExtExtension;
 
-module it.app.extext {
+open module it.app.extext {
     exports app.extext;
     exports app.extext.api;
     exports app.extext.exported;
-
-    opens app.extext.internal to spring.beans;
 
     requires jfxapps.boot.loader;
     requires it.app.ext;

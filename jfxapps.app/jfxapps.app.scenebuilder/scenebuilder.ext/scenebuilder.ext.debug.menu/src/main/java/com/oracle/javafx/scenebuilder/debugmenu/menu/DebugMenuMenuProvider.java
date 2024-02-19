@@ -41,7 +41,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuAttachment;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuProvider;
 import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;

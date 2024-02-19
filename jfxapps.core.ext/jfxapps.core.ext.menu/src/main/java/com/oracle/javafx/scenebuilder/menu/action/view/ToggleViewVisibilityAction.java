@@ -44,7 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
@@ -87,11 +87,11 @@ public class ToggleViewVisibilityAction extends AbstractToggleViewVisibilityActi
         private final MenuBuilder menuBuiler;
 
         private final ActionFactory actionFactory;
-        private final SbContext context;
+        private final JfxAppContext context;
 
         public ViewMenuProvider(
                 ActionFactory actionFactory,
-                SbContext context,
+                JfxAppContext context,
                 @Lazy DockViewController dockViewController,
                 MenuBuilder menuBuiler
                 ) {

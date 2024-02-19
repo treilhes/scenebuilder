@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.layer.Layer;
 import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.loader.ApplicationManager;
@@ -57,6 +57,7 @@ import com.gluonhq.jfxapps.boot.loader.StateProvider;
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
 import com.gluonhq.jfxapps.boot.loader.internal.layer.LayerBootstraper;
+import com.gluonhq.jfxapps.boot.loader.internal.repository.ApplicationRepository;
 import com.gluonhq.jfxapps.boot.loader.model.AbstractExtension;
 import com.gluonhq.jfxapps.boot.loader.model.Application;
 import com.gluonhq.jfxapps.boot.loader.model.JfxApps;
@@ -301,7 +302,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
             return;
         }
 
-        SbContext parentContext = contexts.get(appContainer);
+        JfxAppContext parentContext = contexts.get(appContainer);
         startExtensionTree(parentContext, Set.of(app), listener);
 
     }
@@ -313,12 +314,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
      * @param extensionSet     the extension set
      * @param progressListener the progress listener
      */
-    private void startExtensionTree(SbContext parentContext, Set<? extends AbstractExtension<?>> extensionSet,
+    private void startExtensionTree(JfxAppContext parentContext, Set<? extends AbstractExtension<?>> extensionSet,
             MultipleProgressListener progressListener) {
         extensionSet.forEach(ext -> {
             try {
                 List<Object> singletonInstances = List.of(this);
-                SbContext extContext = contexts.create(parentContext, ext, singletonInstances, progressListener);
+                JfxAppContext extContext = contexts.create(parentContext, ext, singletonInstances, progressListener);
                 startExtensionTree(extContext, ext.getExtensions(), progressListener);
             } catch (Throwable e) {
                 ext.setLoadState(LoadState.Error);
@@ -511,7 +512,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
             reportOf(ext.getId()).getThrowable().ifPresent(e -> builder.append(String.format(">> error : %s", e.getMessage(), e)).append("\n"));
         }
 
-        SbContext ctx = contexts.get(ext);
+        JfxAppContext ctx = contexts.get(ext);
 
         builder.append(String.format("> context : %s", ctx)).append("\n");
         if (ctx != null) {
@@ -556,7 +557,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
      * @param extensionId the extension id
      * @return the context
      */
-    private Optional<SbContext> getContext(UUID extensionId) {
+    private Optional<JfxAppContext> getContext(UUID extensionId) {
         return Optional.ofNullable(contexts.get(extensionId));
     }
 

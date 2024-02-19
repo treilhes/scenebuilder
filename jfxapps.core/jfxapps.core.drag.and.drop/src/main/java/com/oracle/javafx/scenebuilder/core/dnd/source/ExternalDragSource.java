@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
@@ -407,7 +407,7 @@ public final class ExternalDragSource extends AbstractDragSource {
     @Singleton
     @Lazy
     public static class Factory extends DragSourceFactory<ExternalDragSource> {
-        public Factory(SbContext sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

@@ -33,14 +33,14 @@
  */
 package com.oracle.javafx.scenebuilder.library.api;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.oracle.javafx.scenebuilder.library.manager.LibraryDialog;
 
 public class LibraryDialogFactory {
 
-    private final SbContext context;
+    private final JfxAppContext context;
 
-    public LibraryDialogFactory(SbContext context) {
+    public LibraryDialogFactory(JfxAppContext context) {
         super();
         this.context = context;
     }

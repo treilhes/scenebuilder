@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
@@ -174,7 +174,7 @@ public final class BatchJob extends AbstractJob {
     @Singleton
     @Lazy
     public static class Factory extends JobFactory<BatchJob> {
-        public Factory(SbContext sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

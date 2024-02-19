@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.core.dock;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
 
 import jakarta.inject.Provider;
@@ -41,11 +41,11 @@ import jakarta.inject.Provider;
 @com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton
 public class DockWindowFactory {
 
-    private final SbContext context;
+    private final JfxAppContext context;
     private final Provider<ApplicationInstance> document;
 
     protected DockWindowFactory(
-            SbContext context,
+            JfxAppContext context,
             Provider<ApplicationInstance> document) {
         this.context = context;
         this.document = document;

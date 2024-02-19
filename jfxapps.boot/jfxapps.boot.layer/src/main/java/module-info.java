@@ -42,6 +42,8 @@ open module jfxapps.boot.layer {
     requires spring.context;
     requires spring.beans;
     requires org.slf4j;
+
     requires jfxapps.spring.core.patch.link;
+    requires jfxapps.hibernate.core.patch.link;
 
 }
