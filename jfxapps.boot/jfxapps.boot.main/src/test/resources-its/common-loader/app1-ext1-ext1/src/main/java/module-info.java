@@ -33,19 +33,42 @@
  */
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 
-import app.editor.extext.EditorExtExtExtension;
+import app.app1ext1ext1.JfxAppsExtension;
 
-open module it.app.editor.extext {
-    exports app.editor.extext;
-    exports app.editor.extext.api;
-    exports app.editor.extext.exported;
+open module it.app.app1ext1ext1 {
 
+    exports app.app1ext1ext1;
+    exports app.app1ext1ext1.api;
+    exports app.app1ext1ext1.aspect;
+    exports app.app1ext1ext1.rest;
+
+    requires jfxapps.boot.starter;
     requires jfxapps.boot.loader;
-    requires it.app.editor.ext;
-    requires it.app.root;
+    requires jfxapps.boot.jpa;
+
+
+    requires org.aspectj.weaver;
+    requires spring.web;
+    requires spring.webmvc;
+    requires spring.context;
     requires spring.boot.autoconfigure;
     requires spring.data.jpa;
+    requires spring.data.commons;
+    requires jakarta.persistence;
+    requires spring.core;
+    requires spring.boot;
+    requires org.apache.tomcat.embed.core;
+    requires spring.beans;
+    requires org.hibernate.orm.core;
+    requires org.hibernate.validator;
+    requires jakarta.validation;
+    requires spring.aop;
+    requires spring.tx;
+    requires it.app.root;
+    requires it.app.app1;
+    requires it.app.app1ext1;
+    requires jakarta.inject;
+    //requires jakarta.transaction;
 
-    provides Extension with EditorExtExtExtension;
-
+    provides Extension with JfxAppsExtension;
 }

@@ -33,16 +33,16 @@
  */
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 
-import app.ext.JfxAppsExtension;
+import app.ext1.JfxAppsExtension;
 
-open module it.app.ext {
+open module it.app.ext1 {
 
-    exports app.ext;
-    exports app.ext.api;
-    exports app.ext.aspect;
-    exports app.ext.config;
-    exports app.ext.rest;
+    exports app.ext1;
+    exports app.ext1.api;
+    exports app.ext1.aspect;
+    exports app.ext1.rest;
 
+    requires jfxapps.boot.starter;
     requires jfxapps.boot.loader;
     requires jfxapps.boot.jpa;
 
@@ -65,6 +65,7 @@ open module it.app.ext {
     requires spring.aop;
     requires spring.tx;
     requires it.app.root;
+    requires jakarta.inject;
     //requires jakarta.transaction;
 
     provides Extension with JfxAppsExtension;

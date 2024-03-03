@@ -45,17 +45,18 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
+import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebApplicationContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.ResolvableType;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.web.context.support.GenericWebApplicationContext;
 
 import com.gluonhq.jfxapps.boot.context.DocumentScope;
-import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
 import com.gluonhq.jfxapps.boot.context.internal.ContextProgressHandler;
 import com.gluonhq.jfxapps.boot.context.internal.SbBeanFactoryImpl;
 
@@ -63,7 +64,7 @@ public class JfxAppContextImpl implements JfxAppContext  {
 
     private JfxAppContext parent;
 
-    private final AnnotationConfigApplicationContext context;
+    private final AnnotationConfigServletWebApplicationContext context;
     private final SbBeanFactoryImpl beanFactory;
     private final UUID id;
 
@@ -76,7 +77,9 @@ public class JfxAppContextImpl implements JfxAppContext  {
     public JfxAppContextImpl(UUID contextId, ClassLoader loader) {
         this.id = contextId;
         this.beanFactory = new SbBeanFactoryImpl();
-        this.context = new AnnotationConfigApplicationContext(this.beanFactory);
+        //this.context = new AnnotationConfigApplicationContext(this.beanFactory);
+        this.context = new AnnotationConfigServletWebApplicationContext(this.beanFactory);
+
         this.context.setClassLoader(loader);
 
         registerSingleton(this);
@@ -84,11 +87,13 @@ public class JfxAppContextImpl implements JfxAppContext  {
 
     protected void setParent(JfxAppContextImpl parent) {
         this.parent = parent;
-        context.setParent(parent.context);
+        this.setParent(parent.context);
     }
 
     protected void setParent(ApplicationContext parent) {
         context.setParent(parent);
+        context.setServletContext(((GenericWebApplicationContext)parent).getServletContext());
+        //context.setServletConfig(((GenericWebApplicationContext)parent).getServletConfig());
     }
 
 

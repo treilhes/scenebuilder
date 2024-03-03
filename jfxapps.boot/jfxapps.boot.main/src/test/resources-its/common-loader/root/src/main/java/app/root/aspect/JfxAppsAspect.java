@@ -37,11 +37,23 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
+import com.gluonhq.jfxapps.boot.loader.extension.Extension;
+
+import _test.TestConfig;
+import jakarta.inject.Named;
+
 @Aspect
+@Named(TestConfig.ASPECT_NAME)
 public class JfxAppsAspect {
-    @Around("@annotation(app.root.aspect.JfxAppsAspectTarget)")
+
+    private final Extension source;
+
+    protected JfxAppsAspect(Extension source) {
+        this.source = source;
+    }
+
+    @Around(TestConfig.ASPECT_POINTCUT)
     public Object someFunction(ProceedingJoinPoint joinPoint) throws Throwable {
-        System.out.println("Aspect running " + JfxAppsAspect.class.getName());
-        return joinPoint.proceed();
+        return joinPoint.proceed() + "_" + source.getId() + "_";
     }
 }

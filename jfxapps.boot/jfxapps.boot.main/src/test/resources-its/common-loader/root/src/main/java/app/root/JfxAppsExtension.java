@@ -36,23 +36,22 @@ package app.root;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.loader.extension.SealedExtension;
 
-import app.root.aspect.DebugInterceptor;
+import _test.TestConfig;
 import app.root.aspect.JfxAppsAspect;
 import app.root.config.JfxAppsConfig;
 import app.root.internal.JfxAppsLocalService;
-import app.root.rest.JfxAppsExtensionRestController;
 import app.root.rest.JfxAppsRestController;
+import app.root.rest.RestExceptionHandler;
 import app.root.service.JfxAppsDataService;
 import app.root.test.JfxAppsAspectTest;
 
 public class JfxAppsExtension implements SealedExtension {
 
-    private static final UUID PARENT_ID = Extension.ROOT_ID;
+    private static final UUID PARENT_ID = UUID.fromString(TestConfig.PARENT_ID);
 
-    public static final UUID ID = Extension.ROOT_ID;
+    public static final UUID ID = UUID.fromString(TestConfig.ID);
 
     @Override
     public UUID getParentId() {
@@ -72,9 +71,8 @@ public class JfxAppsExtension implements SealedExtension {
                 JfxAppsAspect.class,
                 JfxAppsAspectTest.class,
                 JfxAppsRestController.class,
-                JfxAppsExtensionRestController.class,
                 JfxAppsDataService.class,
-                DebugInterceptor.class);
+                RestExceptionHandler.class);
     }
 
 }

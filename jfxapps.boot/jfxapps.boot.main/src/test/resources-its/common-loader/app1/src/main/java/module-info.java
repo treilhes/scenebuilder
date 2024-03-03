@@ -31,18 +31,42 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 
-import app.editor.EditorExtension;
+import app.app1.JfxAppsExtension;
 
-open module it.app.editor {
-    exports app.editor;
-    exports app.editor.api;
+open module it.app.app1 {
 
+    exports app.app1;
+    exports app.app1.api;
+    exports app.app1.aspect;
+    exports app.app1.rest;
+
+    requires jfxapps.boot.starter;
     requires jfxapps.boot.loader;
-    requires it.app.root;
+    requires jfxapps.boot.jpa;
 
-    provides Extension with EditorExtension;
+
+    requires org.aspectj.weaver;
+    requires spring.web;
+    requires spring.webmvc;
+    requires spring.context;
+    requires spring.boot.autoconfigure;
+    requires spring.data.jpa;
+    requires spring.data.commons;
+    requires jakarta.persistence;
+    requires spring.core;
+    requires spring.boot;
+    requires org.apache.tomcat.embed.core;
+    requires spring.beans;
+    requires org.hibernate.orm.core;
+    requires org.hibernate.validator;
+    requires jakarta.validation;
+    requires spring.aop;
+    requires spring.tx;
+    requires it.app.root;
+    requires jakarta.inject;
+    //requires jakarta.transaction;
+
+    provides Extension with JfxAppsExtension;
 }

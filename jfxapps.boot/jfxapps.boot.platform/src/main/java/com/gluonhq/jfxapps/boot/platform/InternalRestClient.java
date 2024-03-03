@@ -33,18 +33,28 @@
  */
 package com.gluonhq.jfxapps.boot.platform;
 
+
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandler;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.net.http.HttpResponse.ResponseInfo;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public interface InternalRestClient {
 
@@ -55,9 +65,9 @@ public interface InternalRestClient {
     public static String queryOf(String path, Map<String, String> parameters) {
 
         String params = parameters.entrySet().stream()
-                .map(p -> URLEncoder.encode(p.getKey(), StandardCharsets.UTF_8) + "=" + URLEncoder.encode(p.getValue(), StandardCharsets.UTF_8))
-                .reduce((p1, p2) -> p1 + "&" + p2)
-                .orElse("");
+                .map(p -> URLEncoder.encode(p.getKey(), StandardCharsets.UTF_8) + "="
+                        + URLEncoder.encode(p.getValue(), StandardCharsets.UTF_8))
+                .reduce((p1, p2) -> p1 + "&" + p2).orElse("");
 
         if (params.isEmpty()) {
             return path;
@@ -74,91 +84,39 @@ public interface InternalRestClient {
 
     }
 
-    HttpResponse<String> get(UUID uuid, String path) throws URISyntaxException, IOException, InterruptedException;
+    public static String pathOf(Object... path) {
+        return Stream.of(path).map(Object::toString).collect(Collectors.joining("/"));
+    }
 
-    <RESP> HttpResponse<RESP> get(UUID uuid, String path, BodyHandler<RESP> handler)
+    ResponseBuilder get(UUID uuid, String path) throws URISyntaxException, IOException, InterruptedException;
+
+    ResponseBuilder get(UUID uuid, String path, RequestConfig customization)
             throws URISyntaxException, IOException, InterruptedException;
 
-    <RESP> HttpResponse<RESP> get(UUID uuid, String path, Class<RESP> result)
+    ResponseBuilder post(UUID uuid, String path) throws URISyntaxException, IOException, InterruptedException;
+
+    ResponseBuilder post(UUID uuid, String path, Object posted)
             throws URISyntaxException, IOException, InterruptedException;
 
-    <DATA, RESP> HttpResponse<RESP> get(UUID uuid, String path, RequestConfig customization, Class<RESP> resultClass)
+    ResponseBuilder post(UUID uuid, String path, RequestConfig customization, Object posted)
             throws URISyntaxException, IOException, InterruptedException;
 
-    <DATA, RESP> HttpResponse<RESP> get(UUID uuid, String path, RequestConfig customization, BodyHandler<RESP> handler)
+    ResponseBuilder put(UUID uuid, String path) throws URISyntaxException, IOException, InterruptedException;
+
+    ResponseBuilder put(UUID uuid, String path, Object posted)
             throws URISyntaxException, IOException, InterruptedException;
 
-    HttpResponse<String> post(UUID uuid, String path) throws URISyntaxException, IOException, InterruptedException;
-
-    <RESP> HttpResponse<RESP> post(UUID uuid, String path, BodyHandler<RESP> handler)
+    ResponseBuilder put(UUID uuid, String path, RequestConfig customization, Object posted)
             throws URISyntaxException, IOException, InterruptedException;
 
-    <RESP> HttpResponse<RESP> post(UUID uuid, String path, Class<RESP> result)
+    ResponseBuilder delete(UUID uuid, String path)
             throws URISyntaxException, IOException, InterruptedException;
 
-    <DATA, RESP> HttpResponse<RESP> post(UUID uuid, String path, DATA posted, Class<RESP> result)
+    ResponseBuilder delete(UUID uuid, String path, RequestConfig customization)
             throws URISyntaxException, IOException, InterruptedException;
 
-    <DATA> HttpResponse<String> post(UUID uuid, String path, DATA posted)
+    ResponseBuilder request(UUID uuid, String path, RequestConfig customization)
             throws URISyntaxException, IOException, InterruptedException;
-
-    <DATA, RESP> HttpResponse<RESP> post(UUID uuid, String path, DATA posted, BodyHandler<RESP> handler)
-            throws URISyntaxException, IOException, InterruptedException;
-
-    <DATA> HttpResponse<String> post(UUID uuid, String path, RequestConfig customization, DATA posted)
-            throws URISyntaxException, IOException, InterruptedException;
-
-    <DATA, RESP> HttpResponse<RESP> post(UUID uuid, String path, RequestConfig customization, DATA posted,
-            Class<RESP> resultClass) throws URISyntaxException, IOException, InterruptedException;
-
-    <DATA, RESP> HttpResponse<RESP> post(UUID uuid, String path, RequestConfig customization, DATA posted,
-            BodyHandler<RESP> handler) throws URISyntaxException, IOException, InterruptedException;
-
-    HttpResponse<String> put(UUID uuid, String path) throws URISyntaxException, IOException, InterruptedException;
-
-    <RESP> HttpResponse<RESP> put(UUID uuid, String path, BodyHandler<RESP> handler)
-            throws URISyntaxException, IOException, InterruptedException;
-
-    <RESP> HttpResponse<RESP> put(UUID uuid, String path, Class<RESP> result)
-            throws URISyntaxException, IOException, InterruptedException;
-
-    <DATA, RESP> HttpResponse<RESP> put(UUID uuid, String path, DATA posted, Class<RESP> result)
-            throws URISyntaxException, IOException, InterruptedException;
-
-    <DATA> HttpResponse<String> put(UUID uuid, String path, DATA posted)
-            throws URISyntaxException, IOException, InterruptedException;
-
-    <DATA, RESP> HttpResponse<RESP> put(UUID uuid, String path, DATA posted, BodyHandler<RESP> handler)
-            throws URISyntaxException, IOException, InterruptedException;
-
-    <DATA> HttpResponse<String> put(UUID uuid, String path, RequestConfig customization, DATA posted)
-            throws URISyntaxException, IOException, InterruptedException;
-
-    <DATA, RESP> HttpResponse<RESP> put(UUID uuid, String path, RequestConfig customization, DATA posted,
-            Class<RESP> resultClass) throws URISyntaxException, IOException, InterruptedException;
-
-    <DATA, RESP> HttpResponse<RESP> put(UUID uuid, String path, RequestConfig customization, DATA posted,
-            BodyHandler<RESP> handler) throws URISyntaxException, IOException, InterruptedException;
-
-    HttpResponse<String> delete(UUID uuid, String path) throws URISyntaxException, IOException, InterruptedException;
-
-    <RESP> HttpResponse<RESP> delete(UUID uuid, String path, BodyHandler<RESP> handler)
-            throws URISyntaxException, IOException, InterruptedException;
-
-    <RESP> HttpResponse<RESP> delete(UUID uuid, String path, Class<RESP> result)
-            throws URISyntaxException, IOException, InterruptedException;
-
-    <DATA, RESP> HttpResponse<RESP> delete(UUID uuid, String path, RequestConfig customization, Class<RESP> resultClass)
-            throws URISyntaxException, IOException, InterruptedException;
-
-    <DATA, RESP> HttpResponse<RESP> delete(UUID uuid, String path, RequestConfig customization,
-            BodyHandler<RESP> handler) throws URISyntaxException, IOException, InterruptedException;
-
-    <DATA, RESP> HttpResponse<RESP> request(UUID uuid, String path, RequestConfig customization,
-            Class<RESP> resultClass) throws URISyntaxException, IOException, InterruptedException;
-
-    <DATA, RESP> HttpResponse<RESP> request(UUID uuid, String path, RequestConfig customization,
-            BodyHandler<RESP> handler) throws URISyntaxException, IOException, InterruptedException;
 
     public static class JsonResponseException extends RuntimeException {
         /**
@@ -208,4 +166,44 @@ public interface InternalRestClient {
         }
 
     }
+
+
+    public class JsonBodyHandler {
+
+        private static final ObjectMapper mapper = new ObjectMapper();
+
+        public static <T> BodyHandler<T> of(JavaType type) throws JsonResponseException {
+            return responseInfo -> {
+
+                HttpResponse.BodySubscriber<String> upstream = BodyHandlers.ofString().apply(responseInfo);
+
+                return HttpResponse.BodySubscribers.mapping(upstream, (String body) -> {
+                    try {
+                        return body == null || body.isEmpty() ? null : mapper.readValue(body, type);
+                    } catch (JsonParseException e) {
+                        throw new JsonResponseException(responseInfo, body, e);
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                });
+            };
+        }
+
+        public static <T> BodyHandler<T> of(Class<T> target) throws JsonResponseException {
+            JavaType type = mapper.constructType(target);
+            return of(type);
+        }
+
+        public static <T> BodyHandler<List<T>> listOf(Class<T> target) throws JsonResponseException {
+            JavaType type = mapper.getTypeFactory().constructCollectionType(List.class, target);
+            return of(type);
+        }
+
+        public static <K,V> BodyHandler<Map<K,V>> mapOf(Class<K> keyClass, Class<K> valueClass) throws JsonResponseException {
+            JavaType type = mapper.getTypeFactory().constructMapType(Map.class, keyClass, valueClass);
+            return of(type);
+        }
+    }
+
+
 }

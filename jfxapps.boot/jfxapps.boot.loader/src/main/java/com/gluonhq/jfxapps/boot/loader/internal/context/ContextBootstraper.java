@@ -43,15 +43,14 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.ContextManager;
-import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.boot.internal.context.config.DefaultSpringContextConfig;
+import com.gluonhq.jfxapps.boot.internal.context.config.DefaultExtensionContextConfig;
 import com.gluonhq.jfxapps.boot.layer.Layer;
 import com.gluonhq.jfxapps.boot.layer.LayerNotFoundException;
 import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
@@ -177,13 +176,7 @@ public class ContextBootstraper {
 
         classes.addAll(childrenExportedClasses);
         classes.addAll(extensionLocalClasses);
-
-        //classes.add(AnnotationAwareAspectJAutoProxyCreator.class);
-        //classes.add(AnnotationAwareAspectJAutoProxyCreatorInv.class);
-        //classes.add(DispatcherServletAutoConfiguration.class);
-        classes.add(DefaultSpringContextConfig.class);
-
-
+        classes.addAll(DefaultExtensionContextConfig.classesToRegister);
 
         if (parent != null) { // get classes from parent with @EditorSingleton annotation
             boolean isSealed = loader.loadService(currentLayer, Extension.class).stream()

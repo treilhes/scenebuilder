@@ -20,5 +20,8 @@ module jfxapps.boot.context {
     requires jakarta.inject;
     requires jakarta.annotation;
     requires java.desktop;
+    requires spring.boot;
+    requires spring.web;
+    requires org.apache.tomcat.embed.core;
 
 }

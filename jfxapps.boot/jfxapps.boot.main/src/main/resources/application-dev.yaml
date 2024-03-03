@@ -37,3 +37,6 @@ spring:
     show-sql: true
   datasource:
     url: jdbc:h2:file:./target/jfxapps-h2-db
+
+springdoc:
+  show-actuator: true

@@ -8,6 +8,7 @@ open module jfxapps.boot.main {
     requires jfxapps.boot.layer;
     requires jfxapps.boot.maven;
     requires jfxapps.boot.jpa;
+    requires jfxapps.boot.starter;
 
     requires spring.boot;
     requires spring.boot.autoconfigure;
@@ -41,5 +42,6 @@ open module jfxapps.boot.main {
     requires java.net.http;
     requires com.fasterxml.jackson.databind;
     requires spring.tx;
+
     //requires jakarta.transaction;
 }

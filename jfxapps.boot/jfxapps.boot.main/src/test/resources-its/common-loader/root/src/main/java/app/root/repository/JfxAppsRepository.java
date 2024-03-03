@@ -40,17 +40,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import app.root.model.JfxAppsModel;
-import jakarta.validation.Valid;
 
 @Transactional
-public interface JfxAppsRepository extends JpaRepository<JfxAppsModel, Long> {
+public interface JfxAppsRepository extends JpaRepository<JfxAppsModel, Long>, JfxAppsRepositoryCustom {
+
     public JfxAppsModel getTopByOrderByDataAsc();
 
     @Query("Select m from JfxAppsModel m")
     public List<JfxAppsModel> customQuery();
-
-    @Override
-    <S extends JfxAppsModel> S save(@Valid S entity);
-
 
 }

@@ -77,6 +77,9 @@ open module jfxapps.boot.loader {
     requires org.hibernate.orm.core;
     requires spring.aspects;
     requires spring.core;
+    requires org.springdoc.openapi.ui;
+    requires org.springdoc.openapi.common;
+    requires org.springdoc.openapi.webmvc.core;
 
     uses Extension;
 }

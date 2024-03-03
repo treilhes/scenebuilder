@@ -34,23 +34,21 @@
 package com.gluonhq.jfxapps.boot.main.it;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
-import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
-import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,11 +56,10 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -90,7 +87,7 @@ import com.gluonhq.jfxapps.boot.loader.model.JfxAppsExtension;
 import com.gluonhq.jfxapps.boot.main.config.BootConfig;
 import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryClient;
 import com.gluonhq.jfxapps.boot.platform.InternalRestClient;
-import com.gluonhq.jfxapps.boot.platform.InternalRestClient.RequestException;
+import com.gluonhq.jfxapps.boot.platform.InternalRestClient.JsonBodyHandler;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.boot.registry.RegistryManager;
 
@@ -102,12 +99,10 @@ import com.gluonhq.jfxapps.boot.registry.RegistryManager;
  * - Jpa - Validation - Aspect
  */
 @ExtendWith({ MockitoExtension.class, SpringExtension.class })
-@SpringBootTest(classes = { BootConfig.class, AvailableFeaturesTestIT.Configuration.class },
-    webEnvironment = WebEnvironment.RANDOM_PORT,
-    properties = {"spring.main.allow-bean-definition-overriding=true"
-            ,"spring.mvc.servlet.path=/app"
-            ,"server.servlet.context-path=/jfx"
-            })
+@SpringBootTest(classes = { BootConfig.class,
+        AvailableFeaturesTestIT.Configuration.class }, webEnvironment = WebEnvironment.RANDOM_PORT, properties = {
+                "spring.main.allow-bean-definition-overriding=true", "spring.mvc.servlet.path=/app",
+                "server.servlet.context-path=/jfx", "debug=true" })
 //@AutoConfigureCache
 //@AutoConfigureDataJpa
 //@AutoConfigureTestDatabase
@@ -117,7 +112,8 @@ import com.gluonhq.jfxapps.boot.registry.RegistryManager;
 @TestInstance(Lifecycle.PER_CLASS)
 public class AvailableFeaturesTestIT {
 
-    private static final Logger logger = LoggerFactory.getLogger(AvailableFeaturesTestIT.class);
+    private static final String ROLLBACK_TRIGGERED_MARKER = "rollbackTriggered";
+    private static final String CONTROLLER_ADVICE_HANDLED_EXCEPTION_MARKER = "controllerAdviceHandledException";
 
     private static final String RES_IT = "./src/test/resources-its/common-loader";
 
@@ -132,8 +128,8 @@ public class AvailableFeaturesTestIT {
     static class Configuration {
 
         /*
-         * This is a mock of the platform to be able to inject the root path
-         * where extensions and applications are downloaded
+         * This is a mock of the platform to be able to inject the root path where
+         * extensions and applications are downloaded
          */
         @Bean
         @Primary
@@ -214,7 +210,7 @@ public class AvailableFeaturesTestIT {
     ApplicationContext boot;
 
     @Inject
-    InternalRestClient httpClient;
+    InternalRestClient internalClient;
 
     @MockBean
     RegistryManager registryManager;
@@ -222,10 +218,10 @@ public class AvailableFeaturesTestIT {
     @MockBean
     RepositoryClient repositoryClient;
 
-
     /**
      * This is a mock of the server properties to be able to inject the random port
-     * in the server properties. RANDOM_PORT does not work as expected so we give it a little help
+     * in the server properties. RANDOM_PORT does not work as expected so we give it
+     * a little help
      */
     @SpyBean
     ServerProperties serverProperties;
@@ -249,11 +245,20 @@ public class AvailableFeaturesTestIT {
     }
 
     private static Stream<UUID> allContextIds() {
-        //return Stream.of(ROOT_ID, ROOT_EXT1_ID, ROOT_EXT1_EXT1_ID, APP1_ID, APP1_EXT1_ID, APP1_EXT1_EXT1_ID);
-        return Stream.of(ROOT_ID, ROOT_EXT1_ID);
+        return Stream.of(ROOT_ID, ROOT_EXT1_ID, ROOT_EXT1_EXT1_ID, APP1_ID, APP1_EXT1_ID, APP1_EXT1_EXT1_ID);
+
+    }
+
+    private static Stream<Arguments> allContextIdsAndParents() {
+        return Stream.of(Arguments.of(ROOT_ID, List.of()), Arguments.of(ROOT_EXT1_ID, List.of(ROOT_ID)),
+                Arguments.of(ROOT_EXT1_EXT1_ID, List.of(ROOT_ID, ROOT_EXT1_ID)),
+                Arguments.of(APP1_ID, List.of(ROOT_ID)), Arguments.of(APP1_EXT1_ID, List.of(ROOT_ID, APP1_ID)),
+                Arguments.of(APP1_EXT1_EXT1_ID, List.of(ROOT_ID, APP1_ID, APP1_EXT1_ID)));
     }
 
     private final static InternalRestClient.RequestConfig jsonHeader = r -> r.header("Content-Type",
+            "application/json");
+    private final static InternalRestClient.RequestConfig jsonHeaderNew = r -> r.header("Content-Type",
             "application/json");
 
     /**
@@ -276,41 +281,19 @@ public class AvailableFeaturesTestIT {
      */
     @ParameterizedTest
     @MethodSource("allContextIds")
-    public void rest_endpoint_must_be_created_and_accessible(UUID contextId) throws Exception {
-        HttpResponse<String> response = httpClient.get(contextId, "extension");
-        assertEquals(contextId.toString(), response.body());
+    public void extension_rest_endpoint_must_be_created_and_accessible(UUID contextId) throws Exception {
+        internalClient.get(contextId, "extension/id")
+            .on(200, r -> assertEquals(contextId.toString(), r.body()))
+            .ifNoneMatch(r -> fail(r.toString()))
+            .execute();
     }
 
     @Test
     public void boot_rest_endpoint_must_be_created_and_accessible() throws Exception {
-        HttpResponse<String> response = httpClient.get(InternalRestClient.BOOT_CONTEXT, "version");
-        assertEquals(HttpStatus.SC_OK, response.statusCode());
-    }
-
-    @ParameterizedTest
-    @MethodSource("allContextIds")
-    public void lookForCallableTmp(UUID contextId) throws Exception {
-        var ctx = contextManager.get(contextId);
-        Map<String, Callable<Boolean>> rext = ctx.getBeansOfTypeWithGeneric(Callable.class, Boolean.class);
-
-        for (var callable : rext.values()) {
-            System.out.println(callable.getClass().getName() + " will be CALLED");
-            assertTrue(callable.call());
-        }
-    }
-
-    @ParameterizedTest
-    @MethodSource("allContextIds")
-    public void lookForRunnableTmp(UUID contextId) throws Exception {
-        var ctx = contextManager.get(contextId);
-        var result = ctx.getBeansOfType(Runnable.class);
-
-        System.out.println(result.values().size());
-
-        result.values().forEach(r -> {
-            System.out.println(r.getClass().getName() + " will RUN");
-            r.run();
-        });
+        internalClient.get(InternalRestClient.BOOT_CONTEXT, "version")
+        .on(200, r -> assertEquals(200, r.statusCode()))
+        .ifNoneMatch(r -> fail(r.toString()))
+        .execute();
     }
 
     @ParameterizedTest
@@ -321,95 +304,123 @@ public class AvailableFeaturesTestIT {
         postParam.setData("SOMEDATA");
         postParam.setOther("SOMEDATA");
 
-        HttpResponse<TestModel> postResponse = httpClient.post(contextId, "models", jsonHeader, postParam,
-                TestModel.class);
+        TestModel postValue = internalClient.post(contextId, "models", jsonHeader, postParam)
+            .on(200, JsonBodyHandler.of(TestModel.class), r -> assertTrue(r.body() != null && r.body().getId() > 0))
+            .ifNoneMatch(r -> fail(r.toString()))
+            .execute();
 
-        TestModel postValue = postResponse.body();
-        assertNotNull(postValue);
-        assertTrue(postValue.getId() > 0);
+        TestModel getValue = internalClient.get(contextId, InternalRestClient.pathOf("models", postValue.getId()))
+            .on(200, JsonBodyHandler.of(TestModel.class), r -> assertTrue(r.body() != null && r.body().getId() > 0))
+            .ifNoneMatch(r -> fail(r.toString()))
+            .execute();
 
-        var getResponse = httpClient.get(contextId, "models/" + postValue.getId(), TestModel.class);
-
-        var getValue = getResponse.body();
-        assertNotNull(getValue);
         assertEquals(postValue.getId(), getValue.getId());
 
-        var deleteReponse = httpClient.delete(contextId, "models/" + getValue.getId());
-        assertEquals(200, deleteReponse.statusCode());
+        internalClient.delete(contextId, "models/" + postValue.getId())
+            .on(200, r -> assertEquals(200, r.statusCode()))
+            .ifNoneMatch(r -> fail(r.toString()))
+            .execute();
 
-        getResponse = httpClient.get(contextId, "models/" + postValue.getId(), TestModel.class);
-        getValue = getResponse.body();
-        assertNull(getValue);
+        internalClient.get(contextId, "models/" + postValue.getId())
+            .on(200, JsonBodyHandler.of(TestModel.class), r -> assertNull(r.body()))
+            .ifNoneMatch(r -> fail(r.toString()))
+            .execute();
+        ;
     }
 
     @ParameterizedTest
     @MethodSource("allContextIds")
-    public void jpa_transaction_support_roolbacks(UUID contextId) throws Exception {
+    public void jpa_query_and_query_by_derivation_support(UUID contextId) throws Exception {
 
-        try {
+        TestModel postParam = new TestModel();
+        postParam.setData("SOMEDATA");
+        postParam.setOther("SOMEDATA");
 
-            TestModel param = new TestModel();
-            param.setData("SOMEDATA");
-            param.setOther("SOMEDATA");
+        internalClient.post(contextId, "models", jsonHeader, postParam)
+                .on(200, JsonBodyHandler.of(TestModel.class), r -> assertTrue(r.body() != null && r.body().getId() > 0))
+                .ifNoneMatch(r -> fail(r.toString()))
+                .execute();
 
-            HttpResponse<TestModel> response = httpClient.post(contextId, "models", jsonHeader, param, TestModel.class);
+        internalClient.get(contextId, "models/query")
+            .on(200, JsonBodyHandler.listOf(TestModel.class), r -> assertTrue(r.body() != null && r.body().size() > 0))
+            .ifNoneMatch(r -> fail(r.toString()))
+            .execute();
 
-            logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            logResponse(httpClient.get(contextId, "models"));
-            logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            logResponse(httpClient.get(contextId, "models"));
-            logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            logResponse(httpClient.get(contextId, "models/derivation"));
-            logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            logResponse(httpClient.get(contextId, "models/derivation"));
-            logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            logResponse(httpClient.get(contextId, "models/query"));
-            logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            logResponse(httpClient.get(contextId, "models/query"));
-            logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        internalClient.get(contextId, "models/derivation")
+            .on(200, JsonBodyHandler.of(TestModel.class), r -> assertEquals(postParam.getOther(), r.body().getOther()))
+            .ifNoneMatch(r -> fail(r.toString()))
+            .execute();
 
-            TestModel transparam = new TestModel();
-            transparam.setData("TRANSACTION_REMOVED");
+    }
 
-            try {
-                logResponse(httpClient.get(contextId, "models/transaction_rollback_in_service", TestModel.class));
-            } catch (RequestException e) {
-                logException(e);
+    @ParameterizedTest
+    @MethodSource("allContextIds")
+    public void jpa_transaction_support_roolbacks_in_service(UUID contextId) throws Exception {
+        String trRemoved = "transaction_rollback_in_service";
+        TestModel posted = new TestModel();
+        posted.setData(trRemoved);
+
+        internalClient.post(contextId, "models/transaction_rollback_in_service", jsonHeaderNew, posted)
+                .on(500, JsonBodyHandler.of(Error.class),
+                        r -> assertEquals(ROLLBACK_TRIGGERED_MARKER, r.body().getMessage()))
+                .ifNoneMatch(r -> fail("500 should have matched," + r.toString())).execute();
+
+        internalClient.get(contextId, "models").ifNoneMatch(JsonBodyHandler.listOf(TestModel.class), r -> {
+            List<TestModel> models = r.body();
+            boolean found = models.stream().filter(m -> trRemoved.equals(m.getData())).findAny().isPresent();
+            assertFalse(found);
+        }).execute();
+
+    }
+
+    @ParameterizedTest
+    @MethodSource("allContextIds")
+    public void jpa_transaction_support_roolbacks_in_repository(UUID contextId) throws Exception {
+        String trRemoved = "transaction_rollback_in_repository";
+        TestModel posted = new TestModel();
+        posted.setData(trRemoved);
+
+        internalClient.post(contextId, "models/transaction_rollback_in_repository", jsonHeaderNew, posted)
+                .on(500, JsonBodyHandler.of(Error.class),
+                        r -> assertEquals(ROLLBACK_TRIGGERED_MARKER, r.body().getMessage()))
+                .ifNoneMatch(r -> fail("500 should have matched, " + r.toString())).execute();
+
+        internalClient.get(contextId, "models").ifNoneMatch(JsonBodyHandler.listOf(TestModel.class), r -> {
+            List<TestModel> models = r.body();
+            boolean found = models.stream().filter(m -> trRemoved.equals(m.getData())).findAny().isPresent();
+            assertFalse(found);
+        }).execute();
+    }
+
+    @ParameterizedTest
+    @MethodSource("allContextIds")
+    public void controller_advice_handle_exceptions(UUID contextId) throws Exception {
+        internalClient.get(contextId, "models/throw_controler_advice_handled_exception")
+                .on(500, JsonBodyHandler.of(Error.class),
+                        r -> assertEquals(CONTROLLER_ADVICE_HANDLED_EXCEPTION_MARKER, r.body().getMessage()))
+                .ifNoneMatch(r -> fail(r.toString())).execute();
+    }
+
+    @ParameterizedTest
+    @MethodSource("allContextIdsAndParents")
+    public void all_aspects_from_root_to_extensions_must_applied(UUID contextId, List<UUID> parents) throws Exception {
+        internalClient.get(contextId, "models/testing_aspects_are_applied").on(200, r -> {
+            assertTrue(r.body().contains("_" + contextId + "_"));
+            for (UUID parent : parents) {
+                assertTrue(r.body().contains("_" + parent + "_"));
             }
-            try {
-                logResponse(httpClient.get(contextId, "models/transaction_rollback_in_repository", TestModel.class));
-            } catch (RequestException e) {
-                logException(e);
-            }
-
-//            logResponse(httpClient.post(contextId, "models", jsonHeader, "{\"value\": \"someValue\"}"));
-//            logResponse(httpClient.get(contextId, "models"));
-            System.out.println();
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        System.out.println();
+        }).ifNoneMatch(r -> fail(r.toString())).execute();
     }
 
-    private void logResponse(HttpResponse<?> r) {
-        System.out.println(String.format("%s %s", r, r.body()));
-    }
+    @ParameterizedTest
+    @MethodSource("allContextIds")
+    public void testing_validation_is_applied(UUID contextId) throws Exception {
+        TestModel posted = new TestModel(); // "other" is null, so 400 bad request is expected
 
-    private void logResponse(Supplier<HttpResponse<?>> r) {
-        try {
-            var response = r.get();
-            System.out.println(String.format("%s %s", response, response.body()));
-        } catch (RequestException e) {
-            var response = e.getResponse();
-            System.out.println(String.format("%s %s", response, response.body()));
-        }
-
-    }
-
-    private void logException(RequestException e) {
-        var response = e.getResponse();
-        System.out.println(String.format("%s %s", response, response.body()));
+        internalClient.post(contextId, "models/testing_validation_is_applied", jsonHeaderNew, posted)
+                .on(400, r -> {
+                    assertTrue(r.body().toLowerCase().contains("validation failed"));
+                })
+                .ifNoneMatch(r -> fail(r.toString())).execute();
     }
 }

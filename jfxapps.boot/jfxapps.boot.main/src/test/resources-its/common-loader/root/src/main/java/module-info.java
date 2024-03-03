@@ -40,9 +40,9 @@ open module it.app.root {
     exports app.root;
     exports app.root.api;
     exports app.root.aspect;
-    exports app.root.config;
     exports app.root.rest;
 
+    requires jfxapps.boot.starter;
     requires jfxapps.boot.loader;
     requires jfxapps.boot.jpa;
 
@@ -64,6 +64,7 @@ open module it.app.root {
     requires jakarta.validation;
     requires spring.aop;
     requires spring.tx;
+    requires jakarta.inject;
     //requires jakarta.transaction;
 
     provides Extension with JfxAppsExtension;

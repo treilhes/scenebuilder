@@ -33,27 +33,27 @@
  */
 package com.gluonhq.jfxapps.boot.main.config;
 
-import java.util.Enumeration;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.server.RequestPath;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import com.gluonhq.jfxapps.boot.context.ContextManager;
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 @RestController
+@RequestMapping("/" + JfxAppsPlatform.EXTENSION_REST_PATH_PREFIX)
 public class DispatcherRestController {
 
     private static final String JFXAPPS_ATTRIBUTE = "JFXAPPS-ATTRIBUTE";

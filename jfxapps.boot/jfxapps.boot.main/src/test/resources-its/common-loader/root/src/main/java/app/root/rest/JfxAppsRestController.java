@@ -51,6 +51,7 @@ import org.springframework.web.bind.annotation.RestController;
 import app.root.model.JfxAppsModel;
 import app.root.repository.JfxAppsRepository;
 import app.root.service.JfxAppsDataService;
+import app.root.test.JfxAppsAspectTest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -60,11 +61,13 @@ public class JfxAppsRestController {
 
     private final JfxAppsRepository repository;
     private final JfxAppsDataService service;
+    private final JfxAppsAspectTest jfxAppsAspectTest;
 
-    public JfxAppsRestController(JfxAppsRepository repository, JfxAppsDataService service) {
+    public JfxAppsRestController(JfxAppsRepository repository, JfxAppsDataService service, JfxAppsAspectTest jfxAppsAspectTest) {
         super();
         this.repository = repository;
         this.service = service;
+        this.jfxAppsAspectTest = jfxAppsAspectTest;
     }
 
     @GetMapping()
@@ -115,26 +118,32 @@ public class JfxAppsRestController {
         return ResponseEntity.ok(obj);
     }
 
-    @GetMapping("/transaction_rollback_in_service")
+    @PostMapping("/transaction_rollback_in_service")
     @Transactional
-    public ResponseEntity<JfxAppsModel> transaction_rollback_in_service() {
-        service.transactionFailed();
+    public ResponseEntity<JfxAppsModel> transaction_rollback_in_service(@RequestBody JfxAppsModel model) {
+        service.transactionFailed(model);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/transaction_rollback_in_repository")
+    @PostMapping("/transaction_rollback_in_repository")
     @Transactional
-    public ResponseEntity<JfxAppsModel> transaction_rollback_in_repository() {
-        JfxAppsModel rm = new JfxAppsModel();
-        rm.setData("MUST NOT BE INSERTED DUE TO ROLLBACK");
-        JfxAppsModel rm2 = new JfxAppsModel();
-        rm2.setData("NOTBAD");
-        rm2.setOther(null);
-        JfxAppsModel rm3 = new JfxAppsModel();
-        rm3.setData("BAD");
-        rm3.setOther(null);
+    public ResponseEntity<JfxAppsModel> transaction_rollback_in_repository(@RequestBody JfxAppsModel model) throws Exception {
+        repository.transactionFailed(model);
+        return ResponseEntity.ok().build();
+    }
 
-        repository.saveAll(List.of(rm,rm2));//,rm3));
+    @GetMapping("/throw_controler_advice_handled_exception")
+    public ResponseEntity<?> throwControlerAdviceHandledException() throws Exception {
+        throw new Exception("controllerAdviceHandledException");
+    }
+
+    @GetMapping("/testing_aspects_are_applied")
+    public ResponseEntity<String> testing_aspects_are_applied() throws Exception {
+        return ResponseEntity.ok(jfxAppsAspectTest.execute());
+    }
+
+    @PostMapping("/testing_validation_is_applied")
+    public ResponseEntity<String> testing_validation_is_applied(@RequestBody @Valid JfxAppsModel model) throws Exception {
         return ResponseEntity.ok().build();
     }
 }

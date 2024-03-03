@@ -33,26 +33,19 @@
  */
 package app.root.test;
 
-import java.util.concurrent.Callable;
-
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 
 import app.root.aspect.JfxAppsAspectTarget;
 
 @Singleton
-public class JfxAppsAspectTest implements Runnable, Callable<Boolean> {
+public class JfxAppsAspectTest {
 
-    @Override
-    @JfxAppsAspectTarget
-    public void run() {
-        System.out.println("Runnnnnn " + this.getClass().getName());
+    protected JfxAppsAspectTest() {
     }
 
-    @Override
     @JfxAppsAspectTarget
-    public Boolean call() throws Exception {
-        System.out.println("Callllllllllll " + this.getClass().getName());
-        return true;
+    public String execute() {
+        return "EXECUTE";
     }
 
 }

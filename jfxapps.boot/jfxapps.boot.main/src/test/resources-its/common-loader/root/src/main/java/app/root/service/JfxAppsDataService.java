@@ -52,11 +52,9 @@ public class JfxAppsDataService {
         this.repository = repository;
     }
 
-    public void transactionFailed() {
-        JfxAppsModel rm = new JfxAppsModel();
-        rm.setData("INTERNAL");
-        repository.save(rm);
-        throw new RuntimeException("rollback trigger");
+    public void transactionFailed(JfxAppsModel model) {
+        repository.save(model);
+        throw new RuntimeException("rollbackTriggered");
     }
 
 }

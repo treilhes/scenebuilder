@@ -38,6 +38,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.Length;
 
 @Entity
@@ -52,6 +54,7 @@ public class JfxAppsModel {
 
     @Column(nullable = false, columnDefinition = "varchar(255) default ''")
     @Length(max = 255, message = "Max length is 255")
+    @NotNull
     private String other = "default";
 
     public long getId() {
