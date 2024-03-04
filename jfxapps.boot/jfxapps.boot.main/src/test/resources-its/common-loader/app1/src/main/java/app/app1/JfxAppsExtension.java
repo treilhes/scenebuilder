@@ -41,6 +41,7 @@ import com.gluonhq.jfxapps.boot.loader.extension.SealedExtension;
 import _test.TestConfig;
 import app.app1.aspect.JfxAppsAspect;
 import app.app1.config.JfxAppsConfig;
+import app.app1.controller.ExtensionController;
 import app.app1.internal.JfxAppsLocalService;
 import app.app1.rest.JfxAppsRestController;
 import app.app1.rest.RestExceptionHandler;
@@ -72,7 +73,8 @@ public class JfxAppsExtension implements SealedExtension {
                 JfxAppsAspectTest.class,
                 JfxAppsRestController.class,
                 JfxAppsDataService.class,
-                RestExceptionHandler.class);
+                RestExceptionHandler.class,
+                ExtensionController.class);
     }
 
 }

@@ -91,9 +91,10 @@ public class JfxAppContextImpl implements JfxAppContext  {
     }
 
     protected void setParent(ApplicationContext parent) {
-        context.setParent(parent);
-        context.setServletContext(((GenericWebApplicationContext)parent).getServletContext());
-        //context.setServletConfig(((GenericWebApplicationContext)parent).getServletConfig());
+        if (parent != null) {
+            this.context.setParent(parent);
+            this.context.setServletContext(((GenericWebApplicationContext) parent).getServletContext());
+        }
     }
 
 

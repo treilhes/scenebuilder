@@ -71,7 +71,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
+import org.springframework.beans.factory.annotation.Value;
 import com.gluonhq.jfxapps.boot.context.ContextManager;
 import com.gluonhq.jfxapps.boot.context.annotation.Primary;
 import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
@@ -100,7 +100,7 @@ import com.gluonhq.jfxapps.boot.registry.RegistryManager;
  */
 @ExtendWith({ MockitoExtension.class, SpringExtension.class })
 @SpringBootTest(classes = { BootConfig.class,
-        AvailableFeaturesTestIT.Configuration.class }, webEnvironment = WebEnvironment.RANDOM_PORT, properties = {
+        AvailableFeaturesTestIT.Configuration.class }, webEnvironment = WebEnvironment.DEFINED_PORT, properties = {
                 "spring.main.allow-bean-definition-overriding=true", "spring.mvc.servlet.path=/app",
                 "server.servlet.context-path=/jfx", "debug=true" })
 //@AutoConfigureCache
@@ -229,7 +229,8 @@ public class AvailableFeaturesTestIT {
     /**
      * This work as expected and inject the random port successfully
      */
-    @LocalServerPort
+    //@LocalServerPort
+    @Value("${local.server.port:0}")
     int port;
 
     @BeforeAll
@@ -420,6 +421,26 @@ public class AvailableFeaturesTestIT {
         internalClient.post(contextId, "models/testing_validation_is_applied", jsonHeaderNew, posted)
                 .on(400, r -> {
                     assertTrue(r.body().toLowerCase().contains("validation failed"));
+                })
+                .ifNoneMatch(r -> fail(r.toString())).execute();
+    }
+
+    @ParameterizedTest
+    @MethodSource("allContextIds")
+    public void static_ressource_are_accessible(UUID contextId) throws Exception {
+        internalClient.get(contextId, "images/test.png")
+                .on(200, r -> {
+                    assertTrue(r.body().length() > 0);
+                })
+                .ifNoneMatch(r -> fail(r.toString())).execute();
+    }
+
+    @ParameterizedTest
+    @MethodSource("allContextIds")
+    public void mvc_is_enabled_and_return_html(UUID contextId) throws Exception {
+        internalClient.get(contextId, "mvc/extension")
+                .on(200, r -> {
+                    assertTrue(r.body().contains("<html") && r.body().contains(contextId.toString()) && r.body().length() > 0);
                 })
                 .ifNoneMatch(r -> fail(r.toString())).execute();
     }

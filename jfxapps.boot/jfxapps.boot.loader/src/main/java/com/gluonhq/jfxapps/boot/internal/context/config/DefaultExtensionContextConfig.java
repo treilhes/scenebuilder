@@ -33,13 +33,12 @@
  */
 package com.gluonhq.jfxapps.boot.internal.context.config;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javax.sql.DataSource;
@@ -54,13 +53,15 @@ import org.springdoc.core.properties.SwaggerUiOAuthProperties;
 import org.springdoc.webmvc.core.configuration.MultipleOpenApiSupportConfiguration;
 import org.springdoc.webmvc.core.configuration.SpringDocWebMvcConfiguration;
 import org.springdoc.webmvc.ui.SwaggerConfig;
-import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafProperties;
 import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.Ordered;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
@@ -71,18 +72,26 @@ import org.springframework.orm.jpa.persistenceunit.MutablePersistenceUnitInfo;
 import org.springframework.orm.jpa.persistenceunit.PersistenceUnitPostProcessor;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.util.MimeType;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.thymeleaf.context.IExpressionContext;
+import org.thymeleaf.linkbuilder.ILinkBuilder;
+import org.thymeleaf.linkbuilder.StandardLinkBuilder;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.spring6.view.ThymeleafViewResolver;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.platform.InternalRestClient;
 //import org.springframework.data.repository.core.support.TransactionalRepositoryProxyPostProcessor;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 
@@ -101,13 +110,33 @@ import jakarta.servlet.ServletException;
 @EnableWebMvc
 public class DefaultExtensionContextConfig implements WebMvcConfigurer {// extends WebApplicationContextServletContextAwareProcessor {
 
-
-
     private final static Logger logger = LoggerFactory.getLogger(DefaultExtensionContextConfig.class);
+
+    private final JfxAppContext context;
+
+    private final String basePath;
+    private final String internalContextPath;
+    private final String externalContextPath;
+
+    public DefaultExtensionContextConfig(
+            JfxAppContext context,
+            @Value(InternalRestClient.SERVLET_PATH_PROP) String servletPath,
+            @Value(InternalRestClient.CONTEXT_PATH_PROP) String contextPath) {
+        super();
+        this.context = context;
+        this.basePath = ((StringUtils.hasText(contextPath) ? "/" + contextPath : "")
+                + (StringUtils.hasText(servletPath) ? "/" + servletPath : "")).replaceAll("/+", "/");
+        this.internalContextPath = "/" + JfxAppsPlatform.EXTENSION_REST_PATH_PREFIX + "/" + context.getId();
+        this.externalContextPath = basePath + this.internalContextPath;
+    }
+
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         WebMvcConfigurer.super.addResourceHandlers(registry);
+        registry
+            .addResourceHandler(internalContextPath + "/**")
+            .addResourceLocations("classpath:/static/");
     }
 
     public final static List<Class<?>> classesToRegister = List.of(
@@ -133,6 +162,63 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {// exten
 
     }
 
+    @Bean(name = "templateEngine")
+    public SpringTemplateEngine springTemplateEngine() {
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        templateEngine.addTemplateResolver(rawTemplateResolver());
+        templateEngine.setLinkBuilder(linkBuilder());
+        return templateEngine;
+    }
+
+    private ILinkBuilder linkBuilder() {
+        return new StandardLinkBuilder() {
+            @Override
+            protected String computeContextPath(IExpressionContext context, String base,
+                    Map<String, Object> parameters) {
+                return externalContextPath;
+            }
+
+        };
+    }
+    private ITemplateResolver rawTemplateResolver() {
+        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver(context.getBeanClassLoader());
+        templateResolver.setPrefix("/templates/"); //or whatever other directory you have the files
+        templateResolver.setSuffix(".html");       //if they are html files
+        //templateResolver.setTemplateMode(TemplateMode.RAW);
+        //templateResolver.setForceTemplateMode(true); //to turn off suffix-based choosing
+        templateResolver.setCharacterEncoding("UTF8");
+        templateResolver.setCheckExistence(true);
+        return templateResolver;
+    }
+
+    @Bean(DispatcherServlet.VIEW_RESOLVER_BEAN_NAME)
+    org.thymeleaf.spring6.view.ThymeleafViewResolver thymeleafViewResolver(ThymeleafProperties properties,
+            SpringTemplateEngine templateEngine) {
+        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
+        resolver.setTemplateEngine(springTemplateEngine());
+        resolver.setCharacterEncoding(properties.getEncoding().name());
+        resolver.setContentType(
+                appendCharset(properties.getServlet().getContentType(), resolver.getCharacterEncoding()));
+        resolver.setProducePartialOutputWhileProcessing(
+                properties.getServlet().isProducePartialOutputWhileProcessing());
+        resolver.setExcludedViewNames(properties.getExcludedViewNames());
+        resolver.setViewNames(properties.getViewNames());
+        // This resolver acts as a fallback resolver (e.g. like a
+        // InternalResourceViewResolver) so it needs to have low precedence
+        resolver.setOrder(Ordered.LOWEST_PRECEDENCE - 5);
+        resolver.setCache(properties.isCache());
+        return resolver;
+    }
+
+    private String appendCharset(MimeType type, String charset) {
+        if (type.getCharset() != null) {
+            return type.toString();
+        }
+        LinkedHashMap<String, String> parameters = new LinkedHashMap<>();
+        parameters.put("charset", charset);
+        parameters.putAll(type.getParameters());
+        return new MimeType(type, parameters).toString();
+    }
 
     /**
      * This class is used to register the redirector dispatcher servlet in the
@@ -145,22 +231,11 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {// exten
      *
      */
     @Bean(name = "redirector")
-    //@Lazy
     DispatcherServlet dispatcherServlet(ServletContext sctx,ServletConfig scfg, AnnotationConfigServletWebApplicationContext baseContext, JfxAppContext context) {
 
-        var filtered = Stream.concat(Stream.of(JpaRepositoriesAutoConfiguration.class// ,
-        // PersistenceExceptionTranslationPostProcessor.class,
-        // ConfigurationClassPostProcessor.class,
-        // ProxyTransactionManagementConfiguration.class,
-        // AspectJJtaTransactionManagementConfiguration.class
-        ), Stream.of(context.getRegisteredClasses()).filter(webContextValidClassesCheck())).toList()
-                .toArray(new Class[0]);
-
-        logger.info("AnnotationConfigWebApplicationContext for {} created with classes : {}", context.getId(),
-                Arrays.toString(filtered));
-
         var dispatcherServlet = new DispatcherServlet(baseContext);
-        dispatcherServlet.setDetectAllHandlerMappings(false);
+        //dispatcherServlet.setDetectAllHandlerMappings(false);
+        dispatcherServlet.setDetectAllViewResolvers(false);
 
         ServletConfig servletConfig = new ServletConfig() {
 
@@ -207,16 +282,17 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {// exten
     @Bean(DispatcherServlet.HANDLER_MAPPING_BEAN_NAME)
     HandlerMapping handlerMapping(JfxAppContext context) {
         var handler = new RequestMappingHandlerMapping();
-        handler.setPathPrefixes(Map.of("/" + JfxAppsPlatform.EXTENSION_REST_PATH_PREFIX + "/" + context.getId(), c -> true));
+        handler.setOrder(0);
+        handler.setPathPrefixes(Map.of(internalContextPath, c -> true));
         return handler;
     }
 
-    private Predicate<? super Class<?>> webContextValidClassesCheck() {
-        return c -> c.getAnnotationsByType(RestController.class).length > 0
-                || c.getAnnotationsByType(ControllerAdvice.class).length > 0
-        // || c.getAnnotationsByType(Configuration.class).length > 0
-        ;
-    }
+//    private Predicate<? super Class<?>> webContextValidClassesCheck() {
+//        return c -> c.getAnnotationsByType(RestController.class).length > 0
+//                || c.getAnnotationsByType(ControllerAdvice.class).length > 0
+//        // || c.getAnnotationsByType(Configuration.class).length > 0
+//        ;
+//    }
 
 //    @Bean(name = "jpaMappingContext")
 //    public JpaMetamodelMappingContextFactoryBean jpaMetamodelMappingContextFactoryBean(SbContext ctx) {

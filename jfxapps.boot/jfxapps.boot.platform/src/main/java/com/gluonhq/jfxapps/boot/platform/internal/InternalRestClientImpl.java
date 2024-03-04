@@ -67,17 +67,14 @@ public class InternalRestClientImpl implements InternalRestClient {
 
     private static final Logger logger = LoggerFactory.getLogger(InternalRestClientImpl.class);
 
-    private final static String SERVLET_PATH_PROP = "${spring.mvc.servlet.path:}";
-    private final static String CONTEXT_PATH_PROP = "${server.servlet.context-path:}";
-
     private static final ObjectMapper mapper = new ObjectMapper();
 
     private final ServerProperties serverProperties;
     private final String basePath;
 
     protected InternalRestClientImpl(ServerProperties serverProperties,
-            @Value(InternalRestClientImpl.SERVLET_PATH_PROP) String servletPath,
-            @Value(InternalRestClientImpl.CONTEXT_PATH_PROP) String contextPath) {
+            @Value(InternalRestClient.SERVLET_PATH_PROP) String servletPath,
+            @Value(InternalRestClient.CONTEXT_PATH_PROP) String contextPath) {
         this.serverProperties = serverProperties;
         this.basePath = ((StringUtils.hasText(contextPath) ? "/" + contextPath : "")
                 + (StringUtils.hasText(servletPath) ? "/" + servletPath : "")).replaceAll("/+", "/");

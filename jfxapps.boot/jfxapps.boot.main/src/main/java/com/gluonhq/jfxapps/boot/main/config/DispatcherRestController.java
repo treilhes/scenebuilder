@@ -113,9 +113,9 @@ public class DispatcherRestController {
         try {
 
             // check if we are looping
-            if (request.getAttribute(JFXAPPS_ATTRIBUTE) != null) {
-                throw new IllegalStateException("Looping request, JfxApps attribute already set");
-            }
+//            if (request.getAttribute(JFXAPPS_ATTRIBUTE) != null) {
+//                throw new IllegalStateException("Looping request, JfxApps attribute already set");
+//            }
             request.setAttribute(JFXAPPS_ATTRIBUTE, contextId);
 
             DispatcherServlet ds = (DispatcherServlet) ctx.getBean("redirector");

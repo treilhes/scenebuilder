@@ -80,6 +80,8 @@ open module jfxapps.boot.loader {
     requires org.springdoc.openapi.ui;
     requires org.springdoc.openapi.common;
     requires org.springdoc.openapi.webmvc.core;
+    requires thymeleaf;
+    requires thymeleaf.spring6;
 
     uses Extension;
 }

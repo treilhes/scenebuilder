@@ -44,29 +44,9 @@ open module it.app.ext1 {
 
     requires jfxapps.boot.starter;
     requires jfxapps.boot.loader;
-    requires jfxapps.boot.jpa;
+    
 
-
-    requires org.aspectj.weaver;
-    requires spring.web;
-    requires spring.webmvc;
-    requires spring.context;
-    requires spring.boot.autoconfigure;
-    requires spring.data.jpa;
-    requires spring.data.commons;
-    requires jakarta.persistence;
-    requires spring.core;
-    requires spring.boot;
-    requires org.apache.tomcat.embed.core;
-    requires spring.beans;
-    requires org.hibernate.orm.core;
-    requires org.hibernate.validator;
-    requires jakarta.validation;
-    requires spring.aop;
-    requires spring.tx;
     requires it.app.root;
-    requires jakarta.inject;
-    //requires jakarta.transaction;
 
     provides Extension with JfxAppsExtension;
 }

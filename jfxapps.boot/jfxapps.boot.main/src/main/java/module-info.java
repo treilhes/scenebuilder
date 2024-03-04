@@ -42,6 +42,7 @@ open module jfxapps.boot.main {
     requires java.net.http;
     requires com.fasterxml.jackson.databind;
     requires spring.tx;
+    requires spring.beans;
 
     //requires jakarta.transaction;
 }
