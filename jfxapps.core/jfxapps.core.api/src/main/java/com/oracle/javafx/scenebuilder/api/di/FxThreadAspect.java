@@ -56,8 +56,8 @@ public class FxThreadAspect {
     //public void fxThreadPointCut() {}
 
     //@Around("fxThreadPointCut()")
-    //@Around("@annotation(com.gluonhq.jfxapps.boot.context.annotation.FxThread)")
-    @Around("@annotation(com.oracle.javafx.scenebuilder.api.di.FxThread)")
+    @Around("@annotation(com.gluonhq.jfxapps.boot.context.annotation.FxThread)")
+    //@Around("@annotation(com.oracle.javafx.scenebuilder.api.di.FxThread)")
     public Object fxThreadAround(ProceedingJoinPoint joinPoint) throws Throwable {
 
         logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");

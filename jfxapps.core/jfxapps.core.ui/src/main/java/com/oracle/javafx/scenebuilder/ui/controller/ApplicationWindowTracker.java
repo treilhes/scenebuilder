@@ -111,7 +111,8 @@ public class ApplicationWindowTracker implements WindowPreferenceTracker { // , 
 //    }
 
     @PostConstruct
-    @com.oracle.javafx.scenebuilder.api.di.FxThread
+    //@com.oracle.javafx.scenebuilder.api.di.FxThread
+    @FxThread
     public void initialize() {
         System.out.println( this + "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuNNNNNNNNNNNNNNNNNNNNNNN");
         System.out.println("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuNNNNNNNNNNNNNNNNNNNNNNN");

@@ -160,6 +160,11 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.core.controls</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.drag.and.drop</artifactId>
                 <version>${project.version}</version>
             </dependency>

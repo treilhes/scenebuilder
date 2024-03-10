@@ -60,18 +60,18 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.beans.factory.annotation.Value;
+
 import com.gluonhq.jfxapps.boot.context.ContextManager;
 import com.gluonhq.jfxapps.boot.context.annotation.Primary;
 import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
@@ -101,8 +101,10 @@ import com.gluonhq.jfxapps.boot.registry.RegistryManager;
 @ExtendWith({ MockitoExtension.class, SpringExtension.class })
 @SpringBootTest(classes = { BootConfig.class,
         AvailableFeaturesTestIT.Configuration.class }, webEnvironment = WebEnvironment.DEFINED_PORT, properties = {
-                "spring.main.allow-bean-definition-overriding=true", "spring.mvc.servlet.path=/app",
-                "server.servlet.context-path=/jfx", "debug=true" })
+                "spring.mvc.servlet.path=/app",
+                "server.servlet.context-path=/jfx",
+                "debug=false" })
+
 //@AutoConfigureCache
 //@AutoConfigureDataJpa
 //@AutoConfigureTestDatabase
@@ -441,6 +443,22 @@ public class AvailableFeaturesTestIT {
         internalClient.get(contextId, "mvc/extension")
                 .on(200, r -> {
                     assertTrue(r.body().contains("<html") && r.body().contains(contextId.toString()) && r.body().length() > 0);
+                })
+                .ifNoneMatch(r -> fail(r.toString())).execute();
+    }
+
+    @ParameterizedTest
+    @MethodSource("allContextIds")
+    public void openapi_descriptor_and_test_webapp_are_enabled_and_return_html(UUID contextId) throws Exception {
+        internalClient.get(contextId, "v3/api-docs")
+                .on(200, r -> {
+                    assertTrue(r.body().contains("openapi") && r.body().contains(contextId.toString()) && r.body().length() > 0);
+                })
+                .ifNoneMatch(r -> fail(r.toString())).execute();
+
+        internalClient.get(contextId, "swagger-ui/index.html")
+                .on(200, r -> {
+                    assertTrue(r.body().contains("<html") && r.body().length() > 0);
                 })
                 .ifNoneMatch(r -> fail(r.toString())).execute();
     }

@@ -39,12 +39,10 @@ open module it.app.app1ext1ext1 {
 
     exports app.app1ext1ext1;
     exports app.app1ext1ext1.api;
-    exports app.app1ext1ext1.aspect;
-    exports app.app1ext1ext1.rest;
 
     requires jfxapps.boot.starter;
     requires jfxapps.boot.loader;
-    
+
 
     requires it.app.root;
     requires it.app.app1;

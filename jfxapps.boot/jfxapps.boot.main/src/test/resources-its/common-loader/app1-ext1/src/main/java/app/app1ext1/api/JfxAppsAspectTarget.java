@@ -31,13 +31,15 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api.di;
+package app.app1ext1.api;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@Configuration
-@EnableAspectJAutoProxy
-public class FxThreadConfig {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+public @interface JfxAppsAspectTarget {
 
 }

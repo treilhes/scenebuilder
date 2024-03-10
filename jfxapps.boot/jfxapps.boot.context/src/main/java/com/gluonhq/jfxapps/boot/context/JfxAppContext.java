@@ -103,6 +103,8 @@ public interface JfxAppContext {
 
     ClassLoader getBeanClassLoader();
 
+    <T> T getLocalBean(Class<T> cls);
+
 
 
 

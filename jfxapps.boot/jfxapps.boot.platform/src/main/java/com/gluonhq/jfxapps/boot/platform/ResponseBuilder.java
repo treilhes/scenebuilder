@@ -53,7 +53,7 @@ public interface ResponseBuilder {
 
     @FunctionalInterface
     public interface ThrowableConsumer<T> {
-        void accept(T t) throws Throwable;
+        void accept(T t) throws Exception;
     }
 
 

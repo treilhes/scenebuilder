@@ -58,7 +58,7 @@ import io.swagger.v3.oas.models.info.License;
 public class BootConfig {
 
     @Bean
-    public OpenAPI myOpenAPI() {
+    OpenAPI myOpenAPI() {
 //      Server devServer = new Server();
 //      devServer.setUrl(devUrl);
 //      devServer.setDescription("Server URL in Development environment");

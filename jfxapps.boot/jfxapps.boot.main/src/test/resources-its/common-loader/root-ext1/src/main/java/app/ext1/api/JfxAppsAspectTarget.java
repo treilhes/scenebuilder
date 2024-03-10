@@ -31,18 +31,15 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package app.app1ext1.config;
+package app.ext1.api;
 
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import app.app1ext1.model.JfxAppsModel;
-import app.app1ext1.repository.JfxAppsRepository;
-
-@Configuration
-@EntityScan(basePackageClasses = {JfxAppsModel.class})
-@EnableJpaRepositories(basePackageClasses = {JfxAppsRepository.class})
-public class JfxAppsConfig {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+public @interface JfxAppsAspectTarget {
 
 }

@@ -78,7 +78,6 @@ public class ApiExtension implements SealedExtension {
     @Override
     public List<Class<?>> localContextClasses() {
         return Arrays.asList(
-                //FxThreadConfig.class,
                 FxThreadAspect.class,
 
                 FxmlControllerBeanPostProcessor.class,

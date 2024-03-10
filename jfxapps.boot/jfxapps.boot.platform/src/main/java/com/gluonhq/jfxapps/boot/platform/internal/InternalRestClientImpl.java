@@ -357,7 +357,7 @@ public class InternalRestClientImpl implements InternalRestClient {
                 }
 
                 return (T)response.body();
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 if (onException != null) {
                     onException.accept(e);
                     return null;

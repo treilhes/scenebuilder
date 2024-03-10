@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package app.app1ext1ext1.aspect;
+package app.root.api;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

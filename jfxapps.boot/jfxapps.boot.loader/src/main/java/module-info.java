@@ -82,6 +82,8 @@ open module jfxapps.boot.loader {
     requires org.springdoc.openapi.webmvc.core;
     requires thymeleaf;
     requires thymeleaf.spring6;
+    requires io.swagger.v3.core;
+    requires io.swagger.v3.oas.models;
 
     uses Extension;
 }

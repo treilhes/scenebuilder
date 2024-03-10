@@ -33,6 +33,10 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.controls</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.fxom</artifactId>
         </dependency>
         <dependency>
@@ -42,6 +46,10 @@
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.utils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.javafx.starter</artifactId>
         </dependency>
         <!--<dependency>
             <groupId>com.gluonhq.jfxapps</groupId>

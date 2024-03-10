@@ -2,6 +2,7 @@ jfxapps:
   platform:
     rootPath: .
   registry:
+#    snapshotsAllowed: true
     boot:
       groupId: com.gluonhq.jfxapps
       artifactId: jfxapps.core.registry
@@ -18,8 +19,19 @@ jfxapps:
 server:
   port: 0
   address: 127.0.0.1
-
+  tomcat:
+    basedir: .
+    accesslog:
+      enabled: true
+      directory: logs
+      prefix: access
+      buffered: false
+      suffix: .log
+      file-date-format: yyyy-MM-dd
+      #pattern: "[ACCESS] %{org.apache.catalina.AccessLog.RemoteAddr}r %l %t %D %F %B %S vcap_request_id:%{X-Vcap-Request-Id}i"
 spring:
+  main:
+    allow-bean-definition-overriding: true
   jpa:
     properties:
       hibernate:

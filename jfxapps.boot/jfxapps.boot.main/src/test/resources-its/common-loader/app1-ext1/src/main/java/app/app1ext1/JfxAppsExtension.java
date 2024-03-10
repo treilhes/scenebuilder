@@ -36,18 +36,31 @@ package app.app1ext1;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
 import com.gluonhq.jfxapps.boot.loader.extension.SealedExtension;
 
 import _test.TestConfig;
 import app.app1ext1.aspect.JfxAppsAspect;
-import app.app1ext1.config.JfxAppsConfig;
 import app.app1ext1.controller.ExtensionController;
 import app.app1ext1.internal.JfxAppsLocalService;
+import app.app1ext1.model.JfxAppsModel;
+import app.app1ext1.repository.JfxAppsRepository;
 import app.app1ext1.rest.JfxAppsRestController;
 import app.app1ext1.rest.RestExceptionHandler;
 import app.app1ext1.service.JfxAppsDataService;
 import app.app1ext1.test.JfxAppsAspectTest;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
 
+@Configuration
+@EntityScan(basePackageClasses = {JfxAppsModel.class})
+@EnableJpaRepositories(basePackageClasses = {JfxAppsRepository.class})
 public class JfxAppsExtension implements SealedExtension {
 
     private static final UUID PARENT_ID = UUID.fromString(TestConfig.PARENT_ID);
@@ -68,7 +81,6 @@ public class JfxAppsExtension implements SealedExtension {
     public List<Class<?>> localContextClasses() {
         return List.of(
                 JfxAppsLocalService.class,
-                JfxAppsConfig.class,
                 JfxAppsAspect.class,
                 JfxAppsAspectTest.class,
                 JfxAppsRestController.class,
@@ -77,4 +89,22 @@ public class JfxAppsExtension implements SealedExtension {
                 ExtensionController.class);
     }
 
+    @Bean
+    OpenAPI myOpenAPI() {
+      Contact contact = new Contact();
+      contact.setEmail("xxx@xxxx.com");
+      contact.setName("Xxxxxx");
+      contact.setUrl("https://www.xxxx.com");
+
+      License bds3License = new License().name("BSD 3 clause").url("https://opensource.org/license/bsd-3-clause");
+
+      Info info = new Info()
+          .title("Management API " + ID)
+          .version("1.0")
+          .contact(contact)
+          .description("This API exposes endpoints.")
+          .license(bds3License);
+
+      return new OpenAPI().info(info);
+    }
 }

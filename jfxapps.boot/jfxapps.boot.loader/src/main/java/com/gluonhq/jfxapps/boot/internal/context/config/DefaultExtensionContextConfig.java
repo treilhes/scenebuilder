@@ -38,6 +38,7 @@ import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Stream;
 
@@ -46,21 +47,50 @@ import javax.sql.DataSource;
 import org.hibernate.annotations.GenericGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springdoc.core.configuration.SpringDocConfiguration;
+import org.springdoc.core.customizers.OpenApiBuilderCustomizer;
+import org.springdoc.core.customizers.ServerBaseUrlCustomizer;
+import org.springdoc.core.customizers.SpringDocCustomizers;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.properties.SwaggerUiConfigParameters;
+import org.springdoc.core.properties.SwaggerUiConfigProperties;
 import org.springdoc.core.properties.SwaggerUiOAuthProperties;
+import org.springdoc.core.providers.ActuatorProvider;
+import org.springdoc.core.providers.CloudFunctionProvider;
+import org.springdoc.core.providers.JavadocProvider;
+import org.springdoc.core.providers.ObjectMapperProvider;
+import org.springdoc.core.providers.RepositoryRestResourceProvider;
+import org.springdoc.core.providers.RouterFunctionProvider;
+import org.springdoc.core.providers.SecurityOAuth2Provider;
+import org.springdoc.core.providers.SpringDocProviders;
+import org.springdoc.core.providers.SpringWebProvider;
+import org.springdoc.core.providers.WebConversionServiceProvider;
+import org.springdoc.core.service.AbstractRequestService;
+import org.springdoc.core.service.GenericResponseService;
+import org.springdoc.core.service.OpenAPIService;
+import org.springdoc.core.service.OperationService;
+import org.springdoc.core.service.SecurityService;
+import org.springdoc.core.utils.PropertyResolverUtils;
+import org.springdoc.webmvc.api.OpenApiWebMvcResource;
 import org.springdoc.webmvc.core.configuration.MultipleOpenApiSupportConfiguration;
 import org.springdoc.webmvc.core.configuration.SpringDocWebMvcConfiguration;
-import org.springdoc.webmvc.ui.SwaggerConfig;
+import org.springdoc.webmvc.core.providers.SpringWebMvcProvider;
+import org.springdoc.webmvc.ui.SwaggerConfigResource;
+import org.springdoc.webmvc.ui.SwaggerIndexPageTransformer;
+import org.springdoc.webmvc.ui.SwaggerIndexTransformer;
+import org.springdoc.webmvc.ui.SwaggerUiHome;
+import org.springdoc.webmvc.ui.SwaggerWebMvcConfigurer;
+import org.springdoc.webmvc.ui.SwaggerWelcomeCommon;
+import org.springdoc.webmvc.ui.SwaggerWelcomeWebMvc;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafProperties;
 import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebApplicationContext;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
@@ -76,7 +106,6 @@ import org.springframework.util.MimeType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.DispatcherServlet;
-import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -90,11 +119,17 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.LocalContextOnly;
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.platform.InternalRestClient;
 //import org.springframework.data.repository.core.support.TransactionalRepositoryProxyPostProcessor;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.servers.Server;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Table;
@@ -108,7 +143,9 @@ import jakarta.servlet.ServletException;
 @EnableJpaRepositories
 @EnableTransactionManagement
 @EnableWebMvc
-public class DefaultExtensionContextConfig implements WebMvcConfigurer {// extends WebApplicationContextServletContextAwareProcessor {
+public class DefaultExtensionContextConfig implements WebMvcConfigurer {// extends
+                                                                        // WebApplicationContextServletContextAwareProcessor
+                                                                        // {
 
     private final static Logger logger = LoggerFactory.getLogger(DefaultExtensionContextConfig.class);
 
@@ -118,8 +155,7 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {// exten
     private final String internalContextPath;
     private final String externalContextPath;
 
-    public DefaultExtensionContextConfig(
-            JfxAppContext context,
+    public DefaultExtensionContextConfig(JfxAppContext context,
             @Value(InternalRestClient.SERVLET_PATH_PROP) String servletPath,
             @Value(InternalRestClient.CONTEXT_PATH_PROP) String contextPath) {
         super();
@@ -130,37 +166,30 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {// exten
         this.externalContextPath = basePath + this.internalContextPath;
     }
 
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         WebMvcConfigurer.super.addResourceHandlers(registry);
-        registry
-            .addResourceHandler(internalContextPath + "/**")
-            .addResourceLocations("classpath:/static/");
+        registry.addResourceHandler(internalContextPath + "/**").addResourceLocations("classpath:/static/");
     }
 
-    public final static List<Class<?>> classesToRegister = List.of(
-            DefaultExtensionContextConfig.class,
+    public final static List<Class<?>> classesToRegister = List.of(DefaultExtensionContextConfig.class,
             JfxAppsExtensionRestController.class,
-            //AnnotationAwareAspectJAutoProxyCreatorInv.class,
 
             SwaggerConfig.class,
-            //SwaggerUiConfigProperties.class,
-            SwaggerUiConfigParameters.class,
-            SwaggerUiOAuthProperties.class,
-            SpringDocWebMvcConfiguration.class,
-            MultipleOpenApiSupportConfiguration.class,
-            //SpringDocConfiguration.class,
-            SpringDocConfigProperties.class,
-            JacksonAutoConfiguration .class
-    );
+            // SwaggerUiConfigProperties.class,
+            // SwaggerUiConfigParameters.class,
+            // SwaggerUiOAuthProperties.class,
+            SpringDocWebMvcConfiguration.class, MultipleOpenApiSupportConfiguration.class,
+            // SpringDocConfiguration.class,
+            // SpringDocConfigProperties.class,
+            JacksonAutoConfiguration.class);
 
-    @Bean
-    @Primary
-    SpringDocConfiguration SpringDocConfiguration() {
-        return new SpringDocConfiguration();
-
-    }
+//    @Bean
+//    @Primary
+//    SpringDocConfiguration SpringDocConfiguration() {
+//        return new SpringDocConfiguration();
+//
+//    }
 
     @Bean(name = "templateEngine")
     public SpringTemplateEngine springTemplateEngine() {
@@ -180,12 +209,14 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {// exten
 
         };
     }
+
     private ITemplateResolver rawTemplateResolver() {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver(context.getBeanClassLoader());
-        templateResolver.setPrefix("/templates/"); //or whatever other directory you have the files
-        templateResolver.setSuffix(".html");       //if they are html files
-        //templateResolver.setTemplateMode(TemplateMode.RAW);
-        //templateResolver.setForceTemplateMode(true); //to turn off suffix-based choosing
+        templateResolver.setPrefix("/templates/"); // or whatever other directory you have the files
+        templateResolver.setSuffix(".html"); // if they are html files
+        // templateResolver.setTemplateMode(TemplateMode.RAW);
+        // templateResolver.setForceTemplateMode(true); //to turn off suffix-based
+        // choosing
         templateResolver.setCharacterEncoding("UTF8");
         templateResolver.setCheckExistence(true);
         return templateResolver;
@@ -231,10 +262,11 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {// exten
      *
      */
     @Bean(name = "redirector")
-    DispatcherServlet dispatcherServlet(ServletContext sctx,ServletConfig scfg, AnnotationConfigServletWebApplicationContext baseContext, JfxAppContext context) {
+    DispatcherServlet dispatcherServlet(ServletContext sctx, ServletConfig scfg,
+            AnnotationConfigServletWebApplicationContext baseContext, JfxAppContext context) {
 
         var dispatcherServlet = new DispatcherServlet(baseContext);
-        //dispatcherServlet.setDetectAllHandlerMappings(false);
+        // dispatcherServlet.setDetectAllHandlerMappings(false);
         dispatcherServlet.setDetectAllViewResolvers(false);
 
         ServletConfig servletConfig = new ServletConfig() {
@@ -279,8 +311,8 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {// exten
      * @param context
      * @return
      */
-    @Bean(DispatcherServlet.HANDLER_MAPPING_BEAN_NAME)
-    HandlerMapping handlerMapping(JfxAppContext context) {
+    @Bean
+    RequestMappingHandlerMapping requestMappingHandlerMapping(JfxAppContext context) {
         var handler = new RequestMappingHandlerMapping();
         handler.setOrder(0);
         handler.setPathPrefixes(Map.of(internalContextPath, c -> true));
@@ -306,10 +338,11 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {// exten
     /**
      * This method is used to create the entity manager factory for the local
      * context Mainly here to propagate the classloader
-     * @param dataSource the data source
+     *
+     * @param dataSource       the data source
      * @param jpaVendorAdapter the jpa vendor adapter
-     * @param ext the extensions
-     * @param ctx the sb context
+     * @param ext              the extensions
+     * @param ctx              the sb context
      * @return
      */
     @Bean("entityManagerFactory")
@@ -355,10 +388,10 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {// exten
         return new JpaRepositoryFactory(mngr);
     }
 
-
     /**
-     * Hibernate configuration properties.
-     * Do not use the spring.jpa.hibernate.* prefix as it is not supported by hibernate.
+     * Hibernate configuration properties. Do not use the spring.jpa.hibernate.*
+     * prefix as it is not supported by hibernate.
+     *
      * @return the hibernate properties
      */
     final Properties hibernateProperties() {
@@ -395,13 +428,15 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {// exten
 
     /**
      * This class is used to prevent the usage of some annotations in JPA entities.
-     * The annotations that are forbidden are: - {@link Table}
-     * The annotation attributes that are forbidden are: - sequence_name for {@link GenericGenerator}
+     * The annotations that are forbidden are: - {@link Table} The annotation
+     * attributes that are forbidden are: - sequence_name for
+     * {@link GenericGenerator}
      *
      * The list isn't exhaustive and can be extended in the future.
      *
-     * The forbidden annotations are forbidden because they allow customization of the underlying database schema.
-     * Extensions share the same schema and the schema is managed by the application to prevent name collisions.
+     * The forbidden annotations are forbidden because they allow customization of
+     * the underlying database schema. Extensions share the same schema and the
+     * schema is managed by the application to prevent name collisions.
      *
      */
     class JfxAppsPersistenceRulesCheck implements PersistenceUnitPostProcessor {
@@ -411,7 +446,8 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {// exten
          * detected in the classpath.
          *
          * @param pui the persistence unit info
-         * @throws JfxAppsJpaForbiddenException if a forbidden JPA annotation or attribute is found
+         * @throws JfxAppsJpaForbiddenException if a forbidden JPA annotation or
+         *                                      attribute is found
          */
         @Override
         public void postProcessPersistenceUnitInfo(MutablePersistenceUnitInfo pui) {
@@ -445,7 +481,8 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {// exten
     }
 
     /**
-     * This exception is thrown when a forbidden JPA annotation or attribute is found in the detected JPA entities.
+     * This exception is thrown when a forbidden JPA annotation or attribute is
+     * found in the detected JPA entities.
      */
     class JfxAppsJpaForbiddenException extends RuntimeException {
 
@@ -460,4 +497,120 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {// exten
         }
     }
 
+    public static class SwaggerConfig {
+
+        @Bean
+        SwaggerWelcomeWebMvc swaggerWelcome(SwaggerUiConfigProperties swaggerUiConfig,
+                SpringDocConfigProperties springDocConfigProperties,
+                SwaggerUiConfigParameters swaggerUiConfigParameters, SpringWebProvider springWebProvider) {
+            return new SwaggerWelcomeWebMvc(swaggerUiConfig, springDocConfigProperties, swaggerUiConfigParameters,
+                    springWebProvider);
+        }
+
+        @Bean
+        SpringWebProvider springWebProvider(ApplicationContext ctx) {
+            var swp = new SpringWebMvcProvider();
+            swp.setApplicationContext(ctx);
+            return swp;
+        }
+
+        @Bean
+        SwaggerConfigResource swaggerConfigResource(SwaggerWelcomeCommon swaggerWelcomeCommon) {
+            return new SwaggerConfigResource(swaggerWelcomeCommon);
+        }
+
+        @Bean
+        SwaggerUiHome swaggerUiHome() {
+            return new SwaggerUiHome();
+        }
+
+        @Bean
+        SwaggerIndexTransformer indexPageTransformer(SwaggerUiConfigProperties swaggerUiConfig,
+                SwaggerUiOAuthProperties swaggerUiOAuthProperties, SwaggerUiConfigParameters swaggerUiConfigParameters,
+                SwaggerWelcomeCommon swaggerWelcomeCommon, ObjectMapperProvider objectMapperProvider) {
+            return new SwaggerIndexPageTransformer(swaggerUiConfig, swaggerUiOAuthProperties, swaggerUiConfigParameters,
+                    swaggerWelcomeCommon, objectMapperProvider);
+        }
+
+        @Bean
+        SwaggerWebMvcConfigurer swaggerWebMvcConfigurer(SwaggerUiConfigParameters swaggerUiConfigParameters,
+                SwaggerIndexTransformer swaggerIndexTransformer, Optional<ActuatorProvider> actuatorProvider) {
+            return new SwaggerWebMvcConfigurer(swaggerUiConfigParameters, swaggerIndexTransformer, actuatorProvider);
+        }
+
+    }
+//    @Bean("org.springdoc.core.properties.SwaggerUiConfigProperties")
+//    SwaggerUiConfigProperties swaggerUiConfigProperties() {
+//        var param = new SwaggerUiConfigProperties();
+//
+//        //param.setConfigUrl(externalContextPath + "/v3/api-docs/swagger-config");
+//        //param.setPath(externalContextPath + "/swagger-ui.html");
+//
+//        return param;
+//    }
+
+    @Bean
+    ServerBaseUrlCustomizer serverBaseUrlCustomizer() {
+        return new ServerBaseUrlCustomizer() {
+            @Override
+            public String customize(String server) {
+                return server == null ? null : server.replace(internalContextPath, "");
+            }
+        };
+    }
+
+    @Bean("org.springdoc.core.properties.SwaggerUiConfigParameters")
+    SwaggerUiConfigParameters swaggerUiConfigParameters(SwaggerUiConfigProperties swaggerUiConfigProperties) {
+        var param = new SwaggerUiConfigParameters(swaggerUiConfigProperties);
+        param.setPath(
+                String.format("/%s/%s/swagger-ui.html", JfxAppsPlatform.EXTENSION_REST_PATH_PREFIX, context.getId()));
+        return param;
+    }
+
+    @Bean("org.springdoc.core.properties.SpringDocConfigProperties")
+    SpringDocConfigProperties springDocConfigProperties() {
+        var param = new SpringDocConfigProperties();
+        param.getApiDocs().setPath(
+                String.format("/%s/%s/v3/api-docs", JfxAppsPlatform.EXTENSION_REST_PATH_PREFIX, context.getId()));
+        return param;
+    }
+
+    @Bean
+    OpenApiWebMvcResource openApiResource(ObjectFactory<OpenAPIService> openAPIBuilderObjectFactory,
+            AbstractRequestService requestBuilder, GenericResponseService responseBuilder,
+            OperationService operationParser, SpringDocConfigProperties springDocConfigProperties,
+            SpringDocProviders springDocProviders, SpringDocCustomizers springDocCustomizers) {
+        return new OpenApiWebMvcResource(openAPIBuilderObjectFactory, requestBuilder, responseBuilder, operationParser,
+                springDocConfigProperties, springDocProviders, springDocCustomizers);
+    }
+
+    @Bean
+    OpenAPIService openAPIBuilder(@LocalContextOnly Optional<OpenAPI> openAPI, SecurityService securityParser,
+            SpringDocConfigProperties springDocConfigProperties, PropertyResolverUtils propertyResolverUtils,
+            Optional<List<OpenApiBuilderCustomizer>> openApiBuilderCustomisers,
+            Optional<List<ServerBaseUrlCustomizer>> serverBaseUrlCustomisers,
+            Optional<JavadocProvider> javadocProvider) {
+        return new OpenAPIService(openAPI.or(() -> Optional.of(defaultOpenAPI())), securityParser, springDocConfigProperties, propertyResolverUtils,
+                openApiBuilderCustomisers, serverBaseUrlCustomisers, javadocProvider);
+    }
+
+    @Bean
+    SpringDocProviders springDocProviders(Optional<ActuatorProvider> actuatorProvider,
+            Optional<CloudFunctionProvider> springCloudFunctionProvider,
+            Optional<SecurityOAuth2Provider> springSecurityOAuth2Provider,
+            Optional<RepositoryRestResourceProvider> repositoryRestResourceProvider,
+            Optional<RouterFunctionProvider> routerFunctionProvider, Optional<SpringWebProvider> springWebProvider,
+            Optional<WebConversionServiceProvider> webConversionServiceProvider,
+            ObjectMapperProvider objectMapperProvider) {
+        return new SpringDocProviders(actuatorProvider, springCloudFunctionProvider, springSecurityOAuth2Provider,
+                repositoryRestResourceProvider, routerFunctionProvider, springWebProvider, webConversionServiceProvider,
+                objectMapperProvider);
+    }
+
+    @Bean(autowireCandidate = false)
+    OpenAPI defaultOpenAPI() {
+      Info info = new Info()
+          .title(context.getId().toString());
+      return new OpenAPI().info(info);
+    }
 }

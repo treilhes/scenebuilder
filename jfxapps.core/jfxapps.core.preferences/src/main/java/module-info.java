@@ -41,6 +41,7 @@ open module scenebuilder.core.preferences {
     requires jfxapps.core.api;
     requires org.slf4j;
     requires spring.context;
+    requires jfxapps.core.controls;
 
     provides Extension with PreferencesExtension;
 }

@@ -89,14 +89,6 @@ open module jfxapps.core.api {
 
     exports com.oracle.javafx.scenebuilder.core.action.editor;
 
-    exports com.oracle.javafx.scenebuilder.javafx.controls;
-    exports com.oracle.javafx.scenebuilder.javafx.controls.paintpicker;
-    exports com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.colorpicker;
-    exports com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.gradientpicker;
-    exports com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.rotator;
-    exports com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.slider;
-
-
     exports com.oracle.javafx.scenebuilder.api.application.javafx;
     //requires transitive scenebuilder.starter;
     //requires transitive scenebuilder.core.extension.api;

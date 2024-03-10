@@ -36,7 +36,6 @@ package com.gluonhq.jfxapps.boot.context;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.FutureTask;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
@@ -47,7 +46,8 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.Scope;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.gluonhq.jfxapps.boot.context.internal.SbBeanFactoryImpl;
+import com.gluonhq.jfxapps.boot.context.impl.JfxAppContextImpl.SbBeanFactoryImpl;
+
 
 /**
  * The Class DocumentScope is a Spring scope. The scope owner is a bean named

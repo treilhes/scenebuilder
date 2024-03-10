@@ -35,7 +35,7 @@ package app.root.test;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 
-import app.root.aspect.JfxAppsAspectTarget;
+import app.root.api.JfxAppsAspectTarget;
 
 @Singleton
 public class JfxAppsAspectTest {

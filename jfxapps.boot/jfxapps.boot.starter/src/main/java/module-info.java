@@ -32,6 +32,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 module jfxapps.boot.starter {
+
+    requires transitive io.swagger.v3.core;
     requires transitive io.swagger.v3.oas.models;
 
     requires transitive jakarta.inject;

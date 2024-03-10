@@ -31,7 +31,8 @@ jfxapps:
 
 server:
   port: 8080
-  
+  tomcat:
+    basedir: ./target
 spring:
   h2:
     console:

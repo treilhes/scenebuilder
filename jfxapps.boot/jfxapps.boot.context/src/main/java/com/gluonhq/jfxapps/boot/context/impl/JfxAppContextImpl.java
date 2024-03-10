@@ -34,21 +34,42 @@
 package com.gluonhq.jfxapps.boot.context.impl;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import org.springframework.aop.TargetSource;
+import org.springframework.aop.framework.ProxyFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.BeanDefinitionHolder;
+import org.springframework.beans.factory.config.DependencyDescriptor;
+import org.springframework.beans.factory.support.AutowireCandidateResolver;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebApplicationContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
+import org.springframework.context.annotation.ContextAnnotationAutowireCandidateResolver;
 import org.springframework.core.ResolvableType;
+import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
@@ -57,8 +78,9 @@ import org.springframework.web.context.support.GenericWebApplicationContext;
 import com.gluonhq.jfxapps.boot.context.DocumentScope;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
+import com.gluonhq.jfxapps.boot.context.annotation.LocalContextOnly;
 import com.gluonhq.jfxapps.boot.context.internal.ContextProgressHandler;
-import com.gluonhq.jfxapps.boot.context.internal.SbBeanFactoryImpl;
+
 
 public class JfxAppContextImpl implements JfxAppContext  {
 
@@ -77,10 +99,10 @@ public class JfxAppContextImpl implements JfxAppContext  {
     public JfxAppContextImpl(UUID contextId, ClassLoader loader) {
         this.id = contextId;
         this.beanFactory = new SbBeanFactoryImpl();
-        //this.context = new AnnotationConfigApplicationContext(this.beanFactory);
         this.context = new AnnotationConfigServletWebApplicationContext(this.beanFactory);
-
+        this.context.setId(id.toString());
         this.context.setClassLoader(loader);
+        this.context.setAllowBeanDefinitionOverriding(true);
 
         registerSingleton(this);
     }
@@ -170,6 +192,26 @@ public class JfxAppContextImpl implements JfxAppContext  {
     @Override
     public <T> T getBean(Class<T> cls) {
         return context.getBean(cls);
+    }
+
+    @Override
+    public <T> T getLocalBean(Class<T> cls) {
+
+        if (parent == null) {
+            return context.getBean(cls);
+        }
+
+        Map<String, T> globalMap = context.getBeansOfType(cls);
+        Map<String, T> parentMap = parent.getBeansOfType(cls);
+
+        Set<T> result = new HashSet<>(globalMap.values());
+        result.removeAll(parentMap.values());
+
+        if (result.size() == 1) {
+            return result.iterator().next();
+        } else {
+            throw new NoUniqueBeanDefinitionException(cls, result.size(), "No unique bean found");
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -268,5 +310,197 @@ public class JfxAppContextImpl implements JfxAppContext  {
         return beanFactory.getBeanClassLoader();
     }
 
+    public class SbBeanFactoryImpl extends DefaultListableBeanFactory {
 
+        public SbBeanFactoryImpl() {
+            DocumentScope scope = new DocumentScope(this);
+            registerScope(DocumentScope.SCOPE_NAME, scope);
+            //addBeanPostProcessor(new FxmlControllerBeanPostProcessor());
+            setAutowireCandidateResolver(new SbContextAnnotationAutowireCandidateResolver());
+            //registerSingleton(DocumentScope.class.getName(), scope);
+        }
+
+        @Override
+        protected Object createBean(String beanName, RootBeanDefinition mbd, Object[] args) throws BeanCreationException {
+            Class<?> rawClass = mbd.getResolvableType().getRawClass();
+            try {
+                return super.createBean(beanName, mbd, args);
+            } catch (Exception e) {
+                if (e instanceof BeanCreationException) {
+                    rawClass.getModule().addOpens(rawClass.getPackage().getName(), BeanUtils.class.getModule());
+                    return super.createBean(beanName, mbd, args);
+                } else {
+                    throw e;
+                }
+            }
+        }
+
+
+
+//        @Override
+//        public BeanFactory getParentBeanFactory() {
+//            DefaultListableBeanFactory parent = (DefaultListableBeanFactory)super.getParentBeanFactory();
+    //
+//            if (parent == null) {
+//                return null;
+//            }
+    //
+//            ChildFirstBeanFactoryWrapper bf = new ChildFirstBeanFactoryWrapper(parent, this);
+//            return bf;
+//        }
+
+
+        @Override
+        protected boolean isAutowireCandidate(String beanName, DependencyDescriptor descriptor,
+                AutowireCandidateResolver resolver) throws NoSuchBeanDefinitionException {
+
+            LocalContextOnly localContextOnly = descriptor.getAnnotation(LocalContextOnly.class);
+
+            if (localContextOnly != null) {
+                String bdName = BeanFactoryUtils.transformedBeanName(beanName);
+                if (containsBeanDefinition(bdName)) {
+                    return isAutowireCandidate(beanName, getMergedLocalBeanDefinition(bdName), descriptor, resolver);
+                }
+                else if (containsSingleton(beanName)) {
+                    return isAutowireCandidate(beanName, new RootBeanDefinition(getType(beanName)), descriptor, resolver);
+                }
+                return false;
+            }
+
+            return super.isAutowireCandidate(beanName, descriptor, resolver);
+        }
+
+
+
+        private class SbContextAnnotationAutowireCandidateResolver extends ContextAnnotationAutowireCandidateResolver {
+
+
+            @Override
+            public boolean isAutowireCandidate(BeanDefinitionHolder bdHolder, DependencyDescriptor descriptor) {
+                if (super.isAutowireCandidate(bdHolder, descriptor)) {
+                    return checkLocalOnly(bdHolder, descriptor);
+                }
+                return false;
+            }
+
+            private boolean checkLocalOnly(BeanDefinitionHolder bdHolder, DependencyDescriptor descriptor) {
+                LocalContextOnly targetAnn = descriptor.getAnnotation(LocalContextOnly.class);
+                if (targetAnn != null) {
+                    BeanDefinition bd = bdHolder.getBeanDefinition();
+                    String beanName = bdHolder.getBeanName();
+                    String ctxId = JfxAppContextImpl.this.getId().toString();
+                    BeanDefinition mlbd = null;
+                    BeanDefinition mbd = null;
+                    try {
+                        mlbd = beanFactory.getMergedLocalBeanDefinition(bdHolder.getBeanName());
+                    } catch (BeansException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    try {
+                        mbd = beanFactory.getMergedBeanDefinition(bdHolder.getBeanName());
+                    } catch (BeansException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+
+                    Object source = bd.getSource();
+                    System.out.println();
+//                    context.
+//                    String[] candidateTags = null;
+//
+//                    if (source instanceof AnnotatedTypeMetadata) { // source is not null when a candidate was created with @Bean annotation
+//                        Map<String, Object> attributes = ((AnnotatedTypeMetadata) source).getAnnotationAttributes(Tags.class.getName());
+//                        if (attributes != null) {
+//                            candidateTags = (String[]) attributes.get("value");
+//                        }
+//                    } else {
+//                        ResolvableType candidateType = ((RootBeanDefinition) bd).getResolvableType();
+//                        if (candidateType != null) { // candidateType is not null when candidate was created with @Component like annotation
+//                            Class<?> candidateClass = candidateType.resolve();
+//                            if (candidateClass != null) {
+//                                Tags tagsAnn = candidateClass.getAnnotation(Tags.class);
+//                                if (tagsAnn != null) {
+//                                    candidateTags = tagsAnn.value();
+//                                }
+//                            }
+//                        }
+//                    }
+//
+//                    if (candidateTags != null) {
+//                        List<String> targetTags = new ArrayList<>(Arrays.asList(targetAnn.value()));
+//                        targetTags.retainAll(Arrays.asList(candidateTags));
+//                        return !targetTags.isEmpty();
+//                    } else {
+//                        // If a candidate doesn't have @Tags annotation then it's not a suitable candidate
+//                        return false;
+//                    }
+                }
+                // If target doesn't have @LocalOnly annotation then return 'true' as super.isAutowireCandidate() does.
+                return true;
+            }
+
+            @Override
+            protected Object buildLazyResolutionProxy(DependencyDescriptor descriptor, String beanName) {
+                TargetSource ts = new TargetSource() {
+                    private Object savedTarget = null;
+
+                    @Override
+                    public Class<?> getTargetClass() {
+                        return descriptor.getDependencyType();
+                    }
+
+                    @Override
+                    public boolean isStatic() {
+                        return false;
+                    }
+
+                    @Override
+                    public Object getTarget() {
+                        if (savedTarget != null) {
+                            return savedTarget;
+                        }
+                        Set<String> autowiredBeanNames = (beanName != null ? new LinkedHashSet<>(1) : null);
+                        Object target = doResolveDependency(descriptor, beanName, autowiredBeanNames, null);
+                        if (target == null) {
+                            Class<?> type = getTargetClass();
+                            if (Map.class == type) {
+                                return Collections.emptyMap();
+                            } else if (List.class == type) {
+                                return Collections.emptyList();
+                            } else if (Set.class == type || Collection.class == type) {
+                                return Collections.emptySet();
+                            }
+                            throw new NoSuchBeanDefinitionException(descriptor.getResolvableType(),
+                                    "Optional dependency not present for lazy injection point");
+                        }
+                        if (autowiredBeanNames != null) {
+                            for (String autowiredBeanName : autowiredBeanNames) {
+                                if (containsBean(autowiredBeanName)) {
+                                    registerDependentBean(autowiredBeanName, beanName);
+                                }
+                            }
+                        }
+                        savedTarget = target;
+                        return target;
+                    }
+
+                    @Override
+                    public void releaseTarget(Object target) {
+                    }
+                };
+                ProxyFactory pf = new ProxyFactory();
+                pf.setTargetSource(ts);
+                Class<?> dependencyType = descriptor.getDependencyType();
+                if (dependencyType.isInterface()) {
+                    pf.addInterface(dependencyType);
+                }
+                return pf.getProxy(getBeanClassLoader());
+            }
+
+        }
+
+
+
+    }
 }

@@ -10,9 +10,9 @@
 
     <springProfile name="dev">
         <logger name="com.gluonhq" level="DEBUG"/>
-        <logger name="org.springframework" level="TRACE"/>
-        <logger name="org.springframework.aop" level="DEBUG"/>
-        <logger name="org.springframework.orm.jpa" level="DEBUG"/>
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.springframework.aop" level="INFO"/>
+        <logger name="org.springframework.orm.jpa" level="INFO"/>
         
         
         <root level="INFO">
@@ -21,7 +21,7 @@
     </springProfile>
     
     <springProfile name="!dev">
-        <root level="INFO">
+        <root level="WARN">
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>

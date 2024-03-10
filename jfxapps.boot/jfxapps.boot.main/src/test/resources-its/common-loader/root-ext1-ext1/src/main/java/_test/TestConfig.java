@@ -37,5 +37,5 @@ public interface TestConfig {
     public static final String PARENT_ID = "00000000-0000-0000-0000-000000000001";
     public static final String ID = "00000000-0000-0000-0000-000000000011";
     public static final String ASPECT_NAME = "app.ext1ext1.aspect.JfxAppsAspect";
-    public static final String ASPECT_POINTCUT = "@annotation(app.ext1ext1.aspect.JfxAppsAspectTarget)";
+    public static final String ASPECT_POINTCUT = "@annotation(app.ext1ext1.api.JfxAppsAspectTarget)";
 }

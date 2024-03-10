@@ -35,7 +35,7 @@ package app.ext1.test;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 
-import app.ext1.aspect.JfxAppsAspectTarget;
+import app.ext1.api.JfxAppsAspectTarget;
 
 @Singleton
 public class JfxAppsAspectTest {
@@ -44,7 +44,7 @@ public class JfxAppsAspectTest {
     }
 
     @JfxAppsAspectTarget
-    @app.root.aspect.JfxAppsAspectTarget
+    @app.root.api.JfxAppsAspectTarget
     public String execute() {
         return "EXECUTE";
     }
