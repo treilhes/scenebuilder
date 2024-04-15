@@ -72,7 +72,7 @@ public class PreferencesContext {
     }
 
     public boolean isDocumentScope(Class<?> cls) {
-        return context.isDocumentScope(cls);
+        return context.isApplicationInstanceScope(cls);
     }
 
     public boolean isDocumentAlreadyInPathScope() {

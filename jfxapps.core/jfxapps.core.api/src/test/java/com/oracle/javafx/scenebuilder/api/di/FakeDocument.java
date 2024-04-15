@@ -33,11 +33,11 @@
  */
 package com.oracle.javafx.scenebuilder.api.di;
 
-import com.gluonhq.jfxapps.boot.context.Document;
+import com.gluonhq.jfxapps.boot.context.ApplicationInstance;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 
 @ApplicationInstanceSingleton
-public class FakeDocument implements Document {
+public class FakeDocument implements ApplicationInstance {
 
     private final DocumentScopedObject documentScopedObject;
 

@@ -46,6 +46,7 @@ open module jfxapps.app.manager.main {
     requires jfxapps.core.api;
     requires jakarta.inject;
     requires scenebuilder.core.metadata;
+    requires jfxapps.boot.context;
 
     provides Extension with ManagerAppExtension;
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -46,9 +46,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import com.gluonhq.jfxapps.boot.context.Document;
-import com.gluonhq.jfxapps.boot.context.DocumentScope;
+import com.gluonhq.jfxapps.boot.context.ApplicationInstance;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
 
 import javafx.stage.Stage;
 
@@ -70,8 +70,9 @@ public class SbPlatformTest {
 
     @BeforeEach
     void setupContext() {
-        Class<?>[] classes = { FakeDocument.class, DocumentScopedObject.class };
+        Class<?>[] classes = { FakeApplication.class, FakeDocument.class, DocumentScopedObject.class };
         this.context = JfxAppContext.fromScratch(classes);
+        context.getBean(FakeApplication.class);
     }
 
     @Test
@@ -79,17 +80,17 @@ public class SbPlatformTest {
         final CountDownLatch latch = new CountDownLatch(1);
 
         final FakeDocument f1 = context.getBean(FakeDocument.class);
-        assertEquals(f1, DocumentScope.getActiveScope(), "Scope must be the current document scope");
+        assertEquals(f1, JfxAppContext.applicationInstanceScope.getActiveScope().getScopedObject(), "Scope must be the current document scope");
 
 
-        DocumentScope.setCurrentScope(null);
+        JfxAppContext.applicationInstanceScope.unbindScope();
         final FakeDocument f2 = context.getBean(FakeDocument.class);
-        assertEquals(f2, DocumentScope.getActiveScope(), "Scope must be the current document scope");
+        assertEquals(f2, JfxAppContext.applicationInstanceScope.getActiveScope().getScopedObject(), "Scope must be the current document scope");
 
         FutureTask<Runnable> futureTask = new FutureTask<>(() -> {
             try {
-                final Document activeScope = DocumentScope.getActiveScope();
-                final Document currentScope = DocumentScope.getCurrentScope();
+                final ApplicationInstance activeScope = JfxAppContext.applicationInstanceScope.getActiveScope().getScopedObject();
+                final ApplicationInstance currentScope = JfxAppContext.applicationInstanceScope.getCurrentScope().getScopedObject();
                 return () -> {
                     assertNotEquals(f1, f2);
                     assertEquals(f1, activeScope);
@@ -106,8 +107,8 @@ public class SbPlatformTest {
 
         futureTask.get().run();
 
-        assertEquals(f2, DocumentScope.getActiveScope(), "Scope must be the current document scope");
-        assertEquals(f2, DocumentScope.getCurrentScope(), "Scope must be the current document scope");
+        assertEquals(f2, JfxAppContext.applicationInstanceScope.getActiveScope().getScopedObject(), "Scope must be the current document scope");
+        assertEquals(f2, JfxAppContext.applicationInstanceScope.getCurrentScope().getScopedObject(), "Scope must be the current document scope");
     }
 
     @Test
@@ -123,11 +124,11 @@ public class SbPlatformTest {
         final CountDownLatch latch = new CountDownLatch(1);
 
         final FakeDocument f1 = context.getBean(FakeDocument.class);
-        assertEquals(f1, DocumentScope.getActiveScope(), "Scope must be the current document scope");
+        assertEquals(f1, JfxAppContext.applicationInstanceScope.getActiveScope().getScopedObject(), "Scope must be the current document scope");
 
-        DocumentScope.setCurrentScope(null);
+        JfxAppContext.applicationInstanceScope.unbindScope();
         final FakeDocument f2 = context.getBean(FakeDocument.class);
-        assertEquals(f2, DocumentScope.getActiveScope(), "Scope must be the current document scope");
+        assertEquals(f2, JfxAppContext.applicationInstanceScope.getActiveScope().getScopedObject(), "Scope must be the current document scope");
 
         FutureTask<Runnable> futureTask = new FutureTask<>(() -> {
             try {
@@ -154,15 +155,15 @@ public class SbPlatformTest {
         final CountDownLatch latch = new CountDownLatch(2);
 
         final FakeDocument f1 = context.getBean(FakeDocument.class);
-        assertEquals(f1, DocumentScope.getActiveScope(), "Scope must be the current document scope");
+        assertEquals(f1, JfxAppContext.applicationInstanceScope.getActiveScope().getScopedObject(), "Scope must be the current document scope");
 
-        DocumentScope.setCurrentScope(null);
+        JfxAppContext.applicationInstanceScope.unbindScope();
         final FakeDocument f2 = context.getBean(FakeDocument.class);
-        assertEquals(f2, DocumentScope.getActiveScope(), "Scope must be the current document scope");
+        assertEquals(f2, JfxAppContext.applicationInstanceScope.getActiveScope().getScopedObject(), "Scope must be the current document scope");
 
-        DocumentScope.setCurrentScope(null);
+        JfxAppContext.applicationInstanceScope.unbindScope();
         final FakeDocument f3 = context.getBean(FakeDocument.class);
-        assertEquals(f3, DocumentScope.getActiveScope(), "Scope must be the current document scope");
+        assertEquals(f3, JfxAppContext.applicationInstanceScope.getActiveScope().getScopedObject(), "Scope must be the current document scope");
 
         final FutureTask<Runnable> futureTask2 = new FutureTask<>(() -> {
             try {

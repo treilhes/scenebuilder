@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,7 +44,8 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import com.gluonhq.jfxapps.boot.context.DocumentScope;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
 import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
@@ -54,6 +55,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.core.fxom.SceneGraphObject;
 import com.oracle.javafx.scenebuilder.test.FxmlControllerLoader;
+import com.oracle.javafx.scenebuilder.test.JfxAppsExtension;
 import com.oracle.javafx.scenebuilder.test.TestStages;
 
 import javafx.beans.property.SimpleIntegerProperty;
@@ -62,7 +64,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-@ExtendWith({ApplicationExtension.class, MockitoExtension.class})
+@ExtendWith({ApplicationExtension.class, MockitoExtension.class, JfxAppsExtension.class})
 class WorkspaceControllerTest {
 
     static {
@@ -72,8 +74,8 @@ class WorkspaceControllerTest {
     private SceneBuilderManager sbm = new SceneBuilderManager.SceneBuilderManagerImpl();
     private DocumentManager dm = new DocumentManager.DocumentManagerImpl();
 
-    @Mock
-    private ApplicationInstance scopedDocument;
+//    @Mock
+//    private ApplicationInstance scopedDocument;
 
     @Mock
     private FXOMDocument omDocument;
@@ -107,7 +109,7 @@ class WorkspaceControllerTest {
 
     @Test
     void show_ui(FxRobot robot) {
-        DocumentScope.setCurrentScope(scopedDocument);
+        //JfxAppContext.applicationInstanceScope.setCurrentScope(scopedDocument);
 
         WorkspaceController workspace = FxmlControllerLoader.controller(new WorkspaceController(sbm, dm, contextMenu))
                 .withDarkTheme(sbm)
@@ -132,7 +134,7 @@ class WorkspaceControllerTest {
 
         Mockito.when(omDocument.getDisplayNodeOrSceneGraphRoot()).thenReturn(new Label("content2"));
 
-        DocumentScope.setCurrentScope(scopedDocument);
+        //JfxAppContext.applicationInstanceScope.setCurrentScope(scopedDocument);
 
         WorkspaceController workspace = FxmlControllerLoader.controller(new WorkspaceController(sbm, dm, contextMenu)).load();
 

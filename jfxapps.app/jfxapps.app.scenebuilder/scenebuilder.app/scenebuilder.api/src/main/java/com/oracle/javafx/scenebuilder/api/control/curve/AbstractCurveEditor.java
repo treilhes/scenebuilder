@@ -56,9 +56,11 @@ public abstract class AbstractCurveEditor<T extends Node> implements CurveEditor
 
     public void setFxomObject(FXOMObject fxomObject) {
         assert fxomObject != null;
+        assert fxomObject.getSceneGraphObject() != null;
         assert fxomObject.getSceneGraphObject().isNode();
+
         this.fxomObject = fxomObject;
-        this.sceneGraphObject = (T)fxomObject.getSceneGraphObject();
+        this.sceneGraphObject = (T)fxomObject.getSceneGraphObject().get();
     }
 
     @Override

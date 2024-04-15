@@ -48,14 +48,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.gluonhq.jfxapps.boot.context.ContextManager;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.layer.Layer;
 import com.gluonhq.jfxapps.boot.layer.LayerNotFoundException;
 import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
@@ -122,6 +123,9 @@ class ContextBootstraperTest {
     @Mock
     ServiceLoader loader;
 
+    @Captor
+    ArgumentCaptor<Set<Class<?>>> contextClassesCaptor;
+
     /**
      * Must throw if module layer parent layer does not exists.
      */
@@ -178,11 +182,9 @@ class ContextBootstraperTest {
 
         ctxBoot.create(null, parentExtensionModel, null, null, loader);
 
-        ArgumentCaptor<Class<?>[]> contextClassesCaptor = ArgumentCaptor.forClass(Class[].class);
+        verify(contextManager).create(any(), any(), any(), contextClassesCaptor.capture(), any(), any(), any());
 
-        verify(contextManager).create(any(), any(), any(), contextClassesCaptor.capture(), any(), any());
-
-        assertThat(List.of(contextClassesCaptor.getValue())).contains(LocalParentComponent.class,
+        assertThat(contextClassesCaptor.getValue()).contains(LocalParentComponent.class,
                 parentExtensionLoaded.getClass());
     }
 
@@ -215,7 +217,7 @@ class ContextBootstraperTest {
         // the extension loaded is a child of parent
         when(childExtensionLoaded.getParentId()).thenReturn(parentId);
 
-        when(ctx.getId()).thenReturn(parentId);
+        when(ctx.getUuid()).thenReturn(parentId);
 
         // test
 
@@ -223,11 +225,9 @@ class ContextBootstraperTest {
 
         ctxBoot.create(ctx, childExtensionModel, null, null, loader);
 
-        ArgumentCaptor<Class<?>[]> contextClassesCaptor = ArgumentCaptor.forClass(Class[].class);
+        verify(contextManager).create(any(), any(), any(), contextClassesCaptor.capture(), any(), any(), any());
 
-        verify(contextManager).create(any(), any(), any(), contextClassesCaptor.capture(), any(), any());
-
-        assertThat(List.of(contextClassesCaptor.getValue())).contains(LocalChildComponent.class,
+        assertThat(contextClassesCaptor.getValue()).contains(LocalChildComponent.class,
                 childExtensionLoaded.getClass());
     }
 
@@ -256,7 +256,7 @@ class ContextBootstraperTest {
         // the extension loaded is a child of parent
         when(childExtensionLoaded.getParentId()).thenReturn(parentId);
 
-        when(ctx.getId()).thenReturn(parentId);
+        when(ctx.getUuid()).thenReturn(parentId);
 
         // test
 
@@ -264,11 +264,9 @@ class ContextBootstraperTest {
 
         ctxBoot.create(ctx, childExtensionModel, null, null, loader);
 
-        ArgumentCaptor<Class<?>[]> contextClassesCaptor = ArgumentCaptor.forClass(Class[].class);
+        verify(contextManager).create(any(), any(), any(), contextClassesCaptor.capture(), any(), any(), any());
 
-        verify(contextManager).create(any(), any(), any(), contextClassesCaptor.capture(), any(), any());
-
-        assertThat(List.of(contextClassesCaptor.getValue())).contains(LocalChildComponent.class,
+        assertThat(contextClassesCaptor.getValue()).contains(LocalChildComponent.class,
                 childExtensionLoaded.getClass());
     }
 
@@ -294,9 +292,10 @@ class ContextBootstraperTest {
         // the extension loaded is a child of parent
         when(sealedChildExtensionLoaded.getParentId()).thenReturn(parentId);
 
-        when(ctx.getId()).thenReturn(parentId);
-        when(ctx.getRegisteredClasses()).thenReturn(new Class<?>[] { LocalParentComponent.class,
-                WindowParentComponent.class, EditorSingletonParentComponent.class });
+        when(ctx.getUuid()).thenReturn(parentId);
+        //when(ctx.getRegisteredClasses()).thenReturn(Set.of(LocalParentComponent.class));
+        when(ctx.getDeportedClasses()).thenReturn(Set.of(
+                WindowParentComponent.class, EditorSingletonParentComponent.class));
 
         // test
 
@@ -304,11 +303,9 @@ class ContextBootstraperTest {
 
         ctxBoot.create(ctx, childExtensionModel, null, null, loader);
 
-        ArgumentCaptor<Class<?>[]> contextClassesCaptor = ArgumentCaptor.forClass(Class[].class);
+        verify(contextManager).create(any(), any(), any(), contextClassesCaptor.capture(), any(), any(), any());
 
-        verify(contextManager).create(any(), any(), any(), contextClassesCaptor.capture(), any(), any());
-
-        assertThat(List.of(contextClassesCaptor.getValue())).contains(LocalChildComponent.class,
+        assertThat(contextClassesCaptor.getValue()).contains(LocalChildComponent.class,
                 WindowParentComponent.class, EditorSingletonParentComponent.class,
                 sealedChildExtensionLoaded.getClass());
     }
@@ -368,14 +365,12 @@ class ContextBootstraperTest {
 
         ctxBoot.create(null, parentExtensionModel, null, null, loader);
 
-        ArgumentCaptor<Class<?>[]> contextClassesCaptor = ArgumentCaptor.forClass(Class[].class);
+        verify(contextManager).create(any(), any(), any(), contextClassesCaptor.capture(), any(), any(), any());
 
-        verify(contextManager).create(any(), any(), any(), contextClassesCaptor.capture(), any(), any());
-
-        assertThat(List.of(contextClassesCaptor.getValue())).contains(LocalParentComponent.class,
+        assertThat(contextClassesCaptor.getValue()).contains(LocalParentComponent.class,
                 ExportedChildComponent.class);
 
-        assertThat(List.of(contextClassesCaptor.getValue())).doesNotContain(LocalChildComponent.class);
+        assertThat(contextClassesCaptor.getValue()).doesNotContain(LocalChildComponent.class);
     }
 
     /**

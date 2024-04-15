@@ -82,7 +82,7 @@ public class ResizingGuideRenderer {
             final ResizingGuideChrome chrome = chromeMap.get(s);
             assert chrome != null;
             reusableChromes.add(chrome);
-            chromeMap.remove(s);
+            chromeMap.removeScope(s);
             chrome.setVisible(false);
         }
         

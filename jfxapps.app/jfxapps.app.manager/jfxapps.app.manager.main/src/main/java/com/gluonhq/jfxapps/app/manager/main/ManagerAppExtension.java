@@ -44,7 +44,8 @@ import com.gluonhq.jfxapps.app.manager.main.ui.WindowIconSettings;
 import com.gluonhq.jfxapps.app.manager.main.ui.cmp.ApplicationCardController;
 import com.gluonhq.jfxapps.app.manager.main.ui.cmp.ExtensionCardController;
 import com.gluonhq.jfxapps.app.manager.main.ui.cmp.MainContentController;
-import com.gluonhq.jfxapps.boot.loader.extension.EditorExtension;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.loader.extension.ApplicationExtension;
 import com.oracle.javafx.scenebuilder.api.application.annotation.EditorDescriptor;
 
 @EditorDescriptor(
@@ -56,9 +57,9 @@ import com.oracle.javafx.scenebuilder.api.application.annotation.EditorDescripto
             imageX2 = "manager@2x.png",
             extensions = {"jfxmngr"}
         )
-public class ManagerAppExtension  implements EditorExtension  {
+public class ManagerAppExtension implements ApplicationExtension  {
 
-    public final static UUID ID = EditorExtension.MANAGER_APP_ID;
+    public final static UUID ID = ApplicationExtension.MANAGER_APP_ID;
 
     @Override
     public UUID getId() {

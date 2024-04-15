@@ -34,6 +34,7 @@
 package com.gluonhq.jfxapps.boot.context;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public interface ContextManager {
@@ -42,11 +43,11 @@ public interface ContextManager {
 
     boolean exists(UUID contextId);
 
-    JfxAppContext create(UUID parentContextId, UUID contextId, Class<?>[] classes, List<Object> singletonInstances,
+    JfxAppContext create(UUID parentContextId, UUID contextId, Set<Class<?>> classes,Set<Class<?>> deportedClasses, List<Object> singletonInstances,
             MultipleProgressListener progressListener);
 
-    JfxAppContext create(UUID parentContextId, UUID contextId, ClassLoader loader, Class<?>[] classes, List<Object> singletonInstances,
-            MultipleProgressListener progressListener);
+    JfxAppContext create(UUID parentContextId, UUID contextId, ClassLoader loader, Set<Class<?>> classes,
+            Set<Class<?>> deportedClasses, List<Object> singletonInstances, MultipleProgressListener progressListener);
 
     void clear();
 

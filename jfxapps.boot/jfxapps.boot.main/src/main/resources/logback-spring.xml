@@ -2,9 +2,7 @@
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>
-                %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n
-            </Pattern>
+            <Pattern>%d{HH:mm:ss.SSS} [%thread][%8.-8X{jfxApplication}/%8.-8X{jfxInstance}] %-5level %logger{36} - %msg%n</Pattern>
         </layout>
     </appender>
 

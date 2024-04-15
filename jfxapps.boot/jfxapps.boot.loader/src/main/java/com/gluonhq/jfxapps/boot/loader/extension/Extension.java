@@ -51,7 +51,7 @@ import com.gluonhq.jfxapps.spring.core.patch.PatchLink;
  * @author ptreilhes
  *
  */
-public sealed interface Extension permits OpenExtension, SealedExtension {
+public sealed interface Extension permits OpenExtension, SealedExtension, RootExtension {
 
     final static Logger logger = LoggerFactory.getLogger(Extension.class);
 

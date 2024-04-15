@@ -54,7 +54,7 @@
         <plugins>
             <plugin>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.metadata-maven-plugin</artifactId>
+                <artifactId>jfxapps-metadata-maven-plugin</artifactId>
                 <version>17.0.0-SNAPSHOT</version>
                 <executions>
                     <execution>
@@ -145,7 +145,7 @@
                         </constructorOverride>
                     </constructorOverrides>
                     <targetPackage>com.oracle.javafx.scenebuilder.kit.metadata</targetPackage>
-                    <executorClass>com.oracle.javafx.scenebuilder.metadata.template.legacy.LegacyExecutor</executorClass>
+                    <executorClass>com.gluonhq.jfxapps.metadata.template.legacy.LegacyExecutor</executorClass>
                 </configuration>
                 <dependencies>
                     <dependency>

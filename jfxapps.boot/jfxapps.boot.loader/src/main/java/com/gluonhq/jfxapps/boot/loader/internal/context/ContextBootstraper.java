@@ -33,9 +33,10 @@
  */
 package com.gluonhq.jfxapps.boot.loader.internal.context;
 
-import java.util.Arrays;
+import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -43,13 +44,16 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.ContextManager;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.context.annotation.DeportedSingleton;
 import com.gluonhq.jfxapps.boot.internal.context.config.DefaultExtensionContextConfig;
 import com.gluonhq.jfxapps.boot.layer.Layer;
 import com.gluonhq.jfxapps.boot.layer.LayerNotFoundException;
@@ -69,6 +73,9 @@ public class ContextBootstraper {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(ContextBootstraper.class);
+
+    private static final Set<Class<? extends Annotation>> deportableAnnotations = Set.of(ApplicationSingleton.class,
+            ApplicationInstanceSingleton.class, ApplicationInstancePrototype.class, DeportedSingleton.class);
 
     /** The context manager. */
     private final ContextManager contextManager;
@@ -147,7 +154,7 @@ public class ContextBootstraper {
             MultipleProgressListener progressListener, ServiceLoader loader)
             throws InvalidExtensionException, LayerNotFoundException {
         UUID layerId = extension.getId();
-        UUID parentContextId = parent == null ? null : parent.getId();
+        UUID parentContextId = parent == null ? null : parent.getUuid();
 
         // get children extensions
         Set<UUID> extensionIds = extension.getExtensions().stream().map(e -> e.getId()).collect(Collectors.toSet());
@@ -161,10 +168,14 @@ public class ContextBootstraper {
         Set<Class<?>> classes = new HashSet<>();
         Set<Class<?>> extensionLocalClasses = new HashSet<>();
         Set<Class<?>> childrenExportedClasses = new HashSet<>();
+        Set<Class<?>> childrenDeportedClasses = new HashSet<>();
 
         for (UUID id : extensionIds) {
             try {
-                childrenExportedClasses.addAll(findExportedClasses(loader, layerId, id));
+                var map = findExportedClasses2(loader, layerId, id);
+
+                childrenExportedClasses.addAll(map.getOrDefault(ExportType.EXPORTED, List.of()));
+                childrenDeportedClasses.addAll(map.getOrDefault(ExportType.DEPORTED, List.of()));
             } catch (LayerNotFoundException e) {
                 logger.error("Unable to find layer for child extension {}", id, e);
             } catch (InvalidExtensionException e) {
@@ -178,21 +189,29 @@ public class ContextBootstraper {
         classes.addAll(extensionLocalClasses);
         classes.addAll(DefaultExtensionContextConfig.classesToRegister);
 
-        if (parent != null) { // get classes from parent with @EditorSingleton annotation
-            boolean isSealed = loader.loadService(currentLayer, Extension.class).stream()
-                    .anyMatch(SealedExtension.class::isInstance);
-            if (isSealed) {
-                Set<Class<?>> deportedClasses = Arrays.stream(parent.getRegisteredClasses())
-                        .filter(this::acceptClassInSealedExtension).collect(Collectors.toSet());
-                classes.addAll(deportedClasses);
-            }
+        boolean isSealed = loader.loadService(currentLayer, Extension.class).stream()
+                .anyMatch(SealedExtension.class::isInstance);
 
+        // handle classes from parent with @ApplicationSingleton annotation
+        // handle classes from parent with @ApplicationInstanceSingleton annotation
+        if (isSealed) {
+            if (parent != null) {
+                classes.addAll(parent.getDeportedClasses());
+            }
+            classes.addAll(childrenDeportedClasses);
+            childrenDeportedClasses.clear();
+        } else {
+            if (parent != null) {
+                childrenDeportedClasses.addAll(parent.getDeportedClasses());
+            }
         }
 
-        Class<?>[] classesToRegister = classes.toArray(new Class[0]);
+        if (parent != null) {
+            classes.addAll(parent.getBeanClassesForType(BeanPostProcessor.class));
+        }
 
         ClassLoader classloader = currentLayer.getLoader();
-        JfxAppContext context = contextManager.create(parentContextId, layerId, classloader, classesToRegister, singletonInstances,
+        JfxAppContext context = contextManager.create(parentContextId, layerId, classloader, classes, childrenDeportedClasses, singletonInstances,
                 progressListener);
 
         return context;
@@ -205,13 +224,7 @@ public class ContextBootstraper {
      * @return true, if successful
      */
     private boolean acceptClassInSealedExtension(Class<?> cls) {
-        if (cls.getDeclaredAnnotationsByType(ApplicationSingleton.class).length > 0) {
-            return true;
-        }
-        if (cls.getDeclaredAnnotationsByType(ApplicationInstanceSingleton.class).length > 0) {
-            return true;
-        }
-        return false;
+        return deportableAnnotations.stream().anyMatch(a -> cls.getDeclaredAnnotationsByType(a).length > 0);
     }
 
     /**
@@ -238,6 +251,31 @@ public class ContextBootstraper {
                     .map(OpenExtension.class::cast)
                     .peek(e -> validateExtension(e, extensionId, parentId))
                     .flatMap(e -> e.exportedContextClasses().stream()).collect(Collectors.toSet());
+
+        } catch (InvalidExtensionException.Unchecked e) {
+            throw new InvalidExtensionException(e);
+        }
+    }
+
+    private enum ExportType {
+        EXPORTED, DEPORTED
+    }
+    private Map<ExportType, List<Class<?>>> findExportedClasses2(ServiceLoader loader, UUID parentId, UUID extensionId)
+            throws LayerNotFoundException, InvalidExtensionException {
+
+        Layer layer = layerManager.get(extensionId);
+
+        if (layer == null) {
+            throw new LayerNotFoundException(extensionId, "Unable to find child layer for id %s");
+        }
+
+        try {
+            return loader.loadService(layer, Extension.class).stream()
+                    .filter(OpenExtension.class::isInstance)
+                    .map(OpenExtension.class::cast)
+                    .peek(e -> validateExtension(e, extensionId, parentId))
+                    .flatMap(e -> e.exportedContextClasses().stream())
+                    .collect(Collectors.groupingBy(c -> acceptClassInSealedExtension(c) ? ExportType.DEPORTED : ExportType.EXPORTED));
 
         } catch (InvalidExtensionException.Unchecked e) {
             throw new InvalidExtensionException(e);

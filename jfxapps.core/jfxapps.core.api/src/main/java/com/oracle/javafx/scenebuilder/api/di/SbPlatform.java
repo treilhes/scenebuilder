@@ -38,19 +38,24 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.function.Supplier;
 
-import com.gluonhq.jfxapps.boot.context.Document;
-import com.gluonhq.jfxapps.boot.context.DocumentScope;
+import com.gluonhq.jfxapps.boot.context.ApplicationInstance;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
 
 import javafx.application.Platform;
 
 public final class SbPlatform {
 
     private static UUID activeScope() {
-        return DocumentScope.getActiveScopeUUID();
+        if (JfxAppContext.applicationInstanceScope.hasActiveScope()) {
+            return JfxAppContext.applicationInstanceScope.getActiveScope().getId();
+        }
+        return null;
     }
 
-    private static UUID documentScope(Document scopedDocument) {
-        return DocumentScope.getScopeId(scopedDocument);
+    private static UUID documentScope(ApplicationInstance scopedDocument) {
+        var scope = JfxAppContext.applicationInstanceScope.getScope(scopedDocument);
+        return scope == null ? null : scope.getId();
     }
 
     /**
@@ -68,7 +73,7 @@ public final class SbPlatform {
      * @param scopedDocument the document scope
      * @param runnable the code to run
      */
-    public static void runOnFxThreadWithScope(Document scopedDocument, Runnable runnable) {
+    public static void runOnFxThreadWithScope(ApplicationInstance scopedDocument, Runnable runnable) {
         runOnFxThreadWithScope(documentScope(scopedDocument), runnable);
     }
     /**
@@ -81,11 +86,11 @@ public final class SbPlatform {
             throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
         }
         Platform.runLater(() -> {
-            DocumentScope.executeRunnable(runnable, scopedDocument);
+            JfxAppContext.applicationInstanceScope.executeRunnable(runnable, scopedDocument);
         });
     }
 
-    public static <T> FutureTask<T> callOnFxThreadWithScope(Document scopedDocument, Callable<T> callable) {
+    public static <T> FutureTask<T> callOnFxThreadWithScope(ApplicationInstance scopedDocument, Callable<T> callable) {
         return callOnFxThreadWithScope(documentScope(scopedDocument), callable);
     }
     public static <T> FutureTask<T> callOnFxThreadWithScope(UUID scopedDocument, Callable<T> callable) {
@@ -93,13 +98,13 @@ public final class SbPlatform {
             throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
         }
         final FutureTask<T> task = new FutureTask<>(callable);
-        Platform.runLater(() -> DocumentScope.executeRunnable(task, scopedDocument));
+        Platform.runLater(() -> JfxAppContext.applicationInstanceScope.executeRunnable(task, scopedDocument));
         return task;
     }
 
     /**
      * Same as {@link Platform#runOnFxThread(Runnable)} but will also ensure execution
-     * with the currently active {@link Document} scope
+     * with the currently active {@link ApplicationInstance} scope
      * @param runnable
      */
     public static <T> FutureTask<T> callOnFxThreadWithActiveScope(Callable<T> callable) {
@@ -113,11 +118,11 @@ public final class SbPlatform {
      * @param scopedDocument the document scope
      * @param runnable       the code to run
      */
-    public static void runWithScope(Document scopedDocument, Runnable runnable) {
+    public static void runWithScope(ApplicationInstance scopedDocument, Runnable runnable) {
         runWithScope(documentScope(scopedDocument), runnable);
     }
 
-    public static <T> T runWithScope(Document scopedDocument, Supplier<T> runnable) {
+    public static <T> T runWithScope(ApplicationInstance scopedDocument, Supplier<T> runnable) {
         return runWithScope(documentScope(scopedDocument), runnable);
     }
 
@@ -131,14 +136,14 @@ public final class SbPlatform {
         if (scopedDocument == null) {
             throw new RuntimeException("Illegal document scope! The scope must be created before using it here");// NOCHECK
         }
-        DocumentScope.executeRunnable(runnable, scopedDocument);
+        JfxAppContext.applicationInstanceScope.executeRunnable(runnable, scopedDocument);
     }
 
     public static <T> T runWithScope(UUID scopedDocument, Supplier<T> runnable) {
         if (scopedDocument == null) {
             throw new RuntimeException("Illegal document scope! The scope must be created before using it here");// NOCHECK
         }
-        return DocumentScope.executeSupplier(runnable, scopedDocument);
+        return JfxAppContext.applicationInstanceScope.executeSupplier(runnable, scopedDocument);
     }
 
     /**
@@ -147,7 +152,7 @@ public final class SbPlatform {
      * @param scopedDocument the document scope
      * @param runnable       the code to run
      */
-    public static void runOnThreadWithScope(Document scopedDocument, Runnable runnable) {
+    public static void runOnThreadWithScope(ApplicationInstance scopedDocument, Runnable runnable) {
         runOnThreadWithScope(documentScope(scopedDocument), runnable);
     }
 
@@ -162,7 +167,7 @@ public final class SbPlatform {
             throw new RuntimeException("Illegal document scope! The scope must be created before using it here");// NOCHECK
         }
         Thread t = new Thread(() -> {
-            DocumentScope.executeRunnable(runnable, scopedDocument);
+            JfxAppContext.applicationInstanceScope.executeRunnable(runnable, scopedDocument);
         });
         t.run();
     }
@@ -170,7 +175,7 @@ public final class SbPlatform {
 
     /**
      * Same as {@link Platform#runOnFxThread(Runnable)} but will also ensure execution
-     * with the currently active {@link Document} scope
+     * with the currently active {@link ApplicationInstance} scope
      * @param runnable
      */
     public static void runOnFxThreadWithActiveScope(Runnable runnable) {

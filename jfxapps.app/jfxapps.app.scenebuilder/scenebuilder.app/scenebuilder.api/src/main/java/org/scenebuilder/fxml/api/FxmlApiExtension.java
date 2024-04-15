@@ -40,7 +40,7 @@ import java.util.UUID;
 import org.scenebuilder.fxml.api.i18n.I18NFxmlApi;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager.FxmlDocumentManagerImpl;
 
-import com.gluonhq.jfxapps.boot.loader.extension.EditorExtension;
+import com.gluonhq.jfxapps.boot.loader.extension.ApplicationExtension;
 import com.oracle.javafx.scenebuilder.api.application.annotation.EditorDescriptor;
 import com.oracle.javafx.scenebuilder.api.control.driver.DriverExtensionRegistry;
 import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
@@ -62,7 +62,7 @@ import com.oracle.javafx.scenebuilder.ui.controller.ModeManagerController;
             extensions = {"?????"}
         )
 
-public class FxmlApiExtension implements EditorExtension  {
+public class FxmlApiExtension implements ApplicationExtension  {
 
     public static final UUID ID = UUID.fromString("06ae1f67-a8aa-49e3-abb5-4f108534578c");
 
@@ -74,7 +74,7 @@ public class FxmlApiExtension implements EditorExtension  {
 
     @Override
     public UUID getParentId() {
-        return EditorExtension.ROOT_ID;
+        return ApplicationExtension.ROOT_ID;
     }
 
     @Override

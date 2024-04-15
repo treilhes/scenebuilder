@@ -33,21 +33,16 @@
  */
 package com.oracle.javafx.scenebuilder.ui.controller;
 
-import org.springframework.beans.factory.InitializingBean;
-
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.FxThread;
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.application.WindowPreferenceTracker;
-import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.MaximizedPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.StageHeightPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.StageWidthPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.XPosPreference;
 import com.oracle.javafx.scenebuilder.ui.preferences.document.YPosPreference;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.inject.Provider;
 import javafx.beans.value.ChangeListener;
 import javafx.stage.Stage;
@@ -68,7 +63,7 @@ public class ApplicationWindowTracker implements WindowPreferenceTracker { // , 
     /*
      * DocumentWindowController
      */
-    private final InstanceWindow windowInstance;
+    private InstanceWindow windowInstance;
 
     private ChangeListener<? super Number> xPropertyListener;
     private ChangeListener<? super Number> yPropertyListener;
@@ -89,8 +84,7 @@ public class ApplicationWindowTracker implements WindowPreferenceTracker { // , 
             Provider<YPosPreference> yPos,
             Provider<StageHeightPreference> stageHeight,
             Provider<StageWidthPreference> stageWidth,
-            Provider<MaximizedPreference> maximizedWindow,
-            InstanceWindow windowInstance) {
+            Provider<MaximizedPreference> maximizedWindow) {
 
         // @formatter:on
 
@@ -100,20 +94,12 @@ public class ApplicationWindowTracker implements WindowPreferenceTracker { // , 
         this.stageHeightPreference = stageHeight;
         this.stageWidthPreference = stageWidth;
         this.maximizedWindowPreference = maximizedWindow;
-        this.windowInstance = windowInstance;
     }
 
-
-//    @Override
-//    @FxThread
-//    public void afterPropertiesSet() throws Exception {
-//        initialize();
-//    }
-
-    @PostConstruct
-    //@com.oracle.javafx.scenebuilder.api.di.FxThread
+    @Override
     @FxThread
-    public void initialize() {
+    public void initialize(InstanceWindow windowInstance) {
+        this.windowInstance = windowInstance;
         System.out.println( this + "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuNNNNNNNNNNNNNNNNNNNNNNN");
         System.out.println("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuNNNNNNNNNNNNNNNNNNNNNNN");
         System.out.println("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuNNNNNNNNNNNNNNNNNNNNNNN");
@@ -160,12 +146,6 @@ public class ApplicationWindowTracker implements WindowPreferenceTracker { // , 
 //      getStage().maximizedProperty().addListener((ob, o, n) -> System.out.println("MAX" + n));
 //      getStage().maximizedProperty().addListener((n) -> System.out.println("MAXINV" + n));
 
-        //SbPlatform.runOnFxThreadWithActiveScope(() -> );
-        initializeUi();
-    }
-
-    //@FxThread
-    public void initializeUi() {
         if (stageHeightPreference.get().isValid() && !maximizedWindowPreference.get().getValue()) {
             windowInstance.getStage().setHeight(stageHeightPreference.get().getValue());
         }

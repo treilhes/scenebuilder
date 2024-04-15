@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,10 +45,10 @@ import javafx.scene.Node;
 
 /**
  *
- * 
+ *
  */
 public abstract class AbstractRelocater<T extends Node> implements Relocater<T> {
-    
+
     protected final Class<?> parentClass;
     protected Node sceneGraphObject;
     protected FXOMObject fxomObject;
@@ -55,29 +56,29 @@ public abstract class AbstractRelocater<T extends Node> implements Relocater<T> 
     public AbstractRelocater(Class<?> parentClass) {
         this.parentClass = parentClass;
     }
-    
+
     public void setFxomObject(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject() != null;
-        assert fxomObject.isNode();
-        assert fxomObject.hasParent() || fxomObject.isDetachedGraph();
-        
+        assert fxomObject.getSceneGraphObject().isNode();
+        assert fxomObject.getSceneGraphObject().hasParent() || fxomObject.isDetachedGraph();
+
         this.fxomObject = fxomObject;
-        this.sceneGraphObject = (Node)fxomObject.getSceneGraphObject();
-        
-        assert fxomObject.getParentObject() == null || 
+        this.sceneGraphObject = fxomObject.getSceneGraphObject().getAs(Node.class);
+
+        assert fxomObject.getParentObject() == null ||
                 parentClass.isAssignableFrom(fxomObject.getParentObject().getSceneGraphObject().getClass());
     }
-    
+
     @Override
     public Node getSceneGraphObject() {
         return this.sceneGraphObject;
     }
-    
+
     @Override
     public FXOMObject getFxomObject() {
         return this.fxomObject;
     }
-    
+
     @Override
     public abstract void initialize();
     @Override

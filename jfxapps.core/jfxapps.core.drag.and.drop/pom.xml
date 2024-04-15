@@ -13,11 +13,14 @@
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.starter</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.starter.test</artifactId>
+            <scope>test</scope>
         </dependency>
+        <!-- TODO remove those dependencies after refactor -->
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.jobs</artifactId>
@@ -26,5 +29,6 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.selection</artifactId>
         </dependency>
+        <!-- TODO END remove those dependencies after refactor -->
     </dependencies>
 </project>

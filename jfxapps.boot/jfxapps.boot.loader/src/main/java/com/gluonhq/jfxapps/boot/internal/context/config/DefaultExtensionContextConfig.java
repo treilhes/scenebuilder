@@ -262,10 +262,9 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {// exten
      *
      */
     @Bean(name = "redirector")
-    DispatcherServlet dispatcherServlet(ServletContext sctx, ServletConfig scfg,
-            AnnotationConfigServletWebApplicationContext baseContext, JfxAppContext context) {
+    DispatcherServlet dispatcherServlet(ServletContext sctx, ServletConfig scfg, JfxAppContext context) {
 
-        var dispatcherServlet = new DispatcherServlet(baseContext);
+        var dispatcherServlet = new DispatcherServlet(context);
         // dispatcherServlet.setDetectAllHandlerMappings(false);
         dispatcherServlet.setDetectAllViewResolvers(false);
 

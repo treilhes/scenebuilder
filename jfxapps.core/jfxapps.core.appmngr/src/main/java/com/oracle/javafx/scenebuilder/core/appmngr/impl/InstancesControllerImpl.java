@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -52,10 +52,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.DependsOn;
 
-import com.gluonhq.jfxapps.boot.context.DocumentScope;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
+import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
 import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
 import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
 import com.oracle.javafx.scenebuilder.api.application.lifecycle.DisposeWithApplication;
@@ -461,7 +461,7 @@ public class InstancesControllerImpl implements InstancesManager {
      */
     @Override
     public ApplicationInstance newInstance() {
-        DocumentScope.setCurrentScope(null);
+        JfxAppContext.applicationInstanceScope.unbindScope();
 
         final ApplicationInstance result = context.getBean(ApplicationInstance.class);
         final SceneBuilderManager sceneBuilderManager = context.getBean(SceneBuilderManager.class);
@@ -519,7 +519,7 @@ public class InstancesControllerImpl implements InstancesManager {
 //            }
 //        }
         try {
-            return DocumentScope.getCurrentScope();
+            return (ApplicationInstance) JfxAppContext.applicationInstanceScope.getCurrentScope().getScopedObject();
         } catch (Exception e) {
             return null;
         }

@@ -47,43 +47,12 @@ open module jfxapps.boot.loader {
     requires jfxapps.boot.maven;
     requires jfxapps.boot.platform;
     requires jfxapps.boot.registry;
-    //requires jfxapps.boot.jpa;
 
-    requires org.slf4j;
-    requires com.fasterxml.jackson.databind;
-    requires com.fasterxml.jackson.annotation;
-
-    requires spring.context;
-    requires spring.boot;
-    requires jakarta.annotation;
-    requires org.mapstruct;
-    requires java.compiler;
-    requires jakarta.persistence;
-    requires spring.data.jpa;
-    requires spring.boot.autoconfigure;
-    requires spring.aop;
-    requires spring.beans;
+    requires jfxapps.boot.starter;
 
     requires jfxapps.spring.core.patch.link;
     requires jfxapps.hibernate.core.patch.link;
-
-    //not required, but loaded for future use
-    requires spring.web;
-    requires spring.webmvc;
-    requires org.apache.tomcat.embed.core;
-    requires spring.orm;
-    requires spring.tx;
-    requires spring.data.commons;
-    requires org.hibernate.orm.core;
-    requires spring.aspects;
-    requires spring.core;
-    requires org.springdoc.openapi.ui;
-    requires org.springdoc.openapi.common;
-    requires org.springdoc.openapi.webmvc.core;
-    requires thymeleaf;
-    requires thymeleaf.spring6;
-    requires io.swagger.v3.core;
-    requires io.swagger.v3.oas.models;
+    requires java.compiler;
 
     uses Extension;
 }

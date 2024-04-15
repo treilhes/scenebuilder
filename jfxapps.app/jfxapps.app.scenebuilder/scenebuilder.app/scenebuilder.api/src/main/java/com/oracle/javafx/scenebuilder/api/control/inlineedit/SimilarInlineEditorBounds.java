@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -46,7 +47,7 @@ public class SimilarInlineEditorBounds extends AbstractInlineEditorBounds {
 
     @Override
     public Node getBounds(FXOMObject fxomObject) {
-        return fxomObject.isNode() ? (Node)fxomObject.getSceneGraphObject() : null;
+        return fxomObject.getSceneGraphObject().isNode() ? fxomObject.getSceneGraphObject().getAs(Node.class) : null;
     }
 
 }

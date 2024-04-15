@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,7 +36,6 @@ package com.oracle.javafx.scenebuilder.api.control.driver;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
@@ -43,11 +43,10 @@ import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 @Component
 public class DriverExtensionRegistry {
 
-    private final SceneBuilderBeanFactory context;
+    private final JfxAppContext context;
     private final Map<Class<?>, InheritanceMap<?>> extensions = new HashMap<>();
 
-    public DriverExtensionRegistry(
-            @Autowired SceneBuilderBeanFactory context) {
+    public DriverExtensionRegistry(JfxAppContext context) {
         super();
         this.context = context;
     }

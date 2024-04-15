@@ -10,39 +10,6 @@ open module jfxapps.boot.main {
     requires jfxapps.boot.jpa;
     requires jfxapps.boot.starter;
 
-    requires spring.boot;
-    requires spring.boot.autoconfigure;
-
-    requires org.slf4j;
     requires info.picocli;
 
-    // required by javafx
-    requires jdk.xml.dom;
-    requires jdk.jsobject;
-    requires jdk.unsupported;
-    requires java.scripting;
-
-
-    requires java.sql;
-    requires java.instrument;
-
-    requires jakarta.persistence;
-    //requires jakarta.transaction;
-    //requires jakarta.cdi;
-
-    requires spring.data.jpa;
-    requires spring.web;
-
-
-    //requires jakarta.xml.bind;
-
-    //test
-    requires org.apache.tomcat.embed.core;
-    requires spring.webmvc;
-    requires java.net.http;
-    requires com.fasterxml.jackson.databind;
-    requires spring.tx;
-    requires spring.beans;
-
-    //requires jakarta.transaction;
 }

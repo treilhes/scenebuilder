@@ -10,5 +10,7 @@
   
   <modules>
       <module>jfxapps.app.manager.main</module>
+      <module>jfxapps.app.manager.model</module>
+      <module>jfxapps.app.manager.metadata</module>
   </modules>
 </project>

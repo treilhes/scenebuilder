@@ -90,40 +90,22 @@ open module jfxapps.core.api {
     exports com.oracle.javafx.scenebuilder.core.action.editor;
 
     exports com.oracle.javafx.scenebuilder.api.application.javafx;
-    //requires transitive scenebuilder.starter;
-    //requires transitive scenebuilder.core.extension.api;
-    //requires transitive scenebuilder.core.om;
+
+    requires transitive jfxapps.javafx.starter;
 
     requires transitive jfxapps.boot.loader;
     requires transitive jfxapps.boot.platform;
     requires transitive jfxapps.boot.maven;
-    //requires transitive scenebuilder.boot.context;
+    requires transitive jfxapps.boot.starter;
 
     requires transitive jfxapps.core.utils;
+
     requires transitive scenebuilder.core.fxom;
     requires transitive scenebuilder.core.metadata;
 
-    requires transitive javafx.base;
-    requires transitive javafx.controls;
-    requires transitive javafx.fxml;
-    requires transitive javafx.graphics;
-    requires transitive javafx.media;
-    requires transitive javafx.swing;
-    requires transitive javafx.web;
-    requires transitive org.slf4j;
-    requires transitive java.prefs;
-    requires io.reactivex.rxjava3;
-    requires org.reactivestreams;
-    requires com.fasterxml.jackson.annotation;
-    requires com.fasterxml.jackson.databind;
+    requires transitive io.reactivex.rxjava3;
+    requires transitive org.reactivestreams;
     requires transitive org.pdfsam.rxjavafx;
-    requires spring.beans;
-    requires spring.core;
-    requires spring.context;
-    requires jakarta.inject;
-    requires jakarta.annotation;
-
-    requires org.aspectj.weaver;
 
     provides Extension with ApiExtension;
 }

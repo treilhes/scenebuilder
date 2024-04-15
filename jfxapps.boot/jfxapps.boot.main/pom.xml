@@ -112,7 +112,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-invoker-plugin</artifactId>
-                <version>3.2.2</version>
+                <version>3.6.1</version>
                 <configuration>
                     <projectsDirectory>${basedir}/src/test/resources-its</projectsDirectory>
                     <pomIncludes>

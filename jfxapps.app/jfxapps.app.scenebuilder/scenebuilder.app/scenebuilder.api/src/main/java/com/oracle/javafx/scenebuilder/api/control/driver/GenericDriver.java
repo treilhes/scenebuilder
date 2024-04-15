@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,12 +36,9 @@ package com.oracle.javafx.scenebuilder.api.control.driver;
 import org.scenebuilder.fxml.api.Content;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
 import com.oracle.javafx.scenebuilder.api.control.DropTargetProvider;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
@@ -75,9 +73,7 @@ import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationSingleton
 public class GenericDriver extends AbstractDriver {
 
     private static final Logger logger = LoggerFactory.getLogger(GenericDriver.class);
@@ -85,8 +81,8 @@ public class GenericDriver extends AbstractDriver {
     private final DriverExtensionRegistry registry;
 
     public GenericDriver(
-            @Autowired DriverExtensionRegistry registry,
-            @Autowired @Lazy Content contentPanelController) {
+            DriverExtensionRegistry registry,
+            @Lazy Content contentPanelController) {
         super(contentPanelController);
         this.registry = registry;
     }
@@ -95,7 +91,7 @@ public class GenericDriver extends AbstractDriver {
     public <T> T make(Class<T> cls, FXOMObject fxomObject) {
         assert fxomObject instanceof FXOMInstance;
         assert fxomObject.getSceneGraphObject() != null;
-        return registry.getImplementationInstance(cls, fxomObject.getSceneGraphObject().getClass());
+        return registry.getImplementationInstance(cls, fxomObject.getSceneGraphObject().getObjectClass());
     }
 
     @Override
@@ -133,8 +129,8 @@ public class GenericDriver extends AbstractDriver {
 
     @Override
     public Relocater makeRelocater(FXOMObject fxomObject) {
-        assert fxomObject.isNode();
-        final Node node = (Node)fxomObject.getSceneGraphObject();
+        assert fxomObject.getSceneGraphObject().isNode();
+        final Node node = fxomObject.getSceneGraphObject().getAs(Node.class);
         final FXOMObject parentObject = fxomObject.getParentObject();
 
         AbstractRelocater relocater = null;

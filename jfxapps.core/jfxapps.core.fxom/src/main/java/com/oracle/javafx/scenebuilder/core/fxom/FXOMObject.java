@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -56,6 +56,7 @@ public abstract class FXOMObject extends FXOMNode {
     private FXOMProperty parentProperty;
     private FXOMCollection parentCollection;
     //private FXOMDefine parentDefine;
+
     private SceneGraphObject sceneGraphObject = new SceneGraphObject();
 
     FXOMObject(FXOMDocument fxomDocument, GlueElement glueElement, Object sceneGraphObject) {
@@ -248,13 +249,12 @@ public abstract class FXOMObject extends FXOMNode {
 //        return result;
 //    }
 
-
     public SceneGraphObject getSceneGraphObject() {
         return sceneGraphObject;
     }
 
     public void setSceneGraphObject(Object sceneGraphObject) {
-        this.sceneGraphObject = new SceneGraphObject(sceneGraphObject);
+        this.sceneGraphObject.update(sceneGraphObject);
     }
 
     public FXOMObject getNextSlibing() {

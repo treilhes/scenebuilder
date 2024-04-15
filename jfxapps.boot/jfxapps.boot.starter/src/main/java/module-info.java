@@ -33,9 +33,27 @@
  */
 module jfxapps.boot.starter {
 
+    requires transitive com.fasterxml.jackson.databind;
+    requires transitive com.fasterxml.jackson.annotation;
+
     requires transitive io.swagger.v3.core;
     requires transitive io.swagger.v3.oas.models;
 
+    requires transitive java.compiler;
+    requires transitive java.desktop;
+    requires transitive java.instrument;// required by javafx
+    requires transitive java.json;
+    requires transitive java.logging;
+    requires transitive java.net.http;
+    requires transitive java.prefs;
+    requires transitive java.scripting; // required by javafx
+    requires transitive java.sql;
+
+    requires transitive jdk.xml.dom; // required by javafx
+    requires transitive jdk.jsobject; // required by javafx
+    requires transitive jdk.unsupported; // required by javafx
+
+    requires transitive jakarta.annotation;
     requires transitive jakarta.inject;
     requires transitive jakarta.persistence;
     requires transitive jakarta.validation;
@@ -44,11 +62,14 @@ module jfxapps.boot.starter {
     requires transitive org.aspectj.weaver;
     requires transitive org.hibernate.orm.core;
     requires transitive org.hibernate.validator;
+    requires transitive org.mapstruct;
+    requires transitive org.slf4j;
     requires transitive org.springdoc.openapi.ui;
     requires transitive org.springdoc.openapi.common;
     requires transitive org.springdoc.openapi.webmvc.core;
 
     requires transitive spring.aop;
+    requires transitive spring.aspects;
     requires transitive spring.beans;
     requires transitive spring.boot;
     requires transitive spring.boot.autoconfigure;
@@ -56,7 +77,12 @@ module jfxapps.boot.starter {
     requires transitive spring.context;
     requires transitive spring.data.jpa;
     requires transitive spring.data.commons;
+    requires transitive spring.expression;
+    requires transitive spring.orm;
     requires transitive spring.tx;
     requires transitive spring.web;
     requires transitive spring.webmvc;
+
+    requires transitive thymeleaf;
+    requires transitive thymeleaf.spring6;
 }

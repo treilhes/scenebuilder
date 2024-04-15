@@ -38,6 +38,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -75,12 +76,12 @@ public class ContextManagerImpl implements ContextManager {
     }
 
     @Override
-    public JfxAppContext create(UUID parentContextId, UUID contextId, Class<?>[] classes, List<Object> singletonInstances, MultipleProgressListener progressListener) {
-        return create(parentContextId, contextId, null, classes, singletonInstances, progressListener);
+    public JfxAppContext create(UUID parentContextId, UUID contextId, Set<Class<?>> classes,Set<Class<?>> deportedClasses, List<Object> singletonInstances, MultipleProgressListener progressListener) {
+        return create(parentContextId, contextId, null, classes, deportedClasses, singletonInstances, progressListener);
     }
 
     @Override
-    public JfxAppContext create(UUID parentContextId, UUID contextId, ClassLoader loader, Class<?>[] classes, List<Object> singletonInstances, MultipleProgressListener progressListener) {
+    public JfxAppContext create(UUID parentContextId, UUID contextId, ClassLoader loader, Set<Class<?>> classes,Set<Class<?>> deportedClasses, List<Object> singletonInstances, MultipleProgressListener progressListener) {
 
         JfxAppContextImpl parent = contexts.get(parentContextId);
 
@@ -92,17 +93,19 @@ public class ContextManagerImpl implements ContextManager {
             context.setParent(bootContext);
         }
 
-        logger.info("Loading context {} with parent {} using {} classes", contextId, parentContextId, classes.length);
+        logger.info("Loading context {} with parent {} using {} classes", contextId, parentContextId, classes.size());
 
         if (logger.isDebugEnabled()) {
-            Arrays.stream(classes).sorted(Comparator.comparing(Class::getName)).forEach(c -> logger.debug("Loaded {}", c));
+            classes.stream().sorted(Comparator.comparing(Class::getName)).forEach(c -> logger.debug("Loaded {}", c));
+            deportedClasses.stream().sorted(Comparator.comparing(Class::getName)).forEach(c -> logger.debug("Deported {}", c));
         }
 
         if (progressListener != null) {
             context.addProgressListener(progressListener);
         }
 
-        context.register(classes);
+        context.register(classes.toArray(new Class<?>[0]));
+        context.deport(deportedClasses.toArray(new Class<?>[0]));
 
         if (singletonInstances != null) {
             singletonInstances.forEach(context::registerSingleton);
@@ -113,6 +116,10 @@ public class ContextManagerImpl implements ContextManager {
 
         logger.info("Context {} has started successfully (active: {}, running: {}, beans: {})", context.getId(),
                 context.isActive(), context.isRunning(), context.getBeanDefinitionCount());
+
+        if (logger.isDebugEnabled()) {
+            Arrays.stream(context.getBeanDefinitionNames()).sorted().forEach(c -> logger.debug("Bean {}", c));
+        }
 
         contexts.put(contextId, context);
 

@@ -34,7 +34,6 @@
 package com.gluonhq.jfxapps.boot.context.impl;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -51,74 +50,69 @@ import java.util.stream.Collectors;
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
-import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebApplicationContext;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.annotation.ContextAnnotationAutowireCandidateResolver;
 import org.springframework.core.ResolvableType;
-import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 
-import com.gluonhq.jfxapps.boot.context.DocumentScope;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
 import com.gluonhq.jfxapps.boot.context.annotation.LocalContextOnly;
 import com.gluonhq.jfxapps.boot.context.internal.ContextProgressHandler;
+import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
+import com.gluonhq.jfxapps.boot.context.scope.ApplicationScope;
 
+public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationContext implements JfxAppContext {
 
-public class JfxAppContextImpl implements JfxAppContext  {
-
-    private JfxAppContext parent;
-
-    private final AnnotationConfigServletWebApplicationContext context;
+    // private final AnnotationConfigServletWebApplicationContext context;
     private final SbBeanFactoryImpl beanFactory;
     private final UUID id;
-
-    private Class<?>[] registeredClasses;
+    private final Set<Class<?>> registeredClasses = new HashSet<>();
+    private final Set<Class<?>> deportedClasses = new HashSet<>();
 
     public JfxAppContextImpl(UUID id) {
         this(id, null);
     }
 
     public JfxAppContextImpl(UUID contextId, ClassLoader loader) {
+        super(new SbBeanFactoryImpl());
+
         this.id = contextId;
-        this.beanFactory = new SbBeanFactoryImpl();
-        this.context = new AnnotationConfigServletWebApplicationContext(this.beanFactory);
-        this.context.setId(id.toString());
-        this.context.setClassLoader(loader);
-        this.context.setAllowBeanDefinitionOverriding(true);
+        this.beanFactory = (SbBeanFactoryImpl) getBeanFactory();
 
-        registerSingleton(this);
+        this.setClassLoader(loader);
+        this.setAllowBeanDefinitionOverriding(true);
+        this.setId(contextId.toString());
+
+        // registerSingleton(this);
     }
 
-    protected void setParent(JfxAppContextImpl parent) {
-        this.parent = parent;
-        this.setParent(parent.context);
+    @Override
+    public UUID getUuid() {
+        return id;
     }
 
-    protected void setParent(ApplicationContext parent) {
+    @Override
+    public void setParent(ApplicationContext parent) {
         if (parent != null) {
-            this.context.setParent(parent);
-            this.context.setServletContext(((GenericWebApplicationContext) parent).getServletContext());
+            super.setParent(parent);
+            this.setServletContext(((GenericWebApplicationContext) parent).getServletContext());
         }
     }
-
 
     public void registerSingleton(Object singletonObject) {
         // Register the singleton instance with a generated name
@@ -129,80 +123,27 @@ public class JfxAppContextImpl implements JfxAppContext  {
     }
 
     @Override
-    public <T> void registerBean(Class<T> beanClass, Supplier<T> tSupplier) {
-        this.context.registerBean(beanClass, tSupplier);
-    }
-    @Override
     public void addProgressListener(MultipleProgressListener progressListener) {
-        ContextProgressHandler progressHandler = new ContextProgressHandler(id, progressListener);
-        context.addApplicationListener(progressHandler);
-        context.addBeanFactoryPostProcessor(progressHandler);
+        ContextProgressHandler progressHandler = new ContextProgressHandler(UUID.fromString(getId()), progressListener);
+        addApplicationListener(progressHandler);
+        addBeanFactoryPostProcessor(progressHandler);
     }
 
     @Override
-    public void register(Class<?>[] classes) {
-        registeredClasses = classes;
-        context.register(classes);
-    }
-
-    @Override
-    public String[] getBeanDefinitionNames() {
-        return context.getBeanDefinitionNames();
-    }
-
-    @Override
-    public <T> Map<String, T> getBeansOfType(Class<T> cls) {
-        return context.getBeansOfType(cls);
-    }
-
-    @Override
-    public void refresh() {
-        context.refresh();
-    }
-
-    @Override
-    public void start() {
-        context.start();
-    }
-
-    @Override
-    public int getBeanDefinitionCount() {
-        return context.getBeanDefinitionCount();
-    }
-
-    @Override
-    public boolean isRunning() {
-        return context.isRunning();
-    }
-
-    @Override
-    public boolean isActive() {
-        return context.isActive();
-    }
-
-    @Override
-    public UUID getId() {
-        return id;
-    }
-
-    public void close() {
-        context.close();
-    }
-
-    @Override
-    public <T> T getBean(Class<T> cls) {
-        return context.getBean(cls);
+    public void register(Class<?>... classes) {
+        registeredClasses.addAll(Arrays.asList(classes));
+        super.register(classes);
     }
 
     @Override
     public <T> T getLocalBean(Class<T> cls) {
 
-        if (parent == null) {
-            return context.getBean(cls);
+        if (getParent() == null) {
+            return getBean(cls);
         }
 
-        Map<String, T> globalMap = context.getBeansOfType(cls);
-        Map<String, T> parentMap = parent.getBeansOfType(cls);
+        Map<String, T> globalMap = getBeansOfType(cls);
+        Map<String, T> parentMap = getParent().getBeansOfType(cls);
 
         Set<T> result = new HashSet<>(globalMap.values());
         result.removeAll(parentMap.values());
@@ -214,29 +155,16 @@ public class JfxAppContextImpl implements JfxAppContext  {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> T getBean(String beanName) {
-        return (T)context.getBean(beanName);
-    }
-
     @Override
     public String[] getBeanNamesForType(Class<?> cls, Class<?> genericClass) {
         ResolvableType resolvable = ResolvableType.forClassWithGenerics(cls, genericClass);
-        return context.getBeanNamesForType(resolvable);
+        return getBeanNamesForType(resolvable);
     }
-
-
-    @Override
-    public JfxAppContext getParent() {
-        return parent;
-    }
-
 
     @Override
     public Object parseExpression(String spelExpression, Object rootContext) {
         try {
-            StandardEvaluationContext  stContext  = new StandardEvaluationContext(rootContext);
+            StandardEvaluationContext stContext = new StandardEvaluationContext(rootContext);
             SpelExpressionParser parser = new SpelExpressionParser();
             return parser.parseRaw(spelExpression).getValue(stContext);
         } catch (EvaluationException e) {
@@ -250,48 +178,40 @@ public class JfxAppContextImpl implements JfxAppContext  {
     }
 
     @Override
-    public boolean isDocumentScope(Class<?> cls) {
-        String[] names = context.getBeanNamesForType(cls);
+    public boolean isApplicationScope(Class<?> cls) {
+        String[] names = getBeanNamesForType(cls);
 
         if (names.length == 0) {
             return false;
         }
-        BeanDefinition definition = context.getBeanDefinition(names[0]);
-        return DocumentScope.SCOPE_NAME.equals(definition.getScope());
+        BeanDefinition definition = getBeanDefinition(names[0]);
+        return ApplicationInstanceScope.SCOPE_NAME.equals(definition.getScope());
     }
 
     @Override
-    public void publishEvent(ApplicationEvent event) {
-        this.context.publishEvent(event);
+    public boolean isApplicationInstanceScope(Class<?> cls) {
+        String[] names = getBeanNamesForType(cls);
+
+        if (names.length == 0) {
+            return false;
+        }
+        BeanDefinition definition = getBeanDefinition(names[0]);
+        return ApplicationInstanceScope.SCOPE_NAME.equals(definition.getScope());
     }
 
     @Override
     public List<Class<?>> getBeanClassesForAnnotation(Class<? extends Annotation> annotationType) {
-        return Arrays.stream(context.getBeanNamesForAnnotation(annotationType))
-            .map(context::getType)
-            .collect(Collectors.toList());
+        return Arrays.stream(getBeanNamesForAnnotation(annotationType)).map(this::getType).collect(Collectors.toList());
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> List<Class<T>> getBeanClassesForType(Class<T> cls) {
-        return Arrays.stream(context.getBeanNamesForType(cls))
-            .map(n -> (Class<T>)context.getType(n))
-            .collect(Collectors.toList());
+        return Arrays.stream(getBeanNamesForType(cls)).map(n -> (Class<T>) getType(n)).collect(Collectors.toList());
     }
 
     @Override
-    public Object getBean(String string, Object... parameters) {
-        return context.getBean(string, parameters);
-    }
-
-    @Override
-    public <T> T getBean(Class<T> cls, Object... parameters) {
-        return context.getBean(cls, parameters);
-    }
-
-    @Override
-    public Class<?>[] getRegisteredClasses() {
+    public Set<Class<?>> getRegisteredClasses() {
         return registeredClasses;
     }
 
@@ -300,7 +220,7 @@ public class JfxAppContextImpl implements JfxAppContext  {
         String[] beanNamesForType = getBeanNamesForType(cls, generic);
         Map<String, U> map = new HashMap<>();
         if (beanNamesForType.length > 0) {
-            Arrays.asList(beanNamesForType).forEach(n -> map.put(n, (U)getBean(n)));
+            Arrays.asList(beanNamesForType).forEach(n -> map.put(n, (U) getBean(n)));
         }
         return map;
     }
@@ -310,18 +230,54 @@ public class JfxAppContextImpl implements JfxAppContext  {
         return beanFactory.getBeanClassLoader();
     }
 
-    public class SbBeanFactoryImpl extends DefaultListableBeanFactory {
+    @Override
+    public void destroyBean(Object existingBean) {
+        beanFactory.destroyBean(existingBean);
+    }
+
+    @Override
+    public void destroyScopedBean(String beanName) {
+        beanFactory.destroyScopedBean(beanName);
+    }
+
+    @Override
+    public void close() {
+        beanFactory.cleanScopedBeans();
+        super.close();
+    }
+
+    public static class SbBeanFactoryImpl extends DefaultListableBeanFactory {
+
+        private final ApplicationScope applicationScope;
+        private final ApplicationInstanceScope applicationInstanceScope;
 
         public SbBeanFactoryImpl() {
-            DocumentScope scope = new DocumentScope(this);
-            registerScope(DocumentScope.SCOPE_NAME, scope);
-            //addBeanPostProcessor(new FxmlControllerBeanPostProcessor());
+            super();
+
+            this.applicationScope = new ApplicationScope(this, JfxAppContext.applicationScope);
+            this.applicationInstanceScope = new ApplicationInstanceScope(this, JfxAppContext.applicationInstanceScope);
+
+            registerScope(ApplicationScope.SCOPE_NAME, this.applicationScope);
+            registerScope(ApplicationInstanceScope.SCOPE_NAME, this.applicationInstanceScope);
+
+            // addBeanPostProcessor(new FxmlControllerBeanPostProcessor());
             setAutowireCandidateResolver(new SbContextAnnotationAutowireCandidateResolver());
-            //registerSingleton(DocumentScope.class.getName(), scope);
+        }
+
+        public void cleanScopedBeans() {
+            var applicationHolders = applicationScope.getAllContext().stream()
+                    .filter(c -> c.getScopeHolder() == applicationScope).toList();
+
+            applicationHolders.forEach(h -> JfxAppContext.applicationScope.removeScope(h.getScopedObject()));
+
+            var applicationInstanceHolders = applicationInstanceScope.getAllContext().stream()
+                    .filter(c -> c.getScopeHolder() == applicationInstanceScope).toList();
+            applicationInstanceHolders.forEach(h -> JfxAppContext.applicationInstanceScope.removeScope(h.getScopedObject()));
         }
 
         @Override
-        protected Object createBean(String beanName, RootBeanDefinition mbd, Object[] args) throws BeanCreationException {
+        protected Object createBean(String beanName, RootBeanDefinition mbd, Object[] args)
+                throws BeanCreationException {
             Class<?> rawClass = mbd.getResolvableType().getRawClass();
             try {
                 return super.createBean(beanName, mbd, args);
@@ -335,20 +291,17 @@ public class JfxAppContextImpl implements JfxAppContext  {
             }
         }
 
-
-
 //        @Override
 //        public BeanFactory getParentBeanFactory() {
 //            DefaultListableBeanFactory parent = (DefaultListableBeanFactory)super.getParentBeanFactory();
-    //
+        //
 //            if (parent == null) {
 //                return null;
 //            }
-    //
+        //
 //            ChildFirstBeanFactoryWrapper bf = new ChildFirstBeanFactoryWrapper(parent, this);
 //            return bf;
 //        }
-
 
         @Override
         protected boolean isAutowireCandidate(String beanName, DependencyDescriptor descriptor,
@@ -360,9 +313,9 @@ public class JfxAppContextImpl implements JfxAppContext  {
                 String bdName = BeanFactoryUtils.transformedBeanName(beanName);
                 if (containsBeanDefinition(bdName)) {
                     return isAutowireCandidate(beanName, getMergedLocalBeanDefinition(bdName), descriptor, resolver);
-                }
-                else if (containsSingleton(beanName)) {
-                    return isAutowireCandidate(beanName, new RootBeanDefinition(getType(beanName)), descriptor, resolver);
+                } else if (containsSingleton(beanName)) {
+                    return isAutowireCandidate(beanName, new RootBeanDefinition(getType(beanName)), descriptor,
+                            resolver);
                 }
                 return false;
             }
@@ -370,75 +323,7 @@ public class JfxAppContextImpl implements JfxAppContext  {
             return super.isAutowireCandidate(beanName, descriptor, resolver);
         }
 
-
-
         private class SbContextAnnotationAutowireCandidateResolver extends ContextAnnotationAutowireCandidateResolver {
-
-
-            @Override
-            public boolean isAutowireCandidate(BeanDefinitionHolder bdHolder, DependencyDescriptor descriptor) {
-                if (super.isAutowireCandidate(bdHolder, descriptor)) {
-                    return checkLocalOnly(bdHolder, descriptor);
-                }
-                return false;
-            }
-
-            private boolean checkLocalOnly(BeanDefinitionHolder bdHolder, DependencyDescriptor descriptor) {
-                LocalContextOnly targetAnn = descriptor.getAnnotation(LocalContextOnly.class);
-                if (targetAnn != null) {
-                    BeanDefinition bd = bdHolder.getBeanDefinition();
-                    String beanName = bdHolder.getBeanName();
-                    String ctxId = JfxAppContextImpl.this.getId().toString();
-                    BeanDefinition mlbd = null;
-                    BeanDefinition mbd = null;
-                    try {
-                        mlbd = beanFactory.getMergedLocalBeanDefinition(bdHolder.getBeanName());
-                    } catch (BeansException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                    try {
-                        mbd = beanFactory.getMergedBeanDefinition(bdHolder.getBeanName());
-                    } catch (BeansException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-
-                    Object source = bd.getSource();
-                    System.out.println();
-//                    context.
-//                    String[] candidateTags = null;
-//
-//                    if (source instanceof AnnotatedTypeMetadata) { // source is not null when a candidate was created with @Bean annotation
-//                        Map<String, Object> attributes = ((AnnotatedTypeMetadata) source).getAnnotationAttributes(Tags.class.getName());
-//                        if (attributes != null) {
-//                            candidateTags = (String[]) attributes.get("value");
-//                        }
-//                    } else {
-//                        ResolvableType candidateType = ((RootBeanDefinition) bd).getResolvableType();
-//                        if (candidateType != null) { // candidateType is not null when candidate was created with @Component like annotation
-//                            Class<?> candidateClass = candidateType.resolve();
-//                            if (candidateClass != null) {
-//                                Tags tagsAnn = candidateClass.getAnnotation(Tags.class);
-//                                if (tagsAnn != null) {
-//                                    candidateTags = tagsAnn.value();
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//                    if (candidateTags != null) {
-//                        List<String> targetTags = new ArrayList<>(Arrays.asList(targetAnn.value()));
-//                        targetTags.retainAll(Arrays.asList(candidateTags));
-//                        return !targetTags.isEmpty();
-//                    } else {
-//                        // If a candidate doesn't have @Tags annotation then it's not a suitable candidate
-//                        return false;
-//                    }
-                }
-                // If target doesn't have @LocalOnly annotation then return 'true' as super.isAutowireCandidate() does.
-                return true;
-            }
 
             @Override
             protected Object buildLazyResolutionProxy(DependencyDescriptor descriptor, String beanName) {
@@ -500,7 +385,28 @@ public class JfxAppContextImpl implements JfxAppContext  {
 
         }
 
+        public ApplicationScope getApplicationScope() {
+            return applicationScope;
+        }
 
+        public ApplicationInstanceScope getApplicationInstanceScope() {
+            return applicationInstanceScope;
+        }
 
     }
+
+    @Override
+    public <T> void registerBean(Class<T> cls, Supplier<T> supplier) {
+        super.registerBean(cls, supplier);
+    }
+
+    @Override
+    public Set<Class<?>> getDeportedClasses() {
+        return deportedClasses;
+    }
+
+    public void deport(Class<?>... deportedClasses) {
+        this.deportedClasses.addAll(Arrays.asList(deportedClasses));
+    }
+
 }

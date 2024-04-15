@@ -46,8 +46,8 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import com.gluonhq.jfxapps.boot.context.DocumentScope;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
 import com.oracle.javafx.scenebuilder.api.editors.ApplicationInstance;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
@@ -225,7 +225,7 @@ class DocumentWindowControllerTest {
     @Test
     void should_load(FxRobot robot) {
 
-        DocumentScope.setCurrentScope(scopedDocument);
+        ApplicationInstanceScope.setCurrentScope(scopedDocument);
 
         Mockito.when(leftDividerHPos.getValue()).thenReturn(0.2d);
         Mockito.when(rightDividerHPos.getValue()).thenReturn(0.8d);

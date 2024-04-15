@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,32 +38,41 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.Application;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.loader.OpenCommandEvent;
+import com.gluonhq.jfxapps.boot.loader.extension.ApplicationExtension;
 import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
 import com.oracle.javafx.scenebuilder.api.application.CommandHandler;
 import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
 import com.oracle.javafx.scenebuilder.api.application.javafx.JavafxThreadHolder;
 
 @ApplicationSingleton
-public class CommandHandlerImpl implements CommandHandler{
+public class CommandHandlerImpl implements CommandHandler, Application{
 
     private static final Logger logger = LoggerFactory.getLogger(CommandHandlerImpl.class);
 
     private final InstancesManager instancesManager;
     private final JavafxThreadHolder fxThreadHolder;
-
+    private final Set<ApplicationExtension> applications;
     private final List<OpenCommandEvent> waitingCommands = new ArrayList<>();
 
-    public CommandHandlerImpl(InstancesManager instancesManager, JavafxThreadHolder fxThreadHolder) {
+    private final JfxAppContext context;
+
+    public CommandHandlerImpl(JfxAppContext context, InstancesManager instancesManager, JavafxThreadHolder fxThreadHolder,
+            Set<ApplicationExtension> applications) {
         super();
+        this.context = context;
         this.instancesManager = instancesManager;
         this.fxThreadHolder = fxThreadHolder;
+        this.applications = applications;
         this.fxThreadHolder.whenStarted(this::executeStoredCommands);
     }
 

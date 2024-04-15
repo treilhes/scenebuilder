@@ -41,9 +41,10 @@ import java.util.Optional;
 
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
-import com.gluonhq.jfxapps.boot.context.DocumentScope;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.FxThread;
+import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
@@ -430,12 +431,12 @@ public class ApplicationInstanceController implements com.oracle.javafx.scenebui
         // Closes if confirmed
         main.notifyInstanceClosed(this);
 
-        DocumentScope.removeScope(this);
+        JfxAppContext.applicationInstanceScope.removeScope(this);
     }
 
     @Override
     public void onFocus() {
-        DocumentScope.setCurrentScope(this);
+        JfxAppContext.applicationInstanceScope.setCurrentScope(this);
         sceneBuilderManager.documentScoped().onNext(this);
     }
 

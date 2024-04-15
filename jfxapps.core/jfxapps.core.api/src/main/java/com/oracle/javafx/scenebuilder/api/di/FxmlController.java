@@ -66,7 +66,7 @@ public interface FxmlController {
 
 
 	/**
-	 * This method is automatically called by {@link com.oracle.javafx.scenebuilder.api.internal.di.FxmlControllerBeanPostProcessor#postProcessAfterInitialization(Object, String)}
+	 * This method is automatically called by {@link com.oracle.javafx.scenebuilder.api.application.javafx.internal.FxmlControllerBeanPostProcessor#postProcessAfterInitialization(Object, String)}
 	 * after a successful call to {@link javafx.fxml.FXMLLoader#load()} using {@link #getFxmlURL()} and {@link #getResources()} as parameters. The return value of {@link javafx.fxml.FXMLLoader#load()}
 	 * will be used as parameter for this function
 	 * @param root the {@link javafx.scene.Parent} root of the provided fxml file
@@ -75,7 +75,7 @@ public interface FxmlController {
 
 
 	/**
-     * This method is automatically called by {@link com.oracle.javafx.scenebuilder.api.internal.di.FxmlControllerBeanPostProcessor#postProcessAfterInitialization(Object, String)}
+     * This method is automatically called by {@link com.oracle.javafx.scenebuilder.api.application.javafx.internal.FxmlControllerBeanPostProcessor#postProcessAfterInitialization(Object, String)}
      * after a successful call to {@link javafx.fxml.FXMLLoader#load()} using {@link #getFxmlURL()} and {@link #getResources()} as parameters and a successful call to {@link #setRoot(Parent)}
      * It notify the controller that all loading activities have ended successfully
      */

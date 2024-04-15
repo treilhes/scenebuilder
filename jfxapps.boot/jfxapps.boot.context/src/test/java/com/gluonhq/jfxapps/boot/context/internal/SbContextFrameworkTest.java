@@ -39,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -67,56 +68,56 @@ class SbContextFrameworkTest {
     @Test
     void test_injection_feature_optional() {
         ContextManager mng = new ContextManagerImpl(bootContext);
-        Class<?>[] classes = { OptionalFeature.class };
-        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
+        Set<Class<?>> classes = Set.of(OptionalFeature.class);
+        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, Set.of(), null, null);
         assertNotNull(ctx.getBean(OptionalFeature.class));
     }
 
     @Test
     void test_injection_feature_generic() {
         ContextManager mng = new ContextManagerImpl(bootContext);
-        Class<?>[] classes = { Component1.class, Component2.class, Component3.class, GenericFeature.class};
-        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
+        Set<Class<?>> classes = Set.of(Component1.class, Component2.class, Component3.class, GenericFeature.class);
+        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, Set.of(), null, null);
         assertNotNull(ctx.getBean(GenericFeature.class));
     }
 
     @Test
     void test_injection_feature_list() {
         ContextManager mng = new ContextManagerImpl(bootContext);
-        Class<?>[] classes = { Component1.class, Component2.class, Component3.class, ListFeature.class};
-        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
+        Set<Class<?>> classes = Set.of(Component1.class, Component2.class, Component3.class, ListFeature.class);
+        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, Set.of(),null, null);
         assertNotNull(ctx.getBean(ListFeature.class));
     }
 
     @Test
     void test_injection_feature_lazy_injection() {
         ContextManager mng = new ContextManagerImpl(bootContext);
-        Class<?>[] classes = { Component1.class, Component2.class, Component3.class, LazyInjectionFeature.class };
-        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
+        Set<Class<?>> classes = Set.of(Component1.class, Component2.class, Component3.class, LazyInjectionFeature.class);
+        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, Set.of(),null, null);
         assertNotNull(ctx.getBean(LazyInjectionFeature.class));
     }
 
     @Test
     void test_injection_feature_multiple_constructor() {
         ContextManager mng = new ContextManagerImpl(bootContext);
-        Class<?>[] classes = { Component1.class, MultiConstructorFeature.class };
-        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
+        Set<Class<?>> classes = Set.of(Component1.class, MultiConstructorFeature.class);
+        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, Set.of(),null, null);
         assertNotNull(ctx.getBean(MultiConstructorFeature.class));
     }
 
     @Test
     void test_injection_feature_primary() {
         ContextManager mng = new ContextManagerImpl(bootContext);
-        Class<?>[] classes = { PrimaryComponent.class, SecondaryComponent.class, PrimaryInjectionFeature.class };
-        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
+        Set<Class<?>> classes = Set.of(PrimaryComponent.class, SecondaryComponent.class, PrimaryInjectionFeature.class);
+        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, Set.of(), null, null);
         assertNotNull(ctx.getBean(PrimaryInjectionFeature.class));
     }
 
     @Test
     void test_injection_feature_lazy_initialization() {
         ContextManager mng = new ContextManagerImpl(bootContext);
-        Class<?>[] classes = { LazyInitComponent.class, LazyInitFeature.class };
-        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, null, null);
+        Set<Class<?>> classes = Set.of(LazyInitComponent.class, LazyInitFeature.class);
+        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, Set.of(), null, null);
         LazyInitFeature lif = ctx.getBean(LazyInitFeature.class);
 
         assertEquals(0, LazyInitComponent.instanciated);

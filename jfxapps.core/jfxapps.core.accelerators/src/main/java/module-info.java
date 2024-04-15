@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,7 +38,7 @@ open module scenebuilder.core.accelerators {
     exports com.oracle.javafx.scenebuilder.accelerators;
     exports com.oracle.javafx.scenebuilder.accelerators.i18n;
 
-    requires transitive jfxapps.core.api;
+    requires transitive jfxapps.core.starter;
 
     provides Extension with AcceleratorsExtension;
 }

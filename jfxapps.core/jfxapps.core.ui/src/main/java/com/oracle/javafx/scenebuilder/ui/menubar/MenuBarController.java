@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -46,7 +46,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.DocumentScope;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
 import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
@@ -569,7 +570,7 @@ public class MenuBarController implements com.oracle.javafx.scenebuilder.api.ui.
 
         @Override
         public void handle(ActionEvent t) {
-            DocumentScope.setCurrentScope(dwc); // TODO realy necessary ?, check if onFocus is not sufficient
+            JfxAppContext.applicationInstanceScope.setCurrentScope(dwc); // TODO realy necessary ?, check if onFocus is not sufficient
             sceneBuilderManager.documentScoped().onNext(dwc);
             dwc.getDocumentWindow().getStage().toFront();
         }

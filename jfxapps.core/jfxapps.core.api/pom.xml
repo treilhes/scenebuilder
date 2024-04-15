@@ -13,6 +13,34 @@
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.javafx.starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.controls</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.fxom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.metadata</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.utils</artifactId>
+        </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/org.pdfsam.rxjava3/rxjavafx -->
+        <dependency>
+            <groupId>org.pdfsam.rxjava3</groupId>
+            <artifactId>rxjavafx</artifactId>
+            <version>${rxjavafx.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.starter</artifactId>
             <scope>provided</scope>
         </dependency>
@@ -33,36 +61,16 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.controls</artifactId>
+            <artifactId>jfxapps.boot.starter.test</artifactId>
+            <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.fxom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.metadata</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.utils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.javafx.starter</artifactId>
-        </dependency>
+        
         <!--<dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.extension.api</artifactId>
         </dependency>-->
         <!-- JavaFX -->
         
-        
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.boot.starter.test</artifactId>
-            <scope>test</scope>
-        </dependency>
         
         <!-- TODELETE 
         <dependency>
@@ -79,11 +87,5 @@
             <artifactId>jfxapps.starter</artifactId>
         </dependency>-->
         
-        <!-- https://mvnrepository.com/artifact/org.pdfsam.rxjava3/rxjavafx -->
-        <dependency>
-            <groupId>org.pdfsam.rxjava3</groupId>
-            <artifactId>rxjavafx</artifactId>
-            <version>3.0.2</version>
-        </dependency>
     </dependencies>
 </project>

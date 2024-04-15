@@ -37,10 +37,10 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.loader.extension.EditorExtension;
+import com.gluonhq.jfxapps.boot.loader.extension.ApplicationExtension;
 
 public interface EditorDescriptor {
-    EditorExtension getExtension();
+    ApplicationExtension getExtension();
     String getLabel();
     String getDescription();
     String getLicence();
@@ -49,7 +49,7 @@ public interface EditorDescriptor {
     URL getImageX2();
     List<String> handledFileExtensions();
 
-    public static EditorDescriptor fromExtension(EditorExtension extension) {
+    public static EditorDescriptor fromExtension(ApplicationExtension extension) {
 
         final com.oracle.javafx.scenebuilder.api.application.annotation.EditorDescriptor annotation = extension.getClass()
                 .getAnnotation(com.oracle.javafx.scenebuilder.api.application.annotation.EditorDescriptor.class);
@@ -70,12 +70,12 @@ public interface EditorDescriptor {
 
     }
 
-    static EditorDescriptor create(EditorExtension extension, String label, String description, String licence, URL licenceFile, URL image,
+    static EditorDescriptor create(ApplicationExtension extension, String label, String description, String licence, URL licenceFile, URL image,
             URL imageX2, List<String> fileExtensions) {
         return new EditorDescriptor() {
 
             @Override
-            public EditorExtension getExtension() {
+            public ApplicationExtension getExtension() {
                 return extension;
             }
 

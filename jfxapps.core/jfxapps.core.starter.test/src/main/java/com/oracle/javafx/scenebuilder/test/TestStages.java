@@ -44,7 +44,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.Window;
 
 //@ExtendWith({ApplicationExtension.class})
 public class TestStages {

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -57,7 +57,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 @ApplicationInstanceSingleton
-public class ManagerUiTemplate extends AbstractFxmlWindowController implements InstanceWindow, WindowPreferenceTracker {
+public class ManagerUiTemplate extends AbstractFxmlWindowController implements InstanceWindow {
 
     public static final String BOTTOM_DOCK_ID = "e8a0168d-f074-47e7-b107-aa7302a27cf8";
     public static final UUID BOTTOM_DOCK_UUID = UUID.fromString(BOTTOM_DOCK_ID);
@@ -73,17 +73,18 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements I
 
     private final MenuBar menuBar;
     private final MainContent mainContent;
-
+    private final WindowPreferenceTracker tracker;
     private final Provider<BottomDividerVPosPreference> bottomDividerVPos;
 
- // @formatter:off
+    // @formatter:off
     public ManagerUiTemplate(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
             Provider<BottomDividerVPosPreference> bottomDividerVPos,
             Dock bottomDockController,
             MenuBar menuBar,
-            MainContent mainContent) {
+            MainContent mainContent,
+            WindowPreferenceTracker tracker) {
         super(sceneBuilderManager, iconSetting, ManagerUiTemplate.class.getResource("ManagerUiTemplate.fxml"), I18N.getBundle(), false);
         // @formatter:on
 
@@ -98,6 +99,7 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements I
 
         this.menuBar = menuBar;
         this.mainContent = mainContent;
+        this.tracker = tracker;
     }
 
     @FXML
@@ -111,6 +113,7 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements I
         final VBox rootVBox = (VBox) getRoot();
         rootVBox.getChildren().add(0, menuBar.getMenuBar());
         contentPanelHost.getChildren().add(mainContent.getRoot());
+        tracker.initialize(this);;
     }
 
     @Override
@@ -121,30 +124,6 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements I
 
     @Override
     public void updateStageTitle() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void apply() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void track() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void untrack() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onClose() {
         // TODO Auto-generated method stub
 
     }

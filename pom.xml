@@ -24,23 +24,25 @@
         <module>scenebuilder.maven</module>
         <module>scenebuilder.metadata.generator</module>
 
+        <module>jfxapps.metadata</module>
     </modules>
 
     <properties>
 
         <!-- compiler -->
-        <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
+        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <maven.compiler.release>21</maven.compiler.release>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
 
-        <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
+        <maven-dependency-plugin.version>3.6.1</maven-dependency-plugin.version>
         <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
         <maven-surefire-plugin.version>${maven-failsafe-plugin.version}</maven-surefire-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spring.boot.version>3.2.1</spring.boot.version>
+        <spring.boot.version>3.2.4</spring.boot.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <rxjavafx.version>3.0.2</rxjavafx.version>
 
     </properties>
 

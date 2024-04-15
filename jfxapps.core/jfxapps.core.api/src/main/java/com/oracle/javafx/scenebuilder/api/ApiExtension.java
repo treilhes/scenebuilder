@@ -37,14 +37,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.boot.loader.extension.RootExtension;
 import com.gluonhq.jfxapps.boot.loader.extension.SealedExtension;
 import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
+import com.oracle.javafx.scenebuilder.api.application.javafx.internal.FxmlControllerBeanPostProcessor;
 import com.oracle.javafx.scenebuilder.api.application.javafx.internal.JavafxThreadBootstrapper;
 import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
 import com.oracle.javafx.scenebuilder.api.di.FxThreadAspect;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.internal.di.FxmlControllerBeanPostProcessor;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.init.DocumentPreferencesNodeImpl;
@@ -61,7 +62,7 @@ import com.oracle.javafx.scenebuilder.api.ui.dock.SearchController;
 import com.oracle.javafx.scenebuilder.api.ui.dock.ViewController;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuBuilder;
 
-public class ApiExtension implements SealedExtension {
+public class ApiExtension implements RootExtension {
 
     public final static UUID ID = ROOT_ID;
 

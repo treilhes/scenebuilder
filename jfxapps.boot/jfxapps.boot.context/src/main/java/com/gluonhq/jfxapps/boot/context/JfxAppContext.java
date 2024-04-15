@@ -34,18 +34,30 @@
 package com.gluonhq.jfxapps.boot.context;
 
 import java.lang.annotation.Annotation;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import org.springframework.context.ApplicationEvent;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.web.context.ConfigurableWebApplicationContext;
 
 import com.gluonhq.jfxapps.boot.context.impl.JfxAppContextImpl;
+import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScopeHolder;
+import com.gluonhq.jfxapps.boot.context.scope.ApplicationScopeHolder;
 
-public interface JfxAppContext {
+public interface JfxAppContext extends ConfigurableWebApplicationContext {
 
-    public static JfxAppContext fromScratch(Class<?>[] array) {
+    /** The scope holder */
+    public static final ApplicationScopeHolder applicationScope = new ApplicationScopeHolder();
+
+    /** The scope holder */
+    public static final ApplicationInstanceScopeHolder applicationInstanceScope = new ApplicationInstanceScopeHolder(applicationScope);
+
+
+    public static JfxAppContext fromScratch(Class<?>... array) {
         JfxAppContextImpl ctx = new JfxAppContextImpl(UUID.randomUUID());
         ctx.register(array);
         ctx.refresh();
@@ -53,51 +65,29 @@ public interface JfxAppContext {
         return ctx;
     }
 
-    String[] getBeanDefinitionNames();
-
     void addProgressListener(MultipleProgressListener progressListener);
 
-    void register(Class<?>[] array);
-
-    void refresh();
-
-    void start();
-
-    int getBeanDefinitionCount();
-
-    boolean isRunning();
-
-    boolean isActive();
-
-    UUID getId();
-
-    <T> T getBean(Class<T> cls);
-    <T> T getBean(String b);
     String[] getBeanNamesForType(Class<?> cls, Class<?> genericClass);
 
-    JfxAppContext getParent();
+    UUID getUuid();
 
     boolean isExpression(String text);
 
     Object parseExpression(String text, Object rootContext);
 
-    boolean isDocumentScope(Class<?> cls);
+    boolean isApplicationScope(Class<?> cls);
 
-    void publishEvent(ApplicationEvent event);
+    boolean isApplicationInstanceScope(Class<?> cls);
 
-    <T> void registerBean(Class<T> class1, Supplier<T> tSupplier);
+    //<T> void registerBean(Class<T> class1, Supplier<T> tSupplier);
 
     List<Class<?>> getBeanClassesForAnnotation(Class<? extends Annotation> annotationType);
 
     <T> List<Class<T>> getBeanClassesForType(Class<T> cls);
 
-    Object getBean(String string, Object... parameters);
+    Set<Class<?>> getRegisteredClasses();
 
-    <T> T getBean(Class<T> cls, Object... parameters);
-
-    Class<?>[] getRegisteredClasses();
-
-    <T> Map<String, T> getBeansOfType(Class<T> cls);
+    Set<Class<?>> getDeportedClasses();
 
     <T, G, U> Map<String, U> getBeansOfTypeWithGeneric(Class<T> cls, Class<G> generic);
 
@@ -105,7 +95,14 @@ public interface JfxAppContext {
 
     <T> T getLocalBean(Class<T> cls);
 
+    void removeAlias(String alias);
 
+    void removeBeanDefinition(String beanName) throws NoSuchBeanDefinitionException;
 
+    void destroyBean(Object existingBean);
+
+    void destroyScopedBean(String beanName);
+
+    <T> void registerBean(Class<T> class1, Supplier<T> object);
 
 }
