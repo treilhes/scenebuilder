@@ -9,6 +9,11 @@
     <artifactId>scenebuilder.metadata.javafxdata</artifactId>
 
 
+    <properties>
+        <!-- The latest available version of JavaFX -->
+        <javafx.version>21</javafx.version>
+    </properties>
+    
     <dependencies>
         <!-- The goal for this dependency is to force the build of scenebuilder.metadata-maven-plugin -->
         <dependency>
