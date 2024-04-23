@@ -1,3 +1,36 @@
+/*
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
+ * All rights reserved. Use is subject to license terms.
+ *
+ * This file is available and licensed under the following license:
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  - Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *  - Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the distribution.
+ *  - Neither the name of Oracle Corporation and Gluon nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package com.gluonhq.jfxapps.metadata.template.scenebuilderx;
 
 import java.io.File;
@@ -19,6 +52,8 @@ import java.util.stream.Collectors;
 import com.gluonhq.jfxapps.metadata.bean.BundleValues;
 import com.gluonhq.jfxapps.metadata.bean.PropertyMetaData;
 import com.gluonhq.jfxapps.metadata.bean.QualifierMetaData;
+import com.gluonhq.jfxapps.metadata.finder.JavaGenerationContext;
+import com.gluonhq.jfxapps.metadata.finder.PropertyGenerationContext;
 import com.gluonhq.jfxapps.metadata.finder.SearchContext;
 import com.gluonhq.jfxapps.metadata.finder.api.Executor;
 import com.gluonhq.jfxapps.metadata.model.Component;
@@ -37,7 +72,9 @@ public class ScenebuilderxExecutor implements Executor {
     }
 
     @Override
-    public void execute(SearchContext searchContext, Map<Component, Set<Property>> components, Map<Class<?>, Component> descriptorComponents) throws Exception {
+    public void execute(
+            PropertyGenerationContext propertyContext,
+            JavaGenerationContext javaContext, Map<Component, Set<Property>> components, Map<Class<?>, Component> descriptorComponents) throws Exception {
 
         Set<String> packages = new HashSet();
         Descriptor descriptor = new Descriptor();
@@ -47,27 +84,27 @@ public class ScenebuilderxExecutor implements Executor {
         Map<Component, Set<Class>> metaParams = (Map<Component, Set<Class>>) mainInputs
                 .get(SbxMetadata.COMPONENT_META_PARAMS_KEY);
 
-        String javaPackage = searchContext.getTargetPackage();
+        String javaPackage = javaContext.getTargetPackage();
         String packagePath = javaPackage.replace('.', File.separatorChar);
 
         mainInputs.put("package", javaPackage);
         mainInputs.put("uuid", UUID.randomUUID().toString()); // need to get uuid from maven config
         mainInputs.put("components", components);
-        mainInputs.put("metadataPrefix", searchContext.getMetadataPrefix());
+        mainInputs.put("metadataPrefix", javaContext.getMetadataPrefix());
 
-        generateSource(searchContext, mainInputs, "scenebuilderx/PropertyNames.ftl", packagePath + "/PropertyNames.java");
+        generateSource(javaContext, mainInputs, "scenebuilderx/PropertyNames.ftl", packagePath + "/PropertyNames.java");
 
         Map<Class<?>, Component> classToComponents = new HashMap<>(descriptorComponents);
 
         for (Component c : components.keySet()) {
             String category = sanitizeCategory(c.getRaw().getCategory());
             String componentPackage = javaPackage + "." + category.toLowerCase();
-            String componentMetadataClassName = componentPackage + "."+ searchContext.getMetadataPrefix() + c.getRaw().getName() + "Metadata";
+            String componentMetadataClassName = componentPackage + "."+ javaContext.getMetadataPrefix() + c.getRaw().getName() + "Metadata";
 
             c.getCustom().put("package", componentPackage);
             c.getCustom().put("className", componentMetadataClassName);
             c.getCustom().put("category", category);
-            c.getCustom().put("metadataPrefix", searchContext.getMetadataPrefix());
+            c.getCustom().put("metadataPrefix", javaContext.getMetadataPrefix());
             c.getCustom().put("propertyNamesClass", javaPackage + ".PropertyNames");
 
             classToComponents.put(c.getRaw().getType(), c);
@@ -92,40 +129,40 @@ public class ScenebuilderxExecutor implements Executor {
             inputs.put("component", cmp);
             inputs.put("properties", entry.getValue());
             inputs.put("metadataComponents", metadataTypesComponent);
-            inputs.put("metadataPrefix", searchContext.getMetadataPrefix());
+            inputs.put("metadataPrefix", javaContext.getMetadataPrefix());
 
-            String fileName = searchContext.getMetadataPrefix() + entry.getKey().getRaw().getType().getSimpleName() + "Metadata.java";
+            String fileName = javaContext.getMetadataPrefix() + entry.getKey().getRaw().getType().getSimpleName() + "Metadata.java";
 
-            generateSource(searchContext, inputs, "scenebuilderx/ComponentClassMetadata.ftl", componentPackagePath + "/" + fileName);
+            generateSource(javaContext, inputs, "scenebuilderx/ComponentClassMetadata.ftl", componentPackagePath + "/" + fileName);
 
             for (Property property:entry.getValue()) {
                 PropertyMetaData pmeta = property.getRaw();
                 if (property.getType() == Type.COMPONENT) {
-                    handlePropertyResourceCopy(searchContext, cmp, pmeta, pmeta::getImage, "image");
-                    handlePropertyResourceCopy(searchContext, cmp, pmeta, pmeta::getImageX2, "imageX2");
+                    handlePropertyResourceCopy(propertyContext, cmp, pmeta, pmeta::getImage, "image");
+                    handlePropertyResourceCopy(propertyContext, cmp, pmeta, pmeta::getImageX2, "imageX2");
                 }
             }
             for (QualifierMetaData qualifier:cmp.getRaw().getQualifiers()) {
-                handleQualifierResourceCopy(searchContext, cmp, qualifier, qualifier::getFxml, "fxml");
-                handleQualifierResourceCopy(searchContext, cmp, qualifier, qualifier::getImage, "image");
-                handleQualifierResourceCopy(searchContext, cmp, qualifier, qualifier::getImageX2, "imageX2");
+                handleQualifierResourceCopy(propertyContext, cmp, qualifier, qualifier::getFxml, "fxml");
+                handleQualifierResourceCopy(propertyContext, cmp, qualifier, qualifier::getImage, "image");
+                handleQualifierResourceCopy(propertyContext, cmp, qualifier, qualifier::getImageX2, "imageX2");
             }
             descriptor.put(cmp.getRaw().getType(), componentPackage + "." + cmp.getRaw().getName() + "Metadata");
         }
 
-        generateDescriptor(searchContext, descriptor);
+        generateDescriptor(propertyContext, descriptor);
 
-        mainInputs.put("uuid", searchContext.getUuid().toString());
-        mainInputs.put("extensionName", searchContext.getExtensionName());
-        generateExtension(searchContext, mainInputs);
+        mainInputs.put("uuid", javaContext.getUuid().toString());
+        mainInputs.put("extensionName", javaContext.getExtensionName());
+        generateExtension(javaContext, mainInputs);
 
-        generateServiceFile(searchContext, mainInputs);
+        generateServiceFile(propertyContext, mainInputs);
 
-        if (searchContext.getModuleName() != null) {
+        if (javaContext.getModuleName() != null) {
             mainInputs.put("packages", packages);
-            mainInputs.put("moduleName", searchContext.getModuleName());
-            mainInputs.put("moduleRequires", searchContext.getModuleRequires());
-            generateModuleInfo(searchContext, mainInputs);
+            mainInputs.put("moduleName", javaContext.getModuleName());
+            mainInputs.put("moduleRequires", javaContext.getModuleRequires());
+            generateModuleInfo(javaContext, mainInputs);
         }
 
 
@@ -136,7 +173,7 @@ public class ScenebuilderxExecutor implements Executor {
 //        TemplateGenerator.generate(inputs, "scenebuilderx/ValuePropertyMetadataCatalog.ftl", nout);
     }
 
-    private void handlePropertyResourceCopy(SearchContext searchContext, Component cmp, PropertyMetaData property, Supplier<String> getter, String label)
+    private void handlePropertyResourceCopy(PropertyGenerationContext searchContext, Component cmp, PropertyMetaData property, Supplier<String> getter, String label)
             throws IOException {
 
         String value = getter.get();
@@ -162,7 +199,7 @@ public class ScenebuilderxExecutor implements Executor {
         }
     }
 
-    private void handleQualifierResourceCopy(SearchContext searchContext, Component cmp, QualifierMetaData qualifier, Supplier<String> getter, String label)
+    private void handleQualifierResourceCopy(PropertyGenerationContext searchContext, Component cmp, QualifierMetaData qualifier, Supplier<String> getter, String label)
             throws IOException {
 
         String value = getter.get();
@@ -188,19 +225,19 @@ public class ScenebuilderxExecutor implements Executor {
         }
     }
 
-    private void generateDescriptor(SearchContext searchContext, Descriptor descriptor) throws IOException {
+    private void generateDescriptor(PropertyGenerationContext searchContext, Descriptor descriptor) throws IOException {
         String relativePath = Descriptor.DESCRIPTOR_LOCATION;
         String template = "scenebuilderx/Descriptor.ftl";
         generateResource(searchContext, descriptor.getInputs(), template, relativePath);
     }
 
-    private void generateServiceFile(SearchContext searchContext, Map<String, Object> inputs) throws IOException {
+    private void generateServiceFile(PropertyGenerationContext searchContext, Map<String, Object> inputs) throws IOException {
         String relativePath = "META-INF/services/com.oracle.javafx.scenebuilder.extension.Extension";
         String template = "scenebuilderx/service.ftl";
         generateResource(searchContext, inputs, template, relativePath);
     }
 
-    private void generateExtension(SearchContext searchContext, Map<String, Object> inputs) throws IOException {
+    private void generateExtension(JavaGenerationContext searchContext, Map<String, Object> inputs) throws IOException {
         String javaPackage = searchContext.getTargetPackage();
         String packagePath = javaPackage.replace('.', File.separatorChar);
         String relativePath = packagePath + "/" + searchContext.getExtensionName() + ".java";
@@ -208,13 +245,13 @@ public class ScenebuilderxExecutor implements Executor {
         generateSource(searchContext, inputs, template, relativePath);
     }
 
-    private void generateModuleInfo(SearchContext searchContext, Map<String, Object> inputs) throws IOException {
+    private void generateModuleInfo(JavaGenerationContext searchContext, Map<String, Object> inputs) throws IOException {
         String relativePath = "module-info.java";
         String template = "scenebuilderx/module-info.ftl";
         generateSource(searchContext, inputs, template, relativePath);
     }
 
-    private void copyResource(SearchContext searchContext, InputStream stream, String relativePath) throws IOException {
+    private void copyResource(PropertyGenerationContext searchContext, InputStream stream, String relativePath) throws IOException {
         File targetFile = new File(searchContext.getResourceFolder(), relativePath);
 
         if (!targetFile.getParentFile().exists()) {
@@ -224,7 +261,7 @@ public class ScenebuilderxExecutor implements Executor {
         Files.copy(stream, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
 
-    private void generateResource(SearchContext searchContext, Map<String, Object> inputs, String templateFileName, String relativePath) throws IOException {
+    private void generateResource(PropertyGenerationContext searchContext, Map<String, Object> inputs, String templateFileName, String relativePath) throws IOException {
         File targetFile = new File(searchContext.getResourceFolder(), relativePath);
 
         if (!targetFile.getParentFile().exists()) {
@@ -234,7 +271,7 @@ public class ScenebuilderxExecutor implements Executor {
         TemplateGenerator.generate(inputs, templateFileName, targetFile);
     }
 
-    private void generateSource(SearchContext searchContext, Map<String, Object> inputs, String templateFileName, String relativePath) throws IOException {
+    private void generateSource(JavaGenerationContext searchContext, Map<String, Object> inputs, String templateFileName, String relativePath) throws IOException {
         File targetFile = new File(searchContext.getSourceFolder(), relativePath);
 
         if (!targetFile.getParentFile().exists()) {

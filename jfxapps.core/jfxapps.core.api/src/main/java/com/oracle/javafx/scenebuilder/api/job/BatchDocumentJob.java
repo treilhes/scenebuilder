@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.api.job;
 import java.util.Collections;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 /**

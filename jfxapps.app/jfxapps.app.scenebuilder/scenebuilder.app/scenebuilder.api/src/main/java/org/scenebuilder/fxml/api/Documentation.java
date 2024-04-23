@@ -34,7 +34,7 @@ package org.scenebuilder.fxml.api;
 
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 
 public interface Documentation {
     

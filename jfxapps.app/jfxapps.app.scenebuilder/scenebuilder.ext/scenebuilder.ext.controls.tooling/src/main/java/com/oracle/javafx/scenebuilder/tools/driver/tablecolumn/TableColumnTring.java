@@ -39,10 +39,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractGenericTring;
 import com.oracle.javafx.scenebuilder.api.dnd.DropTarget;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.tools.driver.tableview.TableViewDesignInfoX;
 
 import javafx.geometry.Bounds;

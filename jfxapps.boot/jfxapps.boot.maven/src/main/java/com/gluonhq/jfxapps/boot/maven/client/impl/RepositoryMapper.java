@@ -52,7 +52,7 @@ public interface RepositoryMapper {
 
     @Mapping(target = "withId", source = "id")
     @Mapping(target = "withType", source = "type")
-    @Mapping(target = "withURL", source = "URL")
+    @Mapping(target = "withUrl", source = "url")
     @Mapping(target = "withUser", source = "login")
     @Mapping(target = "withPassword", source = "password")
     @Mapping(target = "withContentType", source = "contentType")

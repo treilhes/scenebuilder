@@ -55,6 +55,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
+import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.metadata.IMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.gluonhq.jfxapps.util.NodeUtils;
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardHandler;
 import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.api.dnd.Drag;
@@ -69,13 +77,6 @@ import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
 import com.oracle.javafx.scenebuilder.api.ui.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.ui.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.collector.SceneGraphCollector;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath.Item;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath.Path;
@@ -86,7 +87,6 @@ import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.Pro
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssValuePresenterFactory.CssValuePresenter;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.NodeCssState.CssProperty;
 import com.oracle.javafx.scenebuilder.cssanalyser.preferences.global.CssTableColumnsOrderingReversedPreference;
-import com.oracle.javafx.scenebuilder.util.NodeUtils;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.property.ObjectProperty;

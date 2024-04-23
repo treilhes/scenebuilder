@@ -45,15 +45,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
-import com.oracle.javafx.scenebuilder.core.fxom.collector.PropertyCollector;
-import com.oracle.javafx.scenebuilder.core.fxom.collector.SceneGraphCollector;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
+import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
+import com.gluonhq.jfxapps.core.fxom.collector.PropertyCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
+import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
+import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 
 public class FXOMUtils {
 

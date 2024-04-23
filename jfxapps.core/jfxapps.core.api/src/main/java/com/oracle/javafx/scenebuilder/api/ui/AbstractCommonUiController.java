@@ -37,11 +37,11 @@ import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.util.NodeUtils;
 import com.oracle.javafx.scenebuilder.api.di.FxmlController;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.api.tooltheme.ToolStylesheetProvider;
-import com.oracle.javafx.scenebuilder.util.NodeUtils;
 
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;

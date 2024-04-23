@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,7 +42,7 @@ public class Repository {
     }
     private String id;
     private Class<? extends RepositoryType> type;
-    private String URL;
+    private String url;
     private String user;
     private String password;
     private Content contentType = Content.SNAPSHOT_RELEASE;
@@ -50,7 +50,7 @@ public class Repository {
     private Repository(Builder builder) {
         this.id = builder.id;
         this.type = builder.type;
-        this.URL = builder.URL;
+        this.url = builder.url;
         this.user = builder.user;
         this.password = builder.password;
         this.contentType = builder.contentType;
@@ -64,8 +64,8 @@ public class Repository {
         return type;
     }
 
-    public String getURL() {
-        return URL;
+    public String getUrl() {
+        return url;
     }
 
     public String getUser() {
@@ -85,7 +85,7 @@ public class Repository {
     }
     @Override
     public String toString() {
-        return "Repository [id=" + id + ", type=" + type + ", URL=" + URL + ", user=" + user + ", password=" + password
+        return "Repository [id=" + id + ", type=" + type + ", URL=" + url + ", user=" + user + ", password=" + password
                 + ", contentType=" + contentType + "]";
     }
 
@@ -122,7 +122,7 @@ public class Repository {
     public static class Builder {
         private String id;
         private Class<? extends RepositoryType> type;
-        private String URL;
+        private String url;
         private String user;
         private String password;
         private Content contentType = Content.SNAPSHOT_RELEASE;
@@ -146,8 +146,8 @@ public class Repository {
             return this;
         }
 
-        public Builder withURL(String uRL) {
-            URL = uRL;
+        public Builder withUrl(String url) {
+            this.url = url;
             return this;
         }
 

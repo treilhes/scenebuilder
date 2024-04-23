@@ -49,6 +49,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.api.Size;
 import com.oracle.javafx.scenebuilder.api.application.ApplicationInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
@@ -59,8 +61,6 @@ import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractWindowController;
 import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.beans.value.ChangeListener;

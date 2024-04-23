@@ -37,10 +37,10 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 
 import javafx.scene.image.Image;
 

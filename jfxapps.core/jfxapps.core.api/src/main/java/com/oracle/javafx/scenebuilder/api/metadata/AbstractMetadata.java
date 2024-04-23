@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,12 +35,15 @@ package com.oracle.javafx.scenebuilder.api.metadata;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
+import com.gluonhq.jfxapps.core.metadata.MetadataIntrospector;
+import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
 
-public class AbstractMetadata extends com.oracle.javafx.scenebuilder.core.metadata.AbstractMetadata implements Metadata {
+public abstract class AbstractMetadata<CC, CPC, VPC>
+        extends com.gluonhq.jfxapps.core.metadata.AbstractMetadata<CC, CPC, VPC> implements Metadata<CC, CPC, VPC> {
 
-    protected AbstractMetadata(List<ComponentClassMetadata<?>> componentClassMetadatas) {
-        super(componentClassMetadatas);
+    protected AbstractMetadata(List<ComponentClassMetadata<?, CC, CPC, VPC>> componentClassMetadatas,
+            MetadataIntrospector<CC, CPC, VPC> metadataIntrospector) {
+        super(componentClassMetadatas, metadataIntrospector);
     }
 
 }

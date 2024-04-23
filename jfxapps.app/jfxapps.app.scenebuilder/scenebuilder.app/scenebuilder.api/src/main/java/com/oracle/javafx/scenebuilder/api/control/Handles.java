@@ -32,10 +32,10 @@
  */
 package com.oracle.javafx.scenebuilder.api.control;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.Gesture;
 import com.oracle.javafx.scenebuilder.api.content.decoration.Decoration;
 import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.scene.Node;
 

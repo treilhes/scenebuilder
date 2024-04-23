@@ -37,16 +37,16 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.metadata.IMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata;
+import com.gluonhq.jfxapps.util.AnchorUtils;
+import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.job.JobFactory;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoublePropertyMetadata;
-import com.oracle.javafx.scenebuilder.util.AnchorUtils;
-import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;

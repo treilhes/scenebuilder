@@ -48,11 +48,11 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMElement;
+import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
+import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
-import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
-import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 import com.sun.javafx.scene.NodeHelper;
 
 import javafx.beans.property.ReadOnlyProperty;

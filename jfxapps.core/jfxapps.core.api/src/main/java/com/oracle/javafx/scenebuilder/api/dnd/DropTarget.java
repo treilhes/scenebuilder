@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.api.dnd;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 public interface DropTarget {
 

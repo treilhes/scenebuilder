@@ -41,15 +41,16 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
+import com.gluonhq.jfxapps.util.GridBounds;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTarget;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.DropTargetFactory;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.ClearSelectionJob;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.InsertAsSubComponentJob;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.UpdateSelectionJob;
@@ -59,7 +60,6 @@ import com.oracle.javafx.scenebuilder.tools.job.gridpane.GridSnapshot;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.InsertColumnJob;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.InsertRowJob;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.MoveCellContentJob;
-import com.oracle.javafx.scenebuilder.util.GridBounds;
 
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;

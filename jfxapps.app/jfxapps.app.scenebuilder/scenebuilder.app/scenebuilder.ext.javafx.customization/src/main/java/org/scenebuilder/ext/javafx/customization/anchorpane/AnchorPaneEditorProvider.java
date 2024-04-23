@@ -37,9 +37,9 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.editors.EditorMapProvider;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditor;
-import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
 
 @Component
 public class AnchorPaneEditorProvider implements EditorMapProvider {

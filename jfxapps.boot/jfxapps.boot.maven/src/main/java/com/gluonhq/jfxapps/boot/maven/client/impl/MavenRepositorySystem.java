@@ -398,7 +398,7 @@ public class MavenRepositorySystem {
 
         RepositoryPolicy snapshotPolicy = new RepositoryPolicy(true, UPDATE_POLICY_ALWAYS, CHECKSUM_POLICY_IGNORE);
 
-        final RemoteRepository repo = new RemoteRepository.Builder(repository.getId(), "default", repository.getURL())
+        final RemoteRepository repo = new RemoteRepository.Builder(repository.getId(), "default", repository.getUrl())
                 .setReleasePolicy(releasePolicy).setSnapshotPolicy(snapshotPolicy).setAuthentication(auth).build();
 
         return Optional.of(repo);

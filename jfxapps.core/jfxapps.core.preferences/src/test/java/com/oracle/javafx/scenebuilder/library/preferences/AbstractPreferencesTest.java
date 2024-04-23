@@ -43,11 +43,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.TestInfo;
 import org.mockito.Mockito;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-
 import javafx.beans.property.SimpleIntegerProperty;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.preferences.DocumentPreferencesNode;
 import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
 import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;

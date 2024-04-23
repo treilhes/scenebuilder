@@ -6,7 +6,7 @@
     <groupId>com.gluonhq.jfxapps</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>17.0.0-SNAPSHOT</version>
+    <version>${jfxapps.version}</version>
     <name>Scene Builder</name>
     <description>Scene Builder is a visual, drag n drop, layout tool for
         designing JavaFX application user interfaces</description>
@@ -20,15 +20,13 @@
         <module>jfxapps.boot</module>
         <module>jfxapps.core</module>
         <module>jfxapps.core.ext</module>
-        <module>jfxapps.registry</module>
-        <module>scenebuilder.maven</module>
-        <module>scenebuilder.metadata.generator</module>
-
         <module>jfxapps.metadata</module>
+        <module>jfxapps.registry</module>
+        
     </modules>
 
     <properties>
-
+        <jfxapps.version>17.0.0-SNAPSHOT</jfxapps.version>
         <!-- compiler -->
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <maven.compiler.release>21</maven.compiler.release>
@@ -63,12 +61,12 @@
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.app.starter</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.app.starter.test</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
 
             <!-- jfxapps.boot -->
@@ -76,218 +74,218 @@
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.boot.context</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.boot.jpa</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>spring.core.patch</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>spring.core.patch.link</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>org.hibernate.orm.core.patch</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>org.hibernate.orm.core.patch.link</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.boot.layer</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.boot.loader</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.boot.main</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.boot.maven</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.boot.platform</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.boot.registry</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.boot.starter</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.boot.starter.test</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
 
             <!-- jfxapps.core -->
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.javafx.starter</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.api</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.clipboard</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.controls</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.drag.and.drop</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.error</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.extension.store</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.filesystem</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.fxom</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.jobs</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <!-- <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.core.launcher</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>-->
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.library</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.metadata</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.preferences</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.selection</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.starter</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.starter.test</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.ui</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.utils</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
 
             <!-- jfxapps.ext -->
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.ext.about</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.ext.certificate.manager</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.ext.extension.library</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.ext.log.viewer</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.ext.menu</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.ext.preference.editor</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.ext.update.manager</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.ext.sb</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
 
             <!-- jfxapps.registry -->
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.registry.model</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
 
             <!-- remaining -->
@@ -295,7 +293,7 @@
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.core.ext.scenicview</artifactId>
-                <version>${project.version}</version>
+                <version>${jfxapps.version}</version>
             </dependency>
 
             <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
@@ -396,12 +394,38 @@
         </profile>
     </profiles>
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.1.0</version>
+                <configuration></configuration>
+                <executions>
+                    <!-- enable flattening -->
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <!-- ensure proper cleanup -->
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>com.gluonhq.jfxapps</groupId>
                     <artifactId>jfxapps-registry-maven-plugin</artifactId>
-                    <version>${project.version}</version>
+                    <version>${jfxapps.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.openjfx</groupId>
@@ -449,7 +473,7 @@
                                 javafx.graphics/com.sun.javafx.scene=scenebuilder.fxml.api</arg>
                             <arg>--add-exports</arg>
                             <arg>
-                                javafx.fxml/com.sun.javafx.fxml=scenebuilder.core.fxom</arg>
+                                javafx.fxml/com.sun.javafx.fxml=jfxapps.core.fxom</arg>
                             <arg>--add-exports</arg>
                             <arg>
                                 javafx.graphics/com.sun.javafx.scene=scenebuilder.ext.css.analyser</arg>
@@ -548,8 +572,7 @@
                                 <pluginExecution>
                                     <pluginExecutionFilter>
                                         <groupId>com.gluonhq.jfxapps</groupId>
-                                        <artifactId>
-                                            scenebuilder.metadata-maven-plugin</artifactId>
+                                        <artifactId>jfxapps-metadata-maven-plugin</artifactId>
                                         <versionRange>[1.0.0,)</versionRange>
                                         <goals>
                                             <goal>metadataSource</goal>

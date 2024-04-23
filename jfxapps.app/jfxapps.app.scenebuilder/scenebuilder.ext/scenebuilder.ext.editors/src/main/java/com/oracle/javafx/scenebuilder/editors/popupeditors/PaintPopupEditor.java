@@ -35,10 +35,10 @@ package com.oracle.javafx.scenebuilder.editors.popupeditors;
 
 import org.scenebuilder.fxml.api.Documentation;
 
+import com.gluonhq.jfxapps.core.metadata.util.ColorEncoder;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
-import com.oracle.javafx.scenebuilder.core.metadata.util.ColorEncoder;
 import com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.PaintPicker;
 
 import javafx.beans.value.ChangeListener;

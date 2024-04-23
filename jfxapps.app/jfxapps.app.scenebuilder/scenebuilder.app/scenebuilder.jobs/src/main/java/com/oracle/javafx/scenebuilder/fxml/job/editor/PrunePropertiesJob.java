@@ -41,24 +41,24 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.fxom.FXOMCollection;
+import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
+import com.gluonhq.jfxapps.core.metadata.IMetadata;
+import com.gluonhq.jfxapps.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.BatchDocumentJob;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMCollection;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
-import com.oracle.javafx.scenebuilder.core.metadata.IMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.Metadata;
 import com.oracle.javafx.scenebuilder.fxml.job.editor.atomic.RemoveFxControllerJob;
 import com.oracle.javafx.scenebuilder.fxml.job.editor.atomic.RemovePropertyJob;
 
 /**
  * Job used to remove properties from an {@link FXOMObject} if the property is either:<br/>
  * 1) static like GridPane.columnIndex and the new parent class is different than the previous parent</br>
- * 2) without any meaning in another parent (like position/rotation/scaling). This list is provided by {@link Metadata#isPropertyTrimmingNeeded(com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName)}
+ * 2) without any meaning in another parent (like position/rotation/scaling). This list is provided by {@link Metadata#isPropertyTrimmingNeeded(com.gluonhq.jfxapps.core.fxom.util.PropertyName)}
  */
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)

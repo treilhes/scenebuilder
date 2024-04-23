@@ -1,16 +1,53 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.gluonhq.jfxapps</groupId>
-    <artifactId>jfxapps.app</artifactId>
-    <version>17.0.0-SNAPSHOT</version>
-  </parent>
-  <artifactId>jfxapps.app.manager</artifactId>
-  <packaging>pom</packaging>
-  
-  <modules>
-      <module>jfxapps.app.manager.main</module>
-      <module>jfxapps.app.manager.model</module>
-      <module>jfxapps.app.manager.metadata</module>
-  </modules>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.gluonhq.jfxapps</groupId>
+        <artifactId>jfxapps.app</artifactId>
+        <version>${jfxapps.version}</version>
+    </parent>
+    <artifactId>jfxapps.app.manager</artifactId>
+    <version>${manager.version}</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>jfxapps.app.manager.core</module>
+        <module>jfxapps.app.manager.model</module>
+        <module>jfxapps.app.manager.metadata</module>
+        <module>jfxapps.app.manager.api</module>
+        <module>jfxapps.app.manager.metadata.model</module>
+        <module>jfxapps.app.manager.metadata.modeldata</module>
+    </modules>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <manager.version>1.0.0-SNAPSHOT</manager.version>
+    </properties>
+    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.app.manager.api</artifactId>
+                <version>${manager.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.app.manager.core</artifactId>
+                <version>${manager.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.app.manager.metadata</artifactId>
+                <version>${manager.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.app.manager.model</artifactId>
+                <version>${manager.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

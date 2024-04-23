@@ -39,10 +39,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.core.guides.AbstractSegment;
 import com.oracle.javafx.scenebuilder.core.guides.HorizontalSegment;
 import com.oracle.javafx.scenebuilder.core.guides.VerticalSegment;
-import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

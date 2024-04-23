@@ -43,6 +43,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
@@ -51,7 +52,6 @@ import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
 import com.oracle.javafx.scenebuilder.api.ui.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 import eu.mihosoft.monacofx.MonacoFX;
 import javafx.beans.value.ChangeListener;

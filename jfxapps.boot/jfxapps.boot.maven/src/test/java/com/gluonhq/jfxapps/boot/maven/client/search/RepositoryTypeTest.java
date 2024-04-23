@@ -62,7 +62,7 @@ class RepositoryTypeTest {
     @Test
     void must_return_results_with_local() {
         Repository repo = Repository.builder().withId(MavenPresets.LOCAL)
-                .withURL(tempRepoDir.toString()).build();
+                .withUrl(tempRepoDir.toString()).build();
 
         List<File> matches = List.of(
                 new File(tempRepoDir.toFile(), String.format("some/%s/path/some.artifact/1.0.0/x.jar", searchTerm)),

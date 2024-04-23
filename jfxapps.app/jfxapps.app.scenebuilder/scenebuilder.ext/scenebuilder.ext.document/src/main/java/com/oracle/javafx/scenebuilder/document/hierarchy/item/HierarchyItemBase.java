@@ -38,8 +38,8 @@ import java.util.Objects;
 
 import org.scenebuilder.fxml.api.HierarchyMask;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
 
 import javafx.scene.image.Image;

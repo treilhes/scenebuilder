@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.util.MathUtils;
+import com.gluonhq.jfxapps.util.MathUtils;
 
 import javafx.geometry.Point2D;
 

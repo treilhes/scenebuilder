@@ -35,12 +35,12 @@ package com.oracle.javafx.scenebuilder.fxml.error;
 
 import java.net.URL;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
+import com.gluonhq.jfxapps.core.fxom.FXOMNode;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.oracle.javafx.scenebuilder.api.error.ErrorReportEntry;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 
 /**
  *

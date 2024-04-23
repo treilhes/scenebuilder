@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.document.hierarchy.treeview;
 
 import org.scenebuilder.fxml.api.HierarchyMask.Accessory;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 /**
  *

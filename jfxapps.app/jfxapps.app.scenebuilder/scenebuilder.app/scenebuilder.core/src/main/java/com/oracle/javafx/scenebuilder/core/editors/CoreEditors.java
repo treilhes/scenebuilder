@@ -38,10 +38,10 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.core.metadata.property.FxControllerMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.FxIdMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.FxControllerMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.FxIdMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 
 @Component
 public class CoreEditors implements EditorMapProvider {

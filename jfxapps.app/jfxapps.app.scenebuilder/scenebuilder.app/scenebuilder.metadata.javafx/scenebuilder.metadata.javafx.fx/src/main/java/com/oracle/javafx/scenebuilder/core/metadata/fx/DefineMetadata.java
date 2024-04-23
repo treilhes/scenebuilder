@@ -35,19 +35,19 @@ package com.oracle.javafx.scenebuilder.core.metadata.fx;
 
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDefine;
-import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata.Visibility;
+import com.gluonhq.jfxapps.core.fxom.FXOMDefine;
+import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata.Visibility;
 
 @Component
 public class DefineMetadata extends ComponentClassMetadata<FXOMDefine> {
 
-    private final com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata contentPropertyMetadata;
+    private final com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata contentPropertyMetadata;
 
     protected DefineMetadata() {
         super(FXOMDefine.class, null);
 
-        contentPropertyMetadata = new com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata.Builder()
+        contentPropertyMetadata = new com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata.Builder()
                 .withName(FXOMDefine.defineContentName)
                 .withIsCollection(true)
                 .withIsMain(true)

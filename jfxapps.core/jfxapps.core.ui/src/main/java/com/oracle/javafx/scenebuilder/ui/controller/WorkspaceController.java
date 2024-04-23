@@ -36,6 +36,8 @@ package com.oracle.javafx.scenebuilder.ui.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.SceneGraphObject;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
@@ -44,8 +46,6 @@ import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPanelController;
 import com.oracle.javafx.scenebuilder.api.ui.menu.ContextMenu;
 import com.oracle.javafx.scenebuilder.api.ui.misc.Workspace;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.SceneGraphObject;
 
 import javafx.animation.FadeTransition;
 import javafx.application.ConditionalFeature;

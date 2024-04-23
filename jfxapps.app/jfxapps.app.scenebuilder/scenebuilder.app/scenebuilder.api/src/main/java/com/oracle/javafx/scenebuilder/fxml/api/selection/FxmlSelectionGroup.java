@@ -37,13 +37,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
+import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
 import com.oracle.javafx.scenebuilder.api.job.Job;
 import com.oracle.javafx.scenebuilder.api.om.OMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 
 /**
  * This interface must be implemented by classes expecting to represent a selection content

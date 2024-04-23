@@ -39,14 +39,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.fxom.FXOMCloner;
+import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
+import com.gluonhq.jfxapps.core.fxom.FXOMNode;
+import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMCloner;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
 
 /**
  * Find a reference in the provided {@link FXOMNode} then replace it by cloning the referee using the provided {@link FXOMCloner}

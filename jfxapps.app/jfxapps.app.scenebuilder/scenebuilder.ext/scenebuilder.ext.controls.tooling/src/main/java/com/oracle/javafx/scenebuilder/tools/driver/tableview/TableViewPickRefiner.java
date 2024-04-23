@@ -37,9 +37,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
 import com.oracle.javafx.scenebuilder.api.control.pickrefiner.AbstractPickRefiner;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.collector.SceneGraphCollector;
 
 import javafx.scene.Node;
 import javafx.scene.control.TableColumn;

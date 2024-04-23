@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,21 +31,21 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.oracle.javafx.scenebuilder.core.fxom.ext.FXOMNormalizer;
-import com.oracle.javafx.scenebuilder.core.fxom.ext.FXOMRefresher;
-import com.oracle.javafx.scenebuilder.core.fxom.ext.FileLoader;
-import com.oracle.javafx.scenebuilder.core.fxom.ext.LoaderCapabilitiesManager;
-import com.oracle.javafx.scenebuilder.core.fxom.ext.TransientStateBackup;
-import com.oracle.javafx.scenebuilder.core.fxom.ext.WeakProperty;
+import com.gluonhq.jfxapps.core.fxom.ext.FXOMNormalizer;
+import com.gluonhq.jfxapps.core.fxom.ext.FXOMRefresher;
+import com.gluonhq.jfxapps.core.fxom.ext.FileLoader;
+import com.gluonhq.jfxapps.core.fxom.ext.LoaderCapabilitiesManager;
+import com.gluonhq.jfxapps.core.fxom.ext.TransientStateBackup;
+import com.gluonhq.jfxapps.core.fxom.ext.WeakProperty;
 
-open module scenebuilder.core.fxom {
+open module jfxapps.core.fxom {
 
-    exports com.oracle.javafx.scenebuilder.core.fxom;
-    exports com.oracle.javafx.scenebuilder.core.fxom.collector;
-    exports com.oracle.javafx.scenebuilder.core.fxom.glue;
-    exports com.oracle.javafx.scenebuilder.core.fxom.sampledata;
-    exports com.oracle.javafx.scenebuilder.core.fxom.ext;
-    exports com.oracle.javafx.scenebuilder.core.fxom.util;
+    exports com.gluonhq.jfxapps.core.fxom;
+    exports com.gluonhq.jfxapps.core.fxom.collector;
+    exports com.gluonhq.jfxapps.core.fxom.glue;
+    exports com.gluonhq.jfxapps.core.fxom.sampledata;
+    exports com.gluonhq.jfxapps.core.fxom.ext;
+    exports com.gluonhq.jfxapps.core.fxom.util;
 
 
 //    requires javafx.fxml;

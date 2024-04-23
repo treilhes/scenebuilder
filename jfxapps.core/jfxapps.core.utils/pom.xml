@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.gluonhq.jfxapps</groupId>
         <artifactId>jfxapps.core</artifactId>
-        <version>17.0.0-SNAPSHOT</version>
+        <version>${jfxapps.version}</version>
     </parent>
     <artifactId>jfxapps.core.utils</artifactId>
 

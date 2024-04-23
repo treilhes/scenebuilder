@@ -31,3 +31,4 @@ scenicView.properties
 dist/
 package/
 /build/
+.flattened-pom.xml

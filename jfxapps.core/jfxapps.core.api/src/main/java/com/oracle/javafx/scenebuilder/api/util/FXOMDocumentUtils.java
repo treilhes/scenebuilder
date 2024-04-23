@@ -36,8 +36,8 @@ package com.oracle.javafx.scenebuilder.api.util;
 import java.io.File;
 import java.net.URISyntaxException;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 public class FXOMDocumentUtils {
     public static final String makeTitle(FXOMDocument fxomDocument) {

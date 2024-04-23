@@ -42,10 +42,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.util.AnchorUtils;
+import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.api.control.relocater.AbstractRelocater;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.util.AnchorUtils;
-import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import javafx.geometry.Bounds;
 import javafx.scene.layout.AnchorPane;

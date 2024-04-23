@@ -39,6 +39,7 @@ import org.scenebuilder.fxml.api.Content;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.editors.ApplicationInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
@@ -53,7 +54,6 @@ import com.oracle.javafx.scenebuilder.api.ui.misc.MessageBar;
 import com.oracle.javafx.scenebuilder.api.ui.misc.SelectionBar;
 import com.oracle.javafx.scenebuilder.api.ui.misc.Workspace;
 import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.ui.InnerDockManager.DividerPosition;
 import com.oracle.javafx.scenebuilder.core.ui.preferences.document.BottomDividerVPosPreference;
 import com.oracle.javafx.scenebuilder.core.ui.preferences.document.LeftDividerHPosPreference;

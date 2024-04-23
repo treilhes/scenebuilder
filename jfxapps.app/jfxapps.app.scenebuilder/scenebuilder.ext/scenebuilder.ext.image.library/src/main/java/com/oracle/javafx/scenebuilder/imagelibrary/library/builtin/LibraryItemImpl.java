@@ -36,8 +36,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.library.LibraryItem;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 /**
  *

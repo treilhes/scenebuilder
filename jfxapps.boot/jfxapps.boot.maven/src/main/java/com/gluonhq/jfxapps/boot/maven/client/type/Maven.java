@@ -67,7 +67,7 @@ public class Maven implements RepositoryType {
     public Set<Artifact> getCoordinates(Repository repository, String query) {
         final HttpClient httpClient = newClientBuilder(repository).build();
 
-        String searchUrl = toApiUrl(repository.getURL());
+        String searchUrl = toApiUrl(repository.getUrl());
 
         try {
             HttpRequest request = HttpRequest.newBuilder()

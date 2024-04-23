@@ -2,9 +2,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.gluonhq.jfxapps</groupId>
+    <parent>
+        <groupId>com.gluonhq.jfxapps</groupId>
+        <artifactId>jfxapps.metadata</artifactId>
+        <version>${jfxapps.version}</version>
+    </parent>
     <artifactId>jfxapps-metadata-maven-plugin</artifactId>
-    <version>17.0.0-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <properties>
@@ -13,7 +16,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <integration.testing.framework.version>0.13.1</integration.testing.framework.version>
-        
+
         <logback.version>1.5.3</logback.version>
         <slf4j.version>2.0.12</slf4j.version>
     </properties>
@@ -34,6 +37,10 @@
             <version>4.0.18</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-properties</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
@@ -93,27 +100,27 @@
             <version>${javafx.version}</version>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${slf4j.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>jcl-over-slf4j</artifactId>
-        <version>${slf4j.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>log4j-over-slf4j</artifactId>
-        <version>${slf4j.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>jul-to-slf4j</artifactId>
-        <version>${slf4j.version}</version>
-    </dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -175,6 +182,7 @@
                         <phase>pre-integration-test</phase>
                         <goals>
                             <goal>install</goal>
+                            <goal>resources-its</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -188,7 +196,8 @@
                     <systemProperties>
                         <maven.version>${maven.version}</maven.version>
                         <maven.home>${maven.home}</maven.home>
-                        <ITF_DEBUG>true</ITF_DEBUG>
+                        <!-- ITF_DEBUG enable remote debug on port 8000-->
+                        <!--<ITF_DEBUG>true</ITF_DEBUG>-->
                     </systemProperties>
                 </configuration>
                 <executions>

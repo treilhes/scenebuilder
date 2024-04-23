@@ -32,8 +32,8 @@
  */
 package org.scenebuilder.ext.javafx.customization.anchorpane;
 
-import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyGroupMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.PropertyGroupMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 
 public class AnchorPropertyGroupMetadata extends PropertyGroupMetadata {
 

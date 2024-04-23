@@ -56,6 +56,8 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.core.fxom.FXOMAssetIndex;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
@@ -63,8 +65,6 @@ import com.oracle.javafx.scenebuilder.api.i18n.CombinedResourceBundle;
 import com.oracle.javafx.scenebuilder.api.i18n.I18nResourceProvider;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMAssetIndex;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.fs.preference.document.PathPreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.InitialDirectoryPreference;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;

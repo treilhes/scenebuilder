@@ -35,16 +35,16 @@ package com.oracle.javafx.scenebuilder.core.metadata.fx;
 
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInclude;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic.Type;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata.Visibility;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.CharsetStringPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.ResourceStringPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.StringPropertyMetadata.SourceStringPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
+import com.gluonhq.jfxapps.core.fxom.FXOMInclude;
+import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
+import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic.Type;
+import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata.Visibility;
+import com.gluonhq.jfxapps.core.metadata.property.value.StringPropertyMetadata.CharsetStringPropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.value.StringPropertyMetadata.ResourceStringPropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.value.StringPropertyMetadata.SourceStringPropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.util.InspectorPath;
 
 @Component
 public class IncludeMetadata extends ComponentClassMetadata<FXOMInclude> {

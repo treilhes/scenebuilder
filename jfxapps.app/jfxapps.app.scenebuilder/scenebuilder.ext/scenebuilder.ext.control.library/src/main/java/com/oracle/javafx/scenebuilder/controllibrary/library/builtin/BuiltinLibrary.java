@@ -40,10 +40,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
+import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata.Qualifier;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata.Qualifier;
 import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
 
 import javafx.collections.FXCollections;

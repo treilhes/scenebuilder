@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.api.controls;
 import java.util.List;
 import java.util.Map;
 
-import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
+import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
 
 public interface ControlsProvider {
     Map<String, List<ComponentClassMetadata<?>>> getControls();

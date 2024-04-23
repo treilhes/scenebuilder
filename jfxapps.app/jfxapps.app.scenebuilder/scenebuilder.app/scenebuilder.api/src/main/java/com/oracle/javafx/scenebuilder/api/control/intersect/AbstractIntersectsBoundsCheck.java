@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.control.intersect;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 

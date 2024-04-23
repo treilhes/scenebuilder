@@ -39,6 +39,7 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.util.NodeUtils;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
@@ -46,7 +47,6 @@ import com.oracle.javafx.scenebuilder.api.ui.dock.Dock;
 import com.oracle.javafx.scenebuilder.api.ui.dock.View;
 import com.oracle.javafx.scenebuilder.api.ui.dock.ViewContent;
 import com.oracle.javafx.scenebuilder.api.ui.dock.ViewSearch;
-import com.oracle.javafx.scenebuilder.util.NodeUtils;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;

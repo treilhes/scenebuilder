@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
-import com.oracle.javafx.scenebuilder.core.fxom.ext.FileLoader;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
+import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
+import com.gluonhq.jfxapps.core.fxom.ext.FileLoader;
+import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaException;

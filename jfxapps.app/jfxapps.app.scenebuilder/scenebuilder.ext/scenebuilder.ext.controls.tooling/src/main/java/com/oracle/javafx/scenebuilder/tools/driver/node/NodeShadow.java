@@ -39,8 +39,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.content.util.RegionRectangle;
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractShadow;
-import com.oracle.javafx.scenebuilder.core.content.util.RegionRectangle;
 
 import javafx.scene.Node;
 import javafx.scene.transform.Transform;

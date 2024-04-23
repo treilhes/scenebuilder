@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.tools.driver.gridpane;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.util.MathUtils;
+import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
+import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.util.MathUtils;
 
 import javafx.geometry.Bounds;
 import javafx.scene.layout.GridPane;

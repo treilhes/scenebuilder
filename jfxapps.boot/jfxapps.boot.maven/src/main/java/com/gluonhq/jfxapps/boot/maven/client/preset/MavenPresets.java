@@ -50,17 +50,17 @@ public class MavenPresets {
 
     private static final List<Repository> presetRepositories = Arrays.asList(
             Repository.builder().withId(MAVEN).withType(Maven.class)
-                    .withURL("https://repo1.maven.org/maven2/")
+                    .withUrl("https://repo1.maven.org/maven2/")
                     .build(),
             Repository.builder().withId(SONATYPE).withType(Nexus.class)
-                    .withURL("https://oss.sonatype.org/content/repositories/snapshots")
+                    .withUrl("https://oss.sonatype.org/content/repositories/snapshots")
                     .withContentType(Content.SNAPSHOT).build(),
             Repository.builder().withId(SONATYPE).withType(Nexus.class)
-                    .withURL("https://oss.sonatype.org/content/repositories/releases")
+                    .withUrl("https://oss.sonatype.org/content/repositories/releases")
                     .withContentType(Content.RELEASE)
                     .build(),
             Repository.builder().withId(GLUON_NEXUS).withType(Nexus.class)
-                    .withURL("https://nexus.gluonhq.com/nexus/content/repositories/releases")
+                    .withUrl("https://nexus.gluonhq.com/nexus/content/repositories/releases")
                     .withContentType(Content.RELEASE).build());
 
     public static List<Repository> getPresetRepositories() {

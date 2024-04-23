@@ -35,9 +35,9 @@ package com.oracle.javafx.scenebuilder.api.control.resizer;
 import java.util.List;
 import java.util.Map;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.api.control.Resizer;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;

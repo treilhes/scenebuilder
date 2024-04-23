@@ -35,9 +35,9 @@
 package com.gluonhq.jfxapps.metadata.bean;
 
 import java.lang.annotation.Annotation;
-import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
@@ -57,6 +57,8 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cglib.proxy.Enhancer;
+import org.springframework.cglib.proxy.NoOp;
 
 import com.gluonhq.jfxapps.metadata.bean.PropertyMetaData.Type;
 import com.gluonhq.jfxapps.metadata.util.ReflectionUtils;
@@ -64,16 +66,17 @@ import com.gluonhq.jfxapps.metadata.util.Report;
 import com.gluonhq.jfxapps.metadata.util.Resources;
 
 import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
-import net.bytebuddy.dynamic.scaffold.subclass.ConstructorStrategy;
-import net.bytebuddy.implementation.MethodCall;
-import net.sf.cglib.core.NamingPolicy;
-//import javafx.beans.DefaultProperty;
-//import javafx.scene.image.Image;
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
-import net.sf.cglib.proxy.NoOp;
+import net.bytebuddy.implementation.FixedValue;
+import net.bytebuddy.implementation.MethodDelegation;
+import net.bytebuddy.implementation.bind.annotation.AllArguments;
+import net.bytebuddy.implementation.bind.annotation.Empty;
+import net.bytebuddy.implementation.bind.annotation.Origin;
+import net.bytebuddy.implementation.bind.annotation.RuntimeType;
+import net.bytebuddy.implementation.bind.annotation.SuperMethod;
+import net.bytebuddy.implementation.bind.annotation.This;
+import net.bytebuddy.matcher.ElementMatchers;
 
 /**
  * Represents the meta-data for a JavaFX Bean. A BeanMetaData is created by
@@ -263,7 +266,7 @@ public final class BeanMetaData<T> extends AbstractMetaData {
                 }
 
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Report.warn(beanClass, "Unable to create a default instance", ex);
             }
         }
 
@@ -594,60 +597,25 @@ public final class BeanMetaData<T> extends AbstractMetaData {
         } else if (c.isArray()) {
             return Array.newInstance(c.getComponentType(), 0);
         } else if (c.isInterface()) {
-            // if interface a simple null implementation of methods is sufficient
-            return Enhancer.create(c, new MethodInterceptor() {
+            DynamicType.Unloaded<?> unloadedType = new ByteBuddy()
+                    .subclass(Object.class)
+                    .implement(c)
+                    .method(ElementMatchers.any()).intercept(MethodDelegation.to(Interceptor.class))
+                    .make();
 
-                @Override
-                public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
-                    return null;
-                }
-            });
+            instanciableClass = unloadedType.load(c
+                    .getClassLoader())
+                    .getLoaded();
+
         } else if (Modifier.isAbstract(c.getModifiers())) {
-            // An abstract class may contain code in constructor so we need to relay the proxy instance methods to super calls
-            try {
-                return Enhancer.create(c, new MethodInterceptor() {
+            DynamicType.Unloaded<?> unloadedType = new ByteBuddy()
+                    .subclass(c)
+                    .method(ElementMatchers.isAbstract()).intercept(MethodDelegation.to(Interceptor.class))
+                    .make();
 
-                    @Override
-                    public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy)
-                            throws Throwable {
-
-                        try {
-                            return proxy.invokeSuper(obj, args);
-                        } catch (Exception e) {}
-                        return null;
-                    }
-                });
-
-            } catch (Exception e) {
-                logger.error("Failed to create proxy for abstract class", e);
-
-//                instanciableClass = new ByteBuddy()
-//                        .subclass(c, ConstructorStrategy.Default.DEFAULT_CONSTRUCTOR) // Create a subclass of MyBaseClass
-//                        .name(c.getPackageName() + "." + c.getName() + "Impllll") // Set the full class name with the package
-//                        .make() // Generate the subclass
-//                        .load(c.getClassLoader(), ClassLoadingStrategy.Default.WRAPPER) // Use ClassLoadingStrategy.Default.WRAPPER for loading
-//                        .getLoaded(); // Get the loaded class
-
-                Enhancer enhancer = new Enhancer();
-                enhancer.setSuperclass(c);
-                enhancer.setCallbackType(NoOp.class);
-
-                var n = new NamingPolicy() {
-
-                    @Override
-                    public String getClassName(String prefix, String source, Object key,
-                            net.sf.cglib.core.Predicate names) {
-                        return prefix + "Impl"; // Set the package name for the generated class
-                    }
-
-                };
-                enhancer.setNamingPolicy(n);
-
-                instanciableClass = enhancer.createClass();
-
-
-                System.out.println("instanciableClass = " + instanciableClass);
-            }
+            instanciableClass = unloadedType
+                    .load(c.getClassLoader(), ClassLoadingStrategy.Default.INJECTION)
+                    .getLoaded();
 
         } else {
             instanciableClass = c;
@@ -688,15 +656,31 @@ public final class BeanMetaData<T> extends AbstractMetaData {
         }
 
         if (constructors.isEmpty()) { // no public constructor so create one
-            Enhancer enhancer = new Enhancer();
-            enhancer.setSuperclass(c);
-            enhancer.setCallback(new NoOp() {
-            });
-            enhancer.setCallbackType(NoOp.class);
-            return enhancer.create(new Class[] {}, new Object[] {});
+            try {
+                return new ByteBuddy()
+                        .subclass(c)
+                        .make()
+                        .load(c.getClassLoader(), ClassLoadingStrategy.Default.INJECTION)
+                        .getLoaded().getDeclaredConstructor().newInstance();
+            } catch (Exception e) {
+                Report.error(c, "Failed to instanciate with new constructor()", e);
+            }
         }
 
         return null;
     }
 
+    protected static class Interceptor {
+        @RuntimeType
+        public static Object intercept(@This Object self,
+                                       @Origin Method method,
+                                       @AllArguments Object[] args,
+                                       @SuperMethod(nullIfImpossible = true) Method superMethod,
+                                       @Empty Object defaultValue) throws Throwable {
+          if (superMethod == null) {
+            return defaultValue;
+          }
+          return superMethod.invoke(self, args);
+        }
+      }
 }

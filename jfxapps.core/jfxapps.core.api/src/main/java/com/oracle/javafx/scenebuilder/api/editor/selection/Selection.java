@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.api.editor.selection;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.scene.Node;

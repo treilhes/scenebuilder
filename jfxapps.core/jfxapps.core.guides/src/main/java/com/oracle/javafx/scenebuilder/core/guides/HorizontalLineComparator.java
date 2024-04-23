@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.core.guides;
 
 import java.util.Comparator;
 
-import com.oracle.javafx.scenebuilder.util.MathUtils;
+import com.gluonhq.jfxapps.util.MathUtils;
 
 /**
  *

@@ -36,10 +36,10 @@ package com.oracle.javafx.scenebuilder.job.editor;
 import java.util.Collections;
 import java.util.List;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.CompositeJob;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 /**

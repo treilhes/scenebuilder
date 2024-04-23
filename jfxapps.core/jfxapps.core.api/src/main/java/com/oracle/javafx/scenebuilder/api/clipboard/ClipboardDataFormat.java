@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.api.clipboard;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.scene.input.ClipboardContent;
 

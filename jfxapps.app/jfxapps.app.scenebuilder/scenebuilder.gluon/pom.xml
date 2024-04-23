@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.gluonhq.jfxapps</groupId>
     <artifactId>jfxapps.app.scenebuilder</artifactId>
-    <version>17.0.0-SNAPSHOT</version>
+    <version>${scenebuilder.version}</version>
   </parent>
   <artifactId>scenebuilder.gluon</artifactId>
   <packaging>pom</packaging>

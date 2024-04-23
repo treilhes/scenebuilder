@@ -46,6 +46,7 @@ import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.FxThread;
 import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
 import com.oracle.javafx.scenebuilder.api.application.WindowPreferenceTracker;
@@ -62,7 +63,6 @@ import com.oracle.javafx.scenebuilder.api.ui.dock.DockViewController;
 import com.oracle.javafx.scenebuilder.api.ui.dock.View;
 import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Provider;

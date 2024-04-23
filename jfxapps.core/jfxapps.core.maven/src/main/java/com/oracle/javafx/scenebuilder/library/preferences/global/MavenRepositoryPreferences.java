@@ -81,7 +81,7 @@ public class MavenRepositoryPreferences extends ListItemObjectPreference<Reposit
             logger.error("Repository id can't be null or empty");
             return false;
         }
-        if (object.getType() == null || object.getURL() == null) {
+        if (object.getType() == null || object.getUrl() == null) {
             logger.error("Repository fields type and url can't be null");
             return false;
         }
@@ -108,7 +108,7 @@ public class MavenRepositoryPreferences extends ListItemObjectPreference<Reposit
 
         node.put(REPO_ID, repository.getId());
         node.put(REPO_TYPE, repository.getType().getName());
-        node.put(REPO_URL, repository.getURL());
+        node.put(REPO_URL, repository.getUrl());
         if (repository.getUser() != null) {
             node.put(REPO_USER, repository.getUser());
         }
@@ -134,7 +134,7 @@ public class MavenRepositoryPreferences extends ListItemObjectPreference<Reposit
         Repository repository = Repository.builder()
         .withId(node.get(REPO_ID, null))
         .withType(typeClass)
-        .withURL(node.get(REPO_URL, null))
+        .withUrl(node.get(REPO_URL, null))
         .withUser(node.get(REPO_USER, null))
         .withPassword(node.get(REPO_PASS, null))
         .build();

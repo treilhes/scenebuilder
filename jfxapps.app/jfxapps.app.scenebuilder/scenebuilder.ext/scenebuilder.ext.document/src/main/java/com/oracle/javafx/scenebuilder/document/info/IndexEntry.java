@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.document.info;
 
 import java.util.Objects;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 /**
  *

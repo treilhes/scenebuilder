@@ -34,7 +34,7 @@ package com.oracle.javafx.scenebuilder.tools.job.wrap;
 
 import java.util.Comparator;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Orientation;

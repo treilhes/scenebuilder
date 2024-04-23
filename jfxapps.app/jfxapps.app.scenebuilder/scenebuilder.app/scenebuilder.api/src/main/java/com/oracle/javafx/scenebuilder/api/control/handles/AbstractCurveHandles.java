@@ -36,8 +36,8 @@ package com.oracle.javafx.scenebuilder.api.control.handles;
 import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;

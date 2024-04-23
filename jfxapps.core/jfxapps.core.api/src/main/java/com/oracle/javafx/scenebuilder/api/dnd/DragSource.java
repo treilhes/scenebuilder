@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.api.dnd;
 
 import java.util.Set;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.scene.Node;
 import javafx.scene.input.TransferMode;

@@ -1,6 +1,6 @@
 module jfxapps.core.utils {
-    exports com.oracle.javafx.scenebuilder.util;
-    exports com.oracle.javafx.scenebuilder.core.content.util;
+    exports com.gluonhq.jfxapps.util;
+    exports com.gluonhq.jfxapps.core.content.util;
 
 //    requires transitive scenebuilder.starter;
 //    requires java.desktop;

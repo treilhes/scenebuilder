@@ -44,14 +44,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.fxom.FXOMAssetIndex;
+import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.oracle.javafx.scenebuilder.api.editors.ApplicationInstanceWindow;
 import com.oracle.javafx.scenebuilder.api.error.AbstractErrorCollector;
 import com.oracle.javafx.scenebuilder.api.error.ErrorReportEntry;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem.WatchingCallback;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMAssetIndex;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMNode;
 import com.oracle.javafx.scenebuilder.fxml.error.CSSParsingReportImpl;
 import com.oracle.javafx.scenebuilder.fxml.error.FxmlErrorReportEntryImpl;
 import com.oracle.javafx.scenebuilder.fxml.error.Type;

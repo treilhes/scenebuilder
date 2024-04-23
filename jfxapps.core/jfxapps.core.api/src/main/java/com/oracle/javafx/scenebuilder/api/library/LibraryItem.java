@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.api.library;
 
 import java.net.URL;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 public interface LibraryItem {
 

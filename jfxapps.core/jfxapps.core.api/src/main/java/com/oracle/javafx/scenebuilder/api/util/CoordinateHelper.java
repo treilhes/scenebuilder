@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.api.util;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.SceneGraphObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.SceneGraphObject;
 import com.sun.javafx.geometry.BoundsUtils;
 import com.sun.javafx.scene.NodeHelper;
 import com.sun.javafx.scene.SceneUtils;

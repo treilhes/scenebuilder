@@ -38,12 +38,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.util.IOUtils;
 import com.oracle.javafx.scenebuilder.api.content.decoration.Decoration;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 import com.oracle.javafx.scenebuilder.api.ui.misc.Workspace;
 import com.oracle.javafx.scenebuilder.api.util.CoordinateHelper;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.util.IOUtils;
 
 import javafx.event.EventHandler;
 import javafx.scene.Group;

@@ -58,6 +58,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.fxom.FXOMArchive;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithDocument;
 import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
@@ -81,9 +84,6 @@ import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.BuiltinSect
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemNameComparator;
 import com.oracle.javafx.scenebuilder.controllibrary.preferences.global.DisplayModePreference;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMArchive;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
 
 import javafx.beans.binding.Bindings;

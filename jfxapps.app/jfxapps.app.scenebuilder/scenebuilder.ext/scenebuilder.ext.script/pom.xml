@@ -6,7 +6,7 @@
     <parent>
         <artifactId>scenebuilder.ext</artifactId>
         <groupId>com.gluonhq.jfxapps</groupId>
-        <version>17.0.0-SNAPSHOT</version>
+        <version>${scenebuilder.version}</version>
     </parent>
 
     <artifactId>scenebuilder.ext.script</artifactId>

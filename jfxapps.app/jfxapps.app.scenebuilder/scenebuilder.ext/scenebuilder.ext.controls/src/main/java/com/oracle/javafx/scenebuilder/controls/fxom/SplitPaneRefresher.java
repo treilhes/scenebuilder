@@ -36,13 +36,13 @@ package com.oracle.javafx.scenebuilder.controls.fxom;
 import java.net.URL;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.collector.SceneGraphCollector;
-import com.oracle.javafx.scenebuilder.core.fxom.ext.FXOMRefresher;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.DoubleArrayPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.ListValuePropertyMetadata;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
+import com.gluonhq.jfxapps.core.fxom.ext.FXOMRefresher;
+import com.gluonhq.jfxapps.core.metadata.property.value.DoubleArrayPropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.value.list.ListValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.metadata.javafx.containers.SplitPaneMetadata;
 
 import javafx.scene.control.SplitPane;

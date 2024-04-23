@@ -43,6 +43,8 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
 
+import com.gluonhq.jfxapps.util.ClassUtils;
+
 import javafx.scene.Camera;
 import javafx.scene.Node;
 import javafx.scene.control.Control;

@@ -42,11 +42,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.fxom.FXOMArchive;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardDataFormat;
 import com.oracle.javafx.scenebuilder.api.om.OMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMArchive;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;

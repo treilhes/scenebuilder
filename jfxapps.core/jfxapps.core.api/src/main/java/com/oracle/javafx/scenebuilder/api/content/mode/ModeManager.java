@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.content.mode;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 public interface ModeManager {
 

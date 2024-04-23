@@ -36,8 +36,8 @@ package org.scenebuilder.ext.javafx.customization.anchorpane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.util.InspectorPath;
+import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.metadata.javafx.PropertyNames;
 import com.oracle.javafx.scenebuilder.metadata.javafx.hidden.NodeMetadata;
 

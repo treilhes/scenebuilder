@@ -36,12 +36,12 @@ package com.oracle.javafx.scenebuilder.sourcegen.skeleton;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
+import com.gluonhq.jfxapps.core.fxom.collector.FxEventHandlerCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
-import com.oracle.javafx.scenebuilder.core.fxom.collector.FxEventHandlerCollector;
-import com.oracle.javafx.scenebuilder.core.fxom.collector.FxIdCollector;
 import com.oracle.javafx.scenebuilder.sourcegen.util.eventnames.FindEventNamesUtil;
 
 class SkeletonBuffer {

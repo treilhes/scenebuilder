@@ -149,7 +149,7 @@ public class AddEditRepositoryDialogController extends AbstractFxmlWindowControl
                     protected String call() throws Exception {
                         Repository repository = Repository.builder().withId(nameIDTextfield.getText())
                                 // .withType(typeTextfield.getText())
-                                .withURL(urlTextfield.getText()).withUser(userTextfield.getText())
+                                .withUrl(urlTextfield.getText()).withUser(userTextfield.getText())
                                 .withPassword(passwordTextfield.getText()).build();
 
                         return mavenClient.validate(repository);
@@ -215,11 +215,11 @@ public class AddEditRepositoryDialogController extends AbstractFxmlWindowControl
         Repository repository;
         if (privateCheckBox.isSelected()) {
             repository = Repository.builder().withId(nameIDTextfield.getText())
-                    .withType(typeCombo.getSelectionModel().getSelectedItem()).withURL(urlTextfield.getText())
+                    .withType(typeCombo.getSelectionModel().getSelectedItem()).withUrl(urlTextfield.getText())
                     .withUser(userTextfield.getText()).withPassword(passwordTextfield.getText()).build();
         } else {
             repository = Repository.builder().withId(nameIDTextfield.getText())
-                    .withType(typeCombo.getSelectionModel().getSelectedItem()).withURL(urlTextfield.getText()).build();
+                    .withType(typeCombo.getSelectionModel().getSelectedItem()).withUrl(urlTextfield.getText()).build();
         }
         if (oldRepository != null) {
             mavenClient.remove(repository);
@@ -275,7 +275,7 @@ public class AddEditRepositoryDialogController extends AbstractFxmlWindowControl
 
         nameIDTextfield.setText(repository.getId());
         typeCombo.getSelectionModel().select(repository.getType());
-        urlTextfield.setText(repository.getURL());
+        urlTextfield.setText(repository.getUrl());
 
         userTextfield.clear();
         if (repository.getUser() != null) {
@@ -291,7 +291,7 @@ public class AddEditRepositoryDialogController extends AbstractFxmlWindowControl
         addButton.disableProperty()
                 .bind(nameIDTextfield.textProperty().isEqualTo(repository.getId())
                         .and(typeCombo.getSelectionModel().selectedItemProperty().isEqualTo(repository.getType())
-                                .and(urlTextfield.textProperty().isEqualTo(repository.getURL()).and(userTextfield
+                                .and(urlTextfield.textProperty().isEqualTo(repository.getUrl()).and(userTextfield
                                         .textProperty().isEqualTo(repository.getUser())
                                         .and(passwordTextfield.textProperty().isEqualTo(repository.getPassword()))))));
         super.getStage().setTitle(I18N.getString("repository.dialog.title.update"));

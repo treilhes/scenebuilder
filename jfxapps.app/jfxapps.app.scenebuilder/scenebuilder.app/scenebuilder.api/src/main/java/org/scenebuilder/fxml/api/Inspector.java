@@ -33,8 +33,8 @@
  */
  package org.scenebuilder.fxml.api;
 
+import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.ui.dock.View;
-import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
 
 public interface Inspector extends View {
 

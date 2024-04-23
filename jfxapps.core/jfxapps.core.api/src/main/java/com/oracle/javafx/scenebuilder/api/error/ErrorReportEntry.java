@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.api.error;
 
 import java.net.URL;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 public interface ErrorReportEntry {
 

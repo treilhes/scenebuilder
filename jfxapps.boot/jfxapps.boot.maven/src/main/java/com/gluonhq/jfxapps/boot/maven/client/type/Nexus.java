@@ -77,7 +77,7 @@ public class Nexus implements RepositoryType {
     @Override
     public Set<Artifact> getCoordinates(Repository repository, String query) {
 
-        String url = repository.getURL();
+        String url = repository.getUrl();
         String base = url.substring(0, url.indexOf("/content"));
 
         final HttpClient httpClient = newClientBuilder(repository).build();

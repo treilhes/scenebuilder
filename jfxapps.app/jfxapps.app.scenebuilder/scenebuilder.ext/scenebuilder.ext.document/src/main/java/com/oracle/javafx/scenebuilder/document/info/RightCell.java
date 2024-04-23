@@ -33,7 +33,7 @@
 
 package com.oracle.javafx.scenebuilder.document.info;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;

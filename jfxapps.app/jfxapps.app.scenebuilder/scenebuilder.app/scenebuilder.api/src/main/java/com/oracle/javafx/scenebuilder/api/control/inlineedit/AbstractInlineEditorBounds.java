@@ -32,8 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.api.control.inlineedit;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.InlineEditorBounds;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.scene.Node;
 

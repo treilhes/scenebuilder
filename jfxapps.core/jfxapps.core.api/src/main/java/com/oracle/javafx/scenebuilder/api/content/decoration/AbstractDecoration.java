@@ -33,10 +33,10 @@
  */
 package com.oracle.javafx.scenebuilder.api.content.decoration;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.ui.misc.Workspace;
 import com.oracle.javafx.scenebuilder.api.util.CoordinateHelper;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Bounds;

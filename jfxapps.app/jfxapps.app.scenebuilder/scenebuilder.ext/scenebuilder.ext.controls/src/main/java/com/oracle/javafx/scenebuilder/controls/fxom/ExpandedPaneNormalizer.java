@@ -36,18 +36,18 @@ package com.oracle.javafx.scenebuilder.controls.fxom;
 import java.util.Collection;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMElement;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMIntrinsic;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyC;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
-import com.oracle.javafx.scenebuilder.core.fxom.collector.FxReferenceCollector;
-import com.oracle.javafx.scenebuilder.core.fxom.collector.PropertyCollector;
-import com.oracle.javafx.scenebuilder.core.fxom.ext.FXOMNormalizer;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMElement;
+import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
+import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
+import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
+import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
+import com.gluonhq.jfxapps.core.fxom.collector.FxReferenceCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.PropertyCollector;
+import com.gluonhq.jfxapps.core.fxom.ext.FXOMNormalizer;
+import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 
 import javafx.scene.control.TitledPane;
 

@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.core.metadata.fx;
 
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMScript;
-import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
+import com.gluonhq.jfxapps.core.fxom.FXOMScript;
+import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
 
 @Component
 public class ScriptMetadata extends ComponentClassMetadata<FXOMScript> {

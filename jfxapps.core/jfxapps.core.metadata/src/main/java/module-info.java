@@ -32,18 +32,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-open module scenebuilder.core.metadata {
-    exports com.oracle.javafx.scenebuilder.core.metadata;
-    exports com.oracle.javafx.scenebuilder.core.metadata.klass;
-    exports com.oracle.javafx.scenebuilder.core.metadata.property;
-    exports com.oracle.javafx.scenebuilder.core.metadata.property.value;
-    exports com.oracle.javafx.scenebuilder.core.metadata.property.value.list;
-    exports com.oracle.javafx.scenebuilder.core.metadata.util;
-    exports com.oracle.javafx.scenebuilder.core.metadata.property.value.effect;
-    exports com.oracle.javafx.scenebuilder.core.metadata.property.value.keycombination;
-    exports com.oracle.javafx.scenebuilder.core.metadata.property.value.paint;
+open module jfxapps.core.metadata {
+    exports com.gluonhq.jfxapps.core.metadata;
+    exports com.gluonhq.jfxapps.core.metadata.klass;
+    exports com.gluonhq.jfxapps.core.metadata.property;
+    exports com.gluonhq.jfxapps.core.metadata.property.value;
+    exports com.gluonhq.jfxapps.core.metadata.property.value.list;
+    exports com.gluonhq.jfxapps.core.metadata.util;
+    exports com.gluonhq.jfxapps.core.metadata.property.value.effect;
+    exports com.gluonhq.jfxapps.core.metadata.property.value.keycombination;
+    exports com.gluonhq.jfxapps.core.metadata.property.value.paint;
 
-    requires transitive scenebuilder.core.fxom;
+    requires transitive jfxapps.core.fxom;
     requires jfxapps.core.utils;
 
     requires javafx.graphics;

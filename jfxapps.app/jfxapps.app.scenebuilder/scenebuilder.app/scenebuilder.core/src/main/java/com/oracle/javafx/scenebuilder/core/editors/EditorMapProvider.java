@@ -34,7 +34,7 @@ package com.oracle.javafx.scenebuilder.core.editors;
 
 import java.util.Map;
 
-import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
 
 public interface EditorMapProvider {
     Map<Class<? extends PropertyMetadata>, Class<? extends PropertyEditor>> getMap();

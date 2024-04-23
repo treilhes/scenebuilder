@@ -44,6 +44,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.content.util.BoundsUtils;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
 import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
@@ -55,14 +59,10 @@ import com.oracle.javafx.scenebuilder.api.dnd.Drag;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
 import com.oracle.javafx.scenebuilder.api.dnd.DropTarget;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.content.util.BoundsUtils;
 import com.oracle.javafx.scenebuilder.core.dnd.droptarget.ContainerXYDropTarget;
 import com.oracle.javafx.scenebuilder.core.dnd.droptarget.RootDropTarget;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.editor.fxml.guides.MovingGuideController;
-import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import javafx.event.EventType;
 import javafx.geometry.Bounds;

@@ -37,9 +37,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
+import com.gluonhq.jfxapps.core.metadata.util.ColorEncoder;
 import com.oracle.javafx.scenebuilder.api.CardinalPoint;
-import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
-import com.oracle.javafx.scenebuilder.core.metadata.util.ColorEncoder;
 import com.oracle.javafx.scenebuilder.tools.driver.quadcurve.Quad;
 
 import javafx.geometry.BoundingBox;

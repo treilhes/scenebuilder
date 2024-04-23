@@ -74,7 +74,7 @@ public class RepositoryManagerListCell extends ListCell<RepositoryListItem> {
         cellContent.setAlignment(Pos.CENTER_LEFT);
         String name = listItem.getRepository().getId();
         Label fileName = new Label(name);
-        fileName.setTooltip(new Tooltip(name + " [" + listItem.getRepository().getURL() + "]"));
+        fileName.setTooltip(new Tooltip(name + " [" + listItem.getRepository().getUrl() + "]"));
         HBox.setHgrow(fileName, Priority.ALWAYS);
         HBox buttonContent = createButtonCellContent();
         HBox.setHgrow(buttonContent, Priority.ALWAYS);

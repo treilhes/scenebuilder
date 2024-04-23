@@ -36,11 +36,11 @@ package com.oracle.javafx.scenebuilder.editor.fxml.guides;
 import java.util.Collections;
 import java.util.List;
 
+import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.core.guides.HorizontalLineIndex;
 import com.oracle.javafx.scenebuilder.core.guides.HorizontalSegment;
 import com.oracle.javafx.scenebuilder.core.guides.VerticalLineIndex;
 import com.oracle.javafx.scenebuilder.core.guides.VerticalSegment;
-import com.oracle.javafx.scenebuilder.util.MathUtils;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Group;

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -50,7 +50,7 @@ public class Repository {
     @Id
     private String id;
     private Class<? extends RepositoryType> type;
-    private String URL;
+    private String url;
     private String login;
     private String password;
 
@@ -77,12 +77,12 @@ public class Repository {
         this.type = type;
     }
 
-    public String getURL() {
-        return URL;
+    public String getUrl() {
+        return url;
     }
 
-    public void setURL(String uRL) {
-        URL = uRL;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getLogin() {

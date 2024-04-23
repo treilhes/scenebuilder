@@ -31,6 +31,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import com.gluonhq.jfxapps.core.fxom.ext.FXOMNormalizer;
+import com.gluonhq.jfxapps.core.fxom.ext.FXOMRefresher;
+import com.gluonhq.jfxapps.core.fxom.ext.FileLoader;
+import com.gluonhq.jfxapps.core.fxom.ext.TransientStateBackup;
+import com.gluonhq.jfxapps.core.fxom.ext.WeakProperty;
 import com.oracle.javafx.scenebuilder.controls.BaseControlsExtension;
 import com.oracle.javafx.scenebuilder.controls.fxom.AccordionStateBackup;
 import com.oracle.javafx.scenebuilder.controls.fxom.ClipWeakProperty;
@@ -42,11 +47,6 @@ import com.oracle.javafx.scenebuilder.controls.fxom.LabelForWeakProperty;
 import com.oracle.javafx.scenebuilder.controls.fxom.MediaFileLoader;
 import com.oracle.javafx.scenebuilder.controls.fxom.SplitPaneRefresher;
 import com.oracle.javafx.scenebuilder.controls.fxom.TabPaneStateBackup;
-import com.oracle.javafx.scenebuilder.core.fxom.ext.FXOMNormalizer;
-import com.oracle.javafx.scenebuilder.core.fxom.ext.FXOMRefresher;
-import com.oracle.javafx.scenebuilder.core.fxom.ext.FileLoader;
-import com.oracle.javafx.scenebuilder.core.fxom.ext.TransientStateBackup;
-import com.oracle.javafx.scenebuilder.core.fxom.ext.WeakProperty;
 import com.oracle.javafx.scenebuilder.extension.Extension;
 
 open module scenebuilder.ext.controls {

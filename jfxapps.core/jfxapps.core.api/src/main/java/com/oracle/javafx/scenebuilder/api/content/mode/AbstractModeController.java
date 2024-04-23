@@ -37,11 +37,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.content.decoration.Decoration;
 import com.oracle.javafx.scenebuilder.api.content.mode.Layer.LayerItemCreator;
 import com.oracle.javafx.scenebuilder.api.content.mode.Layer.LayerItemSelector;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.ui.misc.Workspace;
 
 import javafx.scene.Group;

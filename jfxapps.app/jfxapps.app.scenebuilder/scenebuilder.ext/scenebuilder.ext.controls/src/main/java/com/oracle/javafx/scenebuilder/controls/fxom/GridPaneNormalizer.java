@@ -35,14 +35,14 @@ package com.oracle.javafx.scenebuilder.controls.fxom;
 
 import java.net.URL;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.collector.SceneGraphCollector;
-import com.oracle.javafx.scenebuilder.core.fxom.ext.FXOMNormalizer;
-import com.oracle.javafx.scenebuilder.core.fxom.util.Deprecation;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.ColumnConstraintsListPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.value.list.RowConstraintsListPropertyMetadata;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
+import com.gluonhq.jfxapps.core.fxom.ext.FXOMNormalizer;
+import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
+import com.gluonhq.jfxapps.core.metadata.property.value.list.ColumnConstraintsListPropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.value.list.RowConstraintsListPropertyMetadata;
 
 import javafx.scene.layout.GridPane;
 

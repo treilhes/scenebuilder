@@ -1,6 +1,6 @@
 package com.oracle.javafx.scenebuilder.controls.fxom;
 
-import com.oracle.javafx.scenebuilder.core.fxom.ext.WeakProperty;
+import com.gluonhq.jfxapps.core.fxom.ext.WeakProperty;
 
 import javafx.scene.control.Accordion;
 

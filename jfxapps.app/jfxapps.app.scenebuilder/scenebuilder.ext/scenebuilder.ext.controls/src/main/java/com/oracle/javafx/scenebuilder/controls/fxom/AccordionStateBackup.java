@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.controls.fxom;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.collector.SceneGraphCollector;
-import com.oracle.javafx.scenebuilder.core.fxom.ext.TransientStateBackup;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
+import com.gluonhq.jfxapps.core.fxom.ext.TransientStateBackup;
 
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;

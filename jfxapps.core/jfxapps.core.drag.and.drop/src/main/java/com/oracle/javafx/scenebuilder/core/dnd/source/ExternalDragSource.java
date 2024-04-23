@@ -50,14 +50,14 @@ import org.springframework.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.util.ClassUtils;
 import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
 import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardDataFormat;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSourceFactory;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.util.ClassUtils;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Group;

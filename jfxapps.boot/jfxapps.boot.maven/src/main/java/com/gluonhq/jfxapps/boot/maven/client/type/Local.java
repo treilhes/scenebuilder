@@ -53,7 +53,7 @@ public class Local implements RepositoryType {
      */
     @Override
     public Set<Artifact> getCoordinates(Repository repository, String query) {
-        String m2 = repository.getURL();
+        String m2 = repository.getUrl();
 
         try {
             return Files

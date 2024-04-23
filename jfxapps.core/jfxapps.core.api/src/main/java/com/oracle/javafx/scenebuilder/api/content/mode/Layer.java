@@ -37,8 +37,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
 
 import javafx.event.EventHandler;
 import javafx.scene.Group;

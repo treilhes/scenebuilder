@@ -99,9 +99,8 @@ open module jfxapps.core.api {
     requires transitive jfxapps.boot.starter;
 
     requires transitive jfxapps.core.utils;
-
-    requires transitive scenebuilder.core.fxom;
-    requires transitive scenebuilder.core.metadata;
+    requires transitive jfxapps.core.fxom;
+    requires transitive jfxapps.core.metadata;
 
     requires transitive io.reactivex.rxjava3;
     requires transitive org.reactivestreams;

@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.core.dnd.source;
 
-import com.oracle.javafx.scenebuilder.util.MathUtils;
+import com.gluonhq.jfxapps.util.MathUtils;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
