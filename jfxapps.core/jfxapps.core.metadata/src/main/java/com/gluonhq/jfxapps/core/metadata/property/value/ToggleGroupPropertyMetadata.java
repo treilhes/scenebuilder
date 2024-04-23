@@ -106,7 +106,7 @@ public class ToggleGroupPropertyMetadata<VC> extends SingleValuePropertyMetadata
             extends SingleValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, String, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(String.class);
+            valueClass(String.class);
         }
     }
 

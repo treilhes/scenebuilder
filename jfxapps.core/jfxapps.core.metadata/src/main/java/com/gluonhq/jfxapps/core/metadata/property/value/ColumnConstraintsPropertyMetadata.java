@@ -55,52 +55,52 @@ public class ColumnConstraintsPropertyMetadata<VC> extends ComplexPropertyMetada
     private static final ColumnConstraints DEFAULT = new ColumnConstraints();
 
     private final BooleanPropertyMetadata<Void> fillWidthMetadata = new BooleanPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("fillWidth")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT.isFillWidth())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("fillWidth")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT.isFillWidth())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final ComputedSizeDoublePropertyMetadata<Void> maxWidthMetadata = new ComputedSizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("maxWidth")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT.getMaxWidth())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("maxWidth")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT.getMaxWidth())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final ComputedSizeDoublePropertyMetadata<Void> minWidthMetadata = new ComputedSizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("minWidth")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT.getMinWidth())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("minWidth")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT.getMinWidth())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final PercentageDoublePropertyMetadata<Void> percentWidthMetadata = new PercentageDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("percentWidth")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT.getPercentWidth())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("percentWidth")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT.getPercentWidth())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final ComputedAndPrefSizeDoublePropertyMetadata<Void> prefWidthMetadata = new ComputedAndPrefSizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("prefWidth")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT.getPrefWidth())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("prefWidth")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT.getPrefWidth())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EnumerationPropertyMetadata<Void> halignmentMetadata = new EnumerationPropertyMetadata.Builder<HPos, Void>(HPos.class)
-            .withName(new PropertyName("halignment")) //NOCHECK
-            .withReadWrite(true)
-            .withNullEquivalent(EnumerationPropertyMetadata.EQUIV_INHERITED)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("halignment")) //NOCHECK
+            .readWrite(true)
+            .nullEquivalent(EnumerationPropertyMetadata.EQUIV_INHERITED)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EnumerationPropertyMetadata<Void> hgrowMetadata = new EnumerationPropertyMetadata.Builder<Priority, Void>(Priority.class)
-            .withName(new PropertyName("hgrow")) //NOCHECK
-            .withReadWrite(true)
-            .withNullEquivalent(EnumerationPropertyMetadata.EQUIV_INHERITED)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("hgrow")) //NOCHECK
+            .readWrite(true)
+            .nullEquivalent(EnumerationPropertyMetadata.EQUIV_INHERITED)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    public ColumnConstraintsPropertyMetadata(PropertyName name, boolean readWrite, ColumnConstraints defaultValue,
@@ -169,7 +169,7 @@ public class ColumnConstraintsPropertyMetadata<VC> extends ComplexPropertyMetada
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, ColumnConstraints, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(ColumnConstraints.class);
+            valueClass(ColumnConstraints.class);
         }
     }
 

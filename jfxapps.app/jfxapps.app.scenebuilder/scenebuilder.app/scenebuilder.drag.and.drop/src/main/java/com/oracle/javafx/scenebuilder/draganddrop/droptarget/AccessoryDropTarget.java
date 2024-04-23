@@ -231,10 +231,10 @@ public final class AccessoryDropTarget extends AbstractDropTarget {
 
                     final EnumerationPropertyMetadata alignmentMeta
                             = new EnumerationPropertyMetadata.Builder<>(Pos.class)
-                                .withName(alignmentName)
-                                .withNullEquivalent("UNUSED")//NOCHECK
-                                .withReadWrite(true)
-                                .withInspectorPath(InspectorPath.UNUSED).build();
+                                .name(alignmentName)
+                                .nullEquivalent("UNUSED")//NOCHECK
+                                .readWrite(true)
+                                .inspectorPath(InspectorPath.UNUSED).build();
 
                     final AbstractJob alignmentJob = modifyObjectJobFactory.getJob(draggedInstance, alignmentMeta,
                             Pos.CENTER);

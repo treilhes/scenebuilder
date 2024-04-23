@@ -48,17 +48,17 @@ import javafx.scene.effect.Bloom;
 public class BloomPropertyMetadata<VC> extends ComplexPropertyMetadata<Bloom, VC> {
 
     private final EffectPropertyMetadata<Void> inputMetadata = new EffectPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("input")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("input")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final OpacityDoublePropertyMetadata<Void> thresholdMetadata = new OpacityDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("threshold")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.3)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("threshold")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.3)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected BloomPropertyMetadata(PropertyName name, boolean readWrite,
@@ -87,7 +87,7 @@ public class BloomPropertyMetadata<VC> extends ComplexPropertyMetadata<Bloom, VC
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Bloom, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Bloom.class);
+            valueClass(Bloom.class);
         }
     }
 

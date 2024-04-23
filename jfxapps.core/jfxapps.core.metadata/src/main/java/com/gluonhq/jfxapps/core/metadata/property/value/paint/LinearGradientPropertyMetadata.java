@@ -58,52 +58,52 @@ public class LinearGradientPropertyMetadata<VC> extends ComplexPropertyMetadata<
             true /* proportional */, CycleMethod.NO_CYCLE).getStops();
 
     private final CoordinateDoublePropertyMetadata<Void> startXMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("startX")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("startX")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> startYMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("startY")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("startY")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> endXMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("endX")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("endX")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> endYMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("endY")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("endY")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final BooleanPropertyMetadata<Void> proportionalMetadata = new BooleanPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("proportional")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(true)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("proportional")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(true)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EnumerationPropertyMetadata<Void> cycleMethodMetadata = new EnumerationPropertyMetadata.Builder<CycleMethod, Void>(CycleMethod.class)
-            .withName(new PropertyName("cycleMethod")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(CycleMethod.NO_CYCLE)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("cycleMethod")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(CycleMethod.NO_CYCLE)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final StopListPropertyMetadata<Void> stopsMetadata = new StopListPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("stops")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT_STOPS)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("stops")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT_STOPS)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected LinearGradientPropertyMetadata(PropertyName name, boolean readWrite,
@@ -137,7 +137,7 @@ public class LinearGradientPropertyMetadata<VC> extends ComplexPropertyMetadata<
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, LinearGradient, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(LinearGradient.class);
+            valueClass(LinearGradient.class);
         }
     }
 

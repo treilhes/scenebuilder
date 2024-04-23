@@ -106,15 +106,15 @@ public class CertificateManagerControllerTest {
         //HttpsURLConnection.setDefaultSSLSocketFactory(new KeyStoreFactory(new MockServerLogger()).sslContext().getSocketFactory());
         mockServer = ClientAndServer.startClientAndServer(PortFactory.findFreePort());
         mockServer
-            //.withSecure(true)
+            //.secure(true)
             .when(
                 request()
-                    .withMethod("GET")
-                    .withPath("/test")
+                    .method("GET")
+                    .path("/test")
             )
             .respond(
                 response()
-                    .withBody("some_response_body")
+                    .body("some_response_body")
             );
     }
 

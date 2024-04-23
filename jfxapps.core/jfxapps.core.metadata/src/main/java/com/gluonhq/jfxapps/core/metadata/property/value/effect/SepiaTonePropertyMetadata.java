@@ -48,17 +48,17 @@ import javafx.scene.effect.SepiaTone;
 public class SepiaTonePropertyMetadata<VC> extends ComplexPropertyMetadata<SepiaTone, VC> {
 
     private final EffectPropertyMetadata<Void> inputMetadata = new EffectPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("input"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("input"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EffectSizeDoublePropertyMetadata<Void> levelMetadata = new EffectSizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("level"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(1.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("level"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(1.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected SepiaTonePropertyMetadata(PropertyName name, boolean readWrite,
@@ -87,7 +87,7 @@ public class SepiaTonePropertyMetadata<VC> extends ComplexPropertyMetadata<Sepia
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, SepiaTone, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(SepiaTone.class);
+            valueClass(SepiaTone.class);
         }
     }
 

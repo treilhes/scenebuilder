@@ -44,10 +44,10 @@ import javafx.scene.paint.Color;
 public class ColorListPropertyMetadata<VC> extends ListValuePropertyMetadata<Color, VC> {
 
     private final static ColorPropertyMetadata<Void> itemMetadata = new ColorPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("unused")) // NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(Color.BLACK)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("unused")) // NOCHECK
+            .readWrite(true)
+            .defaultValue(Color.BLACK)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    public ColorListPropertyMetadata(PropertyName name, boolean readWrite, List<Color> defaultValue,
@@ -63,8 +63,8 @@ public class ColorListPropertyMetadata<VC> extends ListValuePropertyMetadata<Col
             extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, Color, VC> {
         public AbstractBuilder() {
             super();
-            withItemClass(Color.class);
-            withItemMetadata(ColorListPropertyMetadata.itemMetadata);
+            itemClass(Color.class);
+            itemMetadata(ColorListPropertyMetadata.itemMetadata);
         }
     }
 

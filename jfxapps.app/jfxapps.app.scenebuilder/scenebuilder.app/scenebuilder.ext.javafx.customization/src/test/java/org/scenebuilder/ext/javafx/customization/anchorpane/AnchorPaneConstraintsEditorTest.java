@@ -66,18 +66,18 @@ public class AnchorPaneConstraintsEditorTest {
 
     static DoublePropertyMetadata someAnchorProp(String name) {
         return new NullableCoordinateDoublePropertyMetadata.Builder()
-                .withName(new PropertyName(name))
-                .withReadWrite(true)
-                .withDefaultValue(null)
-                .withInspectorPath(InspectorPath.UNUSED).build();
+                .name(new PropertyName(name))
+                .readWrite(true)
+                .defaultValue(null)
+                .inspectorPath(InspectorPath.UNUSED).build();
     }
     static AnchorPropertyGroupMetadata someAnchorGroupProp() {
         return new AnchorPropertyGroupMetadata.Builder()
-                .withName(new PropertyName("anchors"))
-                .withTopAnchorProperty(someAnchorProp("top"))
-                .withRightAnchorProperty(someAnchorProp("right"))
-                .withBottomAnchorProperty(someAnchorProp("bottom"))
-                .withLeftAnchorProperty(someAnchorProp("left")).build();
+                .name(new PropertyName("anchors"))
+                .topAnchorProperty(someAnchorProp("top"))
+                .rightAnchorProperty(someAnchorProp("right"))
+                .bottomAnchorProperty(someAnchorProp("bottom"))
+                .leftAnchorProperty(someAnchorProp("left")).build();
     }
 
     @Mock

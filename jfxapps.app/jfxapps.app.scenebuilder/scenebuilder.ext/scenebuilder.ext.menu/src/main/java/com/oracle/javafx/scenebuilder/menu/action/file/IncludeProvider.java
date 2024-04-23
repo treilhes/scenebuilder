@@ -65,7 +65,7 @@ public class IncludeProvider implements MenuItemProvider {
 
     @Override
     public List<MenuItemAttachment> menuItems() {
-        Menu menu = menuBuilder.menu().withId(MENU_ID).withTitle(INCLUDE_TITLE).build();
+        Menu menu = menuBuilder.menu().id(MENU_ID).title(INCLUDE_TITLE).build();
 
         return Arrays.asList(
                 MenuItemAttachment.create(menu, ImportProvider.MENU_ID, PositionRequest.AsNextSibling));

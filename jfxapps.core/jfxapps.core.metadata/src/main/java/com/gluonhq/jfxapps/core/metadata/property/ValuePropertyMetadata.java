@@ -168,16 +168,16 @@ public abstract class ValuePropertyMetadata<VC> extends PropertyMetadata<VC> {
         private final Map<Class<?>, Object> defaultValueAlternatives = new HashMap<>();
 
         @Override
-        protected SELF withConstant(String constantName, Object constantValue) {
-            return super.withConstant(constantName, constantValue);
+        protected SELF constant(String constantName, Object constantValue) {
+            return super.constant(constantName, constantValue);
         }
 
-        public SELF withReadWrite(boolean readWrite) {
+        public SELF readWrite(boolean readWrite) {
             this.readWrite = readWrite;
             return self();
         }
 
-        protected SELF withDefaultAlternativeValue(Class<?> cls, Object value) {
+        protected SELF defaultAlternativeValue(Class<?> cls, Object value) {
             this.defaultValueAlternatives.put(cls, value);
             return self();
         }
@@ -186,7 +186,7 @@ public abstract class ValuePropertyMetadata<VC> extends PropertyMetadata<VC> {
 //
 //    public static <V extends ValuePropertyMetadata<VC> , T extends ValuePropertyMetadata.AbstractBuilder<T, V, VC>, VC> T fillBuilder(ValuePropertyMetadata<VC> source, T builder){
 //        return builder
-//                .withName(source.getName())
-//                .withReadWrite(source.isReadWrite());
+//                .name(source.getName())
+//                .readWrite(source.isReadWrite());
 //    }
 }

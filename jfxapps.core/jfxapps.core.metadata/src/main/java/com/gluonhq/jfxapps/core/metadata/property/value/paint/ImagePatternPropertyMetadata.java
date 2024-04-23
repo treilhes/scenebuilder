@@ -51,45 +51,45 @@ import javafx.scene.paint.ImagePattern;
 public class ImagePatternPropertyMetadata<VC> extends ComplexPropertyMetadata<ImagePattern, VC> {
 
     private final ImagePropertyMetadata<Void> imageMetadata = new ImagePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("image")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("image")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> xMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("x")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("x")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> yMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("y")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("y")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final SizeDoublePropertyMetadata<Void> widthMetadata = new SizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("width")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("width")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final SizeDoublePropertyMetadata<Void> heightMetadata = new SizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("height")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("height")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final BooleanPropertyMetadata<Void> proportionalMetadata = new BooleanPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("proportional")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(true)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("proportional")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(true)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    public ImagePatternPropertyMetadata(PropertyName name, boolean readWrite,
@@ -122,7 +122,7 @@ public class ImagePatternPropertyMetadata<VC> extends ComplexPropertyMetadata<Im
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, ImagePattern, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(ImagePattern.class);
+            valueClass(ImagePattern.class);
         }
     }
 

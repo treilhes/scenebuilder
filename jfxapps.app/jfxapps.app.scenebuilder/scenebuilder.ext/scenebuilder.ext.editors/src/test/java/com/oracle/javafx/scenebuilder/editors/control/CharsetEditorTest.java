@@ -57,10 +57,10 @@ public class CharsetEditorTest {
 
     static CharsetStringPropertyMetadata someCharsetStringProp() {
         return new CharsetStringPropertyMetadata.Builder()
-                .withName(new PropertyName("charsetstring"))
-                .withReadWrite(true)
-                .withDefaultValue("")
-                .withInspectorPath(InspectorPath.UNUSED).build();
+                .name(new PropertyName("charsetstring"))
+                .readWrite(true)
+                .defaultValue("")
+                .inspectorPath(InspectorPath.UNUSED).build();
     }
 
     @Mock

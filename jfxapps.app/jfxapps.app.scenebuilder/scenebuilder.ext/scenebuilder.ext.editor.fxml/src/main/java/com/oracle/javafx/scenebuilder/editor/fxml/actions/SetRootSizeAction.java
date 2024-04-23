@@ -153,7 +153,7 @@ public class SetRootSizeAction extends AbstractAction {
                     return menu;
                 }
 
-                menu = menuBuilder.menu().withId(SET_ROOT_SIZE_MENU_ID).withTitle("menu.title.size").build();
+                menu = menuBuilder.menu().id(SET_ROOT_SIZE_MENU_ID).title("menu.title.size").build();
 
                 for (Size size : Size.values()) {
                     if (size == Size.SIZE_DEFAULT || size == Size.SIZE_PREFERRED) {
@@ -162,7 +162,7 @@ public class SetRootSizeAction extends AbstractAction {
 
                     SetRootSizeAction action = actionFactory.create(SetRootSizeAction.class);
                     action.setSize(size);
-                    MenuItem mi = menuBuilder.menuItem().withTitle(size.toString()).withAction(action).build();
+                    MenuItem mi = menuBuilder.menuItem().title(size.toString()).action(action).build();
                     menu.getItems().add(mi);
                 }
 

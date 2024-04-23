@@ -72,7 +72,7 @@ class SkeletonSettings {
         this.textType = type;
     }
 
-    SkeletonSettings withTextType(TEXT_TYPE type) {
+    SkeletonSettings textType(TEXT_TYPE type) {
         this.textType = type;
         return this;
     }
@@ -81,7 +81,7 @@ class SkeletonSettings {
         this.textFormat = format;
     }
 
-    SkeletonSettings withFormat(FORMAT_TYPE format) {
+    SkeletonSettings format(FORMAT_TYPE format) {
         this.textFormat = format;
         return this;
     }

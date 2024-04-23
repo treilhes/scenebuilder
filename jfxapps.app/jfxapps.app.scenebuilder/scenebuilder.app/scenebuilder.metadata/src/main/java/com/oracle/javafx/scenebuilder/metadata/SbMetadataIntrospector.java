@@ -162,7 +162,7 @@ public class SbMetadataIntrospector extends
     @Override
     protected ValuePropertyMetadataCustomization customizeValueProperty(PropertyDescriptor d, int counter) {
         final InspectorPath inspectorPath = new InspectorPath(CUSTOM_SECTION, CUSTOM_SUB_SECTION, counter++);
-        return new ValuePropertyMetadataCustomization.Builder().withInspectorPath(inspectorPath).build();
+        return new ValuePropertyMetadataCustomization.Builder().inspectorPath(inspectorPath).build();
     }
 
 }

@@ -132,9 +132,9 @@ public class OpenRecentProvider implements MenuItemProvider {
             final List<String> recentItems = recentItemsPreference.getValue();
 
             final MenuItem clearMenuItem = builder.menuItem()
-                    .withTitle(CLEAR_RECENT_TITLE)
-                    .withId(ClearRecentItemsAction.CLEARRECENT_MENU_ID)
-                    .withActionClass(ClearRecentItemsAction.class).build();
+                    .title(CLEAR_RECENT_TITLE)
+                    .id(ClearRecentItemsAction.CLEARRECENT_MENU_ID)
+                    .actionClass(ClearRecentItemsAction.class).build();
 
             if (!recentItems.isEmpty()) {
 
@@ -167,12 +167,12 @@ public class OpenRecentProvider implements MenuItemProvider {
                         if (recentItemsNames.get(name) > 1) {
                             // Several files with same name : display full path
                             action.setFxmlFile(Arrays.asList(recentItemFile));
-                            mi = builder.menuItem().withTitle(recentItem).withAction(action).build();
+                            mi = builder.menuItem().title(recentItem).action(action).build();
                         } else {
                             // Single file with this name : display file name only
                             assert recentItemsNames.get(name) == 1;
                             action.setFxmlFile(Arrays.asList(recentItemFile));
-                            mi = builder.menuItem().withTitle(name).withAction(action).build();
+                            mi = builder.menuItem().title(name).action(action).build();
                         }
                         mi.setMnemonicParsing(false);
                         menuItems.add(mi);

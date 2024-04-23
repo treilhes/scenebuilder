@@ -54,11 +54,11 @@ public class ReferenceMetadata extends ComponentClassMetadata<FXOMReference> {
     }
 
     private final I18nStringPropertyMetadata sourceMetadata = new I18nStringPropertyMetadata.Builder()
-            .withName(new PropertyName("source"))
-            .withReadWrite(true)
-            .withDefaultValue("sb_nullReference")
-            .withInspectorPath(new InspectorPath("Properties", "Reference", 1))
-            .withVisibility(Visibility.STANDARD)
+            .name(new PropertyName("source"))
+            .readWrite(true)
+            .defaultValue("sb_nullReference")
+            .inspectorPath(new InspectorPath("Properties", "Reference", 1))
+            .visibility(Visibility.STANDARD)
             .build();
 
     protected ReferenceMetadata(IntrinsicMetadata parent) {

@@ -48,45 +48,45 @@ import javafx.geometry.Bounds;
 public class BoundsPropertyMetadata<VC> extends ComplexPropertyMetadata<Bounds, VC> {
 
     private final CoordinateDoublePropertyMetadata<Void> minXMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-                .withName(new PropertyName("minx"))
-                .withReadWrite(true)
-                .withDefaultValue(0.0)
-                //.withInspectorPath(InspectorPath.UNUSED)
+                .name(new PropertyName("minx"))
+                .readWrite(true)
+                .defaultValue(0.0)
+                //.inspectorPath(InspectorPath.UNUSED)
                 .build();
 
     private final CoordinateDoublePropertyMetadata<Void> minYMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-                .withName(new PropertyName("minY"))
-                .withReadWrite(true)
-                .withDefaultValue(0.0)
-                //.withInspectorPath(InspectorPath.UNUSED)
+                .name(new PropertyName("minY"))
+                .readWrite(true)
+                .defaultValue(0.0)
+                //.inspectorPath(InspectorPath.UNUSED)
                 .build();
 
     private final CoordinateDoublePropertyMetadata<Void> minZMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-                .withName(new PropertyName("minZ"))
-                .withReadWrite(true)
-                .withDefaultValue(0.0)
-                //.withInspectorPath(InspectorPath.UNUSED)
+                .name(new PropertyName("minZ"))
+                .readWrite(true)
+                .defaultValue(0.0)
+                //.inspectorPath(InspectorPath.UNUSED)
                 .build();
 
     private final SizeDoublePropertyMetadata<Void> widthMetadata = new SizeDoublePropertyMetadata.Builder<Void>()
-                .withName(new PropertyName("width"))
-                .withReadWrite(true)
-                .withDefaultValue(0.0)
-                //.withInspectorPath(InspectorPath.UNUSED)
+                .name(new PropertyName("width"))
+                .readWrite(true)
+                .defaultValue(0.0)
+                //.inspectorPath(InspectorPath.UNUSED)
                 .build();
 
     private final SizeDoublePropertyMetadata<Void> heightMetadata = new SizeDoublePropertyMetadata.Builder<Void>()
-                .withName(new PropertyName("height"))
-                .withReadWrite(true)
-                .withDefaultValue(0.0)
-                //.withInspectorPath(InspectorPath.UNUSED)
+                .name(new PropertyName("height"))
+                .readWrite(true)
+                .defaultValue(0.0)
+                //.inspectorPath(InspectorPath.UNUSED)
                 .build();
 
     private final SizeDoublePropertyMetadata<Void> depthMetadata = new SizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("depth"))
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("depth"))
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 
@@ -122,7 +122,7 @@ public class BoundsPropertyMetadata<VC> extends ComplexPropertyMetadata<Bounds, 
 
         public AbstractBuilder() {
             super();
-            withValueClass(Bounds.class);
+            valueClass(Bounds.class);
         }
 
     }

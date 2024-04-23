@@ -52,20 +52,20 @@ public class KeyCombinationPropertyMetadata<VC> extends ComplexPropertyMetadata<
 //    protected KeyCombinationPropertyMetadata(PropertyName name, boolean readWrite, KeyCombination defaultValue,
 //            InspectorPath inspectorPath) {
 //        super(name, KeyCombination.class, readWrite, defaultValue, inspectorPath);
-//        keyCodeCombinationMetadata = fillBuilder(this, new KeyCodeCombinationPropertyMetadata.Builder()).withDefaultValue(null).build();
-//        keyCharacterCombinationMetadata = fillBuilder(this, new KeyCharacterCombinationPropertyMetadata.Builder()).withDefaultValue(null).build();
+//        keyCodeCombinationMetadata = fillBuilder(this, new KeyCodeCombinationPropertyMetadata.Builder()).defaultValue(null).build();
+//        keyCharacterCombinationMetadata = fillBuilder(this, new KeyCharacterCombinationPropertyMetadata.Builder()).defaultValue(null).build();
 //    }
 
     protected KeyCombinationPropertyMetadata(AbstractBuilder<?, ?, VC> builder) {
         super(builder);
         keyCodeCombinationMetadata = new KeyCodeCombinationPropertyMetadata.Builder<Void>()
-                .withName(this.getName())
-                .withReadWrite(this.isReadWrite())
-                .withDefaultValue(null).build();
+                .name(this.getName())
+                .readWrite(this.isReadWrite())
+                .defaultValue(null).build();
         keyCharacterCombinationMetadata = new KeyCharacterCombinationPropertyMetadata.Builder<Void>()
-                .withName(this.getName())
-                .withReadWrite(this.isReadWrite())
-                .withDefaultValue(null).build();
+                .name(this.getName())
+                .readWrite(this.isReadWrite())
+                .defaultValue(null).build();
     }
 
     /*
@@ -89,7 +89,7 @@ public class KeyCombinationPropertyMetadata<VC> extends ComplexPropertyMetadata<
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, KeyCombination, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(KeyCombination.class);
+            valueClass(KeyCombination.class);
         }
     }
 

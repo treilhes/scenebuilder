@@ -59,7 +59,7 @@ public class ListCellPropertyMetadata<VC> extends ComplexPropertyMetadata<Object
             extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Object, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Object.class);
+            valueClass(Object.class);
         }
     }
 

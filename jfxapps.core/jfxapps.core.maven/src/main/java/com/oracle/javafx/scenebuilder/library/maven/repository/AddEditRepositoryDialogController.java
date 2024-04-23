@@ -147,10 +147,10 @@ public class AddEditRepositoryDialogController extends AbstractFxmlWindowControl
                 return new Task<String>() {
                     @Override
                     protected String call() throws Exception {
-                        Repository repository = Repository.builder().withId(nameIDTextfield.getText())
-                                // .withType(typeTextfield.getText())
-                                .withUrl(urlTextfield.getText()).withUser(userTextfield.getText())
-                                .withPassword(passwordTextfield.getText()).build();
+                        Repository repository = Repository.builder().id(nameIDTextfield.getText())
+                                // .type(typeTextfield.getText())
+                                .url(urlTextfield.getText()).user(userTextfield.getText())
+                                .password(passwordTextfield.getText()).build();
 
                         return mavenClient.validate(repository);
                     }
@@ -214,12 +214,12 @@ public class AddEditRepositoryDialogController extends AbstractFxmlWindowControl
     void addRepository() {
         Repository repository;
         if (privateCheckBox.isSelected()) {
-            repository = Repository.builder().withId(nameIDTextfield.getText())
-                    .withType(typeCombo.getSelectionModel().getSelectedItem()).withUrl(urlTextfield.getText())
-                    .withUser(userTextfield.getText()).withPassword(passwordTextfield.getText()).build();
+            repository = Repository.builder().id(nameIDTextfield.getText())
+                    .type(typeCombo.getSelectionModel().getSelectedItem()).url(urlTextfield.getText())
+                    .user(userTextfield.getText()).password(passwordTextfield.getText()).build();
         } else {
-            repository = Repository.builder().withId(nameIDTextfield.getText())
-                    .withType(typeCombo.getSelectionModel().getSelectedItem()).withUrl(urlTextfield.getText()).build();
+            repository = Repository.builder().id(nameIDTextfield.getText())
+                    .type(typeCombo.getSelectionModel().getSelectedItem()).url(urlTextfield.getText()).build();
         }
         if (oldRepository != null) {
             mavenClient.remove(repository);

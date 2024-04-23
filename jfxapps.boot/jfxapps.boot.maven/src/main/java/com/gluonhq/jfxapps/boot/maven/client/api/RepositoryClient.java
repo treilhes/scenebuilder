@@ -45,11 +45,11 @@ public interface RepositoryClient {
         RELEASE, RELEASE_SNAPHOT
     }
 
-    RepositoryClient withLocalPath(File path);
+    RepositoryClient localPath(File path);
 
-    RepositoryClient withRepositories(List<Repository> repositories);
+    RepositoryClient repositories(List<Repository> repositories);
 
-    RepositoryClient withLocalOnly();
+    RepositoryClient localOnly();
 
     List<UniqueArtifact> getAvailableVersions(Artifact artifact);
 

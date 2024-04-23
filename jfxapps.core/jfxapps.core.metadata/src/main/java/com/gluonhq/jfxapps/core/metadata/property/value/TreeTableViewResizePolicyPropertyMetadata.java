@@ -89,13 +89,13 @@ public class TreeTableViewResizePolicyPropertyMetadata<VC> extends CallbackPrope
     public static abstract class AbstractBuilder<SELF, TOBUILD,VC>
             extends CallbackPropertyMetadata.AbstractBuilder<SELF, TOBUILD,VC> {
 
-        public SELF withConstrainedResizePolicy() {
-            withDefaultValue(TreeTableView.CONSTRAINED_RESIZE_POLICY);
+        public SELF constrainedResizePolicy() {
+            defaultValue(TreeTableView.CONSTRAINED_RESIZE_POLICY);
             return self();
         }
 
-        public SELF withUnconstrainedResizePolicy() {
-            withDefaultValue(TreeTableView.UNCONSTRAINED_RESIZE_POLICY);
+        public SELF unconstrainedResizePolicy() {
+            defaultValue(TreeTableView.UNCONSTRAINED_RESIZE_POLICY);
             return self();
         }
 

@@ -77,7 +77,7 @@ public class FunctionalInterfacePropertyMetadata<VC> extends TextEncodableProper
             extends TextEncodablePropertyMetadata.AbstractBuilder<SELF, TOBUILD, String, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(String.class);
+            valueClass(String.class);
         }
     }
 

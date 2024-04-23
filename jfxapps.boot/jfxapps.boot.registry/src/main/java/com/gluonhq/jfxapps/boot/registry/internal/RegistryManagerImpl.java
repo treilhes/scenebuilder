@@ -136,7 +136,7 @@ public class RegistryManagerImpl implements RegistryManager {
     }
 
     private Registry loadArtifact(RegistryArtifact src) {
-        var artifact = Artifact.builder().withGroupId(src.groupId()).withArtifactId(src.artifactId()).build();
+        var artifact = Artifact.builder().groupId(src.groupId()).artifactId(src.artifactId()).build();
 
         logger.info("Loading artifact registry {}", artifact);
 

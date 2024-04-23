@@ -49,19 +49,19 @@ public class MavenPresets {
     public static final String LOCAL = "Local";
 
     private static final List<Repository> presetRepositories = Arrays.asList(
-            Repository.builder().withId(MAVEN).withType(Maven.class)
-                    .withUrl("https://repo1.maven.org/maven2/")
+            Repository.builder().id(MAVEN).type(Maven.class)
+                    .url("https://repo1.maven.org/maven2/")
                     .build(),
-            Repository.builder().withId(SONATYPE).withType(Nexus.class)
-                    .withUrl("https://oss.sonatype.org/content/repositories/snapshots")
-                    .withContentType(Content.SNAPSHOT).build(),
-            Repository.builder().withId(SONATYPE).withType(Nexus.class)
-                    .withUrl("https://oss.sonatype.org/content/repositories/releases")
-                    .withContentType(Content.RELEASE)
+            Repository.builder().id(SONATYPE).type(Nexus.class)
+                    .url("https://oss.sonatype.org/content/repositories/snapshots")
+                    .contentType(Content.SNAPSHOT).build(),
+            Repository.builder().id(SONATYPE).type(Nexus.class)
+                    .url("https://oss.sonatype.org/content/repositories/releases")
+                    .contentType(Content.RELEASE)
                     .build(),
-            Repository.builder().withId(GLUON_NEXUS).withType(Nexus.class)
-                    .withUrl("https://nexus.gluonhq.com/nexus/content/repositories/releases")
-                    .withContentType(Content.RELEASE).build());
+            Repository.builder().id(GLUON_NEXUS).type(Nexus.class)
+                    .url("https://nexus.gluonhq.com/nexus/content/repositories/releases")
+                    .contentType(Content.RELEASE).build());
 
     public static List<Repository> getPresetRepositories() {
         return presetRepositories;

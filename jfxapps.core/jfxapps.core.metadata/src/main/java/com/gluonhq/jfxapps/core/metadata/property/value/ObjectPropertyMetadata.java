@@ -82,7 +82,7 @@ public class ObjectPropertyMetadata<VC> extends SingleValuePropertyMetadata<Obje
             extends SingleValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, Object, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Object.class);
+            valueClass(Object.class);
         }
     }
 

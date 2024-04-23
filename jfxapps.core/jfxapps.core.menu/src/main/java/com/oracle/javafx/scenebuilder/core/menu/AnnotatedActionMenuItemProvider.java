@@ -118,20 +118,20 @@ public class AnnotatedActionMenuItemProvider implements MenuItemProvider, MenuPr
 
             assert annotation != null;
 
-            MenuItem menuItem = builder.menuItem().withId(annotation.id()).withActionClass(actionClass).withTitle(annotation.label()).withToggleClass(annotation.toggleClass()).build();
+            MenuItem menuItem = builder.menuItem().id(annotation.id()).actionClass(actionClass).title(annotation.label()).toggleClass(annotation.toggleClass()).build();
             MenuItemAttachment menuAttachment = MenuItemAttachment.create(menuItem, annotation.targetMenuId(),
                     annotation.positionRequest());
             result.add(menuAttachment);
 
             if (annotation.separatorBefore()) {
-                SeparatorMenuItem separator = builder.separator().withId("separatorBefore_" + annotation.id()).build();
+                SeparatorMenuItem separator = builder.separator().id("separatorBefore_" + annotation.id()).build();
                 MenuItemAttachment attachment = MenuItemAttachment.create(separator, annotation.id(),
                         PositionRequest.AsPreviousSibling);
                 result.add(attachment);
             }
 
             if (annotation.separatorAfter()) {
-                SeparatorMenuItem separator = builder.separator().withId("separatorAfter_" + annotation.id()).build();
+                SeparatorMenuItem separator = builder.separator().id("separatorAfter_" + annotation.id()).build();
                 MenuItemAttachment attachment = MenuItemAttachment.create(separator, annotation.id(),
                         PositionRequest.AsNextSibling);
                 result.add(attachment);
@@ -158,7 +158,7 @@ public class AnnotatedActionMenuItemProvider implements MenuItemProvider, MenuPr
 
         assert annotation != null;
 
-        Menu menu = builder.menu().withId(annotation.id()).withTitle(annotation.label()).build();
+        Menu menu = builder.menu().id(annotation.id()).title(annotation.label()).build();
         MenuAttachment menuAttachment = MenuAttachment.create(menu, annotation.targetMenuId(),
                 annotation.positionRequest());
         result.add(menuAttachment);

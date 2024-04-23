@@ -69,7 +69,7 @@ public class DeleteActionContextMenuProvider implements ContextMenuItemProvider 
 
     @Override
     public List<ContextMenuItemAttachment> contextMenuItems() {
-        MenuItem mi = menuBuilder.menuItem().withActionClass(DeleteAction.class).withId(MENU_ID).withTitle(TITLE).build();
+        MenuItem mi = menuBuilder.menuItem().actionClass(DeleteAction.class).id(MENU_ID).title(TITLE).build();
         ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(mi, GridSelectionGroup.class, null, PositionRequest.AsFirstSibling);
         return List.of(attachment);
     }

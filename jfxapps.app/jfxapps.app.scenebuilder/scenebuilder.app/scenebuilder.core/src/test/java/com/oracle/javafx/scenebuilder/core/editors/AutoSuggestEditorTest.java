@@ -85,22 +85,22 @@ public class AutoSuggestEditorTest {
 
     static IntegerPropertyMetadata someIntProp() {
         return new IntegerPropertyMetadata.Builder()
-                .withName(new PropertyName("int")) //NOCHECK
-                .withReadWrite(true)
-                .withDefaultValue(123).build();
+                .name(new PropertyName("int")) //NOCHECK
+                .readWrite(true)
+                .defaultValue(123).build();
     }
     static StringPropertyMetadata someStringProp() {
         return new MultilineI18nStringPropertyMetadata.Builder()
-                .withName(new PropertyName("string")) //NOCHECK
-                .withReadWrite(true)
-                .withDefaultValue("123").build();
+                .name(new PropertyName("string")) //NOCHECK
+                .readWrite(true)
+                .defaultValue("123").build();
     }
     static PropertyGroupMetadata someGroupProp() {
         return new PropertyGroupMetadata.Builder()
-                .withName(new PropertyName("group")) //NOCHECK
-                .withReadWrite(true)
-                .withProperty("someInt", someIntProp())
-                .withProperty("someString", someStringProp()).build();
+                .name(new PropertyName("group")) //NOCHECK
+                .readWrite(true)
+                .property("someInt", someIntProp())
+                .property("someString", someStringProp()).build();
     }
 
 

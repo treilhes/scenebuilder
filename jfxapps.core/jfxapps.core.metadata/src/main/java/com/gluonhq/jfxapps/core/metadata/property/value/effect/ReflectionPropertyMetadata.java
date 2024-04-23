@@ -49,38 +49,38 @@ import javafx.scene.effect.Reflection;
 public class ReflectionPropertyMetadata<VC> extends ComplexPropertyMetadata<Reflection, VC> {
 
     private final OpacityDoublePropertyMetadata<Void> bottomOpacityMetadata = new OpacityDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("bottomOpacity"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("bottomOpacity"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final OpacityDoublePropertyMetadata<Void> fractionMetadata = new OpacityDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("fraction"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.75)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("fraction"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(0.75)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EffectPropertyMetadata<Void> inputMetadata = new EffectPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("input"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("input"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> topOffsetMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("topOffset"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("topOffset"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final OpacityDoublePropertyMetadata<Void> topOpacityMetadata = new OpacityDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("topOpacity"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.5)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("topOpacity"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(0.5)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected ReflectionPropertyMetadata(PropertyName name, boolean readWrite,
@@ -112,7 +112,7 @@ public class ReflectionPropertyMetadata<VC> extends ComplexPropertyMetadata<Refl
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Reflection, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Reflection.class);
+            valueClass(Reflection.class);
         }
     }
 

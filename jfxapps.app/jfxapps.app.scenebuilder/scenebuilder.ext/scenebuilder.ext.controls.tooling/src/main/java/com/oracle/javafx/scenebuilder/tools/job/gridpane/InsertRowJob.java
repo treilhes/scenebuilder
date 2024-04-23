@@ -68,10 +68,10 @@ public final class InsertRowJob extends BatchSelectionJob {
 
     private static final RowConstraintsListPropertyMetadata rowContraintsMeta =
             new RowConstraintsListPropertyMetadata.Builder()
-                .withName(new PropertyName("rowConstraints")) //NOCHECK
-                .withReadWrite(true)
-                .withDefaultValue(Collections.emptyList())
-                .withInspectorPath(InspectorPath.UNUSED).build();
+                .name(new PropertyName("rowConstraints")) //NOCHECK
+                .readWrite(true)
+                .defaultValue(Collections.emptyList())
+                .inspectorPath(InspectorPath.UNUSED).build();
 
     private FXOMInstance gridPaneObject;
     private int rowIndex;

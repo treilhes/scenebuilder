@@ -73,7 +73,7 @@ public abstract class DoublePropertyMetadata<VC> extends NumberPropertyMetadata<
 
         public AbstractBuilder() {
             super();
-            withValueClass(Double.class);
+            valueClass(Double.class);
         }
 
     }
@@ -98,7 +98,7 @@ public abstract class DoublePropertyMetadata<VC> extends NumberPropertyMetadata<
         protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends DoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD, VC> {
             public AbstractBuilder() {
                 super();
-                withConstant("NULL", null);
+                constant("NULL", null);
             }
         }
 
@@ -184,7 +184,7 @@ public abstract class DoublePropertyMetadata<VC> extends NumberPropertyMetadata<
         protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends CoordinateDoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD, VC> {
             public AbstractBuilder() {
                 super();
-                withConstant("USE_COMPUTED_SIZE", Region.USE_COMPUTED_SIZE);
+                constant("USE_COMPUTED_SIZE", Region.USE_COMPUTED_SIZE);
             }
         }
 
@@ -217,8 +217,8 @@ public abstract class DoublePropertyMetadata<VC> extends NumberPropertyMetadata<
         protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends CoordinateDoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD, VC> {
             public AbstractBuilder() {
                 super();
-                withConstant("USE_COMPUTED_SIZE", Region.USE_COMPUTED_SIZE);
-                withConstant("USE_PREF_SIZE", Region.USE_PREF_SIZE);
+                constant("USE_COMPUTED_SIZE", Region.USE_COMPUTED_SIZE);
+                constant("USE_PREF_SIZE", Region.USE_PREF_SIZE);
             }
         }
 
@@ -265,8 +265,8 @@ public abstract class DoublePropertyMetadata<VC> extends NumberPropertyMetadata<
         protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends CoordinateDoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD, VC> {
             public AbstractBuilder() {
                 super();
-                withMin(0.0);
-                withMax(255.0);
+                min(0.0);
+                max(255.0);
             }
         }
 
@@ -354,8 +354,8 @@ public abstract class DoublePropertyMetadata<VC> extends NumberPropertyMetadata<
         protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends CoordinateDoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD, VC> {
             public AbstractBuilder() {
                 super();
-                withMin(0.0);
-                withMax(1.0);
+                min(0.0);
+                max(1.0);
             }
         }
 
@@ -404,9 +404,9 @@ public abstract class DoublePropertyMetadata<VC> extends NumberPropertyMetadata<
         protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends CoordinateDoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD, VC> {
             public AbstractBuilder() {
                 super();
-                withConstant("INDETERMINATE", ProgressIndicator.INDETERMINATE_PROGRESS);
-                withMin(0.0);
-                withMax(1.0);
+                constant("INDETERMINATE", ProgressIndicator.INDETERMINATE_PROGRESS);
+                min(0.0);
+                max(1.0);
             }
         }
 
@@ -440,8 +440,8 @@ public abstract class DoublePropertyMetadata<VC> extends NumberPropertyMetadata<
         protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends CoordinateDoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD, VC> {
             public AbstractBuilder() {
                 super();
-                withMin(0.0);
-                withMax(100.0);
+                min(0.0);
+                max(100.0);
             }
         }
 
@@ -462,33 +462,33 @@ public abstract class DoublePropertyMetadata<VC> extends NumberPropertyMetadata<
       protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends CoordinateDoublePropertyMetadata.AbstractBuilder<SELF, TOBUILD, VC> {
 
         @Override
-        public SELF withMin(Double min) {
-            return super.withMin(min);
+        public SELF min(Double min) {
+            return super.min(min);
         }
 
         @Override
-        public SELF withMax(Double max) {
-            return super.withMax(max);
+        public SELF max(Double max) {
+            return super.max(max);
         }
 
         @Override
-        public SELF withLenientBoundary(boolean lenientBoundary) {
-            return super.withLenientBoundary(lenientBoundary);
+        public SELF lenientBoundary(boolean lenientBoundary) {
+            return super.lenientBoundary(lenientBoundary);
         }
 
         @Override
-        public SELF withDefaultValue(Double defaultValue) {
-            return super.withDefaultValue(defaultValue);
+        public SELF defaultValue(Double defaultValue) {
+            return super.defaultValue(defaultValue);
         }
 
         @Override
-        public SELF withConstant(String constantName, Object constantValue) {
-            return super.withConstant(constantName, constantValue);
+        public SELF constant(String constantName, Object constantValue) {
+            return super.constant(constantName, constantValue);
         }
 
         @Override
-        public SELF withConstants(Map<String, Object> constants) {
-            return super.withConstants(constants);
+        public SELF constants(Map<String, Object> constants) {
+            return super.constants(constants);
         }
 
       }

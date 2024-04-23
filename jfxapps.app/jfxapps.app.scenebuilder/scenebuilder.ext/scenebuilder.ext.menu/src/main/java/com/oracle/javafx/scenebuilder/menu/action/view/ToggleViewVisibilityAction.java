@@ -142,7 +142,7 @@ public class ToggleViewVisibilityAction extends AbstractToggleViewVisibilityActi
                     View view = context.getBean(vi.getViewClass());
                     action.setView(view);
 
-                    MenuItem mi = menuBuiler.menuItem().withTitle(vi.getName()).withAction(action).build();
+                    MenuItem mi = menuBuiler.menuItem().title(vi.getName()).action(action).build();
 
                     URL icon = vi.getIcon();
                     if (icon == null) {

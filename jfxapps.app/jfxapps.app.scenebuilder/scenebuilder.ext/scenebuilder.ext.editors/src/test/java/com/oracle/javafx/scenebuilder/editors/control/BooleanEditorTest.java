@@ -67,10 +67,10 @@ public class BooleanEditorTest {
 
     static BooleanPropertyMetadata someBoolProp() {
         return new BooleanPropertyMetadata.Builder()
-                .withName(new PropertyName("boolean"))
-                .withReadWrite(true)
-                .withDefaultValue(false)
-                .withInspectorPath(InspectorPath.UNUSED).build();
+                .name(new PropertyName("boolean"))
+                .readWrite(true)
+                .defaultValue(false)
+                .inspectorPath(InspectorPath.UNUSED).build();
     }
 
     @Test

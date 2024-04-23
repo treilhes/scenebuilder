@@ -69,14 +69,14 @@ public class FxmlControllerLoader {
             this.controller = controller;
         }
 
-        public Builder<T> withDarkTheme(SceneBuilderManager sbm) {
+        public Builder<T> darkTheme(SceneBuilderManager sbm) {
             this.sbm = sbm;
             darkTheme = true;
             defaulTheme = false;
             return this;
         }
 
-        public Builder<T> withDefaultTheme(SceneBuilderManager sbm) {
+        public Builder<T> defaultTheme(SceneBuilderManager sbm) {
             this.sbm = sbm;
             darkTheme = false;
             defaulTheme = true;

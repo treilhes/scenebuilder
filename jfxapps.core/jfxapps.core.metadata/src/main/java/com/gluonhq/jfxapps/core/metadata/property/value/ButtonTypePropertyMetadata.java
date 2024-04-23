@@ -103,7 +103,7 @@ public class ButtonTypePropertyMetadata<VC> extends ComplexPropertyMetadata<Butt
             extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, ButtonType,VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(ButtonType.class);
+            valueClass(ButtonType.class);
         }
     }
 

@@ -209,10 +209,10 @@ public final class HierarchyDropTarget extends AbstractDropTarget {
                         = new PropertyName("alignment", BorderPane.class); //NOCHECK
                 final EnumerationPropertyMetadata alignmentMeta
                         = new EnumerationPropertyMetadata.Builder<>(Pos.class)
-                            .withName(alignmentName)
-                            .withReadWrite(true)
-                            .withNullEquivalent("UNUSED")//NOCHECK
-                            .withInspectorPath(InspectorPath.UNUSED).build();
+                            .name(alignmentName)
+                            .readWrite(true)
+                            .nullEquivalent("UNUSED")//NOCHECK
+                            .inspectorPath(InspectorPath.UNUSED).build();
 
                 final AbstractJob alignmentJob
                         = modifyObjectJobFactory.getJob(draggedInstance, alignmentMeta, Pos.CENTER.toString());

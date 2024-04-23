@@ -57,10 +57,10 @@ public class EnumEditorTest {
 
     static EnumerationPropertyMetadata someEnumProp() {
         return new EnumerationPropertyMetadata.Builder<>(javafx.scene.AccessibleRole.class)
-                .withName(new PropertyName("enum"))
-                .withReadWrite(true)
-                .withDefaultValue(javafx.scene.AccessibleRole.CHECK_BOX)
-                .withInspectorPath(InspectorPath.UNUSED).build();
+                .name(new PropertyName("enum"))
+                .readWrite(true)
+                .defaultValue(javafx.scene.AccessibleRole.CHECK_BOX)
+                .inspectorPath(InspectorPath.UNUSED).build();
 
     }
 

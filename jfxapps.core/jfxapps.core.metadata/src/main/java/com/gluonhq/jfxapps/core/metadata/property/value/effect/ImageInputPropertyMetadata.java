@@ -50,24 +50,24 @@ import javafx.scene.effect.ImageInput;
 public class ImageInputPropertyMetadata<VC> extends ComplexPropertyMetadata<ImageInput, VC> {
 
     private final ImagePropertyMetadata<Void> sourceMetadata = new ImagePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("source"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("source"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> xMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("x"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("x"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> yMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("y"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("y"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected ImageInputPropertyMetadata(PropertyName name, boolean readWrite,
@@ -102,7 +102,7 @@ public class ImageInputPropertyMetadata<VC> extends ComplexPropertyMetadata<Imag
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, ImageInput, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(ImageInput.class);
+            valueClass(ImageInput.class);
         }
     }
 

@@ -47,7 +47,7 @@ public final class FxControllerMetadata extends VirtualValuePropertyMetadata {
 
         public AbstractBuilder() {
             super();
-            withName(new PropertyName("fx:controller"));
+            name(new PropertyName("fx:controller"));
         }
     }
 

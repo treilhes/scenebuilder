@@ -109,7 +109,7 @@ class GetMavenArtifactDialogControllerTest {
         GetMavenArtifactDialogController dialog = FxmlControllerLoader
                 .controller(new GetMavenArtifactDialogController(mc, sbm, iconSetting, messageLogger, mavenSetting,
                         repositoryPreferences, owner))
-                .withDarkTheme(sbm).load();
+                .darkTheme(sbm).load();
 
         robot.interact(() -> {
             dialog.openWindow(null);

@@ -47,31 +47,31 @@ import javafx.geometry.Rectangle2D;
 public class Rectangle2DPropertyMetadata<VC> extends ComplexPropertyMetadata<Rectangle2D, VC> {
 
     private final CoordinateDoublePropertyMetadata<Void> minXMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("minX")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("minX")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> minYMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("minY")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("minY")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final SizeDoublePropertyMetadata<Void> widthMetadata = new SizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("width")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("width")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final SizeDoublePropertyMetadata<Void> heightMetadata = new SizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("height")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("height")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 
@@ -103,7 +103,7 @@ public class Rectangle2DPropertyMetadata<VC> extends ComplexPropertyMetadata<Rec
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Rectangle2D, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Rectangle2D.class);
+            valueClass(Rectangle2D.class);
         }
     }
 

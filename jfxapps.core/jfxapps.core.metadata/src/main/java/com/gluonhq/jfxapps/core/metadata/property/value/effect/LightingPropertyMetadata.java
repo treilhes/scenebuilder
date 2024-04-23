@@ -51,52 +51,52 @@ public class LightingPropertyMetadata<VC> extends ComplexPropertyMetadata<Lighti
     private static final Lighting LIGHTING_DEFAULT = new Lighting();
 
     private final EffectPropertyMetadata<Void> bumpInputMetadata = new EffectPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("bumpInput"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(LIGHTING_DEFAULT.getBumpInput())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("bumpInput"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(LIGHTING_DEFAULT.getBumpInput())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EffectPropertyMetadata<Void> contentInputMetadata = new EffectPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("contentInput"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(LIGHTING_DEFAULT.getContentInput())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("contentInput"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(LIGHTING_DEFAULT.getContentInput())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> diffuseConstantMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("diffuseConstant"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(LIGHTING_DEFAULT.getDiffuseConstant())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("diffuseConstant"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(LIGHTING_DEFAULT.getDiffuseConstant())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final LightPropertyMetadata<Void> lightMetadata = new LightPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("light"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(LIGHTING_DEFAULT.getLight())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("light"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(LIGHTING_DEFAULT.getLight())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> specularConstantMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("specularConstant"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(LIGHTING_DEFAULT.getSpecularConstant())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("specularConstant"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(LIGHTING_DEFAULT.getSpecularConstant())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> specularExponentMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("specularExponent"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(LIGHTING_DEFAULT.getSpecularExponent())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("specularExponent"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(LIGHTING_DEFAULT.getSpecularExponent())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> surfaceScaleMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("surfaceScale"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(LIGHTING_DEFAULT.getSurfaceScale())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("surfaceScale"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(LIGHTING_DEFAULT.getSurfaceScale())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected LightingPropertyMetadata(PropertyName name, boolean readWrite,
@@ -130,7 +130,7 @@ public class LightingPropertyMetadata<VC> extends ComplexPropertyMetadata<Lighti
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Lighting, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Lighting.class);
+            valueClass(Lighting.class);
         }
     }
 

@@ -42,10 +42,10 @@ import com.gluonhq.jfxapps.core.metadata.property.value.ObjectPropertyMetadata;
 public class ObjectListPropertyMetadata<VC> extends ListValuePropertyMetadata<Object, VC> {
 
     private final static ObjectPropertyMetadata<Void> itemMetadata = new ObjectPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("unused")) // NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("unused")) // NOCHECK
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
             //true, null, InspectorPath.UNUSED);
 
@@ -62,8 +62,8 @@ public class ObjectListPropertyMetadata<VC> extends ListValuePropertyMetadata<Ob
             extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, Object, VC> {
         public AbstractBuilder() {
             super();
-            withItemClass(Object.class);
-            withItemMetadata(ObjectListPropertyMetadata.itemMetadata);
+            itemClass(Object.class);
+            itemMetadata(ObjectListPropertyMetadata.itemMetadata);
         }
     }
 

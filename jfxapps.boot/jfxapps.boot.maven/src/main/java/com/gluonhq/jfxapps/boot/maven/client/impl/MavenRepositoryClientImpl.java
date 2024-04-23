@@ -89,17 +89,17 @@ public class MavenRepositoryClientImpl implements RepositoryClient {
     }
 
     @Override
-    public RepositoryClient withLocalOnly() {
+    public RepositoryClient localOnly() {
         return new MavenRepositoryClientImpl(this, this.repositoryManager,  this.repositoryFolder, true);
     }
 
     @Override
-    public RepositoryClient withRepositories(List<Repository> repositories) {
+    public RepositoryClient repositories(List<Repository> repositories) {
         return new MavenRepositoryClientImpl(this, RepositoryManager.readOnlyManager(repositories),  this.repositoryFolder, false);
     }
 
     @Override
-    public RepositoryClient withLocalPath(File path) {
+    public RepositoryClient localPath(File path) {
         return new MavenRepositoryClientImpl(this, this.repositoryManager,  path, this.offline);
     }
 

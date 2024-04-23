@@ -58,7 +58,7 @@ public class StringConverterPropertyMetadata<VC> extends ComplexPropertyMetadata
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Object, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Object.class);
+            valueClass(Object.class);
         }
     }
 

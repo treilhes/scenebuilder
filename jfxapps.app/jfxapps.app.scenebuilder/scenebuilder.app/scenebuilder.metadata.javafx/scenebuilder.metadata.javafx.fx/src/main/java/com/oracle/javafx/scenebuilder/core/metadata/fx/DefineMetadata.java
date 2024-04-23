@@ -48,11 +48,11 @@ public class DefineMetadata extends ComponentClassMetadata<FXOMDefine> {
         super(FXOMDefine.class, null);
 
         contentPropertyMetadata = new com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata.Builder()
-                .withName(FXOMDefine.defineContentName)
-                .withIsCollection(true)
-                .withIsMain(true)
-                .withOrder(0)
-                .withVisibility(Visibility.STANDARD)
+                .name(FXOMDefine.defineContentName)
+                .isCollection(true)
+                .isMain(true)
+                .order(0)
+                .visibility(Visibility.STANDARD)
                 .build();
 
         getProperties().add(contentPropertyMetadata);

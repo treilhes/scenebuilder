@@ -127,7 +127,7 @@ public class MoveToDockAction extends AbstractAction {
         public List<ViewMenuItemAttachment> menuItems() {
             List<ViewMenuItemAttachment> result = new ArrayList<>();
 
-            Menu menu = menuBuilder.menu().withTitle("view.menu.title.move").withId(MENU_ID).build();
+            Menu menu = menuBuilder.menu().title("view.menu.title.move").id(MENU_ID).build();
             ViewMenuItemAttachment attachment = ViewMenuItemAttachment
                     .create(menu, ChangeDockTypeAction.MENU_ID, PositionRequest.AsNextSibling, AbstractFxmlViewController.class);
             result.add(attachment);
@@ -142,8 +142,8 @@ public class MoveToDockAction extends AbstractAction {
                     moveToAction.setTargetDockId(dock.getId());
 
                     MenuItem mi = menuBuilder.menuItem()
-                            .withId(menuId).withAction(moveToAction)
-                            .withTitle(title).build();
+                            .id(menuId).action(moveToAction)
+                            .title(title).build();
                     menu.getItems().add(mi);
                 });
             });

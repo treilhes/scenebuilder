@@ -80,9 +80,9 @@ public class EffectPropertyMetadata<VC> extends ComplexPropertyMetadata<Effect, 
     private <U, V extends ComplexPropertyMetadata<U, Void>, T extends ComplexPropertyMetadata.AbstractBuilder<T, V, U, Void>> FXOMInstance makeFxomInstanceFromBuilderAndValue(
             T builder, Effect value, FXOMDocument fxomDocument) {
         return builder
-                .withName(this.getName())
-                .withReadWrite(this.isReadWrite())
-                .withDefaultValue(null)
+                .name(this.getName())
+                .readWrite(this.isReadWrite())
+                .defaultValue(null)
                 .build()
                 .makeFxomInstanceFromValue((U) value, fxomDocument);
     }
@@ -137,7 +137,7 @@ public class EffectPropertyMetadata<VC> extends ComplexPropertyMetadata<Effect, 
 
         public AbstractBuilder() {
             super();
-            withValueClass(Effect.class);
+            valueClass(Effect.class);
         }
 
     }

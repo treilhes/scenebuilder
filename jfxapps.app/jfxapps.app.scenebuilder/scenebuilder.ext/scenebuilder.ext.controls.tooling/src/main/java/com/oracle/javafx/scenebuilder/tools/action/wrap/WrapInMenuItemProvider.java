@@ -71,7 +71,7 @@ public class WrapInMenuItemProvider implements MenuItemProvider, ContextMenuItem
     @Override
     public List<MenuItemAttachment> menuItems() {
 
-        Menu menu = menuBuilder.menu().withId(MENU_ID).withTitle(MENU_LABEL).build();
+        Menu menu = menuBuilder.menu().id(MENU_ID).title(MENU_LABEL).build();
         MenuItemAttachment attachment = MenuItemAttachment.create(menu, DefaultMenu.ARRANGE_MENU_ID, PositionRequest.AsLastChild);
         return List.of(
                 attachment,
@@ -81,7 +81,7 @@ public class WrapInMenuItemProvider implements MenuItemProvider, ContextMenuItem
 
     @Override
     public List<ContextMenuItemAttachment> contextMenuItems() {
-        Menu menu = menuBuilder.menu().withId(MENU_ID).withTitle(MENU_LABEL).build();
+        Menu menu = menuBuilder.menu().id(MENU_ID).title(MENU_LABEL).build();
         ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(menu, DefaultSelectionGroupFactory.class, SendBackwardAction.MENU_ID, PositionRequest.AsNextSibling);
         return List.of(
                 attachment,

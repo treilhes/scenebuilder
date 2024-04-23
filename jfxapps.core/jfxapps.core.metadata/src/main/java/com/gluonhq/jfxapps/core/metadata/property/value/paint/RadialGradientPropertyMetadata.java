@@ -60,59 +60,59 @@ public class RadialGradientPropertyMetadata<VC> extends ComplexPropertyMetadata<
             true /* proportional */, CycleMethod.NO_CYCLE).getStops();
 
     private final AngleDoublePropertyMetadata<Void> focusAngleMetadata = new AngleDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("focusAngle")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("focusAngle")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final SizeDoublePropertyMetadata<Void> focusDistanceMetadata = new SizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("focusDistance")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("focusDistance")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> centerXMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("centerX")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("centerX")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> centerYMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("centerY")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("centerY")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final SizeDoublePropertyMetadata<Void> radiusMetadata = new SizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("radius")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("radius")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final BooleanPropertyMetadata<Void> proportionalMetadata = new BooleanPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("proportional")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(true)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("proportional")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(true)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EnumerationPropertyMetadata<Void> cycleMethodMetadata = new EnumerationPropertyMetadata.Builder<CycleMethod, Void>(CycleMethod.class)
-            .withName(new PropertyName("cycleMethod")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(CycleMethod.NO_CYCLE)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("cycleMethod")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(CycleMethod.NO_CYCLE)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final StopListPropertyMetadata<Void> stopsMetadata = new StopListPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("stops")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT_STOPS)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("stops")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT_STOPS)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected RadialGradientPropertyMetadata(PropertyName name, boolean readWrite,
@@ -148,7 +148,7 @@ public class RadialGradientPropertyMetadata<VC> extends ComplexPropertyMetadata<
             extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, RadialGradient, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(RadialGradient.class);
+            valueClass(RadialGradient.class);
         }
     }
 

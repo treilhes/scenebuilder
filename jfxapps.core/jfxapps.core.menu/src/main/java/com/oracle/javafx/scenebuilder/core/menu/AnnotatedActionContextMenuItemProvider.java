@@ -102,20 +102,20 @@ public class AnnotatedActionContextMenuItemProvider implements ContextMenuItemPr
 
             assert annotation != null;
 
-            MenuItem menuItem = builder.menuItem().withId(annotation.id()).withActionClass(actionClass).withTitle(annotation.label()).withToggleClass(annotation.toggleClass()).build();
+            MenuItem menuItem = builder.menuItem().id(annotation.id()).actionClass(actionClass).title(annotation.label()).toggleClass(annotation.toggleClass()).build();
             ContextMenuItemAttachment menuAttachment = ContextMenuItemAttachment.create(menuItem, annotation.selectionGroup(), annotation.targetMenuId(),
                     annotation.positionRequest());
             result.add(menuAttachment);
 
             if (annotation.separatorBefore()) {
-                SeparatorMenuItem separator = builder.separator().withId("separatorBefore_" + annotation.id()).build();
+                SeparatorMenuItem separator = builder.separator().id("separatorBefore_" + annotation.id()).build();
                 ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(separator, annotation.selectionGroup(),annotation.id(),
                         PositionRequest.AsPreviousSibling);
                 result.add(attachment);
             }
 
             if (annotation.separatorAfter()) {
-                SeparatorMenuItem separator = builder.separator().withId("separatorAfter_" + annotation.id()).build();
+                SeparatorMenuItem separator = builder.separator().id("separatorAfter_" + annotation.id()).build();
                 ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(separator, annotation.selectionGroup(),annotation.id(),
                         PositionRequest.AsNextSibling);
                 result.add(attachment);

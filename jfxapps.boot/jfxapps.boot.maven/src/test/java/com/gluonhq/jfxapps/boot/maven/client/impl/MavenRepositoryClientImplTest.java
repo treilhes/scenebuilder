@@ -73,11 +73,11 @@ class MavenRepositoryClientImplTest {
     private static final String testGroupId = "org.apache.commons";
     private static final String testArtifactId = "commons-lang3";
 
-    private static final Artifact testArtifact = Artifact.builder().withGroupId(testGroupId)
-            .withArtifactId(testArtifactId).build();
+    private static final Artifact testArtifact = Artifact.builder().groupId(testGroupId)
+            .artifactId(testArtifactId).build();
 
-    private static final Artifact testArtifactWithDependency = Artifact.builder().withGroupId("ch.qos.logback")
-            .withArtifactId("logback-classic").build();
+    private static final Artifact testArtifactWithDependency = Artifact.builder().groupId("ch.qos.logback")
+            .artifactId("logback-classic").build();
 
 
     @TempDir
@@ -145,7 +145,7 @@ class MavenRepositoryClientImplTest {
     @Test
     void shouldResolveJarOfSomeVersionForTheWholeTree() {
 
-        var search = Artifact.builder().withGroupId("org.apache.maven").withArtifactId("maven-resolver-provider")
+        var search = Artifact.builder().groupId("org.apache.maven").artifactId("maven-resolver-provider")
                 .build();
 
         UniqueArtifact version = client.getLatestVersion(search).get();
@@ -170,11 +170,11 @@ class MavenRepositoryClientImplTest {
         var fakeFile = new File(r.toURI());
 
         var artifact = UniqueArtifact.builder()
-                .withArtifact("some.group", "some.id")
-                .withVersion("1.0.0")
+                .artifact("some.group", "some.id")
+                .version("1.0.0")
                 .build();
 
-        var resolved = ResolvedArtifact.builder().withArtifact(artifact).withPath(fakeFile.toPath()).build();
+        var resolved = ResolvedArtifact.builder().artifact(artifact).path(fakeFile.toPath()).build();
 
         var result = client.deployToLocalRepository(resolved);
 
@@ -194,12 +194,12 @@ class MavenRepositoryClientImplTest {
         var fakeFile = new File(r.toURI());
 
         var artifact = UniqueArtifact.builder()
-                .withArtifact("some.group", "some.id")
-                .withVersion("1.0.0")
-                .withClassifier(Classifier.builder().withClassifier("xxx").withExtension("aaa").build())
+                .artifact("some.group", "some.id")
+                .version("1.0.0")
+                .classifier(Classifier.builder().classifier("xxx").extension("aaa").build())
                 .build();
 
-        var resolved = ResolvedArtifact.builder().withArtifact(artifact).withPath(fakeFile.toPath()).build();
+        var resolved = ResolvedArtifact.builder().artifact(artifact).path(fakeFile.toPath()).build();
 
         var result = client.deployToLocalRepository(resolved);
 
@@ -225,9 +225,9 @@ class MavenRepositoryClientImplTest {
 
         var artifact = available.get(index[1]);
         var a = UniqueArtifact.builder()
-                .withArtifact(artifact.getGroupId(), artifact.getArtifactId())
-                .withVersion(artifact.getVersion())
-                .withClassifier(Classifier.POM).build();
+                .artifact(artifact.getGroupId(), artifact.getArtifactId())
+                .version(artifact.getVersion())
+                .classifier(Classifier.POM).build();
         client.resolve(available.get(index[1]));
         client.resolve(a); // jar and pom
 
@@ -235,7 +235,7 @@ class MavenRepositoryClientImplTest {
 
 
         // turn off network resolution
-        var c = client.withLocalOnly();
+        var c = client.localOnly();
 
         var availableLocaly = c.getAvailableVersions(testArtifactWithDependency);
         assertTrue(availableLocaly.size() == index.length);

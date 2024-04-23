@@ -48,10 +48,10 @@ import javafx.scene.layout.RowConstraints;
 public class RowConstraintsListPropertyMetadata<VC> extends ListValuePropertyMetadata<RowConstraints, VC> {
 
     private static final RowConstraintsPropertyMetadata<Void> itemMetadata = new RowConstraintsPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("unused"))
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("unused"))
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    public RowConstraintsListPropertyMetadata(PropertyName name, boolean readWrite, List<RowConstraints> defaultValue,
@@ -101,9 +101,9 @@ public class RowConstraintsListPropertyMetadata<VC> extends ListValuePropertyMet
             extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, RowConstraints, VC> {
         public AbstractBuilder() {
             super();
-            withName(new PropertyName("rowConstraints"));
-            withItemClass(RowConstraints.class);
-            withItemMetadata(RowConstraintsListPropertyMetadata.itemMetadata);
+            name(new PropertyName("rowConstraints"));
+            itemClass(RowConstraints.class);
+            itemMetadata(RowConstraintsListPropertyMetadata.itemMetadata);
         }
     }
 

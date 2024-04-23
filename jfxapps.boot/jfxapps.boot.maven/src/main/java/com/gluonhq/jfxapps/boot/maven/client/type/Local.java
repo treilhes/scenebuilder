@@ -75,7 +75,7 @@ public class Local implements RepositoryType {
                     .filter(gav -> gav != null && gav.contains(query))
                     .distinct()
                     .map(gav -> gav.split(":"))
-                    .map(gav -> Artifact.builder().withGroupId(gav[0]).withArtifactId(gav[1]).build())
+                    .map(gav -> Artifact.builder().groupId(gav[0]).artifactId(gav[1]).build())
                     .collect(Collectors.toSet());
         } catch (IOException ex) { }
         return null;

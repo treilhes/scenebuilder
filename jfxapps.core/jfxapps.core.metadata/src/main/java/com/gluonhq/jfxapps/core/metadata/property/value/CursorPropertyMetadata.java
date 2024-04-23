@@ -53,24 +53,24 @@ import javafx.scene.ImageCursor;
 public class CursorPropertyMetadata<VC> extends ComplexPropertyMetadata<Cursor, VC> {
 
     private final CoordinateDoublePropertyMetadata<Void> hotspotXMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("hotspotX"))
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("hotspotX"))
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> hotspotYMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("hotspotY"))
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("hotspotY"))
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final ImagePropertyMetadata<Void> imageMetadata = new ImagePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("image"))
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("image"))
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private static Map<Cursor, String> cursorMap;

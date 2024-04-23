@@ -112,7 +112,7 @@ class WorkspaceControllerTest {
         //JfxAppContext.applicationInstanceScope.setCurrentScope(scopedDocument);
 
         WorkspaceController workspace = FxmlControllerLoader.controller(new WorkspaceController(sbm, dm, contextMenu))
-                .withDarkTheme(sbm)
+                .darkTheme(sbm)
                 .load();
 
         robot.interact(() -> {

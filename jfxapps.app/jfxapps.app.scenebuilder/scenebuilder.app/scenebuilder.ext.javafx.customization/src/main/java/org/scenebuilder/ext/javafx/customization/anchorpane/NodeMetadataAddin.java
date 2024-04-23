@@ -51,12 +51,12 @@ public class NodeMetadataAddin {
         super();
 
         final AnchorPropertyGroupMetadata AnchorPane_AnchorPropertyGroupMetadata = new AnchorPropertyGroupMetadata.Builder()
-                .withName(AnchorPane_anchorsGroupName)
-                .withTopAnchorProperty(nodeMetadata.AnchorPane_topAnchorPropertyMetadata)
-                .withRightAnchorProperty(nodeMetadata.AnchorPane_rightAnchorPropertyMetadata)
-                .withBottomAnchorProperty(nodeMetadata.AnchorPane_bottomAnchorPropertyMetadata)
-                .withLeftAnchorProperty(nodeMetadata.AnchorPane_leftAnchorPropertyMetadata)
-                .withInspectorPath(new InspectorPath("Layout", "AnchorPane COnst", 0))
+                .name(AnchorPane_anchorsGroupName)
+                .topAnchorProperty(nodeMetadata.AnchorPane_topAnchorPropertyMetadata)
+                .rightAnchorProperty(nodeMetadata.AnchorPane_rightAnchorPropertyMetadata)
+                .bottomAnchorProperty(nodeMetadata.AnchorPane_bottomAnchorPropertyMetadata)
+                .leftAnchorProperty(nodeMetadata.AnchorPane_leftAnchorPropertyMetadata)
+                .inspectorPath(new InspectorPath("Layout", "AnchorPane COnst", 0))
                 .build();
 
         nodeMetadata.getProperties().add(AnchorPane_AnchorPropertyGroupMetadata);

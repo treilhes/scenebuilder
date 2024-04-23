@@ -189,7 +189,7 @@ public abstract class CallbackPropertyMetadata<VC> extends ValuePropertyMetadata
         /** The property default value. */
         protected Object defaultValue;
 
-        public SELF withDefaultValue(Object defaultValue) {
+        public SELF defaultValue(Object defaultValue) {
             this.defaultValue = defaultValue;
             return self();
         }

@@ -108,11 +108,11 @@ public final class Classifier {
         private String classifier;
         private String extension;
 
-        public Builder withExtension(String extension) {
+        public Builder extension(String extension) {
             this.extension = extension;
             return this;
         }
-        public Builder withClassifier(String classifier) {
+        public Builder classifier(String classifier) {
             this.classifier = classifier;
             return this;
         }

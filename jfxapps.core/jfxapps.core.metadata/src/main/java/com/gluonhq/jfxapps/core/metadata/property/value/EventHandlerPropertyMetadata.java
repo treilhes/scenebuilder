@@ -70,7 +70,7 @@ public class EventHandlerPropertyMetadata<VC> extends TextEncodablePropertyMetad
             extends TextEncodablePropertyMetadata.AbstractBuilder<SELF, TOBUILD, String, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(String.class);
+            valueClass(String.class);
         }
     }
 

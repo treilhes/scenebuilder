@@ -58,10 +58,10 @@ public class StringEditorTest {
 
     static StringPropertyMetadata someMultilineStringProp() {
         return new MultilineI18nStringPropertyMetadata.Builder()
-                .withName(new PropertyName("multistring"))
-                .withReadWrite(true)
-                .withDefaultValue("")
-                .withInspectorPath(InspectorPath.UNUSED).build();
+                .name(new PropertyName("multistring"))
+                .readWrite(true)
+                .defaultValue("")
+                .inspectorPath(InspectorPath.UNUSED).build();
     }
 
     @Mock

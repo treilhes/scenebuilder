@@ -57,31 +57,31 @@ public class PaintPropertyMetadata<VC> extends ComplexPropertyMetadata<Paint, VC
 //            Paint defaultValue, InspectorPath inspectorPath) {
 //        super(name, Paint.class, readWrite, defaultValue, inspectorPath);
 //
-//        colorMetadata = fillBuilder(this, new ColorPropertyMetadata.Builder()).withDefaultValue(null).build();
-//        imagePatternMetadata = fillBuilder(this, new ImagePatternPropertyMetadata.Builder()).withDefaultValue(null).build();
-//        linearGradientMetadata = fillBuilder(this, new LinearGradientPropertyMetadata.Builder()).withDefaultValue(null).build();
-//        radialGradientMetadata = fillBuilder(this, new RadialGradientPropertyMetadata.Builder()).withDefaultValue(null).build();
+//        colorMetadata = fillBuilder(this, new ColorPropertyMetadata.Builder()).defaultValue(null).build();
+//        imagePatternMetadata = fillBuilder(this, new ImagePatternPropertyMetadata.Builder()).defaultValue(null).build();
+//        linearGradientMetadata = fillBuilder(this, new LinearGradientPropertyMetadata.Builder()).defaultValue(null).build();
+//        radialGradientMetadata = fillBuilder(this, new RadialGradientPropertyMetadata.Builder()).defaultValue(null).build();
 //    }
 
     protected PaintPropertyMetadata(AbstractBuilder<?, ?, VC> builder) {
         super(builder);
 
         colorMetadata = new ColorPropertyMetadata.Builder<Void>()
-                .withName(this.getName())
-                .withReadWrite(this.isReadWrite())
-                .withDefaultValue(null).build();
+                .name(this.getName())
+                .readWrite(this.isReadWrite())
+                .defaultValue(null).build();
         imagePatternMetadata = new ImagePatternPropertyMetadata.Builder<Void>()
-                .withName(this.getName())
-                .withReadWrite(this.isReadWrite())
-                .withDefaultValue(null).build();
+                .name(this.getName())
+                .readWrite(this.isReadWrite())
+                .defaultValue(null).build();
         linearGradientMetadata = new LinearGradientPropertyMetadata.Builder<Void>()
-                .withName(this.getName())
-                .withReadWrite(this.isReadWrite())
-                .withDefaultValue(null).build();
+                .name(this.getName())
+                .readWrite(this.isReadWrite())
+                .defaultValue(null).build();
         radialGradientMetadata = new RadialGradientPropertyMetadata.Builder<Void>()
-                .withName(this.getName())
-                .withReadWrite(this.isReadWrite())
-                .withDefaultValue(null).build();
+                .name(this.getName())
+                .readWrite(this.isReadWrite())
+                .defaultValue(null).build();
     }
 
     /*
@@ -128,7 +128,7 @@ public class PaintPropertyMetadata<VC> extends ComplexPropertyMetadata<Paint, VC
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Paint, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Paint.class);
+            valueClass(Paint.class);
         }
     }
 

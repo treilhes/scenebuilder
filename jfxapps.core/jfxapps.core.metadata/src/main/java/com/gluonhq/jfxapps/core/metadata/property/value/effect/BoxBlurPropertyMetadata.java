@@ -49,31 +49,31 @@ import javafx.scene.effect.BoxBlur;
 public class BoxBlurPropertyMetadata<VC> extends ComplexPropertyMetadata<BoxBlur, VC> {
 
     private final EffectPropertyMetadata<Void> inputMetadata = new EffectPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("input")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("input")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EffectSizeDoublePropertyMetadata<Void> heightMetadata = new EffectSizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("height")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(5.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("height")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(5.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EffectSizeDoublePropertyMetadata<Void> widthMetadata = new EffectSizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("width")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(5.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("width")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(5.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final IntegerPropertyMetadata<Void> iterationsMetadata = new IntegerPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("iterations")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(1)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("iterations")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(1)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected BoxBlurPropertyMetadata(PropertyName name, boolean readWrite,
@@ -104,7 +104,7 @@ public class BoxBlurPropertyMetadata<VC> extends ComplexPropertyMetadata<BoxBlur
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, BoxBlur, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(BoxBlur.class);
+            valueClass(BoxBlur.class);
         }
     }
 

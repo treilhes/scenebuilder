@@ -58,9 +58,9 @@ public class ButtonTypeEditorTest {
 
     static ButtonTypeListPropertyMetadata someButtonTypeListProp() {
         return new ButtonTypeListPropertyMetadata.Builder()
-            .withName(new PropertyName("buttontypelist"))
-            .withReadWrite(true)
-            .withDefaultValue(Collections.emptyList())
+            .name(new PropertyName("buttontypelist"))
+            .readWrite(true)
+            .defaultValue(Collections.emptyList())
             .build();
     }
 

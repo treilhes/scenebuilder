@@ -84,7 +84,7 @@ public class MavenExtensionProvider implements ExtensionContentProvider {
 
     private void resolveArtefact() {
         if (mavenArtifact == null) {
-            mavenArtifact = UniqueArtifact.builder().withArtifact(groupId, artifactId).withVersion(version).build();
+            mavenArtifact = UniqueArtifact.builder().artifact(groupId, artifactId).version(version).build();
         }
     }
 

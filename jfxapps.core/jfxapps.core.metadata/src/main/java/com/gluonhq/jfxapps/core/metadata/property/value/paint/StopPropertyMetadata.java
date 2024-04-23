@@ -47,17 +47,17 @@ import javafx.scene.paint.Stop;
 public class StopPropertyMetadata<VC> extends ComplexPropertyMetadata<Stop, VC> {
 
     private final CoordinateDoublePropertyMetadata<Void> offsetMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("offset")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("offset")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final ColorPropertyMetadata<Void> colorMetadata = new ColorPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("color")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("color")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected StopPropertyMetadata(PropertyName name, boolean readWrite,
@@ -86,7 +86,7 @@ public class StopPropertyMetadata<VC> extends ComplexPropertyMetadata<Stop, VC> 
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Stop, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Stop.class);
+            valueClass(Stop.class);
         }
     }
 

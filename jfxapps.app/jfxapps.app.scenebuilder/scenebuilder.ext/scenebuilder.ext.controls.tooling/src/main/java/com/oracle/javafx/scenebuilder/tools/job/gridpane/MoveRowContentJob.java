@@ -66,10 +66,10 @@ public final  class MoveRowContentJob extends BatchDocumentJob {
 
     private final IntegerPropertyMetadata rowIndexMeta =
             new IntegerPropertyMetadata.Builder()
-                .withName(new PropertyName("rowIndex", GridPane.class)) //NOCHECK
-                .withReadWrite(true)
-                .withDefaultValue(0)
-                .withInspectorPath(InspectorPath.UNUSED).build();
+                .name(new PropertyName("rowIndex", GridPane.class)) //NOCHECK
+                .readWrite(true)
+                .defaultValue(0)
+                .inspectorPath(InspectorPath.UNUSED).build();
 
     private FXOMInstance gridPaneObject;
     private int movingRowIndex;

@@ -332,8 +332,8 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
     }
 
     private static final IntegerPropertyMetadata columnIndexMeta = new IntegerPropertyMetadata.Builder()
-            .withName(new PropertyName("columnIndex", GridPane.class)) // NOCHECK
-            .withReadWrite(true).withDefaultValue(0).withInspectorPath(InspectorPath.UNUSED).build();
+            .name(new PropertyName("columnIndex", GridPane.class)) // NOCHECK
+            .readWrite(true).defaultValue(0).inspectorPath(InspectorPath.UNUSED).build();
 
     private List<FXOMObject> collectSelectedObjectsInColumn() {
         final List<FXOMObject> result = new ArrayList<>();
@@ -355,8 +355,8 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
     }
 
     private static final IntegerPropertyMetadata rowIndexMeta = new IntegerPropertyMetadata.Builder()
-            .withName(new PropertyName("rowIndex", GridPane.class)) // NOCHECK
-            .withReadWrite(true).withDefaultValue(0).withInspectorPath(InspectorPath.UNUSED).build();
+            .name(new PropertyName("rowIndex", GridPane.class)) // NOCHECK
+            .readWrite(true).defaultValue(0).inspectorPath(InspectorPath.UNUSED).build();
 
     private List<FXOMObject> collectSelectedObjectsInRow() {
         final List<FXOMObject> result = new ArrayList<>();

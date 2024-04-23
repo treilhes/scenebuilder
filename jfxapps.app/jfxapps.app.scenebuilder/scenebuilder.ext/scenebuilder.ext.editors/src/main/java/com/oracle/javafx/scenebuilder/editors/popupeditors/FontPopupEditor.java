@@ -100,12 +100,12 @@ public class FontPopupEditor extends PopupEditor {
 
     private final static DoublePropertyMetadata.CustomizableDoublePropertyMetadata sizeMetadata =
             new DoublePropertyMetadata.CustomizableDoublePropertyMetadata.Builder()
-                .withName(PropertyName.EMPTY)
-                .withReadWrite(true)
-                .withMin(1.0)
-                .withMax(96.0)
-                .withLenientBoundary(true)
-                .withConstants(fontSizeConstants).build();
+                .name(PropertyName.EMPTY)
+                .readWrite(true)
+                .min(1.0)
+                .max(96.0)
+                .lenientBoundary(true)
+                .constants(fontSizeConstants).build();
 
     @FXML
     private StackPane familySp;

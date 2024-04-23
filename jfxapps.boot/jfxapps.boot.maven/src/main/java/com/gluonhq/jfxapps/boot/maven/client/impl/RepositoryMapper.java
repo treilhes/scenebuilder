@@ -50,20 +50,20 @@ public interface RepositoryMapper {
     List<com.gluonhq.jfxapps.boot.maven.client.api.Repository> map(List<Repository> repositories);
     List<Repository> mapApi(List<com.gluonhq.jfxapps.boot.maven.client.api.Repository> presetRepositories);
 
-    @Mapping(target = "withId", source = "id")
-    @Mapping(target = "withType", source = "type")
-    @Mapping(target = "withUrl", source = "url")
-    @Mapping(target = "withUser", source = "login")
-    @Mapping(target = "withPassword", source = "password")
-    @Mapping(target = "withContentType", source = "contentType")
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "type", source = "type")
+    @Mapping(target = "url", source = "url")
+    @Mapping(target = "user", source = "login")
+    @Mapping(target = "password", source = "password")
+    @Mapping(target = "contentType", source = "contentType")
     com.gluonhq.jfxapps.boot.maven.client.api.Repository map(Repository repository);
 
     @Mapping(target = "login", source = "user")
     Repository map(com.gluonhq.jfxapps.boot.maven.client.api.Repository repository);
 
-    @Mapping(target = "withArtifact.withArtifact.withGroupId", source = "groupId")
-    @Mapping(target = "withArtifact.withArtifact.withArtifactId", source = "artifactId")
-    @Mapping(target = "withPath", source = "path", qualifiedByName = "fileToPath")
+    @Mapping(target = "artifact.artifact.groupId", source = "groupId")
+    @Mapping(target = "artifact.artifact.artifactId", source = "artifactId")
+    @Mapping(target = "path", source = "path", qualifiedByName = "fileToPath")
     ResolvedArtifact map(Redirect redirect);
 
     @Named("fileToPath")

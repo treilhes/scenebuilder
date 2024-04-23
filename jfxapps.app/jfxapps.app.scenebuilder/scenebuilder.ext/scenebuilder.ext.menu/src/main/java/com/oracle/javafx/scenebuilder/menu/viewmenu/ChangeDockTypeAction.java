@@ -125,7 +125,7 @@ public class ChangeDockTypeAction extends AbstractAction {
         public List<ViewMenuItemAttachment> menuItems() {
             List<ViewMenuItemAttachment> result = new ArrayList<>();
 
-            Menu menu = menuBuilder.menu().withTitle("view.menu.title.dock").withId(MENU_ID).build();
+            Menu menu = menuBuilder.menu().title("view.menu.title.dock").id(MENU_ID).build();
             ViewMenuItemAttachment attachment = ViewMenuItemAttachment
                     .create(menu, null, PositionRequest.AsFirstChild, AbstractFxmlViewController.class);
             result.add(attachment);
@@ -144,9 +144,9 @@ public class ChangeDockTypeAction extends AbstractAction {
                 RadioMenuItem mi = new RadioMenuItem();
                 mi.setToggleGroup(typeToggle);
 
-                mi = menuBuilder.radioMenuItem().withMenuItem(mi)
-                        .withId(menuId).withAction(changeViewTypeAction)
-                        .withTitle(title).build();
+                mi = menuBuilder.radioMenuItem().menuItem(mi)
+                        .id(menuId).action(changeViewTypeAction)
+                        .title(title).build();
 
                 ViewMenuItemAttachment subAttachment = ViewMenuItemAttachment
                         .create(mi, target, positionRequest, AbstractFxmlViewController.class);

@@ -66,7 +66,7 @@ public class ImportProvider implements MenuItemProvider {
 
     @Override
     public List<MenuItemAttachment> menuItems() {
-        Menu menu = menuBuilder.menu().withId(MENU_ID).withTitle(IMPORT_TITLE).build();
+        Menu menu = menuBuilder.menu().id(MENU_ID).title(IMPORT_TITLE).build();
         SeparatorMenuItem separator = menuBuilder.separator().build();
 
         return Arrays.asList(

@@ -89,13 +89,13 @@ public class TableViewResizePolicyPropertyMetadata<VC> extends CallbackPropertyM
     protected static abstract class AbstractBuilder<SELF, TOBUILD,VC>
             extends CallbackPropertyMetadata.AbstractBuilder<SELF, TOBUILD,VC> {
 
-        public SELF withConstrainedResizePolicy() {
-            withDefaultValue(TableView.CONSTRAINED_RESIZE_POLICY);
+        public SELF constrainedResizePolicy() {
+            defaultValue(TableView.CONSTRAINED_RESIZE_POLICY);
             return self();
         }
 
-        public SELF withUnconstrainedResizePolicy() {
-            withDefaultValue(TableView.UNCONSTRAINED_RESIZE_POLICY);
+        public SELF unconstrainedResizePolicy() {
+            defaultValue(TableView.UNCONSTRAINED_RESIZE_POLICY);
             return self();
         }
 

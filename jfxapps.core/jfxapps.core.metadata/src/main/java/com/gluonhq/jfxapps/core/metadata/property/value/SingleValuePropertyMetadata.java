@@ -183,12 +183,12 @@ public abstract class SingleValuePropertyMetadata<T, VC> extends ValuePropertyMe
         /** The property value class. */
         protected Class<T> valueClass;
 
-        public SELF withDefaultValue(T defaultValue) {
+        public SELF defaultValue(T defaultValue) {
             this.defaultValue = defaultValue;
             return self();
         }
 
-        protected SELF withValueClass(Class<T> valueClass) {
+        protected SELF valueClass(Class<T> valueClass) {
             this.valueClass = valueClass;
             return self();
         }

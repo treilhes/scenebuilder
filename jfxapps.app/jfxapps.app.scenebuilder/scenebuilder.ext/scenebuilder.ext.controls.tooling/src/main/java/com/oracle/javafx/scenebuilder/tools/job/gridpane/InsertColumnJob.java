@@ -66,8 +66,8 @@ import javafx.scene.layout.GridPane;
 public final class InsertColumnJob extends BatchSelectionJob {
 
     private static final ColumnConstraintsListPropertyMetadata columnContraintsMeta = new ColumnConstraintsListPropertyMetadata.Builder()
-            .withName(new PropertyName("columnConstraints")) // NOCHECK
-            .withReadWrite(true).withDefaultValue(Collections.emptyList()).withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("columnConstraints")) // NOCHECK
+            .readWrite(true).defaultValue(Collections.emptyList()).inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private FXOMInstance gridPaneObject;

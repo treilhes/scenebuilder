@@ -101,7 +101,7 @@ class AlertDialogTest {
         AlertDialog dialog = new AlertDialog(sbm, is, stage);
 
         robot.interact(() -> {
-            FxmlControllerLoader.controller(dialog).withDarkTheme(sbm).load();
+            FxmlControllerLoader.controller(dialog).darkTheme(sbm).load();
 
             dialog.setTitle("sometitle");
             dialog.setMessage(message);

@@ -47,17 +47,17 @@ import javafx.scene.effect.FloatMap;
 public class FloatMapPropertyMetadata<VC> extends ComplexPropertyMetadata<FloatMap, VC> {
 
     private final IntegerPropertyMetadata<Void> widthMetadata = new IntegerPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("height")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(1)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("height")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(1)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final IntegerPropertyMetadata<Void> heightMetadata = new IntegerPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("height")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(1)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("height")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(1)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected FloatMapPropertyMetadata(PropertyName name, boolean readWrite,
@@ -86,7 +86,7 @@ public class FloatMapPropertyMetadata<VC> extends ComplexPropertyMetadata<FloatM
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, FloatMap, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(FloatMap.class);
+            valueClass(FloatMap.class);
         }
     }
 

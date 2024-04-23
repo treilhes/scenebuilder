@@ -208,12 +208,12 @@ public class SetEffectAction extends AbstractAction {
                     return menu;
                 }
 
-                menu = menuBuilder.menu().withId(SET_EFFECTS_MENU_ID).withTitle("menu.title.add.effect").build();
+                menu = menuBuilder.menu().id(SET_EFFECTS_MENU_ID).title("menu.title.add.effect").build();
 
                 for (Class<? extends Effect> c : effects) {
                     SetEffectAction action = actionFactory.create(SetEffectAction.class);
                     action.setEffectClass(c);
-                    MenuItem mi = menuBuilder.menuItem().withTitle(c.getSimpleName()).withAction(action).build();
+                    MenuItem mi = menuBuilder.menuItem().title(c.getSimpleName()).action(action).build();
                     menu.getItems().add(mi);
                 }
                 return menu;

@@ -49,45 +49,45 @@ import javafx.scene.image.Image;
 public class ImagePropertyMetadata<VC> extends ComplexPropertyMetadata<DesignImage, VC> {
 
     private final I18nStringPropertyMetadata<Void> urlMetadata = new I18nStringPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("url"))
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("url"))
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final SizeDoublePropertyMetadata<Void> requestedWidthMetadata = new SizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("requestedWidth"))
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("requestedWidth"))
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final SizeDoublePropertyMetadata<Void> requestedHeightMetadata = new SizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("requestedHeight"))
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("requestedHeight"))
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final BooleanPropertyMetadata<Void> preserveRatioMetadata = new BooleanPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("preserveRatio"))
-            .withReadWrite(true)
-            .withDefaultValue(false)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("preserveRatio"))
+            .readWrite(true)
+            .defaultValue(false)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final BooleanPropertyMetadata<Void> smoothMetadata = new BooleanPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("smooth"))
-            .withReadWrite(true)
-            .withDefaultValue(false)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("smooth"))
+            .readWrite(true)
+            .defaultValue(false)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final BooleanPropertyMetadata<Void> backgroundLoading = new BooleanPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("backgroundLoading"))
-            .withReadWrite(true)
-            .withDefaultValue(false)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("backgroundLoading"))
+            .readWrite(true)
+            .defaultValue(false)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected ImagePropertyMetadata(PropertyName name, boolean readWrite,

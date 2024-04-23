@@ -60,7 +60,7 @@ public class MeshPropertyMetadata<VC> extends ComplexPropertyMetadata<Mesh, VC> 
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Mesh, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Mesh.class);
+            valueClass(Mesh.class);
         }
     }
 

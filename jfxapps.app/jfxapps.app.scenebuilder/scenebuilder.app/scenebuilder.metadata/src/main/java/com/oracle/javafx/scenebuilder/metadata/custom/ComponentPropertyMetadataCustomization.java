@@ -129,22 +129,22 @@ public class ComponentPropertyMetadataCustomization {
             super();
         }
 
-        protected Builder withIconUrl(URL iconUrl) {
+        protected Builder iconUrl(URL iconUrl) {
             this.iconUrl = iconUrl;
             return this;
         }
 
-        protected Builder withIconX2Url(URL iconX2Url) {
+        protected Builder iconX2Url(URL iconX2Url) {
             this.iconX2Url = iconX2Url;
             return this;
         }
 
-        protected Builder withOrder(int order) {
+        protected Builder order(int order) {
             this.order = order;
             return this;
         }
 
-        protected Builder withResizeNeededWhenTopElement(boolean resizeNeededWhenTopElement) {
+        protected Builder resizeNeededWhenTopElement(boolean resizeNeededWhenTopElement) {
             this.resizeNeededWhenTopElement = resizeNeededWhenTopElement;
             return this;
         }

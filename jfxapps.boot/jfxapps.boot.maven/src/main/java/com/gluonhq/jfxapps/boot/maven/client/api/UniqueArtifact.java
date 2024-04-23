@@ -157,36 +157,36 @@ public class UniqueArtifact implements Comparable<UniqueArtifact> {
         private void updateFromCoordinate() {
             String[] parts = this.coordinates.split(":");
             this.artifact = Artifact.builder()
-                    .withGroupId(parts.length > 0 ? parts[0] : "")
-                    .withArtifactId(parts.length > 1 ? parts[1] : "").build();
+                    .groupId(parts.length > 0 ? parts[0] : "")
+                    .artifactId(parts.length > 1 ? parts[1] : "").build();
             this.version = parts.length > 2 ? parts[2] : "";
         }
-        public Builder withCoordinates(String coordinates) {
+        public Builder coordinates(String coordinates) {
             this.coordinates = coordinates;
             updateFromCoordinate();
             return this;
         }
-        public Builder withArtifact(Artifact artifact) {
+        public Builder artifact(Artifact artifact) {
             this.artifact = artifact;
             updateCoordinate();
             return this;
         }
 
-        public Builder withArtifact(String groupId, String artifactId) {
-            this.artifact = Artifact.builder().withGroupId(groupId).withArtifactId(artifactId).build();
+        public Builder artifact(String groupId, String artifactId) {
+            this.artifact = Artifact.builder().groupId(groupId).artifactId(artifactId).build();
             updateCoordinate();
             return this;
         }
-        public Builder withVersion(String version) {
+        public Builder version(String version) {
             this.version = version;
             updateCoordinate();
             return this;
         }
-        public Builder withClassifier(Classifier classifier) {
+        public Builder classifier(Classifier classifier) {
             this.classifier = classifier;
             return this;
         }
-        public Builder withRepository(Repository repository) {
+        public Builder repository(Repository repository) {
             this.repository = repository;
             return this;
         }

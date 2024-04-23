@@ -62,7 +62,7 @@ public class MaterialPropertyMetadata<VC> extends ComplexPropertyMetadata<Materi
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Material, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Material.class);
+            valueClass(Material.class);
         }
     }
 

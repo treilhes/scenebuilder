@@ -49,24 +49,24 @@ import javafx.scene.effect.MotionBlur;
 public class MotionBlurPropertyMetadata<VC> extends ComplexPropertyMetadata<MotionBlur, VC> {
 
     private final AngleDoublePropertyMetadata<Void> angleMetadata = new AngleDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("angle"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("angle"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EffectPropertyMetadata<Void> inputMetadata = new EffectPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("input"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("input"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final SizeDoublePropertyMetadata<Void> radiusMetadata = new SizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("radius"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(10.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("radius"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(10.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 
@@ -97,7 +97,7 @@ public class MotionBlurPropertyMetadata<VC> extends ComplexPropertyMetadata<Moti
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, MotionBlur, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(MotionBlur.class);
+            valueClass(MotionBlur.class);
         }
     }
 

@@ -50,29 +50,29 @@ import com.gluonhq.jfxapps.core.metadata.util.InspectorPath;
 public class IncludeMetadata extends ComponentClassMetadata<FXOMInclude> {
 
     private final SourceStringPropertyMetadata sourceMetadata = new SourceStringPropertyMetadata.Builder()
-            .withName(new PropertyName("source"))
-            .withReadWrite(true)
-            .withDefaultValue("")
-            .withInspectorPath(new InspectorPath("Properties", "Include FXML file", 2))
-            .withVisibility(Visibility.STANDARD)
-            .withFileUrlDetection(true)
+            .name(new PropertyName("source"))
+            .readWrite(true)
+            .defaultValue("")
+            .inspectorPath(new InspectorPath("Properties", "Include FXML file", 2))
+            .visibility(Visibility.STANDARD)
+            .fileUrlDetection(true)
             .build();
 
     private final ResourceStringPropertyMetadata resourcesMetadata = new ResourceStringPropertyMetadata.Builder()
-            .withName(new PropertyName("resources"))
-            .withReadWrite(true)
-            .withDefaultValue("")
-            .withInspectorPath(new InspectorPath("Properties", "Include FXML file", 2))
-            .withVisibility(Visibility.STANDARD)
-            .withFileUrlDetection(true)
+            .name(new PropertyName("resources"))
+            .readWrite(true)
+            .defaultValue("")
+            .inspectorPath(new InspectorPath("Properties", "Include FXML file", 2))
+            .visibility(Visibility.STANDARD)
+            .fileUrlDetection(true)
             .build();
 
     private final CharsetStringPropertyMetadata charsetMetadata = new CharsetStringPropertyMetadata.Builder()
-            .withName(new PropertyName("charset"))
-            .withReadWrite(true)
-            .withDefaultValue("")
-            .withInspectorPath(new InspectorPath("Properties", "Include FXML file", 2))
-            .withVisibility(Visibility.STANDARD)
+            .name(new PropertyName("charset"))
+            .readWrite(true)
+            .defaultValue("")
+            .inspectorPath(new InspectorPath("Properties", "Include FXML file", 2))
+            .visibility(Visibility.STANDARD)
             .build();
 
     protected IncludeMetadata(IntrinsicMetadata parent) {

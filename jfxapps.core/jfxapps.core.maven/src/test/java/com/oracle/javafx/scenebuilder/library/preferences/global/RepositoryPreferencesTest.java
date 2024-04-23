@@ -61,29 +61,29 @@ class RepositoryPreferencesTest extends AbstractPreferencesTest {
 	}
 
 	private static Repository validObject = Repository.builder().
-	        withId("id1").
-	        withType(Nexus.class).
-	        withUrl("y").
+	        id("id1").
+	        type(Nexus.class).
+	        url("y").
 	        build();
 
 	private static Repository validObject2 = Repository.builder().
-            withId("id2").
-            withType(Nexus.class).
-            withUrl("y").
+            id("id2").
+            type(Nexus.class).
+            url("y").
             build();
 
     private static Repository validObject3 = Repository.builder().
-            withId("id3").
-            withType(Nexus.class).
-            withUrl("y").
-            withUser("user").
-            withPassword("passs").build();
+            id("id3").
+            type(Nexus.class).
+            url("y").
+            user("user").
+            password("passs").build();
 
 	private static Repository invalidFieldsObject = Repository.builder().build();
 
 	private static Repository invalidUrlObject = Repository.builder().
-            withId("id3").
-            withType(Nexus.class).
+            id("id3").
+            type(Nexus.class).
             build();
 
 

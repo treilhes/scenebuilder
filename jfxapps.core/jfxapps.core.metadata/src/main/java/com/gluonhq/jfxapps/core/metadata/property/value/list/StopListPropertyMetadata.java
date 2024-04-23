@@ -46,10 +46,10 @@ import javafx.scene.paint.Stop;
 public class StopListPropertyMetadata<VC> extends ListValuePropertyMetadata<Stop, VC> {
 
     private static final StopPropertyMetadata<Void> itemMetadata = new StopPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("unused")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("unused")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected StopListPropertyMetadata(PropertyName name, boolean readWrite,
@@ -64,13 +64,13 @@ public class StopListPropertyMetadata<VC> extends ListValuePropertyMetadata<Stop
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, Stop, VC> {
         public AbstractBuilder() {
             super();
-            withItemClass(Stop.class);
-            withItemMetadata(StopListPropertyMetadata.itemMetadata);
+            itemClass(Stop.class);
+            itemMetadata(StopListPropertyMetadata.itemMetadata);
         }
 
         @Override
-        public SELF withDefaultValue(List<Stop> defaultValue) {
-            return super.withDefaultValue(defaultValue);
+        public SELF defaultValue(List<Stop> defaultValue) {
+            return super.defaultValue(defaultValue);
         }
 
     }

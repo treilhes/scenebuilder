@@ -48,17 +48,17 @@ import javafx.scene.effect.GaussianBlur;
 public class GaussianBlurPropertyMetadata<VC> extends ComplexPropertyMetadata<GaussianBlur, VC> {
 
     private final EffectPropertyMetadata<Void> inputMetadata = new EffectPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("input"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("input"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> radiusMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("radius"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(10.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("radius"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(10.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected GaussianBlurPropertyMetadata(PropertyName name, boolean readWrite,
@@ -86,7 +86,7 @@ public class GaussianBlurPropertyMetadata<VC> extends ComplexPropertyMetadata<Ga
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, GaussianBlur, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(GaussianBlur.class);
+            valueClass(GaussianBlur.class);
         }
     }
 

@@ -273,8 +273,8 @@ public class MavenRepositorySystem {
 
         classifiers.forEach(c -> {
 
-            UniqueArtifact a = UniqueArtifact.builder().withArtifact(artifact.getArtifact()).withClassifier(c)
-                    .withVersion(artifact.getVersion()).withRepository(artifact.getRepository()).build();
+            UniqueArtifact a = UniqueArtifact.builder().artifact(artifact.getArtifact()).classifier(c)
+                    .version(artifact.getVersion()).repository(artifact.getRepository()).build();
 
             result.put(c, resolveArtifact(remoteRepository, a));
         });
@@ -301,8 +301,8 @@ public class MavenRepositorySystem {
             ArtifactResult result = system.resolveArtifact(session, artifactRequest);
             if (result != null && result.getExceptions().isEmpty()) {
 
-                ResolvedArtifact resolved = ResolvedArtifact.builder().withArtifact(artifact)
-                        .withPath(result.getArtifact().getFile().toPath()).build();
+                ResolvedArtifact resolved = ResolvedArtifact.builder().artifact(artifact)
+                        .path(result.getArtifact().getFile().toPath()).build();
 
                 return Optional.of(resolved);
             } else {
@@ -341,10 +341,10 @@ public class MavenRepositorySystem {
             if (artifactResults.size() == 1 && offline) {
                 // ensure pom is present to allow dependencies resolution or return empty
                 var pom = UniqueArtifact.builder()
-                        .withArtifact(artifact.getGroupId(), artifact.getArtifactId())
-                        .withVersion(artifact.getVersion())
-                        .withRepository(artifact.getRepository())
-                        .withClassifier(Classifier.POM).build();
+                        .artifact(artifact.getGroupId(), artifact.getArtifactId())
+                        .version(artifact.getVersion())
+                        .repository(artifact.getRepository())
+                        .classifier(Classifier.POM).build();
                 if (resolveArtifact(pom).isEmpty()) {
                     return Optional.empty();
                 }
@@ -356,23 +356,23 @@ public class MavenRepositorySystem {
                     .forEach(a -> {
                         var lArtifact = a.getArtifact();
 
-                        var classifier = Classifier.builder().withClassifier(lArtifact.getClassifier())
-                                .withExtension(lArtifact.getExtension()).build();
+                        var classifier = Classifier.builder().classifier(lArtifact.getClassifier())
+                                .extension(lArtifact.getExtension()).build();
 
-                        var id = Artifact.builder().withGroupId(lArtifact.getGroupId())
-                                .withArtifactId(lArtifact.getArtifactId()).build();
+                        var id = Artifact.builder().groupId(lArtifact.getGroupId())
+                                .artifactId(lArtifact.getArtifactId()).build();
 
-                        var unique = UniqueArtifact.builder().withArtifact(id).withClassifier(classifier)
-                                .withVersion(lArtifact.getVersion()).build();
+                        var unique = UniqueArtifact.builder().artifact(id).classifier(classifier)
+                                .version(lArtifact.getVersion()).build();
 
-                        ResolvedArtifact mArtefact = ResolvedArtifact.builder().withArtifact(unique)
-                                .withPath(lArtifact.getFile().toPath()).build();
+                        ResolvedArtifact mArtefact = ResolvedArtifact.builder().artifact(unique)
+                                .path(lArtifact.getFile().toPath()).build();
 
                         dependencies.add(mArtefact);
                     });
 
-            ResolvedArtifact mainArtifact = ResolvedArtifact.builder().withArtifact(artifact)
-                    .withPath(main.getArtifact().getFile().toPath()).withDependencies(dependencies).build();
+            ResolvedArtifact mainArtifact = ResolvedArtifact.builder().artifact(artifact)
+                    .path(main.getArtifact().getFile().toPath()).dependencies(dependencies).build();
 
             return Optional.of(mainArtifact);
         } catch (Exception ex) {
@@ -427,8 +427,8 @@ public class MavenRepositorySystem {
 
         Repository repository = repositoryManager.get(repo.getId()).orElse(null);
 
-        return UniqueArtifact.builder().withRepository(repository).withArtifact(artifact)
-                .withVersion(version.toString()).build();
+        return UniqueArtifact.builder().repository(repository).artifact(artifact)
+                .version(version.toString()).build();
     }
 
     public boolean install(ResolvedArtifact artifact) {

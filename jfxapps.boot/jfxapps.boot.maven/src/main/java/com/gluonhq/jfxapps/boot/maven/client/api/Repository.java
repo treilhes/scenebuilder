@@ -136,32 +136,32 @@ public class Repository {
             return new Repository(this);
         }
 
-        public Builder withId(String id) {
+        public Builder id(String id) {
             this.id = id;
             return this;
         }
 
-        public Builder withType(Class<? extends RepositoryType> type) {
+        public Builder type(Class<? extends RepositoryType> type) {
             this.type = type;
             return this;
         }
 
-        public Builder withUrl(String url) {
+        public Builder url(String url) {
             this.url = url;
             return this;
         }
 
-        public Builder withUser(String user) {
+        public Builder user(String user) {
             this.user = user;
             return this;
         }
 
-        public Builder withPassword(String password) {
+        public Builder password(String password) {
             this.password = password;
             return this;
         }
 
-        public Builder withContentType(Content contentType) {
+        public Builder contentType(Content contentType) {
             this.contentType = contentType;
             return this;
         }

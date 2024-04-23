@@ -42,10 +42,10 @@ import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata.C
 public class DoubleListPropertyMetadata<VC> extends ListValuePropertyMetadata<Double, VC> {
 
     private final static CoordinateDoublePropertyMetadata<Void> itemMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("unused")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("unused")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    public DoubleListPropertyMetadata(PropertyName name, boolean readWrite, List<Double> defaultValue,
@@ -61,8 +61,8 @@ public class DoubleListPropertyMetadata<VC> extends ListValuePropertyMetadata<Do
             extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, Double, VC> {
         public AbstractBuilder() {
             super();
-            withItemClass(Double.class);
-            withItemMetadata(DoubleListPropertyMetadata.itemMetadata);
+            itemClass(Double.class);
+            itemMetadata(DoubleListPropertyMetadata.itemMetadata);
         }
     }
 

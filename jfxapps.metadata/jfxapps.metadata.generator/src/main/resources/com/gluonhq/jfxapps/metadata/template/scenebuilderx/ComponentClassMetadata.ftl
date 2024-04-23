@@ -21,16 +21,16 @@ public class ${metadataPrefix}${component.raw.type.simpleName}Metadata extends C
 <#if property.type == "VALUE">
     public static final ${property.raw.metadataClass.name?replace("$", ".")} ${property.custom["memberName"]}PropertyMetadata =
             new ${property.raw.metadataClass.name?replace("$", ".")}.Builder<#if property.raw.type.enum == true><>(${property.raw.type.name?replace("$", ".")}.class)<#else>()</#if>
-                .withName(PropertyNames.${property.custom["memberName"]}Name)
-                .withReadWrite(${property.raw.readWrite})
+                .name(PropertyNames.${property.custom["memberName"]}Name)
+                .readWrite(${property.raw.readWrite})
     <#if property.custom["defaultValue"] == "null" && property.raw.nullEquivalent??>
-                .withNullEquivalent("${property.raw.nullEquivalent}")
+                .nullEquivalent("${property.raw.nullEquivalent}")
 	</#if>
 	<#if !property.raw.nullEquivalent?? && property.custom["defaultValue"]??>
-				.withDefaultValue(${property.custom["defaultValue"]})
+				.defaultValue(${property.custom["defaultValue"]})
 	</#if>
-                .withInspectorPath(new InspectorPath("${property.raw.section}", "${property.raw.subSection}", ${property.raw.order?c}))
-                .withVisibility(Visibility.${property.raw.visibility.name()})
+                .inspectorPath(new InspectorPath("${property.raw.section}", "${property.raw.subSection}", ${property.raw.order?c}))
+                .visibility(Visibility.${property.raw.visibility.name()})
                 .build();
 </#if>
 <#if property.type == "COMPONENT">
@@ -49,14 +49,14 @@ public class ${metadataPrefix}${component.raw.type.simpleName}Metadata extends C
         <#list properties as property>${logger.info("Processing 2 " + component.raw.name + "." + property.raw.name + " : " + property.type)}
 		<#if property.type == "COMPONENT">
 		    ${property.raw.name}PropertyMetadata = new ${property.raw.metadataClass.name?replace("$", ".")}.Builder()
-	                .withName(PropertyNames.${property.custom["memberName"]}Name)
-	                .withClassMetadata(<#if property.raw.collection == true>${property.raw.collectionType.simpleName?uncap_first}<#else>${property.raw.type.simpleName?uncap_first}</#if>Metadata)
-	                .withIsCollection(${property.raw.collection})
-	                <#if property.raw.image??>.withIconUrl(getClass().getResource("${property.raw.image}"))</#if>
-	                <#if property.raw.imageX2??>.withIconX2Url(getClass().getResource("${property.raw.imageX2}"))</#if>
-	                <#if property.raw.main??>.withIsMain(${property.raw.main})<#else>.withIsMain(<#if component.raw.defaultProperty?? && component.raw.defaultProperty.name == property.raw.name>true<#else>false</#if>)</#if>
-	                .withOrder(${property.raw.order?c})
-	                .withVisibility(Visibility.${property.raw.visibility.name()})
+	                .name(PropertyNames.${property.custom["memberName"]}Name)
+	                .classMetadata(<#if property.raw.collection == true>${property.raw.collectionType.simpleName?uncap_first}<#else>${property.raw.type.simpleName?uncap_first}</#if>Metadata)
+	                .isCollection(${property.raw.collection})
+	                <#if property.raw.image??>.iconUrl(getClass().getResource("${property.raw.image}"))</#if>
+	                <#if property.raw.imageX2??>.iconX2Url(getClass().getResource("${property.raw.imageX2}"))</#if>
+	                <#if property.raw.main??>.isMain(${property.raw.main})<#else>.isMain(<#if component.raw.defaultProperty?? && component.raw.defaultProperty.name == property.raw.name>true<#else>false</#if>)</#if>
+	                .order(${property.raw.order?c})
+	                .visibility(Visibility.${property.raw.visibility.name()})
 	                .build();
 		</#if>
 		</#list>

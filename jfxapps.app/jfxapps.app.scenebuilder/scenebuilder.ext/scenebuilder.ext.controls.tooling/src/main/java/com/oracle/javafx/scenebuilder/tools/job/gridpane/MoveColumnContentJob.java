@@ -67,10 +67,10 @@ public final class MoveColumnContentJob extends BatchDocumentJob {
 
     private final IntegerPropertyMetadata columnIndexMeta =
             new IntegerPropertyMetadata.Builder()
-                .withName(new PropertyName("columnIndex", GridPane.class)) //NOCHECK
-                .withReadWrite(true)
-                .withDefaultValue(0)
-                .withInspectorPath(InspectorPath.UNUSED).build();
+                .name(new PropertyName("columnIndex", GridPane.class)) //NOCHECK
+                .readWrite(true)
+                .defaultValue(0)
+                .inspectorPath(InspectorPath.UNUSED).build();
 
     private FXOMInstance gridPaneObject;
     private int movingColumnIndex;

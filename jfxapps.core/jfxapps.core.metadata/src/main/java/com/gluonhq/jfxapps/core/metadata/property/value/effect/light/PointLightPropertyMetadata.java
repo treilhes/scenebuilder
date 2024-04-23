@@ -49,31 +49,31 @@ import javafx.scene.paint.Color;
 public class PointLightPropertyMetadata<VC> extends ComplexPropertyMetadata<Light.Point, VC> {
 
     private final ColorPropertyMetadata<Void> colorMetadata = new ColorPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("color"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(Color.WHITE)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("color"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(Color.WHITE)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> xMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("x"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("x"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> yMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("y"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("y"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> zMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("z"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("z"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected PointLightPropertyMetadata(PropertyName name, boolean readWrite, Light.Point defaultValue,
@@ -104,7 +104,7 @@ public class PointLightPropertyMetadata<VC> extends ComplexPropertyMetadata<Ligh
             extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Light.Point, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Light.Point.class);
+            valueClass(Light.Point.class);
         }
     }
 

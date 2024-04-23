@@ -188,20 +188,20 @@ public class EnumerationPropertyMetadata<VC> extends ValuePropertyMetadata<VC> {
 
         public AbstractBuilder(Class<T> cls) {
             super();
-            withEnumClass(cls);
+            enumClass(cls);
         }
 
-        protected SELF withEnumClass(Class<T> enumClass) {
+        protected SELF enumClass(Class<T> enumClass) {
             this.enumClass = enumClass;
             return self();
         }
 
-        public SELF withDefaultValue(T defaultValue) {
+        public SELF defaultValue(T defaultValue) {
             this.defaultValue = defaultValue;
             return self();
         }
 
-        protected SELF withNullEquivalent(String nullEquivalent) {
+        protected SELF nullEquivalent(String nullEquivalent) {
             this.nullEquivalent = nullEquivalent;
             return self();
         }
@@ -215,8 +215,8 @@ public class EnumerationPropertyMetadata<VC> extends ValuePropertyMetadata<VC> {
         }
 
         @Override
-        public Builder<T,VC> withNullEquivalent(String nullEquivalent) {
-            return super.withNullEquivalent(nullEquivalent);
+        public Builder<T,VC> nullEquivalent(String nullEquivalent) {
+            return super.nullEquivalent(nullEquivalent);
         }
 
         @Override

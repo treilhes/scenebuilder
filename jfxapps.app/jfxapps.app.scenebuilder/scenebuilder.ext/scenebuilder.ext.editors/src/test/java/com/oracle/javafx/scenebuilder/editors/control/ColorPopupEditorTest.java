@@ -61,10 +61,10 @@ public class ColorPopupEditorTest {
 
     static ColorPropertyMetadata someColorProp() {
         return new ColorPropertyMetadata.Builder()
-                .withName(new PropertyName("color"))
-                .withReadWrite(true)
-                .withDefaultValue(Color.AQUA)
-                .withInspectorPath(InspectorPath.UNUSED).build();
+                .name(new PropertyName("color"))
+                .readWrite(true)
+                .defaultValue(Color.AQUA)
+                .inspectorPath(InspectorPath.UNUSED).build();
     }
 
     @Mock

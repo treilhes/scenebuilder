@@ -54,11 +54,11 @@ public class CopyMetadata extends ComponentClassMetadata<FXOMCopy> {
     }
 
     private final I18nStringPropertyMetadata sourceMetadata = new I18nStringPropertyMetadata.Builder()
-            .withName(new PropertyName("source"))
-            .withReadWrite(true)
-            .withDefaultValue("sb_nullCopy")
-            .withInspectorPath(new InspectorPath("Properties", "Reference", 1))
-            .withVisibility(Visibility.STANDARD)
+            .name(new PropertyName("source"))
+            .readWrite(true)
+            .defaultValue("sb_nullCopy")
+            .inspectorPath(new InspectorPath("Properties", "Reference", 1))
+            .visibility(Visibility.STANDARD)
             .build();
 
     protected CopyMetadata(IntrinsicMetadata parent) {

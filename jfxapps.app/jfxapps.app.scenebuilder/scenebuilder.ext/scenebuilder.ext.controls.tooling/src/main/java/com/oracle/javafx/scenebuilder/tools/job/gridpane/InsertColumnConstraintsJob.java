@@ -64,10 +64,10 @@ public final class InsertColumnConstraintsJob extends AbstractJob {
 
     private static final ColumnConstraintsListPropertyMetadata columnContraintsMeta =
             new ColumnConstraintsListPropertyMetadata.Builder()
-                .withName(new PropertyName("columnConstraints")) //NOCHECK
-                .withReadWrite(true)
-                .withDefaultValue(Collections.emptyList())
-                .withInspectorPath(InspectorPath.UNUSED).build();
+                .name(new PropertyName("columnConstraints")) //NOCHECK
+                .readWrite(true)
+                .defaultValue(Collections.emptyList())
+                .inspectorPath(InspectorPath.UNUSED).build();
 
     private FXOMInstance gridPaneObject;
     private int columnIndex;

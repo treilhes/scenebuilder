@@ -216,13 +216,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         rightDockManager = new InnerDockManager(rightDockController, rightHost, leftRightSplitPane, DividerPosition.BEFORE, rightDividerHPos.get());
         bottomDockManager = new InnerDockManager(bottomDockController, bottomHost, mainSplitPane, DividerPosition.BEFORE, bottomDividerVPos.get());
 
-//        topBottonController = SplitPositionController.of(mainSplitPane, 2).withContent(leftRightSplitPane)
-//                .withDivider(bottomDividerVPos).withContent(bottomHost)
+//        topBottonController = SplitPositionController.of(mainSplitPane, 2).content(leftRightSplitPane)
+//                .divider(bottomDividerVPos).content(bottomHost)
 //                .build(SplitPositionController.MAIN_TOP_BOTTOM);
 //
-//        leftRightController = SplitPositionController.of(leftRightSplitPane, 3).withContent(leftHost)
-//                .withDivider(leftDividerHPos).withContent(centerHost).withDivider(rightDividerHPos)
-//                .withContent(rightHost).build(SplitPositionController.MAIN_LEFT_RIGHT);
+//        leftRightController = SplitPositionController.of(leftRightSplitPane, 3).content(leftHost)
+//                .divider(leftDividerHPos).content(centerHost).divider(rightDividerHPos)
+//                .content(rightHost).build(SplitPositionController.MAIN_LEFT_RIGHT);
 
     }
 

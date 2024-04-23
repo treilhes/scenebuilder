@@ -60,7 +60,7 @@ public class BooleanPropertyMetadata<VC> extends TextEncodablePropertyMetadata<j
             extends TextEncodablePropertyMetadata.AbstractBuilder<SELF, TOBUILD, Boolean, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Boolean.class);
+            valueClass(Boolean.class);
         }
     }
 

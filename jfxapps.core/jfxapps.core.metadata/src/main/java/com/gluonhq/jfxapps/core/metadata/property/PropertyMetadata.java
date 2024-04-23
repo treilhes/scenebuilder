@@ -177,32 +177,32 @@ public abstract class PropertyMetadata<C> implements Comparable<PropertyMetadata
         protected SELF self() {
             return (SELF)this;
         }
-        public SELF withName(PropertyName name) {
+        public SELF name(PropertyName name) {
             this.name = name;
             return self();
         }
 
-        public SELF withVisibility(Visibility visibility) {
+        public SELF visibility(Visibility visibility) {
             this.visibility = visibility;
             return self();
         }
 
-        protected SELF withGroup(boolean group) {
+        protected SELF group(boolean group) {
             this.group = group;
             return self();
         }
 
-        protected SELF withConstant(String constantName, Object constantValue) {
+        protected SELF constant(String constantName, Object constantValue) {
             this.constants.put(constantName, constantValue);
             return self();
         }
 
-        protected SELF withConstants(Map<String, Object> constants) {
+        protected SELF constants(Map<String, Object> constants) {
             this.constants.putAll(constants);
             return self();
         }
 
-        public SELF withCustomization(CUSTO customization) {
+        public SELF customization(CUSTO customization) {
             this.customization = customization;
             return self();
         }

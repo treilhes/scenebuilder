@@ -49,24 +49,24 @@ import javafx.scene.paint.Color;
 public class DistantLightPropertyMetadata<VC> extends ComplexPropertyMetadata<Light.Distant, VC> {
 
     private final ColorPropertyMetadata<Void> colorMetadata = new ColorPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("color"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(Color.WHITE)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("color"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(Color.WHITE)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final AngleDoublePropertyMetadata<Void> azimuthMetadata = new AngleDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("azimuth"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(45.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("azimuth"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(45.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final AngleDoublePropertyMetadata<Void> elevationMetadata = new AngleDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("elevation"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(45.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("elevation"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(45.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected DistantLightPropertyMetadata(PropertyName name, boolean readWrite, Light.Distant defaultValue,
@@ -96,7 +96,7 @@ public class DistantLightPropertyMetadata<VC> extends ComplexPropertyMetadata<Li
             extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Light.Distant, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Light.Distant.class);
+            valueClass(Light.Distant.class);
         }
     }
 

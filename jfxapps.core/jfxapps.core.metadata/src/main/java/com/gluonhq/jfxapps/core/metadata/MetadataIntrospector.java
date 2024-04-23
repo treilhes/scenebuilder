@@ -220,20 +220,20 @@ public abstract class MetadataIntrospector<CC, PC, VC> {
 
                 // @formatter:off
                 result = new EnumerationPropertyMetadata.Builder<Enum<?>, VC>((Class<Enum<?>>) propertyType)
-                        .withName(name)
-                        .withReadWrite(readWrite)
-                        .withDefaultValue((Enum<?>) getDefaultValue(sample, propertyDescriptor.getReadMethod(), fallback))
-                        .withCustomization(propertyCustomization)
+                        .name(name)
+                        .readWrite(readWrite)
+                        .defaultValue((Enum<?>) getDefaultValue(sample, propertyDescriptor.getReadMethod(), fallback))
+                        .customization(propertyCustomization)
                         .build();
                 // @formatter:on
 
             } else if (propertyType == Boolean.class) {
                 // @formatter:off
                 result = new BooleanPropertyMetadata.Builder<VC>()
-                        .withName(name)
-                        .withReadWrite(readWrite)
-                        .withDefaultValue((Boolean) getDefaultValue(sample, propertyDescriptor.getReadMethod(), false))
-                        .withCustomization(propertyCustomization)
+                        .name(name)
+                        .readWrite(readWrite)
+                        .defaultValue((Boolean) getDefaultValue(sample, propertyDescriptor.getReadMethod(), false))
+                        .customization(propertyCustomization)
                         .build();
              // @formatter:on
 
@@ -241,10 +241,10 @@ public abstract class MetadataIntrospector<CC, PC, VC> {
 
              // @formatter:off
                 result = new IntegerPropertyMetadata.Builder<VC>()
-                        .withName(name)
-                        .withReadWrite(readWrite)
-                        .withDefaultValue((Integer) getDefaultValue(sample, propertyDescriptor.getReadMethod(), 0))
-                        .withCustomization(propertyCustomization)
+                        .name(name)
+                        .readWrite(readWrite)
+                        .defaultValue((Integer) getDefaultValue(sample, propertyDescriptor.getReadMethod(), 0))
+                        .customization(propertyCustomization)
                         .build();
              // @formatter:on
 
@@ -252,75 +252,75 @@ public abstract class MetadataIntrospector<CC, PC, VC> {
 
              // @formatter:off
                 result = new CoordinateDoublePropertyMetadata.Builder<VC>()
-                        .withName(name)
-                        .withReadWrite(readWrite)
-                        .withDefaultValue((Double) getDefaultValue(sample, propertyDescriptor.getReadMethod(), 0.0))
-                        .withCustomization(propertyCustomization)
+                        .name(name)
+                        .readWrite(readWrite)
+                        .defaultValue((Double) getDefaultValue(sample, propertyDescriptor.getReadMethod(), 0.0))
+                        .customization(propertyCustomization)
                         .build();
              // @formatter:on
 
             } else if (propertyType == String.class) {
              // @formatter:off
                 result = new I18nStringPropertyMetadata.Builder<VC>()
-                        .withName(name)
-                        .withReadWrite(readWrite)
-                        .withDefaultValue((String) getDefaultValue(sample, propertyDescriptor.getReadMethod(), null))
-                        .withCustomization(propertyCustomization)
+                        .name(name)
+                        .readWrite(readWrite)
+                        .defaultValue((String) getDefaultValue(sample, propertyDescriptor.getReadMethod(), null))
+                        .customization(propertyCustomization)
                         .build();
              // @formatter:on
             } else if (propertyType == javafx.scene.paint.Color.class) {
              // @formatter:off
                 result = new ColorPropertyMetadata.Builder<VC>()
-                        .withName(name)
-                        .withReadWrite(readWrite)
-                        .withDefaultValue((Color) getDefaultValue(sample, propertyDescriptor.getReadMethod(), null))
-                        .withCustomization(propertyCustomization)
+                        .name(name)
+                        .readWrite(readWrite)
+                        .defaultValue((Color) getDefaultValue(sample, propertyDescriptor.getReadMethod(), null))
+                        .customization(propertyCustomization)
                         .build();
              // @formatter:on
             } else if (propertyType == javafx.scene.paint.Paint.class) {
              // @formatter:off
                 result = new PaintPropertyMetadata.Builder<VC>()
-                        .withName(name)
-                        .withReadWrite(readWrite)
-                        .withDefaultValue((Paint) getDefaultValue(sample, propertyDescriptor.getReadMethod(), null))
-                        .withCustomization(propertyCustomization)
+                        .name(name)
+                        .readWrite(readWrite)
+                        .defaultValue((Paint) getDefaultValue(sample, propertyDescriptor.getReadMethod(), null))
+                        .customization(propertyCustomization)
                         .build();
              // @formatter:on
             } else if (propertyType == javafx.scene.text.Font.class) {
              // @formatter:off
                 result = new FontPropertyMetadata.Builder<VC>()
-                        .withName(name)
-                        .withReadWrite(readWrite)
-                        .withDefaultValue((Font) getDefaultValue(sample, propertyDescriptor.getReadMethod(), null))
-                        .withCustomization(propertyCustomization)
+                        .name(name)
+                        .readWrite(readWrite)
+                        .defaultValue((Font) getDefaultValue(sample, propertyDescriptor.getReadMethod(), null))
+                        .customization(propertyCustomization)
                         .build();
              // @formatter:on
             } else if (propertyType == javafx.scene.image.Image.class) {
              // @formatter:off
                 result = new ImagePropertyMetadata.Builder<VC>()
-                        .withName(name)
-                        .withReadWrite(readWrite)
-                        .withDefaultValue(null)
-                        .withCustomization(propertyCustomization)
+                        .name(name)
+                        .readWrite(readWrite)
+                        .defaultValue(null)
+                        .customization(propertyCustomization)
                         .build();
              // @formatter:on
             } else if (propertyType == javafx.util.Duration.class) {
              // @formatter:off
                 Duration defaultValue = (Duration) getDefaultValue(sample, propertyDescriptor.getReadMethod(), null);
                 result = new DurationPropertyMetadata.Builder<VC>()
-                        .withName(name)
-                        .withReadWrite(readWrite)
-                        .withDefaultValue(defaultValue == null ? null : new SBDuration(defaultValue))
-                        .withCustomization(propertyCustomization)
+                        .name(name)
+                        .readWrite(readWrite)
+                        .defaultValue(defaultValue == null ? null : new SBDuration(defaultValue))
+                        .customization(propertyCustomization)
                         .build();
              // @formatter:on
             } else if (propertyType == javafx.event.EventHandler.class) {
              // @formatter:off
                 result = new EventHandlerPropertyMetadata.Builder<VC>()
-                        .withName(name)
-                        .withReadWrite(readWrite)
-                        .withDefaultValue(null)
-                        .withCustomization(propertyCustomization)
+                        .name(name)
+                        .readWrite(readWrite)
+                        .defaultValue(null)
+                        .customization(propertyCustomization)
                         .build();
              // @formatter:on
 
@@ -349,10 +349,10 @@ public abstract class MetadataIntrospector<CC, PC, VC> {
                             if (genericClass.equals(java.lang.String.class)) {
                              // @formatter:off
                                 result = new StringListPropertyMetadata.Builder<VC>()
-                                        .withName(name)
-                                        .withReadWrite(readWrite)
-                                        .withDefaultValue(Collections.emptyList())
-                                        .withCustomization(propertyCustomization)
+                                        .name(name)
+                                        .readWrite(readWrite)
+                                        .defaultValue(Collections.emptyList())
+                                        .customization(propertyCustomization)
                                         .build();
                              // @formatter:on
                             }

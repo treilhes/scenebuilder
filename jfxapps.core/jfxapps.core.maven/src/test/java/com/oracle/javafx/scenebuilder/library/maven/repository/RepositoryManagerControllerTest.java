@@ -122,13 +122,13 @@ class RepositoryManagerControllerTest {
         Mockito.when(owner.getStage()).thenReturn(stage);
 
         Mockito.when(mc.repositories()).thenReturn(List.of(
-                Repository.builder().withId("id1").build(),
-                Repository.builder().withId("id2").build()
+                Repository.builder().id("id1").build(),
+                Repository.builder().id("id2").build()
                 ));
 
         RepositoryManager rdc = FxmlControllerLoader.controller(
                 new RepositoryManagerController(mc, sbm, is, context, messageLogger, repositoryDialogController, owner))
-                .withDarkTheme(sbm).load();
+                .darkTheme(sbm).load();
 
         robot.interact(() -> {
             rdc.openWindow();

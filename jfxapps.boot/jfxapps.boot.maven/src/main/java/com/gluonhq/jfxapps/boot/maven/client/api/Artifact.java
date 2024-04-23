@@ -103,11 +103,11 @@ public class Artifact implements Comparable<Artifact> {
         private String groupId;
         private String artifactId;
 
-        public Builder withGroupId(String groupId) {
+        public Builder groupId(String groupId) {
             this.groupId = groupId;
             return this;
         }
-        public Builder withArtifactId(String artifactId) {
+        public Builder artifactId(String artifactId) {
             this.artifactId = artifactId;
             return this;
         }

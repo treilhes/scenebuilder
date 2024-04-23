@@ -594,33 +594,33 @@ public class FXOMDocument {
         private String fxmlText;
         protected ClassLoader classloader;
 
-        protected Builder withRoot(FXOMObject root) {
+        protected Builder root(FXOMObject root) {
             this.root = root;
             return this;
         }
 
 
-        protected Builder withLocation(URL location) {
+        protected Builder location(URL location) {
             this.location = location;
             return this;
         }
 
-        protected Builder withFxmlText(String fxmlText) {
+        protected Builder fxmlText(String fxmlText) {
             this.fxmlText = fxmlText;
             return this;
         }
 
-        public Builder withResourceBundle(ResourceBundle resources) {
+        public Builder resourceBundle(ResourceBundle resources) {
             this.resources = resources;
             return this;
         }
 
-        public Builder withNormalization(boolean normalize) {
+        public Builder normalization(boolean normalize) {
             this.normalize = normalize;
             return this;
         }
 
-        protected Builder withClassLoader(ClassLoader classloader) {
+        protected Builder classLoader(ClassLoader classloader) {
             this.classloader = classloader;
             return this;
         }

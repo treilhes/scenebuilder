@@ -159,10 +159,10 @@ public abstract class StringPropertyMetadata<VC> extends TextEncodablePropertyMe
 
         public AbstractBuilder() {
             super();
-            withValueClass(String.class);
+            valueClass(String.class);
         }
 
-        public SELF withFileUrlDetection(boolean fileUrlDetection) {
+        public SELF fileUrlDetection(boolean fileUrlDetection) {
             this.detectFileURL = fileUrlDetection;
             return self();
         }

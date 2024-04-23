@@ -87,17 +87,17 @@ public abstract class NumberPropertyMetadata<T extends Number, VC> extends TextE
         protected T min;
         protected T max;
 
-        protected SELF withMin(T min) {
+        protected SELF min(T min) {
             this.min = min;
             return self();
         }
 
-        protected SELF withMax(T max) {
+        protected SELF max(T max) {
             this.max = max;
             return self();
         }
 
-        protected SELF withLenientBoundary(boolean lenientBoundary) {
+        protected SELF lenientBoundary(boolean lenientBoundary) {
             this.lenientBoundary = lenientBoundary;
             return self();
         }

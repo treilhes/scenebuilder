@@ -258,12 +258,12 @@ public abstract class FXOMDocument {
             return (SELF)this;
         }
 
-        protected SELF withRoot(OMObject root) {
+        protected SELF root(OMObject root) {
             this.root = root;
             return self();
         }
 
-        protected SELF withLocation(URL location) {
+        protected SELF location(URL location) {
             this.location = location;
             return self();
         }

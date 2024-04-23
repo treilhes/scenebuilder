@@ -42,10 +42,10 @@ import com.gluonhq.jfxapps.core.metadata.property.value.ObjectPropertyMetadata;
 public class TickMarkListPropertyMetadata<VC> extends ListValuePropertyMetadata<Object, VC> {
 
     private final static ObjectPropertyMetadata<Void> itemMetadata = new ObjectPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("unused")) // NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("unused")) // NOCHECK
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    public TickMarkListPropertyMetadata(PropertyName name, boolean readWrite, List<Object> defaultValue,
@@ -61,8 +61,8 @@ public class TickMarkListPropertyMetadata<VC> extends ListValuePropertyMetadata<
             extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, Object, VC> {
         public AbstractBuilder() {
             super();
-            withItemClass(Object.class);
-            withItemMetadata(TickMarkListPropertyMetadata.itemMetadata);
+            itemClass(Object.class);
+            itemMetadata(TickMarkListPropertyMetadata.itemMetadata);
         }
     }
 

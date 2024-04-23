@@ -64,7 +64,7 @@ public class MainMenuProvider implements MenuProvider {
 
 
     private MenuAttachment newMenu(String targetId, PositionRequest positionRequest, String menuId, String titleKey) {
-        Menu menu = menuBuilder.menu().withId(menuId).withTitle(titleKey).build();
+        Menu menu = menuBuilder.menu().id(menuId).title(titleKey).build();
         return MenuAttachment.create(menu, targetId, positionRequest);
     }
 

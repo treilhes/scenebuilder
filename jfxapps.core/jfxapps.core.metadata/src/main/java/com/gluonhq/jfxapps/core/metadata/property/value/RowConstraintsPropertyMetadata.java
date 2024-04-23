@@ -55,52 +55,52 @@ public class RowConstraintsPropertyMetadata<VC> extends ComplexPropertyMetadata<
     private static final RowConstraints DEFAULT = new RowConstraints();
 
     private final BooleanPropertyMetadata<Void> fillHeightMetadata = new BooleanPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("fillHeight")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT.isFillHeight())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("fillHeight")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT.isFillHeight())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final ComputedSizeDoublePropertyMetadata<Void> maxHeightMetadata = new ComputedSizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("maxHeight")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT.getMaxHeight())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("maxHeight")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT.getMaxHeight())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final ComputedSizeDoublePropertyMetadata<Void> minHeightMetadata = new ComputedSizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("minHeight")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT.getMinHeight())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("minHeight")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT.getMinHeight())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final PercentageDoublePropertyMetadata<Void> percentHeightMetadata = new PercentageDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("percentHeight")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT.getPercentHeight())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("percentHeight")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT.getPercentHeight())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final ComputedAndPrefSizeDoublePropertyMetadata<Void> prefHeightMetadata = new ComputedAndPrefSizeDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("prefHeight")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT.getPrefHeight())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("prefHeight")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT.getPrefHeight())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EnumerationPropertyMetadata<Void> valignmentMetadata = new EnumerationPropertyMetadata.Builder<VPos, Void>(VPos.class)
-            .withName(new PropertyName("valignment")) //NOCHECK
-            .withReadWrite(true)
-            .withNullEquivalent(EnumerationPropertyMetadata.EQUIV_INHERITED)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("valignment")) //NOCHECK
+            .readWrite(true)
+            .nullEquivalent(EnumerationPropertyMetadata.EQUIV_INHERITED)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EnumerationPropertyMetadata<Void> vgrowMetadata = new EnumerationPropertyMetadata.Builder<Priority, Void>(Priority.class)
-            .withName(new PropertyName("vgrow")) //NOCHECK
-            .withReadWrite(true)
-            .withNullEquivalent(EnumerationPropertyMetadata.EQUIV_INHERITED)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("vgrow")) //NOCHECK
+            .readWrite(true)
+            .nullEquivalent(EnumerationPropertyMetadata.EQUIV_INHERITED)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    public RowConstraintsPropertyMetadata(PropertyName name, boolean readWrite, RowConstraints defaultValue,
@@ -168,7 +168,7 @@ public class RowConstraintsPropertyMetadata<VC> extends ComplexPropertyMetadata<
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, RowConstraints, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(RowConstraints.class);
+            valueClass(RowConstraints.class);
         }
     }
 

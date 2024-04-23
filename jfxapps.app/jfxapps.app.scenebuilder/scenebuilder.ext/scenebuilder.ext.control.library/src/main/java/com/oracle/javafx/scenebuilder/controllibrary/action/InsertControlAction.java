@@ -258,7 +258,7 @@ System.out.println();
 
         @Override
         public List<MenuAttachment> menus() {
-            Menu insertMenu = menuBuilder.menu().withId(MENU_ID).withTitle("menu.title.insert").build();
+            Menu insertMenu = menuBuilder.menu().id(MENU_ID).title("menu.title.insert").build();
             populate(insertMenu);
             MenuAttachment attachment = MenuAttachment.create(insertMenu, DefaultMenu.VIEW_MENU_ID, PositionRequest.AsNextSibling);
             return Arrays.asList(attachment);
@@ -274,14 +274,14 @@ System.out.println();
                 .collect(Collectors.groupingBy(LibraryItem::getSection));
 
             map.keySet().stream().sorted().forEach(k -> {
-                Menu menu = menuBuilder.menu().withTitle(k).build();
+                Menu menu = menuBuilder.menu().title(k).build();
                 map.get(k).stream().sorted(Comparator.comparing(LibraryItemImpl::getName)).forEach(l -> {
                     InsertControlAction action = actionFactory.create(InsertControlAction.class);
                     action.setLibraryItem(l);
 
                     String label = l.getName() + LibraryListCell.makeQualifierLabel(l.getQualifier());
 
-                    MenuItem mi = menuBuilder.menuItem().withAction(action).withTitle(label).build();
+                    MenuItem mi = menuBuilder.menuItem().action(action).title(label).build();
 
                     try {
                         Image image = new Image(l.getIconURL().openStream());

@@ -72,7 +72,7 @@ public class ImageLibraryFolderMenuProvider implements ViewMenuItemProvider {
 
 
     private ViewMenuItemAttachment newMenu(String targetId, PositionRequest positionRequest, String menuId, String titleKey) {
-        Menu menu = menuBuilder.menu().withId(menuId).withTitle(titleKey).build();
+        Menu menu = menuBuilder.menu().id(menuId).title(titleKey).build();
 
         // DTL-6439. The custom library menu shall be enabled only
         // in the case there is a user library directory on disk.

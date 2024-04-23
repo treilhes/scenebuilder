@@ -44,10 +44,10 @@ import javafx.scene.control.ButtonType;
 public class ButtonTypeListPropertyMetadata<VC> extends ListValuePropertyMetadata<ButtonType,VC> {
 
     private final static ButtonTypePropertyMetadata<Void> itemMetadata = new ButtonTypePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("unused")) // NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(ButtonType.CLOSE)
-//            .withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("unused")) // NOCHECK
+            .readWrite(true)
+            .defaultValue(ButtonType.CLOSE)
+//            .inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    public ButtonTypeListPropertyMetadata(PropertyName name, boolean readWrite, List<ButtonType> defaultValue,
@@ -63,8 +63,8 @@ public class ButtonTypeListPropertyMetadata<VC> extends ListValuePropertyMetadat
             extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, ButtonType,VC> {
         public AbstractBuilder() {
             super();
-            withItemClass(ButtonType.class);
-            withItemMetadata(ButtonTypeListPropertyMetadata.itemMetadata);
+            itemClass(ButtonType.class);
+            itemMetadata(ButtonTypeListPropertyMetadata.itemMetadata);
         }
     }
 

@@ -72,9 +72,9 @@ public class IntegerPropertyMetadata<VC> extends NumberPropertyMetadata<Integer,
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends NumberPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Integer, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Integer.class);
-            withMin(-Integer.MAX_VALUE);
-            withMax(Integer.MAX_VALUE);
+            valueClass(Integer.class);
+            min(-Integer.MAX_VALUE);
+            max(Integer.MAX_VALUE);
         }
     }
 
@@ -105,7 +105,7 @@ public class IntegerPropertyMetadata<VC> extends NumberPropertyMetadata<Integer,
         protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends IntegerPropertyMetadata.AbstractBuilder<SELF, TOBUILD, VC> {
             public AbstractBuilder() {
                 super();
-                withMin(0);
+                min(0);
             }
         }
 
@@ -244,8 +244,8 @@ public class IntegerPropertyMetadata<VC> extends NumberPropertyMetadata<Integer,
 
             public AbstractBuilder() {
                 super();
-                withConstant("REMAINING", GridPane.REMAINING);
-                withMin(1);
+                constant("REMAINING", GridPane.REMAINING);
+                min(1);
             }
 
         }
@@ -318,8 +318,8 @@ public class IntegerPropertyMetadata<VC> extends NumberPropertyMetadata<Integer,
 
             public AbstractBuilder() {
                 super();
-                withConstant("REMAINING", GridPane.REMAINING);
-                withMin(1);
+                constant("REMAINING", GridPane.REMAINING);
+                min(1);
             }
 
         }

@@ -135,22 +135,22 @@ public class ComponentPropertyMetadata<PC> extends PropertyMetadata<PC> {
             super();
         }
 
-        protected SELF withClassMetadata(ComponentClassMetadata<?, ?, PC, ?> classMetadata) {
+        protected SELF classMetadata(ComponentClassMetadata<?, ?, PC, ?> classMetadata) {
             this.classMetadata = classMetadata;
             return self();
         }
 
-        protected SELF withIsCollection(boolean isCollection) {
+        protected SELF isCollection(boolean isCollection) {
             this.collection = isCollection;
             return self();
         }
 
-        protected SELF withIsMain(boolean isMain) {
+        protected SELF isMain(boolean isMain) {
             this.main = isMain;
             return self();
         }
 
-        protected SELF withDisableChildProperties(Set<PropertyName> disabledPropertyNames) {
+        protected SELF disableChildProperties(Set<PropertyName> disabledPropertyNames) {
             this.disabledChildProperties.addAll(disabledPropertyNames);
             return self();
         }
@@ -159,22 +159,22 @@ public class ComponentPropertyMetadata<PC> extends PropertyMetadata<PC> {
     public static final class Builder<PC> extends AbstractBuilder<Builder<PC>, ComponentPropertyMetadata<PC>, PC> {
 
         @Override
-        public Builder<PC> withClassMetadata(ComponentClassMetadata<?, ?, PC, ?> classMetadata) {
-            return super.withClassMetadata(classMetadata);
+        public Builder<PC> classMetadata(ComponentClassMetadata<?, ?, PC, ?> classMetadata) {
+            return super.classMetadata(classMetadata);
         }
 
         @Override
-        public Builder<PC> withIsCollection(boolean isCollection) {
-            return super.withIsCollection(isCollection);
+        public Builder<PC> isCollection(boolean isCollection) {
+            return super.isCollection(isCollection);
         }
 
         @Override
-        public Builder<PC> withIsMain(boolean isMain) {
-            return super.withIsMain(isMain);
+        public Builder<PC> isMain(boolean isMain) {
+            return super.isMain(isMain);
         }
         @Override
-        public Builder<PC> withDisableChildProperties(Set<PropertyName> disabledPropertyNames) {
-            return super.withDisableChildProperties(disabledPropertyNames);
+        public Builder<PC> disableChildProperties(Set<PropertyName> disabledPropertyNames) {
+            return super.disableChildProperties(disabledPropertyNames);
         }
 
         @Override

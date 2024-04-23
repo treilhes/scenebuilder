@@ -50,31 +50,31 @@ import javafx.scene.effect.BlendMode;
 public class BlendPropertyMetadata<VC> extends ComplexPropertyMetadata<Blend, VC> {
 
     private final EffectPropertyMetadata<Void> bottomInputMetadata = new EffectPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("bottomInput"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("bottomInput"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EffectPropertyMetadata<Void> topInputMetadata = new EffectPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("topInput"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("topInput"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final OpacityDoublePropertyMetadata<Void> opacityMetadata = new OpacityDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("opacity")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(1.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("opacity")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(1.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EnumerationPropertyMetadata<Void> modeMetadata = new EnumerationPropertyMetadata.Builder<BlendMode, Void>(BlendMode.class)
-            .withName(new PropertyName("mode")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(BlendMode.SRC_OVER)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("mode")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(BlendMode.SRC_OVER)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected BlendPropertyMetadata(PropertyName name, boolean readWrite,
@@ -105,7 +105,7 @@ public class BlendPropertyMetadata<VC> extends ComplexPropertyMetadata<Blend, VC
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Blend, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Blend.class);
+            valueClass(Blend.class);
         }
     }
 

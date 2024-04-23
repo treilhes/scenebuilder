@@ -119,17 +119,17 @@ class SkeletonContext {
         private final SortedMap<String, String> eventHandlers = new TreeMap<>();
         private final SortedSet<String> assertions = new TreeSet<>();
 
-        Builder withFxController(String fxController) {
+        Builder fxController(String fxController) {
             this.fxController = fxController;
             return this;
         }
 
-        Builder withDocumentName(String documentName) {
+        Builder documentName(String documentName) {
             this.documentName = documentName;
             return this;
         }
 
-        Builder withSettings(SkeletonSettings settings) {
+        Builder settings(SkeletonSettings settings) {
             this.settings = settings;
             return this;
         }

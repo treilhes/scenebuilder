@@ -61,16 +61,16 @@ public class DoubleBoundedPropertyGroupMetadata<VC> extends PropertyGroupMetadat
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC>
             extends PropertyGroupMetadata.AbstractBuilder<SELF, TOBUILD, VC> {
 
-        public SELF withMinProperty(ValuePropertyMetadata<VC> property) {
-            return withProperty("min", property);
+        public SELF minProperty(ValuePropertyMetadata<VC> property) {
+            return property("min", property);
         }
 
-        public SELF withValueProperty(ValuePropertyMetadata<VC> property) {
-            return withProperty("value", property);
+        public SELF valueProperty(ValuePropertyMetadata<VC> property) {
+            return property("value", property);
         }
 
-        public SELF withMaxProperty(ValuePropertyMetadata<VC> property) {
-            return withProperty("max", property);
+        public SELF maxProperty(ValuePropertyMetadata<VC> property) {
+            return property("max", property);
         }
     }
 

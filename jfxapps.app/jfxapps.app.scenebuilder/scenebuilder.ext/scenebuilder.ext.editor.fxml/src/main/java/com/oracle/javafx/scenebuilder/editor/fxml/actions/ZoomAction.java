@@ -109,7 +109,7 @@ public class ZoomAction extends AbstractAction {
         public List<MenuItemAttachment> menuItems() {
             List<MenuItemAttachment> result = new ArrayList<>();
 
-            Menu menu = menuBuilder.menu().withId(ZOOM_MENU_ID).withTitle("menu.title.zoom").build();
+            Menu menu = menuBuilder.menu().id(ZOOM_MENU_ID).title("menu.title.zoom").build();
             MenuItemAttachment menuAttachment = MenuItemAttachment.create(menu, ToggleGuidesVisibilityAction.MENU_ID,
                     PositionRequest.AfterNextSeparator);
             result.add(menuAttachment);
@@ -128,8 +128,8 @@ public class ZoomAction extends AbstractAction {
                 RadioMenuItem mi = new RadioMenuItem();
                 mi.setToggleGroup(zoomToggle);
 
-                mi = menuBuilder.radioMenuItem().withMenuItem(mi).withId(menuId).withAction(zAction)
-                        .withTitle(title).build();
+                mi = menuBuilder.radioMenuItem().menuItem(mi).id(menuId).action(zAction)
+                        .title(title).build();
 
                 MenuItemAttachment attachment = MenuItemAttachment.create(mi, target, positionRequest);
 

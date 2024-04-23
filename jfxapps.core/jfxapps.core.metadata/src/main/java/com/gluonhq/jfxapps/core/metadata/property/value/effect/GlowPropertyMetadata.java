@@ -48,17 +48,17 @@ import javafx.scene.effect.Glow;
 public class GlowPropertyMetadata<VC> extends ComplexPropertyMetadata<Glow, VC> {
 
     private final EffectPropertyMetadata<Void> inputMetadata = new EffectPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("input"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("input"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final OpacityDoublePropertyMetadata<Void> levelMetadata = new OpacityDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("level"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.3)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("level"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(0.3)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected GlowPropertyMetadata(PropertyName name, boolean readWrite,
@@ -86,7 +86,7 @@ public class GlowPropertyMetadata<VC> extends ComplexPropertyMetadata<Glow, VC> 
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Glow, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Glow.class);
+            valueClass(Glow.class);
         }
     }
 

@@ -47,7 +47,7 @@ public final class FxIdMetadata extends VirtualValuePropertyMetadata {
 
         public AbstractBuilder() {
             super();
-            withName(new PropertyName("fx:id"));
+            name(new PropertyName("fx:id"));
         }
     }
 

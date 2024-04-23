@@ -81,9 +81,9 @@ class SkeletonBuffer {
             return I18N.getString("skeleton.empty");
         } else {
             SkeletonContext.Builder builder = SkeletonContext.builder()
-                .withFxController(document.getFxomRoot().getFxController())
-                .withDocumentName(documentName)
-                .withSettings(settings);
+                .fxController(document.getFxomRoot().getFxController())
+                .documentName(documentName)
+                .settings(settings);
 
             construct(builder);
 

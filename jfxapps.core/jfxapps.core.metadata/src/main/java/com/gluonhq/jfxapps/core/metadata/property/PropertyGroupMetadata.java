@@ -58,8 +58,8 @@ public class PropertyGroupMetadata<VC> extends ValuePropertyMetadata<VC> {
     protected PropertyGroupMetadata(AbstractBuilder<?,?, VC> builder) {
 //        super((AbstractBuilder<?,?, VC>)((
 //                AbstractBuilder<PropertyGroupMetadata.AbstractBuilder<?,?, VC>, PropertyGroupMetadata<VC>, VC>)builder)
-//                .withInspectorPath(builder.properties.isEmpty() ? null : builder.properties.values().iterator().next().getInspectorPath())
-//                .withReadWrite(builder.properties.values().stream().anyMatch(p -> p.isReadWrite()))
+//                .inspectorPath(builder.properties.isEmpty() ? null : builder.properties.values().iterator().next().getInspectorPath())
+//                .readWrite(builder.properties.values().stream().anyMatch(p -> p.isReadWrite()))
 //                );
         super(builder);
         this.properties.putAll(builder.properties);
@@ -179,10 +179,10 @@ public class PropertyGroupMetadata<VC> extends ValuePropertyMetadata<VC> {
 
         public AbstractBuilder() {
             super();
-            withGroup(true);
+            group(true);
         }
 
-        protected SELF withProperty(String key, ValuePropertyMetadata<VC> property) {
+        protected SELF property(String key, ValuePropertyMetadata<VC> property) {
             properties.put(key, property);
             return self();
         }
@@ -191,8 +191,8 @@ public class PropertyGroupMetadata<VC> extends ValuePropertyMetadata<VC> {
     public static final class Builder<VC> extends AbstractBuilder<Builder<VC>, PropertyGroupMetadata<VC>, VC> {
 
         @Override
-        public Builder<VC> withProperty(String key, ValuePropertyMetadata<VC> property) {
-            return super.withProperty(key, property);
+        public Builder<VC> property(String key, ValuePropertyMetadata<VC> property) {
+            return super.property(key, property);
         }
 
         @Override

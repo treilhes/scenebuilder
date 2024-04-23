@@ -47,28 +47,28 @@ import javafx.geometry.Insets;
 public class InsetsPropertyMetadata<VC> extends ComplexPropertyMetadata<Insets, VC> {
 
     private final CoordinateDoublePropertyMetadata<Void> topMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("top"))
-            .withReadWrite(true)
-            .withDefaultValue(Insets.EMPTY.getTop())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("top"))
+            .readWrite(true)
+            .defaultValue(Insets.EMPTY.getTop())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
     private final CoordinateDoublePropertyMetadata<Void> bottomMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("bottom"))
-            .withReadWrite(true)
-            .withDefaultValue(Insets.EMPTY.getTop())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("bottom"))
+            .readWrite(true)
+            .defaultValue(Insets.EMPTY.getTop())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
     private final CoordinateDoublePropertyMetadata<Void> leftMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("left"))
-            .withReadWrite(true)
-            .withDefaultValue(Insets.EMPTY.getTop())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("left"))
+            .readWrite(true)
+            .defaultValue(Insets.EMPTY.getTop())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
     private final CoordinateDoublePropertyMetadata<Void> rightMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("right"))
-            .withReadWrite(true)
-            .withDefaultValue(Insets.EMPTY.getTop())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("right"))
+            .readWrite(true)
+            .defaultValue(Insets.EMPTY.getTop())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 
@@ -99,7 +99,7 @@ public class InsetsPropertyMetadata<VC> extends ComplexPropertyMetadata<Insets, 
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Insets, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Insets.class);
+            valueClass(Insets.class);
         }
     }
 

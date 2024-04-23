@@ -94,28 +94,28 @@ public class MavenClientController implements com.oracle.javafx.scenebuilder.api
         } else {
             List<Repository> prefs = repositoryPreferences.getRepositories();
             File repoPath = new File(repositoryPathPreference.getValue());
-            client = client.withLocalPath(repoPath).withRepositories(prefs);
+            client = client.localPath(repoPath).repositories(prefs);
         }
     }
 
     @Override
     public List<UniqueArtifact> getAvailableVersions(String groupId, String artifactId) {
-        var a = Artifact.builder().withGroupId(groupId).withArtifactId(artifactId).build();
+        var a = Artifact.builder().groupId(groupId).artifactId(artifactId).build();
         return client.getAvailableVersions(a, Scope.RELEASE_SNAPHOT);
     }
 
     public List<UniqueArtifact> getAvailableVersions(String groupId, String artifactId, boolean onlyRelease) {
-        var a = Artifact.builder().withGroupId(groupId).withArtifactId(artifactId).build();
+        var a = Artifact.builder().groupId(groupId).artifactId(artifactId).build();
         return client.getAvailableVersions(a, onlyRelease ? Scope.RELEASE : Scope.RELEASE_SNAPHOT);
     }
 
     public Optional<UniqueArtifact> getLatestVersion(String groupId, String artifactId) {
-        var a = Artifact.builder().withGroupId(groupId).withArtifactId(artifactId).build();
+        var a = Artifact.builder().groupId(groupId).artifactId(artifactId).build();
         return client.getLatestVersion(a, Scope.RELEASE_SNAPHOT);
     }
 
     public Optional<UniqueArtifact> getLatestVersion(String groupId, String artifactId, boolean onlyRelease) {
-        var a = Artifact.builder().withGroupId(groupId).withArtifactId(artifactId).build();
+        var a = Artifact.builder().groupId(groupId).artifactId(artifactId).build();
         return client.getLatestVersion(a, onlyRelease ? Scope.RELEASE : Scope.RELEASE_SNAPHOT);
     }
 

@@ -75,10 +75,10 @@ public class ResizeRowGesture extends AbstractMouseGesture {
             = new PropertyName("rowConstraints"); //NOCHECK
     private static final ValuePropertyMetadata rowConstraintsMeta
             = new RowConstraintsListPropertyMetadata.Builder()
-                    .withName(rowConstraintsName)
-                    .withReadWrite(true)
-                    .withDefaultValue(Collections.emptyList())
-                    .withInspectorPath(InspectorPath.UNUSED).build();
+                    .name(rowConstraintsName)
+                    .readWrite(true)
+                    .defaultValue(Collections.emptyList())
+                    .inspectorPath(InspectorPath.UNUSED).build();
 
     private GridPaneHandles gridPaneHandles;
     private FXOMInstance fxomInstance;

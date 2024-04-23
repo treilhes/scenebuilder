@@ -117,7 +117,7 @@ class AddEditRepositoryDialogControllerTest {
         AddEditRepositoryDialogController dialog = FxmlControllerLoader
                 .controller(new AddEditRepositoryDialogController(mc, sbm, iconSetting, messageLogger, mavenSetting,
                         repositoryPreferences, Optional.empty(), owner))
-                .withDarkTheme(sbm).load();
+                .darkTheme(sbm).load();
 
         robot.interact(() -> {
             dialog.openWindow();

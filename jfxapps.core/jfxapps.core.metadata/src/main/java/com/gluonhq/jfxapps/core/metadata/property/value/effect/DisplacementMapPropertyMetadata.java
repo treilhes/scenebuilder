@@ -51,52 +51,52 @@ public class DisplacementMapPropertyMetadata<VC> extends ComplexPropertyMetadata
     private final DisplacementMap DEFAULT = new DisplacementMap();
 
     private final EffectPropertyMetadata<Void> inputMetadata = new EffectPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("input")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("input")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> offsetXMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("offsetX")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT.getOffsetX())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("offsetX")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT.getOffsetX())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> offsetYMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("offsetY")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT.getOffsetY())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("offsetY")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT.getOffsetY())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> scaleXMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("scaleX")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT.getScaleX())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("scaleX")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT.getScaleX())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> scaleYMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("scaleY")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT.getScaleY())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("scaleY")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT.getScaleY())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final BooleanPropertyMetadata<Void> wrapMetadata = new BooleanPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("wrap")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT.isWrap())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("wrap")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT.isWrap())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final FloatMapPropertyMetadata<Void> mapDataMetadata = new FloatMapPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("mapData")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(DEFAULT.getMapData())
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("mapData")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(DEFAULT.getMapData())
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected DisplacementMapPropertyMetadata(PropertyName name, boolean readWrite,
@@ -129,7 +129,7 @@ public class DisplacementMapPropertyMetadata<VC> extends ComplexPropertyMetadata
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, DisplacementMap, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(DisplacementMap.class);
+            valueClass(DisplacementMap.class);
         }
     }
 

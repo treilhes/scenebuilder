@@ -46,11 +46,11 @@ import javafx.fxml.FXMLLoader;
 public class StringListPropertyMetadata<VC> extends ListValuePropertyMetadata<String, VC> {
 
     private final static I18nStringPropertyMetadata<Void> itemMetadata = new I18nStringPropertyMetadata.Builder<Void>()
-            .withName(null)
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
-            .withFileUrlDetection(true)
+            .name(null)
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
+            .fileUrlDetection(true)
             .build();
 
 //    public StringListPropertyMetadata(PropertyName name, boolean readWrite, List<String> defaultValue,
@@ -113,13 +113,13 @@ public class StringListPropertyMetadata<VC> extends ListValuePropertyMetadata<St
 
         public AbstractBuilder() {
             super();
-            withItemClass(String.class);
-            withItemMetadata(StringListPropertyMetadata.itemMetadata);
+            itemClass(String.class);
+            itemMetadata(StringListPropertyMetadata.itemMetadata);
         }
 
         @Override
-        public SELF withDefaultValue(List<String> defaultValue) {
-            return super.withDefaultValue(defaultValue);
+        public SELF defaultValue(List<String> defaultValue) {
+            return super.defaultValue(defaultValue);
         }
 
     }

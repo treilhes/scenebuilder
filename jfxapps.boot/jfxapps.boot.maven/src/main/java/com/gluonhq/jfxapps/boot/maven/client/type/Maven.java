@@ -88,7 +88,7 @@ public class Maven implements RepositoryType {
                                 .map(doc -> doc.getString("id", ""))
                                 .distinct()
                                 .map(gav -> gav.split(":"))
-                                .map(gav -> Artifact.builder().withGroupId(gav[0]).withArtifactId(gav[1]).build())
+                                .map(gav -> Artifact.builder().groupId(gav[0]).artifactId(gav[1]).build())
                                 .collect(Collectors.toSet());
                     }
                 }

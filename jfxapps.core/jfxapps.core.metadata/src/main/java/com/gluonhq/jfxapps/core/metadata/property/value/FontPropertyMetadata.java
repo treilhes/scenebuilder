@@ -48,17 +48,17 @@ import javafx.scene.text.Font;
 public class FontPropertyMetadata<VC> extends ComplexPropertyMetadata<Font, VC> {
 
     public static final I18nStringPropertyMetadata<Void> nameMetadata = new I18nStringPropertyMetadata.Builder<Void>()
-                .withName(new PropertyName("name")) // NOCHECK
-                .withReadWrite(true)
-                .withDefaultValue(Font.getDefault().getName())
-                //.withInspectorPath(InspectorPath.UNUSED)
+                .name(new PropertyName("name")) // NOCHECK
+                .readWrite(true)
+                .defaultValue(Font.getDefault().getName())
+                //.inspectorPath(InspectorPath.UNUSED)
                 .build();
 
     public static final SizeDoublePropertyMetadata<Void> sizeMetadata = new SizeDoublePropertyMetadata.Builder<Void>()
-                .withName(new PropertyName("size")) // NOCHECK
-                .withReadWrite(true)
-                .withDefaultValue(0.0)
-                //.withInspectorPath(InspectorPath.UNUSED)
+                .name(new PropertyName("size")) // NOCHECK
+                .readWrite(true)
+                .defaultValue(0.0)
+                //.inspectorPath(InspectorPath.UNUSED)
                 .build();
 
 //    protected FontPropertyMetadata(PropertyName name, boolean readWrite, Font defaultValue, InspectorPath inspectorPath) {
@@ -87,7 +87,7 @@ public class FontPropertyMetadata<VC> extends ComplexPropertyMetadata<Font, VC> 
             extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Font, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Font.class);
+            valueClass(Font.class);
         }
     }
 

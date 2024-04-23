@@ -60,7 +60,7 @@ public class ValuePropertyMetadataCustomization {
         /** The inspector path. */
         private InspectorPath inspectorPath;
 
-        public Builder withInspectorPath(InspectorPath inspectorPath) {
+        public Builder inspectorPath(InspectorPath inspectorPath) {
             this.inspectorPath = inspectorPath;
             return this;
         }

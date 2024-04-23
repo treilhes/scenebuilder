@@ -49,38 +49,38 @@ import javafx.scene.paint.Color;
 public class SpotLightPropertyMetadata<VC> extends ComplexPropertyMetadata<Light.Spot, VC> {
 
     private final ColorPropertyMetadata<Void> colorMetadata = new ColorPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("color"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(Color.WHITE)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("color"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(Color.WHITE)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> pointsAtXMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("pointsAtX"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("pointsAtX"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> pointsAtYMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("pointsAtY"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("pointsAtY"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> pointsAtZMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("pointsAtZ"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("pointsAtZ"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> specularExponentMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("specularExponent"))//NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(1.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("specularExponent"))//NOCHECK
+            .readWrite(true)
+            .defaultValue(1.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    public SpotLightPropertyMetadata(PropertyName name, boolean readWrite, Light.Spot defaultValue,
@@ -112,7 +112,7 @@ public class SpotLightPropertyMetadata<VC> extends ComplexPropertyMetadata<Light
             extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Light.Spot, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Light.Spot.class);
+            valueClass(Light.Spot.class);
         }
     }
 

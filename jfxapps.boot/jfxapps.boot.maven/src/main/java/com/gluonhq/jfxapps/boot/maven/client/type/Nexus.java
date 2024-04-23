@@ -146,8 +146,8 @@ public class Nexus implements RepositoryType {
             System.out.println();
         }
         return Artifact.builder()
-                .withGroupId(groupId)
-                .withArtifactId(artifactId)
+                .groupId(groupId)
+                .artifactId(artifactId)
                 .build();
     }
 

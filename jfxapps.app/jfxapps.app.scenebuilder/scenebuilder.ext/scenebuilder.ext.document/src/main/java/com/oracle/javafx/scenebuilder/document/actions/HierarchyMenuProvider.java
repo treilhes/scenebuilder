@@ -63,7 +63,7 @@ public class HierarchyMenuProvider implements ViewMenuItemProvider {
 
 
     private ViewMenuItemAttachment newMenu(String targetId, PositionRequest positionRequest, String menuId, String titleKey) {
-        Menu menu = menuBuilder.menu().withId(menuId).withTitle(titleKey).build();
+        Menu menu = menuBuilder.menu().id(menuId).title(titleKey).build();
         return ViewMenuItemAttachment.create(menu, targetId, positionRequest,DocumentPanelController.class);
     }
 

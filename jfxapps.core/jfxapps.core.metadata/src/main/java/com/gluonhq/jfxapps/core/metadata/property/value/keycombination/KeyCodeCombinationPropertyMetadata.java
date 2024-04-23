@@ -65,45 +65,45 @@ public class KeyCodeCombinationPropertyMetadata<VC> extends ComplexPropertyMetad
     private static final String DUMMY = "dummy"; //NOCHECK
 
     private final EnumerationPropertyMetadata<Void> altMetadata = new EnumerationPropertyMetadata.Builder<KeyCombination.ModifierValue, Void>(KeyCombination.ModifierValue.class)
-            .withName(new PropertyName("alt")) //NOCHECK
-            .withReadWrite(true)
-            .withNullEquivalent(DUMMY)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("alt")) //NOCHECK
+            .readWrite(true)
+            .nullEquivalent(DUMMY)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EnumerationPropertyMetadata<Void> controlMetadata = new EnumerationPropertyMetadata.Builder<KeyCombination.ModifierValue, Void>(KeyCombination.ModifierValue.class)
-            .withName(new PropertyName("control")) //NOCHECK
-            .withReadWrite(true)
-            .withNullEquivalent(DUMMY)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("control")) //NOCHECK
+            .readWrite(true)
+            .nullEquivalent(DUMMY)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EnumerationPropertyMetadata<Void> metaMetadata = new EnumerationPropertyMetadata.Builder<KeyCombination.ModifierValue, Void>(KeyCombination.ModifierValue.class)
-            .withName(new PropertyName("meta")) //NOCHECK
-            .withReadWrite(true)
-            .withNullEquivalent(DUMMY)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("meta")) //NOCHECK
+            .readWrite(true)
+            .nullEquivalent(DUMMY)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EnumerationPropertyMetadata<Void> shiftMetadata = new EnumerationPropertyMetadata.Builder<KeyCombination.ModifierValue, Void>(KeyCombination.ModifierValue.class)
-            .withName(new PropertyName("shift")) //NOCHECK
-            .withReadWrite(true)
-            .withNullEquivalent(DUMMY)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("shift")) //NOCHECK
+            .readWrite(true)
+            .nullEquivalent(DUMMY)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EnumerationPropertyMetadata<Void> shortcutMetadata = new EnumerationPropertyMetadata.Builder<KeyCombination.ModifierValue, Void>(KeyCombination.ModifierValue.class)
-            .withName(new PropertyName("shortcut")) //NOCHECK
-            .withReadWrite(true)
-            .withNullEquivalent(DUMMY)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("shortcut")) //NOCHECK
+            .readWrite(true)
+            .nullEquivalent(DUMMY)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final EnumerationPropertyMetadata<Void> codeMetadata = new EnumerationPropertyMetadata.Builder<KeyCombination.ModifierValue, Void>(KeyCombination.ModifierValue.class)
-            .withName(new PropertyName("code")) //NOCHECK
-            .withReadWrite(true)
-            .withNullEquivalent(DUMMY)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("code")) //NOCHECK
+            .readWrite(true)
+            .nullEquivalent(DUMMY)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected KeyCodeCombinationPropertyMetadata(PropertyName name, boolean readWrite,
@@ -135,7 +135,7 @@ public class KeyCodeCombinationPropertyMetadata<VC> extends ComplexPropertyMetad
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, KeyCodeCombination, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(KeyCodeCombination.class);
+            valueClass(KeyCodeCombination.class);
         }
     }
 

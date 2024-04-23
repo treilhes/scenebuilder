@@ -75,10 +75,10 @@ public class BoundedDoubleEditorTest {
 
     static DoublePropertyMetadata someDoubleProp() {
         return new CoordinateDoublePropertyMetadata.Builder()
-                .withName(new PropertyName("somdouble"))
-                .withReadWrite(true)
-                .withDefaultValue(0.0)
-                .withInspectorPath(InspectorPath.UNUSED).build();
+                .name(new PropertyName("somdouble"))
+                .readWrite(true)
+                .defaultValue(0.0)
+                .inspectorPath(InspectorPath.UNUSED).build();
     }
 
     @Test

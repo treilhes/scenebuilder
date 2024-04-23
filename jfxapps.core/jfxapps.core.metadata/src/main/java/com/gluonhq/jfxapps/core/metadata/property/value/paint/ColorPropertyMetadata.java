@@ -56,28 +56,28 @@ import javafx.scene.paint.Color;
 public class ColorPropertyMetadata<VC> extends ComplexPropertyMetadata<Color, VC> {
 
     private final OpacityDoublePropertyMetadata<Void> redMetadata = new OpacityDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("red")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("red")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
     private final OpacityDoublePropertyMetadata<Void> greenMetadata = new OpacityDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("green")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("green")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
     private final OpacityDoublePropertyMetadata<Void> blueMetadata = new OpacityDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("blue")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("blue")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
     private final OpacityDoublePropertyMetadata<Void> opacityMetadata = new OpacityDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("opacity")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(1.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("opacity")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(1.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    protected ColorPropertyMetadata(PropertyName name, boolean readWrite,
@@ -115,7 +115,7 @@ public class ColorPropertyMetadata<VC> extends ComplexPropertyMetadata<Color, VC
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Color, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Color.class);
+            valueClass(Color.class);
         }
     }
 

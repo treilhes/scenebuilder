@@ -50,38 +50,38 @@ import javafx.scene.paint.Color;
 public class ColorInputPropertyMetadata<VC> extends ComplexPropertyMetadata<ColorInput, VC> {
 
     private final CoordinateDoublePropertyMetadata<Void> heightMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("height")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("height")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> widthMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("width")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("width")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> xMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("x")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("x")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final CoordinateDoublePropertyMetadata<Void> yMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("y")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("y")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
     private final PaintPropertyMetadata<Void> paintMetadata = new PaintPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("paint")) //NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(Color.RED)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("paint")) //NOCHECK
+            .readWrite(true)
+            .defaultValue(Color.RED)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 
@@ -113,7 +113,7 @@ public class ColorInputPropertyMetadata<VC> extends ComplexPropertyMetadata<Colo
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, ColorInput, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(ColorInput.class);
+            valueClass(ColorInput.class);
         }
     }
 

@@ -50,10 +50,10 @@ public class DoubleArrayPropertyMetadata<VC> extends ListValuePropertyMetadata<D
     private final static PropertyName unusedName = new PropertyName("unused"); // NOCHECK
 
     private final static CoordinateDoublePropertyMetadata<Void> itemMetadata = new CoordinateDoublePropertyMetadata.Builder<Void>()
-            .withName(unusedName)
-            .withReadWrite(true)
-            .withDefaultValue(0.0)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(unusedName)
+            .readWrite(true)
+            .defaultValue(0.0)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    public DoubleArrayPropertyMetadata(PropertyName name, boolean readWrite, List<Double> defaultValue,
@@ -91,8 +91,8 @@ public class DoubleArrayPropertyMetadata<VC> extends ListValuePropertyMetadata<D
             extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, Double, VC> {
         public AbstractBuilder() {
             super();
-            withItemClass(Double.class);
-            withItemMetadata(DoubleArrayPropertyMetadata.itemMetadata);
+            itemClass(Double.class);
+            itemMetadata(DoubleArrayPropertyMetadata.itemMetadata);
         }
     }
 

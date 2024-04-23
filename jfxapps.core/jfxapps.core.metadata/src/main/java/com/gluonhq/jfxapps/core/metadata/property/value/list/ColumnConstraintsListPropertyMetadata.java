@@ -48,10 +48,10 @@ import javafx.scene.layout.ColumnConstraints;
 public class ColumnConstraintsListPropertyMetadata<VC> extends ListValuePropertyMetadata<ColumnConstraints, VC> {
 
     private static final ColumnConstraintsPropertyMetadata<Void> itemMetadata = new ColumnConstraintsPropertyMetadata.Builder<Void>()
-            .withName(new PropertyName("unused")) // NOCHECK
-            .withReadWrite(true)
-            .withDefaultValue(null)
-            //.withInspectorPath(InspectorPath.UNUSED)
+            .name(new PropertyName("unused")) // NOCHECK
+            .readWrite(true)
+            .defaultValue(null)
+            //.inspectorPath(InspectorPath.UNUSED)
             .build();
 
 //    public ColumnConstraintsListPropertyMetadata(PropertyName name, boolean readWrite,
@@ -121,9 +121,9 @@ public class ColumnConstraintsListPropertyMetadata<VC> extends ListValueProperty
             extends ListValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, ColumnConstraints, VC> {
         public AbstractBuilder() {
             super();
-            withName(new PropertyName("columnConstraints"));
-            withItemClass(ColumnConstraints.class);
-            withItemMetadata(ColumnConstraintsListPropertyMetadata.itemMetadata);
+            name(new PropertyName("columnConstraints"));
+            itemClass(ColumnConstraints.class);
+            itemMetadata(ColumnConstraintsListPropertyMetadata.itemMetadata);
         }
     }
 

@@ -51,25 +51,25 @@ public class LightPropertyMetadata<VC> extends ComplexPropertyMetadata<Light, VC
 //    protected LightPropertyMetadata(PropertyName name, boolean readWrite,
 //            Light defaultValue, InspectorPath inspectorPath) {
 //        super(name, Light.class, readWrite, defaultValue, inspectorPath);
-//        distantLightMetadata = fillBuilder(this, new DistantLightPropertyMetadata.Builder()).withDefaultValue(null).build();
-//        pointLightMetadata = fillBuilder(this, new PointLightPropertyMetadata.Builder()).withDefaultValue(null).build();
-//        spotLightMetadata = fillBuilder(this, new SpotLightPropertyMetadata.Builder()).withDefaultValue(null).build();
+//        distantLightMetadata = fillBuilder(this, new DistantLightPropertyMetadata.Builder()).defaultValue(null).build();
+//        pointLightMetadata = fillBuilder(this, new PointLightPropertyMetadata.Builder()).defaultValue(null).build();
+//        spotLightMetadata = fillBuilder(this, new SpotLightPropertyMetadata.Builder()).defaultValue(null).build();
 //    }
 
     protected LightPropertyMetadata(AbstractBuilder<?, ?, VC> builder) {
         super(builder);
         distantLightMetadata = new DistantLightPropertyMetadata.Builder<Void>()
-                .withName(this.getName())
-                .withReadWrite(this.isReadWrite())
-                .withDefaultValue(null).build();
+                .name(this.getName())
+                .readWrite(this.isReadWrite())
+                .defaultValue(null).build();
         pointLightMetadata = new PointLightPropertyMetadata.Builder<Void>()
-                .withName(this.getName())
-                .withReadWrite(this.isReadWrite())
-                .withDefaultValue(null).build();
+                .name(this.getName())
+                .readWrite(this.isReadWrite())
+                .defaultValue(null).build();
         spotLightMetadata = new SpotLightPropertyMetadata.Builder<Void>()
-                .withName(this.getName())
-                .withReadWrite(this.isReadWrite())
-                .withDefaultValue(null).build();
+                .name(this.getName())
+                .readWrite(this.isReadWrite())
+                .defaultValue(null).build();
     }
 
     /*
@@ -97,7 +97,7 @@ public class LightPropertyMetadata<VC> extends ComplexPropertyMetadata<Light, VC
     protected static abstract class AbstractBuilder<SELF, TOBUILD, VC> extends ComplexPropertyMetadata.AbstractBuilder<SELF, TOBUILD, Light, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(Light.class);
+            valueClass(Light.class);
         }
     }
 

@@ -129,17 +129,17 @@ public class ResolvedArtifact implements Comparable<ResolvedArtifact> {
         private UniqueArtifact uniqueArtifact;
         private List<ResolvedArtifact> dependencies = new ArrayList<>();
 
-        public Builder withArtifact(UniqueArtifact uniqueArtifact) {
+        public Builder artifact(UniqueArtifact uniqueArtifact) {
             this.uniqueArtifact = uniqueArtifact;
             return this;
         }
 
-        public Builder withPath(Path path) {
+        public Builder path(Path path) {
             this.path = path;
             return this;
         }
 
-        public Builder withDependencies(List<ResolvedArtifact> dependencies) {
+        public Builder dependencies(List<ResolvedArtifact> dependencies) {
             this.dependencies.addAll(dependencies);
             return this;
         }

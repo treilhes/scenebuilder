@@ -132,11 +132,11 @@ public class MavenRepositoryPreferences extends ListItemObjectPreference<Reposit
         }
 
         Repository repository = Repository.builder()
-        .withId(node.get(REPO_ID, null))
-        .withType(typeClass)
-        .withUrl(node.get(REPO_URL, null))
-        .withUser(node.get(REPO_USER, null))
-        .withPassword(node.get(REPO_PASS, null))
+        .id(node.get(REPO_ID, null))
+        .type(typeClass)
+        .url(node.get(REPO_URL, null))
+        .user(node.get(REPO_USER, null))
+        .password(node.get(REPO_PASS, null))
         .build();
 
         setValue(repository);

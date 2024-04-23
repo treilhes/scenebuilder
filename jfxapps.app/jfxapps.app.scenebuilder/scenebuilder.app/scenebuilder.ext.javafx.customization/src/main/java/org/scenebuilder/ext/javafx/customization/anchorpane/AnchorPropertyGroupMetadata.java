@@ -65,20 +65,20 @@ public class AnchorPropertyGroupMetadata extends PropertyGroupMetadata {
 
     protected static abstract class AbstractBuilder<SELF, TOBUILD>
             extends PropertyGroupMetadata.AbstractBuilder<SELF, TOBUILD> {
-        public SELF withTopAnchorProperty(ValuePropertyMetadata property) {
-            return withProperty("topAnchor", property);
+        public SELF topAnchorProperty(ValuePropertyMetadata property) {
+            return property("topAnchor", property);
         }
 
-        public SELF withRightAnchorProperty(ValuePropertyMetadata property) {
-            return withProperty("rightAnchor", property);
+        public SELF rightAnchorProperty(ValuePropertyMetadata property) {
+            return property("rightAnchor", property);
         }
 
-        public SELF withBottomAnchorProperty(ValuePropertyMetadata property) {
-            return withProperty("bottomAnchor", property);
+        public SELF bottomAnchorProperty(ValuePropertyMetadata property) {
+            return property("bottomAnchor", property);
         }
 
-        public SELF withLeftAnchorProperty(ValuePropertyMetadata property) {
-            return withProperty("leftAnchor", property);
+        public SELF leftAnchorProperty(ValuePropertyMetadata property) {
+            return property("leftAnchor", property);
         }
     }
 

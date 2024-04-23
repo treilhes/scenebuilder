@@ -89,7 +89,7 @@ class ApplicationCardControllerTest {
     void should_create_3_rows_with_only_2_lines_with_values(FxRobot robot) {
         ApplicationCardController ctrl = FxmlControllerLoader
                 .controller(new ApplicationCardController(sbm, dm))
-                .withDarkTheme(sbm)
+                .darkTheme(sbm)
                 .load();
 
         Application binded = new Application();

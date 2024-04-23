@@ -72,20 +72,20 @@ public class RedirectedRepositoryClientImpl implements RepositoryClient {
     }
 
     @Override
-    public RepositoryClient withRepositories(List<Repository> repositories) {
+    public RepositoryClient repositories(List<Repository> repositories) {
         return new RedirectedRepositoryClientImpl(config, mappers,
-                client.withRepositories(repositories));
+                client.repositories(repositories));
     }
 
     @Override
-    public RepositoryClient withLocalPath(File path) {
+    public RepositoryClient localPath(File path) {
         return new RedirectedRepositoryClientImpl(config, mappers,
-                client.withLocalPath(path));
+                client.localPath(path));
     }
 
     @Override
-    public RepositoryClient withLocalOnly() {
-        return new RedirectedRepositoryClientImpl(config, mappers, client.withLocalOnly());
+    public RepositoryClient localOnly() {
+        return new RedirectedRepositoryClientImpl(config, mappers, client.localOnly());
     }
 
     @Override
@@ -138,8 +138,8 @@ public class RedirectedRepositoryClientImpl implements RepositoryClient {
 
         var source = redirect.orElse(resolved.get());
 
-        var target = Optional.of(ResolvedArtifact.builder().withArtifact(source.getUniqueArtifact())
-                .withPath(source.getPath()).withDependencies(redirectedDependencies).build());
+        var target = Optional.of(ResolvedArtifact.builder().artifact(source.getUniqueArtifact())
+                .path(source.getPath()).dependencies(redirectedDependencies).build());
 
         return target;
     }

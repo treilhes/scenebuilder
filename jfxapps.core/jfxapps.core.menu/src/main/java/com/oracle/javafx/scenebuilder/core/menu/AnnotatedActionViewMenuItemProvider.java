@@ -102,8 +102,8 @@ public class AnnotatedActionViewMenuItemProvider implements ViewMenuItemProvider
 
             assert annotation != null;
 
-            MenuItem menuItem = builder.menuItem().withId(annotation.id()).withActionClass(actionClass)
-                    .withTitle(annotation.label()).withViewClass(annotation.viewClass()).withToggleClass(annotation.toggleClass()).build();
+            MenuItem menuItem = builder.menuItem().id(annotation.id()).actionClass(actionClass)
+                    .title(annotation.label()).viewClass(annotation.viewClass()).toggleClass(annotation.toggleClass()).build();
 
             ViewMenuItemAttachment menuAttachment = ViewMenuItemAttachment.create(menuItem, annotation.targetMenuId(),
                     annotation.positionRequest(), annotation.viewClass());
@@ -111,14 +111,14 @@ public class AnnotatedActionViewMenuItemProvider implements ViewMenuItemProvider
             result.add(menuAttachment);
 
             if (annotation.separatorBefore()) {
-                SeparatorMenuItem separator = builder.separator().withId("separatorBefore_" + annotation.id()).build();
+                SeparatorMenuItem separator = builder.separator().id("separatorBefore_" + annotation.id()).build();
                 ViewMenuItemAttachment attachment = ViewMenuItemAttachment.create(separator, annotation.id(),
                         PositionRequest.AsPreviousSibling, annotation.viewClass());
                 result.add(attachment);
             }
 
             if (annotation.separatorAfter()) {
-                SeparatorMenuItem separator = builder.separator().withId("separatorAfter_" + annotation.id()).build();
+                SeparatorMenuItem separator = builder.separator().id("separatorAfter_" + annotation.id()).build();
                 ViewMenuItemAttachment attachment = ViewMenuItemAttachment.create(separator, annotation.id(),
                         PositionRequest.AsNextSibling, annotation.viewClass());
                 result.add(attachment);

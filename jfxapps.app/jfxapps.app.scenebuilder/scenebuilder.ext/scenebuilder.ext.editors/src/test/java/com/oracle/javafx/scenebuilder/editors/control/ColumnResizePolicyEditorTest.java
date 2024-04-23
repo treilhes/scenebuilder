@@ -60,17 +60,17 @@ public class ColumnResizePolicyEditorTest {
 
     static TableViewResizePolicyPropertyMetadata someTableViewResizePolicyProp() {
         return new TableViewResizePolicyPropertyMetadata.Builder()
-                .withName(new PropertyName("tv"))
-                .withReadWrite(true)
-                .withDefaultValue(TableView.UNCONSTRAINED_RESIZE_POLICY)
+                .name(new PropertyName("tv"))
+                .readWrite(true)
+                .defaultValue(TableView.UNCONSTRAINED_RESIZE_POLICY)
                 .build();
     }
 
     static TreeTableViewResizePolicyPropertyMetadata someTreeTableViewResizePolicyProp() {
         return new TreeTableViewResizePolicyPropertyMetadata.Builder()
-                .withName(new PropertyName("ttv"))
-                .withReadWrite(true)
-                .withDefaultValue(TreeTableView.UNCONSTRAINED_RESIZE_POLICY).build();
+                .name(new PropertyName("ttv"))
+                .readWrite(true)
+                .defaultValue(TreeTableView.UNCONSTRAINED_RESIZE_POLICY).build();
     }
 
     @Mock

@@ -251,17 +251,17 @@ public abstract class ListValuePropertyMetadata<T,VC> extends ValuePropertyMetad
         protected SingleValuePropertyMetadata<T,Void> itemMetadata;
         protected List<T> defaultValue;
 
-        protected SELF withItemClass(Class<T> itemClass) {
+        protected SELF itemClass(Class<T> itemClass) {
             this.itemClass = itemClass;
             return self();
         }
 
-        protected SELF withItemMetadata(SingleValuePropertyMetadata<T,Void> itemMetadata) {
+        protected SELF itemMetadata(SingleValuePropertyMetadata<T,Void> itemMetadata) {
             this.itemMetadata = itemMetadata;
             return self();
         }
 
-        public SELF withDefaultValue(List<T> defaultValue) {
+        public SELF defaultValue(List<T> defaultValue) {
             this.defaultValue = defaultValue;
             return self();
         }

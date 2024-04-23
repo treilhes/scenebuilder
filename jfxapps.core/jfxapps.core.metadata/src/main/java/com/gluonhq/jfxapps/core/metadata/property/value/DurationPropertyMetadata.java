@@ -56,7 +56,7 @@ public class DurationPropertyMetadata<VC> extends TextEncodablePropertyMetadata<
             extends TextEncodablePropertyMetadata.AbstractBuilder<SELF, TOBUILD, SBDuration, VC> {
         public AbstractBuilder() {
             super();
-            withValueClass(SBDuration.class);
+            valueClass(SBDuration.class);
         }
     }
 

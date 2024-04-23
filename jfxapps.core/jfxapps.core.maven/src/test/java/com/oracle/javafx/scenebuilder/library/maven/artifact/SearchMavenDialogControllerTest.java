@@ -109,7 +109,7 @@ class SearchMavenDialogControllerTest {
 
         SearchMavenArtifactDialog dialog = FxmlControllerLoader.controller(new SearchMavenArtifactDialogController(mc,
                 sbm, iconSetting, messageLogger, mavenSetting, repositoryPreferences, owner))
-                .withDarkTheme(sbm).load();
+                .darkTheme(sbm).load();
 
         robot.interact(() -> {
             dialog.openWindow(null);

@@ -82,7 +82,7 @@ public class MenuBuilder {
         return new MenuItemBuilder<MenuItem>();
     }
     public MenuItemBuilder<RadioMenuItem> radioMenuItem() {
-        return new MenuItemBuilder<RadioMenuItem>().withMenuItem(new RadioMenuItem());
+        return new MenuItemBuilder<RadioMenuItem>().menuItem(new RadioMenuItem());
     }
     public SeparatorMenuItemBuilder separator() {
         return new SeparatorMenuItemBuilder();
@@ -109,36 +109,36 @@ public class MenuBuilder {
         private Class<? extends View> viewClass = null;
         private Class<? extends ToggleGroup> toggleClass;
 
-        public MenuItemBuilder<T> withMenuItem(T item) {
+        public MenuItemBuilder<T> menuItem(T item) {
             this.item = item;
             return this;
         }
-        public MenuItemBuilder<T> withTitle(String title) {
+        public MenuItemBuilder<T> title(String title) {
             this.title = title;
             if (title != null) {
                 titleFunction = null;
             }
             return this;
         }
-        public MenuItemBuilder<T> withTitleFunction(Function<Action, String> titleFunction) {
+        public MenuItemBuilder<T> titleFunction(Function<Action, String> titleFunction) {
             this.titleFunction = titleFunction;
             if (titleFunction != null) {
                 title = null;
             }
             return this;
         }
-        public MenuItemBuilder<T> withId(String menuId) {
+        public MenuItemBuilder<T> id(String menuId) {
             this.menuId = menuId;
             return this;
         }
-        public MenuItemBuilder<T> withAction(Action action) {
+        public MenuItemBuilder<T> action(Action action) {
             this.action = action;
             if (action != null) {
                 actionClass = null;
             }
             return this;
         }
-        public MenuItemBuilder<T> withActionClass(Class<? extends Action> actionClass) {
+        public MenuItemBuilder<T> actionClass(Class<? extends Action> actionClass) {
             this.actionClass = actionClass;
             if (actionClass != null) {
                 action = null;
@@ -146,12 +146,12 @@ public class MenuBuilder {
             return this;
         }
 
-        public MenuItemBuilder<T> withViewClass(Class<? extends View> viewClass) {
+        public MenuItemBuilder<T> viewClass(Class<? extends View> viewClass) {
             this.viewClass = viewClass;
             return this;
         }
 
-        public MenuItemBuilder<T> withToggleClass(Class<? extends ToggleGroup> toggleClass) {
+        public MenuItemBuilder<T> toggleClass(Class<? extends ToggleGroup> toggleClass) {
             this.toggleClass = toggleClass;
             return this;
         }
@@ -239,15 +239,15 @@ public class MenuBuilder {
         String title = null;
         String menuId = null;
 
-        public InternalMenuBuilder withMenu(Menu item) {
+        public InternalMenuBuilder menu(Menu item) {
             this.item = item;
             return this;
         }
-        public InternalMenuBuilder withTitle(String title) {
+        public InternalMenuBuilder title(String title) {
             this.title = title;
             return this;
         }
-        public InternalMenuBuilder withId(String menuId) {
+        public InternalMenuBuilder id(String menuId) {
             this.menuId = menuId;
             return this;
         }
@@ -271,11 +271,11 @@ public class MenuBuilder {
         SeparatorMenuItem item = null;
         String menuId = null;
 
-        public SeparatorMenuItemBuilder withSeparatorMenuItem(SeparatorMenuItem item) {
+        public SeparatorMenuItemBuilder separatorMenuItem(SeparatorMenuItem item) {
             this.item = item;
             return this;
         }
-        public SeparatorMenuItemBuilder withId(String menuId) {
+        public SeparatorMenuItemBuilder id(String menuId) {
             this.menuId = menuId;
             return this;
         }
