@@ -34,8 +34,10 @@
 package com.gluonhq.jfxapps.metadata.plugin;
 
 import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,21 +51,23 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import com.gluonhq.jfxapps.metadata.bean.BeanMetaData;
-import com.gluonhq.jfxapps.metadata.bean.BundleValues;
-import com.gluonhq.jfxapps.metadata.bean.PropertyMetaData;
-import com.gluonhq.jfxapps.metadata.finder.ClassCrawler;
-import com.gluonhq.jfxapps.metadata.finder.JarFinder;
-import com.gluonhq.jfxapps.metadata.finder.MetadataConverter;
-import com.gluonhq.jfxapps.metadata.finder.PropertyGenerationContext;
-import com.gluonhq.jfxapps.metadata.finder.SearchContext;
-import com.gluonhq.jfxapps.metadata.model.Descriptor;
+import com.gluonhq.jfxapps.metadata.bean.MetadataProducer;
+import com.gluonhq.jfxapps.metadata.finder.api.IClassCrawler;
+import com.gluonhq.jfxapps.metadata.finder.api.SearchContext;
+import com.gluonhq.jfxapps.metadata.finder.impl.ClassCrawler;
+import com.gluonhq.jfxapps.metadata.finder.impl.DescriptorCollector;
+import com.gluonhq.jfxapps.metadata.finder.impl.JarFinder;
+import com.gluonhq.jfxapps.metadata.finder.impl.MatchingJarCollector;
+import com.gluonhq.jfxapps.metadata.java.model.tbd.Descriptor;
+import com.gluonhq.jfxapps.metadata.properties.api.PropertyGenerationContext;
+import com.gluonhq.jfxapps.metadata.properties.api.PropertyGenerator;
+import com.gluonhq.jfxapps.metadata.properties.impl.PropertyGeneratorImpl;
+import com.gluonhq.jfxapps.metadata.util.FxThreadinitializer;
 import com.gluonhq.jfxapps.metadata.util.Report;
-import com.gluonhq.jfxapps.metadata.util.Resources;
 
 import javafx.application.Platform;
 
-@Mojo(name = "metadataResource", defaultPhase = LifecyclePhase.GENERATE_RESOURCES,
-    requiresDependencyResolution = ResolutionScope.COMPILE)
+@Mojo(name = "metadataResource", defaultPhase = LifecyclePhase.GENERATE_RESOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
 public class MetadataResourceMojo extends JfxAppsAbstractMojo {
 
     /**
@@ -82,29 +86,52 @@ public class MetadataResourceMojo extends JfxAppsAbstractMojo {
 
         try {
 
+         // Get the runtime classpath elements
+            List<String> runtimeClasspathElements = project.getRuntimeClasspathElements();
+            URL[] runtimeUrls = new URL[runtimeClasspathElements.size()];
+            for (int i = 0; i < runtimeClasspathElements.size(); i++) {
+                String element = runtimeClasspathElements.get(i).replace("\\", "/");
+                Path path = Path.of(element);
+                if (Files.exists(path) && Files.isDirectory(path) && !element.endsWith("/")) {
+                    element += "/";
+                }
+                runtimeUrls[i] = new URL("file://" + element);
+            }
+
+            // Create a new URLClassLoader with the runtime classpath elements
+            URLClassLoader urlClassLoader = new URLClassLoader(runtimeUrls,
+                    Thread.currentThread().getContextClassLoader());
+
+            // Set the context class loader to the new URLClassLoader
+            Thread.currentThread().setContextClassLoader(urlClassLoader);
+
             if (!FxThreadinitializer.initJFX(javafxVersion).get()) {
                 throw new MojoExecutionException("Failed to initialize JavaFX thread");
             }
 
-            PluginDescriptor pluginDescriptor = (PluginDescriptor)getPluginContext().get("pluginDescriptor");
+            PluginDescriptor pluginDescriptor = (PluginDescriptor) getPluginContext().get("pluginDescriptor");
             List<File> cp = pluginDescriptor.getArtifacts().stream().map(a -> a.getFile()).collect(Collectors.toList());
 
             final SearchContext searchContext = createSearchContext();
             final PropertyGenerationContext propertyContext = createPropertyGenerationContext();
 
-            List<Descriptor> descriptors = new ArrayList<>();
-            Set<Path> jars = JarFinder.listJarsInClasspath(cp, searchContext.getJarFilterPatterns(), descriptors);
+            DescriptorCollector descriptorCollector = new DescriptorCollector();
+            MatchingJarCollector jarCollector = new MatchingJarCollector(searchContext.getJarFilterPatterns());
 
-            ClassCrawler crawler = new ClassCrawler();
-            MetadataConverter converter = new MetadataConverter();
+            JarFinder.listJarsInClasspath(cp, List.of(jarCollector, descriptorCollector));
+            Set<Path> jars = jarCollector.getCollected();
+            Set<Descriptor> descriptors = descriptorCollector.getCollected();
 
-            final CompletableFuture<Map<Class<?>, BeanMetaData<?>>> returnValue = new CompletableFuture<>();
+            IClassCrawler crawler = new ClassCrawler();
+            PropertyGenerator generator = new PropertyGeneratorImpl(propertyContext);
+
+            final CompletableFuture<Boolean> returnValue = new CompletableFuture<>();
 
             Runnable runnable = () -> {
                 try {
                     var classes = crawler.crawl(jars, searchContext);
-                    var beanMap = converter.convert(classes, propertyContext);
-                    returnValue.complete(beanMap);
+                    generator.generateProperties(classes, descriptors);
+                    returnValue.complete(true);
                 } catch (Exception e) {
                     returnValue.completeExceptionally(e);
                 }
@@ -112,22 +139,14 @@ public class MetadataResourceMojo extends JfxAppsAbstractMojo {
 
             Platform.runLater(runnable);
 
-            Map<Class<?>, BeanMetaData<?>> found = returnValue.get();
-
-            for (BeanMetaData<?> bm:found.values()) {
-                for (PropertyMetaData pm:bm.getProperties()) {
-                    if (!pm.isHidden() && pm.isLocal()) {
-                        defaultValueTo(bm, pm, BundleValues.METACLASS, "TOBEDEFINED");
-                        defaultValueTo(bm, pm, BundleValues.ORDER, "TOBEDEFINED");
-                    }
-                }
+            if (returnValue.get()) {
+                getLog().info("SUCCESS");
             }
-            Resources.save(found.keySet(), resourceFolder);
 
-            if (Report.flush(getLog().isDebugEnabled()) && failOnError) {
-                throw new MojoExecutionException(
-                        "Some errors occured during the generation process, please see the logs!");
+            if (returnValue.isCompletedExceptionally()) {
+                throw new MojoExecutionException("Failed to complete the generating process!", returnValue.exceptionNow());
             }
+
         } catch (Exception e) {
             getLog().error("Failed to complete the generating process! " + e.getMessage(), e);
             throw new MojoExecutionException("Failed to complete the generating process!", e);
@@ -136,13 +155,5 @@ public class MetadataResourceMojo extends JfxAppsAbstractMojo {
         }
 
     }
-
-    private void defaultValueTo(BeanMetaData<?> bm, PropertyMetaData pm, String property, String defaultValue) {
-        if (pm.getBundleValue(bm.getType(), property, null) == null) {
-            pm.setBundleValue(bm.getType(), property, defaultValue);
-        }
-    }
-
-
 
 }

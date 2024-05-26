@@ -34,12 +34,10 @@
 package com.gluonhq.jfxapps.metadata.plugin;
 
 import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -53,19 +51,18 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
-import com.gluonhq.jfxapps.metadata.bean.BeanMetaData;
-import com.gluonhq.jfxapps.metadata.finder.ClassCrawler;
-import com.gluonhq.jfxapps.metadata.finder.JarFinder;
-import com.gluonhq.jfxapps.metadata.finder.JavaGenerationContext;
-import com.gluonhq.jfxapps.metadata.finder.MetadataConverter;
-import com.gluonhq.jfxapps.metadata.finder.PropertyGenerationContext;
-import com.gluonhq.jfxapps.metadata.finder.SearchContext;
 import com.gluonhq.jfxapps.metadata.finder.api.Executor;
-import com.gluonhq.jfxapps.metadata.model.Component;
-import com.gluonhq.jfxapps.metadata.model.Descriptor;
-import com.gluonhq.jfxapps.metadata.model.MetadataFromJavafx;
-import com.gluonhq.jfxapps.metadata.model.Property;
-import com.gluonhq.jfxapps.metadata.plugin.JfxAppsAbstractMojo.FxThreadinitializer;
+import com.gluonhq.jfxapps.metadata.finder.api.IClassCrawler;
+import com.gluonhq.jfxapps.metadata.finder.api.SearchContext;
+import com.gluonhq.jfxapps.metadata.finder.impl.ClassCrawler;
+import com.gluonhq.jfxapps.metadata.finder.impl.DescriptorCollector;
+import com.gluonhq.jfxapps.metadata.finder.impl.JarFinder;
+import com.gluonhq.jfxapps.metadata.finder.impl.MatchingJarCollector;
+import com.gluonhq.jfxapps.metadata.java.api.JavaGenerationContext;
+import com.gluonhq.jfxapps.metadata.java.impl.JavaGeneratorImpl;
+import com.gluonhq.jfxapps.metadata.java.model.tbd.Descriptor;
+import com.gluonhq.jfxapps.metadata.properties.api.PropertyGenerationContext;
+import com.gluonhq.jfxapps.metadata.util.FxThreadinitializer;
 import com.gluonhq.jfxapps.metadata.util.Report;
 
 import javafx.application.Platform;
@@ -89,17 +86,35 @@ public class MetadataSourceMojo extends JfxAppsAbstractMojo {
     @Parameter(property = "moduleRequires", required = false)
     List<String> moduleRequires;
 
-    @Parameter(property = "executorClass", required = true)
-    String executorClass;
-
     @Parameter(property = "extensionName", required = true)
     String extensionName;
 
     @Parameter(property = "metadataPrefix", required = false, defaultValue = "")
     String metadataPrefix = "";
 
-    @Parameter(defaultValue = "${project}", readonly = true, required = true)
-    private MavenProject project;
+    @Parameter(property = "templateForComponentCustomization", required = false, defaultValue = "")
+    String templateForComponentCustomization = "";
+
+    @Parameter(property = "templateForComponentConstructorCustomization", required = false, defaultValue = "")
+    String templateForComponentConstructorCustomization = "";
+
+    @Parameter(property = "templateForComponentPropertyCustomization", required = false, defaultValue = "")
+    String templateForComponentPropertyCustomization = "";
+
+    @Parameter(property = "templateForValuePropertyCustomization", required = false, defaultValue = "")
+    String templateForValuePropertyCustomization = "";
+
+    @Parameter(property = "templateForStaticValuePropertyCustomization", required = false, defaultValue = "")
+    String templateForStaticValuePropertyCustomization = "";
+
+    @Parameter(property = "targetComponentCustomizationClass", required = false, defaultValue = "")
+    String targetComponentCustomizationClass = "";
+
+    @Parameter(property = "targetComponentPropertyCustomizationClass", required = false, defaultValue = "")
+    String targetComponentPropertyCustomizationClass = "";
+
+    @Parameter(property = "targetValuePropertyCustomizationClass", required = false, defaultValue = "")
+    String targetValuePropertyCustomizationClass = "";
 
     /**
      * Default constructor.
@@ -129,23 +144,23 @@ public class MetadataSourceMojo extends JfxAppsAbstractMojo {
             final PropertyGenerationContext propertyContext = createPropertyGenerationContext();
             final JavaGenerationContext javaContext = createJavaGenerationContext();
 
-            Executor executor = javaContext.getExecutorClass().getConstructor().newInstance();
-            List<Descriptor> descriptors = new ArrayList<>();
-            Set<Path> jars = JarFinder.listJarsInClasspath(cp, searchContext.getJarFilterPatterns(), descriptors);
-            ClassCrawler crawler = new ClassCrawler();
-            MetadataConverter converter = new MetadataConverter();
+            DescriptorCollector descriptorCollector = new DescriptorCollector();
+            MatchingJarCollector jarCollector = new MatchingJarCollector(searchContext.getJarFilterPatterns());
 
-            final CompletableFuture<Map<Class<?>, BeanMetaData<?>>> returnValue = new CompletableFuture<>();
-            final CompletableFuture<Map<Class<?>, Component>> descriptorReturnValue = new CompletableFuture<>();
+            JarFinder.listJarsInClasspath(cp, List.of(jarCollector, descriptorCollector));
+            Set<Path> jars = jarCollector.getCollected();
+            Set<Descriptor> descriptors = descriptorCollector.getCollected();
 
-            executor.preExecute(searchContext);
+            IClassCrawler crawler = new ClassCrawler();
+            JavaGeneratorImpl generator = new JavaGeneratorImpl(propertyContext, javaContext);
+
+            final CompletableFuture<Boolean> returnValue = new CompletableFuture<>();
 
             Runnable runnable = () -> {
                 try {
                     var classes = crawler.crawl(jars, searchContext);
-                    var beanMap = converter.convert(classes, propertyContext);
-                    descriptorReturnValue.complete(descriptorLoad(descriptors));
-                    returnValue.complete(beanMap);
+                    generator.generateJavaFiles(classes, descriptors);
+                    returnValue.complete(true);
                 } catch (Exception e) {
                     returnValue.completeExceptionally(e);
                 }
@@ -153,22 +168,13 @@ public class MetadataSourceMojo extends JfxAppsAbstractMojo {
 
             Platform.runLater(runnable);
 
-            Map<Class<?>, BeanMetaData<?>> found = returnValue.get();
-            Map<Class<?>, Component> othersFound = descriptorReturnValue.get();
-
-            found.forEach((k,v) -> getLog().debug("Crawled:" + k.getName()));
-            othersFound.forEach((k,v) -> getLog().debug("From descriptors:" + k.getName()));
-
-            try {
-
-                Map<Component, Set<Property>> components = MetadataFromJavafx.load(found, othersFound);
-
-                executor.execute(propertyContext, javaContext, components, othersFound);
-            } catch (Exception e) {
-                throw new MojoExecutionException("Unable to execute Executor program", e);
+            if (returnValue.get()) {
+                getLog().info("SUCCESS");
             }
 
-            // Resources.save(output);
+            if (returnValue.isCompletedExceptionally()) {
+                throw new MojoExecutionException("Failed to complete the generating process!", returnValue.exceptionNow());
+            }
 
             updateProject();
 
@@ -186,28 +192,6 @@ public class MetadataSourceMojo extends JfxAppsAbstractMojo {
 
     }
 
-    private Map<Class<?>, Component> descriptorLoad(List<Descriptor> descriptors) {
-
-        Map<Class<?>, Component> result = new HashMap<>();
-
-        if (descriptors != null && !descriptors.isEmpty()) {
-            for (Descriptor extDescriptor : descriptors) {
-                for (Entry<Class<?>, String> e : extDescriptor.getClassToMetaClass().entrySet()) {
-                    Class<?> componentClass = e.getKey();
-                    String metaClassName = e.getValue();
-                    try {
-                        Component c = new Component(new BeanMetaData<>(componentClass, null));
-                        c.getCustom().put("className", metaClassName);
-                        result.put(componentClass, c);
-                    } catch (Exception ex) {
-                    }
-                }
-            }
-        }
-
-        return result;
-    }
-
     private void updateProject() {
         project.addCompileSourceRoot(sourceFolder.getPath());
         project.addCompileSourceRoot(resourceFolder.getPath());
@@ -221,12 +205,6 @@ public class MetadataSourceMojo extends JfxAppsAbstractMojo {
     private JavaGenerationContext createJavaGenerationContext() throws MojoExecutionException {
 
         JavaGenerationContext javaContext = new JavaGenerationContext();
-
-        try {
-            javaContext.setExecutorClass((Class<Executor>) Class.forName(executorClass));
-        } catch (Exception e) {
-            throw new MojoExecutionException("Unable to find executor class", e);
-        }
 
         if (sourceFolder != null && !sourceFolder.exists()) {
             sourceFolder.mkdirs();
@@ -251,6 +229,15 @@ public class MetadataSourceMojo extends JfxAppsAbstractMojo {
 
         javaContext.setMetadataPrefix(metadataPrefix);
 
+        javaContext.setComponentCustomizationTemplate(templateForComponentCustomization);
+        javaContext.setComponentPropertyCustomizationTemplate(templateForComponentPropertyCustomization);
+        javaContext.setValuePropertyCustomizationTemplate(templateForValuePropertyCustomization);
+        javaContext.setStaticValuePropertyCustomizationTemplate(templateForStaticValuePropertyCustomization);
+        javaContext.setComponentConstructorCustomizationTemplate(templateForComponentConstructorCustomization);
+
+        javaContext.setTargetComponentCustomizationClass(targetComponentCustomizationClass);
+        javaContext.setTargetComponentPropertyCustomizationClass(targetComponentPropertyCustomizationClass);
+        javaContext.setTargetValuePropertyCustomizationClass(targetValuePropertyCustomizationClass);
         return javaContext;
     }
 }

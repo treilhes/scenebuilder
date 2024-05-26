@@ -37,7 +37,6 @@ package com.gluonhq.jfxapps.metadata.bean;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
@@ -57,18 +56,16 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cglib.proxy.Enhancer;
-import org.springframework.cglib.proxy.NoOp;
 
 import com.gluonhq.jfxapps.metadata.bean.PropertyMetaData.Type;
 import com.gluonhq.jfxapps.metadata.util.ReflectionUtils;
 import com.gluonhq.jfxapps.metadata.util.Report;
 import com.gluonhq.jfxapps.metadata.util.Resources;
+import com.gluonhq.jfxapps.metadata.util.StringUtils;
 
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
-import net.bytebuddy.implementation.FixedValue;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.implementation.bind.annotation.AllArguments;
 import net.bytebuddy.implementation.bind.annotation.Empty;
@@ -139,24 +136,24 @@ public final class BeanMetaData<T> extends AbstractMetaData {
      * This is used in the implementation to find the images of the specified sizes
      * on disk, and in storing them and retrieving them as needed.
      */
-    private enum ImageSize {
-        Size_16(16), Size_32(32), Size_64(64), Size_128(128), Size_256(256), Size_512(512),
-        Size_Full(Integer.MAX_VALUE);
-
-        private final int size;
-
-        ImageSize(int size) {
-            this.size = size;
-        }
-
-        public final String getExtension() {
-            return size == Integer.MAX_VALUE ? "" : size + "x" + size;
-        }
-
-        public final int getSize() {
-            return size;
-        }
-    }
+//    private enum ImageSize {
+//        Size_16(16), Size_32(32), Size_64(64), Size_128(128), Size_256(256), Size_512(512),
+//        Size_Full(Integer.MAX_VALUE);
+//
+//        private final int size;
+//
+//        ImageSize(int size) {
+//            this.size = size;
+//        }
+//
+//        public final String getExtension() {
+//            return size == Integer.MAX_VALUE ? "" : size + "x" + size;
+//        }
+//
+//        public final int getSize() {
+//            return size;
+//        }
+//    }
 
     /**
      * The list of meta-data for properties.
@@ -173,10 +170,10 @@ public final class BeanMetaData<T> extends AbstractMetaData {
 //     */
 //    private List<PropertyMetaData> staticProperties;
 
-    /**
-     * A map containing the images that were discovered for this bean.
-     */
-    private Map<ImageSize, URL> images = new HashMap<>();
+//    /**
+//     * A map containing the images that were discovered for this bean.
+//     */
+//    private Map<ImageSize, URL> images = new HashMap<>();
 
     /**
      * The class of the Builder, if any, which is associated with this JavaFX Bean.
@@ -196,9 +193,9 @@ public final class BeanMetaData<T> extends AbstractMetaData {
      */
     private Class<T> type;
 
-    private final List<QualifierMetaData> qualifiers = new ArrayList<>();
+    //private final List<QualifierMetaData> qualifiers = new ArrayList<>();
 
-    public BeanMetaData(final Class<T> beanClass, Map<Constructor<?>, Class[]> alternativeParameters) {
+    public BeanMetaData(final Class<T> beanClass, Map<Constructor<?>, Class<?>[]> alternativeParameters) {
         this(beanClass, alternativeParameters, false);
     }
     /**
@@ -212,16 +209,14 @@ public final class BeanMetaData<T> extends AbstractMetaData {
      *
      * @param beanClass The class to use
      */
-    public BeanMetaData(final Class<T> beanClass, Map<Constructor<?>, Class[]> alternativeParameters, boolean disableInstantiate) {
+    public BeanMetaData(final Class<T> beanClass, Map<Constructor<?>, Class<?>[]> alternativeParameters, boolean disableInstantiate) {
         // Step 0a: Look for and load the resource bundles associated with
         // this bean. Look for a "resources" bundle in the same
         // package as the class, and a "FooResources" bundle also
         // in the same package as the class. The FooResources takes
         // precedence over "resources" in the case of lookup
-        super(new Resources(beanClass), beanClass.getSimpleName());
-
-        if (beanClass == null)
-            throw new NullPointerException("beanClass cannot be null");
+        //super(new Resources(beanClass), beanClass.getSimpleName());
+        super(beanClass.getSimpleName());
 
         this.type = beanClass;
 
@@ -304,18 +299,7 @@ public final class BeanMetaData<T> extends AbstractMetaData {
 //            }
         }
 
-        // Step 3: Find all properties, callbacks, and events. Because immutable
-        // properties only have a "getter" and no property method, and
-        // because we don't support properties which have a setter but
-        // no getter, we use the getter as the authoritative way to
-        // identify a property. If a property has a return type of
-        // Callback, then we have a Callback. Otherwise If the property
-        // name (as derived from the getter) starts with "on", then we
-        // have an event and create an EventMetaData. Otherwise we
-        // create a PropertyMetaData. While iterating, locate the
-        // property which matches the DefaultProperty annotation
-        // Step 2d: Lookup the DefaultProperty
-
+        // find default property if any
         Annotation[] annotations = beanClass.getAnnotations();
         final Annotation defaultPropertyAnnotation = Stream.of(annotations)
                 .filter(a -> a.annotationType().getName().equals("javafx.beans.DefaultProperty")).findFirst()
@@ -329,6 +313,18 @@ public final class BeanMetaData<T> extends AbstractMetaData {
                             .invoke(defaultPropertyAnnotation);
         } catch (Exception e) {
         }
+
+        // Step 3: Find all properties, callbacks, and events. Because immutable
+        // properties only have a "getter" and no property method, and
+        // because we don't support properties which have a setter but
+        // no getter, we use the getter as the authoritative way to
+        // identify a property. If a property has a return type of
+        // Callback, then we have a Callback. Otherwise If the property
+        // name (as derived from the getter) starts with "on", then we
+        // have an event and create an EventMetaData. Otherwise we
+        // create a PropertyMetaData. While iterating, locate the
+        // property which matches the DefaultProperty annotation
+        // Step 2d: Lookup the DefaultProperty
 
         Method[] methods = beanClass.getMethods();
         //List<PropertyMetaData> sp = new ArrayList<PropertyMetaData>();
@@ -395,12 +391,12 @@ public final class BeanMetaData<T> extends AbstractMetaData {
         // we are not circumventing any security protocol.
 
         // Step 5: Find and load possible qualifiers
-        String qualifiersValue = getBundleValue(beanClass, BundleValues.QUALIFIERS, null);
-        if (qualifiersValue != null && !qualifiersValue.isBlank()) {
-            Arrays.stream(qualifiersValue.split(","))
-                .map(String::trim)
-                .forEach(s -> qualifiers.add(new QualifierMetaData(beanClass, bundle, s)));
-        }
+//        String qualifiersValue = getBundleValue(beanClass, BundleValues.QUALIFIERS, null);
+//        if (qualifiersValue != null && !qualifiersValue.isBlank()) {
+//            Arrays.stream(qualifiersValue.split(","))
+//                .map(String::trim)
+//                .forEach(s -> qualifiers.add(new QualifierMetaData(beanClass, bundle, s)));
+//        }
     }
 
     /**
@@ -413,9 +409,9 @@ public final class BeanMetaData<T> extends AbstractMetaData {
         return properties;
     }
 
-    public final List<QualifierMetaData> getQualifiers() {
-        return qualifiers;
-    }
+//    public final List<QualifierMetaData> getQualifiers() {
+//        return qualifiers;
+//    }
 
     /**
      * Gets the class of the Builder, if any, which is associated with this JavaFX
@@ -444,43 +440,43 @@ public final class BeanMetaData<T> extends AbstractMetaData {
      *         any smaller image is found. Null is ultimately returned if no image
      *         exists.
      */
-    public final URL findImage(int width, int height) {
-        // We might as well just get right to it. If there are no images,
-        // then null is always returned.
-        if (images.isEmpty())
-            return null;
-
-        // Look for the image associated with a specific size which
-        // is greater than or equal to the requested width and height.
-        // We simply iterate over all ImageSize values and check the
-        // map for any value that is greater than or equal to the
-        // requested width and height.
-        final ImageSize[] imageSizes = ImageSize.values();
-        for (ImageSize imageSize : imageSizes) {
-            final int size = imageSize.getSize();
-            if (size >= width && size >= height) {
-                // We found the best match, so just return it
-                URL image = images.get(imageSize);
-                if (image != null)
-                    return image;
-            }
-        }
-
-        // Well, we didn't find an image bigger than the requested size, so we
-        // now have to find the next closest smaller one.
-        for (int i = imageSizes.length - 1; i >= 0; i--) {
-            final ImageSize imageSize = imageSizes[i];
-            final int size = imageSize.getSize();
-            if (size <= width && size <= height) {
-                // We found the best match, so just return it
-                URL image = images.get(imageSize);
-                if (image != null)
-                    return image;
-            }
-        }
-
-        throw new AssertionError("This code should be unreachable");
-    }
+//    public final URL findImage(int width, int height) {
+//        // We might as well just get right to it. If there are no images,
+//        // then null is always returned.
+//        if (images.isEmpty())
+//            return null;
+//
+//        // Look for the image associated with a specific size which
+//        // is greater than or equal to the requested width and height.
+//        // We simply iterate over all ImageSize values and check the
+//        // map for any value that is greater than or equal to the
+//        // requested width and height.
+//        final ImageSize[] imageSizes = ImageSize.values();
+//        for (ImageSize imageSize : imageSizes) {
+//            final int size = imageSize.getSize();
+//            if (size >= width && size >= height) {
+//                // We found the best match, so just return it
+//                URL image = images.get(imageSize);
+//                if (image != null)
+//                    return image;
+//            }
+//        }
+//
+//        // Well, we didn't find an image bigger than the requested size, so we
+//        // now have to find the next closest smaller one.
+//        for (int i = imageSizes.length - 1; i >= 0; i--) {
+//            final ImageSize imageSize = imageSizes[i];
+//            final int size = imageSize.getSize();
+//            if (size <= width && size <= height) {
+//                // We found the best match, so just return it
+//                URL image = images.get(imageSize);
+//                if (image != null)
+//                    return image;
+//            }
+//        }
+//
+//        throw new AssertionError("This code should be unreachable");
+//    }
 
 //    /**
 //     * Finds the PropertyMetaData matching the property with the given name.
@@ -542,42 +538,42 @@ public final class BeanMetaData<T> extends AbstractMetaData {
         return Modifier.isAbstract(type.getModifiers());
     }
 
-    public String getDisplayName() {
-        return getBundleValue(this.type, BundleValues.DISPLAY_NAME, toDisplayName(getName()));
-    }
-
-    public String getDescriptionProperty() {
-        return getBundleValue(this.type, BundleValues.DESCRIPTION_PROPERTY, null);
-    }
-
-    public String getLabelMutation() {
-        return getBundleValue(this.type, BundleValues.LABEL_MUTATION_LAMBDA, null);
-    }
-
-    public String getCategory() {
-        return getBundleValue(this.type, BundleValues.CATEGORY, AbstractMetaData.HIDDEN);
-    }
-
-    public boolean isResizeNeededWhenTopElement() {
-        return Boolean.parseBoolean(getBundleValue(this.type, BundleValues.RESIZE_WHEN_TOP_ELEMENT, "false"));
-    }
-
-    public List<String> getShadows() {
-        String shadowed =  getBundleValue(this.type, BundleValues.SHADOWS, null);
-
-        if (shadowed == null || shadowed.isBlank()) {
-            return Collections.emptyList();
-        } else {
-            return  Arrays.stream(shadowed.split(","))
-                        .map(String::trim)
-                        .filter(Predicate.not(String::isBlank))
-                        .collect(Collectors.toList());
-        }
-    }
-
-    public String getVersion() {
-        return getBundleValue(this.type, BundleValues.VERSION, "");
-    }
+//    public String getDisplayName() {
+//        return getBundleValue(this.type, BundleValues.DISPLAY_NAME, StringUtils.toDisplayName(getName()));
+//    }
+//
+//    public String getDescriptionProperty() {
+//        return getBundleValue(this.type, BundleValues.DESCRIPTION_PROPERTY, null);
+//    }
+//
+//    public String getLabelMutation() {
+//        return getBundleValue(this.type, BundleValues.LABEL_MUTATION_LAMBDA, null);
+//    }
+//
+//    public String getCategory() {
+//        return getBundleValue(this.type, BundleValues.CATEGORY, AbstractMetaData.HIDDEN);
+//    }
+//
+//    public boolean isResizeNeededWhenTopElement() {
+//        return Boolean.parseBoolean(getBundleValue(this.type, BundleValues.RESIZE_WHEN_TOP_ELEMENT, "false"));
+//    }
+//
+//    public List<String> getShadows() {
+//        String shadowed =  getBundleValue(this.type, BundleValues.SHADOWS, null);
+//
+//        if (shadowed == null || shadowed.isBlank()) {
+//            return Collections.emptyList();
+//        } else {
+//            return  Arrays.stream(shadowed.split(","))
+//                        .map(String::trim)
+//                        .filter(Predicate.not(String::isBlank))
+//                        .collect(Collectors.toList());
+//        }
+//    }
+//
+//    public String getVersion() {
+//        return getBundleValue(this.type, BundleValues.VERSION, "");
+//    }
 
 
 
@@ -588,7 +584,7 @@ public final class BeanMetaData<T> extends AbstractMetaData {
         return null;
     }
 
-    private static Object computeInstance(Class<?> c, Map<Constructor<?>, Class[]> alternativeParameters) {
+    private static Object computeInstance(Class<?> c, Map<Constructor<?>, Class<?>[]> alternativeParameters) {
 
         final Class<?> instanciableClass;
 

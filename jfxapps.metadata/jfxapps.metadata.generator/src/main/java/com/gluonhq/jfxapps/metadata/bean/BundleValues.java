@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.metadata.bean;
 
+@Deprecated
 public interface BundleValues {
 
 	//class level
@@ -52,12 +53,12 @@ public interface BundleValues {
 	final String METACLASS = "class";
 	final String TMP_METACLASS_KIND = "classKind";
 	final String IS_COMPONENT = "component";
-	final String IS_COLLECTION = "collection";
-	final String COLLECTION_TYPE = "collectionType";
+	//final String IS_COLLECTION = "collection";
+	//final String COLLECTION_TYPE = "collectionType";
 	final String CONTENT_TYPE = "type";
 	final String CHILD_LABEL_MUTATION_LAMBDA = "childLabelMutation";
 	final String NULL_EQUIVALENT = "nullEquivalent";
-	final String DEFAULT_VALUE = "defaultValue";
+	//final String DEFAULT_VALUE = "defaultValue";
 
 	final String MAIN = "main";
 	final String HIDDEN = "hidden";

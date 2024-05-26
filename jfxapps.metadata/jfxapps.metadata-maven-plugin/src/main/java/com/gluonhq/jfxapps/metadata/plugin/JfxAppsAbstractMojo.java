@@ -36,22 +36,17 @@ package com.gluonhq.jfxapps.metadata.plugin;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
 
-import com.gluonhq.jfxapps.metadata.finder.PropertyGenerationContext;
-import com.gluonhq.jfxapps.metadata.finder.SearchContext;
-import com.gluonhq.jfxapps.metadata.plugin.data.ConstructorOverride;
-
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.stage.Stage;
+import com.gluonhq.jfxapps.metadata.finder.api.SearchContext;
+import com.gluonhq.jfxapps.metadata.plugin.params.ConstructorOverride;
+import com.gluonhq.jfxapps.metadata.properties.api.PropertyGenerationContext;
 
 public abstract class JfxAppsAbstractMojo extends AbstractMojo {
 
@@ -93,94 +88,17 @@ public abstract class JfxAppsAbstractMojo extends AbstractMojo {
     @Parameter(property = "constructorOverrides", required = false)
     List<ConstructorOverride> constructorOverrides;
 
+    @Parameter(property = "componentCustomizationClass", required = false)
+    String componentCustomizationClass;
 
-    protected static class FxThreadinitializer {
+    @Parameter(property = "componentPropertyCustomizationClass", required = false)
+    String componentPropertyCustomizationClass;
 
-        private static FxThreadinitializer INSTANCE;
+    @Parameter(property = "valuePropertyCustomizationClass", required = false)
+    String valuePropertyCustomizationClass;
 
-        private final CompletableFuture<Boolean> threadInitialized = new CompletableFuture<>();
-        private final JfxThread thread = new JfxThread();
-
-        public static Future<Boolean> initJFX(String javafxVersion) {
-            if (INSTANCE == null) {
-                INSTANCE = new FxThreadinitializer();
-            }
-            return INSTANCE.initJFXInternal(javafxVersion);
-        }
-
-        private static void notifyStarted() {
-            INSTANCE.internalNotifyStarted();
-        }
-
-        private static void notifyException(Throwable t) {
-            INSTANCE.internalNotifyException(t);
-        }
-
-        public static void stop() {
-            INSTANCE.internalStop();
-        }
-
-        private FxThreadinitializer() {
-            thread.setUncaughtExceptionHandler((Thread thread, Throwable throwable) -> {
-                FxThreadinitializer.notifyException(throwable);
-            });
-            thread.setDaemon(true);
-        }
-
-        private Future<Boolean> initJFXInternal(String javafxVersion) {
-
-            System.out.println("Initializing JavaFX thread");
-            String fxv = System.getProperty("javafx.version", "versionless");
-            System.out.println("JavaFX version : " + fxv);
-            // System.setProperty("javafx.version", javafxVersion);
-            System.setProperty("javafx.version", "versionless");
-            fxv = System.getProperty("javafx.version", "versionless");
-            System.out.println("JavaFX version : " + fxv);
-
-            thread.start();
-
-            return threadInitialized;
-        }
-
-        private void internalNotifyStarted() {
-            threadInitialized.complete(true);
-        }
-
-        private void internalNotifyException(Throwable t) {
-            threadInitialized.completeExceptionally(t);
-        }
-
-        private void internalStop() {
-            thread.interrupt();
-        }
-
-        public static class DummyApp extends Application {
-            @Override
-            public void start(Stage primaryStage) throws Exception {
-                FxThreadinitializer.notifyStarted();
-            }
-        }
-
-        protected static class JfxThread extends Thread {
-
-            public JfxThread() {
-                super("JavaFX Init Thread");
-            }
-
-            @Override
-            public void run() {
-                Application.launch(DummyApp.class, new String[0]);
-            }
-
-            @Override
-            public void interrupt() {
-                Platform.exit();
-                super.interrupt();
-            }
-
-        }
-    }
-
+    @Parameter(defaultValue = "${project}", readonly = true, required = true)
+    MavenProject project;
 
     protected SearchContext createSearchContext() throws MojoExecutionException {
 
@@ -260,6 +178,23 @@ public abstract class JfxAppsAbstractMojo extends AbstractMojo {
             resourceFolder.mkdirs();
         }
         propertyContext.setResourceFolder(resourceFolder);
+
+        try {
+            propertyContext.setComponentCustomizationClass(componentCustomizationClass);
+        } catch (ClassNotFoundException e) {
+            throw new MojoExecutionException(e);
+        }
+        try {
+            propertyContext.setComponentPropertyCustomizationClass(componentPropertyCustomizationClass);
+        } catch (ClassNotFoundException e) {
+            throw new MojoExecutionException(e);
+        }
+
+        try {
+            propertyContext.setValuePropertyCustomizationClass(valuePropertyCustomizationClass);
+        } catch (ClassNotFoundException e) {
+            throw new MojoExecutionException(e);
+        }
 
         return propertyContext;
     }

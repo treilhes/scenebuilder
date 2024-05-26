@@ -133,13 +133,28 @@
                             <failOnError>true</failOnError>
                             <javafxVersion>${javafx.version}</javafxVersion>
                             <resourceFolder>./src/main/resources</resourceFolder>
+                            
+                            <componentCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custo.ComponentCusto</componentCustomizationClass>
+                            <componentPropertyCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custo.ComponentPropertyCusto</componentPropertyCustomizationClass>
+                            <valuePropertyCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custo.ValuePropertyCusto</valuePropertyCustomizationClass>
+                            
+                            <templateForComponentCustomization>/_templates/CustomizeComponent.ftl</templateForComponentCustomization>
+                            <templateForComponentConstructorCustomization>/_templates/CustomizeComponentConstructor.ftl</templateForComponentConstructorCustomization>
+                            <templateForComponentPropertyCustomization>/_templates/CustomizeComponentProperty.ftl</templateForComponentPropertyCustomization>
+                            <templateForValuePropertyCustomization>/_templates/CustomizeValueProperty.ftl</templateForValuePropertyCustomization>
+                            <templateForStaticValuePropertyCustomization>/_templates/CustomizeStaticValueProperty.ftl</templateForStaticValuePropertyCustomization>
+                            
+                            <targetComponentCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization</targetComponentCustomizationClass>
+                            <targetComponentPropertyCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custom.ComponentPropertyMetadataCustomization</targetComponentPropertyCustomizationClass>
+                            <targetValuePropertyCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization</targetValuePropertyCustomizationClass>
+        
                         </configuration>
                         <dependencies>
-                            <dependency>
+                            <!--<dependency>
                                 <groupId>com.gluonhq.jfxapps</groupId>
                                 <artifactId>scenebuilder.metadata.javafxdata</artifactId>
                                 <version>${scenebuilder.version}</version>
-                            </dependency>
+                            </dependency>-->
                             <dependency>
                                 <groupId>org.openjfx</groupId>
                                 <artifactId>javafx-fxml</artifactId>

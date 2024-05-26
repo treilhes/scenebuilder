@@ -52,11 +52,12 @@
             <artifactId>junit-pioneer</artifactId>
             <version>2.2.0</version>
         </dependency>
-        
+        <!--
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
+        -->
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-junit5</artifactId>

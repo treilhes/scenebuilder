@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,11 +37,11 @@ package com.gluonhq.jfxapps.metadata.bean;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
-import java.util.Optional;
 
 import com.gluonhq.jfxapps.metadata.util.ReflectionUtils;
 import com.gluonhq.jfxapps.metadata.util.Report;
 import com.gluonhq.jfxapps.metadata.util.Resources;
+import com.gluonhq.jfxapps.metadata.util.StringUtils;
 
 /**
  * Represents the meta-data for a JavaFX Bean property. A PropertyMetaData is
@@ -71,6 +71,12 @@ import com.gluonhq.jfxapps.metadata.util.Resources;
  * that have a public getter can have a PropertyMetaData created for them.
  *
  * @author Richard
+ */
+/**
+ *
+ */
+/**
+ *
  */
 public class PropertyMetaData extends AbstractMetaData {
     // TODO need to add the ability to reference a custom PropertyEditor!
@@ -147,7 +153,7 @@ public class PropertyMetaData extends AbstractMetaData {
     private boolean collection;
 
     /**
-     * if the property return type is a collection then indicate if the collection
+     * if the property return type is a collection then indicate the collection
      * mutability
      */
     private Mutability collectionMutability = null;
@@ -161,21 +167,17 @@ public class PropertyMetaData extends AbstractMetaData {
     private Object defaultValue;
 
     /**
-     * The visibility of the property.
-     */
-    private Visibility visibility = Visibility.STANDARD;
-
-    /**
      * Package private constructor which reuses the bundle and omits some checks for
      * the sake of performance efficiency.
      *
      * @param beanClass The bean class, cannot be null
      * @param getter    The getter, cannot be null
-     * @param instance
+     * @param instance  The instance, may be null
      * @param bundle    The bundle, cannot be null
      */
     PropertyMetaData(Class<?> beanClass, Method getter, Type type, Object instance) {
-        super(new Resources(beanClass), extractName(getter));
+        //super(new Resources(beanClass), extractName(getter));
+        super(extractName(getter));
         this.instance = instance;
         this.beanClass = beanClass;
         this.propertyType = type;
@@ -188,12 +190,20 @@ public class PropertyMetaData extends AbstractMetaData {
         init(beanClass, getter);
     }
 
+    /**
+     * Extract the property name from the getter method
+     * Ex: getMyProperty -> myProperty
+     * Ex: isMyProperty -> myProperty
+     * Ex: hasMyProerty -> myProperty
+     * @param getter The getter method
+     * @return The property name
+     */
     private static String extractName(Method getter) {
         if (getter == null)
             return null;
         final String getterName = getter.getName();
         final String capitalizedName = getterName.startsWith("get") ? getterName.substring(3) : getterName.substring(2);
-        return decapitalize(capitalizedName);
+        return StringUtils.decapitalize(capitalizedName);
     }
 
     /**
@@ -325,10 +335,15 @@ public class PropertyMetaData extends AbstractMetaData {
                 if (getType().isArray()) {
                     collectionType = getType().getComponentType();
                 } else {
-                    collectionType = ReflectionUtils.findGenericTypes(beanClass, getName()).get(0);
+                    var genericTypes = ReflectionUtils.findGenericTypes(beanClass, getName());
+                    if (genericTypes == null) {
+                        genericTypes = ReflectionUtils.findGenericTypes(getter);
+                    }
+                    collectionType = genericTypes.get(0);
                 }
 
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -350,19 +365,6 @@ public class PropertyMetaData extends AbstractMetaData {
      * @return the data type for this property
      */
     public final Class<?> getType() {
-        String btype = getBundleValue(beanClass, BundleValues.COLLECTION_TYPE, null);
-
-        if (btype == null) {
-            return type;
-        }
-
-        try {
-            type = Class.forName(btype);
-        } catch (ClassNotFoundException e) {
-            Report.error(beanClass,
-                    String.format("Unable to load type for property '%s' the metadata class : %s", getName(), btype));
-        }
-
         return type;
     }
 
@@ -407,16 +409,6 @@ public class PropertyMetaData extends AbstractMetaData {
         return mutability;
     }
 
-
-    public Object getDefaultValue() {
-        String overridedDefaultValue = getBundleValue(beanClass, BundleValues.DEFAULT_VALUE, null);
-
-        if (isReadWrite() && propertyType != Type.EVENT) {
-            return overridedDefaultValue != null ? overridedDefaultValue : defaultValue;
-        }
-        return null;
-    }
-
     public boolean isStatic() {
         return isStatic;
     }
@@ -426,151 +418,169 @@ public class PropertyMetaData extends AbstractMetaData {
     }
 
     public boolean isCollection() {
-        String isCollection = getBundleValue(beanClass, BundleValues.IS_COLLECTION, null);
-
-        if (isCollection == null) {
-            return collection;
-        }
-
-        collection = Boolean.parseBoolean(isCollection);
-
         return collection;
     }
 
+    /**
+     * Gets the collection mutability of the property. If the property is not a
+     * collection, then this will return null
+     * @return
+     */
     public Mutability getCollectionMutability() {
         return collectionMutability;
     }
 
+
+    /**
+     * Gets the collection type of the property. If the property is not a collection,
+     * then this will return null
+     * @return The collection type of the property.
+     */
     public Class<?> getCollectionType() {
-        String type = getBundleValue(beanClass, BundleValues.COLLECTION_TYPE, null);
-
-        if (type == null) {
-            return collectionType;
-        }
-
-        try {
-            collectionType = Class.forName(type);
-        } catch (ClassNotFoundException e) {
-            Report.error(beanClass,
-                    String.format("Unable to load collectionType for property '%s' the metadata class : %s", getName(), type));
-        }
         return collectionType;
     }
 
+    /**
+     * Gets the content type of the property. If the property is not a collection,
+     * then this will return the same as getType(). If the property is a collection,
+     * then this will return the type of the elements in the collection.
+     * @return The content type of the property.
+     */
     public Class<?> getContentType() {
         return isCollection() ? getCollectionType() : getType();
     }
 
+    /**
+     * Gets the mutability of this property.
+     *
+     * @return The mutability of this property.
+     */
     public boolean isReadWrite() {
         return getMutability() == Mutability.WRITABLE
                 || (isCollection() && getCollectionMutability() == Mutability.WRITABLE);
     }
 
+    /**
+     * Mark the property as local if the property is declared in the same class as the bean and not in a superclass.
+     * @return true if the property is local to the bean class, false otherwise.
+     */
     public boolean isLocal() {
         return getter.getDeclaringClass().equals(beanClass);
     }
 
+    /**
+     * Get the class where the property is declared.
+     * @return the class where the property is declared.
+     */
     public Class<?> getResidenceClass() {
         return getter.getDeclaringClass();
     }
 
+    /**
+     * Get the type of the property.
+     * @return the type of the property.
+     */
     public Type getPropertyType() {
         return propertyType;
     }
 
-    public String getDisplayName() {
-        return getBundleValue(beanClass, BundleValues.DISPLAY_NAME, toDisplayName(getName()));
-    }
+//    public String getDisplayName() {
+//        return getBundleValue(beanClass, BundleValues.DISPLAY_NAME, StringUtils.toDisplayName(getName()));
+//    }
+//
+//    public String getChildLabelMutation() {
+//        return getBundleValue(beanClass, BundleValues.CHILD_LABEL_MUTATION_LAMBDA, null);
+//    }
+//
+//    public String getCategory() {
+//        return getBundleValue(beanClass, BundleValues.CATEGORY, AbstractMetaData.HIDDEN);
+//    }
+//
+//    public String getSection() {
+//        return getBundleValue(beanClass, BundleValues.INSPECTOR_SECTION, null);
+//    }
+//
+//    public String getSubSection() {
+//        return getBundleValue(beanClass, BundleValues.INSPECTOR_SUBSECTION, null);
+//    }
+//
+//    public int getOrder() {
+//        return Integer.parseInt(getBundleValue(beanClass, BundleValues.ORDER, "-1"));
+//    }
+//
+//    public String getImage() {
+//        return getBundleValue(beanClass, BundleValues.IMAGE, null);
+//    }
+//
+//    public String getImageX2() {
+//        return getBundleValue(beanClass, BundleValues.IMAGE_X2, null);
+//    }
+//
+//    public String getNullEquivalent() {
+//        return getBundleValue(beanClass, BundleValues.NULL_EQUIVALENT, null);
+//    }
+//    public Class<?> getMetadataClass() {
+//        String cls = getBundleValue(beanClass, BundleValues.METACLASS, null);
+//        try {
+//            return Class.forName(cls);
+//        } catch (Exception e) {
+//            Report.error(beanClass,
+//                    String.format("Unable to load for property '%s' the metadata class : %s", getName(), cls));
+//            return null;
+//        }
+//    }
+//
+//    @Deprecated
+//    public String getKind() {
+//        return getBundleValue(beanClass, BundleValues.TMP_METACLASS_KIND, null);
+//    }
+//
+//    public boolean isFreeChildPositioning() {
+//        return Boolean.parseBoolean(getBundleValue(beanClass, BundleValues.FREE_POSITIONING, "false"));
+//    }
+//
+//    public boolean isHidden() {
+//        return Boolean.parseBoolean(getBundleValue(beanClass, BundleValues.HIDDEN, "false"));
+//    }
+//
+//    public Boolean getMain() {
+//        String main = getBundleValue(beanClass, BundleValues.MAIN, "");
+//        return main.isEmpty() ? null : Boolean.valueOf(main);
+//    }
+//
+//    public Visibility getVisibility() {
+//        return Visibility.valueOf(getBundleValue(beanClass, BundleValues.VISIBILITY, visibility.name()).toUpperCase());
+//    }
+//
+//    public Optional<Boolean> isComponent() {
+//        String isComponent = getBundleValue(beanClass, BundleValues.IS_COMPONENT, null);
+//        if (isComponent == null) {
+//            return Optional.empty();
+//        }
+//        return Optional.of(Boolean.parseBoolean(isComponent));
+//    }
+//
+//    @Override
+//    public String getBundleValue(Class<?> beanClass, String name, String defaultValue) {
+//        if (isStatic) {
+//            return super.getBundleValue(beanClass, "static", name, defaultValue);
+//        } else {
+//            return super.getBundleValue(beanClass, name, defaultValue);
+//        }
+//
+//    }
+//
+//    @Override
+//    public void setBundleValue(Class<?> beanClass, String name, String value) {
+//        if (isStatic) {
+//            super.setBundleValue(beanClass, "static", name, value);
+//        } else {
+//            super.setBundleValue(beanClass, name, value);
+//        }
+//    }
 
-    public String getChildLabelMutation() {
-        return getBundleValue(beanClass, BundleValues.CHILD_LABEL_MUTATION_LAMBDA, null);
-    }
-
-    public String getCategory() {
-        return getBundleValue(beanClass, BundleValues.CATEGORY, AbstractMetaData.HIDDEN);
-    }
-
-    public String getSection() {
-        return getBundleValue(beanClass, BundleValues.INSPECTOR_SECTION, null);
-    }
-
-    public String getSubSection() {
-        return getBundleValue(beanClass, BundleValues.INSPECTOR_SUBSECTION, null);
-    }
-
-    public int getOrder() {
-        return Integer.parseInt(getBundleValue(beanClass, BundleValues.ORDER, "-1"));
-    }
-
-    public String getImage() {
-        return getBundleValue(beanClass, BundleValues.IMAGE, null);
-    }
-
-    public String getImageX2() {
-        return getBundleValue(beanClass, BundleValues.IMAGE_X2, null);
-    }
-
-    public String getNullEquivalent() {
-        return getBundleValue(beanClass, BundleValues.NULL_EQUIVALENT, null);
-    }
-    public Class<?> getMetadataClass() {
-        String cls = getBundleValue(beanClass, BundleValues.METACLASS, null);
-        try {
-            return Class.forName(cls);
-        } catch (Exception e) {
-            Report.error(beanClass,
-                    String.format("Unable to load for property '%s' the metadata class : %s", getName(), cls));
-            return null;
-        }
-    }
-
-    @Deprecated
-    public String getKind() {
-        return getBundleValue(beanClass, BundleValues.TMP_METACLASS_KIND, null);
-    }
-
-    public boolean isFreeChildPositioning() {
-        return Boolean.parseBoolean(getBundleValue(beanClass, BundleValues.FREE_POSITIONING, "false"));
-    }
-
-    public boolean isHidden() {
-        return Boolean.parseBoolean(getBundleValue(beanClass, BundleValues.HIDDEN, "false"));
-    }
-
-    public Boolean getMain() {
-        String main = getBundleValue(beanClass, BundleValues.MAIN, "");
-        return main.isEmpty() ? null : Boolean.valueOf(main);
-    }
-
-    public Visibility getVisibility() {
-        return Visibility.valueOf(getBundleValue(beanClass, BundleValues.VISIBILITY, visibility.name()).toUpperCase());
-    }
-
-    public Optional<Boolean> isComponent() {
-        String isComponent = getBundleValue(beanClass, BundleValues.IS_COMPONENT, null);
-        if (isComponent == null) {
-            return Optional.empty();
-        }
-        return Optional.of(Boolean.parseBoolean(isComponent));
-    }
-
-    @Override
-    public String getBundleValue(Class<?> beanClass, String name, String defaultValue) {
-        if (isStatic) {
-            return super.getBundleValue(beanClass, "static", name, defaultValue);
-        } else {
-            return super.getBundleValue(beanClass, name, defaultValue);
-        }
-
-    }
-
-    @Override
-    public void setBundleValue(Class<?> beanClass, String name, String value) {
-        if (isStatic) {
-            super.setBundleValue(beanClass, "static", name, value);
-        } else {
-            super.setBundleValue(beanClass, name, value);
-        }
+    public Object getDefaultValue() {
+        return defaultValue;
     }
 
     public static PropertyMetaData relocalize(PropertyMetaData property, BeanMetaData<?> targetBean) {

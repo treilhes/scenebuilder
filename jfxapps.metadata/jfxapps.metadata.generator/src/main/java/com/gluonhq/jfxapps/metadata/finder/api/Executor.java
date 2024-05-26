@@ -36,16 +36,15 @@ package com.gluonhq.jfxapps.metadata.finder.api;
 import java.util.Map;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.metadata.finder.JavaGenerationContext;
-import com.gluonhq.jfxapps.metadata.finder.PropertyGenerationContext;
-import com.gluonhq.jfxapps.metadata.finder.SearchContext;
-import com.gluonhq.jfxapps.metadata.model.Component;
-import com.gluonhq.jfxapps.metadata.model.Property;
+import com.gluonhq.jfxapps.metadata.java.api.JavaGenerationContext;
+import com.gluonhq.jfxapps.metadata.java.model.Component;
+import com.gluonhq.jfxapps.metadata.java.model.ComponentProperty;
+import com.gluonhq.jfxapps.metadata.properties.api.PropertyGenerationContext;
 
 public interface Executor {
 
     void preExecute(SearchContext searchContext) throws Exception;
 
     void execute(PropertyGenerationContext propertyContext, JavaGenerationContext searchContext,
-            Map<Component, Set<Property>> components, Map<Class<?>, Component> descriptorComponents) throws Exception;
+            Map<Component, Set<ComponentProperty>> components, Map<Class<?>, Component> descriptorComponents) throws Exception;
 }

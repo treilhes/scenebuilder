@@ -81,8 +81,11 @@ public class ComponentClassMetadataCustomization {
     private ComponentClassMetadata<?, ComponentClassMetadataCustomization, ?, ?> owner;
 
 
-    public ComponentClassMetadataCustomization(ComponentClassMetadata<?, ComponentClassMetadataCustomization, ?, ?> owner) {
+    public ComponentClassMetadataCustomization() {
         super();
+    }
+
+    public void setOwner(ComponentClassMetadata<?, ComponentClassMetadataCustomization, ?, ?> owner) {
         this.owner = owner;
     }
 
