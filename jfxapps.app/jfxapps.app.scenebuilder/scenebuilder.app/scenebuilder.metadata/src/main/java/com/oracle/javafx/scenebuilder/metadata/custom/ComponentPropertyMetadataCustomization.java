@@ -111,6 +111,10 @@ public class ComponentPropertyMetadataCustomization {
         return order;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
 
         /** Icon illustrating this placeholder. */
@@ -129,22 +133,22 @@ public class ComponentPropertyMetadataCustomization {
             super();
         }
 
-        protected Builder iconUrl(URL iconUrl) {
+        public Builder iconUrl(URL iconUrl) {
             this.iconUrl = iconUrl;
             return this;
         }
 
-        protected Builder iconX2Url(URL iconX2Url) {
+        public Builder iconX2Url(URL iconX2Url) {
             this.iconX2Url = iconX2Url;
             return this;
         }
 
-        protected Builder order(int order) {
+        public Builder order(int order) {
             this.order = order;
             return this;
         }
 
-        protected Builder resizeNeededWhenTopElement(boolean resizeNeededWhenTopElement) {
+        public Builder resizeNeededWhenTopElement(boolean resizeNeededWhenTopElement) {
             this.resizeNeededWhenTopElement = resizeNeededWhenTopElement;
             return this;
         }

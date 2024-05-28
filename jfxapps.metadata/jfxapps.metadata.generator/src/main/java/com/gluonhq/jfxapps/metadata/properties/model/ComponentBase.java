@@ -263,7 +263,7 @@ public class ComponentBase<CC, CPC, CPB extends ComponentPropertyBase<CPC>, VPC,
     }
 
 
-    public static abstract class AbstractDeserializer<CMP extends ComponentBase<?, ?, ?, ?, ?>, CP extends ComponentPropertyBase<?>, VP extends ValuePropertyBase<?>>
+    public static abstract class AbstractDeserializer<CMP extends ComponentBase, CP extends ComponentPropertyBase, VP extends ValuePropertyBase>
             extends StdDeserializer<CMP> implements ContextualDeserializer {
 
         private static final Logger logger = LoggerFactory.getLogger(AbstractDeserializer.class);
@@ -357,18 +357,18 @@ public class ComponentBase<CC, CPC, CPB extends ComponentPropertyBase<CPC>, VPC,
     }
 
 
-    public static class Serializer extends StdSerializer<ComponentBase<?,?,?, ?,?>> {
+    public static class Serializer extends StdSerializer<ComponentBase> {
 
         public Serializer() {
             this(null);
         }
 
-        public Serializer(Class<ComponentBase<?,?,?, ?,?>> t) {
+        public Serializer(Class<ComponentBase> t) {
             super(t);
         }
 
         @Override
-        public void serialize(ComponentBase<?,?,?, ?,?> value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+        public void serialize(ComponentBase value, JsonGenerator gen, SerializerProvider provider) throws IOException {
             gen.writeStartObject();
 
             gen.writeObjectFieldStart("class");

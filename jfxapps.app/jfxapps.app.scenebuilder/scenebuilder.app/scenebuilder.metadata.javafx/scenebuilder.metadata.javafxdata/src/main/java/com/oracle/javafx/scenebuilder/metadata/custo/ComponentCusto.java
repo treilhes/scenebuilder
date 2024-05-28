@@ -110,7 +110,7 @@ public class ComponentCusto {
         @JsonInclude(Include.NON_NULL)
         private String label;
         @JsonInclude(Include.NON_NULL)
-        private String lambdaCheck;
+        private String applicabilityCheck;
 
         public String getFxml() {
             return fxml;
@@ -132,8 +132,12 @@ public class ComponentCusto {
             return label;
         }
 
-        public String getLambdaCheck() {
-            return lambdaCheck;
+        public String getApplicabilityCheck() {
+            return applicabilityCheck;
+        }
+
+        public void setApplicabilityCheck(String applicabilityCheck) {
+            this.applicabilityCheck = applicabilityCheck;
         }
 
         public void setFxml(String fxml) {
@@ -154,10 +158,6 @@ public class ComponentCusto {
 
         public void setLabel(String label) {
             this.label = label;
-        }
-
-        public void setLambdaCheck(String lambdaCheck) {
-            this.lambdaCheck = lambdaCheck;
         }
 
     }

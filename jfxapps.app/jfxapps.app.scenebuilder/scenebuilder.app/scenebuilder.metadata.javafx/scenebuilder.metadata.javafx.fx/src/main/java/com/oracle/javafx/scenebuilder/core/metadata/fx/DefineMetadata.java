@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,35 +37,42 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDefine;
 import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata.Visibility;
+import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentPropertyMetadataCustomization;
+import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
 
 @Component
-public class DefineMetadata extends ComponentClassMetadata<FXOMDefine> {
+public class DefineMetadata extends ComponentClassMetadata<FXOMDefine, ComponentClassMetadataCustomization,
+ComponentPropertyMetadataCustomization,
+ValuePropertyMetadataCustomization> {
 
-    private final com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata contentPropertyMetadata;
+    private final ComponentPropertyMetadata<ComponentPropertyMetadataCustomization> contentPropertyMetadata;
 
     protected DefineMetadata() {
-        super(FXOMDefine.class, null);
+        super(FXOMDefine.class, null, ComponentClassMetadataCustomization.builder()
+                .qualifier("default", Qualifier.builder()
+                        .label("default")
+                        .description("")
+                        .category("Fx")
+                        .fxmlUrl(CopyMetadata.class.getResource("Define.fxml"))
+                        .iconUrl(CopyMetadata.class.getResource("Define.png"))
+                        .iconX2Url(CopyMetadata.class.getResource("Define@2x.png"))
+                        .build())
+                .build());
 
-        contentPropertyMetadata = new com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata.Builder()
+        contentPropertyMetadata = new ComponentPropertyMetadata.Builder<ComponentPropertyMetadataCustomization>()
                 .name(FXOMDefine.defineContentName)
                 .isCollection(true)
                 .isMain(true)
-                .order(0)
-                .visibility(Visibility.STANDARD)
+                .customization(ComponentPropertyMetadataCustomization.builder()
+                        .order(0)
+                        .build())
                 .build();
 
         getProperties().add(contentPropertyMetadata);
 
-        getQualifiers().put("default",
-                new Qualifier(
-                        getClass().getResource("Define.fxml"),
-                        "default",
-                        "",
-                        getClass().getResource("Define.png"),
-                        getClass().getResource("Define@2x.png"),
-                        "Fx"
-                        ));
     }
 
     @Override

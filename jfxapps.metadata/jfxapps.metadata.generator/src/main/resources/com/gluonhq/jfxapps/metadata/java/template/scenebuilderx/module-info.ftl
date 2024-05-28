@@ -9,8 +9,8 @@ open module ${context.moduleName} {
 
     requires jfxapps.boot.loader;
     requires jfxapps.boot.starter;
-    requires jfxapps.core.metadata;
-    requires jfxapps.core.fxom;
+    requires transitive jfxapps.core.metadata;
+    requires transitive jfxapps.core.fxom;
 
     <#list context.requiredModules as requiredModule>
     requires transitive ${requiredModule};

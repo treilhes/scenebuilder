@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,59 +40,76 @@ import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic.Type;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata.Visibility;
 import com.gluonhq.jfxapps.core.metadata.property.value.StringPropertyMetadata.CharsetStringPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.StringPropertyMetadata.ResourceStringPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.StringPropertyMetadata.SourceStringPropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.util.InspectorPath;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentPropertyMetadataCustomization;
+import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
 
 @Component
-public class IncludeMetadata extends ComponentClassMetadata<FXOMInclude> {
+public class IncludeMetadata extends ComponentClassMetadata<FXOMInclude, ComponentClassMetadataCustomization,
+ComponentPropertyMetadataCustomization,
+ValuePropertyMetadataCustomization> {
 
-    private final SourceStringPropertyMetadata sourceMetadata = new SourceStringPropertyMetadata.Builder()
+    private final SourceStringPropertyMetadata<ValuePropertyMetadataCustomization> sourceMetadata = new SourceStringPropertyMetadata.Builder<ValuePropertyMetadataCustomization>()
             .name(new PropertyName("source"))
             .readWrite(true)
             .defaultValue("")
-            .inspectorPath(new InspectorPath("Properties", "Include FXML file", 2))
-            .visibility(Visibility.STANDARD)
+            .customization(ValuePropertyMetadataCustomization.builder()
+                    .inspectorPath(ValuePropertyMetadataCustomization.InspectorPath.builder()
+                            .sectionTag("Properties")
+                            .subSectionTag("Include FXML file")
+                            .subSectionIndex(1)
+                            .build())
+                    .build())
             .fileUrlDetection(true)
             .build();
 
-    private final ResourceStringPropertyMetadata resourcesMetadata = new ResourceStringPropertyMetadata.Builder()
+    private final ResourceStringPropertyMetadata<ValuePropertyMetadataCustomization> resourcesMetadata = new ResourceStringPropertyMetadata.Builder<ValuePropertyMetadataCustomization>()
             .name(new PropertyName("resources"))
             .readWrite(true)
             .defaultValue("")
-            .inspectorPath(new InspectorPath("Properties", "Include FXML file", 2))
-            .visibility(Visibility.STANDARD)
+            .customization(ValuePropertyMetadataCustomization.builder()
+                    .inspectorPath(ValuePropertyMetadataCustomization.InspectorPath.builder()
+                            .sectionTag("Properties")
+                            .subSectionTag("Include FXML file")
+                            .subSectionIndex(2)
+                            .build())
+                    .build())
             .fileUrlDetection(true)
             .build();
 
-    private final CharsetStringPropertyMetadata charsetMetadata = new CharsetStringPropertyMetadata.Builder()
+    private final CharsetStringPropertyMetadata<ValuePropertyMetadataCustomization> charsetMetadata = new CharsetStringPropertyMetadata.Builder<ValuePropertyMetadataCustomization>()
             .name(new PropertyName("charset"))
             .readWrite(true)
             .defaultValue("")
-            .inspectorPath(new InspectorPath("Properties", "Include FXML file", 2))
-            .visibility(Visibility.STANDARD)
+            .customization(ValuePropertyMetadataCustomization.builder()
+                    .inspectorPath(ValuePropertyMetadataCustomization.InspectorPath.builder()
+                            .sectionTag("Properties")
+                            .subSectionTag("Include FXML file")
+                            .subSectionIndex(3)
+                            .build())
+                    .build())
             .build();
 
     protected IncludeMetadata(IntrinsicMetadata parent) {
-        super(FXOMInclude.class, parent);
+        super(FXOMInclude.class, parent, ComponentClassMetadataCustomization.builder()
+                .qualifier("include", Qualifier.builder()
+                        .applicabilityCheck((FXOMIntrinsic o) -> o.getType() == Type.FX_INCLUDE)
+                        .label("default")
+                        .description("")
+                        .category("Fx")
+                        .fxmlUrl(CopyMetadata.class.getResource("Include.fxml"))
+                        .iconUrl(CopyMetadata.class.getResource("Include.png"))
+                        .iconX2Url(CopyMetadata.class.getResource("Include@2x.png"))
+                        .build())
+                .build());
 
         getProperties().add(sourceMetadata);
         getProperties().add(resourcesMetadata);
         getProperties().add(charsetMetadata);
-
-        getQualifiers().put("include",
-                new Qualifier(
-                        getClass().getResource("Include.fxml"),
-                        "default",
-                        "",
-                        getClass().getResource("Include.png"),
-                        getClass().getResource("Include@2x.png"),
-                        "Fx",
-                        (FXOMIntrinsic o) -> o.getType() == Type.FX_INCLUDE
-                        ));
-
     }
 
     @Override

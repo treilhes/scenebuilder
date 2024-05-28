@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,44 +31,15 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.core.metadata.fx;
+package com.oracle.javafx.scenebuilder.api.editor.selection;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import com.oracle.javafx.scenebuilder.api.di.SceneBuilderBeanFactory;
+import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+public class GroupFactory<T extends AbstractSelectionGroup> extends AbstractFactory<T> {
 
-
-public class MoveMeInJavafXGenerator implements OpenExtension {
-
-    @Override
-    public UUID getId() {
-        return UUID.fromString("0664d636-a28e-489b-a83c-e44959ee71ad");
-    }
-
-    @Override
-    public UUID getParentId() {
-        return OpenExtension.ROOT_ID;
-    }
-
-    @Override
-    public List<Class<?>> localContextClasses() {
-        return List.of();
-    }
-
-    @Override
-    public List<Class<?>> exportedContextClasses() {
-     // @formatter:off
-        return Arrays.asList(
-                CommentMetadata.class,
-                CopyMetadata.class,
-                DefineMetadata.class,
-                IncludeMetadata.class,
-                IntrinsicMetadata.class,
-                ReferenceMetadata.class,
-                ScriptMetadata.class);
-     // @formatter:on
+    public GroupFactory(SceneBuilderBeanFactory sbContext) {
+        super(sbContext);
     }
 
 }

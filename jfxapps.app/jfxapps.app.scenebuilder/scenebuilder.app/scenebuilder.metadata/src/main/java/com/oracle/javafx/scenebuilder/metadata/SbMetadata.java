@@ -46,8 +46,8 @@ import com.gluonhq.jfxapps.core.metadata.MetadataIntrospector;
 import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization;
 import com.oracle.javafx.scenebuilder.metadata.custom.ComponentPropertyMetadataCustomization;
-import com.oracle.javafx.scenebuilder.metadata.custom.InspectorPathComparator;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
+import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPathComparator;
 
 public class SbMetadata extends
         AbstractMetadata<ComponentClassMetadataCustomization, ComponentPropertyMetadataCustomization, ValuePropertyMetadataCustomization> {

@@ -1,12 +1,19 @@
 <#if component.customization??>
-    setResizeNeededWhenTopElement(${component.customization.resizeNeededWhenTop});
-
     <#if component.customization.descriptionProperty??>
-    setDescriptionProperty(${component.customization.descriptionProperty}PropertyMetadata);
-    </#if>
-    <#if component.customization.labelMutation??>
-    setLabelMutation((originalLabel, object) -> ${component.customization.labelMutation});
+    getCustomization().setDescriptionProperty(${component.customization.descriptionProperty}PropertyMetadata);
     </#if>
 <#else>
     ${logger.warn(component.metadata.type + " : Customization null.")}
 </#if>
+
+<#list component.componentProperties as key, property>
+    <#if property.metadataClass??>
+        <#if property.customization??>
+            <#if property.customization.freeChildPositioning>
+                getCustomization().setFreeChildPositioning(${property.memberName}PropertyMetadata, ${property.customization.freeChildPositioning});
+            </#if>
+        </#if>
+    <#else>
+        ${logger.info("MetadataClass not set! Discard component property " + component.metadata.name + "." + property.metadata.name + " : " + property.metadata.contentType)}
+    </#if>
+</#list>

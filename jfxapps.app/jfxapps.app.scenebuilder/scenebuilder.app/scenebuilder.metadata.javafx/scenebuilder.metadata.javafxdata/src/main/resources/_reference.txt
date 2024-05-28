@@ -49,7 +49,7 @@ public interface BundleValues {
 
 	//qualifier level
     final String FXML = "fxml";
-    final String LAMBDA_CHECK = "lambdaCheck";
+    final String LAMBDA_CHECK = "applicabilityCheck";
 
 
 	final String HIDDEN_PROPERTIES = "hiddens";

@@ -10,25 +10,24 @@
   <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.boot.starter</artifactId>
+            <artifactId>jfxapps.core.starter</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.metadata</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-fxml</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-web</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-swing</artifactId>
-                </exclusion>
-            </exclusions>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>scenebuilder.metadata</artifactId>
+            <version>${scenebuilder.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.javafx.starter</artifactId>
+            <scope>provided</scope>
         </dependency>
   </dependencies>
 </project>

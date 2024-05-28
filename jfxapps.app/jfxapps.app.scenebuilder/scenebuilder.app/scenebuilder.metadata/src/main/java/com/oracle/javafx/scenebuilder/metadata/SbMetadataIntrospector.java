@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.metadata;
 
-import static com.oracle.javafx.scenebuilder.metadata.custom.InspectorPath.CUSTOM_SECTION;
-import static com.oracle.javafx.scenebuilder.metadata.custom.InspectorPath.CUSTOM_SUB_SECTION;
+import static com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath.CUSTOM_SECTION;
+import static com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath.CUSTOM_SUB_SECTION;
 
 import java.beans.PropertyDescriptor;
 import java.util.Set;
@@ -45,8 +45,8 @@ import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization;
 import com.oracle.javafx.scenebuilder.metadata.custom.ComponentPropertyMetadataCustomization;
-import com.oracle.javafx.scenebuilder.metadata.custom.InspectorPath;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
+import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
 
 public class SbMetadataIntrospector extends
         MetadataIntrospector<ComponentClassMetadataCustomization, ComponentPropertyMetadataCustomization, ValuePropertyMetadataCustomization> {

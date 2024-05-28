@@ -87,7 +87,7 @@ public class ${component.metadataClassSimpleName} extends ComponentClassMetadata
         <#assign propertyMetadataClassName = property.metadataClass.name?replace("$", ".")>
         ${logger.info("Processing component property " + component.metadata.name + "." + property.metadata.name + " : " + property.metadata.contentType)}
         private final ${propertyMetadataClassName}<${context.componentPropertyCustomizationClassName!"<targetComponentPropertyCustomizationClass> not set in plugin configuration!"}> 
-            ${property.metadata.name}PropertyMetadata;
+            ${property.memberName}PropertyMetadata;
     <#else>
         ${logger.info("MetadataClass not set! Discard component property " + component.metadata.name + "." + property.metadata.name + " : " + property.metadata.contentType)}
     </#if>
@@ -105,12 +105,14 @@ public class ${component.metadataClassSimpleName} extends ComponentClassMetadata
     {
         super(${componentClassName}.class, <#if component.parent??>parent<#else>null</#if>, ${customization.customizeComponent(context, component)!"null"});
 
+        var ${component.metadata.type.simpleName?uncap_first}Metadata = this;
+        
         <#list component.componentProperties as key, property>
             <#if property.metadataClass??>
             ${logger.info("Processing 2 " + component.metadata.name + "." + property.metadata.name + " : " + property.metadata.contentType)}
             <#assign propertyMetadataClassName = property.metadataClass.name?replace("$", ".")>
             
-            ${property.metadata.name}PropertyMetadata = new ${propertyMetadataClassName}.Builder<${context.componentPropertyCustomizationClassName!"<targetComponentPropertyCustomizationClass> not set in plugin configuration!"}>()
+            ${property.memberName}PropertyMetadata = new ${propertyMetadataClassName}.Builder<${context.componentPropertyCustomizationClassName!"<targetComponentPropertyCustomizationClass> not set in plugin configuration!"}>()
                     .name(PropertyNames.${property.memberName}Name)
                     .classMetadata(<#if property.metadata.collection == true>${property.metadata.collectionType.simpleName?uncap_first}<#else>${property.metadata.type.simpleName?uncap_first}</#if>Metadata)
                     .isCollection(${property.metadata.collection})

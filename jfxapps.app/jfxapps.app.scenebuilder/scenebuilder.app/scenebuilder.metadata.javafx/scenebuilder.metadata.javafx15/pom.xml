@@ -15,25 +15,22 @@
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.boot.starter</artifactId>
+            <artifactId>jfxapps.core.starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.gluonhq.jfxapps</groupId>
+                    <artifactId>jfxapps.javafx.starter</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.metadata</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-fxml</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-web</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-swing</artifactId>
-                </exclusion>
-            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>scenebuilder.metadata</artifactId>
+            <version>${scenebuilder.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -152,12 +149,34 @@
                         </constructorOverride>
                     </constructorOverrides>
                     <targetPackage>com.oracle.javafx.scenebuilder.metadata.javafx</targetPackage>
-                    <executorClass>com.gluonhq.jfxapps.metadata.template.scenebuilderx.ScenebuilderxExecutor</executorClass>
                     <extensionName>JavafxMetadataExtension</extensionName>
                     <moduleName>scenebuilder.metadata.javafx</moduleName>
                     <uuid>5cadadb4-8aba-44f1-b66d-78e988cd998c</uuid>
                     <failOnError>false</failOnError>
                     <javafxVersion>${javafx.version}</javafxVersion>
+                    
+                    <moduleRequires>
+                        <moduleRequire>scenebuilder.metadata</moduleRequire>
+                        <moduleRequire>javafx.swing</moduleRequire>
+                        <moduleRequire>javafx.media</moduleRequire>
+                        <moduleRequire>javafx.controls</moduleRequire>
+                        <moduleRequire>javafx.fxml</moduleRequire>
+                        <moduleRequire>javafx.web</moduleRequire>
+                    </moduleRequires>
+                    <componentCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custo.ComponentCusto</componentCustomizationClass>
+                    <componentPropertyCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custo.ComponentPropertyCusto</componentPropertyCustomizationClass>
+                    <valuePropertyCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custo.ValuePropertyCusto</valuePropertyCustomizationClass>
+                    
+                    <templateForComponentCustomization>/_templates/CustomizeComponent.ftl</templateForComponentCustomization>
+                    <templateForComponentConstructorCustomization>/_templates/CustomizeComponentConstructor.ftl</templateForComponentConstructorCustomization>
+                    <templateForComponentPropertyCustomization>/_templates/CustomizeComponentProperty.ftl</templateForComponentPropertyCustomization>
+                    <templateForValuePropertyCustomization>/_templates/CustomizeValueProperty.ftl</templateForValuePropertyCustomization>
+                    <templateForStaticValuePropertyCustomization>/_templates/CustomizeStaticValueProperty.ftl</templateForStaticValuePropertyCustomization>
+                    
+                    <targetComponentCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization</targetComponentCustomizationClass>
+                    <targetComponentPropertyCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custom.ComponentPropertyMetadataCustomization</targetComponentPropertyCustomizationClass>
+                    <targetValuePropertyCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization</targetValuePropertyCustomizationClass>
+                            
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -173,18 +192,6 @@
                             <exclusion>
                                 <groupId>com.gluonhq.jfxapps</groupId>
                                 <artifactId>scenebuilder.starter</artifactId>
-                            </exclusion>
-                            <exclusion>
-                                <groupId>org.openjfx</groupId>
-                                <artifactId>javafx-fxml</artifactId>
-                            </exclusion>
-                            <exclusion>
-                                <groupId>org.openjfx</groupId>
-                                <artifactId>javafx-web</artifactId>
-                            </exclusion>
-                            <exclusion>
-                                <groupId>org.openjfx</groupId>
-                                <artifactId>javafx-swing</artifactId>
                             </exclusion>
                         </exclusions>
                     </dependency>

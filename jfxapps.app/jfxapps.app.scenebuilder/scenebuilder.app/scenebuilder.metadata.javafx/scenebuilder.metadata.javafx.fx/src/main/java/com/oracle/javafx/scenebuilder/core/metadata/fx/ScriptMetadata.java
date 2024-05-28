@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,21 +37,26 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMScript;
 import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentPropertyMetadataCustomization;
+import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
 
 @Component
-public class ScriptMetadata extends ComponentClassMetadata<FXOMScript> {
+public class ScriptMetadata extends ComponentClassMetadata<FXOMScript, ComponentClassMetadataCustomization,
+ComponentPropertyMetadataCustomization,
+ValuePropertyMetadataCustomization> {
     protected ScriptMetadata() {
-        super(FXOMScript.class, null);
-
-        getQualifiers().put("default",
-                new Qualifier(
-                        getClass().getResource("Script.fxml"),
-                        "default",
-                        "",
-                        getClass().getResource("Script.png"),
-                        getClass().getResource("Script@2x.png"),
-                        "Fx"
-                        ));
+        super(FXOMScript.class, null, ComponentClassMetadataCustomization.builder()
+                .qualifier("default", Qualifier.builder()
+                        .label("default")
+                        .description("")
+                        .category("Fx")
+                        .fxmlUrl(CopyMetadata.class.getResource("Script.fxml"))
+                        .iconUrl(CopyMetadata.class.getResource("Script.png"))
+                        .iconX2Url(CopyMetadata.class.getResource("Script@2x.png"))
+                        .build())
+                .build());
     }
 
     @Override

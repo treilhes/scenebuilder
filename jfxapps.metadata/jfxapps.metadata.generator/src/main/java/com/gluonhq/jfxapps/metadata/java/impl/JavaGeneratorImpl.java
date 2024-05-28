@@ -135,8 +135,8 @@ public class JavaGeneratorImpl implements ClassCustomization {
 
         // populate the components with parent and dependencies
         localComponents.values().forEach(c -> {
-            findAndSetParentComponent(c, localComponents, availableComponents);
-            findAndSetComponentDependencies(c, localComponents, availableComponents);
+            populateParentComponent(c, localComponents, availableComponents);
+            populateComponentDependencies(c, localComponents, availableComponents);
         });
 
         localComponents.values().forEach(c -> {
@@ -337,7 +337,7 @@ public class JavaGeneratorImpl implements ClassCustomization {
 
     }
 
-    private <CC, CPC, VPC> void findAndSetParentComponent(Component<CC, CPC, VPC> component,
+    private <CC, CPC, VPC> void populateParentComponent(Component<CC, CPC, VPC> component,
             Map<Class<?>, Component<?, ?, ?>> localComponents, Map<Class<?>, Component<?, ?, ?>> availableComponents) {
         Component<?, ?, ?> parent = null;
         Class<?> current = component.getMetadata().getType().getSuperclass();
@@ -355,12 +355,18 @@ public class JavaGeneratorImpl implements ClassCustomization {
         }
     }
 
-    private void findAndSetComponentDependencies(Component<?, ?, ?> component,
+    private void populateComponentDependencies(Component<?, ?, ?> component,
             Map<Class<?>, Component<?, ?, ?>> localComponents, Map<Class<?>, Component<?, ?, ?>> availableComponents) {
 
         component.getComponentProperties().values().stream().forEach(p -> {
             if (p instanceof ComponentProperty cp) {
                 Class<?> contentType = cp.getMetadata().getContentType();
+
+                if (component.getMetadata().getType().equals(contentType)) {
+                    // no need to add itself to dependencies
+                    return;
+                }
+
                 if (localComponents.containsKey(contentType)) {
                     cp.setContentTypeMetadataClassName(localComponents.get(contentType).getMetadataClassName());
                 } else if (availableComponents.containsKey(contentType)) {
@@ -380,6 +386,12 @@ public class JavaGeneratorImpl implements ClassCustomization {
         component.getStaticValueProperties().values().stream().forEach(p -> {
             if (p instanceof ValueProperty vp) {
                 Class<?> applicability = vp.getMetadata().getApplicability();
+
+                if (component.getMetadata().getType().equals(applicability)) {
+                    // no need to add itself to dependencies
+                    return;
+                }
+
                 String metadataClassName = null;
                 if (localComponents.containsKey(applicability)) {
                     metadataClassName = localComponents.get(applicability).getMetadataClassName();

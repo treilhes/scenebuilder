@@ -34,6 +34,7 @@
 
 open module jfxapps.core.metadata {
     exports com.gluonhq.jfxapps.core.metadata;
+    exports com.gluonhq.jfxapps.core.metadata.fx.defaults;
     exports com.gluonhq.jfxapps.core.metadata.klass;
     exports com.gluonhq.jfxapps.core.metadata.property;
     exports com.gluonhq.jfxapps.core.metadata.property.value;

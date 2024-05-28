@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,40 +42,48 @@ import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic.Type;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.fx.defaults.NullReference;
 import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata.Visibility;
 import com.gluonhq.jfxapps.core.metadata.property.value.StringPropertyMetadata.I18nStringPropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.util.InspectorPath;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentPropertyMetadataCustomization;
+import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
 
 @Component
-public class CopyMetadata extends ComponentClassMetadata<FXOMCopy> {
+public class CopyMetadata extends ComponentClassMetadata<FXOMCopy, ComponentClassMetadataCustomization,
+ComponentPropertyMetadataCustomization,
+ValuePropertyMetadataCustomization> {
 
     static {
         FXOMDocument.DEFAULT_NAMESPACE.put("sb_nullCopy", new NullReference());
     }
 
-    private final I18nStringPropertyMetadata sourceMetadata = new I18nStringPropertyMetadata.Builder()
+    private final I18nStringPropertyMetadata<ValuePropertyMetadataCustomization> sourceMetadata = new I18nStringPropertyMetadata.Builder<ValuePropertyMetadataCustomization>()
             .name(new PropertyName("source"))
             .readWrite(true)
             .defaultValue("sb_nullCopy")
-            .inspectorPath(new InspectorPath("Properties", "Reference", 1))
-            .visibility(Visibility.STANDARD)
+            .customization(ValuePropertyMetadataCustomization.builder()
+                    .inspectorPath(ValuePropertyMetadataCustomization.InspectorPath.builder()
+                            .sectionTag("Properties")
+                            .subSectionTag("Reference")
+                            .subSectionIndex(1)
+                            .build())
+                    .build())
             .build();
 
     protected CopyMetadata(IntrinsicMetadata parent) {
-        super(FXOMCopy.class, parent);
+        super(FXOMCopy.class, parent, ComponentClassMetadataCustomization.builder()
+                .qualifier("copy", Qualifier.builder()
+                        .applicabilityCheck((FXOMIntrinsic o) -> o.getType() == Type.FX_COPY)
+                        .label("default")
+                        .description("")
+                        .category("Fx")
+                        .fxmlUrl(CopyMetadata.class.getResource("Copy.fxml"))
+                        .iconUrl(CopyMetadata.class.getResource("Copy.png"))
+                        .iconX2Url(CopyMetadata.class.getResource("Copy@2x.png"))
+                        .build())
+                .build());
 
         getProperties().add(sourceMetadata);
-
-        getQualifiers().put("copy",
-                new Qualifier(
-                        getClass().getResource("Copy.fxml"),
-                        "default",
-                        "",
-                        getClass().getResource("Copy.png"),
-                        getClass().getResource("Copy@2x.png"),
-                        "Fx",
-                        (FXOMIntrinsic o) -> o.getType() == Type.FX_COPY
-                        ));
 
     }
 

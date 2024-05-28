@@ -239,7 +239,58 @@ public class ComponentClassMetadataCustomization {
             return applicabilityCheck;
         }
 
+        public static Builder builder() {
+            return new Builder();
+        }
 
+        public static class Builder {
+            private URL fxmlUrl;
+            private String label;
+            private String description;
+            private URL iconUrl;
+            private URL iconX2Url;
+            private String category;
+            private ApplicabilityCheck<?> applicabilityCheck;
+
+            public Builder fxmlUrl(URL fxmlUrl) {
+                this.fxmlUrl = fxmlUrl;
+                return this;
+            }
+
+            public Builder label(String label) {
+                this.label = label;
+                return this;
+            }
+
+            public Builder description(String description) {
+                this.description = description;
+                return this;
+            }
+
+            public Builder iconUrl(URL iconUrl) {
+                this.iconUrl = iconUrl;
+                return this;
+            }
+
+            public Builder iconX2Url(URL iconX2Url) {
+                this.iconX2Url = iconX2Url;
+                return this;
+            }
+
+            public Builder category(String category) {
+                this.category = category;
+                return this;
+            }
+
+            public Builder applicabilityCheck(ApplicabilityCheck<?> applicabilityCheck) {
+                this.applicabilityCheck = applicabilityCheck;
+                return this;
+            }
+
+            public Qualifier build() {
+                return new Qualifier(fxmlUrl, label, description, iconUrl, iconX2Url, category, applicabilityCheck);
+            }
+        }
     }
 
     @FunctionalInterface
@@ -285,8 +336,40 @@ public class ComponentClassMetadataCustomization {
         return this;
     }
 
-    protected void setFreeChildPositioning(ComponentPropertyMetadata<ComponentPropertyMetadataCustomization> componentProperty, boolean freeChildPositioning) {
+    public void setFreeChildPositioning(ComponentPropertyMetadata<ComponentPropertyMetadataCustomization> componentProperty, boolean freeChildPositioning) {
         this.freeChildPositioning.put(componentProperty, freeChildPositioning);
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private final Map<String, Qualifier> qualifiers = new HashMap<>();
+        private boolean resizeNeededWhenTopElement = true;
+        private LabelMutation labelMutation = null;
+
+        public Builder qualifier(String key, Qualifier qualifier) {
+            qualifiers.put(key, qualifier);
+            return this;
+        }
+
+        public Builder resizeNeededWhenTopElement(boolean resizeNeededWhenTopElement) {
+            this.resizeNeededWhenTopElement = resizeNeededWhenTopElement;
+            return this;
+        }
+
+        public Builder labelMutation(LabelMutation labelMutation) {
+            this.labelMutation = labelMutation;
+            return this;
+        }
+
+        public ComponentClassMetadataCustomization build() {
+            ComponentClassMetadataCustomization customization = new ComponentClassMetadataCustomization();
+            qualifiers.forEach(customization.qualifiers::put);
+            customization.setResizeNeededWhenTopElement(resizeNeededWhenTopElement);
+            customization.setLabelMutation(labelMutation);
+            return customization;
+        }
+    }
 }
