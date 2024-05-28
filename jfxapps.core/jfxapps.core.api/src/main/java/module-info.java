@@ -52,6 +52,7 @@ open module jfxapps.core.api {
     exports com.oracle.javafx.scenebuilder.api.content.gesture;
     exports com.oracle.javafx.scenebuilder.api.content.mode;
     exports com.oracle.javafx.scenebuilder.api.content.mode.annotation;
+    exports com.oracle.javafx.scenebuilder.api.css;
     exports com.oracle.javafx.scenebuilder.api.di;
     exports com.oracle.javafx.scenebuilder.api.dnd;
     exports com.oracle.javafx.scenebuilder.api.ui.dock;
@@ -82,7 +83,7 @@ open module jfxapps.core.api {
     exports com.oracle.javafx.scenebuilder.api.shortcut.annotation;
     exports com.oracle.javafx.scenebuilder.api.subjects;
     exports com.oracle.javafx.scenebuilder.api.template;
-    exports com.oracle.javafx.scenebuilder.api.theme;
+
     exports com.oracle.javafx.scenebuilder.api.tooltheme;
 
     exports com.oracle.javafx.scenebuilder.api.util;

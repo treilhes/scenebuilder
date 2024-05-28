@@ -38,11 +38,11 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.SceneGraphObject;
+import com.oracle.javafx.scenebuilder.api.css.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPanelController;
 import com.oracle.javafx.scenebuilder.api.ui.menu.ContextMenu;
 import com.oracle.javafx.scenebuilder.api.ui.misc.Workspace;

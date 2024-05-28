@@ -32,6 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.theme;
 
+import com.oracle.javafx.scenebuilder.api.css.StylesheetProvider;
 import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 
 /**
