@@ -1,9 +1,9 @@
 open module scenebuilder.core.maven {
-    exports com.oracle.javafx.scenebuilder.library.maven.artifact;
-    exports com.oracle.javafx.scenebuilder.library.maven;
-    exports com.oracle.javafx.scenebuilder.library.maven.impl;
-    exports com.oracle.javafx.scenebuilder.library.preferences.global;
-    exports com.oracle.javafx.scenebuilder.library.maven.repository;
+    exports com.gluonhq.jfxapps.core.maven.artifact;
+    exports com.gluonhq.jfxapps.core.maven;
+    exports com.gluonhq.jfxapps.core.maven.impl;
+    exports com.gluonhq.jfxapps.core.maven.preferences.global;
+    exports com.gluonhq.jfxapps.core.maven.repository;
 
     requires transitive jfxapps.core.api;
     requires jakarta.annotation;
