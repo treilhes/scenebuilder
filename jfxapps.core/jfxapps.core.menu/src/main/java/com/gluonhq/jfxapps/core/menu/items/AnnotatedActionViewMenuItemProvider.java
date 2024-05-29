@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.core.menu;
+package com.gluonhq.jfxapps.core.menu.items;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,25 +44,25 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.ui.menu.ContextMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.menu.ContextMenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.menu.ViewMenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.menu.ViewMenuItemProvider;
 
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 
 @ApplicationInstanceSingleton
-public class AnnotatedActionContextMenuItemProvider implements ContextMenuItemProvider {
+public class AnnotatedActionViewMenuItemProvider implements ViewMenuItemProvider {
 
-    private static Logger logger = LoggerFactory.getLogger(AnnotatedActionContextMenuItemProvider.class);
+    private static Logger logger = LoggerFactory.getLogger(AnnotatedActionViewMenuItemProvider.class);
 
     private final JfxAppContext context;
     private final MenuBuilder builder;
 
-    private List<ContextMenuItemAttachment> menuItemsCache;
+    private List<ViewMenuItemAttachment> menuItemsCache;
 
-    public AnnotatedActionContextMenuItemProvider(JfxAppContext context,
+    public AnnotatedActionViewMenuItemProvider(JfxAppContext context,
             MenuBuilder menuBuilder) {
         super();
         this.context = context;
@@ -70,54 +70,57 @@ public class AnnotatedActionContextMenuItemProvider implements ContextMenuItemPr
     }
 
     @Override
-    public List<ContextMenuItemAttachment> contextMenuItems() {
+    public List<ViewMenuItemAttachment> menuItems() {
 
         if (menuItemsCache != null) {
             return menuItemsCache;
         }
 
-        menuItemsCache = context
+        return context
                 .getBeanClassesForAnnotation(
-                        com.gluonhq.jfxapps.core.api.ui.menu.annotation.ContextMenuItemAttachment.class)
-                .stream().map(this::makeContextMenuItemAttachment).flatMap(l -> l.stream()).filter(Objects::nonNull)
+                        com.gluonhq.jfxapps.core.api.ui.menu.annotation.ViewMenuItemAttachment.class)
+                .stream().map(this::makeMenuItemAttachment).flatMap(l -> l.stream()).filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        return menuItemsCache;
+//        return menuItemsCache;
     }
 
     @SuppressWarnings("unchecked")
-    private List<ContextMenuItemAttachment> makeContextMenuItemAttachment(Class<?> cls) {
+    private List<ViewMenuItemAttachment> makeMenuItemAttachment(Class<?> cls) {
 
-        List<ContextMenuItemAttachment> result = new ArrayList<>();
+        List<ViewMenuItemAttachment> result = new ArrayList<>();
 
         try {
             if (!AbstractAction.class.isAssignableFrom(cls)) {
-                logger.error("ContextMenuItemAttachment annotation can only be used on Action, discarding {}", cls.getName());
+                logger.error("ViewMenuItemAttachment annotation can only be used on Action, discarding {}", cls.getName());
                 return null;
             }
             final Class<AbstractAction> actionClass = (Class<AbstractAction>) cls;
 
-            final com.gluonhq.jfxapps.core.api.ui.menu.annotation.ContextMenuItemAttachment annotation = actionClass
-                    .getAnnotation(com.gluonhq.jfxapps.core.api.ui.menu.annotation.ContextMenuItemAttachment.class);
+            final com.gluonhq.jfxapps.core.api.ui.menu.annotation.ViewMenuItemAttachment annotation = actionClass
+                    .getAnnotation(com.gluonhq.jfxapps.core.api.ui.menu.annotation.ViewMenuItemAttachment.class);
 
             assert annotation != null;
 
-            MenuItem menuItem = builder.menuItem().id(annotation.id()).actionClass(actionClass).title(annotation.label()).toggleClass(annotation.toggleClass()).build();
-            ContextMenuItemAttachment menuAttachment = ContextMenuItemAttachment.create(menuItem, annotation.selectionGroup(), annotation.targetMenuId(),
-                    annotation.positionRequest());
+            MenuItem menuItem = builder.menuItem().id(annotation.id()).actionClass(actionClass)
+                    .title(annotation.label()).viewClass(annotation.viewClass()).toggleClass(annotation.toggleClass()).build();
+
+            ViewMenuItemAttachment menuAttachment = ViewMenuItemAttachment.create(menuItem, annotation.targetMenuId(),
+                    annotation.positionRequest(), annotation.viewClass());
+
             result.add(menuAttachment);
 
             if (annotation.separatorBefore()) {
                 SeparatorMenuItem separator = builder.separator().id("separatorBefore_" + annotation.id()).build();
-                ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(separator, annotation.selectionGroup(),annotation.id(),
-                        PositionRequest.AsPreviousSibling);
+                ViewMenuItemAttachment attachment = ViewMenuItemAttachment.create(separator, annotation.id(),
+                        PositionRequest.AsPreviousSibling, annotation.viewClass());
                 result.add(attachment);
             }
 
             if (annotation.separatorAfter()) {
                 SeparatorMenuItem separator = builder.separator().id("separatorAfter_" + annotation.id()).build();
-                ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(separator, annotation.selectionGroup(),annotation.id(),
-                        PositionRequest.AsNextSibling);
+                ViewMenuItemAttachment attachment = ViewMenuItemAttachment.create(separator, annotation.id(),
+                        PositionRequest.AsNextSibling, annotation.viewClass());
                 result.add(attachment);
             }
         } catch (Exception e) {

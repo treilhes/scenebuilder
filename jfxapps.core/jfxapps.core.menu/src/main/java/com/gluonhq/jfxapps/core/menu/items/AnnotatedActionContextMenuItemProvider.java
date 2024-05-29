@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.core.menu;
+package com.gluonhq.jfxapps.core.menu.items;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,29 +44,25 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuAttachment;
+import com.gluonhq.jfxapps.core.api.ui.menu.ContextMenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.menu.ContextMenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuProvider;
 import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
 
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 
 @ApplicationInstanceSingleton
-public class AnnotatedActionMenuItemProvider implements MenuItemProvider, MenuProvider {
+public class AnnotatedActionContextMenuItemProvider implements ContextMenuItemProvider {
 
-    private static Logger logger = LoggerFactory.getLogger(AnnotatedActionMenuItemProvider.class);
+    private static Logger logger = LoggerFactory.getLogger(AnnotatedActionContextMenuItemProvider.class);
 
     private final JfxAppContext context;
     private final MenuBuilder builder;
 
-    private List<MenuItemAttachment> menuItemsCache;
-    private List<MenuAttachment> menuCache;
+    private List<ContextMenuItemAttachment> menuItemsCache;
 
-    public AnnotatedActionMenuItemProvider(JfxAppContext context,
+    public AnnotatedActionContextMenuItemProvider(JfxAppContext context,
             MenuBuilder menuBuilder) {
         super();
         this.context = context;
@@ -74,7 +70,7 @@ public class AnnotatedActionMenuItemProvider implements MenuItemProvider, MenuPr
     }
 
     @Override
-    public List<MenuItemAttachment> menuItems() {
+    public List<ContextMenuItemAttachment> contextMenuItems() {
 
         if (menuItemsCache != null) {
             return menuItemsCache;
@@ -82,87 +78,51 @@ public class AnnotatedActionMenuItemProvider implements MenuItemProvider, MenuPr
 
         menuItemsCache = context
                 .getBeanClassesForAnnotation(
-                        com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment.class)
-                .stream().map(this::makeMenuItemAttachment).flatMap(l -> l.stream()).filter(Objects::nonNull)
+                        com.gluonhq.jfxapps.core.api.ui.menu.annotation.ContextMenuItemAttachment.class)
+                .stream().map(this::makeContextMenuItemAttachment).flatMap(l -> l.stream()).filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
         return menuItemsCache;
     }
 
-    @Override
-    public List<MenuAttachment> menus() {
-        if (menuCache != null) {
-            return menuCache;
-        }
-        menuCache = context
-                .getBeanClassesForAnnotation(com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuAttachment.class)
-                .stream().map(this::makeMenuAttachment).flatMap(l -> l.stream()).filter(Objects::nonNull)
-                .collect(Collectors.toList());
-        return menuCache;
-    }
-
     @SuppressWarnings("unchecked")
-    private List<MenuItemAttachment> makeMenuItemAttachment(Class<?> cls) {
+    private List<ContextMenuItemAttachment> makeContextMenuItemAttachment(Class<?> cls) {
 
-        List<MenuItemAttachment> result = new ArrayList<>();
+        List<ContextMenuItemAttachment> result = new ArrayList<>();
 
         try {
             if (!AbstractAction.class.isAssignableFrom(cls)) {
-                logger.error("MenuItemAttachment annotation can only be used on Action, discarding {}", cls.getName());
+                logger.error("ContextMenuItemAttachment annotation can only be used on Action, discarding {}", cls.getName());
                 return null;
             }
             final Class<AbstractAction> actionClass = (Class<AbstractAction>) cls;
 
-            final com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment annotation = actionClass
-                    .getAnnotation(com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment.class);
+            final com.gluonhq.jfxapps.core.api.ui.menu.annotation.ContextMenuItemAttachment annotation = actionClass
+                    .getAnnotation(com.gluonhq.jfxapps.core.api.ui.menu.annotation.ContextMenuItemAttachment.class);
 
             assert annotation != null;
 
             MenuItem menuItem = builder.menuItem().id(annotation.id()).actionClass(actionClass).title(annotation.label()).toggleClass(annotation.toggleClass()).build();
-            MenuItemAttachment menuAttachment = MenuItemAttachment.create(menuItem, annotation.targetMenuId(),
+            ContextMenuItemAttachment menuAttachment = ContextMenuItemAttachment.create(menuItem, annotation.selectionGroup(), annotation.targetMenuId(),
                     annotation.positionRequest());
             result.add(menuAttachment);
 
             if (annotation.separatorBefore()) {
                 SeparatorMenuItem separator = builder.separator().id("separatorBefore_" + annotation.id()).build();
-                MenuItemAttachment attachment = MenuItemAttachment.create(separator, annotation.id(),
+                ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(separator, annotation.selectionGroup(),annotation.id(),
                         PositionRequest.AsPreviousSibling);
                 result.add(attachment);
             }
 
             if (annotation.separatorAfter()) {
                 SeparatorMenuItem separator = builder.separator().id("separatorAfter_" + annotation.id()).build();
-                MenuItemAttachment attachment = MenuItemAttachment.create(separator, annotation.id(),
+                ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(separator, annotation.selectionGroup(),annotation.id(),
                         PositionRequest.AsNextSibling);
                 result.add(attachment);
             }
         } catch (Exception e) {
             logger.error("Unable to create a menu attachment for action : {}", cls, e);
         }
-        return result;
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<MenuAttachment> makeMenuAttachment(Class<?> cls) {
-
-        List<MenuAttachment> result = new ArrayList<>();
-
-        if (!AbstractAction.class.isAssignableFrom(cls)) {
-            logger.error("MenuAttachment annotation can only be used on Action, discarding {}", cls.getName());
-            return null;
-        }
-        final Class<AbstractAction> actionClass = (Class<AbstractAction>) cls;
-
-        final com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuAttachment annotation = actionClass
-                .getAnnotation(com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuAttachment.class);
-
-        assert annotation != null;
-
-        Menu menu = builder.menu().id(annotation.id()).title(annotation.label()).build();
-        MenuAttachment menuAttachment = MenuAttachment.create(menu, annotation.targetMenuId(),
-                annotation.positionRequest());
-        result.add(menuAttachment);
-
         return result;
     }
 

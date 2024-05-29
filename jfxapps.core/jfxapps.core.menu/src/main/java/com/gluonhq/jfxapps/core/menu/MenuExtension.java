@@ -31,17 +31,17 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.menu;
+package com.gluonhq.jfxapps.core.menu;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.oracle.javafx.scenebuilder.core.menu.AnnotatedActionContextMenuItemProvider;
-import com.oracle.javafx.scenebuilder.core.menu.AnnotatedActionMenuItemProvider;
-import com.oracle.javafx.scenebuilder.core.menu.AnnotatedActionViewMenuItemProvider;
-import com.oracle.javafx.scenebuilder.menu.i18n.I18NMenu;
+import com.gluonhq.jfxapps.core.menu.i18n.I18NMenu;
+import com.gluonhq.jfxapps.core.menu.items.AnnotatedActionContextMenuItemProvider;
+import com.gluonhq.jfxapps.core.menu.items.AnnotatedActionMenuItemProvider;
+import com.gluonhq.jfxapps.core.menu.items.AnnotatedActionViewMenuItemProvider;
 
 public class MenuExtension implements OpenExtension {
     @Override
