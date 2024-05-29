@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api.util;
+package com.gluonhq.jfxapps.core.api.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -58,16 +58,30 @@ import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 
 @ExtendWith(ApplicationExtension.class)
-class CoordinateHelperTest {
+class CoordinateHelperNestedClipTest {
 
     private FXOMDocument newFxomDocument;
     private FXOMObject rectangle;
-    private FXOMObject circle;
+    private FXOMObject circleClip1;
+    private FXOMObject rectangleClip2;
+    private FXOMObject rectangleClip3;
+    private FXOMObject expected;
+
     private Bounds rectangleLocalBounds;
-    private Bounds circleLocalBounds;
+    private Bounds circleClip1LocalBounds;
+    private Bounds rectangleClip2LocalBounds;
+    private Bounds rectangleClip3LocalBounds;
+    private Bounds expectedLocalBounds;
+
+    private Transform rectangleLocalTransform;
+    private Transform circleClip1LocalTransform;
+    private Transform rectangleClip2LocalTransform;
+    private Transform rectangleClip3LocalTransform;
+    private Transform expectedClip3LocalTransform;
 
     /**
      * Will be called with {@code @Before} semantics, i. e. before each test method.
@@ -77,19 +91,32 @@ class CoordinateHelperTest {
     @Start
     private void start(Stage stage) {
         try {
-            URL url = CoordinateHelperTest.class.getResource("clipedRectangle.fxml");
+            URL url = CoordinateHelperNestedClipTest.class.getResource("3levelClipedRectangle.fxml");
             String fxmlText = new String(Files.readAllBytes(Path.of(url.toURI())));
-            newFxomDocument = new FXOMDocument(fxmlText, url, CoordinateHelperTest.class.getClassLoader(), null);
+            newFxomDocument = new FXOMDocument(fxmlText, url, CoordinateHelperNestedClipTest.class.getClassLoader(), null);
             Parent root = (Parent)newFxomDocument.getSceneGraphRoot();
             stage.setScene(new Scene(root, 300, 300));
             stage.show();
 
             Map<String, FXOMObject> fxomObjects = newFxomDocument.collect(FxIdCollector.fxIdsMap());
             rectangle = fxomObjects.get("rectangle");
-            circle = fxomObjects.get("circle");
+            circleClip1 = fxomObjects.get("circleClip1");
+            rectangleClip2 = fxomObjects.get("rectangleClip2");
+            rectangleClip3 = fxomObjects.get("rectangleClip3");
+            expected = fxomObjects.get("expected");
+
 
             rectangleLocalBounds = rectangle.getSceneGraphObject().getAs(Node.class).getBoundsInLocal();
-            circleLocalBounds = circle.getSceneGraphObject().getAs(Node.class).getBoundsInLocal();
+            circleClip1LocalBounds = circleClip1.getSceneGraphObject().getAs(Node.class).getBoundsInLocal();
+            rectangleClip2LocalBounds = rectangleClip2.getSceneGraphObject().getAs(Node.class).getBoundsInLocal();
+            rectangleClip3LocalBounds = rectangleClip3.getSceneGraphObject().getAs(Node.class).getBoundsInLocal();
+            expectedLocalBounds = expected.getSceneGraphObject().getAs(Node.class).getBoundsInLocal();
+
+//            rectangleLocalTransform = ((Node)rectangle.getSceneGraphObject()).getBoundsInLocal();
+//            circleClip1LocalBounds = ((Node)circleClip1.getSceneGraphObject()).getBoundsInLocal();
+//            rectangleClip2LocalBounds = ((Node)rectangleClip2.getSceneGraphObject()).getBoundsInLocal();
+//            rectangleClip3LocalBounds = ((Node)rectangleClip3.getSceneGraphObject()).getBoundsInLocal();
+//            expectedLocalBounds = ((Node)expected.getSceneGraphObject()).getBoundsInLocal();
 
 
         } catch (Exception e) {
@@ -103,55 +130,55 @@ class CoordinateHelperTest {
      */
     @Test
     void testIfJavaFXIssueHasBeenSolved() {
-        Node rectangleNode = rectangle.getSceneGraphObject().getAs(Node.class);
-        Node circleNode = circle.getSceneGraphObject().getAs(Node.class);
+        Node expectedNode = expected.getSceneGraphObject().getAs(Node.class);
+        Node rectangleClip3Node = rectangleClip3.getSceneGraphObject().getAs(Node.class);
 
         assertNotEquals(
-                rectangleNode.localToScene(0, 0),
-                circleNode.localToScene(0, 0),
+                expectedNode.localToScene(0, 0),
+                rectangleClip3Node.localToScene(0, 0),
                 "Alleluia !!! javafx issue solved");
 
         assertNotEquals(
-                rectangleNode.localToScene(rectangleNode.getBoundsInLocal()),
-                circleNode.localToScene(circleNode.getBoundsInLocal()),
+                expectedNode.localToScene(expectedNode.getBoundsInLocal()),
+                rectangleClip3Node.localToScene(rectangleClip3Node.getBoundsInLocal()),
                 "Alleluia !!! javafx issue solved");
 
         assertNotEquals(
-                rectangleNode.localToScene(0, 0, true),
-                circleNode.localToScene(0, 0, true),
+                expectedNode.localToScene(0, 0, true),
+                rectangleClip3Node.localToScene(0, 0, true),
                 "Alleluia !!! javafx issue solved");
 
         assertNotEquals(
-                rectangleNode.localToScene(rectangleNode.getBoundsInLocal(), true),
-                circleNode.localToScene(circleNode.getBoundsInLocal(), true),
+                expectedNode.localToScene(expectedNode.getBoundsInLocal(), true),
+                rectangleClip3Node.localToScene(rectangleClip3Node.getBoundsInLocal(), true),
                 "Alleluia !!! javafx issue solved");
 
         assertNotEquals(
-                rectangleNode.sceneToLocal(0, 0),
-                circleNode.sceneToLocal(0, 0),
+                expectedNode.sceneToLocal(0, 0),
+                rectangleClip3Node.sceneToLocal(0, 0),
                 "Alleluia !!! javafx issue solved");
 
         assertNotEquals(
-                rectangleNode.sceneToLocal(rectangleNode.getBoundsInLocal()),
-                circleNode.sceneToLocal(circleNode.getBoundsInLocal()),
+                expectedNode.sceneToLocal(expectedNode.getBoundsInLocal()),
+                rectangleClip3Node.sceneToLocal(rectangleClip3Node.getBoundsInLocal()),
                 "Alleluia !!! javafx issue solved");
 
         assertNotEquals(
-                rectangleNode.sceneToLocal(0, 0, true),
-                circleNode.sceneToLocal(0, 0, true),
+                expectedNode.sceneToLocal(0, 0, true),
+                rectangleClip3Node.sceneToLocal(0, 0, true),
                 "Alleluia !!! javafx issue solved");
 
         assertNotEquals(
-                rectangleNode.sceneToLocal(rectangleNode.getBoundsInLocal(), true),
-                circleNode.sceneToLocal(circleNode.getBoundsInLocal(), true),
+                expectedNode.sceneToLocal(expectedNode.getBoundsInLocal(), true),
+                rectangleClip3Node.sceneToLocal(rectangleClip3Node.getBoundsInLocal(), true),
                 "Alleluia !!! javafx issue solved");
     }
 
     @Test
     void shouldReturnTheSameScenePoint3DInSameScene() {
-        Point3D sameScenePoint = new Point3D(100, 100, 0);
-        Point3D rect = CoordinateHelper.localToScene(rectangle, 0.0, 0.0, 0.0);
-        Point3D circ = CoordinateHelper.localToScene(circle, 0.0, 0.0, 0.0);
+        Point3D sameScenePoint = new Point3D(200, 200, 0);
+        Point3D rect = CoordinateHelper.localToScene(expected, 0.0, 0.0, 0.0);
+        Point3D circ = CoordinateHelper.localToScene(rectangleClip3, 0.0, 0.0, 0.0);
 
         assertEquals(sameScenePoint, rect);
         assertEquals(rect, circ);
@@ -159,9 +186,9 @@ class CoordinateHelperTest {
 
     @Test
     void shouldReturnTheSameScenePoint2DInSameScene() {
-        Point2D sameScenePoint = new Point2D(100, 100);
-        Point2D rect = CoordinateHelper.localToScene(rectangle, 0.0, 0.0);
-        Point2D circ = CoordinateHelper.localToScene(circle, 0.0, 0.0);
+        Point2D sameScenePoint = new Point2D(200, 200);
+        Point2D rect = CoordinateHelper.localToScene(expected, 0.0, 0.0);
+        Point2D circ = CoordinateHelper.localToScene(rectangleClip3, 0.0, 0.0);
 
         assertEquals(sameScenePoint, rect);
         assertEquals(rect, circ);
@@ -170,8 +197,8 @@ class CoordinateHelperTest {
     @Test
     void shouldReturnTheSameScenePoint3DInRootScene() {
         Point3D sameScenePoint = new Point3D(200, 200, 0);
-        Point3D rect = CoordinateHelper.localToScene(rectangle, 0.0, 0.0, 0.0, true);
-        Point3D circ = CoordinateHelper.localToScene(circle, 0.0, 0.0, 0.0, true);
+        Point3D rect = CoordinateHelper.localToScene(expected, 0.0, 0.0, 0.0, true);
+        Point3D circ = CoordinateHelper.localToScene(rectangleClip3, 0.0, 0.0, 0.0, true);
 
         assertEquals(sameScenePoint, rect);
         assertEquals(rect, circ);
@@ -180,8 +207,8 @@ class CoordinateHelperTest {
     @Test
     void shouldReturnTheSameScenePoint2DInRootScene() {
         Point2D sameScenePoint = new Point2D(200, 200);
-        Point2D rect = CoordinateHelper.localToScene(rectangle, 0.0, 0.0, true);
-        Point2D circ = CoordinateHelper.localToScene(circle, 0.0, 0.0, true);
+        Point2D rect = CoordinateHelper.localToScene(expected, 0.0, 0.0, true);
+        Point2D circ = CoordinateHelper.localToScene(rectangleClip3, 0.0, 0.0, true);
 
         assertEquals(sameScenePoint, rect);
         assertEquals(rect, circ);
@@ -190,11 +217,11 @@ class CoordinateHelperTest {
 
     @Test
     void shouldReturnTheSameLocalPoint2DFromSameScenePoint() {
-        Point2D scenePoint = new Point2D(100, 100);
+        Point2D scenePoint = new Point2D(200, 200);
         Point2D expectedLocalPoint = new Point2D(0, 0);
 
-        Point2D rect = CoordinateHelper.sceneToLocal(rectangle, scenePoint);
-        Point2D circ = CoordinateHelper.sceneToLocal(circle, scenePoint);
+        Point2D rect = CoordinateHelper.sceneToLocal(expected, scenePoint);
+        Point2D circ = CoordinateHelper.sceneToLocal(rectangleClip3, scenePoint);
 
         assertEquals(expectedLocalPoint, rect);
         assertEquals(rect, circ);
@@ -202,11 +229,11 @@ class CoordinateHelperTest {
 
     @Test
     void shouldReturnTheSameLocalPoint3DFromSameScenePoint() {
-        Point3D scenePoint = new Point3D(100, 100, 0);
+        Point3D scenePoint = new Point3D(200, 200, 0);
         Point3D expectedLocalPoint = new Point3D(0, 0, 0);
 
-        Point3D rect = CoordinateHelper.sceneToLocal(rectangle, scenePoint);
-        Point3D circ = CoordinateHelper.sceneToLocal(circle, scenePoint);
+        Point3D rect = CoordinateHelper.sceneToLocal(expected, scenePoint);
+        Point3D circ = CoordinateHelper.sceneToLocal(rectangleClip3, scenePoint);
 
         assertEquals(expectedLocalPoint, rect);
         assertEquals(rect, circ);
@@ -217,8 +244,8 @@ class CoordinateHelperTest {
         Point2D scenePoint = new Point2D(200, 200);
         Point2D expectedLocalPoint = new Point2D(0, 0);
 
-        Point2D rect = CoordinateHelper.sceneToLocal(rectangle, scenePoint, true);
-        Point2D circ = CoordinateHelper.sceneToLocal(circle, scenePoint, true);
+        Point2D rect = CoordinateHelper.sceneToLocal(expected, scenePoint, true);
+        Point2D circ = CoordinateHelper.sceneToLocal(rectangleClip3, scenePoint, true);
 
         assertEquals(expectedLocalPoint, rect);
         assertEquals(rect, circ);
@@ -226,9 +253,9 @@ class CoordinateHelperTest {
 
     @Test
     void shouldReturnTheSameBoundsInSameScene() {
-        Bounds expectedBounds = new BoundingBox(100, 100, 100, 100);
-        Bounds rect = CoordinateHelper.localToScene(rectangle, rectangleLocalBounds);
-        Bounds circ = CoordinateHelper.localToScene(circle, circleLocalBounds);
+        Bounds expectedBounds = new BoundingBox(200, 200, 75, 75);
+        Bounds rect = CoordinateHelper.localToScene(expected, expectedLocalBounds);
+        Bounds circ = CoordinateHelper.localToScene(rectangleClip3, rectangleClip3LocalBounds);
 
         assertEquals(expectedBounds, rect);
         assertEquals(rect, circ);
@@ -236,9 +263,9 @@ class CoordinateHelperTest {
 
     @Test
     void shouldReturnTheSameBoundsInRootScene() {
-        Bounds expectedBounds = new BoundingBox(200, 200, 100, 100);
-        Bounds rect = CoordinateHelper.localToScene(rectangle, rectangleLocalBounds, true);
-        Bounds circ = CoordinateHelper.localToScene(circle, circleLocalBounds, true);
+        Bounds expectedBounds = new BoundingBox(200, 200, 75, 75);
+        Bounds rect = CoordinateHelper.localToScene(expected, expectedLocalBounds, true);
+        Bounds circ = CoordinateHelper.localToScene(rectangleClip3, rectangleClip3LocalBounds, true);
 
         assertEquals(rect, expectedBounds);
         assertEquals(rect, circ);
@@ -246,11 +273,11 @@ class CoordinateHelperTest {
 
     @Test
     void shouldReturnTheSameLocalBoundsFromSameSceneBounds() {
-        Bounds sceneBounds = new BoundingBox(100, 100, 100, 100);
-        Bounds expectedLocalBounds = new BoundingBox(0, 0, 100, 100);
+        Bounds sceneBounds = new BoundingBox(200, 200, 75, 75);
+        Bounds expectedLocalBounds = new BoundingBox(0, 0, 75, 75);
 
-        Bounds rect = CoordinateHelper.sceneToLocal(rectangle, sceneBounds);
-        Bounds circ = CoordinateHelper.sceneToLocal(circle, sceneBounds);
+        Bounds rect = CoordinateHelper.sceneToLocal(expected, sceneBounds);
+        Bounds circ = CoordinateHelper.sceneToLocal(rectangleClip3, sceneBounds);
 
         assertEquals(expectedLocalBounds, rect);
         assertEquals(rect, circ);
@@ -258,13 +285,25 @@ class CoordinateHelperTest {
 
     @Test
     void shouldReturnTheSameLocalBoundsFromRootSceneBounds() {
-        Bounds rootSceneBounds = new BoundingBox(200, 200, 100, 100);
-        Bounds expectedLocalBounds = new BoundingBox(0, 0, 100, 100);
+        Bounds rootSceneBounds = new BoundingBox(200, 200, 75, 75);
+        Bounds expectedLocalBounds = new BoundingBox(0, 0, 75, 75);
 
-        Bounds rect = CoordinateHelper.sceneToLocal(rectangle, rootSceneBounds, true);
-        Bounds circ = CoordinateHelper.sceneToLocal(circle, rootSceneBounds, true);
+        Bounds rect = CoordinateHelper.sceneToLocal(expected, rootSceneBounds, true);
+        Bounds circ = CoordinateHelper.sceneToLocal(rectangleClip3, rootSceneBounds, true);
 
         assertEquals(expectedLocalBounds, rect);
         assertEquals(rect, circ);
+    }
+
+    @Test
+    void shouldReturnSameTransform() throws Exception {
+        Point3D scenePoint = new Point3D(200, 200, 0);
+        Point3D otherScenePoint = new Point3D(100, 100, 100);
+
+        final Transform expectedTransform = expected.getSceneGraphObject().getAs(Node.class).getLocalToSceneTransform();
+        final Transform rectangleClip3Transform = CoordinateHelper.localToSceneTransform(rectangleClip3);
+
+        assertEquals(expectedTransform.transform(scenePoint), rectangleClip3Transform.transform(scenePoint));
+        assertEquals(expectedTransform.transform(otherScenePoint), rectangleClip3Transform.transform(otherScenePoint));
     }
 }
