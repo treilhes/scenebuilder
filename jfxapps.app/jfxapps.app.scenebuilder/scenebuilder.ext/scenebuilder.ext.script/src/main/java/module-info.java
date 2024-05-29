@@ -1,8 +1,8 @@
 import org.scenebuilder.ext.script.LoaderCapabilitiesManagerImpl;
 import org.scenebuilder.ext.script.ScenebuilderScriptExtension;
 
+import com.gluonhq.jfxapps.core.extension.Extension;
 import com.gluonhq.jfxapps.core.fxom.ext.LoaderCapabilitiesManager;
-import com.oracle.javafx.scenebuilder.extension.Extension;
 
 open module scenebuilder.ext.script {
     exports org.scenebuilder.ext.script;

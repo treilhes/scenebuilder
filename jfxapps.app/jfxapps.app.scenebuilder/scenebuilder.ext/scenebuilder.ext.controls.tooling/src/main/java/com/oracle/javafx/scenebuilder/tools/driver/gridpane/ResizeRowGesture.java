@@ -54,10 +54,10 @@ import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.list.RowConstraintsListPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyEvent;

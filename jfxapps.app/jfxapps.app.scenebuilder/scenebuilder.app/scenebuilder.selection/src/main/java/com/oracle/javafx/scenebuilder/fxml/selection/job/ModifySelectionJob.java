@@ -54,8 +54,8 @@ import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 
 /**
  * This job set the property defined by the provided {@link ValuePropertyMetadata}<br/>

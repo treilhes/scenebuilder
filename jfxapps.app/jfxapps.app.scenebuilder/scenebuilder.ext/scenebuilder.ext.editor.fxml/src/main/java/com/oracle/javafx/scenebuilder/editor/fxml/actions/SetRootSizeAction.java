@@ -53,7 +53,7 @@ import com.gluonhq.jfxapps.core.api.ui.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.job.editor.UsePredefinedSizeJob;
+import com.gluonhq.jfxapps.core.job.editor.UsePredefinedSizeJob;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;

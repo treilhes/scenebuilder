@@ -55,10 +55,10 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.job.editor.atomic.AddPropertyJob;
+import com.gluonhq.jfxapps.core.job.editor.atomic.AddPropertyValueJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
-import com.oracle.javafx.scenebuilder.metadata.javafx.hidden.ColumnConstraintsMetadata;
+import com.gluonhq.jfxapps.core.metadata.javafx.hidden.ColumnConstraintsMetadata;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.GridPaneJobUtils.Position;
 import com.oracle.javafx.scenebuilder.tools.mask.GridPaneHierarchyMask;
 

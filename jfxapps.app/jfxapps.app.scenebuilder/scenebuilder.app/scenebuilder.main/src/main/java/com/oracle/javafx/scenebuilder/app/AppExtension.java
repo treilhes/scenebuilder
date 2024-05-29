@@ -37,10 +37,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.core.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.app.action.ShowDocumentationAction;
 import com.oracle.javafx.scenebuilder.app.i18n.I18NApp;
 import com.oracle.javafx.scenebuilder.app.settings.WindowIconSetting;
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class AppExtension extends AbstractExtension {
     @Override

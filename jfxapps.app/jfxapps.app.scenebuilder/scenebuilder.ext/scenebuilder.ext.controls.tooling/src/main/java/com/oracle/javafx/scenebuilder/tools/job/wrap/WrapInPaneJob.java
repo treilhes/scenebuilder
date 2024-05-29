@@ -43,16 +43,16 @@ import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactor
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.job.editor.atomic.AddPropertyJob;
+import com.gluonhq.jfxapps.core.job.editor.atomic.AddPropertyValueJob;
+import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyFxControllerJob;
+import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
+import com.gluonhq.jfxapps.core.job.editor.atomic.RemovePropertyJob;
+import com.gluonhq.jfxapps.core.job.editor.atomic.RemovePropertyValueJob;
+import com.gluonhq.jfxapps.core.job.editor.atomic.ToggleFxRootJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.SetDocumentRootJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxControllerJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyValueJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ToggleFxRootJob;
 
 import javafx.scene.layout.Pane;
 

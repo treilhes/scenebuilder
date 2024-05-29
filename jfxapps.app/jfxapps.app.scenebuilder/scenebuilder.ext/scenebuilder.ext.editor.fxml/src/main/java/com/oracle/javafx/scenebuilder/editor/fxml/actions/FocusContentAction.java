@@ -44,7 +44,7 @@ import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.menu.action.view.ToggleMinimizeLeftDockAction;
+import com.gluonhq.jfxapps.core.menu.action.view.ToggleMinimizeLeftDockAction;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)

@@ -57,8 +57,8 @@ import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.test.JfxInitializer;
-import com.oracle.javafx.scenebuilder.ui.controller.EditorController;
+import com.gluonhq.jfxapps.core.test.JfxInitializer;
+import com.gluonhq.jfxapps.core.ui.controller.EditorController;
 
 /**
  * Unit test for {@link com.gluonhq.jfxapps.core.fxom.util.Deprecation#setStaticLoad(javafx.fxml.FXMLLoader, boolean) }

@@ -31,13 +31,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import com.gluonhq.jfxapps.core.extension.Extension;
 import com.oracle.javafx.scenebuilder.editors.DefaultEditorsExtension;
-import com.oracle.javafx.scenebuilder.extension.Extension;
 
 open module scenebuilder.ext.editors {
-    exports com.oracle.javafx.scenebuilder.editors.control;
+    exports com.gluonhq.jfxapps.core.editors.control;
     exports com.oracle.javafx.scenebuilder.editors.control.effectpicker.editors;
-    exports com.oracle.javafx.scenebuilder.editors;
+    exports com.gluonhq.jfxapps.core.editors;
     exports com.oracle.javafx.scenebuilder.editors.popupeditors;
     exports com.oracle.javafx.scenebuilder.editors.control.effectpicker;
 

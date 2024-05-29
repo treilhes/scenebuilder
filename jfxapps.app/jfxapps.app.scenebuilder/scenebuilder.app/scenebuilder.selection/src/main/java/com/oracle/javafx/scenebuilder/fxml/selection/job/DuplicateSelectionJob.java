@@ -57,8 +57,8 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.job.editor.atomic.RelocateNodeJob;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.RelocateNodeJob;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.scene.Node;

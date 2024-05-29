@@ -37,9 +37,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.metadata.javafx.hidden.NodeMetadata;
 import com.gluonhq.jfxapps.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.metadata.javafx.PropertyNames;
-import com.oracle.javafx.scenebuilder.metadata.javafx.hidden.NodeMetadata;
 
 @Component
 public class NodeMetadataAddin {

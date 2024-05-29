@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.core.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.document.actions.AbstractShowAction;
 import com.oracle.javafx.scenebuilder.document.actions.HierarchyMenuProvider;
 import com.oracle.javafx.scenebuilder.document.actions.ShowFxIdAction;
@@ -63,7 +64,6 @@ import com.oracle.javafx.scenebuilder.document.info.InfoPanelController;
 import com.oracle.javafx.scenebuilder.document.preferences.document.ShowExpertByDefaultPreference;
 import com.oracle.javafx.scenebuilder.document.preferences.global.DisplayOptionPreference;
 import com.oracle.javafx.scenebuilder.document.view.DocumentPanelController;
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class DocumentExtension extends AbstractExtension {
 

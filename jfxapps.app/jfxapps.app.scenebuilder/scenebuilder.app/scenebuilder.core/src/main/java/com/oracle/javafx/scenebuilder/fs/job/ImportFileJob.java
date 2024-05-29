@@ -55,10 +55,10 @@ import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
+import com.gluonhq.jfxapps.core.selection.job.InsertAsSubComponentJob;
+import com.gluonhq.jfxapps.core.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.selection.job.InsertAsSubComponentJob;
-import com.oracle.javafx.scenebuilder.selection.job.SetDocumentRootJob;
 
 /**
  * Load the provided fxml {@link File}, if the current scoped document is empty

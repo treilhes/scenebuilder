@@ -40,9 +40,9 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.job.AbstractJobExtension;
+import com.gluonhq.jfxapps.core.job.editor.atomic.AddPropertyValueJob;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)

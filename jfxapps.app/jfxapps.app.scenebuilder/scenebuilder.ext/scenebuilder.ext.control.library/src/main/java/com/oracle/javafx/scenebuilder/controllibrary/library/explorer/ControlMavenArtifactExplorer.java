@@ -46,13 +46,13 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.library.maven.MavenArtifact;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibraryFilter;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.library.api.Explorer;
 import com.oracle.javafx.scenebuilder.library.api.ExplorerInspector;
-import com.oracle.javafx.scenebuilder.library.maven.MavenArtifact;
 import com.oracle.javafx.scenebuilder.library.util.ExplorationCancelledException;
 import com.oracle.javafx.scenebuilder.library.util.JarExplorer;
 import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;

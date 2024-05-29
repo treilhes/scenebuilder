@@ -53,7 +53,7 @@ import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.job.editor.UseComputedSizesObjectJob;
+import com.gluonhq.jfxapps.core.job.editor.UseComputedSizesObjectJob;
 
 /**
  * This job apply the constant USE_COMPUTED_SIZE on width and height on the

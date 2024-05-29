@@ -57,10 +57,10 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
+import com.gluonhq.jfxapps.core.selection.job.InsertAsSubComponentJob;
 import com.gluonhq.jfxapps.util.URLUtils;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
-import com.oracle.javafx.scenebuilder.selection.job.InsertAsSubComponentJob;
 
 /**
  * Cannot include in non saved document<br/>

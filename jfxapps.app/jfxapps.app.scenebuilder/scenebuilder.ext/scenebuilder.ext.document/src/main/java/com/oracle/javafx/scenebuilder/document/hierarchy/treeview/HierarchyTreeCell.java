@@ -52,6 +52,7 @@ import com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit.Type;
 import com.gluonhq.jfxapps.core.api.util.StringUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.ui.inlineedit.PrefixedValue;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
 import com.oracle.javafx.scenebuilder.document.api.Hierarchy;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
@@ -60,7 +61,6 @@ import com.oracle.javafx.scenebuilder.document.api.HierarchyPanel;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyCellAssignment;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyDNDController;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyDNDController.DroppingMouseLocation;
-import com.oracle.javafx.scenebuilder.ui.inlineedit.PrefixedValue;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyParentRing;
 
 import javafx.beans.value.ChangeListener;

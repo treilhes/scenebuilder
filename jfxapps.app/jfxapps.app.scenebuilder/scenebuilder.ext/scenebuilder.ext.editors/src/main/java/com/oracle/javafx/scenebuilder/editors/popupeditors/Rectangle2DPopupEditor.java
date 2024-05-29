@@ -43,8 +43,8 @@ import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
+import com.gluonhq.jfxapps.core.controls.DoubleField;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
-import com.oracle.javafx.scenebuilder.javafx.controls.DoubleField;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

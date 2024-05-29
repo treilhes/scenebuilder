@@ -48,8 +48,8 @@ import com.gluonhq.jfxapps.core.api.ui.menu.DefaultMenu;
 import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.menu.annotation.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.menu.action.file.RevealIncludedFxmlAction;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.BringToFrontJob;
-import com.oracle.javafx.scenebuilder.menu.action.file.RevealIncludedFxmlAction;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)

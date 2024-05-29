@@ -60,11 +60,11 @@ import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.job.editor.PrunePropertiesJob;
+import com.gluonhq.jfxapps.core.job.editor.atomic.AddPropertyJob;
+import com.gluonhq.jfxapps.core.job.editor.atomic.AddPropertyValueJob;
+import com.gluonhq.jfxapps.core.job.editor.atomic.RemovePropertyJob;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.job.editor.PrunePropertiesJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 /**

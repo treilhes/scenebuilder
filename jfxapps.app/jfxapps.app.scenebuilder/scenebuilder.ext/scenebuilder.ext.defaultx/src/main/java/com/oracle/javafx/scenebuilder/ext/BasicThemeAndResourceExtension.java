@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.core.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentThemeExtension;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentUserStylesheetsExtension;
@@ -55,7 +56,6 @@ import com.oracle.javafx.scenebuilder.ext.theme.document.I18NResourcePreference;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.ext.theme.document.UserStylesheetsPreference;
 import com.oracle.javafx.scenebuilder.ext.theme.global.ThemePreference;
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class BasicThemeAndResourceExtension extends AbstractExtension {
 

@@ -51,9 +51,9 @@ import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
+import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyFxIdJob;
 import com.oracle.javafx.scenebuilder.document.api.AbstractDisplayOption;
 import com.oracle.javafx.scenebuilder.document.api.annotation.DisplayOptionName;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxIdJob;
 
 /**
  *

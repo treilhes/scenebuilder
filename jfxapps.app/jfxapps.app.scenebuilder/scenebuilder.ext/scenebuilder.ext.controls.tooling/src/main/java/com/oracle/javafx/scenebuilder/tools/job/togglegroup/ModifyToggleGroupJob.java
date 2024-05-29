@@ -55,11 +55,11 @@ import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.util.JavaLanguage;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.job.editor.atomic.AddPropertyJob;
+import com.gluonhq.jfxapps.core.job.editor.atomic.RemovePropertyJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.ToggleGroupPropertyMetadata;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.RemovePropertyJob;
 
 /**
  * This job allocate a toggle group id to an {@link FXOMObject}

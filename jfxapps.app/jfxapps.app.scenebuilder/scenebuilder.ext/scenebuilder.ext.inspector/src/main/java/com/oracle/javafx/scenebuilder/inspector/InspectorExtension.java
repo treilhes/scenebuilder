@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.gluonhq.jfxapps.core.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.inspector.actions.FocusCodeTabAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.FocusLayoutTabAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.FocusPropertyTabAction;

@@ -42,9 +42,9 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.core.api.preferences.Preference;
 import com.gluonhq.jfxapps.core.api.preferences.PreferenceEditorFactory;
 import com.gluonhq.jfxapps.core.api.preferences.type.EnumPreference;
-import com.oracle.javafx.scenebuilder.javafx.controls.DoubleField;
-import com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.PaintPicker;
-import com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.PaintPicker.Mode;
+import com.gluonhq.jfxapps.core.controls.DoubleField;
+import com.gluonhq.jfxapps.core.controls.paintpicker.PaintPicker;
+import com.gluonhq.jfxapps.core.controls.paintpicker.PaintPicker.Mode;
 
 import javafx.scene.Node;
 import javafx.scene.Parent;

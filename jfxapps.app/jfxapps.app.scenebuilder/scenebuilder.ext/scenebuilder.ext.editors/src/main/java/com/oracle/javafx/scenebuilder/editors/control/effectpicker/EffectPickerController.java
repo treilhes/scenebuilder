@@ -34,14 +34,14 @@ package com.oracle.javafx.scenebuilder.editors.control.effectpicker;
 
 import java.net.URL;
 
+import com.gluonhq.jfxapps.core.controls.paintpicker.PaintPicker;
+import com.gluonhq.jfxapps.core.controls.paintpicker.PaintPicker.Mode;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.editors.CheckBoxControl;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.editors.DoubleTextFieldControl;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.editors.EnumControl;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.editors.ImageControl;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.editors.LightControl;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.editors.SliderControl;
-import com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.PaintPicker;
-import com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.PaintPicker.Mode;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;

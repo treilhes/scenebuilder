@@ -42,11 +42,11 @@ import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
+import com.gluonhq.jfxapps.core.controls.DoubleField;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
 import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
-import com.oracle.javafx.scenebuilder.javafx.controls.DoubleField;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

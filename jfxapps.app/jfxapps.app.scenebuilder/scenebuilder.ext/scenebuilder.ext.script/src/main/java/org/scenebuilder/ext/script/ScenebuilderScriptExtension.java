@@ -39,7 +39,7 @@ import java.util.UUID;
 import org.scenebuilder.ext.script.i18n.I18NScenebuilderScript;
 import org.scenebuilder.ext.script.preference.global.StaticLoadPreference;
 
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.gluonhq.jfxapps.core.extension.AbstractExtension;
 
 public class ScenebuilderScriptExtension extends AbstractExtension {
     @Override

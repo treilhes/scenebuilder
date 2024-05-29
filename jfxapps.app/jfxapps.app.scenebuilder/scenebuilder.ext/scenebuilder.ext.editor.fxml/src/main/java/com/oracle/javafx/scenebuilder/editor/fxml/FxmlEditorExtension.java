@@ -37,6 +37,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.core.extension.AbstractExtension;
+import com.gluonhq.jfxapps.core.ui.controller.HudWindowController;
+import com.gluonhq.jfxapps.core.ui.controller.WorkspaceController;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.BringForwardAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.BringToFrontAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.FocusContentAction;
@@ -60,10 +63,7 @@ import com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse.SelectWithMarque
 import com.oracle.javafx.scenebuilder.editor.fxml.i18n.I18NContentEditor;
 import com.oracle.javafx.scenebuilder.editor.fxml.preferences.global.AlignmentGuidesColorPreference;
 import com.oracle.javafx.scenebuilder.editor.fxml.preferences.global.BackgroundImagePreference;
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key.MoveWithKeyGesture;
-import com.oracle.javafx.scenebuilder.ui.controller.HudWindowController;
-import com.oracle.javafx.scenebuilder.ui.controller.WorkspaceController;
 
 public class FxmlEditorExtension extends AbstractExtension {
     @Override

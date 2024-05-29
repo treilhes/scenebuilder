@@ -36,8 +36,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import org.scenebuilder.ext.script.graalvm.javascript.i18n.I18NExtensionCamelCasedName;
+
+import com.gluonhq.jfxapps.core.extension.AbstractExtension;
 
 public class GraalVmJavascriptEngineExtension extends AbstractExtension {
     @Override

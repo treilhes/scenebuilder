@@ -40,8 +40,8 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.document.api.annotation.DisplayOptionName;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 
 /**
  *

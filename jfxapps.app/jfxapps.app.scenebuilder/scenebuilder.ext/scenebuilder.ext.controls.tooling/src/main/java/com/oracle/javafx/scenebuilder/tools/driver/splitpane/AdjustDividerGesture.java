@@ -51,10 +51,10 @@ import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.ui.misc.HudWindow;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 
 import javafx.scene.Node;
 import javafx.scene.control.SplitPane;

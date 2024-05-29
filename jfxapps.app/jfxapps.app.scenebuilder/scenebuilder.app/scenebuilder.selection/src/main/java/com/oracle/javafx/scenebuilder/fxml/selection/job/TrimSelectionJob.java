@@ -53,9 +53,9 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMFxIdIndex;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxControllerJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.RemoveObjectJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ToggleFxRootJob;
+import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyFxControllerJob;
+import com.gluonhq.jfxapps.core.job.editor.atomic.RemoveObjectJob;
+import com.gluonhq.jfxapps.core.job.editor.atomic.ToggleFxRootJob;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.selection.job.ClearSelectionJob;
 

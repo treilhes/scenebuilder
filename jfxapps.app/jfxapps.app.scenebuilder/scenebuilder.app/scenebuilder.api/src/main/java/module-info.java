@@ -33,7 +33,7 @@
  */
 import org.scenebuilder.fxml.api.FxmlApiExtension;
 
-import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.gluonhq.jfxapps.core.extension.Extension;
 
 open module scenebuilder.fxml.api {
     exports org.scenebuilder.fxml.api;
@@ -42,13 +42,13 @@ open module scenebuilder.fxml.api {
 
     exports com.gluonhq.jfxapps.core.api.content;
     exports com.gluonhq.jfxapps.core.api.mode;
-    exports com.oracle.javafx.scenebuilder.api.control;
+    exports com.gluonhq.jfxapps.core.api.control;
     exports com.oracle.javafx.scenebuilder.api.control.curve;
     exports com.oracle.javafx.scenebuilder.api.control.decoration;
     exports com.oracle.javafx.scenebuilder.api.control.driver;
     exports com.oracle.javafx.scenebuilder.api.control.droptarget;
     exports com.oracle.javafx.scenebuilder.api.control.effect;
-    exports com.oracle.javafx.scenebuilder.api.control.handles;
+    exports com.gluonhq.jfxapps.core.api.control.handles;
     exports com.oracle.javafx.scenebuilder.api.control.inlineedit;
     exports com.oracle.javafx.scenebuilder.api.control.intersect;
     exports com.oracle.javafx.scenebuilder.api.control.outline;

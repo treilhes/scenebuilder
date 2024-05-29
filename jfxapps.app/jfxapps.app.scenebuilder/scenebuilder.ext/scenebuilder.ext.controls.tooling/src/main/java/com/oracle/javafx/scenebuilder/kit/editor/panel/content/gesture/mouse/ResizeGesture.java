@@ -57,6 +57,7 @@ import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
@@ -68,7 +69,6 @@ import com.oracle.javafx.scenebuilder.api.control.Resizer.Feature;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.control.Shadow;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.ResizingGuideController;
 
 import javafx.event.EventType;

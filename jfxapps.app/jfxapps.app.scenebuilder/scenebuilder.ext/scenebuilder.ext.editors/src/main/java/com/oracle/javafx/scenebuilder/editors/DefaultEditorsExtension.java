@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.core.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.editors.actions.SetEffectAction;
 import com.oracle.javafx.scenebuilder.editors.control.BooleanEditor;
 import com.oracle.javafx.scenebuilder.editors.control.BoundedDoubleEditor;
@@ -78,7 +79,6 @@ import com.oracle.javafx.scenebuilder.editors.popupeditors.GenericPaintPopupEdit
 import com.oracle.javafx.scenebuilder.editors.popupeditors.KeyCombinationPopupEditor;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.Rectangle2DPopupEditor;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.StringPopupEditor;
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class DefaultEditorsExtension extends AbstractExtension {
 

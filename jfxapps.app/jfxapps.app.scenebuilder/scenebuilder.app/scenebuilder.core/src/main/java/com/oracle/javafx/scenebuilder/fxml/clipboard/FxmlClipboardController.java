@@ -45,12 +45,12 @@ import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit;
+import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.clipboard.controller.ClipboardController;
 import com.oracle.javafx.scenebuilder.core.clipboard.internal.ClipboardEncoder;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.CutSelectionJob;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.PasteIntoJob;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.PasteJob;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.scene.Node;
 import javafx.scene.control.TextInputControl;

@@ -46,6 +46,7 @@ import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
+import com.gluonhq.jfxapps.core.fxml.api.selection.SelectionState;
 import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
@@ -53,7 +54,6 @@ import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertiesEditor;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
-import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
 
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;

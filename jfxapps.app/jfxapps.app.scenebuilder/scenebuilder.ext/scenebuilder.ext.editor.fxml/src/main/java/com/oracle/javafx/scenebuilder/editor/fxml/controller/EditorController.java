@@ -65,7 +65,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
+import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;

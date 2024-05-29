@@ -41,6 +41,7 @@ import org.scenebuilder.fxml.api.FxmlApiExtension;
 import org.scenebuilder.fxml.core.i18n.I18NFxmlCoreExtension;
 
 import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.core.fs.preference.global.WildcardImportsPreference;
 import com.oracle.javafx.scenebuilder.core.doc.DocumentationImpl;
 import com.oracle.javafx.scenebuilder.core.editors.ControllerClassEditor;
 import com.oracle.javafx.scenebuilder.core.editors.CoreEditors;
@@ -57,7 +58,6 @@ import com.oracle.javafx.scenebuilder.core.ui.preferences.document.LeftDividerHP
 import com.oracle.javafx.scenebuilder.core.ui.preferences.document.RightDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.fs.job.ImportFileJob;
 import com.oracle.javafx.scenebuilder.fs.job.IncludeFileJob;
-import com.oracle.javafx.scenebuilder.fs.preference.global.WildcardImportsPreference;
 
 public class FxmlCoreExtensionExtension implements OpenExtension {
 

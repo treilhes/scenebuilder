@@ -65,13 +65,13 @@ import com.gluonhq.jfxapps.core.api.ui.menu.MenuProvider;
 import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.selection.job.InsertAsAccessoryJob;
+import com.gluonhq.jfxapps.core.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryListCell;
-import com.oracle.javafx.scenebuilder.selection.job.InsertAsAccessoryJob;
-import com.oracle.javafx.scenebuilder.selection.job.SetDocumentRootJob;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;

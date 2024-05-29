@@ -55,7 +55,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
-import com.oracle.javafx.scenebuilder.job.editor.FitToParentObjectJob;
+import com.gluonhq.jfxapps.core.job.editor.FitToParentObjectJob;
 
 import javafx.scene.control.ToggleGroup;
 

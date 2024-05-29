@@ -1,6 +1,6 @@
 import org.scenebuilder.ext.script.graalvm.javascript.GraalVmJavascriptEngineExtension;
 
-import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.gluonhq.jfxapps.core.extension.Extension;
 
 open module scenebuilder.ext.script.graalvm.javascript {
     exports org.scenebuilder.ext.script.graalvm.javascript;

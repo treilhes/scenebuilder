@@ -57,13 +57,13 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
+import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyFxControllerJob;
+import com.gluonhq.jfxapps.core.job.editor.atomic.ToggleFxRootJob;
+import com.gluonhq.jfxapps.core.selection.SelectionStateImpl;
 import com.oracle.javafx.scenebuilder.core.editors.ControllerClassEditor;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory.PropertyEditorFactorySession;
 import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyFxControllerJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ToggleFxRootJob;
-import com.oracle.javafx.scenebuilder.selection.SelectionStateImpl;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;

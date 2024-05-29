@@ -48,8 +48,8 @@ import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
+import com.gluonhq.jfxapps.core.job.editor.atomic.ReIndexObjectJob;
 import com.oracle.javafx.scenebuilder.job.editor.InlineDocumentJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.ReIndexObjectJob;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 /**

@@ -31,8 +31,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import com.gluonhq.jfxapps.core.extension.Extension;
 import com.oracle.javafx.scenebuilder.app.AppExtension;
-import com.oracle.javafx.scenebuilder.extension.Extension;
 
 open module scenebuilder.application {
     exports com.oracle.javafx.scenebuilder.app.settings;

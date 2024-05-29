@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.app;
 
-import com.oracle.javafx.scenebuilder.launcher.app.SceneBuilderBootstrap;
+import com.gluonhq.jfxapps.core.launcher.app.SceneBuilderBootstrap;
 
 //@SpringBootApplication
 public class SceneBuilderApp {

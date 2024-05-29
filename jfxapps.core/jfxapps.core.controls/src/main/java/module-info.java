@@ -1,10 +1,10 @@
 module jfxapps.core.controls {
-    exports com.oracle.javafx.scenebuilder.javafx.controls;
-    exports com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.rotator;
-    exports com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.colorpicker;
-    exports com.oracle.javafx.scenebuilder.javafx.controls.paintpicker;
-    exports com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.slider;
-    exports com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.gradientpicker;
+    exports com.gluonhq.jfxapps.core.controls;
+    exports com.gluonhq.jfxapps.core.controls.paintpicker.rotator;
+    exports com.gluonhq.jfxapps.core.controls.paintpicker.colorpicker;
+    exports com.gluonhq.jfxapps.core.controls.paintpicker;
+    exports com.gluonhq.jfxapps.core.controls.paintpicker.slider;
+    exports com.gluonhq.jfxapps.core.controls.paintpicker.gradientpicker;
 
     requires javafx.base;
     requires javafx.controls;

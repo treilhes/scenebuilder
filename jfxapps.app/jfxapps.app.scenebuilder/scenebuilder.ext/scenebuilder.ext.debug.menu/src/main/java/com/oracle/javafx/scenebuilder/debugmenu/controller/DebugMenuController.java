@@ -52,9 +52,9 @@ import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.ui.menu.DebugMenu;
 import com.gluonhq.jfxapps.core.api.ui.menu.DefaultMenu;
+import com.gluonhq.jfxapps.core.job.editor.reference.UpdateReferencesJob;
 import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
-import com.oracle.javafx.scenebuilder.job.editor.reference.UpdateReferencesJob;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;

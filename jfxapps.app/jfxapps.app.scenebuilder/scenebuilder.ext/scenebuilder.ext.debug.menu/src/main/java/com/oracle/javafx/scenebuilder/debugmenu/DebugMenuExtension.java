@@ -37,13 +37,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.core.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.debugmenu.action.ToggleDebugViewVisibilityAction;
 import com.oracle.javafx.scenebuilder.debugmenu.controller.DebugMenuController;
 import com.oracle.javafx.scenebuilder.debugmenu.controller.DebugMenuWindowController;
 import com.oracle.javafx.scenebuilder.debugmenu.i18n.I18NDebugMenu;
 import com.oracle.javafx.scenebuilder.debugmenu.menu.DebugMenuMenuProvider;
 import com.oracle.javafx.scenebuilder.debugmenu.view.DebugPreferencesView;
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class DebugMenuExtension extends AbstractExtension {
     @Override

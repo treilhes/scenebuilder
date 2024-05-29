@@ -42,15 +42,14 @@ import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager.FxmlDocumentManage
 
 import com.gluonhq.jfxapps.boot.loader.extension.ApplicationExtension;
 import com.gluonhq.jfxapps.core.api.application.annotation.EditorDescriptor;
+import com.gluonhq.jfxapps.core.extension.AbstractExtension;
+import com.gluonhq.jfxapps.core.ui.controller.ModeManagerController;
 import com.oracle.javafx.scenebuilder.api.control.driver.DriverExtensionRegistry;
 import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
 import com.oracle.javafx.scenebuilder.api.control.inlineedit.SimilarInlineEditorBounds;
 import com.oracle.javafx.scenebuilder.api.control.pickrefiner.NoPickRefiner;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.fxml.preferences.global.ParentRingColorPreference;
-import com.oracle.javafx.scenebuilder.ui.controller.ModeManagerController;
 
 @EditorDescriptor(
             label = "scenebuilder.app.label",

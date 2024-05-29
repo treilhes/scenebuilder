@@ -36,8 +36,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import com.gluonhq.jfxapps.core.controls.paintpicker.PaintPicker;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPickerController;
-import com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.PaintPicker;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;

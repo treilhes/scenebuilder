@@ -40,8 +40,8 @@ import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.menu.action.AbstractToggleMinimizeDockAction;
-import com.oracle.javafx.scenebuilder.menu.action.view.ToggleMinimizeLeftDockAction;
+import com.gluonhq.jfxapps.core.menu.action.AbstractToggleMinimizeDockAction;
+import com.gluonhq.jfxapps.core.menu.action.view.ToggleMinimizeLeftDockAction;
 
 @Prototype
 @ActionMeta(nameKey = "action.name.toggle.dock", descriptionKey = "action.description.toggle.dock")

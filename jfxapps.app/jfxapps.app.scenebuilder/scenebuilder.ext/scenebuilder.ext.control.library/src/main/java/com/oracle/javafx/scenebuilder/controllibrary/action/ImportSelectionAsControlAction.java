@@ -50,8 +50,8 @@ import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.menu.annotation.ViewMenuItemAttachment;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)

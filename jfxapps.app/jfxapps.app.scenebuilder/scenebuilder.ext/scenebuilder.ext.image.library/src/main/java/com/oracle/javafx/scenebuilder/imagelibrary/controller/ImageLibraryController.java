@@ -48,12 +48,12 @@ import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.library.LibraryItem;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.selection.job.InsertAsSubComponentJob;
+import com.gluonhq.jfxapps.core.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
 import com.oracle.javafx.scenebuilder.imagelibrary.drag.source.ImageLibraryDragSource;
 import com.oracle.javafx.scenebuilder.imagelibrary.panel.LibraryListCell;
 import com.oracle.javafx.scenebuilder.imagelibrary.panel.LibraryListItem;
-import com.oracle.javafx.scenebuilder.selection.job.InsertAsSubComponentJob;
-import com.oracle.javafx.scenebuilder.selection.job.SetDocumentRootJob;
 
 import javafx.scene.control.ListView;
 import javafx.scene.input.Dragboard;

@@ -1,6 +1,6 @@
 import org.scenebuilder.ext.javafx.customization.JavafxCustomizationExtension;
 
-import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.gluonhq.jfxapps.core.extension.Extension;
 
 open module scenebuilder.ext.javafx.customization {
     exports org.scenebuilder.ext.javafx.customization;

@@ -1,4 +1,4 @@
-import com.oracle.javafx.scenebuilder.extension.Extension;
+import com.gluonhq.jfxapps.core.extension.Extension;
 import com.oracle.javafx.scenebuilder.helpfeatures.HelpFeaturesExtension;
 
 open module scenebuilder.ext.help.features {

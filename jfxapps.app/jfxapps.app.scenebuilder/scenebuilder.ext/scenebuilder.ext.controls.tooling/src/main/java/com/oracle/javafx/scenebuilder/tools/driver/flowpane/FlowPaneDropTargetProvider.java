@@ -40,11 +40,11 @@ import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.HierarchyMask.Accessory;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
+import com.gluonhq.jfxapps.core.core.dnd.droptarget.AccessoryDropTarget;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetProvider;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.core.dnd.droptarget.AccessoryDropTarget;
 import com.oracle.javafx.scenebuilder.tools.driver.common.GenericParentTring;
 
 import javafx.scene.layout.FlowPane;

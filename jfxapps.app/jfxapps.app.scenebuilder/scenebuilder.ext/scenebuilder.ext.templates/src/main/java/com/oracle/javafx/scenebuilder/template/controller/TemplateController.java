@@ -44,9 +44,9 @@ import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.job.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.template.Template;
+import com.gluonhq.jfxapps.core.job.editor.UseSizeJob;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
-import com.oracle.javafx.scenebuilder.job.editor.UseSizeJob;
 
 
 /**

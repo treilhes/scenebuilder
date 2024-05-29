@@ -69,13 +69,13 @@ import com.gluonhq.jfxapps.core.content.util.ScrollPaneBooster;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
+import com.gluonhq.jfxapps.core.selection.SelectionStateImpl;
+import com.gluonhq.jfxapps.core.ui.controller.HudWindowController;
+import com.gluonhq.jfxapps.core.ui.controller.WorkspaceController;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.editor.fxml.preferences.global.AlignmentGuidesColorPreference;
 import com.oracle.javafx.scenebuilder.editor.fxml.preferences.global.BackgroundImagePreference;
-import com.oracle.javafx.scenebuilder.selection.SelectionStateImpl;
-import com.oracle.javafx.scenebuilder.ui.controller.HudWindowController;
-import com.oracle.javafx.scenebuilder.ui.controller.WorkspaceController;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;

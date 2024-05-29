@@ -42,9 +42,9 @@ import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.ext.FileLoader;
 import com.gluonhq.jfxapps.core.fxom.util.DesignImage;
+import com.gluonhq.jfxapps.core.metadata.javafx.controls.ImageViewMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.ImagePropertyMetadata;
-import com.oracle.javafx.scenebuilder.metadata.javafx.controls.ImageViewMetadata;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

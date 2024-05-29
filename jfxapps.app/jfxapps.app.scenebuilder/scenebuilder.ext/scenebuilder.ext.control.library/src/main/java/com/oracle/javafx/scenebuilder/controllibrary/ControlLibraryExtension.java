@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.core.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.controllibrary.action.ImportSelectionAsControlAction;
 import com.oracle.javafx.scenebuilder.controllibrary.action.InsertControlAction;
 import com.oracle.javafx.scenebuilder.controllibrary.action.LibraryFolderMenuProvider;
@@ -62,7 +63,6 @@ import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlMav
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryListCell;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.controllibrary.preferences.global.DisplayModePreference;
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class ControlLibraryExtension extends AbstractExtension {
 

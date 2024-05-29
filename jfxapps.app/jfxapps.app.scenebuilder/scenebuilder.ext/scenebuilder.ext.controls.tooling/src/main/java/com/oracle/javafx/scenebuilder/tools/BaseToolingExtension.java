@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import com.gluonhq.jfxapps.core.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;

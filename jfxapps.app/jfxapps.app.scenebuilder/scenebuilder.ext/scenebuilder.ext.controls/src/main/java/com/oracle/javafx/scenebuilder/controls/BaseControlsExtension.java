@@ -37,8 +37,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.core.extension.AbstractExtension;
 import com.oracle.javafx.scenebuilder.controls.contextmenu.ContextMenuMenuProvider;
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
 public class BaseControlsExtension extends AbstractExtension {
 

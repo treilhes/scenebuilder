@@ -51,7 +51,7 @@ import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.job.editor.RelocateSelectionJob;
+import com.gluonhq.jfxapps.core.job.editor.RelocateSelectionJob;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
