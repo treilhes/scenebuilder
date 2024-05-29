@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.core.preferences;
+package com.gluonhq.jfxapps.core.preferences;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -39,10 +39,10 @@ import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.oracle.javafx.scenebuilder.core.preferences.controller.DocumentPreferencesController;
-import com.oracle.javafx.scenebuilder.core.preferences.controller.PreferencesController;
-import com.oracle.javafx.scenebuilder.core.preferences.edit.PreferenceEditorFactoryImpl;
-import com.oracle.javafx.scenebuilder.core.preferences.i18n.I18NPreferences;
+import com.gluonhq.jfxapps.core.preferences.controller.DocumentPreferencesController;
+import com.gluonhq.jfxapps.core.preferences.controller.PreferencesController;
+import com.gluonhq.jfxapps.core.preferences.edit.PreferenceEditorFactoryImpl;
+import com.gluonhq.jfxapps.core.preferences.i18n.I18NPreferences;
 
 public class PreferencesExtension implements OpenExtension {
 

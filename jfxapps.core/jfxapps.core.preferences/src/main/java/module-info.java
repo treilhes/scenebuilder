@@ -32,11 +32,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.oracle.javafx.scenebuilder.core.preferences.PreferencesExtension;
+import com.gluonhq.jfxapps.core.preferences.PreferencesExtension;
 
 open module scenebuilder.core.preferences {
-    exports com.oracle.javafx.scenebuilder.core.preferences;
-    exports com.oracle.javafx.scenebuilder.core.preferences.i18n;
+    exports com.gluonhq.jfxapps.core.preferences;
+    exports com.gluonhq.jfxapps.core.preferences.i18n;
 
     requires jfxapps.core.api;
     requires org.slf4j;

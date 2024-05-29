@@ -30,24 +30,21 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.core.preferences.controller;
+package com.gluonhq.jfxapps.core.preferences.controller;
 
 import java.util.List;
 
-import org.springframework.context.annotation.DependsOn;
-
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.gluonhq.jfxapps.core.api.preferences.DocumentPreferencesNode;
-import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
+import com.gluonhq.jfxapps.core.api.preferences.Preferences;
 
 /**
  * Defines preferences for Scene Builder App.
  */
-@Singleton
-@DependsOn("i18n") //NOCHECK
-public class PreferencesController  {
+@ApplicationInstanceSingleton
+public class DocumentPreferencesController implements Preferences {
 
-    private final List<ManagedGlobalPreference> preferences;
+    private final List<ManagedDocumentPreference> preferences;
 
 	/***************************************************************************
      *                                                                         *
@@ -55,35 +52,20 @@ public class PreferencesController  {
      *                                                                         *
      **************************************************************************/
 
-    private PreferencesController(
-    		DocumentPreferencesNode documentPreferenceNode,
-    		List<ManagedGlobalPreference> preferences
+    public DocumentPreferencesController(
+    		List<ManagedDocumentPreference> preferences
     	) {
     	this.preferences = preferences;
-
-        documentPreferenceNode.cleanupCorruptedNodes();
-        readFromJavaPreferences();
     }
 
+    @Override
     public void readFromJavaPreferences() {
     	preferences.forEach((p) -> p.readFromJavaPreferences());
     }
 
+    @Override
     public void writeToJavaPreferences() {
     	preferences.forEach((p) -> p.writeToJavaPreferences());
-    }
-
-    //TODO what to do with that?
-    public void temp() {
-        // Document size
-//        if (getRootContainerHeight() == -1) {
-//            setRootContainerHeight(DEFAULT_ROOT_CONTAINER_HEIGHT);
-//        }
-//
-//        if (getRootContainerWidth() == -1) {
-//            setRootContainerWidth(DEFAULT_ROOT_CONTAINER_WIDTH);
-//        }
-
     }
 
 }
