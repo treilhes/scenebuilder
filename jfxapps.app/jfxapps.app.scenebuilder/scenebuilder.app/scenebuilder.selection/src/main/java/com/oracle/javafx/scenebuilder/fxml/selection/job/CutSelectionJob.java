@@ -49,8 +49,8 @@ import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.job.editor.InlineSelectionJob;
 import com.oracle.javafx.scenebuilder.core.clipboard.internal.ClipboardEncoder;
-import com.oracle.javafx.scenebuilder.job.editor.InlineSelectionJob;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 import javafx.scene.input.Clipboard;

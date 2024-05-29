@@ -54,7 +54,7 @@ import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.DesignHierarchyPath;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
+import com.gluonhq.jfxapps.core.job.editor.BatchJob;
 import com.oracle.javafx.scenebuilder.selection.job.BackupSelectionJob;
 import com.oracle.javafx.scenebuilder.selection.job.UpdateSelectionJob;
 

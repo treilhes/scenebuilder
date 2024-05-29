@@ -53,10 +53,10 @@ import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.job.editor.BatchJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
 
 import javafx.geometry.Point2D;
 import javafx.scene.control.TableColumn;

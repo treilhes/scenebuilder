@@ -47,13 +47,13 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
+import com.gluonhq.jfxapps.core.job.editor.InlineDocumentJob;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.fxml.job.editor.atomic.RemoveObjectJob;
 import com.oracle.javafx.scenebuilder.fxml.job.editor.atomic.ReplacePropertyValueJobT;
-import com.oracle.javafx.scenebuilder.job.editor.InlineDocumentJob;
 
 /**
  * This Job updates the FXOM document at execution time.

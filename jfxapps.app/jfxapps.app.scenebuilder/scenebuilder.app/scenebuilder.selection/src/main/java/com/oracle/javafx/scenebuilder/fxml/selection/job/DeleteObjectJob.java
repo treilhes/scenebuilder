@@ -50,8 +50,8 @@ import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMVirtual;
+import com.gluonhq.jfxapps.core.job.editor.InlineDocumentJob;
 import com.gluonhq.jfxapps.core.job.editor.reference.DeleteRefereeObjectJob;
-import com.oracle.javafx.scenebuilder.job.editor.InlineDocumentJob;
 
 import javafx.scene.Scene;
 import javafx.scene.chart.Axis;

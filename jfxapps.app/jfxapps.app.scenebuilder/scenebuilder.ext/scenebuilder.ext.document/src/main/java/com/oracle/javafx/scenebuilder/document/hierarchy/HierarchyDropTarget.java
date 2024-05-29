@@ -51,6 +51,7 @@ import com.gluonhq.jfxapps.core.api.job.AbstractJob;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.job.editor.BatchJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ReIndexObjectJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.RemoveObjectJob;
@@ -59,7 +60,6 @@ import com.gluonhq.jfxapps.core.metadata.util.InspectorPath;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.InsertAsAccessoryJob;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.InsertAsSubComponentJob;
-import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;

@@ -52,10 +52,10 @@ import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
+import com.gluonhq.jfxapps.core.job.editor.atomic.SetFxomRootJob;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.fxml.job.editor.PrunePropertiesJob;
 import com.oracle.javafx.scenebuilder.fxml.job.editor.UsePredefinedSizeJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.SetFxomRootJob;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 /**

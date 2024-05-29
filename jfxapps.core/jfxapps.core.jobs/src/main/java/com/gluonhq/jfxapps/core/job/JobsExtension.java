@@ -31,16 +31,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.job;
+package com.gluonhq.jfxapps.core.job;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
-import com.oracle.javafx.scenebuilder.job.editor.atomic.SetFxomRootJob;
-import com.oracle.javafx.scenebuilder.job.manager.JobManagerImpl;
+import com.gluonhq.jfxapps.core.job.editor.BatchJob;
+import com.gluonhq.jfxapps.core.job.editor.atomic.SetFxomRootJob;
+import com.gluonhq.jfxapps.core.job.manager.JobManagerImpl;
 
 public class JobsExtension implements OpenExtension {
 
