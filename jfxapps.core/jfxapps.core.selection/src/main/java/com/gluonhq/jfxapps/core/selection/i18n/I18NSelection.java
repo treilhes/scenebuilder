@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,42 +30,26 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.selection;
+package com.gluonhq.jfxapps.core.selection.i18n;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.ResourceBundle;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.oracle.javafx.scenebuilder.selection.i18n.I18NSelection;
-import com.oracle.javafx.scenebuilder.selection.job.BackupSelectionJob;
+import org.springframework.stereotype.Component;
 
-public class SelectionExtension implements OpenExtension {
-    @Override
-    public UUID getId() {
-        return UUID.fromString("a112d6e9-4079-4733-96d1-d29b3fef675d");
-    }
+import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
+
+@Component
+public class I18NSelection implements BundleProvider {
+
+    private static ResourceBundle bundle;
 
     @Override
-    public UUID getParentId() {
-        return OpenExtension.ROOT_ID;
-    }
-
-    @Override
-    public List<Class<?>> localContextClasses() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public List<Class<?>> exportedContextClasses() {
-     // @formatter:off
-        return Arrays.asList(
-                BackupSelectionJob.class,
-                BackupSelectionJob.Factory.class,
-                I18NSelection.class,
-                SelectionImpl.class
-            );
-     // @formatter:on
+	public synchronized ResourceBundle getBundle() {
+        if (bundle == null) {
+            final String packageName = I18NSelection.class.getPackage().getName();
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderSelection"); //NOCHECK
+        }
+        return bundle;
     }
 }
+

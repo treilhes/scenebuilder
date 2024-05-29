@@ -32,12 +32,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.oracle.javafx.scenebuilder.selection.SelectionExtension;
+import com.gluonhq.jfxapps.core.selection.SelectionExtension;
 
 open module scenebuilder.core.selection {
-    exports com.oracle.javafx.scenebuilder.selection;
-    exports com.oracle.javafx.scenebuilder.selection.i18n;
-    exports com.oracle.javafx.scenebuilder.selection.job;
+    exports com.gluonhq.jfxapps.core.selection;
+    exports com.gluonhq.jfxapps.core.selection.i18n;
+    exports com.gluonhq.jfxapps.core.selection.job;
 
     requires transitive jfxapps.core.api;
     //requires transitive scenebuilder.core.jobs;

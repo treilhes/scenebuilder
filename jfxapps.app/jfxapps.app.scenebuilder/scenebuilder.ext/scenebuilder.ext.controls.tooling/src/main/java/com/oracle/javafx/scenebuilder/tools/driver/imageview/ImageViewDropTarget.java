@@ -52,9 +52,9 @@ import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.ImagePropertyMetadata;
+import com.gluonhq.jfxapps.core.selection.job.BackupSelectionJob;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.UpdateSelectionJob;
-import com.oracle.javafx.scenebuilder.selection.job.BackupSelectionJob;
 
 import javafx.scene.image.ImageView;
 

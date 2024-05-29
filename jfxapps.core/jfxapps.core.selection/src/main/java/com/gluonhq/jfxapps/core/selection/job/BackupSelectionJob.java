@@ -32,7 +32,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.selection.job;
+package com.gluonhq.jfxapps.core.selection.job;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -46,42 +46,41 @@ import com.gluonhq.jfxapps.core.api.job.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-
 
 /**
- * Update the currently scoped document selection {@link Selection} with the provided list of {@link FXOMObject}
+ * This job create a backup of the current selection by cloning the content of {@link Selection#getGroup()}
+ * Undoing the job will restore the selection
  */
 @Prototype
-public final class UpdateSelectionJob extends AbstractJob {
+public final class BackupSelectionJob extends AbstractJob {
 
     private SelectionGroup oldSelectionGroup;
-    private SelectionGroup newSelectionGroup;
 
-    private final FXOMDocument fxomDocument;
     private final Selection selection;
 
-    protected UpdateSelectionJob(
+    private final DocumentManager documentManager;
+
+    protected BackupSelectionJob(
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
-            Selection selection) {
+            Selection selection
+            ) {
         super(extensionFactory);
-        this.fxomDocument = documentManager.fxomDocument().get();
+        this.documentManager = documentManager;
         this.selection = selection;
     }
 
-    protected void setJobParameters(SelectionGroup group) {
-        newSelectionGroup = group;
+    protected void setJobParameters() {
+        try {
+            if (selection.getGroup() == null) {
+                this.oldSelectionGroup = null;
+            } else {
+                this.oldSelectionGroup = selection.getGroup().clone();
+            }
+        } catch(CloneNotSupportedException x) {
+            throw new RuntimeException("Bug", x); //NOCHECK
+        }
     }
-//    protected void setJobParameters(Collection<FXOMObject> newSelectedObjects) {
-//        assert newSelectedObjects != null; // But possibly empty
-//        if (newSelectedObjects.isEmpty()) {
-//            newSelectionGroup = null;
-//        } else {
-//            newSelectionGroup = objectSelectionGroupFactory.getGroup(newSelectedObjects, newSelectedObjects.iterator().next(), null);
-//        }
-//    }
-
     /*
      * Job
      */
@@ -93,17 +92,6 @@ public final class UpdateSelectionJob extends AbstractJob {
 
     @Override
     public void doExecute() {
-        // Saves the current selection
-        try {
-            if (selection.getGroup() == null) {
-                this.oldSelectionGroup = null;
-            } else {
-                this.oldSelectionGroup = selection.getGroup().clone();
-            }
-        } catch(CloneNotSupportedException x) {
-            throw new RuntimeException("Bug", x);
-        }
-
         // Now same as redo()
         redo();
     }
@@ -111,13 +99,12 @@ public final class UpdateSelectionJob extends AbstractJob {
     @Override
     public void doUndo() {
         selection.select(oldSelectionGroup);
-        assert selection.isValid(fxomDocument);
+        assert selection.isValid(documentManager.fxomDocument().get());
     }
 
     @Override
     public void doRedo() {
-        selection.select(newSelectionGroup);
-        assert selection.isValid(fxomDocument);
+
     }
 
     @Override
@@ -127,31 +114,17 @@ public final class UpdateSelectionJob extends AbstractJob {
     }
 
     @Singleton
-    public static class Factory extends JobFactory<UpdateSelectionJob> {
+    public static class Factory extends JobFactory<BackupSelectionJob> {
         public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 
         /**
-         * Create an {@link  UpdateSelectionJob} job
-         * @param group the selection group to select
+         * Create an {@link BackupSelectionJob} job
          * @return the job to execute
          */
-        public UpdateSelectionJob getJob(SelectionGroup group) {
-            return create(UpdateSelectionJob.class, j -> j.setJobParameters(group));
+        public BackupSelectionJob getJob() {
+            return create(BackupSelectionJob.class, j -> j.setJobParameters());
         }
-
-//        /**
-//         * Create an {@link  UpdateSelectionJob} job
-//         * @param newSelectedObjects the objects {@link FXOMObject} to select
-//         * @return the job to execute
-//         */
-//        public UpdateSelectionJob getJob(Collection<? extends OMObject> newSelectedObjects) {
-//            return create(UpdateSelectionJob.class, j -> j.setJobParameters(newSelectedObjects));
-//        }
-//
-//        public UpdateSelectionJob getJob(OMObject fxomObject) {
-//            return create(UpdateSelectionJob.class, j -> j.setJobParameters(List.of(fxomObject)));
-//        }
     }
 }
