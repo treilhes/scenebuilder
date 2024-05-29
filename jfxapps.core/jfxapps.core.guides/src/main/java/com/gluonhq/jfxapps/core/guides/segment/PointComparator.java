@@ -31,16 +31,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.core.guides;
+package com.gluonhq.jfxapps.core.guides.segment;
 
-/**
- *
- */
-public abstract class AbstractSegment implements Comparable<AbstractSegment> {
+import java.util.Comparator;
+
+import com.gluonhq.jfxapps.util.MathUtils;
+
+import javafx.geometry.Point2D;
+
+public class PointComparator implements Comparator<Point2D> {
     
-    public abstract double getX1();
-    public abstract double getY1();
-    public abstract double getX2();
-    public abstract double getY2();
-    public abstract double getLength();
+    @Override
+    public int compare(Point2D o1, Point2D o2) {
+        assert o1 != null;
+        assert o2 != null;
+
+        final int result;
+
+        if (o1 == o2) {
+            result = 0;
+        } else if (MathUtils.equals(o1.getX(), o2.getX()) && MathUtils.equals(o1.getY(), o2.getY())) {
+            result = 0;
+        } else {
+            double r1 = Math.sqrt(o1.getX() * o1.getX() + o1.getY() * o1.getY());
+            double r2 = Math.sqrt(o2.getX() * o2.getX() + o2.getY() * o2.getY());
+            result = Double.compare(r1, r2);
+        }
+
+        return result;
+    }
+    
 }

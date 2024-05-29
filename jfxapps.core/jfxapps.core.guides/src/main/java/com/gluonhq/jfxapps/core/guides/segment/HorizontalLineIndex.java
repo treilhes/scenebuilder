@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.core.guides;
+package com.gluonhq.jfxapps.core.guides.segment;
 
 import java.util.ArrayList;
 import java.util.Collections;

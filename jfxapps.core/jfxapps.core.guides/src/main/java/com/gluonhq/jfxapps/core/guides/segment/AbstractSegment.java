@@ -31,59 +31,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.core.guides;
+package com.gluonhq.jfxapps.core.guides.segment;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import com.gluonhq.jfxapps.util.MathUtils;
-
-import javafx.geometry.Point2D;
-
-public class PointIndex {
-
-    private static final PointComparator comparator = new PointComparator();
-
-    private final List<Point2D> points = new ArrayList<>();
-    private boolean sorted;
-
-
-    public void addPoint(Point2D point) {
-        points.add(point);
-        sorted = false;
-    }
-
-    public void clear() {
-        points.clear();
-    }
-
-    public boolean isEmpty() {
-        return points.isEmpty();
-    }
-
-    public List<Point2D> match(Point2D target, double threshold) {
-        assert threshold >= 0;
-
-        if (sorted == false) {
-            Collections.sort(points, comparator);
-        }
-        double bestDelta = Double.MAX_VALUE;
-        final List<Point2D> result = new ArrayList<>();
-        for (Point2D point : points) {
-            final double delta = Math.sqrt(Math.pow(target.getX() - point.getX(), 2) + Math.pow(target.getY() - point.getY(), 2));
-            if (delta < threshold) {
-                if (MathUtils.equals(delta, bestDelta)) {
-                    result.add(point);
-                } else if (delta < bestDelta) {
-                    bestDelta = delta;
-                    result.clear();
-                    result.add(point);
-                }
-            }
-        }
-
-        return result;
-    }
+/**
+ *
+ */
+public abstract class AbstractSegment implements Comparable<AbstractSegment> {
     
+    public abstract double getX1();
+    public abstract double getY1();
+    public abstract double getX2();
+    public abstract double getY2();
+    public abstract double getLength();
 }

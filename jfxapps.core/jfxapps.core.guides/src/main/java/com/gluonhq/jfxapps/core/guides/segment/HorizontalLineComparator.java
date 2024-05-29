@@ -31,54 +31,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.core.guides;
+package com.gluonhq.jfxapps.core.guides.segment;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Comparator;
 
 import com.gluonhq.jfxapps.util.MathUtils;
 
 /**
  *
  */
-public class SegmentIndex {
-    
-    private final List<AbstractSegment> segments = new ArrayList<>();
-    private boolean sorted;
-    
+public class HorizontalLineComparator implements Comparator<HorizontalSegment> {
 
-    public void addSegment(AbstractSegment s) {
-        segments.add(s);
-        sorted = false;
-    }
-    
-    public void clear() {
-        segments.clear();
-    }
-    
-    public List<AbstractSegment> match(double targetLength, double threshold) {
-        assert targetLength >= 0;
-        assert threshold >= 0;
+    @Override
+    public int compare(HorizontalSegment o1, HorizontalSegment o2) {
+        assert o1 != null;
+        assert o2 != null;
+        assert MathUtils.equals(o1.getY1(), o1.getY2());
+        assert MathUtils.equals(o2.getY1(), o2.getY2());
         
-        if (sorted == false) {
-            Collections.sort(segments);
-        }
-        double bestDelta = Double.MAX_VALUE;
-        final List<AbstractSegment> result = new ArrayList<>();
-        for (AbstractSegment s : segments) {
-            final double delta = Math.abs(s.getLength() - targetLength);
-            if (delta < threshold) {
-                if (MathUtils.equals(delta, bestDelta)) {
-                    result.add(s);
-                } else if (delta < bestDelta) {
-                    bestDelta = delta;
-                    result.clear();
-                    result.add(s);
-                }
-            }
+        final int result;
+        
+        if (o1 == o2) {
+            result = 0;
+        } else if (MathUtils.equals(o1.getY1(), o2.getY1())) {
+            result = 0;
+        } else if (o1.getY1() < o2.getY1()) {
+            result = +1;
+        } else {
+            result = -1;
         }
         
         return result;
     }
+    
 }

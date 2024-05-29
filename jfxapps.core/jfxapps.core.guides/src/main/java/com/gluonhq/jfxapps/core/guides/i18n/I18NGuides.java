@@ -30,35 +30,26 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.gluonhq.jfxapps.core.guides.i18n;
 
-package com.oracle.javafx.scenebuilder.core.guides;
+import java.util.ResourceBundle;
 
-import java.util.Comparator;
+import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.util.MathUtils;
+import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
 
-import javafx.geometry.Point2D;
+@Component
+public class I18NGuides implements BundleProvider {
 
-public class PointComparator implements Comparator<Point2D> {
-    
+    private static ResourceBundle bundle;
+
     @Override
-    public int compare(Point2D o1, Point2D o2) {
-        assert o1 != null;
-        assert o2 != null;
-
-        final int result;
-
-        if (o1 == o2) {
-            result = 0;
-        } else if (MathUtils.equals(o1.getX(), o2.getX()) && MathUtils.equals(o1.getY(), o2.getY())) {
-            result = 0;
-        } else {
-            double r1 = Math.sqrt(o1.getX() * o1.getX() + o1.getY() * o1.getY());
-            double r2 = Math.sqrt(o2.getX() * o2.getX() + o2.getY() * o2.getY());
-            result = Double.compare(r1, r2);
+	public synchronized ResourceBundle getBundle() {
+        if (bundle == null) {
+            final String packageName = I18NGuides.class.getPackage().getName();
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderGuides"); //NOCHECK
         }
-
-        return result;
+        return bundle;
     }
-    
 }
+

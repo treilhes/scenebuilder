@@ -32,11 +32,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.oracle.javafx.scenebuilder.guides.GuidesExtension;
+import com.gluonhq.jfxapps.core.guides.GuidesExtension;
 
 open module scenebuilder.core.guides {
-    exports com.oracle.javafx.scenebuilder.guides;
-    exports com.oracle.javafx.scenebuilder.guides.i18n;
+    exports com.gluonhq.jfxapps.core.guides;
+    exports com.gluonhq.jfxapps.core.guides.i18n;
 
     requires transitive jfxapps.core.api;
 

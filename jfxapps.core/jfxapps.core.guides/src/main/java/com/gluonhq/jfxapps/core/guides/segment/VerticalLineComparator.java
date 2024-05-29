@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,38 +30,38 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.guides;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+package com.gluonhq.jfxapps.core.guides.segment;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.oracle.javafx.scenebuilder.guides.i18n.I18NGuides;
+import java.util.Comparator;
 
-public class GuidesExtension implements OpenExtension {
+import com.gluonhq.jfxapps.util.MathUtils;
 
-    @Override
-    public UUID getId() {
-        return UUID.fromString("f04a79dc-d3aa-40ee-b081-2ba47433a18f");
-    }
+/**
+ *
+ */
+public class VerticalLineComparator implements Comparator<VerticalSegment> {
 
     @Override
-    public UUID getParentId() {
-        return OpenExtension.ROOT_ID;
+    public int compare(VerticalSegment o1, VerticalSegment o2) {
+        assert o1 != null;
+        assert o2 != null;
+        assert MathUtils.equals(o1.getX1(), o1.getX2());
+        assert MathUtils.equals(o2.getX1(), o2.getX2());
+        
+        final int result;
+        
+        if (o1 == o2) {
+            result = 0;
+        } else if (MathUtils.equals(o1.getX1(), o2.getX1())) {
+            result = 0;
+        } else if (o1.getX1() < o2.getX1()) {
+            result = +1;
+        } else {
+            result = -1;
+        }
+        
+        return result;
     }
-
-    @Override
-    public List<Class<?>> localContextClasses() {
-        return List.of();
-    }
-
-    @Override
-    public List<Class<?>> exportedContextClasses() {
-     // @formatter:off
-        return Arrays.asList(
-                I18NGuides.class
-            );
-     // @formatter:on
-    }
+    
 }
