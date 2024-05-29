@@ -63,10 +63,10 @@ import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
 import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
 import com.gluonhq.jfxapps.core.controls.IntegerField;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.library.util.LibraryUtil;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlFilterTransform;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;
-import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;

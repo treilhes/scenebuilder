@@ -54,11 +54,11 @@ import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
+import com.gluonhq.jfxapps.core.library.api.Explorer;
+import com.gluonhq.jfxapps.core.library.util.LibraryUtil;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionLibraryFilter;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionReport;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionReportEntry;
-import com.oracle.javafx.scenebuilder.library.api.Explorer;
-import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
 
 import javafx.concurrent.Task;
 

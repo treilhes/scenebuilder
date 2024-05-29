@@ -44,12 +44,12 @@ import org.apache.fontbox.ttf.TrueTypeFont;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.core.library.util.LibraryUtil;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.BoundingBox;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibraryFilter;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReportEntry;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReportEntry.Type;
-import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
 
 public class ImageExplorerUtil {
 

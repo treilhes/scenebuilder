@@ -76,6 +76,7 @@ import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMArchive;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.library.util.LibraryUtil;
 import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
 import com.oracle.javafx.scenebuilder.controllibrary.action.InsertControlAction;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
@@ -84,7 +85,6 @@ import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.BuiltinSect
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemNameComparator;
 import com.oracle.javafx.scenebuilder.controllibrary.preferences.global.DisplayModePreference;
-import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;

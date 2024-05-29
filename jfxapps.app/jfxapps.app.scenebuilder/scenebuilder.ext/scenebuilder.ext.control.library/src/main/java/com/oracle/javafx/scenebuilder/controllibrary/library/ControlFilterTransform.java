@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.gluonhq.jfxapps.core.api.library.ReportEntry;
-import com.oracle.javafx.scenebuilder.library.api.Transform;
+import com.gluonhq.jfxapps.core.library.api.Transform;
 
 
 public class ControlFilterTransform implements Transform<ControlReportImpl, ControlReportImpl> {

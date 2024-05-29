@@ -60,7 +60,13 @@ import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.misc.UILogger;
 import com.gluonhq.jfxapps.core.extstore.fs.ExtensionFileSystemFactory;
 import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
+import com.gluonhq.jfxapps.core.library.api.AbstractLibrary;
+import com.gluonhq.jfxapps.core.library.api.Explorer;
+import com.gluonhq.jfxapps.core.library.api.LibraryDialogFactory;
+import com.gluonhq.jfxapps.core.library.api.LibraryStoreFactory;
+import com.gluonhq.jfxapps.core.library.api.Transform;
 import com.gluonhq.jfxapps.core.library.maven.MavenArtifact;
+import com.gluonhq.jfxapps.core.library.util.LibraryUtil;
 import com.oracle.javafx.scenebuilder.imagelibrary.ImageLibraryExtension;
 import com.oracle.javafx.scenebuilder.imagelibrary.importer.ImageImportWindowController;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReportEntry.Type;
@@ -70,12 +76,6 @@ import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageExplore
 import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageFileExplorer;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageFolderExplorer;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageMavenArtifactExplorer;
-import com.oracle.javafx.scenebuilder.library.api.AbstractLibrary;
-import com.oracle.javafx.scenebuilder.library.api.Explorer;
-import com.oracle.javafx.scenebuilder.library.api.LibraryDialogFactory;
-import com.oracle.javafx.scenebuilder.library.api.LibraryStoreFactory;
-import com.oracle.javafx.scenebuilder.library.api.Transform;
-import com.oracle.javafx.scenebuilder.library.util.LibraryUtil;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

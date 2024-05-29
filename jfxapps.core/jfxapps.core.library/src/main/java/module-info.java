@@ -32,15 +32,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.oracle.javafx.scenebuilder.library.LibraryExtension;
+import com.gluonhq.jfxapps.core.library.LibraryExtension;
 
 open module scenebuilder.core.library {
-    exports com.oracle.javafx.scenebuilder.library.manager;
-    exports com.oracle.javafx.scenebuilder.library.api;
-    exports com.oracle.javafx.scenebuilder.library;
-    exports com.oracle.javafx.scenebuilder.library.store;
-    exports com.oracle.javafx.scenebuilder.library.util;
-    exports com.oracle.javafx.scenebuilder.library.preferences.global;
+    exports com.gluonhq.jfxapps.core.library.manager;
+    exports com.gluonhq.jfxapps.core.library.api;
+    exports com.gluonhq.jfxapps.core.library;
+    exports com.gluonhq.jfxapps.core.library.store;
+    exports com.gluonhq.jfxapps.core.library.util;
+    exports com.gluonhq.jfxapps.core.library.preferences.global;
 
     requires jfxapps.core.starter;
 

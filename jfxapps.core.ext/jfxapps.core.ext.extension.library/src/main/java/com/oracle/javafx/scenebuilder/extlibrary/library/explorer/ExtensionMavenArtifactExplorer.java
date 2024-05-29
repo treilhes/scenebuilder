@@ -52,10 +52,10 @@ import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
 import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
+import com.gluonhq.jfxapps.core.library.api.Explorer;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionLibraryFilter;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionReport;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionReportEntry;
-import com.oracle.javafx.scenebuilder.library.api.Explorer;
 
 import javafx.concurrent.Task;
 

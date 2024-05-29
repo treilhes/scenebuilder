@@ -34,7 +34,7 @@ package com.oracle.javafx.scenebuilder.extlibrary.library;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.library.api.Transform;
+import com.gluonhq.jfxapps.core.library.api.Transform;
 
 
 public class ExtensionFilterTransform implements Transform<ExtensionReport, ExtensionReport> {
