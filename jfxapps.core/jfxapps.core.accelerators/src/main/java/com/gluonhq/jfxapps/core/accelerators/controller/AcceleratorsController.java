@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.core.accelerator;
+package com.gluonhq.jfxapps.core.accelerators.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +44,8 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.core.accelerators.preferences.global.AcceleratorsMapPreference;
+import com.gluonhq.jfxapps.core.accelerators.preferences.global.FocusedAcceleratorsMapPreference;
 import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.preferences.Preference;
@@ -53,8 +55,6 @@ import com.gluonhq.jfxapps.core.api.shortcut.Accelerators;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.ui.AbstractCommonUiController;
 import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlViewController;
-import com.oracle.javafx.scenebuilder.core.accelerator.preferences.global.AcceleratorsMapPreference;
-import com.oracle.javafx.scenebuilder.core.accelerator.preferences.global.FocusedAcceleratorsMapPreference;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;

@@ -31,20 +31,15 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.core.accelerator.preferences.global;
+package com.gluonhq.jfxapps.core.accelerators.preferences.global;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.action.Action;
+import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
 import com.gluonhq.jfxapps.core.api.preferences.MapPreferences;
 import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
 
@@ -52,20 +47,20 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.input.KeyCombination;
 
-public class FocusedAcceleratorsMapPreference extends MapPreferences<Class<? extends Action>, ObservableList<KeyCombination>> {
+
+@ApplicationSingleton
+public class AcceleratorsMapPreference extends MapPreferences<Class<? extends Action>, ObservableList<KeyCombination>> implements ManagedGlobalPreference {
 
     /***************************************************************************
      *                                                                         *
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    private static final String PREFERENCE_KEY = "Accelerators-%s"; //NOCHECK
+    public static final String PREFERENCE_KEY = "Accelerators"; //NOCHECK
     private static final String SEPARATOR = "//"; //NOCHECK
 
-    public FocusedAcceleratorsMapPreference(
-            PreferencesContext preferencesContext,
-            Class<?> focusedClass) {
-        super(preferencesContext, PreferencesContext.generateKey(String.format(PREFERENCE_KEY, focusedClass.getName())));
+    public AcceleratorsMapPreference(PreferencesContext preferencesContext) {
+        super(preferencesContext, PREFERENCE_KEY);
     }
 
     @Override
@@ -107,29 +102,6 @@ public class FocusedAcceleratorsMapPreference extends MapPreferences<Class<? ext
 
         if (getValue().isEmpty()) {
             getValue().putAll(backup);
-        }
-    }
-
-    @ApplicationSingleton
-    public static final class Factory {
-
-        private final Map<Class<?>, FocusedAcceleratorsMapPreference> cache = new HashMap<>();
-        private final PreferencesContext preferencesContext;
-
-        public Factory(PreferencesContext preferencesContext) {
-            this.preferencesContext = preferencesContext;
-        }
-
-        public FocusedAcceleratorsMapPreference get(Class<?> focusedClass) {
-            if (cache.containsKey(focusedClass)) {
-                return cache.get(focusedClass);
-            }
-
-            FocusedAcceleratorsMapPreference focusedPref = new FocusedAcceleratorsMapPreference(preferencesContext, focusedClass);
-            focusedPref.readFromJavaPreferences();
-            cache.put(focusedClass, focusedPref);
-
-            return focusedPref;
         }
     }
 }

@@ -32,11 +32,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.oracle.javafx.scenebuilder.accelerators.AcceleratorsExtension;
+import com.gluonhq.jfxapps.core.accelerators.AcceleratorsExtension;
 
 open module scenebuilder.core.accelerators {
-    exports com.oracle.javafx.scenebuilder.accelerators;
-    exports com.oracle.javafx.scenebuilder.accelerators.i18n;
+    exports com.gluonhq.jfxapps.core.accelerators;
+    exports com.gluonhq.jfxapps.core.accelerators.i18n;
 
     requires transitive jfxapps.core.starter;
 

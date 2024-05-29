@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,45 +30,26 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.accelerators;
+package com.gluonhq.jfxapps.core.accelerators.i18n;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.ResourceBundle;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.oracle.javafx.scenebuilder.accelerators.i18n.I18NAccelerators;
-import com.oracle.javafx.scenebuilder.core.accelerator.AcceleratorsController;
-import com.oracle.javafx.scenebuilder.core.accelerator.preferences.global.AcceleratorsMapPreference;
-import com.oracle.javafx.scenebuilder.core.accelerator.preferences.global.FocusedAcceleratorsMapPreference;
-import com.oracle.javafx.scenebuilder.core.shortcut.AnnotatedActionAcceleratorProvider;
+import org.springframework.stereotype.Component;
 
-public class AcceleratorsExtension implements OpenExtension {
-    @Override
-    public UUID getId() {
-        return UUID.fromString("6c858b4e-b74f-4e8d-89c6-99c96ca77732");
-    }
+import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
+
+@Component
+public class I18NAccelerators implements BundleProvider {
+
+    private static ResourceBundle bundle;
 
     @Override
-    public UUID getParentId() {
-        return OpenExtension.ROOT_ID;
-    }
-
-    @Override
-    public List<Class<?>> localContextClasses() {
-        return List.of();
-    }
-
-    @Override
-    public List<Class<?>> exportedContextClasses() {
-     // @formatter:off
-        return Arrays.asList(
-                AcceleratorsMapPreference.class,
-                AcceleratorsController.class,
-                AnnotatedActionAcceleratorProvider.class,
-                FocusedAcceleratorsMapPreference.Factory.class,
-                I18NAccelerators.class
-            );
-     // @formatter:on
+	public synchronized ResourceBundle getBundle() {
+        if (bundle == null) {
+            final String packageName = I18NAccelerators.class.getPackage().getName();
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderAccelerators"); //NOCHECK
+        }
+        return bundle;
     }
 }
+

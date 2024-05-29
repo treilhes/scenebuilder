@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.core.shortcut;
+package com.gluonhq.jfxapps.core.accelerators.shortcut;
 
 import java.util.ArrayList;
 import java.util.List;
