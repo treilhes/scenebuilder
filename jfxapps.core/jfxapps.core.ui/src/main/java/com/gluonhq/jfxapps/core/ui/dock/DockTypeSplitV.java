@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,28 +31,24 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.gluonhq.jfxapps.core.ui.BaseUiExtension;
+package com.gluonhq.jfxapps.core.ui.dock;
 
-open module jfxapps.core.ui {
-    exports com.gluonhq.jfxapps.core.ui.preferences.document;
-    exports com.gluonhq.jfxapps.core.ui.editor.messagelog;
-    exports com.gluonhq.jfxapps.core.ui.menubar;
-    exports com.gluonhq.jfxapps.core.ui.controller;
-    exports com.gluonhq.jfxapps.core.ui.dialog;
-    exports com.gluonhq.jfxapps.core.ui.i18n;
-    exports com.gluonhq.jfxapps.core.ui.message;
-    exports com.gluonhq.jfxapps.core.ui.selectionbar;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 
-    exports com.gluonhq.jfxapps.core.ui.dock;
-    exports com.gluonhq.jfxapps.core.ui.dock.preferences.document;
+import javafx.geometry.Orientation;
 
-    requires transitive jfxapps.core.api;
-    requires jakarta.inject;
-    requires jakarta.annotation;
-    requires spring.context;
-    requires spring.beans;
-    //requires scenebuilder.core.selection;
+@Singleton
+@Lazy
+public class DockTypeSplitV extends AbstractDockTypeSplit {
 
-    provides Extension with BaseUiExtension;
+    public DockTypeSplitV(JfxAppContext context) {
+        super(context, Orientation.VERTICAL);
+    }
+
+    @Override
+    public String getNameKey() {
+        return "viewtype.splitv";
+    }
 }

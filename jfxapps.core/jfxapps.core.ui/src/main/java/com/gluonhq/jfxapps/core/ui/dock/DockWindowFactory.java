@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,28 +31,29 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.gluonhq.jfxapps.core.ui.BaseUiExtension;
+package com.gluonhq.jfxapps.core.ui.dock;
 
-open module jfxapps.core.ui {
-    exports com.gluonhq.jfxapps.core.ui.preferences.document;
-    exports com.gluonhq.jfxapps.core.ui.editor.messagelog;
-    exports com.gluonhq.jfxapps.core.ui.menubar;
-    exports com.gluonhq.jfxapps.core.ui.controller;
-    exports com.gluonhq.jfxapps.core.ui.dialog;
-    exports com.gluonhq.jfxapps.core.ui.i18n;
-    exports com.gluonhq.jfxapps.core.ui.message;
-    exports com.gluonhq.jfxapps.core.ui.selectionbar;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 
-    exports com.gluonhq.jfxapps.core.ui.dock;
-    exports com.gluonhq.jfxapps.core.ui.dock.preferences.document;
+import jakarta.inject.Provider;
 
-    requires transitive jfxapps.core.api;
-    requires jakarta.inject;
-    requires jakarta.annotation;
-    requires spring.context;
-    requires spring.beans;
-    //requires scenebuilder.core.selection;
+@com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton
+public class DockWindowFactory {
 
-    provides Extension with BaseUiExtension;
+    private final JfxAppContext context;
+    private final Provider<ApplicationInstance> document;
+
+    protected DockWindowFactory(
+            JfxAppContext context,
+            Provider<ApplicationInstance> document) {
+        this.context = context;
+        this.document = document;
+    }
+
+    public DockWindowController newDockWindow() {
+        DockWindowController dwc = context.getBean(DockWindowController.class);
+        dwc.setFocusHandler(document.get()::onFocus);
+        return dwc;
+    }
 }

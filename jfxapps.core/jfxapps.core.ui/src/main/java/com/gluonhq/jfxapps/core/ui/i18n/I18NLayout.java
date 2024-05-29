@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,28 +30,28 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.gluonhq.jfxapps.core.ui.BaseUiExtension;
+package com.gluonhq.jfxapps.core.ui.i18n;
 
-open module jfxapps.core.ui {
-    exports com.gluonhq.jfxapps.core.ui.preferences.document;
-    exports com.gluonhq.jfxapps.core.ui.editor.messagelog;
-    exports com.gluonhq.jfxapps.core.ui.menubar;
-    exports com.gluonhq.jfxapps.core.ui.controller;
-    exports com.gluonhq.jfxapps.core.ui.dialog;
-    exports com.gluonhq.jfxapps.core.ui.i18n;
-    exports com.gluonhq.jfxapps.core.ui.message;
-    exports com.gluonhq.jfxapps.core.ui.selectionbar;
+import java.util.ResourceBundle;
 
-    exports com.gluonhq.jfxapps.core.ui.dock;
-    exports com.gluonhq.jfxapps.core.ui.dock.preferences.document;
+import org.springframework.stereotype.Component;
 
-    requires transitive jfxapps.core.api;
-    requires jakarta.inject;
-    requires jakarta.annotation;
-    requires spring.context;
-    requires spring.beans;
-    //requires scenebuilder.core.selection;
+import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
 
-    provides Extension with BaseUiExtension;
+/**
+ *
+ */
+@Component
+public class I18NLayout implements BundleProvider {
+    
+    private static ResourceBundle bundle;
+
+    @Override
+	public synchronized ResourceBundle getBundle() {
+        if (bundle == null) {
+            final String packageName = I18NLayout.class.getPackage().getName();
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderLayout"); //NOCHECK
+        }
+        return bundle;
+    }
 }

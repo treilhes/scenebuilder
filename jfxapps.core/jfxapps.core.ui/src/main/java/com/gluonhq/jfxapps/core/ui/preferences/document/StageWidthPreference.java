@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,28 +31,21 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.gluonhq.jfxapps.core.ui.BaseUiExtension;
+package com.gluonhq.jfxapps.core.ui.preferences.document;
 
-open module jfxapps.core.ui {
-    exports com.gluonhq.jfxapps.core.ui.preferences.document;
-    exports com.gluonhq.jfxapps.core.ui.editor.messagelog;
-    exports com.gluonhq.jfxapps.core.ui.menubar;
-    exports com.gluonhq.jfxapps.core.ui.controller;
-    exports com.gluonhq.jfxapps.core.ui.dialog;
-    exports com.gluonhq.jfxapps.core.ui.i18n;
-    exports com.gluonhq.jfxapps.core.ui.message;
-    exports com.gluonhq.jfxapps.core.ui.selectionbar;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preferences.type.DoublePreference;
 
-    exports com.gluonhq.jfxapps.core.ui.dock;
-    exports com.gluonhq.jfxapps.core.ui.dock.preferences.document;
+@ApplicationInstanceSingleton
+public class StageWidthPreference extends DoublePreference implements ManagedDocumentPreference {
 
-    requires transitive jfxapps.core.api;
-    requires jakarta.inject;
-    requires jakarta.annotation;
-    requires spring.context;
-    requires spring.beans;
-    //requires scenebuilder.core.selection;
+	public static final String PREFERENCE_KEY = "width"; //NOCHECK
+	public static final Double PREFERENCE_DEFAULT_VALUE = 1240.0; //NOCHECK
 
-    provides Extension with BaseUiExtension;
+    public StageWidthPreference(PreferencesContext preferencesContext) {
+		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
+	}
+
 }
