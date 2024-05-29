@@ -58,8 +58,8 @@ import com.gluonhq.jfxapps.core.api.application.lifecycle.DisposeWithApplication
 import com.gluonhq.jfxapps.core.api.library.LibraryFilter;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.misc.UILogger;
+import com.gluonhq.jfxapps.core.extstore.fs.ExtensionFileSystemFactory;
 import com.gluonhq.jfxapps.core.library.maven.MavenArtifact;
-import com.oracle.javafx.scenebuilder.extstore.fs.ExtensionFileSystemFactory;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.imagelibrary.ImageLibraryExtension;
 import com.oracle.javafx.scenebuilder.imagelibrary.importer.ImageImportWindowController;

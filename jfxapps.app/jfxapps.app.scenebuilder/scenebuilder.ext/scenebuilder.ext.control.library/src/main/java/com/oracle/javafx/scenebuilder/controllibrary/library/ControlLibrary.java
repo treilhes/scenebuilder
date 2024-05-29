@@ -57,6 +57,7 @@ import com.gluonhq.jfxapps.core.api.application.lifecycle.DisposeWithApplication
 import com.gluonhq.jfxapps.core.api.library.LibraryFilter;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.misc.UILogger;
+import com.gluonhq.jfxapps.core.extstore.fs.ExtensionFileSystemFactory;
 import com.gluonhq.jfxapps.core.library.maven.MavenArtifact;
 import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata.Qualifier;
 import com.oracle.javafx.scenebuilder.controllibrary.ControlLibraryExtension;
@@ -66,7 +67,6 @@ import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItem
 import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlFileExplorer;
 import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlFolderExplorer;
 import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlMavenArtifactExplorer;
-import com.oracle.javafx.scenebuilder.extstore.fs.ExtensionFileSystemFactory;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.library.api.AbstractLibrary;
 import com.oracle.javafx.scenebuilder.library.api.Explorer;

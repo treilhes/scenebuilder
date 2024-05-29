@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,39 +30,24 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.extstore;
+package com.gluonhq.jfxapps.core.extstore.fs;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
-import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.oracle.javafx.scenebuilder.extstore.fs.ExtensionFileSystemFactory;
-import com.oracle.javafx.scenebuilder.extstore.i18n.I18NExtensionStore;
-
-public class ExtensionStoreExtension implements OpenExtension {
-    @Override
-    public UUID getId() {
-        return UUID.fromString("5aa2900e-db2f-44e0-9f27-a05365dc01f1");
-    }
-
-    @Override
-    public UUID getParentId() {
-        return OpenExtension.ROOT_ID;
-    }
-
-    @Override
-    public List<Class<?>> localContextClasses() {
-        return List.of();
-    }
-
-    @Override
-    public List<Class<?>> exportedContextClasses() {
-     // @formatter:off
-        return Arrays.asList(
-                ExtensionFileSystemFactory.class,
-                I18NExtensionStore.class
-            );
-     // @formatter:on
-    }
+public interface ExtensionFileSystem {
+    boolean isCreated();
+    boolean create();
+    List<Path> list();
+    List<Path> list(String path);
+    Path get(String path);
+    Path get(Path target);
+    boolean copy(List<Path> files, String destination) throws IOException;
+    boolean copy(List<Path> files, Path libraryFilesRoot) throws IOException;
+    boolean delete(String destination);
+    void createDirectoryIfNotExists(Path path);
+    boolean existsDirectory(Path path);
+    
+    
 }
