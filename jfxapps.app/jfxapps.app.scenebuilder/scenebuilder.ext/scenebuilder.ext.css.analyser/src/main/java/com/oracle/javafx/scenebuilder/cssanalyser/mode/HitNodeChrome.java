@@ -37,8 +37,8 @@ package com.oracle.javafx.scenebuilder.cssanalyser.mode;
 import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
-import com.gluonhq.jfxapps.core.content.util.RegionRectangle;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.util.content.RegionRectangle;
 import com.oracle.javafx.scenebuilder.api.content.decoration.AbstractDecoration;
 
 import javafx.geometry.Bounds;

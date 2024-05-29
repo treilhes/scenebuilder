@@ -41,7 +41,7 @@ import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlPopupController;
 import com.gluonhq.jfxapps.core.api.ui.misc.HudWindow;
-import com.gluonhq.jfxapps.core.content.util.LineEquation;
+import com.gluonhq.jfxapps.util.content.LineEquation;
 
 import javafx.fxml.FXML;
 import javafx.geometry.BoundingBox;

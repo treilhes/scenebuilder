@@ -31,7 +31,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.gluonhq.jfxapps.core.content.util;
+package com.gluonhq.jfxapps.util.content;
 
 import com.gluonhq.jfxapps.util.MathUtils;
 
