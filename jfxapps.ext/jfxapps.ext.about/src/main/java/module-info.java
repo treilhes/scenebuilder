@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.ext.about.AboutExtension;
 
-open module scenebuilder.ext.about {
+open module jfxapps.ext.about {
     exports com.gluonhq.jfxapps.ext.about;
     exports com.gluonhq.jfxapps.ext.about.i18n;
     exports com.gluonhq.jfxapps.ext.about.actions;

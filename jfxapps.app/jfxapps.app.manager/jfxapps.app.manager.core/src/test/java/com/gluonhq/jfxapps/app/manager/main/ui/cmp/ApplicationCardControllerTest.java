@@ -47,8 +47,8 @@ import com.gluonhq.jfxapps.app.manager.model.Application;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.test.FxmlControllerLoader;
-import com.oracle.javafx.scenebuilder.test.TestStages;
+import com.gluonhq.jfxapps.test.FxmlControllerLoader;
+import com.gluonhq.jfxapps.test.TestStages;
 
 import javafx.scene.Parent;
 import javafx.scene.control.Button;

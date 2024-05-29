@@ -37,7 +37,7 @@ import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.ext.container.ScenebuilderContainerExtension;
 import com.gluonhq.jfxapps.ext.container.spi.InMemoryFileURLStreamHandlerProvider;
 
-open module scenebuilder.ext.sb {
+open module jfxapps.ext.sb {
     exports com.gluonhq.jfxapps.ext.container;
     exports com.gluonhq.jfxapps.ext.container.actions;
     exports com.gluonhq.jfxapps.ext.container.menu;

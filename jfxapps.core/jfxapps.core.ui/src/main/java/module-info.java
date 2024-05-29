@@ -52,7 +52,7 @@ open module jfxapps.core.ui {
     requires jakarta.annotation;
     requires spring.context;
     requires spring.beans;
-    //requires scenebuilder.core.selection;
+    //requires jfxapps.core.selection;
 
     provides Extension with BaseUiExtension;
 }

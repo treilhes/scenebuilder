@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.fs.FileSystemExtension;
 
-open module scenebuilder.core.filesystem {
+open module jfxapps.core.filesystem {
     exports com.gluonhq.jfxapps.core.fs.util;
     exports com.gluonhq.jfxapps.core.fs.preference.global;
     exports com.gluonhq.jfxapps.core.fs.controller;

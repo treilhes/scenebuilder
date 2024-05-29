@@ -16,7 +16,7 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.ext.sb</artifactId>
+            <artifactId>jfxapps.ext.container</artifactId>
         </dependency>
     </dependencies>
 </project>

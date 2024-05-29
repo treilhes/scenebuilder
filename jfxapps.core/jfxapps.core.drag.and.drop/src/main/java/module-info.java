@@ -34,14 +34,14 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.dnd.DragAndDropExtension;
 
-open module scenebuilder.core.drag.and.drop{
+open module jfxapps.core.drag.and.drop{
     exports com.gluonhq.jfxapps.core.dnd;
     exports com.gluonhq.jfxapps.core.dnd.controller;
     exports com.gluonhq.jfxapps.core.dnd.source;
 
     requires transitive jfxapps.core.api;
-    requires scenebuilder.core.jobs;
-    requires scenebuilder.core.selection;
+    requires jfxapps.core.jobs;
+    requires jfxapps.core.selection;
 
     provides Extension with DragAndDropExtension;
 }

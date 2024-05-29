@@ -88,8 +88,6 @@ open module jfxapps.core.api {
 
     exports com.gluonhq.jfxapps.core.api.util;
 
-    exports com.gluonhq.jfxapps.core.action.editor;
-
     exports com.gluonhq.jfxapps.core.api.application.javafx;
 
     requires transitive jfxapps.javafx.starter;

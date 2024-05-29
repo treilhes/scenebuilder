@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.accelerators.AcceleratorsExtension;
 
-open module scenebuilder.core.accelerators {
+open module jfxapps.core.accelerators {
     exports com.gluonhq.jfxapps.core.accelerators;
     exports com.gluonhq.jfxapps.core.accelerators.i18n;
 

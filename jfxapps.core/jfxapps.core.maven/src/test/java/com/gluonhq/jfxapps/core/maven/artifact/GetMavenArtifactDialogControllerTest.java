@@ -53,7 +53,7 @@ import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.maven.artifact.GetMavenArtifactDialogController;
 import com.gluonhq.jfxapps.core.maven.impl.MavenClientController;
 import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoriesPreferences;
-import com.oracle.javafx.scenebuilder.test.FxmlControllerLoader;
+import com.gluonhq.jfxapps.test.FxmlControllerLoader;
 
 import javafx.scene.Parent;
 import javafx.stage.Stage;

@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.extstore.ExtensionStoreExtension;
 
-open module scenebuilder.core.extension.store {
+open module jfxapps.core.extension.store {
 
     exports com.gluonhq.jfxapps.core.extstore;
     exports com.gluonhq.jfxapps.core.extstore.fs;

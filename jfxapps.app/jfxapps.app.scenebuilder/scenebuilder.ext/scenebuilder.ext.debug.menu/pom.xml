@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.ext.menu</artifactId>
+            <artifactId>jfxapps.ext.menu</artifactId>
         </dependency>
     </dependencies>
 </project>

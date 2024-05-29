@@ -34,15 +34,15 @@
 import com.oracle.javafx.scenebuilder.extension.Extension;
 import com.oracle.javafx.scenebuilder.launcher.LauncherExtension;
 
-open module scenebuilder.core.launcher {
+open module jfxapps.core.launcher {
     exports com.oracle.javafx.scenebuilder.launcher;
     exports com.oracle.javafx.scenebuilder.launcher.i18n;
     exports com.oracle.javafx.scenebuilder.launcher.splash;
     exports com.oracle.javafx.scenebuilder.launcher.app;
 
-    requires scenebuilder.starter;
+    requires jfxapps.starter;
     requires transitive jfxapps.core.api;
-    requires scenebuilder.core.filesystem;
+    requires jfxapps.core.filesystem;
 
     provides Extension with LauncherExtension;
 }

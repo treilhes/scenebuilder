@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.menu.MenuExtension;
 
-open module scenebuilder.core.menu {
+open module jfxapps.core.menu {
     exports com.gluonhq.jfxapps.core.menu;
     exports com.gluonhq.jfxapps.core.menu.i18n;
 

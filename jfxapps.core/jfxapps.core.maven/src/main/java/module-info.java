@@ -1,4 +1,4 @@
-open module scenebuilder.core.maven {
+open module jfxapps.core.maven {
     exports com.gluonhq.jfxapps.core.maven.artifact;
     exports com.gluonhq.jfxapps.core.maven;
     exports com.gluonhq.jfxapps.core.maven.impl;

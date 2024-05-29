@@ -51,13 +51,7 @@ public class FxThreadAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(FxThreadAspect.class);
 
-    //@Pointcut("@annotation(com.oracle.javafx.scenebuilder.api.di.FxThread)")
-    //@Pointcut("@annotation(com.gluonhq.jfxapps.boot.context.annotation.FxThread)")
-    //public void fxThreadPointCut() {}
-
-    //@Around("fxThreadPointCut()")
     @Around("@annotation(com.gluonhq.jfxapps.boot.context.annotation.FxThread)")
-    //@Around("@annotation(com.oracle.javafx.scenebuilder.api.di.FxThread)")
     public Object fxThreadAround(ProceedingJoinPoint joinPoint) throws Throwable {
 
         logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");

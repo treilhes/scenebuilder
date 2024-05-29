@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.ext.menu.DefaultMenuExtension;
 
-open module scenebuilder.core.ext.menu {
+open module jfxapps.core.ext.menu {
     exports com.gluonhq.jfxapps.ext.menu;
     exports com.gluonhq.jfxapps.ext.menu.action;
     exports com.gluonhq.jfxapps.ext.menu.action.edit;
@@ -43,7 +43,7 @@ open module scenebuilder.core.ext.menu {
     exports com.gluonhq.jfxapps.ext.menu.i18n;
 
     requires transitive jfxapps.core.api;
-    requires transitive scenebuilder.core.filesystem;
+    requires transitive jfxapps.core.filesystem;
 
     provides Extension with DefaultMenuExtension;
 }

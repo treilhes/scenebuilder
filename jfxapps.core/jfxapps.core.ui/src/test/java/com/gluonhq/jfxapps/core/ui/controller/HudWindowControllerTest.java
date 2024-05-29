@@ -49,8 +49,8 @@ import org.testfx.matcher.control.LabeledMatchers;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.ui.controller.HudWindowController;
-import com.oracle.javafx.scenebuilder.test.FxmlControllerLoader;
-import com.oracle.javafx.scenebuilder.test.TestStages;
+import com.gluonhq.jfxapps.test.FxmlControllerLoader;
+import com.gluonhq.jfxapps.test.TestStages;
 
 import javafx.scene.Parent;
 import javafx.scene.control.Button;

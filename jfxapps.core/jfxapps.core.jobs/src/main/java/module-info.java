@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.job.JobsExtension;
 
-open module scenebuilder.core.jobs {
+open module jfxapps.core.jobs {
     exports com.gluonhq.jfxapps.core.job;
     exports com.gluonhq.jfxapps.core.job.editor;
     exports com.gluonhq.jfxapps.core.job.editor.atomic;

@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.library.LibraryExtension;
 
-open module scenebuilder.core.library {
+open module jfxapps.core.library {
     exports com.gluonhq.jfxapps.core.library.manager;
     exports com.gluonhq.jfxapps.core.library.api;
     exports com.gluonhq.jfxapps.core.library;
@@ -44,8 +44,8 @@ open module scenebuilder.core.library {
 
     requires jfxapps.core.starter;
 
-    requires scenebuilder.core.extension.store;
-    requires scenebuilder.core.filesystem;
+    requires jfxapps.core.extension.store;
+    requires jfxapps.core.filesystem;
     requires java.compiler;
 
     provides Extension with LibraryExtension;

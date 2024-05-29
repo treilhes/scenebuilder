@@ -19,7 +19,7 @@
         <module>jfxapps.app</module>
         <module>jfxapps.boot</module>
         <module>jfxapps.core</module>
-        <module>jfxapps.core.ext</module>
+        <module>jfxapps.ext</module>
         <module>jfxapps.metadata</module>
         <module>jfxapps.registry</module>
         
@@ -242,42 +242,42 @@
             <!-- jfxapps.ext -->
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.core.ext.about</artifactId>
+                <artifactId>jfxapps.ext.about</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.core.ext.certificate.manager</artifactId>
+                <artifactId>jfxapps.ext.certificate.manager</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.core.ext.extension.library</artifactId>
+                <artifactId>jfxapps.ext.extension.library</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.core.ext.log.viewer</artifactId>
+                <artifactId>jfxapps.ext.log.viewer</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.core.ext.menu</artifactId>
+                <artifactId>jfxapps.ext.menu</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.core.ext.preference.editor</artifactId>
+                <artifactId>jfxapps.ext.preference.editor</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.core.ext.update.manager</artifactId>
+                <artifactId>jfxapps.ext.update.manager</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.ext.sb</artifactId>
+                <artifactId>jfxapps.ext.container</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
 
@@ -396,6 +396,13 @@
     <build>
         <plugins>
             <plugin>
+                <!-- 
+                This plugin has 2 internal usages:
+                - generate a flattened version of the pom.xml in the repository, maven actions
+                will use the flattened pom.xml as the effective pom reducing the
+                number of roundtrip during dependency resolution and download
+                - manage a centralize version for the project
+                -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
                 <version>1.1.0</version>

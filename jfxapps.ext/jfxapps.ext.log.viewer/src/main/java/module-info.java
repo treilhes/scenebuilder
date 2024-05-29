@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.ext.logviewer.LogViewerExtension;
 
-open module scenebuilder.ext.log.viewer {
+open module jfxapps.ext.log.viewer {
     exports com.gluonhq.jfxapps.ext.logviewer.i18n;
     exports com.gluonhq.jfxapps.ext.logviewer.controller;
     exports com.gluonhq.jfxapps.ext.logviewer;

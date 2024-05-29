@@ -34,13 +34,13 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.selection.SelectionExtension;
 
-open module scenebuilder.core.selection {
+open module jfxapps.core.selection {
     exports com.gluonhq.jfxapps.core.selection;
     exports com.gluonhq.jfxapps.core.selection.i18n;
     exports com.gluonhq.jfxapps.core.selection.job;
 
     requires transitive jfxapps.core.api;
-    //requires transitive scenebuilder.core.jobs;
+    //requires transitive jfxapps.core.jobs;
 
     provides Extension with SelectionExtension;
 }

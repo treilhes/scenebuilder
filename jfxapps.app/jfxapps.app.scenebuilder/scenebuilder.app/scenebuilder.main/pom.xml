@@ -76,7 +76,7 @@
 
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.ext.menu</artifactId>
+            <artifactId>jfxapps.ext.menu</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
@@ -88,7 +88,7 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.ext.preference.editor</artifactId>
+            <artifactId>jfxapps.ext.preference.editor</artifactId>
         </dependency>
         
 
@@ -96,7 +96,7 @@
 
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.ext.sb</artifactId>
+            <artifactId>jfxapps.ext.container</artifactId>
         </dependency>
 
         <dependency>
@@ -110,7 +110,7 @@
 
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.ext.certificate.manager</artifactId>
+            <artifactId>jfxapps.ext.certificate.manager</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
@@ -144,7 +144,7 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.ext.extension.library</artifactId>
+            <artifactId>jfxapps.ext.extension.library</artifactId>
         </dependency>
 
         <dependency>
@@ -186,15 +186,15 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.ext.update.manager</artifactId>
+            <artifactId>jfxapps.ext.update.manager</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.ext.log.viewer</artifactId>
+            <artifactId>jfxapps.ext.log.viewer</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.ext.about</artifactId>
+            <artifactId>jfxapps.ext.about</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>

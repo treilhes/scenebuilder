@@ -76,7 +76,7 @@ import com.gluonhq.jfxapps.core.ui.preferences.document.StageHeightPreference;
 import com.gluonhq.jfxapps.core.ui.preferences.document.StageWidthPreference;
 import com.gluonhq.jfxapps.core.ui.preferences.document.XPosPreference;
 import com.gluonhq.jfxapps.core.ui.preferences.document.YPosPreference;
-import com.oracle.javafx.scenebuilder.test.FxmlControllerLoader;
+import com.gluonhq.jfxapps.test.FxmlControllerLoader;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;

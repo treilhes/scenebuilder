@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.preferences.PreferencesExtension;
 
-open module scenebuilder.core.preferences {
+open module jfxapps.core.preferences {
     exports com.gluonhq.jfxapps.core.preferences;
     exports com.gluonhq.jfxapps.core.preferences.i18n;
 

@@ -50,8 +50,8 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
 import com.gluonhq.jfxapps.core.ui.dialog.AlertDialog;
-import com.oracle.javafx.scenebuilder.test.FxmlControllerLoader;
-import com.oracle.javafx.scenebuilder.test.TestStages;
+import com.gluonhq.jfxapps.test.FxmlControllerLoader;
+import com.gluonhq.jfxapps.test.TestStages;
 
 import javafx.scene.Parent;
 import javafx.stage.Stage;

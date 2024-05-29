@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.ext.scenicview.ScenicViewExtension;
 
-open module scenebuilder.ext.scenicview {
+open module jfxapps.ext.scenicview {
     exports com.gluonhq.jfxapps.ext.scenicview;
     exports com.gluonhq.jfxapps.ext.scenicview.i18n;
 

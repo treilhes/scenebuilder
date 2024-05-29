@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.clipboard.ClipboardExtension;
 
-open module scenebuilder.core.clipboard {
+open module jfxapps.core.clipboard {
     exports com.gluonhq.jfxapps.core.clipboard;
     exports com.gluonhq.jfxapps.core.clipboard.i18n;
 

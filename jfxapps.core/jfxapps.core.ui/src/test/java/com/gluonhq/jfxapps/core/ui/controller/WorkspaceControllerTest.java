@@ -55,9 +55,9 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.SceneGraphObject;
 import com.gluonhq.jfxapps.core.ui.controller.WorkspaceController;
-import com.oracle.javafx.scenebuilder.test.FxmlControllerLoader;
-import com.oracle.javafx.scenebuilder.test.JfxAppsExtension;
-import com.oracle.javafx.scenebuilder.test.TestStages;
+import com.gluonhq.jfxapps.test.FxmlControllerLoader;
+import com.gluonhq.jfxapps.test.JfxAppsExtension;
+import com.gluonhq.jfxapps.test.TestStages;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Parent;

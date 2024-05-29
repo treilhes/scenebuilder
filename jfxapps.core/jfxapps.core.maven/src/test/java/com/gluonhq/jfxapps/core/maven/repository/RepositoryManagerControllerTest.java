@@ -59,8 +59,8 @@ import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoriesPreferences;
 import com.gluonhq.jfxapps.core.maven.repository.AddEditRepositoryDialogController;
 import com.gluonhq.jfxapps.core.maven.repository.RepositoryManagerController;
-import com.oracle.javafx.scenebuilder.test.FxmlControllerLoader;
-import com.oracle.javafx.scenebuilder.test.TestStages;
+import com.gluonhq.jfxapps.test.FxmlControllerLoader;
+import com.gluonhq.jfxapps.test.TestStages;
 
 import javafx.scene.Parent;
 import javafx.scene.layout.Pane;

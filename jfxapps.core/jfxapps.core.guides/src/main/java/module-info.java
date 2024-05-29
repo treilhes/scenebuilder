@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.guides.GuidesExtension;
 
-open module scenebuilder.core.guides {
+open module jfxapps.core.guides {
     exports com.gluonhq.jfxapps.core.guides;
     exports com.gluonhq.jfxapps.core.guides.i18n;
 

@@ -32,7 +32,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.appmngr.AppManagerExtension;
 
-open module scenebuilder.core.appmngr {
+open module jfxapps.core.appmngr {
     exports com.gluonhq.jfxapps.core.appmngr.impl;
     exports com.gluonhq.jfxapps.core.appmngr;
 

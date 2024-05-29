@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.ext.certmngr.CertificateManagerExtension;
 
-open module scenebuilder.core.ext.certificate.manager {
+open module jfxapps.core.ext.certificate.manager {
     exports com.gluonhq.jfxapps.ext.certmngr;
     exports com.gluonhq.jfxapps.ext.certmngr.controller;
     exports com.gluonhq.jfxapps.ext.certmngr.i18n;

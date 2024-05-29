@@ -35,7 +35,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.ext.extlibrary.ExtensionLibraryExtension;
 
-open module scenebuilder.ext.extension.library {
+open module jfxapps.ext.extension.library {
     exports com.gluonhq.jfxapps.ext.extlibrary.i18n;
     exports com.gluonhq.jfxapps.ext.extlibrary.menu;
     exports com.gluonhq.jfxapps.ext.extlibrary.library;
@@ -47,15 +47,15 @@ open module scenebuilder.ext.extension.library {
 
 //    requires com.fasterxml.jackson.core;
 //    requires com.fasterxml.jackson.databind;
-    requires scenebuilder.core.extension.store;
+    requires jfxapps.core.extension.store;
 //    requires javafx.base;
 //    requires javafx.controls;
 //    requires javafx.fxml;
 //    requires javafx.graphics;
-    requires scenebuilder.core.library;
+    requires jfxapps.core.library;
 //    requires org.slf4j;
     requires transitive jfxapps.core.api;
-    requires scenebuilder.core.filesystem;
+    requires jfxapps.core.filesystem;
     requires jakarta.annotation;
 //    requires spring.beans;
 //    requires spring.context;

@@ -34,15 +34,15 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.ext.prefedit.PreferenceEditorExtension;
 
-open module scenebuilder.ext.preference.editor {
+open module jfxapps.ext.preference.editor {
 
     exports com.gluonhq.jfxapps.ext.prefedit.i18n;
     exports com.gluonhq.jfxapps.ext.prefedit;
     exports com.gluonhq.jfxapps.ext.prefedit.controller;
 
     requires transitive jfxapps.core.api;
-    requires scenebuilder.ext.editors;
-    requires scenebuilder.ext.menu;
+    requires jfxapps.ext.editors;
+    requires jfxapps.ext.menu;
 
     provides Extension with PreferenceEditorExtension;
 }

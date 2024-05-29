@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.ext.updatemgr.UpdateManagerExtension;
 
-open module scenebuilder.ext.update.manager {
+open module jfxapps.ext.update.manager {
     exports com.gluonhq.jfxapps.ext.updatemgr.i18n;
     exports com.gluonhq.jfxapps.ext.updatemgr;
 

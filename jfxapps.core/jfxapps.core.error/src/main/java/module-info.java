@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.error.ErrorExtension;
 
-open module scenebuilder.core.error {
+open module jfxapps.core.error {
     exports com.gluonhq.jfxapps.core.error;
     exports com.gluonhq.jfxapps.core.error.i18n;
     exports com.gluonhq.jfxapps.core.error.report;
