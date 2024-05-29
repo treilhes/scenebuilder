@@ -42,7 +42,7 @@ import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.extstore.fs.ExtensionFileSystemFactory;
-import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
+import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.library.api.LibraryStore;
 import com.oracle.javafx.scenebuilder.library.api.LibraryStoreConfiguration;
 import com.oracle.javafx.scenebuilder.library.api.LibraryStoreFactory;

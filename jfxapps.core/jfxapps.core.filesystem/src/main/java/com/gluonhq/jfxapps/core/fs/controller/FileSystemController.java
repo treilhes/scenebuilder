@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.fs.controller;
+package com.gluonhq.jfxapps.core.fs.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,13 +63,13 @@ import com.gluonhq.jfxapps.core.api.i18n.CombinedResourceBundle;
 import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.fs.preference.document.PathPreference;
+import com.gluonhq.jfxapps.core.fs.preference.global.InitialDirectoryPreference;
+import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
+import com.gluonhq.jfxapps.core.fs.preference.global.WildcardImportsPreference;
+import com.gluonhq.jfxapps.core.fs.util.FileWatcher;
 import com.gluonhq.jfxapps.core.fxom.FXOMAssetIndex;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.fs.preference.document.PathPreference;
-import com.oracle.javafx.scenebuilder.fs.preference.global.InitialDirectoryPreference;
-import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
-import com.oracle.javafx.scenebuilder.fs.preference.global.WildcardImportsPreference;
-import com.oracle.javafx.scenebuilder.fs.util.FileWatcher;
 
 import jakarta.inject.Provider;
 

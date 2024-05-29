@@ -46,6 +46,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.core.fs.preference.global.WildcardImportsPreference;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.core.context.SbContext;
@@ -56,7 +57,6 @@ import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
 import com.oracle.javafx.scenebuilder.api.ui.dock.ViewSearch;
 import com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment;
 import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
-import com.oracle.javafx.scenebuilder.fs.preference.global.WildcardImportsPreference;
 
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.animation.FadeTransition;

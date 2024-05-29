@@ -42,7 +42,7 @@ import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
+import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
 
 @Prototype
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")

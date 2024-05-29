@@ -51,7 +51,7 @@ import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
+import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
 
 public abstract class AbstractOpenFilesAction extends AbstractAction {
 

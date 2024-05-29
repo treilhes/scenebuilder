@@ -31,51 +31,28 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.fs;
+package com.gluonhq.jfxapps.core.fs.preference.global;
 
-import java.util.List;
-import java.util.UUID;
+import java.io.File;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
-import com.oracle.javafx.scenebuilder.fs.controller.FileSystemController;
-import com.oracle.javafx.scenebuilder.fs.preference.document.PathPreference;
-import com.oracle.javafx.scenebuilder.fs.preference.global.InitialDirectoryPreference;
-import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
-import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsSizePreference;
-import com.oracle.javafx.scenebuilder.fs.preference.global.WildcardImportsPreference;
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preferences.type.FilePreference;
 
-public class FileSystemExtension implements OpenExtension {
+@Singleton
+public class InitialDirectoryPreference extends FilePreference implements ManagedGlobalPreference {
 
-    private static final UUID ID = UUID.fromString("0f456500-a6d0-4438-8186-4d3de840b81b");
+    /***************************************************************************
+     *                                                                         *
+     * Static fields                                                           *
+     *                                                                         *
+     **************************************************************************/
+    public static final String PREFERENCE_KEY = "initialDirectory"; //NOCHECK
+    public static final File PREFERENCE_DEFAULT_VALUE = JfxAppsPlatform.USER_HOME;
 
-    @Override
-    public UUID getId() {
-        return ID;
-    }
-
-    @Override
-    public UUID getParentId() {
-        return OpenExtension.ROOT_ID;
-    }
-
-    @Override
-    public List<Class<?>> localContextClasses() {
-        return List.of();
-    }
-
-    @Override
-    public List<Class<?>> exportedContextClasses() {
-     // @formatter:off
-        return List.of(
-                FileSystemController.class,
-                InitialDirectoryPreference.class,
-                RecentItemsPreference.class,
-                RecentItemsSizePreference.class,
-                ClassLoaderController.class,
-                PathPreference.class,
-                WildcardImportsPreference.class
-            );
-     // @formatter:on
-    }
+	public InitialDirectoryPreference(PreferencesContext preferencesContext) {
+		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
+	}
 }

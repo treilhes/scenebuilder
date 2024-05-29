@@ -49,7 +49,7 @@ import com.gluonhq.jfxapps.core.api.ui.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
+import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.menu.action.OpenFilesAction;
 
 import javafx.scene.control.Menu;

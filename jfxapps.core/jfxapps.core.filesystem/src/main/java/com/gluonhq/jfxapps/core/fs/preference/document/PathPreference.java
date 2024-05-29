@@ -31,57 +31,27 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.fs.preference.global;
+package com.gluonhq.jfxapps.core.fs.preference.document;
 
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups;
-import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preferences.PreferenceEditorFactory;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.preferences.DocumentPreferencesNode;
+import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
 import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preferences.UserPreference;
-import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
-import com.gluonhq.jfxapps.core.api.preferences.type.BooleanPreference;
+import com.gluonhq.jfxapps.core.api.preferences.type.StringPreference;
 
-import javafx.scene.Parent;
-
-@Component
-public class WildcardImportsPreference extends BooleanPreference implements ManagedGlobalPreference, UserPreference<Boolean> {
+@ApplicationInstanceSingleton
+public class PathPreference extends StringPreference implements ManagedDocumentPreference {
 
     /***************************************************************************
      *                                                                         *
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "WILDCARD_IMPORT"; //NOCHECK
-    public static final boolean PREFERENCE_DEFAULT_VALUE = false;
-	private final PreferenceEditorFactory preferenceEditorFactory;
+    public static final String PREFERENCE_KEY = DocumentPreferencesNode.PATH_PREFERENCE_KEY; //NOCHECK
+    public static final String PREFERENCE_DEFAULT_VALUE = null;
 
-	public WildcardImportsPreference(
-			PreferencesContext preferencesContext,
-			PreferenceEditorFactory preferenceEditorFactory) {
+	public PathPreference(PreferencesContext preferencesContext) {
 		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-		this.preferenceEditorFactory = preferenceEditorFactory;
 	}
 
-	@Override
-	public String getLabelI18NKey() {
-		return "prefs.wildcard.import";
-	}
-
-	@Override
-	public Parent getEditor() {
-		return preferenceEditorFactory.newBooleanFieldEditor(this);
-	}
-
-
-	@Override
-	public PreferenceGroup getGroup() {
-		return DefaultPreferenceGroups.GLOBAL_GROUP_F;
-	}
-
-	@Override
-	public String getOrderKey() {
-		return getGroup().getOrderKey() + "_B";
-	}
 }

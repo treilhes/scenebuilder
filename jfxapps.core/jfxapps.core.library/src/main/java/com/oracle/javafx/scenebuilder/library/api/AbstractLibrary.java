@@ -67,7 +67,7 @@ import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
 import com.gluonhq.jfxapps.core.api.library.LibraryItem;
 import com.gluonhq.jfxapps.core.api.library.Report;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
+import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.library.manager.ImportProgressDialogController;
 import com.oracle.javafx.scenebuilder.library.manager.LibraryDialogController;
 

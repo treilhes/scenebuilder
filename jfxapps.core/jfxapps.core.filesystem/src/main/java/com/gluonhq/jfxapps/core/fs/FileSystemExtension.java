@@ -31,27 +31,51 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.fs.preference.document;
+package com.gluonhq.jfxapps.core.fs;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.preferences.DocumentPreferencesNode;
-import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
-import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preferences.type.StringPreference;
+import java.util.List;
+import java.util.UUID;
 
-@ApplicationInstanceSingleton
-public class PathPreference extends StringPreference implements ManagedDocumentPreference {
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
+import com.gluonhq.jfxapps.core.fs.controller.FileSystemController;
+import com.gluonhq.jfxapps.core.fs.preference.document.PathPreference;
+import com.gluonhq.jfxapps.core.fs.preference.global.InitialDirectoryPreference;
+import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
+import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsSizePreference;
+import com.gluonhq.jfxapps.core.fs.preference.global.WildcardImportsPreference;
 
-    /***************************************************************************
-     *                                                                         *
-     * Static fields                                                           *
-     *                                                                         *
-     **************************************************************************/
-    public static final String PREFERENCE_KEY = DocumentPreferencesNode.PATH_PREFERENCE_KEY; //NOCHECK
-    public static final String PREFERENCE_DEFAULT_VALUE = null;
+public class FileSystemExtension implements OpenExtension {
 
-	public PathPreference(PreferencesContext preferencesContext) {
-		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-	}
+    private static final UUID ID = UUID.fromString("0f456500-a6d0-4438-8186-4d3de840b81b");
 
+    @Override
+    public UUID getId() {
+        return ID;
+    }
+
+    @Override
+    public UUID getParentId() {
+        return OpenExtension.ROOT_ID;
+    }
+
+    @Override
+    public List<Class<?>> localContextClasses() {
+        return List.of();
+    }
+
+    @Override
+    public List<Class<?>> exportedContextClasses() {
+     // @formatter:off
+        return List.of(
+                FileSystemController.class,
+                InitialDirectoryPreference.class,
+                RecentItemsPreference.class,
+                RecentItemsSizePreference.class,
+                ClassLoaderController.class,
+                PathPreference.class,
+                WildcardImportsPreference.class
+            );
+     // @formatter:on
+    }
 }

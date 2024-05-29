@@ -48,7 +48,7 @@ import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
+import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
 import com.oracle.javafx.scenebuilder.menu.action.AbstractOpenFilesAction;
 
 import javafx.stage.FileChooser;

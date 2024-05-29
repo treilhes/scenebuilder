@@ -32,7 +32,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.fs.util;
+package com.gluonhq.jfxapps.core.fs.util;
 
 import java.io.IOException;
 import java.nio.file.Files;

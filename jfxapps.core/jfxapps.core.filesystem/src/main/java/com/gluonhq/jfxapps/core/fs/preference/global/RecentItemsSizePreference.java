@@ -31,28 +31,77 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.fs.preference.global;
-
-import java.io.File;
+package com.gluonhq.jfxapps.core.fs.preference.global;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups;
 import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preferences.Preference;
+import com.gluonhq.jfxapps.core.api.preferences.PreferenceEditorFactory;
 import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preferences.type.FilePreference;
+import com.gluonhq.jfxapps.core.api.preferences.UserPreference;
+import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
+import com.gluonhq.jfxapps.core.api.preferences.type.IntegerPreference;
+
+import javafx.scene.Parent;
 
 @Singleton
-public class InitialDirectoryPreference extends FilePreference implements ManagedGlobalPreference {
+public class RecentItemsSizePreference extends IntegerPreference implements ManagedGlobalPreference, UserPreference<Integer> {
 
     /***************************************************************************
      *                                                                         *
      * Static fields                                                           *
      *                                                                         *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "initialDirectory"; //NOCHECK
-    public static final File PREFERENCE_DEFAULT_VALUE = JfxAppsPlatform.USER_HOME;
+    public static final String PREFERENCE_KEY = "RECENT_ITEMS_SIZE"; //NOCHECK
+    public static final int PREFERENCE_DEFAULT_VALUE = 15;
+    public static final Integer[] RECENT_ITEMS_SIZE = {5, 10, 15, 20};
 
-	public InitialDirectoryPreference(PreferencesContext preferencesContext) {
+	private final RecentItemsPreference recentItems;
+	private final PreferenceEditorFactory preferenceEditorFactory;
+
+	public RecentItemsSizePreference(
+			PreferencesContext preferencesContext,
+			RecentItemsPreference recentItems,
+			PreferenceEditorFactory preferenceEditorFactory) {
 		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
+		this.preferenceEditorFactory = preferenceEditorFactory;
+		this.recentItems = recentItems;
 	}
+
+	@Override
+	public Preference<Integer> setValue(Integer newValue) {
+		Preference<Integer> that = super.setValue(newValue);
+		// Remove last items depending on the size
+
+		if (recentItems != null) {
+			while (recentItems.getValue().size() > getValue()) {
+	            recentItems.getValue().remove(recentItems.getValue().size() - 1);
+	        }
+	        recentItems.writeToJavaPreferences();
+		}
+
+		return that;
+	}
+
+	@Override
+	public String getLabelI18NKey() {
+		return "prefs.recent.items";
+	}
+
+	@Override
+	public Parent getEditor() {
+		return preferenceEditorFactory.newChoiceFieldEditor(this, RECENT_ITEMS_SIZE);
+	}
+
+	@Override
+	public PreferenceGroup getGroup() {
+		return DefaultPreferenceGroups.GLOBAL_GROUP_E;
+	}
+
+	@Override
+	public String getOrderKey() {
+		return getGroup().getOrderKey() + "_A";
+	}
+
 }
