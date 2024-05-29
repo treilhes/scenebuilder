@@ -12,12 +12,12 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>jfxapps.app.manager.core</module>
-        <module>jfxapps.app.manager.model</module>
-        <module>jfxapps.app.manager.metadata</module>
-        <module>jfxapps.app.manager.api</module>
-        <module>jfxapps.app.manager.metadata.model</module>
-        <module>jfxapps.app.manager.metadata.modeldata</module>
+        <module>manager.app</module>
+        <module>manager.model</module>
+        <module>manager.metadata</module>
+        <module>manager.api</module>
+        <module>manager.metadata.model</module>
+        <module>manager.metadata.modeldata</module>
     </modules>
     
     <properties>
@@ -30,22 +30,32 @@
         <dependencies>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.app.manager.api</artifactId>
+                <artifactId>manager.api</artifactId>
                 <version>${manager.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.app.manager.core</artifactId>
+                <artifactId>manager.core</artifactId>
                 <version>${manager.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.app.manager.metadata</artifactId>
+                <artifactId>manager.metadata</artifactId>
                 <version>${manager.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.app.manager.model</artifactId>
+                <artifactId>manager.metadata.model</artifactId>
+                <version>${manager.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>manager.metadata.modeldata</artifactId>
+                <version>${manager.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>manager.model</artifactId>
                 <version>${manager.version}</version>
             </dependency>
         </dependencies>

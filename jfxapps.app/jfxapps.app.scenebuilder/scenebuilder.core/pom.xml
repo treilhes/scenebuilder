@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.gluonhq.jfxapps</groupId>
+        <artifactId>jfxapps.app.scenebuilder</artifactId>
+        <version>${scenebuilder.version}</version>
+    </parent>
+    <artifactId>scenebuilder.core</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>scenebuilder.api</module>
+        <module>scenebuilder.main</module>
+        <module>scenebuilder.app</module>
+        <module>scenebuilder.jobs</module>
+        <module>scenebuilder.selection</module>
+        <module>scenebuilder.drag.and.drop</module>
+        <module>scenebuilder.clipboard</module>
+        <module>scenebuilder.ext.javafx.customization</module>
+        <module>scenebuilder.metadata.javafx</module>
+        <module>scenebuilder.app.starter</module>
+        <module>scenebuilder.app.starter.test</module>
+        <module>scenebuilder.metadata</module>
+    </modules>
+</project>
