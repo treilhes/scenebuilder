@@ -32,12 +32,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.oracle.javafx.scenebuilder.core.error.ErrorExtension;
+import com.gluonhq.jfxapps.core.error.ErrorExtension;
 
 open module scenebuilder.core.error {
-    exports com.oracle.javafx.scenebuilder.core.error;
-    exports com.oracle.javafx.scenebuilder.core.error.i18n;
-    exports com.oracle.javafx.scenebuilder.core.error.report;
+    exports com.gluonhq.jfxapps.core.error;
+    exports com.gluonhq.jfxapps.core.error.i18n;
+    exports com.gluonhq.jfxapps.core.error.report;
 
     requires transitive jfxapps.core.api;
 

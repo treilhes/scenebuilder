@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,40 +30,26 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.core.error;
+package com.gluonhq.jfxapps.core.error.i18n;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.ResourceBundle;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.oracle.javafx.scenebuilder.core.error.i18n.I18NError;
-import com.oracle.javafx.scenebuilder.core.error.report.ErrorReportImpl;
+import org.springframework.stereotype.Component;
 
-public class ErrorExtension implements OpenExtension {
-    @Override
-    public UUID getId() {
-        return UUID.fromString("f784b4aa-1970-4253-83f4-5a0a08149807");
-    }
+import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
+
+@Component
+public class I18NError implements BundleProvider {
+
+    private static ResourceBundle bundle;
 
     @Override
-    public UUID getParentId() {
-        return OpenExtension.ROOT_ID;
+	public synchronized ResourceBundle getBundle() {
+        if (bundle == null) {
+            final String packageName = I18NError.class.getPackage().getName();
+            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderError"); //NOCHECK
+        }
+        return bundle;
     }
-
-    @Override
-    public List<Class<?>> localContextClasses() {
-        return List.of();
-    }
-
-    @Override
-    public List<Class<?>> exportedContextClasses() {
-     // @formatter:off
-        return Arrays.asList(
-                I18NError.class,
-                ErrorReportImpl.class
-            );
-     // @formatter:on
-    }
-
 }
+
