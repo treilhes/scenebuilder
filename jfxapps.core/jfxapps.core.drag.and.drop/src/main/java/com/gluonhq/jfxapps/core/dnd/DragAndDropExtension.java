@@ -31,15 +31,15 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.core.dnd;
+package com.gluonhq.jfxapps.core.dnd;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.oracle.javafx.scenebuilder.core.dnd.controller.DragController;
-import com.oracle.javafx.scenebuilder.core.dnd.source.ExternalDragSource;
+import com.gluonhq.jfxapps.core.dnd.controller.DragController;
+import com.gluonhq.jfxapps.core.dnd.source.ExternalDragSource;
 
 public class DragAndDropExtension implements OpenExtension {
     @Override

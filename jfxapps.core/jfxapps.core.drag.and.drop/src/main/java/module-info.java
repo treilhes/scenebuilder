@@ -32,12 +32,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.oracle.javafx.scenebuilder.core.dnd.DragAndDropExtension;
+import com.gluonhq.jfxapps.core.dnd.DragAndDropExtension;
 
 open module scenebuilder.core.drag.and.drop{
-    exports com.oracle.javafx.scenebuilder.core.dnd;
-    exports com.oracle.javafx.scenebuilder.core.dnd.controller;
-    exports com.oracle.javafx.scenebuilder.core.dnd.source;
+    exports com.gluonhq.jfxapps.core.dnd;
+    exports com.gluonhq.jfxapps.core.dnd.controller;
+    exports com.gluonhq.jfxapps.core.dnd.source;
 
     requires transitive jfxapps.core.api;
     requires scenebuilder.core.jobs;
