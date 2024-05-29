@@ -54,8 +54,8 @@ import com.gluonhq.jfxapps.core.api.template.TemplateGroup;
 import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
 import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
 import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsSizePreference;
-import com.oracle.javafx.scenebuilder.menu.action.OpenFilesAction;
-import com.oracle.javafx.scenebuilder.menu.action.file.OpenAction;
+import com.gluonhq.jfxapps.ext.menu.action.OpenFilesAction;
+import com.gluonhq.jfxapps.ext.menu.action.file.OpenAction;
 import com.oracle.javafx.scenebuilder.template.controller.TemplateController;
 import com.oracle.javafx.scenebuilder.template.controller.TemplatesBaseWindowController;
 

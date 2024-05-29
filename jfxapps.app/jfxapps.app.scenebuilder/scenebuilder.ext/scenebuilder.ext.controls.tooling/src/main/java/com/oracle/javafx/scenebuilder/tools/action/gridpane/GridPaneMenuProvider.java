@@ -48,7 +48,7 @@ import com.gluonhq.jfxapps.core.api.ui.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.menu.action.modify.UseComputedSizeAction;
+import com.gluonhq.jfxapps.ext.menu.action.modify.UseComputedSizeAction;
 
 import javafx.scene.control.Menu;
 

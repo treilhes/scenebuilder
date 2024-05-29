@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>jfxapps.ext.preference.editor</artifactId>
+
+    <parent>
+        <groupId>com.gluonhq.jfxapps</groupId>
+        <artifactId>jfxapps.ext</artifactId>
+        <version>${jfxapps.version}</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.starter</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.ext.menu</artifactId>
+        </dependency>
+    </dependencies>
+</project>

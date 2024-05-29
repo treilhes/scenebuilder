@@ -57,7 +57,7 @@ import com.gluonhq.jfxapps.core.api.ui.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.menu.action.AbstractToggleViewVisibilityAction;
+import com.gluonhq.jfxapps.ext.menu.action.AbstractToggleViewVisibilityAction;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;

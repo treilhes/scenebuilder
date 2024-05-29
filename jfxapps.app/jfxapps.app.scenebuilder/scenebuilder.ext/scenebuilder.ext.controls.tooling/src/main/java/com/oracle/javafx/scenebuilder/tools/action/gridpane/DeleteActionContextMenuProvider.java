@@ -43,7 +43,7 @@ import com.gluonhq.jfxapps.core.api.ui.menu.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.menu.ContextMenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.menu.action.edit.DeleteAction;
+import com.gluonhq.jfxapps.ext.menu.action.edit.DeleteAction;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
 
 import javafx.scene.control.MenuItem;
