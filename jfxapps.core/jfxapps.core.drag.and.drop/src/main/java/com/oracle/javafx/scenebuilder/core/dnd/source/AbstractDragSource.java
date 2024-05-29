@@ -36,8 +36,8 @@ package com.oracle.javafx.scenebuilder.core.dnd.source;
 import java.net.URL;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;

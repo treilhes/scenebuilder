@@ -46,17 +46,17 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
-import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.ui.dock.DockViewController;
-import com.oracle.javafx.scenebuilder.api.ui.dock.View;
-import com.oracle.javafx.scenebuilder.api.ui.dock.ViewAttachment;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuBuilder;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemProvider;
-import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.ui.dock.DockViewController;
+import com.gluonhq.jfxapps.core.api.ui.dock.View;
+import com.gluonhq.jfxapps.core.api.ui.dock.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.menu.MenuBuilder;
+import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemProvider;
+import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.menu.action.AbstractToggleViewVisibilityAction;
 
 import javafx.scene.control.Menu;

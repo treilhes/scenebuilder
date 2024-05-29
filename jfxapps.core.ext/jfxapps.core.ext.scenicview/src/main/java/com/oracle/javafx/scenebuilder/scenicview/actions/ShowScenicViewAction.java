@@ -35,13 +35,13 @@ package com.oracle.javafx.scenebuilder.scenicview.actions;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
-import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.ui.menu.DefaultMenu;
-import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.di.SbPlatform;
+import com.gluonhq.jfxapps.core.api.ui.menu.DefaultMenu;
+import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.scenicview.controller.ScenicViewStarter;
 
 @Prototype

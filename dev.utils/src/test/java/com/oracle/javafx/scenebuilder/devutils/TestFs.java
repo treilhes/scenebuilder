@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.devutils;
 
 import java.io.File;
 
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;

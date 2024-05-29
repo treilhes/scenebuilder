@@ -36,11 +36,11 @@ package com.oracle.javafx.scenebuilder.selection;
 import java.util.Objects;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;

@@ -53,11 +53,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.application.lifecycle.DisposeWithApplication;
+import com.gluonhq.jfxapps.core.api.library.LibraryFilter;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.misc.UILogger;
 import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata.Qualifier;
-import com.oracle.javafx.scenebuilder.api.application.lifecycle.DisposeWithApplication;
-import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.ui.misc.UILogger;
 import com.oracle.javafx.scenebuilder.controllibrary.ControlLibraryExtension;
 import com.oracle.javafx.scenebuilder.controllibrary.importer.ImportWindowController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.BuiltinLibrary;

@@ -49,13 +49,13 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.dnd.Drag;
+import com.gluonhq.jfxapps.core.api.error.ErrorReport;
+import com.gluonhq.jfxapps.core.api.error.ErrorReport.ErrorReportEntry;
+import com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInclude;
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;
-import com.oracle.javafx.scenebuilder.api.dnd.Drag;
-import com.oracle.javafx.scenebuilder.api.error.ErrorReport;
-import com.oracle.javafx.scenebuilder.api.error.ErrorReport.ErrorReportEntry;
-import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyController;
@@ -134,7 +134,7 @@ class HierarchyTreeCellTest {
 
     }
     /**
-     * Test method for {@link com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell#HierarchyTreeCell(com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit, com.oracle.javafx.scenebuilder.api.error.ErrorReport, com.oracle.javafx.scenebuilder.api.dnd.Drag)}.
+     * Test method for {@link com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell#HierarchyTreeCell(com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit, com.gluonhq.jfxapps.core.api.error.ErrorReport, com.gluonhq.jfxapps.core.api.dnd.Drag)}.
      */
     @Test
     void testHierarchyTreeCell(FxRobot robot) {

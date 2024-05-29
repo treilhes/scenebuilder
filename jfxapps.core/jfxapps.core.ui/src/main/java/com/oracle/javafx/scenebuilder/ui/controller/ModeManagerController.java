@@ -43,13 +43,13 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.content.mode.AbstractModeController;
+import com.gluonhq.jfxapps.core.api.content.mode.Mode;
+import com.gluonhq.jfxapps.core.api.content.mode.ModeDescriptor;
+import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
+import com.gluonhq.jfxapps.core.api.content.mode.ModeProvider;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.api.content.mode.AbstractModeController;
-import com.oracle.javafx.scenebuilder.api.content.mode.Mode;
-import com.oracle.javafx.scenebuilder.api.content.mode.ModeDescriptor;
-import com.oracle.javafx.scenebuilder.api.content.mode.ModeManager;
-import com.oracle.javafx.scenebuilder.api.content.mode.ModeProvider;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 @ApplicationInstanceSingleton
 public class ModeManagerController implements ModeManager {

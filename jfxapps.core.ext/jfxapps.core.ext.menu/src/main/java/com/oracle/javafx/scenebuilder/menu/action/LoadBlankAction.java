@@ -34,10 +34,10 @@
 package com.oracle.javafx.scenebuilder.menu.action;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
-import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 
 @Prototype
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")

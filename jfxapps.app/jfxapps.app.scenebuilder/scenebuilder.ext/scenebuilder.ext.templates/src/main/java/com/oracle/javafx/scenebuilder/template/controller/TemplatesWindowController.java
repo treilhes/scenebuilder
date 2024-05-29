@@ -42,12 +42,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.application.ApplicationInstanceWindow;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.template.Template;
-import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
-import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.application.ApplicationInstanceWindow;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.template.Template;
+import com.gluonhq.jfxapps.core.api.template.TemplateGroup;
+import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
 
 import javafx.stage.Modality;
 

@@ -35,11 +35,11 @@ package com.oracle.javafx.scenebuilder.menu.action;
 
 import java.util.ArrayList;
 
-import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
-import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.ui.dock.Dock;
-import com.oracle.javafx.scenebuilder.api.ui.dock.DockViewController;
-import com.oracle.javafx.scenebuilder.api.ui.dock.View;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.ui.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.dock.DockViewController;
+import com.gluonhq.jfxapps.core.api.ui.dock.View;
 
 public abstract class AbstractCloseDockAction extends AbstractAction {
 

@@ -41,15 +41,15 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.BatchSelectionJob;
+import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
+import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.job.BatchSelectionJob;
-import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.job.JobFactory;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
 
 /**

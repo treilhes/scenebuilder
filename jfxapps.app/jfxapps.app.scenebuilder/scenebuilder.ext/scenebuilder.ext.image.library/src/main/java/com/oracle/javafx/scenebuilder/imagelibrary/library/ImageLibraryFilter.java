@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.imagelibrary.library;
 
-import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
+import com.gluonhq.jfxapps.core.api.library.LibraryFilter;
 
 public interface ImageLibraryFilter extends LibraryFilter{
 

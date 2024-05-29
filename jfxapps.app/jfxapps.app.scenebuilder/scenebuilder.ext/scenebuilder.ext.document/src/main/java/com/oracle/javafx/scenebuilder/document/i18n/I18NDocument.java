@@ -37,7 +37,7 @@ import java.util.ResourceBundle;
 
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.i18n.BundleProvider;
+import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
 
 @Component
 public class I18NDocument implements BundleProvider {

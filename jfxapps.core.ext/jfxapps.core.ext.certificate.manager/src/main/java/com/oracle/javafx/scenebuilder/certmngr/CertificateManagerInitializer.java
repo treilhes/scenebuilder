@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.certmngr;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithApplication;
+import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithApplication;
 
 @Singleton
 public class CertificateManagerInitializer implements InitWithApplication {

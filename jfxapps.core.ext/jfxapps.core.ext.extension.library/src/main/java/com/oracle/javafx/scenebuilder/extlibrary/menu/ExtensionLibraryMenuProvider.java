@@ -39,10 +39,10 @@ import java.util.List;
 import org.springframework.context.annotation.Lazy;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemProvider;
-import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemProvider;
+import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.extlibrary.controller.ExtensionLibraryMenuController;
 
 import javafx.scene.control.MenuItem;

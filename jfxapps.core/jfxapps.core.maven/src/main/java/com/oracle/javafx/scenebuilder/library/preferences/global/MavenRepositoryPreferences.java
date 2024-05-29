@@ -41,10 +41,10 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
 import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
-import com.oracle.javafx.scenebuilder.api.preferences.DefaultProvider;
-import com.oracle.javafx.scenebuilder.api.preferences.KeyProvider;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.type.ListItemObjectPreference;
+import com.gluonhq.jfxapps.core.api.preferences.DefaultProvider;
+import com.gluonhq.jfxapps.core.api.preferences.KeyProvider;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preferences.type.ListItemObjectPreference;
 
 /**
  * Defines repository preferences global to the application.

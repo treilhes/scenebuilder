@@ -39,10 +39,10 @@ import java.util.List;
 import java.util.Optional;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.job.JobManager;
-import com.oracle.javafx.scenebuilder.api.job.JobPipeline;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.JobManager;
+import com.gluonhq.jfxapps.core.api.job.JobPipeline;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;

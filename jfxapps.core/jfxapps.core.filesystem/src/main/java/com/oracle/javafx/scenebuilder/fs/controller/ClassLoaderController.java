@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 
 @Singleton
 public class ClassLoaderController {

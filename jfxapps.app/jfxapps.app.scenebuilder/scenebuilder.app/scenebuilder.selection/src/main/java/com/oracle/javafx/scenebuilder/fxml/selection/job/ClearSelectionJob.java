@@ -40,10 +40,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
+import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 
 /**
  * Clear the currently scoped {@link FXOMDocument} selection.

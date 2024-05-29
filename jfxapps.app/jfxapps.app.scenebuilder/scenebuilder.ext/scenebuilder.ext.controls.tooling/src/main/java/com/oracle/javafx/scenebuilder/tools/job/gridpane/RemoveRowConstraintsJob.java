@@ -41,12 +41,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.BatchDocumentJob;
+import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
+import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.job.BatchDocumentJob;
-import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.DeleteObjectJob;
 import com.oracle.javafx.scenebuilder.tools.mask.GridPaneHierarchyMask;
 

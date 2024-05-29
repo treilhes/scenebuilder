@@ -36,11 +36,11 @@ package com.oracle.javafx.scenebuilder.tools.job.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gluonhq.jfxapps.core.api.HierarchyMask;
+import com.gluonhq.jfxapps.core.api.HierarchyMask.Accessory;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 
 import javafx.geometry.BoundingBox;

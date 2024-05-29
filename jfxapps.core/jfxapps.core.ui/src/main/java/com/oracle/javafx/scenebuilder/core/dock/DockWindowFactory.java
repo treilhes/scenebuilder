@@ -34,7 +34,7 @@
 package com.oracle.javafx.scenebuilder.core.dock;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
+import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 
 import jakarta.inject.Provider;
 

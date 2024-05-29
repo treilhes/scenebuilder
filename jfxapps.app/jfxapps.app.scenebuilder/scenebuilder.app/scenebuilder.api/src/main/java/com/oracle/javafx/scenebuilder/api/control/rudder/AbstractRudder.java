@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.api.control.rudder;
 import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
-import com.oracle.javafx.scenebuilder.api.content.decoration.AbstractDecoration;
+import com.gluonhq.jfxapps.core.api.content.decoration.AbstractDecoration;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
 
 /**

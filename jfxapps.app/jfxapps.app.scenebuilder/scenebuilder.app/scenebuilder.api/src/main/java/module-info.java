@@ -40,8 +40,8 @@ open module scenebuilder.fxml.api {
     exports org.scenebuilder.fxml.api.i18n;
     exports org.scenebuilder.fxml.api.subjects;
 
-    exports com.oracle.javafx.scenebuilder.api.content;
-    exports com.oracle.javafx.scenebuilder.api.content.mode;
+    exports com.gluonhq.jfxapps.core.api.content;
+    exports com.gluonhq.jfxapps.core.api.mode;
     exports com.oracle.javafx.scenebuilder.api.control;
     exports com.oracle.javafx.scenebuilder.api.control.curve;
     exports com.oracle.javafx.scenebuilder.api.control.decoration;
@@ -59,10 +59,10 @@ open module scenebuilder.fxml.api {
     exports com.oracle.javafx.scenebuilder.api.control.rudder;
     exports com.oracle.javafx.scenebuilder.api.control.tring;
     exports com.oracle.javafx.scenebuilder.api.controls;
-    exports com.oracle.javafx.scenebuilder.api.css;
-    exports com.oracle.javafx.scenebuilder.api.mask;
+    exports com.gluonhq.jfxapps.core.api.css;
+    exports com.gluonhq.jfxapps.core.api.mask;
     exports com.oracle.javafx.scenebuilder.api.script;
-    exports com.oracle.javafx.scenebuilder.api.theme;
+    exports com.gluonhq.jfxapps.core.api.theme.theme;
 
     exports com.oracle.javafx.scenebuilder.fxml.api.selection;
 

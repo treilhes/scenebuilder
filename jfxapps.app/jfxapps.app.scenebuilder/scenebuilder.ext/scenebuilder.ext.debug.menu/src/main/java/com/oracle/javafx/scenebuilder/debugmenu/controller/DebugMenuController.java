@@ -44,15 +44,15 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.CompositeJob;
+import com.gluonhq.jfxapps.core.api.job.JobManager;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.ui.menu.DebugMenu;
+import com.gluonhq.jfxapps.core.api.ui.menu.DefaultMenu;
 import com.gluonhq.jfxapps.util.MathUtils;
-import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.job.CompositeJob;
-import com.oracle.javafx.scenebuilder.api.job.JobManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
-import com.oracle.javafx.scenebuilder.api.ui.menu.DebugMenu;
-import com.oracle.javafx.scenebuilder.api.ui.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.job.editor.BatchJob;
 import com.oracle.javafx.scenebuilder.job.editor.reference.UpdateReferencesJob;
 

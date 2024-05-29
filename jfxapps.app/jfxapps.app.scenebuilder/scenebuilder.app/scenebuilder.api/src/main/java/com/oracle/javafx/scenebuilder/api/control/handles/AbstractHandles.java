@@ -38,12 +38,12 @@ import java.net.URL;
 import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
-import com.oracle.javafx.scenebuilder.api.Gesture;
-import com.oracle.javafx.scenebuilder.api.content.decoration.AbstractDecoration;
-import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
-import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture.Factory;
+import com.gluonhq.jfxapps.core.api.Gesture;
+import com.gluonhq.jfxapps.core.api.content.decoration.AbstractDecoration;
+import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture.Factory;
+import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
-import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;

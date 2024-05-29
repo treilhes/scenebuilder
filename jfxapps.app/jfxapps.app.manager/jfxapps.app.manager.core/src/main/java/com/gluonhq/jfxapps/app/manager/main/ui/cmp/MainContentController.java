@@ -41,10 +41,10 @@ import com.gluonhq.jfxapps.app.manager.model.AppModel;
 import com.gluonhq.jfxapps.app.manager.model.Application;
 import com.gluonhq.jfxapps.app.manager.model.Extension;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPanelController;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlPanelController;
 
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;

@@ -38,9 +38,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Size;
-import com.oracle.javafx.scenebuilder.api.template.AbstractTemplate;
-import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
+import com.gluonhq.jfxapps.core.api.Size;
+import com.gluonhq.jfxapps.core.api.template.AbstractTemplate;
+import com.gluonhq.jfxapps.core.api.template.TemplateGroup;
 import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
 
 public class GluonTemplateList {

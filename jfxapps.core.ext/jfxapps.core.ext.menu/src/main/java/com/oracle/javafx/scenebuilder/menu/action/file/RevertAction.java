@@ -34,20 +34,20 @@
 package com.oracle.javafx.scenebuilder.menu.action.file;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
+import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
+import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
+import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
-import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
-import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
-import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert;
-import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert.ButtonID;
-import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
-import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
 
 @Prototype
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")

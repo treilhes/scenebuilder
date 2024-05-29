@@ -56,12 +56,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.ui.dialog.AbstractModalDialog;
-import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
-import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert.ButtonID;
-import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.dialog.AbstractModalDialog;
+import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
+import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageFilterTransform;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageFilterTransform.FontImage;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageFilterTransform.FontImageItem;

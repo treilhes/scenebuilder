@@ -38,8 +38,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardDataFormat;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;

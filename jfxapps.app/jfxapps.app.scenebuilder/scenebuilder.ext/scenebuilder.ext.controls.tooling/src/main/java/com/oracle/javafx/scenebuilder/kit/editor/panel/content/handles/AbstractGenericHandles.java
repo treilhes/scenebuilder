@@ -38,12 +38,12 @@ import java.util.List;
 import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
+import com.gluonhq.jfxapps.core.api.CardinalPoint;
+import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
+import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.util.MathUtils;
-import com.oracle.javafx.scenebuilder.api.CardinalPoint;
-import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
-import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;

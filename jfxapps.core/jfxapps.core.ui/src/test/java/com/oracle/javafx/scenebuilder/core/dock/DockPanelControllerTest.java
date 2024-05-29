@@ -45,9 +45,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
-import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
-import com.oracle.javafx.scenebuilder.api.ui.dock.DockType;
+import com.gluonhq.jfxapps.core.api.subjects.DockManager;
+import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
+import com.gluonhq.jfxapps.core.api.ui.dock.DockType;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.DockMinimizedPreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockDockTypePreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;

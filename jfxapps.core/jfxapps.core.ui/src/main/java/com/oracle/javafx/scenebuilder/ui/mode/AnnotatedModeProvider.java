@@ -43,9 +43,9 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.oracle.javafx.scenebuilder.api.content.mode.AbstractModeController;
-import com.oracle.javafx.scenebuilder.api.content.mode.ModeDescriptor;
-import com.oracle.javafx.scenebuilder.api.content.mode.ModeProvider;
+import com.gluonhq.jfxapps.core.api.content.mode.AbstractModeController;
+import com.gluonhq.jfxapps.core.api.content.mode.ModeDescriptor;
+import com.gluonhq.jfxapps.core.api.content.mode.ModeProvider;
 
 @ApplicationInstanceSingleton
 public class AnnotatedModeProvider implements ModeProvider {
@@ -69,7 +69,7 @@ public class AnnotatedModeProvider implements ModeProvider {
 
         modesCache = context
                 .getBeanClassesForAnnotation(
-                        com.oracle.javafx.scenebuilder.api.content.mode.annotation.ModeDescriptor.class)
+                        com.gluonhq.jfxapps.core.api.content.mode.annotation.ModeDescriptor.class)
                 .stream().map(this::makeModeDescriptor).flatMap(l -> l.stream()).filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
@@ -88,9 +88,9 @@ public class AnnotatedModeProvider implements ModeProvider {
             }
             final Class<AbstractModeController> modeClass = (Class<AbstractModeController>) cls;
 
-            final com.oracle.javafx.scenebuilder.api.content.mode.annotation.ModeDescriptor[] annotations = modeClass
+            final com.gluonhq.jfxapps.core.api.content.mode.annotation.ModeDescriptor[] annotations = modeClass
                     .getAnnotationsByType(
-                            com.oracle.javafx.scenebuilder.api.content.mode.annotation.ModeDescriptor.class);
+                            com.gluonhq.jfxapps.core.api.content.mode.annotation.ModeDescriptor.class);
 
             assert annotations != null;
 
@@ -98,7 +98,7 @@ public class AnnotatedModeProvider implements ModeProvider {
                 return result;
             }
 
-            for (com.oracle.javafx.scenebuilder.api.content.mode.annotation.ModeDescriptor annotation : annotations) {
+            for (com.gluonhq.jfxapps.core.api.content.mode.annotation.ModeDescriptor annotation : annotations) {
                 result.add(ModeDescriptor.create(modeClass, annotation.documentType(), annotation.defaultMode()));
             }
 

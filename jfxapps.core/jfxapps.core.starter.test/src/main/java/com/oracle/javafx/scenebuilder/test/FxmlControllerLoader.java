@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.test;
 
-import com.oracle.javafx.scenebuilder.api.di.FxmlController;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.util.FXMLUtils;
+import com.gluonhq.jfxapps.core.api.di.FxmlController;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 
 import javafx.scene.Parent;
 

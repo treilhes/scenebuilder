@@ -42,14 +42,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.charm.glisten.visual.GlistenStyleClasses;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups;
-import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
-import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferenceEditorFactory;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.type.EnumPreference;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups;
+import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preferences.PreferenceEditorFactory;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preferences.UserPreference;
+import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
+import com.gluonhq.jfxapps.core.api.preferences.type.EnumPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference.GluonSwatch;
 
 import javafx.scene.Node;

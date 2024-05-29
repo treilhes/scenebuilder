@@ -43,11 +43,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
-import com.oracle.javafx.scenebuilder.api.application.ApplicationInstanceWindow;
-import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.action.ActionFactory;
+import com.gluonhq.jfxapps.core.api.application.ApplicationInstanceWindow;
+import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
 import com.oracle.javafx.scenebuilder.ext.theme.document.UserStylesheetsPreference;
 

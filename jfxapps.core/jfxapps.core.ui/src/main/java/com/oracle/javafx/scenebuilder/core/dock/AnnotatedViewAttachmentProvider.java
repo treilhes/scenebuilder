@@ -44,9 +44,9 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
-import com.oracle.javafx.scenebuilder.api.ui.dock.ViewAttachment;
-import com.oracle.javafx.scenebuilder.api.ui.dock.ViewAttachmentProvider;
+import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.ui.dock.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.dock.ViewAttachmentProvider;
 
 @ApplicationInstanceSingleton
 public class AnnotatedViewAttachmentProvider implements ViewAttachmentProvider {
@@ -69,7 +69,7 @@ public class AnnotatedViewAttachmentProvider implements ViewAttachmentProvider {
             return viewsCache;
         }
 
-        viewsCache = context.getBeanClassesForAnnotation(com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment.class)
+        viewsCache = context.getBeanClassesForAnnotation(com.gluonhq.jfxapps.core.api.ui.dock.annotation.ViewAttachment.class)
                 .stream().map(this::makeViewAttachment).flatMap(l -> l.stream()).filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
@@ -88,8 +88,8 @@ public class AnnotatedViewAttachmentProvider implements ViewAttachmentProvider {
             }
             final Class<AbstractFxmlViewController> viewClass = (Class<AbstractFxmlViewController>) cls;
 
-            final com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment annotation = viewClass
-                    .getAnnotation(com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment.class);
+            final com.gluonhq.jfxapps.core.api.ui.dock.annotation.ViewAttachment annotation = viewClass
+                    .getAnnotation(com.gluonhq.jfxapps.core.api.ui.dock.annotation.ViewAttachment.class);
 
             assert annotation != null;
 

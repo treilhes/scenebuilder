@@ -37,14 +37,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.control.droptarget.AbstractDropTarget;
+import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
+import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.content.util.BoundsUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
-import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTarget;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetProvider;
-import com.oracle.javafx.scenebuilder.api.dnd.DropTarget;
-import com.oracle.javafx.scenebuilder.api.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridPaneDropTarget.ColumnArea;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridPaneDropTarget.RowArea;
 

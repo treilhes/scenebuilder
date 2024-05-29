@@ -45,7 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPickerController;
 
 import javafx.beans.property.ObjectProperty;

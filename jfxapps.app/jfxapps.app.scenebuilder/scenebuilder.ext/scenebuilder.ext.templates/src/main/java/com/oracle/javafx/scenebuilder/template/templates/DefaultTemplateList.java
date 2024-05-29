@@ -37,9 +37,9 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.Size;
-import com.oracle.javafx.scenebuilder.api.template.AbstractTemplate;
-import com.oracle.javafx.scenebuilder.api.template.AbstractTemplateGroup;
+import com.gluonhq.jfxapps.core.api.Size;
+import com.gluonhq.jfxapps.core.api.template.AbstractTemplate;
+import com.gluonhq.jfxapps.core.api.template.AbstractTemplateGroup;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 
 public class DefaultTemplateList {

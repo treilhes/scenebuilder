@@ -45,11 +45,11 @@ import java.util.regex.Pattern;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.editors.ApplicationInstanceWindow;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
-import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlWindowController;
+import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.gluon.controller.TrackingController;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationEmailPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationHashPreference;

@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.api.mask;
 import org.scenebuilder.fxml.api.HierarchyMask;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
+import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
 
 public abstract class MaskFactory<T extends HierarchyMask> extends AbstractFactory<T> {
 

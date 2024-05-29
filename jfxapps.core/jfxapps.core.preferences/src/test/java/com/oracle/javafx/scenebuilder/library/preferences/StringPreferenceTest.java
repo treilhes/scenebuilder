@@ -42,9 +42,9 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
-import com.oracle.javafx.scenebuilder.api.preferences.type.StringPreference;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preferences.RootPreferencesNode;
+import com.gluonhq.jfxapps.core.api.preferences.type.StringPreference;
 
 @ExtendWith({MockitoExtension.class})
 public class StringPreferenceTest extends AbstractPreferencesTest {

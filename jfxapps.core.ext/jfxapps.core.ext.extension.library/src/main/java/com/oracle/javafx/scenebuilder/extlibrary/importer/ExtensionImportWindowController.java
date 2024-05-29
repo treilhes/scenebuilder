@@ -50,12 +50,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.ui.dialog.AbstractModalDialog;
-import com.oracle.javafx.scenebuilder.api.ui.dialog.Alert.ButtonID;
-import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
-import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.dialog.AbstractModalDialog;
+import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
+import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionFilterTransform;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionReport;
 import com.oracle.javafx.scenebuilder.extlibrary.library.ExtensionReportEntry;

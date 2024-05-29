@@ -37,12 +37,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
-import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithDocument;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.tooltheme.ToolStylesheetProvider;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithDocument;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 
 @Prototype
 @ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report")

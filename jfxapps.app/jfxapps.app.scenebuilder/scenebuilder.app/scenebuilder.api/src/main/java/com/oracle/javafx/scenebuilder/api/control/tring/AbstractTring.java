@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.api.control.tring;
 import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
-import com.oracle.javafx.scenebuilder.api.content.decoration.AbstractDecoration;
+import com.gluonhq.jfxapps.core.api.content.decoration.AbstractDecoration;
+import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.Tring;
-import com.oracle.javafx.scenebuilder.api.dnd.DropTarget;
 
 import javafx.scene.paint.Paint;
 

@@ -35,14 +35,14 @@ package com.oracle.javafx.scenebuilder.core.dock;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
-import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlWindowController;
-import com.oracle.javafx.scenebuilder.api.ui.dock.Dock;
-import com.oracle.javafx.scenebuilder.api.ui.dock.DockNameHelper;
-import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.DockManager;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlWindowController;
+import com.gluonhq.jfxapps.core.api.ui.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.dock.DockNameHelper;
+import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
 
 import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.FXML;

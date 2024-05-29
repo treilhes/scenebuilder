@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.library.preferences.global;
 
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
 
 public class MavenArtifactsPreferencesFactory {
 

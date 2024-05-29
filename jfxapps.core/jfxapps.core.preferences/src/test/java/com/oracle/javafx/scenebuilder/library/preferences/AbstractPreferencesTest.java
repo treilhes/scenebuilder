@@ -46,11 +46,11 @@ import org.mockito.Mockito;
 import javafx.beans.property.SimpleIntegerProperty;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.preferences.DocumentPreferencesNode;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preferences.RootPreferencesNode;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.api.preferences.DocumentPreferencesNode;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 class AbstractPreferencesTest {
 

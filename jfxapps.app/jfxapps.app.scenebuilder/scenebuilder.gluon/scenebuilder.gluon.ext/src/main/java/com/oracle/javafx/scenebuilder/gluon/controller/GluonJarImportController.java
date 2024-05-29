@@ -40,11 +40,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.WelcomeDialog;
-import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
-import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
-import com.oracle.javafx.scenebuilder.api.editors.ApplicationInstance;
+import com.gluonhq.jfxapps.core.api.WelcomeDialog;
+import com.gluonhq.jfxapps.core.api.application.InstancesManager;
+import com.gluonhq.jfxapps.core.api.di.SbPlatform;
+import com.gluonhq.jfxapps.core.api.editors.ApplicationInstance;
+import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;

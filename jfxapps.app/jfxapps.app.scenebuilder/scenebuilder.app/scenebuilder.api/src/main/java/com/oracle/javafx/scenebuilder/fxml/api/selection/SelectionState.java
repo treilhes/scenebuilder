@@ -37,11 +37,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.metadata.BasicSelection;
-import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 
 import javafx.css.Style;
 import javafx.css.StyleableProperty;

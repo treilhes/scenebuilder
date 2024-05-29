@@ -36,13 +36,13 @@ package com.oracle.javafx.scenebuilder.about.actions;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.about.controller.AboutWindowController;
-import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
-import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
 
 @Prototype
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")

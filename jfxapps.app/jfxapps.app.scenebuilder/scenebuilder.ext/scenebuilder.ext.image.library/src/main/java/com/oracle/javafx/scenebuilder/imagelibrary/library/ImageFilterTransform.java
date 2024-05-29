@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.oracle.javafx.scenebuilder.api.library.ReportEntry.Status;
+import com.gluonhq.jfxapps.core.api.library.ReportEntry.Status;
 import com.oracle.javafx.scenebuilder.library.api.Transform;
 
 public class ImageFilterTransform implements Transform<ImageReport, ImageReport> {

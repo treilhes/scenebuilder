@@ -46,7 +46,7 @@ import com.gluonhq.jfxapps.app.manager.main.ui.cmp.ExtensionCardController;
 import com.gluonhq.jfxapps.app.manager.main.ui.cmp.MainContentController;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.loader.extension.ApplicationExtension;
-import com.oracle.javafx.scenebuilder.api.application.annotation.EditorDescriptor;
+import com.gluonhq.jfxapps.core.api.application.annotation.EditorDescriptor;
 
 @EditorDescriptor(
             label = "manager.app.label",

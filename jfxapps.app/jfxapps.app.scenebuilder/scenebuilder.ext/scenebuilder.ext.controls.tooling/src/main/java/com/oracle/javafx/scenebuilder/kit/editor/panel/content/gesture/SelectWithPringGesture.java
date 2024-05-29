@@ -38,11 +38,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseDragGesture;
+import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseDragGesture;
-import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
-import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
-import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 
 import javafx.scene.input.MouseEvent;
 

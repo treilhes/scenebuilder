@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.ui.editor.messagelog;
 
-import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger.MessageEntry;
+import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger.MessageEntry;
 
 /**
  *

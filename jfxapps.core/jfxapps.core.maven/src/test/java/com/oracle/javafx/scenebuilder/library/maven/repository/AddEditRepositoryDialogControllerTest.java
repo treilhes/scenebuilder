@@ -49,13 +49,13 @@ import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.boot.maven.client.type.Maven;
 import com.gluonhq.jfxapps.boot.maven.client.type.Nexus;
-import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.maven.MavenClient;
-import com.oracle.javafx.scenebuilder.api.settings.MavenSetting;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
-import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
+import com.gluonhq.jfxapps.core.api.SceneBuilderWindow;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.maven.MavenClient;
+import com.gluonhq.jfxapps.core.api.settings.MavenSetting;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
 import com.oracle.javafx.scenebuilder.test.FxmlControllerLoader;
 

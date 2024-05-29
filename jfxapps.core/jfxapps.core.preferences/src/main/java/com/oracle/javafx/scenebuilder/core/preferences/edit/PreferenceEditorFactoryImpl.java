@@ -39,9 +39,9 @@ import java.util.function.Function;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.preferences.Preference;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferenceEditorFactory;
-import com.oracle.javafx.scenebuilder.api.preferences.type.EnumPreference;
+import com.gluonhq.jfxapps.core.api.preferences.Preference;
+import com.gluonhq.jfxapps.core.api.preferences.PreferenceEditorFactory;
+import com.gluonhq.jfxapps.core.api.preferences.type.EnumPreference;
 import com.oracle.javafx.scenebuilder.javafx.controls.DoubleField;
 import com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.PaintPicker;
 import com.oracle.javafx.scenebuilder.javafx.controls.paintpicker.PaintPicker.Mode;

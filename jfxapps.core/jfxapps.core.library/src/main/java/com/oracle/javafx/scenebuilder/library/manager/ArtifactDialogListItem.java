@@ -35,7 +35,7 @@
 package com.oracle.javafx.scenebuilder.library.manager;
 
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
-import com.oracle.javafx.scenebuilder.api.library.LibraryArtifact;
+import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
 
 /**
  * List cell item in the JAR/FXML Library dialog.

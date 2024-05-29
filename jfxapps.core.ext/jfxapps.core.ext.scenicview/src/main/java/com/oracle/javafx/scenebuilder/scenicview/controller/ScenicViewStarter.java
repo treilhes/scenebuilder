@@ -35,7 +35,7 @@
 package com.oracle.javafx.scenebuilder.scenicview.controller;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
 
 /**
  * @treatAsPrivate

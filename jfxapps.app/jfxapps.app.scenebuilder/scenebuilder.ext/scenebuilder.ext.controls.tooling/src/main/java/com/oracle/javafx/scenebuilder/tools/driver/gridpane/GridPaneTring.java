@@ -40,8 +40,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
-import com.oracle.javafx.scenebuilder.api.dnd.DropTarget;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridPaneDropTarget.ColumnArea;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridPaneDropTarget.RowArea;
 

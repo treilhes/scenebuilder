@@ -49,16 +49,16 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
-import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
-import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.ui.menu.Attachment;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuAttachment;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemProvider;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuProvider;
-import com.oracle.javafx.scenebuilder.api.util.FXMLUtils;
+import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
+import com.gluonhq.jfxapps.core.api.application.InstancesManager;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.menu.Attachment;
+import com.gluonhq.jfxapps.core.api.ui.menu.MenuAttachment;
+import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemProvider;
+import com.gluonhq.jfxapps.core.api.ui.menu.MenuProvider;
+import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 
 import jakarta.annotation.PostConstruct;
 import javafx.collections.ObservableList;
@@ -78,7 +78,7 @@ import javafx.scene.layout.StackPane;
  */
 @com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton
 //@Conditional(EditorPlatform.IS_MAC_CONDITION.class)
-public class MenuBarController implements com.oracle.javafx.scenebuilder.api.ui.menu.MenuBar {
+public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.menu.MenuBar {
     private final static Logger logger = LoggerFactory.getLogger(MenuBarController.class);
 
     private static MenuBarController systemMenuBarController; // For Mac only

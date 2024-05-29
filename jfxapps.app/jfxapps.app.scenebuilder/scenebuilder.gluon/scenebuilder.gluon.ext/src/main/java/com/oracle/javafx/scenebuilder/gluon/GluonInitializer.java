@@ -36,10 +36,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.WelcomeDialog;
-import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithApplication;
-import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.editors.ApplicationInstanceWindow;
+import com.gluonhq.jfxapps.core.api.WelcomeDialog;
+import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithApplication;
+import com.gluonhq.jfxapps.core.api.di.SbPlatform;
+import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
 import com.oracle.javafx.scenebuilder.gluon.controller.GluonJarImportController;
 import com.oracle.javafx.scenebuilder.gluon.controller.RegistrationController;
 import com.oracle.javafx.scenebuilder.gluon.controller.TrackingController;

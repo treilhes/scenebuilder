@@ -37,7 +37,7 @@ import java.security.Provider;
 
 import javax.net.ssl.TrustManagerFactory;
 
-import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
+import com.gluonhq.jfxapps.core.api.subjects.NetworkManager;
 
 public class ReloadableTrustManagerProvider extends Provider {
     

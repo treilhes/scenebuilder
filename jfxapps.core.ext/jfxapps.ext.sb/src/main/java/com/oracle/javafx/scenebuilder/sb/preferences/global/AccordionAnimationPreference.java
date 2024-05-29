@@ -37,14 +37,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups;
-import com.oracle.javafx.scenebuilder.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
-import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferenceEditorFactory;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.UserPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.type.BooleanPreference;
-import com.oracle.javafx.scenebuilder.api.tooltheme.CssPreference;
+import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups;
+import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preferences.PreferenceEditorFactory;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preferences.UserPreference;
+import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
+import com.gluonhq.jfxapps.core.api.preferences.type.BooleanPreference;
+import com.gluonhq.jfxapps.core.api.tooltheme.CssPreference;
 
 import javafx.scene.Parent;
 

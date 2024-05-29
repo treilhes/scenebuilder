@@ -35,11 +35,11 @@ package com.oracle.javafx.scenebuilder.document.hierarchy.display;
 
 import org.scenebuilder.fxml.api.HierarchyMask;
 
+import com.gluonhq.jfxapps.core.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.document.api.AbstractDisplayOption;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 

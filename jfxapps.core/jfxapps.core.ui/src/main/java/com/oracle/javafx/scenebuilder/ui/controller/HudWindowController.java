@@ -36,12 +36,12 @@ package com.oracle.javafx.scenebuilder.ui.controller;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.CardinalPoint;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlPopupController;
+import com.gluonhq.jfxapps.core.api.ui.misc.HudWindow;
 import com.gluonhq.jfxapps.core.content.util.LineEquation;
-import com.oracle.javafx.scenebuilder.api.CardinalPoint;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlPopupController;
-import com.oracle.javafx.scenebuilder.api.ui.misc.HudWindow;
 
 import javafx.fxml.FXML;
 import javafx.geometry.BoundingBox;

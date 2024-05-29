@@ -45,10 +45,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.action.AbstractActionExtension;
-import com.oracle.javafx.scenebuilder.api.application.ApplicationInstanceWindow;
-import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
-import com.oracle.javafx.scenebuilder.api.fs.FileSystem.WatchingCallback;
+import com.gluonhq.jfxapps.core.api.action.AbstractActionExtension;
+import com.gluonhq.jfxapps.core.api.application.ApplicationInstanceWindow;
+import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.fs.FileSystem.WatchingCallback;
 import com.oracle.javafx.scenebuilder.ext.controller.SceneStyleSheetMenuController;
 import com.oracle.javafx.scenebuilder.ext.theme.document.UserStylesheetsPreference;
 

@@ -33,8 +33,8 @@
 
 package com.oracle.javafx.scenebuilder.library.manager;
 
-import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

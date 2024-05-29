@@ -46,23 +46,23 @@ import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.FxThread;
 import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.application.InstancesManager;
+import com.gluonhq.jfxapps.core.api.application.WindowPreferenceTracker;
+import com.gluonhq.jfxapps.core.api.application.lifecycle.DisposeWithDocument;
+import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithDocument;
+import com.gluonhq.jfxapps.core.api.di.SbPlatform;
+import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.preferences.Preferences;
+import com.gluonhq.jfxapps.core.api.subjects.DockManager;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.dock.DockViewController;
+import com.gluonhq.jfxapps.core.api.ui.dock.View;
+import com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit;
+import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
-import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
-import com.oracle.javafx.scenebuilder.api.application.WindowPreferenceTracker;
-import com.oracle.javafx.scenebuilder.api.application.lifecycle.DisposeWithDocument;
-import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithDocument;
-import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.preferences.Preferences;
-import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.ui.dock.DockViewController;
-import com.oracle.javafx.scenebuilder.api.ui.dock.View;
-import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
-import com.oracle.javafx.scenebuilder.api.ui.misc.MessageLogger;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Provider;
@@ -76,7 +76,7 @@ import javafx.scene.input.KeyEvent;
  *
  */
 @ApplicationInstanceSingleton
-public class ApplicationInstanceController implements com.oracle.javafx.scenebuilder.api.application.ApplicationInstance {
+public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.api.application.ApplicationInstance {
 
     private final InstanceWindow documentWindow;
     private final FileSystem fileSystem;

@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.imagelibrary.library;
 import java.nio.file.Path;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.library.Report;
+import com.gluonhq.jfxapps.core.api.library.Report;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

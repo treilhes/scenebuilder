@@ -32,65 +32,65 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.oracle.javafx.scenebuilder.api.ApiExtension;
+import com.gluonhq.jfxapps.core.api.ApiExtension;
 
 open module jfxapps.core.api {
 
-    exports com.oracle.javafx.scenebuilder.api;
-    exports com.oracle.javafx.scenebuilder.api.action;
-    exports com.oracle.javafx.scenebuilder.api.action.editor;
+    exports com.gluonhq.jfxapps.core.api;
+    exports com.gluonhq.jfxapps.core.api.action;
+    exports com.gluonhq.jfxapps.core.api.action.editor;
 
-    exports com.oracle.javafx.scenebuilder.api.application;
-    exports com.oracle.javafx.scenebuilder.api.application.annotation;
-    exports com.oracle.javafx.scenebuilder.api.application.lifecycle;
+    exports com.gluonhq.jfxapps.core.api.application;
+    exports com.gluonhq.jfxapps.core.api.application.annotation;
+    exports com.gluonhq.jfxapps.core.api.application.lifecycle;
 
-    exports com.oracle.javafx.scenebuilder.api.ui.alert;
-    exports com.oracle.javafx.scenebuilder.api.clipboard;
+    exports com.gluonhq.jfxapps.core.api.ui.alert;
+    exports com.gluonhq.jfxapps.core.api.clipboard;
 
 
-    exports com.oracle.javafx.scenebuilder.api.content.decoration;
-    exports com.oracle.javafx.scenebuilder.api.content.gesture;
-    exports com.oracle.javafx.scenebuilder.api.content.mode;
-    exports com.oracle.javafx.scenebuilder.api.content.mode.annotation;
-    exports com.oracle.javafx.scenebuilder.api.css;
-    exports com.oracle.javafx.scenebuilder.api.di;
-    exports com.oracle.javafx.scenebuilder.api.dnd;
-    exports com.oracle.javafx.scenebuilder.api.ui.dock;
-    exports com.oracle.javafx.scenebuilder.api.ui.dock.annotation;
-    exports com.oracle.javafx.scenebuilder.api.editor.images;
-    exports com.oracle.javafx.scenebuilder.api.editor.selection;
-    exports com.oracle.javafx.scenebuilder.api.error;
-    exports com.oracle.javafx.scenebuilder.api.factory;
-    exports com.oracle.javafx.scenebuilder.api.fs;
-    exports com.oracle.javafx.scenebuilder.api.i18n;
-    exports com.oracle.javafx.scenebuilder.api.job;
-    exports com.oracle.javafx.scenebuilder.api.launcher;
-    exports com.oracle.javafx.scenebuilder.api.library;
+    exports com.gluonhq.jfxapps.core.api.content.decoration;
+    exports com.gluonhq.jfxapps.core.api.content.gesture;
+    exports com.gluonhq.jfxapps.core.api.content.mode;
+    exports com.gluonhq.jfxapps.core.api.content.mode.annotation;
+    exports com.gluonhq.jfxapps.core.api.css;
+    exports com.gluonhq.jfxapps.core.api.di;
+    exports com.gluonhq.jfxapps.core.api.dnd;
+    exports com.gluonhq.jfxapps.core.api.ui.dock;
+    exports com.gluonhq.jfxapps.core.api.ui.dock.annotation;
+    exports com.gluonhq.jfxapps.core.api.editor.images;
+    exports com.gluonhq.jfxapps.core.api.editor.selection;
+    exports com.gluonhq.jfxapps.core.api.error;
+    exports com.gluonhq.jfxapps.core.api.factory;
+    exports com.gluonhq.jfxapps.core.api.fs;
+    exports com.gluonhq.jfxapps.core.api.i18n;
+    exports com.gluonhq.jfxapps.core.api.job;
+    exports com.gluonhq.jfxapps.core.api.launcher;
+    exports com.gluonhq.jfxapps.core.api.library;
 
-    exports com.oracle.javafx.scenebuilder.api.maven;
-    exports com.oracle.javafx.scenebuilder.api.metadata;
-    exports com.oracle.javafx.scenebuilder.api.ui;
-    exports com.oracle.javafx.scenebuilder.api.ui.selbar;
-    exports com.oracle.javafx.scenebuilder.api.ui.menu;
-    exports com.oracle.javafx.scenebuilder.api.ui.menu.annotation;
-    exports com.oracle.javafx.scenebuilder.api.ui.misc;
-    exports com.oracle.javafx.scenebuilder.api.ui.dialog;
-    exports com.oracle.javafx.scenebuilder.api.preferences;
-    exports com.oracle.javafx.scenebuilder.api.preferences.type;
+    exports com.gluonhq.jfxapps.core.api.maven;
+    exports com.gluonhq.jfxapps.core.api.metadata;
+    exports com.gluonhq.jfxapps.core.api.ui;
+    exports com.gluonhq.jfxapps.core.api.ui.selbar;
+    exports com.gluonhq.jfxapps.core.api.ui.menu;
+    exports com.gluonhq.jfxapps.core.api.ui.menu.annotation;
+    exports com.gluonhq.jfxapps.core.api.ui.misc;
+    exports com.gluonhq.jfxapps.core.api.ui.dialog;
+    exports com.gluonhq.jfxapps.core.api.preferences;
+    exports com.gluonhq.jfxapps.core.api.preferences.type;
 
-    exports com.oracle.javafx.scenebuilder.api.settings;
-    exports com.oracle.javafx.scenebuilder.api.shortcut;
-    exports com.oracle.javafx.scenebuilder.api.shortcut.annotation;
-    exports com.oracle.javafx.scenebuilder.api.subjects;
-    exports com.oracle.javafx.scenebuilder.api.template;
+    exports com.gluonhq.jfxapps.core.api.settings;
+    exports com.gluonhq.jfxapps.core.api.shortcut;
+    exports com.gluonhq.jfxapps.core.api.shortcut.annotation;
+    exports com.gluonhq.jfxapps.core.api.subjects;
+    exports com.gluonhq.jfxapps.core.api.template;
 
-    exports com.oracle.javafx.scenebuilder.api.tooltheme;
+    exports com.gluonhq.jfxapps.core.api.tooltheme;
 
-    exports com.oracle.javafx.scenebuilder.api.util;
+    exports com.gluonhq.jfxapps.core.api.util;
 
     exports com.oracle.javafx.scenebuilder.core.action.editor;
 
-    exports com.oracle.javafx.scenebuilder.api.application.javafx;
+    exports com.gluonhq.jfxapps.core.api.application.javafx;
 
     requires transitive jfxapps.javafx.starter;
 

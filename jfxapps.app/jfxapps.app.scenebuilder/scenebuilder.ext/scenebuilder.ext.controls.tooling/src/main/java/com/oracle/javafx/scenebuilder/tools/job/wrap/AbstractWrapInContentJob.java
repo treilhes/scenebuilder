@@ -38,15 +38,15 @@ import java.util.List;
 
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
+import com.gluonhq.jfxapps.core.api.HierarchyMask;
+import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask;
-import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
-import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;

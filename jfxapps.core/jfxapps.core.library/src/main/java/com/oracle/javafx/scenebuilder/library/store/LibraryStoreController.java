@@ -64,7 +64,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
-import com.oracle.javafx.scenebuilder.api.library.LibraryArtifact;
+import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
 import com.oracle.javafx.scenebuilder.extstore.fs.ExtensionFileSystem;
 import com.oracle.javafx.scenebuilder.library.api.LibraryStore;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenArtifactsPreferences;

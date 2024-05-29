@@ -39,14 +39,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
-import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
-import com.oracle.javafx.scenebuilder.api.ui.dock.ViewSearch;
-import com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.di.SbPlatform;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.ui.ViewMenuController;
+import com.gluonhq.jfxapps.core.api.ui.dock.ViewSearch;
+import com.gluonhq.jfxapps.core.api.ui.dock.annotation.ViewAttachment;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

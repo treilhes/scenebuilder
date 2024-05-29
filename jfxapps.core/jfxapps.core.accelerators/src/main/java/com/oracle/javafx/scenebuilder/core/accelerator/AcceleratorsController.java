@@ -44,15 +44,15 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
-import com.oracle.javafx.scenebuilder.api.action.Action;
-import com.oracle.javafx.scenebuilder.api.application.InstanceWindow;
-import com.oracle.javafx.scenebuilder.api.preferences.Preference;
-import com.oracle.javafx.scenebuilder.api.shortcut.Accelerator;
-import com.oracle.javafx.scenebuilder.api.shortcut.AcceleratorProvider;
-import com.oracle.javafx.scenebuilder.api.shortcut.Accelerators;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.ui.AbstractCommonUiController;
-import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.action.Action;
+import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.preferences.Preference;
+import com.gluonhq.jfxapps.core.api.shortcut.Accelerator;
+import com.gluonhq.jfxapps.core.api.shortcut.AcceleratorProvider;
+import com.gluonhq.jfxapps.core.api.shortcut.Accelerators;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.ui.AbstractCommonUiController;
+import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.core.accelerator.preferences.global.AcceleratorsMapPreference;
 import com.oracle.javafx.scenebuilder.core.accelerator.preferences.global.FocusedAcceleratorsMapPreference;
 
@@ -71,7 +71,7 @@ import javafx.scene.input.KeyCombination.ModifierValue;
  * accelerator specific to scenebuilder focused panel
  * {@link AbstractCommonUiController}. The initial configuration is provided by
  * injection of {@link AcceleratorProvider} or class annotated by
- * {@link com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator}.
+ * {@link com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator}.
  * The initial configuration is override by preferences. A global
  * {@link Preference} with the injected {@link AcceleratorsMapPreference} and
  * focused items preference by using

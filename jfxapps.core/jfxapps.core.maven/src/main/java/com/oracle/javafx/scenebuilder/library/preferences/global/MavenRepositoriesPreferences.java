@@ -40,8 +40,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
-import com.oracle.javafx.scenebuilder.api.preferences.ListPreferences;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preferences.ListPreferences;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
 
 @Component
 public class MavenRepositoriesPreferences extends ListPreferences<MavenRepositoryPreferences, Repository> {

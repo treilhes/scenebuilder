@@ -44,12 +44,12 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
-import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
-import com.oracle.javafx.scenebuilder.api.action.Action;
-import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
-import com.oracle.javafx.scenebuilder.api.shortcut.Accelerator;
-import com.oracle.javafx.scenebuilder.api.shortcut.AcceleratorProvider;
-import com.oracle.javafx.scenebuilder.api.ui.AbstractCommonUiController;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.Action;
+import com.gluonhq.jfxapps.core.api.action.ActionFactory;
+import com.gluonhq.jfxapps.core.api.shortcut.Accelerator;
+import com.gluonhq.jfxapps.core.api.shortcut.AcceleratorProvider;
+import com.gluonhq.jfxapps.core.api.ui.AbstractCommonUiController;
 
 import javafx.scene.input.KeyCombination;
 
@@ -77,7 +77,7 @@ public class AnnotatedActionAcceleratorProvider implements AcceleratorProvider {
             return acceleratorsCache;
         }
 
-        acceleratorsCache = context.getBeanClassesForAnnotation(com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator.class)
+        acceleratorsCache = context.getBeanClassesForAnnotation(com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator.class)
                 .stream().map(this::makeAccelerator).flatMap(l -> l.stream()).filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
@@ -96,8 +96,8 @@ public class AnnotatedActionAcceleratorProvider implements AcceleratorProvider {
             }
             final Class<AbstractAction> actionClass = (Class<AbstractAction>) cls;
 
-            final com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator[] annotations = actionClass
-                    .getAnnotationsByType(com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator.class);
+            final com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator[] annotations = actionClass
+                    .getAnnotationsByType(com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator.class);
 
             assert annotations != null;
 
@@ -107,7 +107,7 @@ public class AnnotatedActionAcceleratorProvider implements AcceleratorProvider {
 
             final Action action = actionFactory.create(actionClass);
 
-            for (com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator annotation : annotations) {
+            for (com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator annotation : annotations) {
 
                 final String rawAccelerator;
                 if (JfxAppsPlatform.IS_MAC && !annotation.macosAccelerator().isBlank()) {

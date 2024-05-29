@@ -34,10 +34,10 @@
 package com.oracle.javafx.scenebuilder.fs.preference.document;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.oracle.javafx.scenebuilder.api.preferences.DocumentPreferencesNode;
-import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.type.StringPreference;
+import com.gluonhq.jfxapps.core.api.preferences.DocumentPreferencesNode;
+import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preferences.type.StringPreference;
 
 @ApplicationInstanceSingleton
 public class PathPreference extends StringPreference implements ManagedDocumentPreference {

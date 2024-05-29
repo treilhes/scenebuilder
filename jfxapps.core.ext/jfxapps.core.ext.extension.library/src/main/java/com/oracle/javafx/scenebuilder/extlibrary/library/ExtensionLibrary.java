@@ -49,11 +49,11 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
-import com.oracle.javafx.scenebuilder.api.application.lifecycle.DisposeWithApplication;
-import com.oracle.javafx.scenebuilder.api.library.LibraryArtifact;
-import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.ui.misc.UILogger;
+import com.gluonhq.jfxapps.core.api.application.lifecycle.DisposeWithApplication;
+import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
+import com.gluonhq.jfxapps.core.api.library.LibraryFilter;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.misc.UILogger;
 import com.oracle.javafx.scenebuilder.extlibrary.ExtensionLibraryExtension;
 import com.oracle.javafx.scenebuilder.extlibrary.importer.ExtensionImportWindowController;
 import com.oracle.javafx.scenebuilder.extlibrary.library.builtin.ExtensionBuiltinLibrary;

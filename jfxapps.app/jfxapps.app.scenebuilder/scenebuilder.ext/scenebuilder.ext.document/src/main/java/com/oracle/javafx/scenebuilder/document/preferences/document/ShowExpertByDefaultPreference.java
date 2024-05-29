@@ -37,9 +37,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.type.BooleanPreference;
+import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preferences.type.BooleanPreference;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)

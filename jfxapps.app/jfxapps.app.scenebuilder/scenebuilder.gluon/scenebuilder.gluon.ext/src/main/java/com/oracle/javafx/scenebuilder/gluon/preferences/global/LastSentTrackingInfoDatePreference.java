@@ -37,9 +37,9 @@ import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.type.LocalDatePreference;
+import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preferences.type.LocalDatePreference;
 
 @Component
 public class LastSentTrackingInfoDatePreference extends LocalDatePreference implements ManagedGlobalPreference {

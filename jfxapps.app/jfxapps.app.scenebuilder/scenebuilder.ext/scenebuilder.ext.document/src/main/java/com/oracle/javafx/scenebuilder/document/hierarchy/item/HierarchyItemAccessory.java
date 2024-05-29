@@ -40,9 +40,9 @@ import java.util.Objects;
 import org.scenebuilder.fxml.api.HierarchyMask;
 import org.scenebuilder.fxml.api.HierarchyMask.Accessory;
 
+import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 
 import javafx.scene.image.Image;

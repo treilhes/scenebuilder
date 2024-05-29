@@ -39,9 +39,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 
-import com.oracle.javafx.scenebuilder.api.preferences.DocumentPreferencesNode;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
+import com.gluonhq.jfxapps.core.api.preferences.DocumentPreferencesNode;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preferences.RootPreferencesNode;
 
 class AbstractPreferencesTest {
 

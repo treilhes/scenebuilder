@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.inspector.actions;
 
-import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
-import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.ViewMode;
 

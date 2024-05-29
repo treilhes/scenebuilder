@@ -37,7 +37,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.editors.ApplicationInstanceWindow;
+import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationEmailPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationHashPreference;
 import com.oracle.javafx.scenebuilder.gluon.registration.RegistrationWindowController;

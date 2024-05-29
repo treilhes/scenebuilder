@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.glossary.impl;
 import java.net.URL;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.Glossary;
+import com.gluonhq.jfxapps.core.api.Glossary;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;

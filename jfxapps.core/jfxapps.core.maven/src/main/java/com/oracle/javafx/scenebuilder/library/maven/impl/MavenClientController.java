@@ -50,7 +50,7 @@ import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
 import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
-import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
+import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoriesPreferences;
 import com.oracle.javafx.scenebuilder.library.preferences.global.MavenRepositoryPathPreference;
 
@@ -59,7 +59,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 @ApplicationSingleton
-public class MavenClientController implements com.oracle.javafx.scenebuilder.api.maven.MavenClient {
+public class MavenClientController implements com.gluonhq.jfxapps.core.api.maven.MavenClient {
 
     private RepositoryClient client;
     private RepositoryManager repositoryManager;

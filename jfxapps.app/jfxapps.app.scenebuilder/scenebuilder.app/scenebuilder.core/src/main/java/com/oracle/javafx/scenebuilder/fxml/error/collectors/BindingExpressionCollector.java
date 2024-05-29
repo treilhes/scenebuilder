@@ -38,11 +38,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.error.AbstractErrorCollector;
+import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.collector.PropertyCollector;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.api.error.AbstractErrorCollector;
-import com.oracle.javafx.scenebuilder.api.error.ErrorReportEntry;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.fxml.error.FxmlErrorReportEntryImpl;
 import com.oracle.javafx.scenebuilder.fxml.error.Type;

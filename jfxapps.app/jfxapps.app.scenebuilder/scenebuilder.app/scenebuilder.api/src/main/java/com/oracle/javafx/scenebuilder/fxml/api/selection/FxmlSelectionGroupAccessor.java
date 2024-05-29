@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.fxml.api.selection;
 
-import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroupAccessor;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroupAccessor;
 
 public class FxmlSelectionGroupAccessor extends SelectionGroupAccessor {
 

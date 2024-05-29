@@ -37,9 +37,9 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.MapPreferences;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
+import com.gluonhq.jfxapps.core.api.preferences.MapPreferences;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
 
 
 @ApplicationInstanceSingleton

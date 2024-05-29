@@ -39,10 +39,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.tooltheme.AbstractToolTheme;
-import com.oracle.javafx.scenebuilder.api.tooltheme.ToolTheme;
-import com.oracle.javafx.scenebuilder.api.tooltheme.ToolThemeMeta;
-import com.oracle.javafx.scenebuilder.api.tooltheme.ToolThemeProvider;
+import com.gluonhq.jfxapps.core.api.tooltheme.AbstractToolTheme;
+import com.gluonhq.jfxapps.core.api.tooltheme.ToolTheme;
+import com.gluonhq.jfxapps.core.api.tooltheme.ToolThemeMeta;
+import com.gluonhq.jfxapps.core.api.tooltheme.ToolThemeProvider;
 
 @Component
 @Qualifier("default")

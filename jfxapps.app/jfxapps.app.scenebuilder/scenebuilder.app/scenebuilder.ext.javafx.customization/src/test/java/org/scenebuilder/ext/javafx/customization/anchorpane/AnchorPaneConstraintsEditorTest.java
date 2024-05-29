@@ -47,11 +47,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.scenebuilder.ext.javafx.customization.anchorpane.AnchorPaneConstraintsEditor.ConstraintEditor;
 import org.testfx.framework.junit5.ApplicationExtension;
 
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata.NullableCoordinateDoublePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
 
 import javafx.scene.control.TextField;

@@ -43,7 +43,7 @@ import java.nio.file.Paths;
 
 import org.junit.Test;
 
-import com.oracle.javafx.scenebuilder.api.library.LibraryArtifact;
+import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
 
 public class DialogListItemComparatorTest {
 

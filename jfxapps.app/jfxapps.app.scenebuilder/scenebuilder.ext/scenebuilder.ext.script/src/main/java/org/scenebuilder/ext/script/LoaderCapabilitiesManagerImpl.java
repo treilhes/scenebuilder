@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.core.context.SbContext;
+import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.ext.LoaderCapabilitiesManager;
-import com.oracle.javafx.scenebuilder.api.lifecycle.InitWithDocument;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)

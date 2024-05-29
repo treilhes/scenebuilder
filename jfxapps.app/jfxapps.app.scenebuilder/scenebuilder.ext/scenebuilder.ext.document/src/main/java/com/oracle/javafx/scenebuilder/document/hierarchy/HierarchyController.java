@@ -46,13 +46,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.job.JobManager;
+import com.gluonhq.jfxapps.core.api.ui.menu.ContextMenu;
+import com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.job.JobManager;
-import com.oracle.javafx.scenebuilder.api.ui.menu.ContextMenu;
-import com.oracle.javafx.scenebuilder.api.ui.misc.InlineEdit;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
 import com.oracle.javafx.scenebuilder.document.api.Hierarchy;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;

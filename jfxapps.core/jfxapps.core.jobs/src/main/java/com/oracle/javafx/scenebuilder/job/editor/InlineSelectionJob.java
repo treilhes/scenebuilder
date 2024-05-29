@@ -35,11 +35,11 @@ package com.oracle.javafx.scenebuilder.job.editor;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 
 /**
  * This Job updates the FXOM document AND the selection at execution time.

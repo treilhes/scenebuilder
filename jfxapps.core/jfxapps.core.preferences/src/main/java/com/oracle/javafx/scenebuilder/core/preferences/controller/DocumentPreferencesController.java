@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.core.preferences.controller;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.Preferences;
+import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
+import com.gluonhq.jfxapps.core.api.preferences.Preferences;
 
 /**
  * Defines preferences for Scene Builder App.

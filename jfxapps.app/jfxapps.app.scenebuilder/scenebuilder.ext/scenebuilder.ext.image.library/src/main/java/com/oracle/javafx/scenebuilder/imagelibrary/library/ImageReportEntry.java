@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.imagelibrary.library;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.library.ReportEntry;
+import com.gluonhq.jfxapps.core.api.library.ReportEntry;
 
 /**
  *

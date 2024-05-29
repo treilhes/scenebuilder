@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.theme;
 
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 
 /**
  * Theme group contract supported by Scene Builder Kit.

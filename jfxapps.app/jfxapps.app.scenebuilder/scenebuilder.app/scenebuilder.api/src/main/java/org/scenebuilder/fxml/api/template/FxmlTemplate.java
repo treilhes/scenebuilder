@@ -34,7 +34,7 @@ package org.scenebuilder.fxml.api.template;
 
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.template.Template;
+import com.gluonhq.jfxapps.core.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 
 public interface FxmlTemplate extends Template {

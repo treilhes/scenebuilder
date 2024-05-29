@@ -43,9 +43,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.type.ListOfStringPreference;
+import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preferences.type.ListOfStringPreference;
 
 import jakarta.inject.Provider;
 

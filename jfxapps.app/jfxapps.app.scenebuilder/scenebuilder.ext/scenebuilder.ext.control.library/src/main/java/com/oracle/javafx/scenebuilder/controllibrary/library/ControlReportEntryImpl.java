@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.controllibrary.library;
 
-import com.oracle.javafx.scenebuilder.api.library.ReportEntry;
+import com.gluonhq.jfxapps.core.api.library.ReportEntry;
 
 import javafx.scene.Node;
 

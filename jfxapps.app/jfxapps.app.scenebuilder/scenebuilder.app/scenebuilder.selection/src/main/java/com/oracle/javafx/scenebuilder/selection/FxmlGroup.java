@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.selection;
 
 import java.util.Set;
 
+import com.gluonhq.jfxapps.core.api.editor.selection.Group;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.editor.selection.Group;
 
 import javafx.scene.Node;
 

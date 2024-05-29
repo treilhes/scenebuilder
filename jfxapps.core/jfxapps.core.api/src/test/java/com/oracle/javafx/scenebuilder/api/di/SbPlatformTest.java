@@ -49,6 +49,7 @@ import org.testfx.framework.junit5.Start;
 import com.gluonhq.jfxapps.boot.context.ApplicationInstance;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
+import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 
 import javafx.stage.Stage;
 

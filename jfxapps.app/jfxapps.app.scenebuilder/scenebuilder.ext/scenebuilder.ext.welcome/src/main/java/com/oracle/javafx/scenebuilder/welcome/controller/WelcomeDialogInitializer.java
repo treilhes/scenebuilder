@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.welcome.controller;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
-import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithApplication;
-import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
+import com.gluonhq.jfxapps.core.api.application.InstancesManager;
+import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithApplication;
+import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 
 @Component
 public class WelcomeDialogInitializer implements InitWithApplication {

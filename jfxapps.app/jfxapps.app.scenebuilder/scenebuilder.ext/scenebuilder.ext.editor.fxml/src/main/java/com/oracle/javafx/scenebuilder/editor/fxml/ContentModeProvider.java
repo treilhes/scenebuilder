@@ -38,9 +38,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.core.api.content.mode.ModeDescriptor;
+import com.gluonhq.jfxapps.core.api.content.mode.ModeProvider;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.api.content.mode.ModeDescriptor;
-import com.oracle.javafx.scenebuilder.api.content.mode.ModeProvider;
 import com.oracle.javafx.scenebuilder.editor.fxml.controller.EditModeController;
 
 @Component

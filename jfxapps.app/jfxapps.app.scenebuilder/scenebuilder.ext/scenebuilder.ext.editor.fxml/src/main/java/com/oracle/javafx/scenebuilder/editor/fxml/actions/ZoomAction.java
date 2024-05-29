@@ -41,16 +41,16 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.ui.menu.MenuBuilder;
+import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemProvider;
+import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
 import com.gluonhq.jfxapps.util.MathUtils;
-import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
-import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
-import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuBuilder;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemProvider;
-import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.ui.misc.Workspace;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.RadioMenuItem;

@@ -41,7 +41,7 @@ import org.scenebuilder.fxml.api.i18n.I18NFxmlApi;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager.FxmlDocumentManagerImpl;
 
 import com.gluonhq.jfxapps.boot.loader.extension.ApplicationExtension;
-import com.oracle.javafx.scenebuilder.api.application.annotation.EditorDescriptor;
+import com.gluonhq.jfxapps.core.api.application.annotation.EditorDescriptor;
 import com.oracle.javafx.scenebuilder.api.control.driver.DriverExtensionRegistry;
 import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
 import com.oracle.javafx.scenebuilder.api.control.inlineedit.SimilarInlineEditorBounds;

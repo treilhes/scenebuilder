@@ -44,9 +44,9 @@ import java.util.prefs.Preferences;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.RootPreferencesNode;
-import com.oracle.javafx.scenebuilder.api.preferences.type.ListOfStringPreference;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preferences.RootPreferencesNode;
+import com.gluonhq.jfxapps.core.api.preferences.type.ListOfStringPreference;
 
 public class ListOfStringPreferenceTest extends AbstractPreferencesTest {
 

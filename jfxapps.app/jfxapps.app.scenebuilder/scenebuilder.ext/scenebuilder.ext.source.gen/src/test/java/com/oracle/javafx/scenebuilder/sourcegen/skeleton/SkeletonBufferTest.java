@@ -38,8 +38,8 @@ import java.net.URL;
 
 import org.junit.Test;
 
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.sourcegen.i18n.I18NSourceGen;
 
 /**

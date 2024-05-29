@@ -48,16 +48,16 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.oracle.javafx.scenebuilder.api.SceneBuilderWindow;
-import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithDocument;
-import com.oracle.javafx.scenebuilder.api.subjects.DockManager;
-import com.oracle.javafx.scenebuilder.api.subjects.ViewManager;
-import com.oracle.javafx.scenebuilder.api.subjects.ViewManager.DockRequest;
-import com.oracle.javafx.scenebuilder.api.ui.dock.Dock;
-import com.oracle.javafx.scenebuilder.api.ui.dock.DockViewController;
-import com.oracle.javafx.scenebuilder.api.ui.dock.View;
-import com.oracle.javafx.scenebuilder.api.ui.dock.ViewAttachment;
-import com.oracle.javafx.scenebuilder.api.ui.dock.ViewAttachmentProvider;
+import com.gluonhq.jfxapps.core.api.SceneBuilderWindow;
+import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithDocument;
+import com.gluonhq.jfxapps.core.api.subjects.DockManager;
+import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
+import com.gluonhq.jfxapps.core.api.subjects.ViewManager.DockRequest;
+import com.gluonhq.jfxapps.core.api.ui.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.dock.DockViewController;
+import com.gluonhq.jfxapps.core.api.ui.dock.View;
+import com.gluonhq.jfxapps.core.api.ui.dock.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.dock.ViewAttachmentProvider;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastDockUuidPreference;
 import com.oracle.javafx.scenebuilder.core.dock.preferences.document.LastViewVisibilityPreference;
 

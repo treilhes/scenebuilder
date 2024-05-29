@@ -41,11 +41,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
-import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithDocument;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithDocument;
+import com.gluonhq.jfxapps.core.api.theme.StylesheetProvider;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)

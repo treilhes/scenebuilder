@@ -40,12 +40,12 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.api.editor.selection.SelectionGroup;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.job.JobFactory;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
+import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 
 /**
  * This job create a backup of the current selection by cloning the content of {@link Selection#getGroup()}

@@ -34,9 +34,9 @@
 package com.oracle.javafx.scenebuilder.ui.preferences.document;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
-import com.oracle.javafx.scenebuilder.api.preferences.type.BooleanPreference;
+import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preferences.type.BooleanPreference;
 
 @ApplicationInstanceSingleton
 public class MaximizedPreference extends BooleanPreference implements ManagedDocumentPreference {

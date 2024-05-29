@@ -34,7 +34,7 @@ package com.oracle.javafx.scenebuilder.controllibrary.library;
 
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.library.LibraryFilter;
+import com.gluonhq.jfxapps.core.api.library.LibraryFilter;
 
 @Component
 public class ControlLibraryDefaultFilter implements LibraryFilter {

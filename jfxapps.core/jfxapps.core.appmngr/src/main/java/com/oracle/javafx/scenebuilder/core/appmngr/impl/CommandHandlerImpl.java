@@ -49,10 +49,10 @@ import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.loader.OpenCommandEvent;
 import com.gluonhq.jfxapps.boot.loader.extension.ApplicationExtension;
-import com.oracle.javafx.scenebuilder.api.application.ApplicationInstance;
-import com.oracle.javafx.scenebuilder.api.application.CommandHandler;
-import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
-import com.oracle.javafx.scenebuilder.api.application.javafx.JavafxThreadHolder;
+import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
+import com.gluonhq.jfxapps.core.api.application.CommandHandler;
+import com.gluonhq.jfxapps.core.api.application.InstancesManager;
+import com.gluonhq.jfxapps.core.api.application.javafx.JavafxThreadHolder;
 
 @ApplicationSingleton
 public class CommandHandlerImpl implements CommandHandler, Application{

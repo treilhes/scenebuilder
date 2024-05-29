@@ -36,7 +36,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 
 abstract class AbstractSkeletonCreator {
 

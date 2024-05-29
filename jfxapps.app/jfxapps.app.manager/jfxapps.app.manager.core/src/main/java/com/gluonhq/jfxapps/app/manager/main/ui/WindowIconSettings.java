@@ -34,7 +34,7 @@
 package com.gluonhq.jfxapps.app.manager.main.ui;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
 
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;

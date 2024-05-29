@@ -44,9 +44,9 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
-import com.oracle.javafx.scenebuilder.api.action.Action;
-import com.oracle.javafx.scenebuilder.api.preferences.MapPreferences;
-import com.oracle.javafx.scenebuilder.api.preferences.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.action.Action;
+import com.gluonhq.jfxapps.core.api.preferences.MapPreferences;
+import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.core.dnd.controller;
 
-import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
-import com.oracle.javafx.scenebuilder.api.dnd.DropTarget;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.dnd.DragSource;
+import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
+import com.gluonhq.jfxapps.core.api.job.AbstractJob;
 
 /**
  *

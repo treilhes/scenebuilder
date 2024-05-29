@@ -48,7 +48,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.TrustManagerFactorySpi;
 
-import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
+import com.gluonhq.jfxapps.core.api.subjects.NetworkManager;
 
 public class ReloadableTrustManagerFactory extends TrustManagerFactorySpi {
 

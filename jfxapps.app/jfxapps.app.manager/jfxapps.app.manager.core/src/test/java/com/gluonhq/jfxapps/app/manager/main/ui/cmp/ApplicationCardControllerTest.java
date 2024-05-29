@@ -44,9 +44,9 @@ import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.app.manager.main.ui.cmp.ApplicationCardController;
 import com.gluonhq.jfxapps.app.manager.model.Application;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.oracle.javafx.scenebuilder.test.FxmlControllerLoader;
 import com.oracle.javafx.scenebuilder.test.TestStages;
 

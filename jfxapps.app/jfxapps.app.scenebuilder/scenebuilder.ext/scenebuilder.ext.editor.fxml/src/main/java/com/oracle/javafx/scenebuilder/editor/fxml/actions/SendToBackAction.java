@@ -37,16 +37,16 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
-import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
-import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.job.JobManager;
-import com.oracle.javafx.scenebuilder.api.shortcut.annotation.Accelerator;
-import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.ContextMenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.JobManager;
+import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
+import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.menu.annotation.ContextMenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.SendToBackJob;
 
 @Component

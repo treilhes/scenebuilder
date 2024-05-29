@@ -49,6 +49,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
+import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.GroupFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -58,10 +62,6 @@ import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.value.IntegerPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.api.editor.selection.AbstractSelectionGroup;
-import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
-import com.oracle.javafx.scenebuilder.api.editor.selection.GroupFactory;
-import com.oracle.javafx.scenebuilder.api.job.Job;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.DeleteGridSelectionJob;
 

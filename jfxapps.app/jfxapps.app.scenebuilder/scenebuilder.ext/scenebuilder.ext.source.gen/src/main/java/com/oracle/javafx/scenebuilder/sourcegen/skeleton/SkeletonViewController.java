@@ -43,15 +43,15 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.application.ApplicationInstanceWindow;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.ui.ViewMenuController;
+import com.gluonhq.jfxapps.core.api.ui.dock.ViewSearch;
+import com.gluonhq.jfxapps.core.api.ui.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.util.FXOMDocumentUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.api.application.ApplicationInstanceWindow;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
-import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
-import com.oracle.javafx.scenebuilder.api.ui.dock.ViewSearch;
-import com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment;
-import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
 
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;

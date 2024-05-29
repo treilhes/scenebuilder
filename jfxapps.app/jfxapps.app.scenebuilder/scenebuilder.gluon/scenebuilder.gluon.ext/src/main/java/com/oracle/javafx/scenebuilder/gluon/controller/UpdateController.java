@@ -39,11 +39,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
-import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.editors.ApplicationInstanceWindow;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.ui.alert.SBAlert;
+import com.gluonhq.jfxapps.core.api.application.InstancesManager;
+import com.gluonhq.jfxapps.core.api.di.SbPlatform;
+import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.ui.alert.SBAlert;
 import com.oracle.javafx.scenebuilder.gluon.dialog.UpdateSceneBuilderDialog;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.IgnoreVersionPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.ShowUpdateDialogDatePreference;

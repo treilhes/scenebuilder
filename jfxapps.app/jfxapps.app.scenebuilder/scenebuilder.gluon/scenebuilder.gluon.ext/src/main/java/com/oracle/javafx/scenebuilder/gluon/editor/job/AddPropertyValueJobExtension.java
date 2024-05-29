@@ -38,8 +38,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.editors.ApplicationInstanceWindow;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJobExtension;
+import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
+import com.gluonhq.jfxapps.core.api.job.AbstractJobExtension;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyValueJob;

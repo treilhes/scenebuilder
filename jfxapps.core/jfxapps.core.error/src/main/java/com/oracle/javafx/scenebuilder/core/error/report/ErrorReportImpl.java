@@ -44,11 +44,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.error.ErrorCollector;
+import com.gluonhq.jfxapps.core.api.error.ErrorReport;
+import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.error.ErrorCollector;
-import com.oracle.javafx.scenebuilder.api.error.ErrorReport;
-import com.oracle.javafx.scenebuilder.api.error.ErrorReportEntry;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 
 /**
  *

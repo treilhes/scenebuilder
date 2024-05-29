@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
@@ -68,7 +69,6 @@ import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizer;
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractShadow;
 import com.oracle.javafx.scenebuilder.api.control.rudder.AbstractRudder;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractTring;
-import com.oracle.javafx.scenebuilder.api.dnd.DropTarget;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;

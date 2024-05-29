@@ -42,14 +42,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
+import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata;
-import com.oracle.javafx.scenebuilder.api.factory.AbstractFactory;
-import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
-import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
-import com.oracle.javafx.scenebuilder.api.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertiesEditor;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;

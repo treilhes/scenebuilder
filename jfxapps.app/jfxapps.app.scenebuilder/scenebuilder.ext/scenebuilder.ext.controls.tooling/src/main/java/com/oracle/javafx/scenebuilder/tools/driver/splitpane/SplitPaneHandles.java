@@ -42,8 +42,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractGesture;
-import com.oracle.javafx.scenebuilder.api.content.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
+import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractNodeHandles;

@@ -35,9 +35,9 @@ package org.scenebuilder.fxml.api.template;
 import java.net.URL;
 import java.util.List;
 
-import com.oracle.javafx.scenebuilder.api.Size;
-import com.oracle.javafx.scenebuilder.api.template.AbstractTemplate;
-import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
+import com.gluonhq.jfxapps.core.api.Size;
+import com.gluonhq.jfxapps.core.api.template.AbstractTemplate;
+import com.gluonhq.jfxapps.core.api.template.TemplateGroup;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 
 public abstract class AbstractFxmlTemplate extends AbstractTemplate implements FxmlTemplate {

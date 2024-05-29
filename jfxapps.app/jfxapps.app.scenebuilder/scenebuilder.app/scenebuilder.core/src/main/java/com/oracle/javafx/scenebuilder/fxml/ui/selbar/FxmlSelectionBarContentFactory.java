@@ -39,12 +39,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.HierarchyMask;
+import com.gluonhq.jfxapps.core.api.om.OMObject;
+import com.gluonhq.jfxapps.core.api.ui.selbar.SelectionBarContentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask.Factory;
-import com.oracle.javafx.scenebuilder.api.om.OMObject;
-import com.oracle.javafx.scenebuilder.api.ui.selbar.SelectionBarContentFactory;
 
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;

@@ -40,9 +40,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.extstore.fs.ExtensionFileSystemFactory;
 import com.oracle.javafx.scenebuilder.fs.controller.ClassLoaderController;
 import com.oracle.javafx.scenebuilder.library.api.LibraryStore;

@@ -38,12 +38,12 @@ import java.util.Collection;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.oracle.javafx.scenebuilder.api.ui.dock.DockContext;
-import com.oracle.javafx.scenebuilder.api.ui.dock.DockType;
-import com.oracle.javafx.scenebuilder.api.ui.dock.View;
-import com.oracle.javafx.scenebuilder.api.ui.dock.ViewAttachment;
-import com.oracle.javafx.scenebuilder.api.ui.dock.ViewController;
-import com.oracle.javafx.scenebuilder.api.util.FXMLUtils;
+import com.gluonhq.jfxapps.core.api.ui.dock.DockContext;
+import com.gluonhq.jfxapps.core.api.ui.dock.DockType;
+import com.gluonhq.jfxapps.core.api.ui.dock.View;
+import com.gluonhq.jfxapps.core.api.ui.dock.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.dock.ViewController;
+import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

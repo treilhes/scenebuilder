@@ -48,6 +48,8 @@ import org.scenebuilder.fxml.api.HierarchyMask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
+import com.gluonhq.jfxapps.core.api.util.StringUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
@@ -64,8 +66,6 @@ import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata.Visibility;
 import com.gluonhq.jfxapps.core.metadata.property.value.StringPropertyMetadata;
-import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
-import com.oracle.javafx.scenebuilder.api.util.StringUtils;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;

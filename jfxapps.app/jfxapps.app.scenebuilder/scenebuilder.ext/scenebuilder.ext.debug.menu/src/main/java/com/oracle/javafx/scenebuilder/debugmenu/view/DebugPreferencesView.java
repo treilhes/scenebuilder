@@ -42,14 +42,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.preferences.ManagedDocumentPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.ManagedGlobalPreference;
-import com.oracle.javafx.scenebuilder.api.preferences.Preference;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
-import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
-import com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
+import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preferences.Preference;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.ui.ViewMenuController;
+import com.gluonhq.jfxapps.core.api.ui.dock.annotation.ViewAttachment;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;

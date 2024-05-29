@@ -34,8 +34,8 @@ package com.oracle.javafx.scenebuilder.app.settings;
 
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.api.settings.AbstractSetting;
-import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.settings.AbstractSetting;
+import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
 
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;

@@ -43,18 +43,18 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseGesture;
+import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.JobManager;
+import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.list.ColumnConstraintsListPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.api.content.gesture.AbstractMouseGesture;
-import com.oracle.javafx.scenebuilder.api.content.gesture.GestureFactory;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.job.JobManager;
-import com.oracle.javafx.scenebuilder.api.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.ModifyObjectJob;
 
 import javafx.geometry.Point2D;

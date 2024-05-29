@@ -61,7 +61,7 @@ import javax.net.ssl.X509TrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oracle.javafx.scenebuilder.api.subjects.NetworkManager;
+import com.gluonhq.jfxapps.core.api.subjects.NetworkManager;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.subjects.ReplaySubject;

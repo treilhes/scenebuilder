@@ -38,10 +38,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithDocument;
+import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.api.application.lifecycle.InitWithDocument;
-import com.oracle.javafx.scenebuilder.api.editors.ApplicationInstanceWindow;
-import com.oracle.javafx.scenebuilder.api.subjects.DocumentManager;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 

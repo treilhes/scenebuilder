@@ -35,7 +35,7 @@ package org.scenebuilder.fxml.api;
 
 import java.io.File;
 
-import com.oracle.javafx.scenebuilder.api.application.Editor;
+import com.gluonhq.jfxapps.core.api.application.Editor;
 
 import javafx.beans.value.ObservableValue;
 

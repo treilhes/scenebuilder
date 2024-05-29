@@ -37,13 +37,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.HierarchyMask;
+import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
+import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.HierarchyMask;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetProvider;
-import com.oracle.javafx.scenebuilder.api.dnd.DropTarget;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.api.util.CoordinateHelper;
 import com.oracle.javafx.scenebuilder.core.dnd.droptarget.AccessoryDropTarget;
 
 import javafx.geometry.Bounds;

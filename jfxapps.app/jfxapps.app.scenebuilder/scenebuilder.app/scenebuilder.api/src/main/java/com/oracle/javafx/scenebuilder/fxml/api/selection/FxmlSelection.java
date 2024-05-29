@@ -37,9 +37,9 @@ import java.util.Map;
 
 import org.scenebuilder.fxml.api.HierarchyMask.Accessory;
 
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 
 import javafx.scene.Node;
 import javafx.scene.control.Control;

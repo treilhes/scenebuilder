@@ -39,11 +39,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
+import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
-import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.job.editor.atomic.AddPropertyJob;

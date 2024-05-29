@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.control;
 
-import com.oracle.javafx.scenebuilder.api.content.decoration.Decoration;
+import com.gluonhq.jfxapps.core.api.content.decoration.Decoration;
 
 public interface Rudder<T> extends Decoration<T> {
 
