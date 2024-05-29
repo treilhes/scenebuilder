@@ -1,4 +1,4 @@
-package com.oracle.javafx.scenebuilder.core.clipboard;
+package com.gluonhq.jfxapps.core.clipboard;
 
 import static org.junit.Assert.assertTrue;
 

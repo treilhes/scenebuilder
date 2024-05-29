@@ -31,55 +31,46 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.core.clipboard.internal;
+
+package com.gluonhq.jfxapps.core.clipboard.internal;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.Optional;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
-import javafx.scene.image.ImageView;
-import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
 
-@ApplicationInstanceSingleton
-public class ImageDataFormat implements ClipboardDataFormat {
+/**
+ *
+ */
+@Prototype
+public class ClipboardEncoder {
 
-    @Override
-    public boolean hasDecodableContent(Clipboard clipboard) {
-        return false;
+    private final Optional<List<ClipboardDataFormat>> dataFormats;
+
+    public ClipboardEncoder(
+            Optional<List<ClipboardDataFormat>> dataFormats) {
+        this.dataFormats = dataFormats;
     }
 
-    @Override
-    public List<? extends FXOMObject> decode(Clipboard clipboard, Consumer<Exception> errorHandler) throws Exception {
-        return Collections.emptyList();
+    public boolean isEncodable(List<? extends FXOMObject> fxomObjects) {
+        return fxomObjects != null && fxomObjects.isEmpty() == false;
     }
 
-    @Override
-    public boolean isEncodable(List<? extends FXOMObject> omObjects) {
-        return omObjects != null && !omObjects.isEmpty()
-                && omObjects.get(0).getSceneGraphObject().isInstanceOf(ImageView.class);
-    }
-
-    @Override
-    public ClipboardContent encode(List<? extends FXOMObject> omObjects) {
+    public ClipboardContent makeEncoding(List<? extends FXOMObject> fxomObjects) {
+        assert isEncodable(fxomObjects);
 
         final ClipboardContent result = new ClipboardContent();
 
-        // DataFormat.IMAGE
-        final FXOMObject fxomObject0 = omObjects.get(0);
-        if (fxomObject0.getSceneGraphObject().isInstanceOf(ImageView.class)) {
-            final ImageView imageView = fxomObject0.getSceneGraphObject().getAs(ImageView.class);
-            if (imageView.getImage() != null) {
-                result.put(DataFormat.IMAGE, imageView.getImage());
-            }
-        }
+        dataFormats.orElse(Collections.emptyList()).stream()
+            .filter(d -> d.isEncodable(fxomObjects))
+            .map(d -> d.encode(fxomObjects))
+            .forEach(cc -> result.putAll(cc));
 
         return result;
     }
-
 }

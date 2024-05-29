@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -30,26 +31,39 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.core.clipboard.i18n;
+package com.gluonhq.jfxapps.core.clipboard;
 
-import java.util.ResourceBundle;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
-import org.springframework.stereotype.Component;
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.core.clipboard.controller.ClipboardController;
+import com.gluonhq.jfxapps.core.clipboard.i18n.I18NClipboard;
 
-import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
-
-@Component
-public class I18NClipboard implements BundleProvider {
-
-    private static ResourceBundle bundle;
+public class ClipboardExtension implements OpenExtension {
+    @Override
+    public UUID getId() {
+        return UUID.fromString("898396ea-fac4-4ca2-8915-72501f2d5f10");
+    }
 
     @Override
-	public synchronized ResourceBundle getBundle() {
-        if (bundle == null) {
-            final String packageName = I18NClipboard.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderClipboard"); //NOCHECK
-        }
-        return bundle;
+    public UUID getParentId() {
+        return OpenExtension.ROOT_ID;
+    }
+
+    @Override
+    public List<Class<?>> localContextClasses() {
+        return List.of();
+    }
+
+    @Override
+    public List<Class<?>> exportedContextClasses() {
+     // @formatter:off
+        return Arrays.asList(
+                ClipboardController.class,
+                I18NClipboard.class
+            );
+     // @formatter:on
     }
 }
-

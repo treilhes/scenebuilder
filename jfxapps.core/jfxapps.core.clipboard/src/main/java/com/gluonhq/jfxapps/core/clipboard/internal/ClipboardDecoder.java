@@ -32,7 +32,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.oracle.javafx.scenebuilder.core.clipboard.internal;
+package com.gluonhq.jfxapps.core.clipboard.internal;
 
 import java.util.Collections;
 import java.util.List;

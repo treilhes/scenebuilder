@@ -32,11 +32,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.oracle.javafx.scenebuilder.core.clipboard.ClipboardExtension;
+import com.gluonhq.jfxapps.core.clipboard.ClipboardExtension;
 
 open module scenebuilder.core.clipboard {
-    exports com.oracle.javafx.scenebuilder.core.clipboard;
-    exports com.oracle.javafx.scenebuilder.core.clipboard.i18n;
+    exports com.gluonhq.jfxapps.core.clipboard;
+    exports com.gluonhq.jfxapps.core.clipboard.i18n;
 
     requires jfxapps.core.api;
 
