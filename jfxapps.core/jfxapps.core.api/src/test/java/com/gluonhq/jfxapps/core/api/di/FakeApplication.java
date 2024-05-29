@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,42 +31,18 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.core.appmngr;
+package com.gluonhq.jfxapps.core.api.di;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import com.gluonhq.jfxapps.boot.context.Application;
+import com.gluonhq.jfxapps.boot.context.ApplicationInstance;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.oracle.javafx.scenebuilder.core.appmngr.impl.CommandHandlerImpl;
-import com.oracle.javafx.scenebuilder.core.appmngr.impl.InstancesControllerImpl;
+@ApplicationSingleton
+public class FakeApplication implements Application {
 
-public class AppManagerExtension implements OpenExtension {
-
-    public static final UUID ID = UUID.fromString("9ea8a33c-7743-43b0-9273-9d744b82b898");
-
-    @Override
-    public UUID getId() {
-        return ID;
+    public FakeApplication() {
+        super();
     }
 
-    @Override
-    public UUID getParentId() {
-        return OpenExtension.ROOT_ID;
-    }
-
-    @Override
-    public List<Class<?>> localContextClasses() {
-        return List.of();
-    }
-
-    @Override
-    public List<Class<?>> exportedContextClasses() {
-     // @formatter:off
-        return Arrays.asList(
-                CommandHandlerImpl.class,
-                InstancesControllerImpl.class
-            );
-     // @formatter:on
-    }
 }

@@ -30,11 +30,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.oracle.javafx.scenebuilder.core.appmngr.AppManagerExtension;
+import com.gluonhq.jfxapps.core.appmngr.AppManagerExtension;
 
 open module scenebuilder.core.appmngr {
-    exports com.oracle.javafx.scenebuilder.core.appmngr.impl;
-    exports com.oracle.javafx.scenebuilder.core.appmngr;
+    exports com.gluonhq.jfxapps.core.appmngr.impl;
+    exports com.gluonhq.jfxapps.core.appmngr;
 
     requires transitive jfxapps.core.api;
     requires jakarta.inject;

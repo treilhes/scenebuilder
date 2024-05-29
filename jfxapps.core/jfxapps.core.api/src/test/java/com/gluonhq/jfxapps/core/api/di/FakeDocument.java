@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,28 +31,23 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.core.action.editor;
+package com.gluonhq.jfxapps.core.api.di;
 
-import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.boot.context.ApplicationInstance;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyCombination.Modifier;
+@ApplicationInstanceSingleton
+public class FakeDocument implements ApplicationInstance {
 
-public class KeyboardModifier {
+    private final DocumentScopedObject documentScopedObject;
 
-	public static Modifier control() {
-		if (JfxAppsPlatform.IS_MAC) {
-	        return KeyCombination.META_DOWN;
-	    } else {
-	        // Should cover Windows, Solaris, Linux
-	    	return KeyCombination.CONTROL_DOWN;
-	    }
-	}
+    public FakeDocument(DocumentScopedObject documentScopedObject) {
+        super();
+        this.documentScopedObject = documentScopedObject;
+    }
 
-	public static String toMacAcceleratorString(String rawAccelerator) {
-		if (JfxAppsPlatform.IS_MAC) {
-			rawAccelerator = rawAccelerator.toLowerCase().replace("ctrl", "meta");
-	    }
-		return rawAccelerator;
-	}
+    public DocumentScopedObject getDocumentScopedObject() {
+        return documentScopedObject;
+    }
+
 }
