@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,10 +39,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.scenebuilder.fxml.api.Documentation;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.Glossary;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
@@ -62,8 +60,7 @@ import javafx.event.EventHandler;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Prototype
 public class FxIdEditor extends AutoSuggestEditor {
 
     private static final String PROPERTY_NAME = "fx:id";
@@ -71,7 +68,7 @@ public class FxIdEditor extends AutoSuggestEditor {
     //private Editor editorController;
     private final MessageLogger messageLog;
     private final Glossary glossary;
-    private final DocumentManager<FXOMDocument> documentManager;
+    private final DocumentManager documentManager;
 
 //    public FxIdEditor(List<String> suggestedFxIds, Editor editorController) {
 //        super(PROPERTY_NAME, DEFAULT_VALUE, suggestedFxIds); //NOCHECK
@@ -83,7 +80,7 @@ public class FxIdEditor extends AutoSuggestEditor {
             Documentation documentation,
             FileSystem fileSystem,
             Glossary glossary,
-            DocumentManager<FXOMDocument> documentManager,
+            DocumentManager documentManager,
             MessageLogger messageLogger) {
         super(dialog, documentation, fileSystem);
         this.messageLog = messageLogger;

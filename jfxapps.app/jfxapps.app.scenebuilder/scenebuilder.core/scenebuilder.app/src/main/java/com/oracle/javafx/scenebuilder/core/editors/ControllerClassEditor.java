@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,11 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.scenebuilder.fxml.api.Documentation;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.Glossary;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
@@ -59,22 +56,20 @@ import javafx.event.EventHandler;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
+@Prototype
 public class ControllerClassEditor extends AutoSuggestEditor {
 
     private static final String PROPERTY_NAME = "Controller class"; //NOCHECK
     private static final String DEFAULT_VALUE = null;
     private final Glossary glossary;
-    private final DocumentManager<FXOMDocument> documentManager;
+    private final DocumentManager documentManager;
 
     public ControllerClassEditor(
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem,
             Glossary glossary,
-            DocumentManager<FXOMDocument> documentManager) {
+            DocumentManager documentManager) {
         super(dialog, documentation, fileSystem);
         this.glossary = glossary;
         this.documentManager = documentManager;

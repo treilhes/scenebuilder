@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -282,13 +283,13 @@ public class EditorUtils {
 
     public static AnimationTimer doEndOfFrame(final Runnable callback) {
         AnimationTimer timer = new NextFrameTimer(callback, 0);
-        timer.startApplication();
+        timer.start();
         return timer;
     }
 
     public static AnimationTimer doNextFrame(final Runnable callback) {
         AnimationTimer timer = new NextFrameTimer(callback);
-        timer.startApplication();
+        timer.start();
         return timer;
     }
 

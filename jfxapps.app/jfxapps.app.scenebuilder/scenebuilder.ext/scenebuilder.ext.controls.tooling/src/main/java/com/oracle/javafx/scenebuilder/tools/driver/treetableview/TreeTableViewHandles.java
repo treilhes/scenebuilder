@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,16 +35,14 @@ package com.oracle.javafx.scenebuilder.tools.driver.treetableview;
 
 import java.util.List;
 
-import org.scenebuilder.fxml.api.Content;
+import org.scenebuilder.fxml.api.HierarchyMask;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.HierarchyMask;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
@@ -67,24 +65,22 @@ import javafx.scene.shape.Line;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Prototype
 public class TreeTableViewHandles extends AbstractNodeHandles<Node> implements InitializingBean {
 
     private final Group grips = new Group();
-	//private SceneBuilderBeanFactory context;
 	private final DesignHierarchyMask.Factory maskFactory;
     private final ResizeTreeTableColumnGesture.Factory resizeTreeTableColumnGestureFactory;
 
     public TreeTableViewHandles(
             Driver driver,
-            Content contentPanelController,
+            Workspace workspace,
             FxmlDocumentManager documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory,
             DesignHierarchyMask.Factory maskFactory,
     		ResizeTreeTableColumnGesture.Factory resizeTreeTableColumnGestureFactory) {
-        super(driver, contentPanelController, documentManager, discardGestureFactory, resizeGestureFactory, Node.class);
+        super(driver, workspace, documentManager, discardGestureFactory, resizeGestureFactory, Node.class);
         //this.context = context;
         this.maskFactory = maskFactory;
         this.resizeTreeTableColumnGestureFactory = resizeTreeTableColumnGestureFactory;
@@ -98,7 +94,7 @@ public class TreeTableViewHandles extends AbstractNodeHandles<Node> implements I
 
     @Override
     public void initialize() {
-        assert getFxomInstance().getSceneGraphObject() instanceof TreeTableView;
+        assert getFxomInstance().getSceneGraphObject().isInstanceOf(TreeTableView.class);
     }
 
     public TreeTableView<?> getTreeTableView() {

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,20 +40,14 @@ import java.util.List;
 import java.util.Stack;
 import java.util.function.Consumer;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationSingleton
 public class PropertyEditorFactory {
 
     // Map metadata class to editor class
@@ -62,11 +57,11 @@ public class PropertyEditorFactory {
     private final HashMap<Class<? extends PropertyEditor>, Stack<PropertyEditor>> editorPools;
 
     /** The spring context. */
-    private final SceneBuilderBeanFactory context;
+    private final JfxAppContext context;
 
     public PropertyEditorFactory(
-            @Autowired SceneBuilderBeanFactory context,
-            @Autowired List<EditorMapProvider> editorMapProviders
+            JfxAppContext context,
+            List<EditorMapProvider> editorMapProviders
             ) {
         this.editorPools = new HashMap<>();
         this.metadataToEditors = new HashMap<>();

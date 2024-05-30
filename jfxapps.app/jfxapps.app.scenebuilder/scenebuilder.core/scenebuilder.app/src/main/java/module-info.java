@@ -45,6 +45,7 @@ open module scenebuilder.fxml.core {
     requires transitive scenebuilder.fxml.api;
     requires transitive scenebuilder.core.extension.api;
     requires jakarta.inject;
+    requires jfxapps.core.controls;
 
     provides Extension with FxmlCoreExtensionExtension;
 }

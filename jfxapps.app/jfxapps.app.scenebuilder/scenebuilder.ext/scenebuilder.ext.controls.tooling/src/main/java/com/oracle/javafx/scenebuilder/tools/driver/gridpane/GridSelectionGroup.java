@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -49,6 +49,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.GroupFactory;
@@ -74,8 +75,7 @@ import javafx.scene.layout.RowConstraints;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Prototype
 public final class GridSelectionGroup extends AbstractSelectionGroup {
 
     static private final PropertyName rowConstraintsName = new PropertyName("rowConstraints");

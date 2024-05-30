@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,12 +35,12 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles;
 
 import java.util.List;
 
-import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
 import com.gluonhq.jfxapps.core.api.CardinalPoint;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.util.MathUtils;
@@ -99,12 +99,12 @@ public abstract class AbstractGenericHandles<T> extends AbstractHandles<T> {
 
     public AbstractGenericHandles(
             Driver driver,
-            Content contentPanelController,
+            Workspace workspace,
             FxmlDocumentManager documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory,
             Class<T> sceneGraphObjectClass) {
-        super(contentPanelController, documentManager, discardGestureFactory, sceneGraphObjectClass);
+        super(workspace, documentManager, discardGestureFactory, sceneGraphObjectClass);
         this.driver = driver;
         this.resizeGestureFactory = resizeGestureFactory;
 

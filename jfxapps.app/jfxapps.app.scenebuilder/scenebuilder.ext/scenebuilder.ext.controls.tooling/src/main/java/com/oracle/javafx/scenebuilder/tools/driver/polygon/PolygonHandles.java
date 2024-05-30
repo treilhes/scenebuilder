@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,14 +38,12 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
-import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.Gesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractCurveHandles;
@@ -65,8 +63,7 @@ import javafx.scene.shape.Polygon;
 * in the Editor<br>
 * Subclasses will use the same handles until a more specialized one has been registered
 */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Prototype
 public class PolygonHandles extends AbstractCurveHandles<Polygon> {
 
     private final List<Circle> verticesHandle = new ArrayList<>();
@@ -75,12 +72,12 @@ public class PolygonHandles extends AbstractCurveHandles<Polygon> {
     private final EditCurveGesture.Factory editCurveGestureFactory;
 
     public PolygonHandles(
-            Content contentPanelController,
+            Workspace workspace,
             FxmlDocumentManager documentManager,
             DiscardGesture.Factory discardGestureFactory,
             EditCurveGesture.Factory editCurveGestureFactory
     		) {
-        super(contentPanelController, documentManager, discardGestureFactory, Polygon.class);
+        super(workspace, documentManager, discardGestureFactory, Polygon.class);
 
         this.editCurveGestureFactory = editCurveGestureFactory;
     }

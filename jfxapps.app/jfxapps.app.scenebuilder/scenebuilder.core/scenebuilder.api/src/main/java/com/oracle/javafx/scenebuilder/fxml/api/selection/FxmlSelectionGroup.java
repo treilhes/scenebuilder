@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,7 +39,6 @@ import java.util.Set;
 
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.api.om.OMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
@@ -71,6 +70,7 @@ public interface FxmlSelectionGroup extends SelectionGroup, Cloneable {
      * @param fxomDocument the owner document
      * @return true if all the selected {@link FXOMObject} are part of the provided {@link FXOMDocument}
      */
+    @Override
     public boolean isValid(FXOMDocument fxomDocument);
     /**
      * Get the collection of all the selected objects in the group

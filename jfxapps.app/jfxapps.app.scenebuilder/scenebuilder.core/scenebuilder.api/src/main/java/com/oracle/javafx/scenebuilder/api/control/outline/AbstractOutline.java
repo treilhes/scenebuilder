@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,10 +36,10 @@ package com.oracle.javafx.scenebuilder.api.control.outline;
 
 import java.util.List;
 
-import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
 import com.gluonhq.jfxapps.core.api.content.decoration.AbstractDecoration;
+import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -64,10 +64,10 @@ public abstract class AbstractOutline<T> extends AbstractDecoration<T> implement
     private final LineTo lineTo3 = new LineTo();
 
     public AbstractOutline(
-            Content contentPanelController,
+            Workspace workspace,
             FxmlDocumentManager documentManager,
             Class<T> sceneGraphClass) {
-        super(contentPanelController, documentManager, sceneGraphClass);
+        super(workspace, documentManager, sceneGraphClass);
 
         final List<PathElement> ringElements = ringPath.getElements();
         ringElements.add(moveTo0);

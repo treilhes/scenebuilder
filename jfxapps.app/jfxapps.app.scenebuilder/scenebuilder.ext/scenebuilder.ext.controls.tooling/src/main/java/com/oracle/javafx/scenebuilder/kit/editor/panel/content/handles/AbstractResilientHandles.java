@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,10 +34,10 @@
 
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles;
 
-import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 
@@ -53,12 +53,12 @@ public abstract class AbstractResilientHandles<T> extends AbstractGenericHandles
 
     public AbstractResilientHandles(
             Driver driver,
-            Content contentPanelController,
+            Workspace workspace,
             FxmlDocumentManager documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory,
             Class<T> sceneGraphObjectClass) {
-        super(driver, contentPanelController, documentManager, discardGestureFactory, resizeGestureFactory, sceneGraphObjectClass);
+        super(driver, workspace, documentManager, discardGestureFactory, resizeGestureFactory, sceneGraphObjectClass);
         getRootNode().setVisible(false);
     }
 

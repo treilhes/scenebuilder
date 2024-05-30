@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,7 +35,7 @@ package com.oracle.javafx.scenebuilder.api.control;
 
 import com.gluonhq.jfxapps.core.api.Gesture;
 import com.gluonhq.jfxapps.core.api.content.decoration.Decoration;
-import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.scene.Node;
@@ -52,5 +53,5 @@ public interface Handles<T> extends Decoration<T> {
 
 	Gesture findEnabledGesture(Node hitNode);
 
-	void update(AbstractSelectionGroup selectionGroup);
+	void update(SelectionGroup selectionGroup);
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,14 +35,14 @@ package com.oracle.javafx.scenebuilder.api.control.handles;
 
 import java.net.URL;
 
-import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
 import com.gluonhq.jfxapps.core.api.Gesture;
 import com.gluonhq.jfxapps.core.api.content.decoration.AbstractDecoration;
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture.Factory;
-import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 
 import javafx.scene.Node;
@@ -70,11 +70,11 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> implement
     protected final Factory discardGestureFactory;
 
     public AbstractHandles(
-            Content content,
+            Workspace workspace,
             FxmlDocumentManager documentManager,
             DiscardGesture.Factory discardGestureFactory,
             Class<T> sceneGraphClass) {
-        super(content, documentManager, sceneGraphClass);
+        super(workspace, documentManager, sceneGraphClass);
         this.discardGestureFactory = discardGestureFactory;
     }
 
@@ -170,7 +170,7 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> implement
     }
 
     @Override
-    public void update(AbstractSelectionGroup selectionGroup) {
+    public void update(SelectionGroup selectionGroup) {
 
     }
 

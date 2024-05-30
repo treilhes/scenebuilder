@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -45,8 +45,8 @@ import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.dock.Dock;
-import com.gluonhq.jfxapps.core.api.ui.dock.DockViewController;
 import com.gluonhq.jfxapps.core.api.ui.dock.Dock.Orientation;
+import com.gluonhq.jfxapps.core.api.ui.dock.DockViewController;
 import com.gluonhq.jfxapps.core.api.ui.menu.MenuBar;
 import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.misc.MessageBar;

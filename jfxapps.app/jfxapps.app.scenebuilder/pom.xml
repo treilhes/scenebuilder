@@ -23,10 +23,16 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- scenebuilder.app -->
+            <!-- scenebuilder.core -->
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.app</artifactId>
                 <version>${project.version}</version>
             </dependency>
             
@@ -45,12 +51,6 @@
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.clipboard</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.core</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -80,6 +80,12 @@
 
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.metadata</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.metadata.javafx15</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -97,16 +103,6 @@
             </dependency>
 
             <!-- scenebuilder;ext -->
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.ext.editor.fxml</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.ext.editor.script</artifactId>
-                <version>${project.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.ext.control.library</artifactId>
@@ -139,7 +135,29 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.defaultx</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.ext.document</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.dummy</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.editor.fxml</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.editor.script</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -156,11 +174,6 @@
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.ext.glossary</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.ext.gluon</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -190,6 +203,17 @@
                 <artifactId>scenebuilder.ext.script</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.script.graalvm-javascript</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.script.graalvm-javascript-rt</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.ext.source.gen</artifactId>
@@ -209,6 +233,17 @@
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.ext.welcome</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- scenebuilder.gluon -->
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.gluon</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.metadata.gluon</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

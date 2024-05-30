@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -68,30 +68,26 @@ package org.scenebuilder.fxml.api.subjects;
  */
 
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SubjectItem;
 import com.gluonhq.jfxapps.core.api.subjects.SubjectManager;
-import com.gluonhq.jfxapps.core.api.theme.StylesheetProvider;
 import com.gluonhq.jfxapps.core.api.ui.AbstractCommonUiController;
 import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlViewController;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
 
-import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subjects.ReplaySubject;
+import io.reactivex.rxjava3.subjects.PublishSubject;
+import io.reactivex.rxjava3.subjects.ReplaySubject;
 import javafx.beans.value.ChangeListener;
 
 public interface FxmlDocumentManager extends DocumentManager {
 
 
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+    @ApplicationInstanceSingleton
     public class FxmlDocumentManagerImpl implements InitializingBean, FxmlDocumentManager {
 
         private final DocumentManager documentManager;

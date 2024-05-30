@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,8 +40,6 @@ import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.menu.action.AbstractToggleMinimizeDockAction;
-import com.gluonhq.jfxapps.core.menu.action.view.ToggleMinimizeLeftDockAction;
 
 @Prototype
 @ActionMeta(nameKey = "action.name.toggle.dock", descriptionKey = "action.description.toggle.dock")

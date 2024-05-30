@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,15 +35,13 @@ package com.oracle.javafx.scenebuilder.tools.driver.scene;
 
 import java.util.List;
 
-import org.scenebuilder.fxml.api.Content;
+import org.scenebuilder.fxml.api.HierarchyMask;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.HierarchyMask;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
@@ -55,8 +53,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Prototype
 public class SceneHandles extends AbstractGenericHandles<Scene> {
     private Node sceneGraphObject;
     private FXOMObject root;
@@ -64,12 +61,12 @@ public class SceneHandles extends AbstractGenericHandles<Scene> {
 
     public SceneHandles(
             Driver driver,
-            Content contentPanelController,
+            Workspace workspace,
             FxmlDocumentManager documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory,
             @Autowired DesignHierarchyMask.Factory maskFactory) {
-        super(driver, contentPanelController, documentManager, discardGestureFactory, resizeGestureFactory, Scene.class);
+        super(driver, workspace, documentManager, discardGestureFactory, resizeGestureFactory, Scene.class);
         this.maskFactory = maskFactory;
     }
 
@@ -83,8 +80,8 @@ public class SceneHandles extends AbstractGenericHandles<Scene> {
 
         assert root != null;
         assert root instanceof FXOMInstance;
-        assert root.getSceneGraphObject() instanceof Node;
-        sceneGraphObject = (Node) root.getSceneGraphObject();
+        assert root.getSceneGraphObject().isNode();
+        sceneGraphObject = root.getSceneGraphObject().getAs(Node.class);
 
     }
 

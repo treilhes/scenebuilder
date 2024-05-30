@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -62,7 +62,7 @@ import javafx.util.Duration;
  */
 public abstract class AbstractPropertiesEditor extends AbstractEditor {
 
-    private ValuePropertyMetadata propMeta = null;
+    private ValuePropertyMetadata<?> propMeta = null;
     private final HBox nameNode;
     private MenuButton menu;
     private final MenuItem resetvalueMenuItem = new MenuItem(I18N.getString("inspector.editors.resetvalue"));
@@ -132,7 +132,7 @@ public abstract class AbstractPropertiesEditor extends AbstractEditor {
         boolean allDefault = true;
         for (AbstractPropertyEditor propertyEditor : getPropertyEditors()) {
             Object value = propertyEditor.valueProperty().getValue();
-            ValuePropertyMetadata propMeta = propertyEditor.getPropertyMeta();
+            ValuePropertyMetadata<?> propMeta = propertyEditor.getPropertyMeta();
             if (value == null) {
                 if (!(propMeta.getDefaultValueObject() == null)) {
                     allDefault = false;
@@ -188,11 +188,11 @@ public abstract class AbstractPropertiesEditor extends AbstractEditor {
     }
 
     @Override
-    public void reset(ValuePropertyMetadata propMeta, SelectionState selectionState) {
+    public void reset(ValuePropertyMetadata<?> propMeta, SelectionState selectionState) {
         assert propMeta instanceof PropertyGroupMetadata;
 
         List<AbstractPropertyEditor> editors = getPropertyEditors();
-        PropertyGroupMetadata pgm = (PropertyGroupMetadata)propMeta;
+        PropertyGroupMetadata<?> pgm = (PropertyGroupMetadata<?>)propMeta;
 
         assert editors.size() == pgm.getProperties().length;
 
@@ -201,7 +201,7 @@ public abstract class AbstractPropertiesEditor extends AbstractEditor {
         for (int i=0;i < editors.size(); i++) {
             AbstractPropertyEditor editor = editors.get(i);
             if (editor.getPropertyMeta() != null) {
-                ValuePropertyMetadata prop = pgm.getPropertiesMap().get(editor.getPropertyMeta().getName().getName());
+                ValuePropertyMetadata<?> prop = pgm.getPropertiesMap().get(editor.getPropertyMeta().getName().getName());
 
                 assert prop != null;
                 editor.reset(prop, selectionState);
@@ -212,7 +212,7 @@ public abstract class AbstractPropertiesEditor extends AbstractEditor {
     }
 
     @Override
-    public ValuePropertyMetadata getPropertyMeta() {
+    public ValuePropertyMetadata<?> getPropertyMeta() {
         return propMeta;
     }
 

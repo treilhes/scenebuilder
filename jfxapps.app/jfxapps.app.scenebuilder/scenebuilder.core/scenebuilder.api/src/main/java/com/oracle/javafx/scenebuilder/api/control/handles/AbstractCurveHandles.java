@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,10 +33,10 @@
  */
 package com.oracle.javafx.scenebuilder.api.control.handles;
 
-import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.beans.value.ChangeListener;
@@ -51,10 +51,10 @@ import javafx.scene.Node;
 public abstract class AbstractCurveHandles<T extends Node> extends AbstractHandles<T> {
 
     public AbstractCurveHandles(
-            Content contentPanelController,
+            Workspace workspace,
             FxmlDocumentManager documentManager,
             DiscardGesture.Factory discardGestureFactory, Class<T> sceneGraphClass) {
-        super(contentPanelController, documentManager, discardGestureFactory, sceneGraphClass);
+        super(workspace, documentManager, discardGestureFactory, sceneGraphClass);
     }
 
     protected final ChangeListener<Number> coordinateListener

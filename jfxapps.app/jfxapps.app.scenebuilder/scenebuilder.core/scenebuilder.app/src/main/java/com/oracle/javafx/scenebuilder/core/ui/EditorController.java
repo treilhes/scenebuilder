@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,18 +34,13 @@
 package com.oracle.javafx.scenebuilder.core.ui;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Locale;
-import java.util.ResourceBundle;
-
-import org.scenebuilder.fxml.api.Editor;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.application.Editor;
 import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithDocument;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
@@ -58,14 +53,11 @@ import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
-import com.gluonhq.jfxapps.core.fxom.FXOMAssetIndex;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
-import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
