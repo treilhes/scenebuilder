@@ -31,19 +31,40 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.api.metadata;
+package com.oracle.javafx.scenebuilder.metadata;
 
-import java.util.List;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization;
 
-import com.gluonhq.jfxapps.core.metadata.MetadataIntrospector;
-import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
+/**
+ *
+ *
+ */
+public class CustomComponentClassMetadata<T> extends SbComponentClassMetadata<T> {
 
-public abstract class AbstractMetadata<CC, CPC, VPC>
-        extends com.gluonhq.jfxapps.core.metadata.AbstractMetadata<CC, CPC, VPC> implements Metadata<CC, CPC, VPC> {
+    private final Exception introspectionException;
 
-    protected AbstractMetadata(List<ComponentClassMetadata<?, CC, CPC, VPC>> componentClassMetadatas,
-            MetadataIntrospector<CC, CPC, VPC> metadataIntrospector) {
-        super(componentClassMetadatas, metadataIntrospector);
+    public CustomComponentClassMetadata(Class<T> klass, SbComponentClassMetadata<?> parentMetadata, ComponentClassMetadataCustomization customization, Exception introspectionException) {
+        super(klass, parentMetadata, customization);
+        this.introspectionException = introspectionException;
     }
+
+    public Exception getIntrospectionException() {
+        return introspectionException;
+    }
+
+    /*
+     * Object
+     */
+
+    @Override
+    public int hashCode() {
+        return super.hashCode(); // Only to please FindBugs
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj); // Only to please FindBugs
+    }
+
 
 }

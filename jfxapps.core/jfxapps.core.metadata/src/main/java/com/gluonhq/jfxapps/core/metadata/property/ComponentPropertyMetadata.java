@@ -43,11 +43,12 @@ import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
  * This class describes a property used as a placeholder for other component
  *
  */
-public class ComponentPropertyMetadata<PC> extends PropertyMetadata<PC> {
+public class ComponentPropertyMetadata<PC, CCM extends ComponentClassMetadata> extends PropertyMetadata<PC> {
 
     /** The class metadata of the owner component. */
-    private final ComponentClassMetadata<?, ?, PC, ?> classMetadata;
+    private final CCM classMetadata;
 
+    //T, CC, CPC, VPC, P extends ComponentClassMetadata<?, CC, CPC, VPC, P>
     /** Does this placeholder accept a collection of components. */
     private final boolean collection;
 
@@ -56,7 +57,7 @@ public class ComponentPropertyMetadata<PC> extends PropertyMetadata<PC> {
 
     private Set<PropertyName> disabledChildProperties = new HashSet<>();
 
-    protected ComponentPropertyMetadata(AbstractBuilder<?, ?, PC> builder) {
+    protected ComponentPropertyMetadata(AbstractBuilder<?, ?, PC, CCM> builder) {
         super(builder);
         this.classMetadata = builder.classMetadata;
         this.collection = builder.collection;
@@ -69,7 +70,7 @@ public class ComponentPropertyMetadata<PC> extends PropertyMetadata<PC> {
      *
      * @return the owner component metadata
      */
-    public ComponentClassMetadata<?, ?, PC, ?> getClassMetadata() {
+    public CCM getClassMetadata() {
         return classMetadata;
     }
 
@@ -86,7 +87,7 @@ public class ComponentPropertyMetadata<PC> extends PropertyMetadata<PC> {
         return main;
     }
 
-    public ComponentPropertyMetadata<PC> disableChildProperty(PropertyName propertyName) {
+    public ComponentPropertyMetadata<PC, CCM> disableChildProperty(PropertyName propertyName) {
         if (!disabledChildProperties.contains(propertyName)) {
             disabledChildProperties.add(propertyName);
         }
@@ -118,10 +119,10 @@ public class ComponentPropertyMetadata<PC> extends PropertyMetadata<PC> {
         return super.equals(obj);
     }
 
-    protected static abstract class AbstractBuilder<SELF, TOBUILD, PC>
+    protected static abstract class AbstractBuilder<SELF, TOBUILD, PC, CCM extends ComponentClassMetadata>
             extends PropertyMetadata.AbstractBuilder<SELF, TOBUILD, PC> {
         /** The class metadata of the owner component. */
-        protected ComponentClassMetadata<?, ?, PC, ?> classMetadata;
+        protected CCM classMetadata;
 
         /** Does this placeholder accept a collection of components. */
         protected boolean collection;
@@ -135,7 +136,7 @@ public class ComponentPropertyMetadata<PC> extends PropertyMetadata<PC> {
             super();
         }
 
-        protected SELF classMetadata(ComponentClassMetadata<?, ?, PC, ?> classMetadata) {
+        protected SELF classMetadata(CCM classMetadata) {
             this.classMetadata = classMetadata;
             return self();
         }
@@ -156,30 +157,30 @@ public class ComponentPropertyMetadata<PC> extends PropertyMetadata<PC> {
         }
     }
 
-    public static final class Builder<PC> extends AbstractBuilder<Builder<PC>, ComponentPropertyMetadata<PC>, PC> {
+    public static final class Builder<PC, CCM extends ComponentClassMetadata> extends AbstractBuilder<Builder<PC, CCM>, ComponentPropertyMetadata<PC, CCM>, PC, CCM> {
 
         @Override
-        public Builder<PC> classMetadata(ComponentClassMetadata<?, ?, PC, ?> classMetadata) {
+        public Builder<PC, CCM> classMetadata(CCM classMetadata) {
             return super.classMetadata(classMetadata);
         }
 
         @Override
-        public Builder<PC> isCollection(boolean isCollection) {
+        public Builder<PC, CCM> isCollection(boolean isCollection) {
             return super.isCollection(isCollection);
         }
 
         @Override
-        public Builder<PC> isMain(boolean isMain) {
+        public Builder<PC, CCM> isMain(boolean isMain) {
             return super.isMain(isMain);
         }
         @Override
-        public Builder<PC> disableChildProperties(Set<PropertyName> disabledPropertyNames) {
+        public Builder<PC, CCM> disableChildProperties(Set<PropertyName> disabledPropertyNames) {
             return super.disableChildProperties(disabledPropertyNames);
         }
 
         @Override
-        public ComponentPropertyMetadata<PC> build() {
-            return new ComponentPropertyMetadata<PC>(this);
+        public ComponentPropertyMetadata<PC, CCM> build() {
+            return new ComponentPropertyMetadata<PC, CCM>(this);
         }
     }
 }

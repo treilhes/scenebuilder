@@ -107,14 +107,17 @@ public class MetadataSourceMojo extends JfxAppsAbstractMojo {
     @Parameter(property = "templateForStaticValuePropertyCustomization", required = false, defaultValue = "")
     String templateForStaticValuePropertyCustomization = "";
 
-    @Parameter(property = "targetComponentCustomizationClass", required = false, defaultValue = "")
-    String targetComponentCustomizationClass = "";
+    @Parameter(property = "targetComponentSuperClass", required = false)
+    String targetComponentSuperClass;
 
-    @Parameter(property = "targetComponentPropertyCustomizationClass", required = false, defaultValue = "")
-    String targetComponentPropertyCustomizationClass = "";
+    @Parameter(property = "targetComponentCustomizationClass", required = false)
+    String targetComponentCustomizationClass;
 
-    @Parameter(property = "targetValuePropertyCustomizationClass", required = false, defaultValue = "")
-    String targetValuePropertyCustomizationClass = "";
+    @Parameter(property = "targetComponentPropertyCustomizationClass", required = false)
+    String targetComponentPropertyCustomizationClass;
+
+    @Parameter(property = "targetValuePropertyCustomizationClass", required = false)
+    String targetValuePropertyCustomizationClass;
 
     /**
      * Default constructor.
@@ -235,6 +238,8 @@ public class MetadataSourceMojo extends JfxAppsAbstractMojo {
         javaContext.setStaticValuePropertyCustomizationTemplate(templateForStaticValuePropertyCustomization);
         javaContext.setComponentConstructorCustomizationTemplate(templateForComponentConstructorCustomization);
 
+
+        javaContext.setTargetComponentSuperClass(targetComponentSuperClass);
         javaContext.setTargetComponentCustomizationClass(targetComponentCustomizationClass);
         javaContext.setTargetComponentPropertyCustomizationClass(targetComponentPropertyCustomizationClass);
         javaContext.setTargetValuePropertyCustomizationClass(targetValuePropertyCustomizationClass);

@@ -46,6 +46,7 @@ import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.SbComponentClassMetadata;
 
 import javafx.scene.Node;
 
@@ -55,16 +56,16 @@ import javafx.scene.Node;
  */
 public class ComponentClassMetadataCustomization {
 
-    public static final Comparator<ComponentPropertyMetadata<ComponentPropertyMetadataCustomization>> COMPARATOR =
-            Comparator
-            .comparing((ComponentPropertyMetadata<ComponentPropertyMetadataCustomization> p) -> p.getCustomization().getOrder())
-            .thenComparing((ComponentPropertyMetadata<ComponentPropertyMetadataCustomization> p) -> p.getName().getName());
+    public static final Comparator<ComponentPropertyMetadata<ComponentPropertyMetadataCustomization, ?>> COMPARATOR = Comparator
+            .<ComponentPropertyMetadata<ComponentPropertyMetadataCustomization, ?>, Integer>comparing(
+                    p -> p.getCustomization().getOrder())
+            .thenComparing(p -> p.getName().getName());
 
     /** The component properties component subset. */
     private final Map<String, Qualifier> qualifiers = new HashMap<>();
 
     /** The free child positioning flag. default false */
-    private final Map<ComponentPropertyMetadata<ComponentPropertyMetadataCustomization>, Boolean> freeChildPositioning = new HashMap<>();
+    private final Map<ComponentPropertyMetadata<ComponentPropertyMetadataCustomization, SbComponentClassMetadata<?>>, Boolean> freeChildPositioning = new HashMap<>();
 
     /** true if the component deserves a resizing using predefined size when set as root element of the document. default: true */
     private boolean resizeNeededWhenTopElement = true;
@@ -76,16 +77,16 @@ public class ComponentClassMetadataCustomization {
     private LabelMutation labelMutation = null;
 
     /** if set operate a custom mutation on the original string */
-    private final Map<ComponentPropertyMetadata<ComponentPropertyMetadataCustomization>, ChildLabelMutation> childLabelMutations = new HashMap<>();
+    private final Map<ComponentPropertyMetadata<ComponentPropertyMetadataCustomization, SbComponentClassMetadata<?>>, ChildLabelMutation> childLabelMutations = new HashMap<>();
 
-    private ComponentClassMetadata<?, ComponentClassMetadataCustomization, ?, ?> owner;
+    private SbComponentClassMetadata<?> owner;
 
 
     public ComponentClassMetadataCustomization() {
         super();
     }
 
-    public void setOwner(ComponentClassMetadata<?, ComponentClassMetadataCustomization, ?, ?> owner) {
+    public void setOwner(SbComponentClassMetadata<?> owner) {
         this.owner = owner;
     }
 
@@ -103,8 +104,8 @@ public class ComponentClassMetadataCustomization {
      *
      * @return true, if is free child positioning
      */
-    public boolean isFreeChildPositioning(ComponentPropertyMetadata<ComponentPropertyMetadataCustomization> componentProperty) {
-        ComponentClassMetadata<?, ComponentClassMetadataCustomization, ?, ?> current = owner;
+    public boolean isFreeChildPositioning(ComponentPropertyMetadata<ComponentPropertyMetadataCustomization, ? extends SbComponentClassMetadata<?>> componentProperty) {
+        var current = owner;
 
         while (current != null && !current.getCustomization().freeChildPositioning.containsKey(componentProperty)) {
             current = owner.getParentMetadata();
@@ -131,7 +132,7 @@ public class ComponentClassMetadataCustomization {
      * @return the property name or null if none found
      */
     public PropertyName getDescriptionProperty() {
-        ComponentClassMetadata<?, ComponentClassMetadataCustomization, ?, ?> current = owner;
+        var current = owner;
 
         while (current != null && current.getCustomization().descriptionProperty == null ) {
             current = current.getParentMetadata();
@@ -326,17 +327,17 @@ public class ComponentClassMetadataCustomization {
         return this;
     }
 
-    public ChildLabelMutation getChildLabelMutations(ComponentPropertyMetadata<ComponentPropertyMetadataCustomization> cmp) {
+    public ChildLabelMutation getChildLabelMutations(ComponentPropertyMetadata<ComponentPropertyMetadataCustomization, SbComponentClassMetadata<?>> cmp) {
         return childLabelMutations.get(cmp);
     }
 
-    protected ComponentClassMetadataCustomization setChildLabelMutation(ComponentPropertyMetadata<ComponentPropertyMetadataCustomization> cmp, ChildLabelMutation labelMutation) {
+    protected ComponentClassMetadataCustomization setChildLabelMutation(ComponentPropertyMetadata<ComponentPropertyMetadataCustomization, SbComponentClassMetadata<?>> cmp, ChildLabelMutation labelMutation) {
         assert owner.getAllSubComponentProperties().contains(cmp);
         childLabelMutations.put(cmp, labelMutation);
         return this;
     }
 
-    public void setFreeChildPositioning(ComponentPropertyMetadata<ComponentPropertyMetadataCustomization> componentProperty, boolean freeChildPositioning) {
+    public void setFreeChildPositioning(ComponentPropertyMetadata<ComponentPropertyMetadataCustomization, SbComponentClassMetadata<?>> componentProperty, boolean freeChildPositioning) {
         this.freeChildPositioning.put(componentProperty, freeChildPositioning);
     }
 

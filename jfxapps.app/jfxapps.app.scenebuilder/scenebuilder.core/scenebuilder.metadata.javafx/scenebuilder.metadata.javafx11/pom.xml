@@ -30,7 +30,6 @@
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>scenebuilder.metadata</artifactId>
-            <version>${scenebuilder.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -167,6 +166,7 @@
                     <templateForValuePropertyCustomization>/_templates/CustomizeValueProperty.ftl</templateForValuePropertyCustomization>
                     <templateForStaticValuePropertyCustomization>/_templates/CustomizeStaticValueProperty.ftl</templateForStaticValuePropertyCustomization>
                     
+                    <targetComponentSuperClass>com.oracle.javafx.scenebuilder.metadata.SbComponentClassMetadata</targetComponentSuperClass>
                     <targetComponentCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization</targetComponentCustomizationClass>
                     <targetComponentPropertyCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custom.ComponentPropertyMetadataCustomization</targetComponentPropertyCustomizationClass>
                     <targetValuePropertyCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization</targetValuePropertyCustomizationClass>
@@ -180,8 +180,8 @@
                     </dependency>
                     <dependency>
                         <groupId>com.gluonhq.jfxapps</groupId>
-                        <artifactId>jfxapps.core.metadata</artifactId>
-                        <version>${jfxapps.version}</version>
+                        <artifactId>scenebuilder.metadata</artifactId>
+                        <version>${scenebuilder.version}</version>
                         <exclusions>
                             <exclusion>
                                 <groupId>com.gluonhq.jfxapps</groupId>

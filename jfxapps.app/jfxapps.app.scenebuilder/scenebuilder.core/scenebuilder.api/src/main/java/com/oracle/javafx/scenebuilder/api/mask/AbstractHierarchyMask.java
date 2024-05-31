@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -58,14 +58,15 @@ import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
-import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata.ChildLabelMutation;
-import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata.Qualifier;
 import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata.Visibility;
+import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.StringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.SbComponentClassMetadata;
+import com.oracle.javafx.scenebuilder.metadata.SbMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentPropertyMetadataCustomization;
+import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -76,19 +77,18 @@ import javafx.scene.image.Image;
 public abstract class AbstractHierarchyMask implements HierarchyMask {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractHierarchyMask.class);
-
     private FXOMObject fxomObject;
     private List<Accessory> accessories;
     private Accessory mainAccessory;
-    private Set<ComponentPropertyMetadata> subComponents;
-    private ComponentClassMetadata<?> componentClassMetadata;
-    private final IMetadata metadata;
+    private Set<? extends ComponentPropertyMetadata<ComponentPropertyMetadataCustomization, ? extends SbComponentClassMetadata<?>>> subComponents;
+    private SbComponentClassMetadata<?> componentClassMetadata;
+    private final SbMetadata metadata;
 
-    protected AbstractHierarchyMask(IMetadata metadata) {
+    protected AbstractHierarchyMask(SbMetadata metadata) {
         this.metadata = metadata;
     }
 
-    protected IMetadata getMetadata() {
+    protected SbMetadata getMetadata() {
         return metadata;
     }
 
@@ -113,7 +113,7 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
                 .map(cpm -> new AccessoryImpl(this.componentClassMetadata, cpm))
                 .collect(Collectors.toList());
 
-            ComponentPropertyMetadata mainComponent = componentClassMetadata.getMainComponentProperty();
+            var mainComponent = componentClassMetadata.getMainComponentProperty();
             mainAccessory = mainComponent == null ? null : new AccessoryImpl(this.componentClassMetadata, mainComponent);
 
             this.accessories.remove(mainAccessory);
@@ -121,8 +121,8 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
         } else {
             logger.warn("FxomObject [{}] has metadata class", componentClassMetadata.getClass());
             this.mainAccessory = null;
-            this.subComponents = new HashSet<ComponentPropertyMetadata>();
-            this.accessories = new ArrayList<HierarchyMask.Accessory>();
+            this.subComponents = new HashSet<>();
+            this.accessories = new ArrayList<>();
         }
     }
 
@@ -151,7 +151,7 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
      * @return true, if is a {@link Node}
      */
     public boolean isFxNode() {
-        return fxomObject.getSceneGraphObject() instanceof Node;
+        return fxomObject.getSceneGraphObject().isNode();
     }
 
     /**
@@ -163,7 +163,7 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
     public FXOMObject getClosestFxNode() {
         FXOMObject result = fxomObject;
 
-        while ((result != null) && !(result.getSceneGraphObject() instanceof Node)) {
+        while (result != null && !result.getSceneGraphObject().isNode()) {
             result = result.getParentObject();
         }
 
@@ -174,8 +174,8 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
         final Object sceneGraphObject;
 
         if (fxomObject.isVirtual() || fxomObject instanceof FXOMIntrinsic) {
-            ComponentClassMetadata<?> cm = metadata.queryComponentMetadata(fxomObject.getClass());
-            return cm.applicableQualifiers(fxomObject).stream().findFirst().orElse(Qualifier.UNKNOWN);
+            var cm = metadata.queryComponentMetadata(fxomObject.getClass());
+            return cm.getCustomization().applicableQualifiers(fxomObject).stream().findFirst().orElse(Qualifier.UNKNOWN);
 //        }
 //        // For FXOMIntrinsic, we use the source sceneGraphObject
 //        else if (fxomObject instanceof FXOMIntrinsic) {
@@ -189,9 +189,9 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
             return null;
         }
 
-        ComponentClassMetadata<?> cm = metadata.queryComponentMetadata(sceneGraphObject.getClass());
+        var cm = metadata.queryComponentMetadata(sceneGraphObject.getClass());
 
-        return cm.applicableQualifiers(sceneGraphObject).stream().findFirst().orElse(Qualifier.UNKNOWN);
+        return cm.getCustomization().applicableQualifiers(sceneGraphObject).stream().findFirst().orElse(Qualifier.UNKNOWN);
 
     }
     @Override
@@ -242,18 +242,21 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
 //                prefix += "FXML "; //NOCHECK
 //            }
         } else {
-            sceneGraphObject = fxomObject.getSceneGraphObject();
+            sceneGraphObject = fxomObject.getSceneGraphObject().get();
         }
 
         if (sceneGraphObject == null && sceneGraphObject instanceof Node) {
             final Node node = (Node) sceneGraphObject;
             classNameInfo = prefix + sceneGraphObject.getClass().getSimpleName() + suffix;
 
-            if (componentClassMetadata.getLabelMutation() != null) {
-                classNameInfo = componentClassMetadata.getLabelMutation().mutate(classNameInfo, sceneGraphObject);
+            var parentMetadata = componentClassMetadata.getParentMetadata();
+            var labelMutation = componentClassMetadata.getCustomization().getLabelMutation();
+            if (labelMutation != null) {
+                classNameInfo = labelMutation.mutate(classNameInfo, sceneGraphObject);
             }
-            if (accessory != null && componentClassMetadata.getParentMetadata() != null) {
-                ChildLabelMutation childMutation = componentClassMetadata.getParentMetadata().getChildLabelMutations(accessory.getPropertyMetadata());
+            if (accessory != null && parentMetadata != null) {
+                var parentCutomization = parentMetadata.getCustomization();
+                var childMutation = parentCutomization.getChildLabelMutations(accessory.getPropertyMetadata());
                 if (childMutation != null) {
                     classNameInfo = childMutation.mutate(classNameInfo, node.getParent(), node);
                 }
@@ -273,14 +276,15 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
      */
     @Override
     public String getDescription() {
-        final PropertyName propertyName = getPropertyNameForDescription();
+        final var propertyName = getPropertyNameForDescription();
         if (propertyName != null) { // (1)
 
             assert propertyName != null; // Because of (1)
             assert fxomObject instanceof FXOMElement;
-            final FXOMElement fxomElement = (FXOMElement) fxomObject;
-            final ValuePropertyMetadata vpm = metadata.queryValueProperty(fxomElement, propertyName);
-            final Object description = vpm.getValueInSceneGraphObject(fxomElement); // resolved value
+
+            final var fxomElement = (FXOMElement) fxomObject;
+            final var vpm = metadata.queryValueProperty(fxomElement, propertyName);
+            final var description = vpm.getValueInSceneGraphObject(fxomElement); // resolved value
             return description == null ? null : description.toString();
         }
         return null;
@@ -304,9 +308,9 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
     public Object getNodeIdValue() {
         Object result = null;
         if (fxomObject instanceof FXOMElement) {
-            final FXOMElement fxomElement = (FXOMElement) fxomObject;
-            final PropertyName propertyName = new PropertyName("id"); //NOCHECK
-            final ValuePropertyMetadata vpm = metadata.queryValueProperty(fxomElement, propertyName);
+            final var fxomElement = (FXOMElement) fxomObject;
+            final var propertyName = new PropertyName("id"); //NOCHECK
+            final var vpm = metadata.queryValueProperty(fxomElement, propertyName);
             result = vpm.getValueObject(fxomElement);
         }
         return result;
@@ -331,8 +335,8 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
     public String getFxId() {
         String result = null;
         if (fxomObject instanceof FXOMElement) { // Can be null for place holder items
-            final FXOMElement fxomElement = (FXOMElement) fxomObject;
-            final String fxId = fxomElement.getFxId();
+            final var fxomElement = (FXOMElement) fxomObject;
+            final var fxId = fxomElement.getFxId();
             result = fxId == null ? "" : fxId; //NOCHECK
         }
         return result;
@@ -439,13 +443,13 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
         assert isAcceptingAccessory(accessory);
         assert fxomObject instanceof FXOMElement;
 
-        final FXOMElement fxomElement = (FXOMElement) fxomObject;
-        final PropertyName propertyName = getPropertyNameForAccessory(accessory);
-        final FXOMProperty fxomProperty = fxomElement.getProperties().get(propertyName);
+        final var fxomElement = (FXOMElement) fxomObject;
+        final var propertyName = getPropertyNameForAccessory(accessory);
+        final var fxomProperty = fxomElement.getProperties().get(propertyName);
         final List<FXOMObject> result = new ArrayList<>();
 
         if (fxomProperty instanceof FXOMPropertyC) {
-            final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
+            final var fxomPropertyC = (FXOMPropertyC) fxomProperty;
             assert fxomPropertyC.getChildren() != null : "accessory=" + accessory;
             result.addAll(fxomPropertyC.getChildren());
         }
@@ -497,7 +501,7 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
 
     @Override
     public int getSubComponentCount(Accessory accessory, boolean includeVirtuals) {
-        final PropertyName name = accessory.getName();
+        final var name = accessory.getName();
         return (name == null) ? 0 : getSubComponents(accessory, includeVirtuals).size();
     }
 
@@ -517,13 +521,13 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
         //assert accessory.isCollection();
         assert fxomObject instanceof FXOMElement;
 
-        final PropertyName subComponentPropertyName = accessory.getName();
-        final FXOMElement fxomInstance = (FXOMElement) fxomObject;
-        final FXOMProperty fxomProperty = fxomInstance.getProperties().get(subComponentPropertyName);
+        final var subComponentPropertyName = accessory.getName();
+        final var fxomInstance = (FXOMElement) fxomObject;
+        final var fxomProperty = fxomInstance.getProperties().get(subComponentPropertyName);
 
         final List<FXOMObject> result;
-        if (fxomProperty instanceof FXOMPropertyC) {
-            result = ((FXOMPropertyC) fxomProperty).getChildren();
+        if (fxomProperty instanceof FXOMPropertyC fpc) {
+            result = fpc.getChildren();
         } else {
             result = Collections.emptyList();
         }
@@ -537,7 +541,8 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
 
     @Override
     public PropertyName getPropertyNameForDescription() {
-        return componentClassMetadata == null ? null : componentClassMetadata.getDescriptionProperty();
+        final var custo = componentClassMetadata.getCustomization();
+        return componentClassMetadata == null ? null : custo.getDescriptionProperty();
     }
 
     @Override
@@ -545,13 +550,12 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
         if (propertyName != null) { // (1)
          // Retrieve the unresolved description
             assert fxomObject instanceof FXOMInstance; // Because of (1)
-            final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-            final ValuePropertyMetadata vpm
-                    = metadata.queryValueProperty(fxomInstance, propertyName);
-            final Object description = vpm.getValueObject(fxomInstance); // unresolved value
+            final var fxomInstance = (FXOMInstance) fxomObject;
+            final var vpm = metadata.queryValueProperty(fxomInstance, propertyName);
+            final var description = vpm.getValueObject(fxomInstance); // unresolved value
             //FIXME description can be null
             assert description != null;
-            final PrefixedValue pv = new PrefixedValue(description.toString());
+            final var pv = new PrefixedValue(description.toString());
             return pv.isResourceKey();
         }
         return false;
@@ -597,8 +601,12 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
      */
     @Override
     public boolean needResizeWhenTopElement() {
-        boolean result = subComponents.stream().anyMatch(cmp -> cmp.isResizeNeededWhenTopElement());
-        result &= componentClassMetadata.isResizeNeededWhenTopElement();
+        boolean result = subComponents.stream().map(cmp -> cmp.getCustomization())
+                .anyMatch(cmp -> cmp.isResizeNeededWhenTopElement());
+
+        final var custo = componentClassMetadata.getCustomization();
+        result &= custo.isResizeNeededWhenTopElement();
+
         return result;
     }
 
@@ -629,36 +637,34 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
     }
 
     @Override
-    public ValuePropertyMetadata getPropertyMetadata(PropertyName propertyName) {
-        if (fxomObject instanceof FXOMElement) {
-            final FXOMElement fxomElement = (FXOMElement) fxomObject;
-            final ValuePropertyMetadata vpm = metadata.queryValueProperty(fxomElement, propertyName);
-            return vpm;
+    public ValuePropertyMetadata<ValuePropertyMetadata<ValuePropertyMetadataCustomization>> getPropertyMetadata(PropertyName propertyName) {
+        if (fxomObject instanceof FXOMElement fxe) {
+            return metadata.queryValueProperty(fxe, propertyName);
         }
         return null;
     }
 
     @Override
     public Object getPropertyValue(PropertyName propertyName) {
-        ValuePropertyMetadata vpm = getPropertyMetadata(propertyName);
-        if (vpm != null) {
-            return vpm.getValueObject((FXOMElement) fxomObject);
+        var vpm = getPropertyMetadata(propertyName);
+        if (vpm != null && fxomObject instanceof FXOMElement fxe) {
+            return vpm.getValueObject(fxe);
         }
         return null;
     }
 
     @Override
     public Object getPropertySceneGraphValue(PropertyName propertyName) {
-        ValuePropertyMetadata vpm = getPropertyMetadata(propertyName);
-        if (vpm != null) {
-            return vpm.getValueInSceneGraphObject((FXOMElement) fxomObject);
+        var vpm = getPropertyMetadata(propertyName);
+        if (vpm != null && fxomObject instanceof FXOMElement fxe) {
+            return vpm.getValueInSceneGraphObject(fxe);
         }
         return null;
     }
 
     @Override
     public boolean isReadOnlyProperty(PropertyName propertyName) {
-        ValuePropertyMetadata vpm = getPropertyMetadata(propertyName);
+        var vpm = getPropertyMetadata(propertyName);
         if (vpm != null) {
             return !vpm.isReadWrite();
         }
@@ -667,9 +673,9 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
 
     @Override
     public boolean isMultilineProperty(PropertyName propertyName) {
-        ValuePropertyMetadata vpm = getPropertyMetadata(propertyName);
-        if (vpm != null && StringPropertyMetadata.class.isInstance(vpm)) {
-            return ((StringPropertyMetadata)vpm).isMultiline();
+        var vpm = getPropertyMetadata(propertyName);
+        if (vpm != null && vpm instanceof StringPropertyMetadata spm) {
+            return spm.isMultiline();
         }
         return false;
     }
@@ -680,21 +686,22 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
     }
 
     public static class AccessoryImpl implements Accessory{
-        private final ComponentClassMetadata<?> owner;
-        private final ComponentPropertyMetadata propertyMetadata;
+        private final SbComponentClassMetadata<?> owner;
+        private final ComponentPropertyMetadata<ComponentPropertyMetadataCustomization, ? extends SbComponentClassMetadata<?>> propertyMetadata;
 
-        public AccessoryImpl(ComponentClassMetadata<?> owner, ComponentPropertyMetadata propertyMetadata) {
+        public AccessoryImpl(SbComponentClassMetadata<?> owner,
+                ComponentPropertyMetadata<ComponentPropertyMetadataCustomization, ? extends SbComponentClassMetadata<?>> propertyMetadata) {
             super();
             this.owner = owner;
             this.propertyMetadata = propertyMetadata;
         }
 
-        public ComponentClassMetadata<?> getOwner() {
+        public SbComponentClassMetadata<?> getOwner() {
             return owner;
         }
 
         @Override
-        public ComponentPropertyMetadata getPropertyMetadata() {
+        public ComponentPropertyMetadata<ComponentPropertyMetadataCustomization, ? extends SbComponentClassMetadata<?>> getPropertyMetadata() {
             return propertyMetadata;
         }
 
@@ -785,7 +792,8 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
 
         @Override
         public boolean isFreeChildPositioning() {
-            return owner.isFreeChildPositioning(propertyMetadata);
+            var custo = owner.getCustomization();
+            return custo.isFreeChildPositioning(propertyMetadata);
         }
 
 

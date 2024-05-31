@@ -57,6 +57,7 @@ public class JavaGenerationContext {
     private String targetComponentCustomizationClass;
     private String targetComponentPropertyCustomizationClass;
     private String targetValuePropertyCustomizationClass;
+    private String targetComponentSuperClass;
 
     public File getSourceFolder() {
         return sourceFolder;
@@ -160,6 +161,14 @@ public class JavaGenerationContext {
     }
     public void setTargetValuePropertyCustomizationClass(String targetValuePropertyCustomizationClass) {
         this.targetValuePropertyCustomizationClass = targetValuePropertyCustomizationClass;
+    }
+
+    public String getTargetComponentSuperClass() {
+        return targetComponentSuperClass;
+    }
+
+    public void setTargetComponentSuperClass(String targetComponentSuperClass) {
+        this.targetComponentSuperClass = targetComponentSuperClass;
     }
 
 

@@ -65,9 +65,9 @@ open module scenebuilder.fxml.api {
 
     requires transitive jfxapps.core.api;
     requires transitive jfxapps.core.fxom;
+
     requires transitive scenebuilder.metadata;
     requires transitive scenebuilder.app.starter;
-
 
     provides Extension with FxmlApiExtension;
 }

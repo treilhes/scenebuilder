@@ -145,6 +145,7 @@ public class JavaGeneratorImpl implements ClassCustomization {
         });
 
         Context context = new Context();
+        context.setComponentSuperClassName(javaGenerationContext.getTargetComponentSuperClass());
         context.setComponentCustomizationClassName(javaGenerationContext.getTargetComponentCustomizationClass());
         context.setComponentPropertyCustomizationClassName(
                 javaGenerationContext.getTargetComponentPropertyCustomizationClass());

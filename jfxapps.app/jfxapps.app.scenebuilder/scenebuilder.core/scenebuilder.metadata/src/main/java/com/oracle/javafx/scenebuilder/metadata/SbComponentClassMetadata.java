@@ -31,43 +31,27 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.metadata.klass;
+package com.oracle.javafx.scenebuilder.metadata;
 
-/**
- *
- *
- */
-public class CustomComponentClassMetadata<T, CC, PC, VC> extends ComponentClassMetadata<T, CC, PC, VC> {
+import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentPropertyMetadataCustomization;
+import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
 
-    private final Exception introspectionException;
+public class SbComponentClassMetadata<T> extends ComponentClassMetadata<T,
+    ComponentClassMetadataCustomization,
+    ComponentPropertyMetadataCustomization,
+    ComponentPropertyMetadata<ComponentPropertyMetadataCustomization, SbComponentClassMetadata<T>>,
+    ValuePropertyMetadataCustomization,
+    ValuePropertyMetadata<ValuePropertyMetadataCustomization>,
+    SbComponentClassMetadata<?>> {
 
-    public CustomComponentClassMetadata(Class<T> klass,
-            ComponentClassMetadata<?, CC, PC, VC> parentMetadata, CC customization, Exception introspectionException) {
+    public SbComponentClassMetadata(Class<T> klass,
+            SbComponentClassMetadata<?> parentMetadata,
+            ComponentClassMetadataCustomization customization) {
         super(klass, parentMetadata, customization);
-        this.introspectionException = introspectionException;
-
-        //FIXME add this initialization in customization object
-        //getQualifiers().put(Qualifier.DEFAULT , Qualifier.UNKNOWN);
     }
-
-    public Exception getIntrospectionException() {
-        return introspectionException;
-    }
-
-
-    /*
-     * Object
-     */
-
-    @Override
-    public int hashCode() {
-        return super.hashCode(); // Only to please FindBugs
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj); // Only to please FindBugs
-    }
-
 
 }

@@ -46,6 +46,7 @@ public class Context {
     String componentCustomizationClassName;
     String componentPropertyCustomizationClassName;
     String valuePropertyCustomizationClassName;
+    private String componentSuperClass;
 
     public Context() {
         super();
@@ -123,6 +124,12 @@ public class Context {
         this.valuePropertyCustomizationClassName = valuePropertyCustomizationClassName;
     }
 
+    public void setComponentSuperClassName(String componentSuperClass) {
+        this.componentSuperClass = componentSuperClass;
+    }
 
+    public String getComponentSuperClassName() {
+        return componentSuperClass;
+    }
 
 }

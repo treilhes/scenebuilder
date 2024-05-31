@@ -33,8 +33,6 @@
  */
 package com.gluonhq.jfxapps.core.metadata.klass;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -57,14 +55,20 @@ import javafx.collections.SetChangeListener.Change;
 /**
  * This class describes an fxml component class
  * @param <T> the component class
- * @param <CC> the component customization class
- * @param <CPC> the component property customization class
- * @param <VPC> the component value customization class
+ * @param <CC> the component metadata customization class
+ * @param <CPC> the component property metadata customization class
+ * @param <CPM> the component property metadata class
+ * @param <VPC> the component value metadata customization class
+ * @param <VPM> the component value metadata class
  */
-public class ComponentClassMetadata<T, CC, CPC, VPC> extends ClassMetadata<T> {
+public class ComponentClassMetadata<T, CC,
+    CPC,
+    CPM extends ComponentPropertyMetadata,
+    VPC,
+    VPM extends ValuePropertyMetadata,
+    P extends ComponentClassMetadata> extends ClassMetadata<T> {
 
-    public static final Comparator<ComponentPropertyMetadata<?>> COMPARATOR =
-            Comparator.comparing(cpm -> cpm.getName().getName());
+    public static final Comparator<ComponentPropertyMetadata> COMPARATOR = Comparator.comparing(cpm -> cpm.getName().getName());
 
     /** The component properties. */
     private final ObservableSet<PropertyMetadata<?>> properties = FXCollections.observableSet(new HashSet<>());
@@ -79,10 +83,10 @@ public class ComponentClassMetadata<T, CC, CPC, VPC> extends ClassMetadata<T> {
     private final Set<PropertyGroupMetadata<VPC>> groups = new HashSet<>();
 
     /** The component properties component subset. */
-    private final Set<ComponentPropertyMetadata<CPC>> subComponents = new HashSet<>();
+    private final Set<ComponentPropertyMetadata<CPC, P>> subComponents = new HashSet<>();
 
     /** The inherited parent metadata. */
-    private final ComponentClassMetadata<?, CC, CPC, VPC> parentMetadata;
+    private final P parentMetadata;
 
     private final CC customization;
     /**
@@ -91,7 +95,7 @@ public class ComponentClassMetadata<T, CC, CPC, VPC> extends ClassMetadata<T> {
      * @param klass the component's class
      * @param parentMetadata the inherited parent component's metadata
      */
-    public ComponentClassMetadata(Class<T> klass, ComponentClassMetadata<?, CC, CPC, VPC> parentMetadata, CC customization) {
+    public ComponentClassMetadata(Class<T> klass, P parentMetadata, CC customization) {
         super(klass);
         this.parentMetadata = parentMetadata;
         this.customization = customization;
@@ -113,7 +117,7 @@ public class ComponentClassMetadata<T, CC, CPC, VPC> extends ClassMetadata<T> {
                         values.add((ValuePropertyMetadata<VPC>)e.getElementAdded());
                     }
                 } else if (ComponentPropertyMetadata.class.isAssignableFrom(e.getElementAdded().getClass())) {
-                    subComponents.add((ComponentPropertyMetadata<CPC>)e.getElementAdded());
+                    subComponents.add((ComponentPropertyMetadata<CPC, P>)e.getElementAdded());
                 }
             } else if (e.wasRemoved() && e.getElementRemoved() != null) {
                 if (ValuePropertyMetadata.class.isAssignableFrom(e.getElementRemoved().getClass())) {
@@ -162,13 +166,14 @@ public class ComponentClassMetadata<T, CC, CPC, VPC> extends ClassMetadata<T> {
      *
      * @return the components subset properties
      */
-    public Set<ComponentPropertyMetadata<CPC>> getSubComponentProperties() {
+    public Set<CPM> getSubComponentProperties() {
         return Collections.unmodifiableSet(subComponents.stream()
+                .map(i -> (CPM)i)
                 .filter(c -> !shadowedProperties.contains(c.getName()))
                 .collect(Collectors.toSet()));
     }
 
-    public Set<ComponentPropertyMetadata<CPC>> getAllSubComponentProperties() {
+    public Set<CPM> getAllSubComponentProperties() {
         return getAllSubComponentProperties(COMPARATOR);
     }
 
@@ -177,11 +182,11 @@ public class ComponentClassMetadata<T, CC, CPC, VPC> extends ClassMetadata<T> {
      * which aren't shadowed
      * @return all the components subset properties
      */
-    public Set<ComponentPropertyMetadata<CPC>> getAllSubComponentProperties(
-            Comparator<ComponentPropertyMetadata<?>> comparator) {
+    public Set<CPM> getAllSubComponentProperties(Comparator<? extends ComponentPropertyMetadata> comparator) {
 
-        TreeSet<ComponentPropertyMetadata<CPC>> result = new TreeSet<>(comparator);
-        ComponentClassMetadata<?, CC, CPC, VPC> current = this;
+        TreeSet<CPM> result = new TreeSet<CPM>((Comparator<CPM>)comparator);
+
+        ComponentClassMetadata<?, ?, ?, CPM, ?, ?, ?> current = this;
 
         while (current != null) {
             current.getSubComponentProperties().stream()
@@ -198,11 +203,11 @@ public class ComponentClassMetadata<T, CC, CPC, VPC> extends ClassMetadata<T> {
      * which isn't shadowed
      * @return all the components subset properties
      */
-    public ComponentPropertyMetadata<CPC> getMainComponentProperty() {
-        ComponentClassMetadata<?, CC, CPC, VPC> current = this;
+    public CPM getMainComponentProperty() {
+        ComponentClassMetadata<?, ?, ?, CPM, ?, ?, ?> current = this;
 
         while (current != null) {
-            Optional<ComponentPropertyMetadata<CPC>> optional = current.getSubComponentProperties().stream()
+            Optional<CPM> optional = current.getSubComponentProperties().stream()
                 .filter(p -> p.isMain())
                 .filter(p -> !shadowedProperties.contains(p.getName()))
                 .findFirst();
@@ -219,7 +224,7 @@ public class ComponentClassMetadata<T, CC, CPC, VPC> extends ClassMetadata<T> {
      *
      * @return the parent metadata
      */
-    public ComponentClassMetadata<?, CC, CPC, VPC> getParentMetadata() {
+    public P getParentMetadata() {
         return parentMetadata;
     }
 

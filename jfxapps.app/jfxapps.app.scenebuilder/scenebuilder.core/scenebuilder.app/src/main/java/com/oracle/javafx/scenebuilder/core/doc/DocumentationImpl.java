@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,15 +39,14 @@ import java.util.Set;
 
 import org.scenebuilder.fxml.api.Documentation;
 import org.scenebuilder.fxml.api.DocumentationUrlBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.SbMetadata;
 
 @Component
 @Lazy
@@ -54,12 +54,12 @@ public class DocumentationImpl implements Documentation {
 
     private final List<DocumentationUrlBuilder> urlBuilders;
     private final FileSystem fileSystem;
-    private final IMetadata metadata;
+    private final SbMetadata metadata;
 
     public DocumentationImpl(
-            @Autowired IMetadata metadata,
-            @Autowired FileSystem fileSystem,
-            @Autowired List<DocumentationUrlBuilder> urlBuilders
+            SbMetadata metadata,
+            FileSystem fileSystem,
+            List<DocumentationUrlBuilder> urlBuilders
             ) {
         this.metadata = metadata;
         this.fileSystem = fileSystem;
@@ -97,7 +97,7 @@ public class DocumentationImpl implements Documentation {
         if (propMeta.isStaticProperty()) {
             clazz = propertyName.getResidenceClass();
         } else {
-            ComponentClassMetadata<?> cmp = metadata.queryComponentMetadata(clazz, propertyName);
+            var cmp = metadata.queryComponentMetadata(clazz, propertyName);
             clazz = cmp == null ? null : cmp.getKlass();
         }
 

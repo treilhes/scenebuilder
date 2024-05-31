@@ -31,49 +31,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.api.metadata;
+package com.oracle.javafx.scenebuilder.metadata;
 
-import java.util.Collection;
-import java.util.Set;
-
-import com.gluonhq.jfxapps.core.fxom.FXOMElement;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentPropertyMetadataCustomization;
 
-public interface Metadata<CC, CPC, VPC> {
+public class SbComponentPropertyMetadata extends ComponentPropertyMetadata<ComponentPropertyMetadataCustomization, SbComponentClassMetadata<?>> {
 
-    ComponentClassMetadata<?, CC, CPC, VPC> queryComponentMetadata(Class<?> componentClass);
-
-    Set<PropertyMetadata<?>> queryProperties(Class<?> componentClass);
-
-    Set<PropertyMetadata<?>> queryProperties(Collection<Class<?>> componentClasses);
-
-    Set<ComponentPropertyMetadata<CPC>> queryComponentProperties(Class<?> componentClass);
-
-    ComponentPropertyMetadata<CPC> queryComponentProperty(Class<?> componentClass, PropertyName name);
-
-    Set<ValuePropertyMetadata<VPC>> queryValueProperties(Set<Class<?>> componentClasses);
-
-    PropertyMetadata<?> queryProperty(Class<?> componentClass, PropertyName targetName);
-
-    ValuePropertyMetadata<VPC> queryValueProperty(FXOMElement fxomInstance, PropertyName targetName);
-
-    Collection<ComponentClassMetadata<?, CC, CPC, VPC>> getComponentClasses();
-
-    Set<PropertyName> getHiddenProperties();
-
-    /**
-     * During prune properties job a property is trimmed
-     * if the property is static
-     * if the property is transient (has a meaning in the current parent only)
-     * @param name
-     * @return
-     */
-    boolean isPropertyTrimmingNeeded(PropertyName name);
-
-    ComponentClassMetadata<?, CC, CPC, VPC> queryComponentMetadata(Class<?> clazz, PropertyName propName);
+    protected SbComponentPropertyMetadata(
+            AbstractBuilder<?, ?, ComponentPropertyMetadataCustomization, SbComponentClassMetadata<?>> builder) {
+        super(builder);
+    }
 
 }

@@ -1,5 +1,5 @@
 <#assign componentClassName = component.metadata.type.name?replace("$", ".")>
-
+<#assign componentSuperClassName = context.componentSuperClassName!"<targetComponentSuperClass> not set in plugin configuration!">
 package ${component.metadataClassPackage};
 
 import org.springframework.context.annotation.Lazy;
@@ -15,10 +15,7 @@ import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata.Visibility;
  * THIS CODE IS AUTOMATICALLY GENERATED !
  */
 @Component
-public class ${component.metadataClassSimpleName} extends ComponentClassMetadata<${componentClassName}, 
-    ${context.componentCustomizationClassName!"<targetComponentCustomizationClass> not set in plugin configuration!"},
-    ${context.componentPropertyCustomizationClassName!"<targetComponentPropertyCustomizationClass> not set in plugin configuration!"},
-    ${context.valuePropertyCustomizationClassName!"<targetValuePropertyCustomizationClass> not set in plugin configuration!"}> {
+public class ${component.metadataClassSimpleName} extends ${componentSuperClassName}<${componentClassName}> {
 
 <#macro valuePropertyMacro property customization>
     <#assign propertyMetadataClassName = property.metadataClass.name?replace("$", ".")>

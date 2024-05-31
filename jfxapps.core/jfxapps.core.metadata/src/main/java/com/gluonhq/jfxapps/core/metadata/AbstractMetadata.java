@@ -56,48 +56,52 @@ import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
  *
  */
 
-public abstract class AbstractMetadata<CC, CPC, VPC> {
+public abstract class AbstractMetadata<
+    CC,
+    CPM extends ComponentPropertyMetadata, VPM extends ValuePropertyMetadata,
+    C extends ComponentClassMetadata> {
 
-    private final Map<Class<?>, ComponentClassMetadata<?, CC, CPC, VPC>> componentClassMap = new HashMap<>();
-    private final Map<Class<?>, ComponentClassMetadata<?, CC, CPC, VPC>> customComponentClassMap = new WeakHashMap<>();
+    private final Map<Class<?>, C> componentClassMap = new HashMap<>();
+    private final Map<Class<?>, C> customComponentClassMap = new WeakHashMap<>();
 
-    private final MetadataIntrospector<CC, CPC, VPC> metadataIntrospector;
+    public interface MetadataIntrospector<C> {
+        C introspect(Class<?> componentClass);
+    }
+    private MetadataIntrospector<C> metadataIntrospector;
 
-    protected AbstractMetadata(List<ComponentClassMetadata<?, CC, CPC, VPC>> componentClassMetadatas,
-            MetadataIntrospector<CC, CPC, VPC> metadataIntrospector) {
-        this.metadataIntrospector = metadataIntrospector;
-
+    protected AbstractMetadata(List<C> componentClassMetadatas) {
         // Populate componentClassMap
         componentClassMetadatas.forEach(c -> componentClassMap.put(c.getKlass(), c));
-
     }
 
 
-    public ComponentClassMetadata<?, CC, CPC, VPC> queryComponentMetadata(Class<?> componentClass) {
-        final ComponentClassMetadata<?, CC, CPC, VPC> result;
+    public MetadataIntrospector<C> getMetadataIntrospector() {
+        return metadataIntrospector;
+    }
 
 
-        final ComponentClassMetadata<?, CC, CPC, VPC> componentMetadata = componentClassMap.get(componentClass);
+    protected void setMetadataIntrospector(MetadataIntrospector<C> metadataIntrospector) {
+        this.metadataIntrospector = metadataIntrospector;
+    }
+
+    public C queryComponentMetadata(Class<?> componentClass) {
+        final C result;
+
+
+        final C componentMetadata = componentClassMap.get(componentClass);
         if (componentMetadata != null) {
             // componentClass is a certified component
             result = componentMetadata;
         } else {
             // componentClass is a custom component
-            final ComponentClassMetadata<?, CC, CPC, VPC> customMetadata = customComponentClassMap.get(componentClass);
+            final C customMetadata = customComponentClassMap.get(componentClass);
             if (customMetadata != null) {
                 // componentClass has already been introspected
                 result = customMetadata;
             } else {
                 // componentClass must be introspected
-                // Let's find the first certified ancestor
-                Class<?> ancestorClass = componentClass.getSuperclass();
-                ComponentClassMetadata<?, CC, CPC, VPC> ancestorMetadata = null;
-                while ((ancestorClass != null) && (ancestorMetadata == null)) {
-                    ancestorMetadata = componentClassMap.get(ancestorClass);
-                    ancestorClass = ancestorClass.getSuperclass();
-                }
 
-                result = metadataIntrospector.introspect(componentClass, ancestorMetadata, this);
+                result = metadataIntrospector.introspect(componentClass);
 
                 customComponentClassMap.put(componentClass, result);
             }
@@ -109,7 +113,7 @@ public abstract class AbstractMetadata<CC, CPC, VPC> {
 
     public Set<PropertyMetadata<?>> queryProperties(Class<?> componentClass) {
         final Map<PropertyName, PropertyMetadata<?>> result = new HashMap<>();
-        ComponentClassMetadata<?, CC, CPC, VPC> classMetadata = queryComponentMetadata(componentClass);
+        ComponentClassMetadata<?, ?, ?, ?, ?, ?, ?> classMetadata = queryComponentMetadata(componentClass);
 
         Set<PropertyName> shadowed = new HashSet<>();
         while (classMetadata != null) {
@@ -146,21 +150,21 @@ public abstract class AbstractMetadata<CC, CPC, VPC> {
 
 
     @SuppressWarnings("unchecked")
-    public Set<ComponentPropertyMetadata<CPC>> queryComponentProperties(Class<?> componentClass) {
-        final Set<ComponentPropertyMetadata<CPC>> result = new HashSet<>();
+    public Set<CPM> queryComponentProperties(Class<?> componentClass) {
+        final Set<CPM> result = new HashSet<>();
 
         for (PropertyMetadata<?> propertyMetadata : queryProperties(Arrays.asList(componentClass))) {
             if (propertyMetadata instanceof ComponentPropertyMetadata cpc) {
-                result.add(cpc);
+                result.add((CPM)cpc);
             }
         }
         return result;
     }
 
 
-    public ComponentPropertyMetadata<CPC> queryComponentProperty(Class<?> componentClass, PropertyName name) {
-        ComponentClassMetadata<?, CC, CPC, VPC> classMetadata = queryComponentMetadata(componentClass);
-        Optional<ComponentPropertyMetadata<CPC>> result = classMetadata.getAllSubComponentProperties().stream()
+    public CPM queryComponentProperty(Class<?> componentClass, PropertyName name) {
+        ComponentClassMetadata<?, ?, ?, CPM, ?, ?, ?> classMetadata = queryComponentMetadata(componentClass);
+        Optional<CPM> result = classMetadata.getAllSubComponentProperties().stream()
             .filter(scp -> scp.getName().equals(name))
             .findFirst();
         return result.isEmpty() ? null : result.get();
@@ -168,8 +172,8 @@ public abstract class AbstractMetadata<CC, CPC, VPC> {
 
 
     @SuppressWarnings("unchecked")
-    public Set<ValuePropertyMetadata<VPC>> queryValueProperties(Set<Class<?>> componentClasses) {
-        final Set<ValuePropertyMetadata<VPC>> result = new HashSet<>();
+    public Set<ValuePropertyMetadata<VPM>> queryValueProperties(Set<Class<?>> componentClasses) {
+        final Set<ValuePropertyMetadata<VPM>> result = new HashSet<>();
         for (PropertyMetadata<?> propertyMetadata : queryProperties(componentClasses)) {
             if (propertyMetadata instanceof ValuePropertyMetadata vpc) {
                 result.add(vpc);
@@ -204,8 +208,8 @@ public abstract class AbstractMetadata<CC, CPC, VPC> {
 
 
     @SuppressWarnings("unchecked")
-    public ValuePropertyMetadata<VPC> queryValueProperty(FXOMElement fxomInstance, PropertyName targetName) {
-        final ValuePropertyMetadata<VPC> result;
+    public ValuePropertyMetadata<VPM> queryValueProperty(FXOMElement fxomInstance, PropertyName targetName) {
+        final ValuePropertyMetadata<VPM> result;
         assert fxomInstance != null;
         assert targetName != null;
 
@@ -226,17 +230,17 @@ public abstract class AbstractMetadata<CC, CPC, VPC> {
         return result;
     }
 
-    public Collection<ComponentClassMetadata<?, CC, CPC, VPC>> getComponentClasses() {
+    public Collection<C> getComponentClasses() {
         return componentClassMap.values();
     }
 
-    public ComponentClassMetadata<?, CC, CPC, VPC> queryComponentMetadata(Class<?> clazz, PropertyName propName) {
+    public C queryComponentMetadata(Class<?> clazz, PropertyName propName) {
 
-        ComponentClassMetadata<?, CC, CPC, VPC> classMeta = queryComponentMetadata(clazz);
+        ComponentClassMetadata<?, ?, ?, ?, ?, ?, ?> classMeta = queryComponentMetadata(clazz);
         while (classMeta != null) {
             for (PropertyMetadata<?> propMeta : classMeta.getProperties()) {
                 if (propMeta.getName().compareTo(propName) == 0) {
-                    return classMeta;
+                    return (C)classMeta;
                 }
             }
             // Check the inherited classes
