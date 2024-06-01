@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>scenebuilder.ext.control.library</module>
+        
         <module>scenebuilder.ext.controls.tooling</module>
         <module>scenebuilder.ext.controls</module>
         <module>scenebuilder.ext.css.analyser</module>
@@ -24,8 +24,9 @@
         <module>scenebuilder.ext.exporter</module>
         <module>scenebuilder.ext.glossary</module>
         <module>scenebuilder.ext.help.features</module>
-        <module>scenebuilder.ext.image.library</module>
         <module>scenebuilder.ext.inspector</module>
+        <module>scenebuilder.ext.library.image</module>
+        <module>scenebuilder.ext.library.control</module>
         <module>scenebuilder.ext.menu</module>
         <module>scenebuilder.ext.preview</module>
         <module>scenebuilder.ext.script.graalvm-javascript-rt</module>

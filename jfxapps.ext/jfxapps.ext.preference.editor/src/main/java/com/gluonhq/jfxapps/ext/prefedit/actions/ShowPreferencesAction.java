@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,7 +42,6 @@ import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.ext.menu.action.file.QuitScenebuilderAction;
 import com.gluonhq.jfxapps.ext.prefedit.controller.PreferencesWindowController;
 
 @Prototype
@@ -52,11 +51,13 @@ import com.gluonhq.jfxapps.ext.prefedit.controller.PreferencesWindowController;
 
 @MenuItemAttachment(
         id = ShowPreferencesAction.MENU_ID,
-        targetMenuId = QuitScenebuilderAction.MENU_ID,
+        targetMenuId = ShowPreferencesAction.QUIT_MENU_REF_ID,
         label = "menu.title.preferences",
         positionRequest = PositionRequest.AsPreviousSibling)
 @Accelerator(accelerator = "CTRL+,")
 public class ShowPreferencesAction extends AbstractAction {
+
+    public final static String QUIT_MENU_REF_ID = "fb462a53-9877-4f85-a37f-8aa07f6a3ec1";
 
     public final static String MENU_ID = "showPreferencesMenuItem";
 

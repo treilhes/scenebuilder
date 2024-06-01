@@ -161,11 +161,11 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>scenebuilder.ext.image.library</artifactId>
+            <artifactId>scenebuilder.ext.library.image</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>scenebuilder.ext.control.library</artifactId>
+            <artifactId>scenebuilder.ext.library.control</artifactId>
         </dependency>
 
         <dependency>

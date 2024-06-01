@@ -1,14 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>scenebuilder.ext.image.library</artifactId>
-
+    
     <parent>
         <groupId>com.gluonhq.jfxapps</groupId>
         <artifactId>scenebuilder.ext</artifactId>
         <version>${scenebuilder.version}</version>
     </parent>
 
+    <artifactId>scenebuilder.ext.library.control</artifactId>
+    
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
@@ -31,10 +32,11 @@
             <artifactId>jfxapps.core.filesystem</artifactId>
         </dependency>
 
+
         <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>fontbox</artifactId>
-            <version>2.0.23</version>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.ext.menu</artifactId>
         </dependency>
+
     </dependencies>
 </project>

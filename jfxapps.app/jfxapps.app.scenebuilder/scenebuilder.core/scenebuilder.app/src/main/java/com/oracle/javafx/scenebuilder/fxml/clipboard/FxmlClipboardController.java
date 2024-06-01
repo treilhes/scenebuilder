@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,30 +34,23 @@
 package com.oracle.javafx.scenebuilder.fxml.clipboard;
 
 import org.scenebuilder.fxml.api.Content;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
-import com.gluonhq.jfxapps.core.api.clipboard.ClipboardHandler;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
-import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.clipboard.controller.ClipboardController;
 import com.oracle.javafx.scenebuilder.core.clipboard.internal.ClipboardEncoder;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.CutSelectionJob;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.PasteIntoJob;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.PasteJob;
 
-import javafx.scene.Node;
-import javafx.scene.control.TextInputControl;
 import javafx.scene.input.Clipboard;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class FxmlClipboardController extends ClipboardController {
 
     private final ApplicationInstanceWindow documentWindow;

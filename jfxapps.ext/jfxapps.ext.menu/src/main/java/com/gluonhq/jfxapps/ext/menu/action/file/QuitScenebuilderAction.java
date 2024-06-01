@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -70,7 +70,7 @@ public class QuitScenebuilderAction extends AbstractAction {
 
     private final static Logger logger = LoggerFactory.getLogger(QuitScenebuilderAction.class);
 
-    public final static String MENU_ID = "quitMenu";
+    public final static String MENU_ID = "fb462a53-9877-4f85-a37f-8aa07f6a3ec1";
 
     private final InstancesManager main;
     private final Dialog dialog;

@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.core.extension.Extension;
 import com.oracle.javafx.scenebuilder.imagelibrary.ImageLibraryExtension;
 
-open module scenebuilder.ext.image.library {
+open module scenebuilder.ext.library.image {
 
     exports com.oracle.javafx.scenebuilder.imagelibrary.action;
     exports com.oracle.javafx.scenebuilder.imagelibrary.library;

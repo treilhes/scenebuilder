@@ -34,7 +34,7 @@
 import com.gluonhq.jfxapps.core.extension.Extension;
 import com.oracle.javafx.scenebuilder.controllibrary.ControlLibraryExtension;
 
-open module scenebuilder.ext.control.library {
+open module scenebuilder.ext.library.control {
     exports com.oracle.javafx.scenebuilder.controllibrary.action;
     exports com.oracle.javafx.scenebuilder.controllibrary.controller;
     exports com.oracle.javafx.scenebuilder.controllibrary.library.builtin;

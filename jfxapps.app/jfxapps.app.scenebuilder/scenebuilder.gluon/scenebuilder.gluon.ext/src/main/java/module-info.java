@@ -32,7 +32,7 @@ open module scenebuilder.ext.gluon {
     requires scenebuilder.core.jobs;
     requires scenebuilder.core.library;
 //    requires org.slf4j;
-    requires scenebuilder.ext.control.library;
+    requires scenebuilder.ext.library.control;
     requires scenebuilder.ext.controls;
     requires transitive jfxapps.core.api;
     requires scenebuilder.ext.defaultx;

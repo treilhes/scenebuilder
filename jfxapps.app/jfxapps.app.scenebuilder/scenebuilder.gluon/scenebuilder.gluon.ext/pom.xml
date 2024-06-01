@@ -33,7 +33,7 @@
         <!-- temp -->
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>scenebuilder.ext.control.library</artifactId>
+            <artifactId>scenebuilder.ext.library.control</artifactId>
         </dependency>
         
         <!-- Gluon Charm Glisten -->

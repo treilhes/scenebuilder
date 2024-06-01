@@ -105,7 +105,7 @@
             <!-- scenebuilder;ext -->
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.ext.control.library</artifactId>
+                <artifactId>scenebuilder.ext.library.control</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -183,7 +183,7 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.ext.image.library</artifactId>
+                <artifactId>scenebuilder.ext.library.image</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
