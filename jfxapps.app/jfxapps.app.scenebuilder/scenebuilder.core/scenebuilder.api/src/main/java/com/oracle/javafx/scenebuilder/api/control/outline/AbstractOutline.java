@@ -39,7 +39,7 @@ import java.util.List;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
 import com.gluonhq.jfxapps.core.api.content.decoration.AbstractDecoration;
-import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

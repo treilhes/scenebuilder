@@ -39,9 +39,9 @@ import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.ext.about.controller.AboutWindowController;
 
 @Prototype

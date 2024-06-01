@@ -41,7 +41,7 @@ import com.gluonhq.jfxapps.core.api.content.decoration.Decoration;
 import com.gluonhq.jfxapps.core.api.content.mode.Layer.LayerItemCreator;
 import com.gluonhq.jfxapps.core.api.content.mode.Layer.LayerItemSelector;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 import javafx.scene.Group;

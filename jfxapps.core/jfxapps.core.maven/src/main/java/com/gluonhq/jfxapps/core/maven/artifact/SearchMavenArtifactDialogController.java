@@ -44,16 +44,16 @@ import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
 import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
-import com.gluonhq.jfxapps.core.api.SceneBuilderWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.maven.ArtefactHandler;
 import com.gluonhq.jfxapps.core.api.maven.MavenClient;
 import com.gluonhq.jfxapps.core.api.maven.SearchMavenArtifactDialog;
 import com.gluonhq.jfxapps.core.api.settings.MavenSetting;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlWindowController;
-import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
-import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
+import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoriesPreferences;
 
 import javafx.beans.binding.Bindings;
@@ -109,7 +109,7 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
     private Service<ObservableList<UniqueArtifact>> versionsService;
     private final Service<ResolvedArtifact> installService;
     private Artifact artifact;
-    private final SceneBuilderWindow owner;
+    private final InstanceWindow owner;
     private String lastLoadedKey = null;
 
  // @formatter:off
@@ -120,7 +120,7 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
             MessageLogger messageLogger,
             MavenSetting mavenSetting,
             MavenRepositoriesPreferences repositoryPreferences,
-            SceneBuilderWindow owner) {
+            InstanceWindow owner) {
      // @formatter:on
         super(sceneBuilderManager, iconSetting,
                 SearchMavenArtifactDialogController.class.getResource("SearchMavenArtifactDialog.fxml"),

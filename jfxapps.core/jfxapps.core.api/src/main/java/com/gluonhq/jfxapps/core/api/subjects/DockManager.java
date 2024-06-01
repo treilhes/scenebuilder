@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.core.api.subjects;
 import java.util.Collection;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.ui.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.ReplaySubject;

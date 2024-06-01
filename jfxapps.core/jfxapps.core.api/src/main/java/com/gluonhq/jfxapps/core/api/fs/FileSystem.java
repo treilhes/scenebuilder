@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
-import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 
 public interface FileSystem {
 
@@ -105,12 +105,12 @@ public interface FileSystem {
      */
     void updateNextInitialDirectory(File chosenFile);
 
-    void watch(InstanceWindow document, List<File> files, WatchingCallback callback);
+    void watch(MainInstanceWindow document, List<File> files, WatchingCallback callback);
 
-    void watch(InstanceWindow document, Set<Path> files, WatchingCallback callback);
+    void watch(MainInstanceWindow document, Set<Path> files, WatchingCallback callback);
 
 	void unwatch(Object key);
-	void unwatchDocument(InstanceWindow document);
+	void unwatchDocument(MainInstanceWindow document);
 
 	void stopWatcher();
 

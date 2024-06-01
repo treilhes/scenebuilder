@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.document.api;
 
-import com.gluonhq.jfxapps.core.api.ui.dock.View;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 
 import javafx.scene.control.Accordion;
 

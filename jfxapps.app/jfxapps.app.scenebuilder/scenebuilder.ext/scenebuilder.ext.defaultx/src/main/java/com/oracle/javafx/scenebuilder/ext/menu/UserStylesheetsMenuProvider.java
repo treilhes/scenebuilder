@@ -44,9 +44,9 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.ext.controller.SceneStyleSheetMenuController;
 import com.oracle.javafx.scenebuilder.ext.theme.document.UserStylesheetsPreference;

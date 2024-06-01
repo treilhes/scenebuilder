@@ -36,11 +36,11 @@ package com.gluonhq.jfxapps.core.library.manager;
 import java.io.File;
 
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
-import com.gluonhq.jfxapps.core.api.SceneBuilderWindow;
+import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 
 import javafx.collections.ObservableList;
 
-public interface LibraryDialog extends SceneBuilderWindow {
+public interface LibraryDialog extends InstanceWindow {
 
     boolean load();
     boolean save();

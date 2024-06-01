@@ -51,7 +51,7 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.template.Template;
 import com.gluonhq.jfxapps.core.api.template.TemplateGroup;
-import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
 import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsSizePreference;
 import com.gluonhq.jfxapps.ext.menu.action.OpenFilesAction;

@@ -43,7 +43,6 @@ import java.util.stream.Stream;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
-import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -53,9 +52,10 @@ import com.gluonhq.jfxapps.core.api.maven.RepositoryManager;
 import com.gluonhq.jfxapps.core.api.maven.SearchMavenArtifactDialog;
 import com.gluonhq.jfxapps.core.api.settings.MavenSetting;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlWindowController;
-import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
-import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.library.api.AbstractLibrary;
 import com.gluonhq.jfxapps.core.library.api.LibraryStoreConfiguration;
 import com.gluonhq.jfxapps.core.library.preferences.global.MavenArtifactsPreferences;
@@ -138,7 +138,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
             MessageLogger messageLogger,
             MavenSetting mavenSetting,
             MavenArtifactsPreferences mavenPreferences,
-            InstanceWindow document,
+            MainInstanceWindow document,
             FileSystem fileSystem,
             RepositoryManager repositoryManager,
             SearchMavenArtifactDialog searchMavenArtifactDialog,

@@ -58,9 +58,9 @@ import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactor
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.job.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.ui.menu.ContextMenu;
-import com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit;
-import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.api.util.StringUtils;
 import com.gluonhq.jfxapps.core.core.dnd.droptarget.RootDropTarget;

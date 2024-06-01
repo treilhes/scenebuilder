@@ -44,7 +44,7 @@ import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
 import com.oracle.javafx.scenebuilder.core.clipboard.controller.ClipboardController;
 import com.oracle.javafx.scenebuilder.core.clipboard.internal.ClipboardEncoder;

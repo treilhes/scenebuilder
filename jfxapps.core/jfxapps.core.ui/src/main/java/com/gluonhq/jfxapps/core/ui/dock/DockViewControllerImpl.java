@@ -48,16 +48,16 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.SceneBuilderWindow;
 import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithDocument;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager.DockRequest;
-import com.gluonhq.jfxapps.core.api.ui.dock.Dock;
-import com.gluonhq.jfxapps.core.api.ui.dock.DockViewController;
-import com.gluonhq.jfxapps.core.api.ui.dock.View;
-import com.gluonhq.jfxapps.core.api.ui.dock.ViewAttachment;
-import com.gluonhq.jfxapps.core.api.ui.dock.ViewAttachmentProvider;
+import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachmentProvider;
 import com.gluonhq.jfxapps.core.ui.dock.preferences.document.LastDockUuidPreference;
 import com.gluonhq.jfxapps.core.ui.dock.preferences.document.LastViewVisibilityPreference;
 
@@ -78,7 +78,7 @@ public class DockViewControllerImpl implements InitWithDocument, DockViewControl
     private final Map<Class<? extends View>, ViewAttachment> viewItems = new HashMap<>();
     private final Map<UUID, Dock> activeDocks = new HashMap<>();
     private final Map<UUID, Dock> createdDocks = new HashMap<>();
-    private final Map<SceneBuilderWindow, Boolean> activeWindows = new HashMap<>();
+    private final Map<InstanceWindow, Boolean> activeWindows = new HashMap<>();
     private final LastViewVisibilityPreference lastViewVisibilityPreference;
 
     public DockViewControllerImpl(

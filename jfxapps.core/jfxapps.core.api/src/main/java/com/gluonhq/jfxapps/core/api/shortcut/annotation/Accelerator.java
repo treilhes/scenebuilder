@@ -39,7 +39,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.gluonhq.jfxapps.core.api.ui.AbstractCommonUiController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractCommonUiController;
 
 /**
  *

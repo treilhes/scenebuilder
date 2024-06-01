@@ -46,9 +46,7 @@ import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.FxThread;
 import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
-import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
-import com.gluonhq.jfxapps.core.api.application.WindowPreferenceTracker;
 import com.gluonhq.jfxapps.core.api.application.lifecycle.DisposeWithDocument;
 import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithDocument;
 import com.gluonhq.jfxapps.core.api.di.SbPlatform;
@@ -58,10 +56,12 @@ import com.gluonhq.jfxapps.core.api.preferences.Preferences;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.dock.DockViewController;
-import com.gluonhq.jfxapps.core.api.ui.dock.View;
-import com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit;
-import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.WindowPreferenceTracker;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 import jakarta.annotation.PostConstruct;
@@ -78,7 +78,7 @@ import javafx.scene.input.KeyEvent;
 @ApplicationInstanceSingleton
 public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.api.application.ApplicationInstance {
 
-    private final InstanceWindow documentWindow;
+    private final MainInstanceWindow documentWindow;
     private final FileSystem fileSystem;
 
     //private final MenuBar menuBarController;
@@ -123,7 +123,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
 //            @Autowired Editor editorController,
             InlineEdit inlineEdit,
             MessageLogger messageLogger,
-            InstanceWindow documentWindow,
+            MainInstanceWindow documentWindow,
             //MenuBarController menuBarController,
 //            Provider<MessageBarController> messageBarController,
 //            SelectionBarController selectionBarController,
@@ -530,7 +530,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
     }
 
     @Override
-    public InstanceWindow getDocumentWindow() {
+    public MainInstanceWindow getDocumentWindow() {
         return documentWindow;
     }
 

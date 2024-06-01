@@ -45,10 +45,10 @@ import org.springframework.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
 import com.gluonhq.jfxapps.ext.menu.action.OpenFilesAction;
 

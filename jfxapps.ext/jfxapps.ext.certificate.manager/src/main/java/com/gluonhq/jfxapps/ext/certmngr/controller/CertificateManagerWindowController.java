@@ -41,12 +41,12 @@ import org.springframework.context.annotation.Lazy;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.NetworkManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlWindowController;
-import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -93,7 +93,7 @@ public class CertificateManagerWindowController extends AbstractFxmlWindowContro
         networkManager.trustRequest().observeOn(JavaFxScheduler.platform()).subscribe(certificates -> {
             pendingCertificates.add(certificates);
             if (!this.getStage().isShowing()) {
-                this.getStage(true).initOwner(context.getBean(InstanceWindow.class).getStage());
+                this.getStage(true).initOwner(context.getBean(MainInstanceWindow.class).getStage());
                 this.openWindow();
             }
         });

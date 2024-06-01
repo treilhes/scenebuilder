@@ -47,9 +47,9 @@ import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
 import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
 import com.gluonhq.jfxapps.core.api.preferences.Preference;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.ViewMenuController;
-import com.gluonhq.jfxapps.core.api.ui.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;

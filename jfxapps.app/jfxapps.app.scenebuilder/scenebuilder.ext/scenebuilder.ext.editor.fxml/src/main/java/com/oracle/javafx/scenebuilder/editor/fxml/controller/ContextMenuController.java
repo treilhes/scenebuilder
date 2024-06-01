@@ -54,9 +54,9 @@ import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.ui.menu.Attachment;
-import com.gluonhq.jfxapps.core.api.ui.menu.ContextMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.menu.ContextMenuItemProvider;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.Attachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemProvider;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
@@ -73,7 +73,7 @@ import javafx.scene.control.SeparatorMenuItem;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class ContextMenuController implements com.gluonhq.jfxapps.core.api.ui.menu.ContextMenu {
+public class ContextMenuController implements com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu {
 
     private static final Logger logger = LoggerFactory.getLogger(ContextMenuController.class);
 

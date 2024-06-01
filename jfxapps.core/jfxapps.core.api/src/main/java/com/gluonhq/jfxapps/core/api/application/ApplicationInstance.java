@@ -38,6 +38,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
 
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+
 
 public interface ApplicationInstance extends com.gluonhq.jfxapps.boot.context.ApplicationInstance {
     //API validated
@@ -60,7 +62,7 @@ public interface ApplicationInstance extends com.gluonhq.jfxapps.boot.context.Ap
 
     void close();
     void onFocus();
-    InstanceWindow getDocumentWindow();
+    MainInstanceWindow getDocumentWindow();
 
     void closeWindow();
 

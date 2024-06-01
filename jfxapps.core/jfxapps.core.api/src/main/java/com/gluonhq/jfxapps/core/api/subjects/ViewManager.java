@@ -36,8 +36,8 @@ package com.gluonhq.jfxapps.core.api.subjects;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.ui.dock.View;
-import com.gluonhq.jfxapps.core.api.ui.dock.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachment;
 
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.Subject;

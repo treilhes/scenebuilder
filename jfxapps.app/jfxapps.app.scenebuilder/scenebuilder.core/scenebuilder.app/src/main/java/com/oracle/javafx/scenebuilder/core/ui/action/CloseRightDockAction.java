@@ -37,8 +37,8 @@ import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.dock.Dock;
-import com.gluonhq.jfxapps.core.api.ui.dock.DockViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
 
 @Prototype
 @ActionMeta(nameKey = "action.name.toggle.dock", descriptionKey = "action.description.toggle.dock")

@@ -50,10 +50,10 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlPanelController;
-import com.gluonhq.jfxapps.core.api.ui.misc.SelectionBar;
-import com.gluonhq.jfxapps.core.api.ui.selbar.SelectionBarContentFactory;
-import com.gluonhq.jfxapps.core.api.ui.selbar.SelectionBarContentFactory.BarItem;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPanelController;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.SelectionBar;
+import com.gluonhq.jfxapps.core.api.ui.controller.selbar.SelectionBarContentFactory;
+import com.gluonhq.jfxapps.core.api.ui.controller.selbar.SelectionBarContentFactory.BarItem;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 

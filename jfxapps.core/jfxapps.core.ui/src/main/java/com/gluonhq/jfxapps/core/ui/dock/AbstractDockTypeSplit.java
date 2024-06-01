@@ -37,11 +37,11 @@ import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.ui.dock.DockContext;
-import com.gluonhq.jfxapps.core.api.ui.dock.DockType;
-import com.gluonhq.jfxapps.core.api.ui.dock.View;
-import com.gluonhq.jfxapps.core.api.ui.dock.ViewAttachment;
-import com.gluonhq.jfxapps.core.api.ui.dock.ViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockContext;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockType;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewController;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 
 import javafx.beans.property.ObjectProperty;

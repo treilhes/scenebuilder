@@ -47,14 +47,14 @@ import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.accelerators.preferences.global.AcceleratorsMapPreference;
 import com.gluonhq.jfxapps.core.accelerators.preferences.global.FocusedAcceleratorsMapPreference;
 import com.gluonhq.jfxapps.core.api.action.Action;
-import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.preferences.Preference;
 import com.gluonhq.jfxapps.core.api.shortcut.Accelerator;
 import com.gluonhq.jfxapps.core.api.shortcut.AcceleratorProvider;
 import com.gluonhq.jfxapps.core.api.shortcut.Accelerators;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractCommonUiController;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractCommonUiController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -87,14 +87,14 @@ public class AcceleratorsController implements Accelerators {
     private final Optional<List<AcceleratorProvider>> acceleratorProviders;
 
     private DocumentManager documentManager;
-    private InstanceWindow documentWindow;
+    private MainInstanceWindow documentWindow;
 
     private Map<Action, List<KeyCombination>> defaultGlobalAccelerators = new HashMap<>();
     private Map<Class<? extends AbstractCommonUiController>, Map<Action, List<KeyCombination>>> defaultFocusedAccelerators = new HashMap<>();
 
     public AcceleratorsController(
             DocumentManager documentManager,
-            InstanceWindow documentWindow,
+            MainInstanceWindow documentWindow,
             AcceleratorsMapPreference acceleratorsMapPreference,
             FocusedAcceleratorsMapPreference.Factory focusedAcceleratorsMapPreferenceFactory,
             Optional<List<AcceleratorProvider>> acceleratorProviders) {

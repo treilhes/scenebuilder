@@ -35,14 +35,14 @@ package com.gluonhq.jfxapps.core.ui.dock;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
-import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlWindowController;
-import com.gluonhq.jfxapps.core.api.ui.dock.Dock;
-import com.gluonhq.jfxapps.core.api.ui.dock.DockNameHelper;
-import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockNameHelper;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 
 import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.FXML;
@@ -68,7 +68,7 @@ public class DockWindowController extends AbstractFxmlWindowController {
     public DockWindowController(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
-            InstanceWindow documentWindow,
+            MainInstanceWindow documentWindow,
             DockPanelController dockPanelController,
             DockManager dockManager,
             DockNameHelper dockNameHelper) {

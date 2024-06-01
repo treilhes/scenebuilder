@@ -42,7 +42,7 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.ui.controller.dialog.Dialog;
 import com.gluonhq.jfxapps.core.extstore.fs.ExtensionFileSystemFactory;
 import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
 import com.gluonhq.jfxapps.core.library.api.LibraryStore;

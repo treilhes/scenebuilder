@@ -34,7 +34,7 @@
 package com.gluonhq.jfxapps.core.api.content.decoration;
 
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 

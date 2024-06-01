@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.imagelibrary.panel;
 
-import com.gluonhq.jfxapps.core.api.ui.dock.View;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 
 /**
  * @author ptreilhes

@@ -54,7 +54,7 @@ import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.api.job.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.ui.misc.HudWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.HudWindow;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;

@@ -36,9 +36,9 @@ package com.gluonhq.jfxapps.core.ui.dialog;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.controller.dialog.Alert;
+import com.gluonhq.jfxapps.core.api.ui.controller.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 
 import javafx.stage.Window;
 

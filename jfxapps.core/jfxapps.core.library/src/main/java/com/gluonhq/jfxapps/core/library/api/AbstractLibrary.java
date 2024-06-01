@@ -58,7 +58,6 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
-import com.gluonhq.jfxapps.core.api.SceneBuilderWindow;
 import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithApplication;
 import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithDocument;
 import com.gluonhq.jfxapps.core.api.di.SbPlatform;
@@ -67,6 +66,7 @@ import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
 import com.gluonhq.jfxapps.core.api.library.LibraryItem;
 import com.gluonhq.jfxapps.core.api.library.Report;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
 import com.gluonhq.jfxapps.core.library.manager.ImportProgressDialogController;
 import com.gluonhq.jfxapps.core.library.manager.LibraryDialogController;
@@ -411,7 +411,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
         return reports;
     }
 
-    public SceneBuilderWindow openDialog() {
+    public InstanceWindow openDialog() {
         LibraryDialogController libraryDialogController = context.getBean(LibraryDialogController.class);
         libraryDialogController.initForLibrary(this);
         libraryDialogController.openWindow();

@@ -44,16 +44,16 @@ import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
-import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
-import com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit;
-import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.dialog.Alert;
+import com.gluonhq.jfxapps.core.api.ui.controller.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.ui.controller.dialog.Alert.ButtonID;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.fs.preference.global.WildcardImportsPreference;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
@@ -64,7 +64,7 @@ public class SaveAction extends AbstractAction {
     private final ApplicationInstance document;
     private final InlineEdit inlineEdit;
     private final Dialog dialog;
-    private final InstanceWindow documentWindow;
+    private final MainInstanceWindow documentWindow;
     private final MessageLogger messageLogger;
     private final InstancesManager editor;
     private final DocumentManager documentManager;
@@ -75,7 +75,7 @@ public class SaveAction extends AbstractAction {
             ActionExtensionFactory extensionFactory,
             ApplicationInstance document,
             DocumentManager documentManager,
-            InstanceWindow documentWindow,
+            MainInstanceWindow documentWindow,
             InstancesManager editor,
             InlineEdit inlineEdit,
             Dialog dialog,

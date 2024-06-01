@@ -56,7 +56,7 @@ import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.application.lifecycle.DisposeWithApplication;
 import com.gluonhq.jfxapps.core.api.library.LibraryFilter;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.misc.UILogger;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.UILogger;
 import com.gluonhq.jfxapps.core.extstore.fs.ExtensionFileSystemFactory;
 import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
 import com.gluonhq.jfxapps.core.library.api.AbstractLibrary;

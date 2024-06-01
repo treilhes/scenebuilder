@@ -38,8 +38,8 @@ import org.scenebuilder.fxml.api.Inspector.SectionId;
 
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.ui.dock.Dock;
-import com.gluonhq.jfxapps.core.api.ui.dock.DockViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
 
 public abstract class AbstractFocusTabAction extends AbstractAction {
 

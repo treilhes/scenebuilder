@@ -46,7 +46,7 @@ import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
 import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.core.dnd.droptarget.AccessoryDropTarget;
 import com.gluonhq.jfxapps.core.core.dnd.droptarget.RootDropTarget;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;

@@ -50,7 +50,7 @@ import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.menu.ContextMenu;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.SceneGraphObject;

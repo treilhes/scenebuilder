@@ -53,11 +53,11 @@ import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.menu.Attachment;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuAttachment;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuProvider;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.Attachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuProvider;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 
 import jakarta.annotation.PostConstruct;
@@ -78,7 +78,7 @@ import javafx.scene.layout.StackPane;
  */
 @com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton
 //@Conditional(EditorPlatform.IS_MAC_CONDITION.class)
-public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.menu.MenuBar {
+public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBar {
     private final static Logger logger = LoggerFactory.getLogger(MenuBarController.class);
 
     private static MenuBarController systemMenuBarController; // For Mac only

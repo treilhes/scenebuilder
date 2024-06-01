@@ -38,11 +38,11 @@ import java.util.Map;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
-import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlWindowController;
-import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -66,7 +66,7 @@ public class ExtensionLibraryWindowController extends AbstractFxmlWindowControll
     public ExtensionLibraryWindowController(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
-            InstanceWindow document
+            MainInstanceWindow document
             ) {
         super(sceneBuilderManager, iconSetting, ExtensionLibraryWindowController.class.getResource("ExtensionLibraryWindow.fxml"), I18N.getBundle(),
                 document); // NOI18N

@@ -41,9 +41,9 @@ import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlPanelController;
-import com.gluonhq.jfxapps.core.api.ui.menu.ContextMenu;
-import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPanelController;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.SceneGraphObject;
 

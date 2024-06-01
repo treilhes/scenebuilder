@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
-import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 
 import javafx.scene.Node;
 import javafx.scene.input.InputEvent;

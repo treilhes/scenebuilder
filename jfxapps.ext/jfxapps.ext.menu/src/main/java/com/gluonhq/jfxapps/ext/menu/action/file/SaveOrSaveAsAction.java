@@ -40,8 +40,8 @@ import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.ext.menu.action.SaveAction;
 

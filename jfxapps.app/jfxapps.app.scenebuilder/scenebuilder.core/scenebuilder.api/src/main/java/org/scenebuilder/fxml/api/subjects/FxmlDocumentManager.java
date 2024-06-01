@@ -74,8 +74,8 @@ import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SubjectItem;
 import com.gluonhq.jfxapps.core.api.subjects.SubjectManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractCommonUiController;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractCommonUiController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
 

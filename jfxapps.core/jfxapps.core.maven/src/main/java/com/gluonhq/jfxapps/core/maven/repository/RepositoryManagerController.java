@@ -38,14 +38,14 @@ import java.util.stream.Collectors;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
-import com.gluonhq.jfxapps.core.api.SceneBuilderWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.maven.MavenClient;
 import com.gluonhq.jfxapps.core.api.maven.RepositoryManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlWindowController;
-import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
-import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
+import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -65,7 +65,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController im
     private ListView<RepositoryListItem> repositoryListView;
 
     private final MessageLogger messageLogger;
-    private final SceneBuilderWindow owner;
+    private final InstanceWindow owner;
 
     private ObservableList<RepositoryListItem> listItems;
 
@@ -82,7 +82,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController im
             JfxAppContext context,
             MessageLogger messageLogger,
             AddEditRepositoryDialogController repositoryDialogController,
-            SceneBuilderWindow owner) {
+            InstanceWindow owner) {
      // @formatter:on
         super(sceneBuilderManager, iconSetting, RepositoryManagerController.class.getResource("RepositoryManager.fxml"),
                 I18N.getBundle(), owner);

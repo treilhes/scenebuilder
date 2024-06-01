@@ -44,10 +44,10 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.menu.ViewMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.menu.ViewMenuItemProvider;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenuItemProvider;
 
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -78,7 +78,7 @@ public class AnnotatedActionViewMenuItemProvider implements ViewMenuItemProvider
 
         return context
                 .getBeanClassesForAnnotation(
-                        com.gluonhq.jfxapps.core.api.ui.menu.annotation.ViewMenuItemAttachment.class)
+                        com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment.class)
                 .stream().map(this::makeMenuItemAttachment).flatMap(l -> l.stream()).filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
@@ -97,8 +97,8 @@ public class AnnotatedActionViewMenuItemProvider implements ViewMenuItemProvider
             }
             final Class<AbstractAction> actionClass = (Class<AbstractAction>) cls;
 
-            final com.gluonhq.jfxapps.core.api.ui.menu.annotation.ViewMenuItemAttachment annotation = actionClass
-                    .getAnnotation(com.gluonhq.jfxapps.core.api.ui.menu.annotation.ViewMenuItemAttachment.class);
+            final com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment annotation = actionClass
+                    .getAnnotation(com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment.class);
 
             assert annotation != null;
 

@@ -39,8 +39,8 @@ import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.CardinalPoint;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlPopupController;
-import com.gluonhq.jfxapps.core.api.ui.misc.HudWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPopupController;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.HudWindow;
 import com.gluonhq.jfxapps.util.content.LineEquation;
 
 import javafx.fxml.FXML;

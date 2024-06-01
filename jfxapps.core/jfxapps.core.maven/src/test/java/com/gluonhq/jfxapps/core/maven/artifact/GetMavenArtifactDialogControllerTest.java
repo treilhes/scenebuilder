@@ -44,12 +44,12 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import com.gluonhq.jfxapps.core.api.SceneBuilderWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.settings.MavenSetting;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
-import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
+import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.maven.artifact.GetMavenArtifactDialogController;
 import com.gluonhq.jfxapps.core.maven.impl.MavenClientController;
 import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoriesPreferences;
@@ -82,7 +82,7 @@ class GetMavenArtifactDialogControllerTest {
     private MavenRepositoriesPreferences repositoryPreferences;
 
     @Mock
-    private SceneBuilderWindow owner;
+    private InstanceWindow owner;
 
     private Stage stage;
 

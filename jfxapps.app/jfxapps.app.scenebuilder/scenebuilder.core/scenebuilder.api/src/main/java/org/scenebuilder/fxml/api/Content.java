@@ -36,7 +36,7 @@ package org.scenebuilder.fxml.api;
 import java.util.Set;
 
 import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
-import com.gluonhq.jfxapps.core.api.ui.misc.HudWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.HudWindow;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 

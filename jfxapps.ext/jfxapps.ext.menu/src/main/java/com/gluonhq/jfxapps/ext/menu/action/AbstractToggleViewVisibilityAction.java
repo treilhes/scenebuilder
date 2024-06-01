@@ -35,9 +35,9 @@ package com.gluonhq.jfxapps.ext.menu.action;
 
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.ui.dock.Dock;
-import com.gluonhq.jfxapps.core.api.ui.dock.DockViewController;
-import com.gluonhq.jfxapps.core.api.ui.dock.View;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 
 public abstract class AbstractToggleViewVisibilityAction extends AbstractAction {
 

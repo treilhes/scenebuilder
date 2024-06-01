@@ -41,14 +41,14 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import com.gluonhq.jfxapps.core.api.SceneBuilderWindow;
 import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.template.Template;
 import com.gluonhq.jfxapps.core.api.template.TemplateGroup;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlWindowController;
-import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 
 import javafx.fxml.FXML;
@@ -76,7 +76,7 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
     private VBox templateContainer;
 
     public TemplatesBaseWindowController(SceneBuilderManager sceneBuilderManager, IconSetting iconSetting, URL fxmlURL,
-            ResourceBundle resources, SceneBuilderWindow owner, List<TemplateGroup> templateGroups,
+            ResourceBundle resources, InstanceWindow owner, List<TemplateGroup> templateGroups,
             List<Template> templates) {
         super(sceneBuilderManager, iconSetting, fxmlURL, resources, owner);
         this.templates = templates;

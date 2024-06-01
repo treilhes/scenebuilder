@@ -43,10 +43,10 @@ import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.ViewMenuController;
-import com.gluonhq.jfxapps.core.api.ui.dock.ViewSearch;
-import com.gluonhq.jfxapps.core.api.ui.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

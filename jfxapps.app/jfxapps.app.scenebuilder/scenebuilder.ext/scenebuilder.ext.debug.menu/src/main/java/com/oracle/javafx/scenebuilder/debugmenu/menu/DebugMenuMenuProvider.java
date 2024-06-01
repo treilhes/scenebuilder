@@ -42,9 +42,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuAttachment;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuProvider;
-import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuProvider;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.debugmenu.controller.DebugMenuController;
 
 import javafx.scene.control.Menu;

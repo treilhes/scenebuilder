@@ -40,8 +40,8 @@ import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractPopupController;
-import com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractPopupController;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Bounds;

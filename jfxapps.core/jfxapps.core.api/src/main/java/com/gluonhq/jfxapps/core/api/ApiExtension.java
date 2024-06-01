@@ -56,11 +56,11 @@ import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.NetworkManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
-import com.gluonhq.jfxapps.core.api.ui.ViewMenuController;
-import com.gluonhq.jfxapps.core.api.ui.dock.DockNameHelper;
-import com.gluonhq.jfxapps.core.api.ui.dock.SearchController;
-import com.gluonhq.jfxapps.core.api.ui.dock.ViewController;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuBuilder;
+import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockNameHelper;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.SearchController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 
 public class ApiExtension implements RootExtension {
 

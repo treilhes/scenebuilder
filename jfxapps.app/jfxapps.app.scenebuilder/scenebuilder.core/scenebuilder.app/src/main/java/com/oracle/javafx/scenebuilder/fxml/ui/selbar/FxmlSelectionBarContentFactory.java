@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.om.OMObject;
-import com.gluonhq.jfxapps.core.api.ui.selbar.SelectionBarContentFactory;
+import com.gluonhq.jfxapps.core.api.ui.controller.selbar.SelectionBarContentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask.Factory;

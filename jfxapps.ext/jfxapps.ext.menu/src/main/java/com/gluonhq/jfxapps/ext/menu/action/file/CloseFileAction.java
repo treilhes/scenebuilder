@@ -39,15 +39,15 @@ import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
-import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.dialog.Alert;
+import com.gluonhq.jfxapps.core.api.ui.controller.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 
 @Prototype
 @ActionMeta(
@@ -67,7 +67,7 @@ public class CloseFileAction extends AbstractAction {
     private final DocumentManager documentManager;
     private final InlineEdit inlineEdit;
     private final Dialog dialog;
-    private final InstanceWindow documentWindow;
+    private final MainInstanceWindow documentWindow;
     private final ActionFactory actionFactory;
     private final ApplicationInstance document;
     private boolean force = false;
@@ -77,7 +77,7 @@ public class CloseFileAction extends AbstractAction {
             ActionExtensionFactory extensionFactory,
             DocumentManager documentManager,
             ApplicationInstance document,
-            InstanceWindow documentWindow,
+            MainInstanceWindow documentWindow,
             InlineEdit inlineEdit,
             Dialog dialog,
             ActionFactory actionFactory) {

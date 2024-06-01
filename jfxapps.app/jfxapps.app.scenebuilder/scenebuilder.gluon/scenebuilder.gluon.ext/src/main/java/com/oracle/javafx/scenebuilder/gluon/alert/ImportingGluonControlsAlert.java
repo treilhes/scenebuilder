@@ -34,7 +34,7 @@
 package com.oracle.javafx.scenebuilder.gluon.alert;
 
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.alert.SBAlert;
+import com.gluonhq.jfxapps.core.api.ui.controller.alert.SBAlert;
 
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;

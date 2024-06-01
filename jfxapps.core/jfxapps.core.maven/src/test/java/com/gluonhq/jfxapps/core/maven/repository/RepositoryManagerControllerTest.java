@@ -48,14 +48,14 @@ import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
-import com.gluonhq.jfxapps.core.api.SceneBuilderWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.maven.MavenClient;
 import com.gluonhq.jfxapps.core.api.maven.RepositoryManager;
 import com.gluonhq.jfxapps.core.api.settings.MavenSetting;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
-import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
+import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoriesPreferences;
 import com.gluonhq.jfxapps.core.maven.repository.AddEditRepositoryDialogController;
 import com.gluonhq.jfxapps.core.maven.repository.RepositoryManagerController;
@@ -97,7 +97,7 @@ class RepositoryManagerControllerTest {
     private AddEditRepositoryDialogController repositoryDialogController;
 
     @Mock
-    private SceneBuilderWindow owner;
+    private InstanceWindow owner;
 
     private Stage stage;
 

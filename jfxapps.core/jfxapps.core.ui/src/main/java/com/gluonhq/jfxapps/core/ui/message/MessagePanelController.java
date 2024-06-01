@@ -37,9 +37,9 @@ import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlPanelController;
-import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
-import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger.MessageEntry;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPanelController;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger.MessageEntry;
 import com.gluonhq.jfxapps.core.ui.editor.messagelog.MessageLogEntry;
 
 import javafx.beans.value.ChangeListener;

@@ -34,7 +34,7 @@
 package com.gluonhq.jfxapps.core.api.shortcut;
 
 import com.gluonhq.jfxapps.core.api.action.Action;
-import com.gluonhq.jfxapps.core.api.ui.AbstractCommonUiController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractCommonUiController;
 
 import javafx.scene.control.MenuItem;
 

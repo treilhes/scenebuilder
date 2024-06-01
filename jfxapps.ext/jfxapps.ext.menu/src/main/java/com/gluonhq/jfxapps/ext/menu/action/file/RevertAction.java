@@ -39,14 +39,14 @@ import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
-import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
-import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.dialog.Alert;
+import com.gluonhq.jfxapps.core.api.ui.controller.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.ui.controller.dialog.Alert.ButtonID;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 @Prototype
@@ -64,14 +64,14 @@ public class RevertAction extends AbstractAction {
     private final ApplicationInstance document;
     private final DocumentManager documentManager;
     private final Dialog dialog;
-    private final InstanceWindow documentWindow;
+    private final MainInstanceWindow documentWindow;
     private final ActionFactory actionFactory;
 
     public RevertAction(
             ActionExtensionFactory extensionFactory,
             ApplicationInstance document,
             DocumentManager documentManager,
-            InstanceWindow documentWindow,
+            MainInstanceWindow documentWindow,
             Dialog dialog,
             ActionFactory actionFactory) {
         super(extensionFactory);

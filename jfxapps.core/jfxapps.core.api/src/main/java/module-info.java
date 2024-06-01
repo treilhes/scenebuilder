@@ -44,7 +44,7 @@ open module jfxapps.core.api {
     exports com.gluonhq.jfxapps.core.api.application.annotation;
     exports com.gluonhq.jfxapps.core.api.application.lifecycle;
 
-    exports com.gluonhq.jfxapps.core.api.ui.alert;
+    exports com.gluonhq.jfxapps.core.api.ui.controller.alert;
     exports com.gluonhq.jfxapps.core.api.clipboard;
 
 
@@ -55,8 +55,8 @@ open module jfxapps.core.api {
     exports com.gluonhq.jfxapps.core.api.css;
     exports com.gluonhq.jfxapps.core.api.di;
     exports com.gluonhq.jfxapps.core.api.dnd;
-    exports com.gluonhq.jfxapps.core.api.ui.dock;
-    exports com.gluonhq.jfxapps.core.api.ui.dock.annotation;
+    exports com.gluonhq.jfxapps.core.api.ui.controller.dock;
+    exports com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation;
     exports com.gluonhq.jfxapps.core.api.editor.images;
     exports com.gluonhq.jfxapps.core.api.editor.selection;
     exports com.gluonhq.jfxapps.core.api.error;
@@ -68,12 +68,12 @@ open module jfxapps.core.api {
     exports com.gluonhq.jfxapps.core.api.library;
 
     exports com.gluonhq.jfxapps.core.api.maven;
-    exports com.gluonhq.jfxapps.core.api.ui;
-    exports com.gluonhq.jfxapps.core.api.ui.selbar;
-    exports com.gluonhq.jfxapps.core.api.ui.menu;
-    exports com.gluonhq.jfxapps.core.api.ui.menu.annotation;
-    exports com.gluonhq.jfxapps.core.api.ui.misc;
-    exports com.gluonhq.jfxapps.core.api.ui.dialog;
+    exports com.gluonhq.jfxapps.core.api.ui.controller;
+    exports com.gluonhq.jfxapps.core.api.ui.controller.selbar;
+    exports com.gluonhq.jfxapps.core.api.ui.controller.menu;
+    exports com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation;
+    exports com.gluonhq.jfxapps.core.api.ui.controller.misc;
+    exports com.gluonhq.jfxapps.core.api.ui.controller.dialog;
     exports com.gluonhq.jfxapps.core.api.preferences;
     exports com.gluonhq.jfxapps.core.api.preferences.type;
 

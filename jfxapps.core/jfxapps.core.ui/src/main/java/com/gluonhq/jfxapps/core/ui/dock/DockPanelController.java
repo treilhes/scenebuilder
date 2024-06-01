@@ -46,16 +46,16 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.SceneBuilderWindow;
 import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager.DockRequest;
-import com.gluonhq.jfxapps.core.api.ui.dock.Dock;
-import com.gluonhq.jfxapps.core.api.ui.dock.DockContext;
-import com.gluonhq.jfxapps.core.api.ui.dock.DockType;
-import com.gluonhq.jfxapps.core.api.ui.dock.View;
-import com.gluonhq.jfxapps.core.api.ui.dock.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockContext;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockType;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachment;
 import com.gluonhq.jfxapps.core.ui.dock.preferences.document.DockMinimizedPreference;
 import com.gluonhq.jfxapps.core.ui.dock.preferences.document.LastDockDockTypePreference;
 import com.gluonhq.jfxapps.core.ui.dock.preferences.document.LastDockUuidPreference;
@@ -93,7 +93,7 @@ public class DockPanelController implements Dock {
     private VBox content;
 
     private final ObservableMap<View, DockContext<?>> views = FXCollections.observableHashMap();
-    private SceneBuilderWindow parentWindow;
+    private InstanceWindow parentWindow;
 
     @SuppressWarnings("rawtypes")
     private ObjectProperty<DockType> dockTypeProperty;
@@ -268,11 +268,11 @@ public class DockPanelController implements Dock {
     }
 
     @Override
-    public SceneBuilderWindow getParentWindow() {
+    public InstanceWindow getParentWindow() {
         return parentWindow;
     }
 
-    protected void setParentWindow(SceneBuilderWindow parentWindow) {
+    protected void setParentWindow(InstanceWindow parentWindow) {
         this.parentWindow = parentWindow;
     }
 

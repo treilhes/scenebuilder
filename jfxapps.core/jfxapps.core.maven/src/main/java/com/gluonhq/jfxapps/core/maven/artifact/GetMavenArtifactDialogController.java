@@ -42,16 +42,16 @@ import java.util.stream.Collectors;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
-import com.gluonhq.jfxapps.core.api.SceneBuilderWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.maven.ArtefactHandler;
 import com.gluonhq.jfxapps.core.api.maven.GetMavenArtifactDialog;
 import com.gluonhq.jfxapps.core.api.maven.MavenClient;
 import com.gluonhq.jfxapps.core.api.settings.MavenSetting;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlWindowController;
-import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
-import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
+import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoriesPreferences;
 
 import javafx.beans.value.ChangeListener;
@@ -95,7 +95,7 @@ public class GetMavenArtifactDialogController extends AbstractFxmlWindowControll
     private final MavenClient mavenClient;
     private Service<ObservableList<UniqueArtifact>> versionsService;
     private final Service<ResolvedArtifact> installService;
-    private final SceneBuilderWindow owner;
+    private final InstanceWindow owner;
     private final MessageLogger messageLogger;
 
 //    private final ChangeListener<MavenArtifact> comboBoxListener = (obs, ov, nv) -> {
@@ -118,7 +118,7 @@ public class GetMavenArtifactDialogController extends AbstractFxmlWindowControll
             MessageLogger messageLogger,
             MavenSetting mavenSetting,
             MavenRepositoriesPreferences repositoryPreferences,
-            SceneBuilderWindow owner) {
+            InstanceWindow owner) {
      // @formatter:on
         super(sceneBuilderManager, iconSetting,
                 GetMavenArtifactDialogController.class.getResource("GetMavenArtifactDialog.fxml"), I18N.getBundle(),

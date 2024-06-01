@@ -39,7 +39,7 @@ import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlPanelController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPanelController;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

@@ -44,12 +44,12 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuAttachment;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuProvider;
-import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuProvider;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -82,7 +82,7 @@ public class AnnotatedActionMenuItemProvider implements MenuItemProvider, MenuPr
 
         menuItemsCache = context
                 .getBeanClassesForAnnotation(
-                        com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment.class)
+                        com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment.class)
                 .stream().map(this::makeMenuItemAttachment).flatMap(l -> l.stream()).filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
@@ -95,7 +95,7 @@ public class AnnotatedActionMenuItemProvider implements MenuItemProvider, MenuPr
             return menuCache;
         }
         menuCache = context
-                .getBeanClassesForAnnotation(com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuAttachment.class)
+                .getBeanClassesForAnnotation(com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuAttachment.class)
                 .stream().map(this::makeMenuAttachment).flatMap(l -> l.stream()).filter(Objects::nonNull)
                 .collect(Collectors.toList());
         return menuCache;
@@ -113,8 +113,8 @@ public class AnnotatedActionMenuItemProvider implements MenuItemProvider, MenuPr
             }
             final Class<AbstractAction> actionClass = (Class<AbstractAction>) cls;
 
-            final com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment annotation = actionClass
-                    .getAnnotation(com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuItemAttachment.class);
+            final com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment annotation = actionClass
+                    .getAnnotation(com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment.class);
 
             assert annotation != null;
 
@@ -153,8 +153,8 @@ public class AnnotatedActionMenuItemProvider implements MenuItemProvider, MenuPr
         }
         final Class<AbstractAction> actionClass = (Class<AbstractAction>) cls;
 
-        final com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuAttachment annotation = actionClass
-                .getAnnotation(com.gluonhq.jfxapps.core.api.ui.menu.annotation.MenuAttachment.class);
+        final com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuAttachment annotation = actionClass
+                .getAnnotation(com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuAttachment.class);
 
         assert annotation != null;
 

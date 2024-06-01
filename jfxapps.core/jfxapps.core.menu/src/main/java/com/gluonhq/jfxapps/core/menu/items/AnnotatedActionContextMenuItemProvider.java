@@ -44,10 +44,10 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.ui.menu.ContextMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.menu.ContextMenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemProvider;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -78,7 +78,7 @@ public class AnnotatedActionContextMenuItemProvider implements ContextMenuItemPr
 
         menuItemsCache = context
                 .getBeanClassesForAnnotation(
-                        com.gluonhq.jfxapps.core.api.ui.menu.annotation.ContextMenuItemAttachment.class)
+                        com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ContextMenuItemAttachment.class)
                 .stream().map(this::makeContextMenuItemAttachment).flatMap(l -> l.stream()).filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
@@ -97,8 +97,8 @@ public class AnnotatedActionContextMenuItemProvider implements ContextMenuItemPr
             }
             final Class<AbstractAction> actionClass = (Class<AbstractAction>) cls;
 
-            final com.gluonhq.jfxapps.core.api.ui.menu.annotation.ContextMenuItemAttachment annotation = actionClass
-                    .getAnnotation(com.gluonhq.jfxapps.core.api.ui.menu.annotation.ContextMenuItemAttachment.class);
+            final com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ContextMenuItemAttachment annotation = actionClass
+                    .getAnnotation(com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ContextMenuItemAttachment.class);
 
             assert annotation != null;
 

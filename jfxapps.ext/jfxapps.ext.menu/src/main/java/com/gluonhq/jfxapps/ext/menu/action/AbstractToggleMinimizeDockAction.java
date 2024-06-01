@@ -35,7 +35,7 @@ package com.gluonhq.jfxapps.ext.menu.action;
 
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.ui.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 
 public abstract class AbstractToggleMinimizeDockAction extends AbstractAction {
 

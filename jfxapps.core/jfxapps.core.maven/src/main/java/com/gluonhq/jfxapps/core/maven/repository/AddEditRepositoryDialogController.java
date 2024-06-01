@@ -41,15 +41,15 @@ import java.util.Set;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
 import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
-import com.gluonhq.jfxapps.core.api.SceneBuilderWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.maven.MavenClient;
 import com.gluonhq.jfxapps.core.api.maven.RepositoryTypeProvider;
 import com.gluonhq.jfxapps.core.api.settings.MavenSetting;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlWindowController;
-import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
-import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
+import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoriesPreferences;
 
 import javafx.concurrent.Service;
@@ -115,7 +115,7 @@ public class AddEditRepositoryDialogController extends AbstractFxmlWindowControl
     @FXML
     private Label resultLabel;
 //
-    private final SceneBuilderWindow owner;
+    private final InstanceWindow owner;
     private final MessageLogger messageLogger;
     private final MavenClient mavenClient;
     private Repository oldRepository;
@@ -131,7 +131,7 @@ public class AddEditRepositoryDialogController extends AbstractFxmlWindowControl
     		MavenSetting mavenSetting,
     		MavenRepositoriesPreferences repositoryPreferences,
     		Optional<List<RepositoryTypeProvider>> repositoryTypes,
-    		SceneBuilderWindow owner) {
+    		InstanceWindow owner) {
      // @formatter:on
         super(sceneBuilderManager, iconSetting,
                 AddEditRepositoryDialogController.class.getResource("AddEditRepositoryDialog.fxml"), I18N.getBundle(),

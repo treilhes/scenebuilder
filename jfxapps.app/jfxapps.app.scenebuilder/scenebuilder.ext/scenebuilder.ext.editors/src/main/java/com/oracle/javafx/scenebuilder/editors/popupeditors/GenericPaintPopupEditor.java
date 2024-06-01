@@ -39,8 +39,8 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger;
+import com.gluonhq.jfxapps.core.api.ui.controller.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 
 /**
  * Popup editor for the Paint property.

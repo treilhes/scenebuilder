@@ -52,7 +52,7 @@ import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.error.ErrorReport;
 import com.gluonhq.jfxapps.core.api.error.ErrorReport.ErrorReportEntry;
-import com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInclude;
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;
@@ -134,7 +134,7 @@ class HierarchyTreeCellTest {
 
     }
     /**
-     * Test method for {@link com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell#HierarchyTreeCell(com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit, com.gluonhq.jfxapps.core.api.error.ErrorReport, com.gluonhq.jfxapps.core.api.dnd.Drag)}.
+     * Test method for {@link com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell#HierarchyTreeCell(com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit, com.gluonhq.jfxapps.core.api.error.ErrorReport, com.gluonhq.jfxapps.core.api.dnd.Drag)}.
      */
     @Test
     void testHierarchyTreeCell(FxRobot robot) {

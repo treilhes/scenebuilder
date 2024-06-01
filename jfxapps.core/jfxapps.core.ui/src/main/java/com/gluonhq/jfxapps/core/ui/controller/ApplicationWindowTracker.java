@@ -35,8 +35,8 @@ package com.gluonhq.jfxapps.core.ui.controller;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.FxThread;
-import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
-import com.gluonhq.jfxapps.core.api.application.WindowPreferenceTracker;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.WindowPreferenceTracker;
 import com.gluonhq.jfxapps.core.ui.preferences.document.MaximizedPreference;
 import com.gluonhq.jfxapps.core.ui.preferences.document.StageHeightPreference;
 import com.gluonhq.jfxapps.core.ui.preferences.document.StageWidthPreference;
@@ -63,7 +63,7 @@ public class ApplicationWindowTracker implements WindowPreferenceTracker { // , 
     /*
      * DocumentWindowController
      */
-    private InstanceWindow windowInstance;
+    private MainInstanceWindow windowInstance;
 
     private ChangeListener<? super Number> xPropertyListener;
     private ChangeListener<? super Number> yPropertyListener;
@@ -98,7 +98,7 @@ public class ApplicationWindowTracker implements WindowPreferenceTracker { // , 
 
     @Override
     @FxThread
-    public void initialize(InstanceWindow windowInstance) {
+    public void initialize(MainInstanceWindow windowInstance) {
         this.windowInstance = windowInstance;
         System.out.println( this + "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuNNNNNNNNNNNNNNNNNNNNNNN");
         System.out.println("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuNNNNNNNNNNNNNNNNNNNNNNN");

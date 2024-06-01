@@ -40,13 +40,13 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
-import com.gluonhq.jfxapps.core.api.ui.menu.ContextMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.menu.ContextMenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.menu.DefaultMenu;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemProvider;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.DefaultMenu;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.SendBackwardAction;
 
 import javafx.scene.control.Menu;

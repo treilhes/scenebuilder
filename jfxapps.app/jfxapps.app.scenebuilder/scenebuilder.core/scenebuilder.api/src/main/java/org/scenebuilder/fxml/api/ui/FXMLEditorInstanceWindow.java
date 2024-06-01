@@ -33,10 +33,10 @@
  */
 package org.scenebuilder.fxml.api.ui;
 
-import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
-import com.gluonhq.jfxapps.core.api.ui.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 
-public interface FXMLEditorInstanceWindow extends InstanceWindow {
+public interface FXMLEditorInstanceWindow extends MainInstanceWindow {
 
     /**
      * @return

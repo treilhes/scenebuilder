@@ -37,7 +37,7 @@ import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
 import com.gluonhq.jfxapps.core.api.content.decoration.AbstractDecoration;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.oracle.javafx.scenebuilder.api.control.Tring;
 
 import javafx.scene.paint.Paint;

@@ -32,7 +32,7 @@
  */
 package com.gluonhq.jfxapps.core.ui.editor.messagelog;
 
-import com.gluonhq.jfxapps.core.api.ui.misc.MessageLogger.MessageEntry;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger.MessageEntry;
 
 /**
  *

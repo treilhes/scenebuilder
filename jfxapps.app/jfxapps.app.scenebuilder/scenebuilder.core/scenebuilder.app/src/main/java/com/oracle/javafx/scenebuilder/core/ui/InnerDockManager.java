@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.preferences.type.DoublePreference;
-import com.gluonhq.jfxapps.core.api.ui.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener.Change;

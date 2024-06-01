@@ -40,8 +40,8 @@ import com.gluonhq.jfxapps.boot.context.annotation.Primary;
 import com.gluonhq.jfxapps.core.api.css.StylesheetProvider;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
-import com.gluonhq.jfxapps.core.api.ui.AbstractCommonUiController;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractCommonUiController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 

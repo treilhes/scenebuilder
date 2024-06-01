@@ -38,15 +38,15 @@ import java.util.UUID;
 import com.gluonhq.jfxapps.app.manager.main.api.MainContent;
 import com.gluonhq.jfxapps.app.manager.preferences.document.BottomDividerVPosPreference;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
-import com.gluonhq.jfxapps.core.api.application.WindowPreferenceTracker;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlWindowController;
-import com.gluonhq.jfxapps.core.api.ui.dock.Dock;
-import com.gluonhq.jfxapps.core.api.ui.dock.Dock.Orientation;
-import com.gluonhq.jfxapps.core.api.ui.menu.MenuBar;
-import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.WindowPreferenceTracker;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock.Orientation;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBar;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 
 import jakarta.inject.Provider;
 import javafx.event.EventHandler;
@@ -57,7 +57,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 @ApplicationInstanceSingleton
-public class ManagerUiTemplate extends AbstractFxmlWindowController implements InstanceWindow {
+public class ManagerUiTemplate extends AbstractFxmlWindowController implements MainInstanceWindow {
 
     public static final String BOTTOM_DOCK_ID = "e8a0168d-f074-47e7-b107-aa7302a27cf8";
     public static final UUID BOTTOM_DOCK_UUID = UUID.fromString(BOTTOM_DOCK_ID);

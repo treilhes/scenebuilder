@@ -48,7 +48,7 @@ import com.gluonhq.jfxapps.core.api.content.mode.Layer;
 import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
 import com.gluonhq.jfxapps.core.api.job.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.ui.misc.HudWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.HudWindow;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;

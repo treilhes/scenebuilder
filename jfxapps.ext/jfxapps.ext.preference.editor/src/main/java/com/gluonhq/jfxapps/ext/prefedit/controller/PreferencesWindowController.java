@@ -40,16 +40,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.SceneBuilderWindow;
-import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
 import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
 import com.gluonhq.jfxapps.core.api.preferences.UserPreference;
 import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.AbstractFxmlWindowController;
-import com.gluonhq.jfxapps.core.api.ui.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -82,7 +82,7 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
     @FXML
     private Button documentResetButton;
 
-    private final SceneBuilderWindow ownerWindow;
+    private final InstanceWindow ownerWindow;
 
     private List<UserPreference<?>> globalPreferences;
     private List<UserPreference<?>> documentPreferences;
@@ -90,7 +90,7 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
     public PreferencesWindowController(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
-            InstanceWindow documentWindowController,
+            MainInstanceWindow documentWindowController,
             List<ManagedGlobalPreference> globalPreferences,
             List<ManagedDocumentPreference> documentPreferences) {
         super(sceneBuilderManager, iconSetting, PreferencesWindowController.class.getResource("Preferences.fxml"),

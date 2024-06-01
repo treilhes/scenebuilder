@@ -35,7 +35,7 @@
 package com.gluonhq.jfxapps.ext.scenicview.controller;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 
 /**
  * @treatAsPrivate
@@ -49,6 +49,6 @@ public class ScenicViewStarter implements Runnable {
 
         @Override
         public void run() {
-                org.scenicview.ScenicView.show(context.getBean(InstanceWindow.class).getScene());
+                org.scenicview.ScenicView.show(context.getBean(MainInstanceWindow.class).getScene());
         }
 }

@@ -34,10 +34,10 @@
 package com.gluonhq.jfxapps.core.clipboard.controller;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardHandler;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.ui.misc.InlineEdit;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 
 import javafx.scene.Node;
 import javafx.scene.control.TextInputControl;
@@ -46,12 +46,12 @@ import javafx.scene.input.Clipboard;
 @ApplicationInstanceSingleton
 public abstract class ClipboardController implements com.gluonhq.jfxapps.core.api.clipboard.Clipboard {
 
-    private final InstanceWindow documentWindow;
+    private final MainInstanceWindow documentWindow;
     private final InlineEdit inlineEdit;
     private final DocumentManager documentManager;
 
     public ClipboardController(
-            InstanceWindow documentWindow,
+            MainInstanceWindow documentWindow,
             InlineEdit inlineEdit,
             DocumentManager documentManager) {
         super();

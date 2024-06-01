@@ -40,7 +40,7 @@ import java.util.Set;
 
 import com.gluonhq.jfxapps.core.api.content.decoration.Decoration;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.util.IOUtils;

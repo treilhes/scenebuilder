@@ -34,7 +34,7 @@
 
 package com.gluonhq.jfxapps.core.api.content.gesture;
 
-import com.gluonhq.jfxapps.core.api.ui.misc.Workspace;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 
 import javafx.scene.Node;
 import javafx.scene.input.InputEvent;

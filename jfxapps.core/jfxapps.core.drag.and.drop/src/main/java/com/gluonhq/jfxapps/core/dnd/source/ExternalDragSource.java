@@ -50,11 +50,11 @@ import org.springframework.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.gluonhq.jfxapps.core.api.application.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
 import com.gluonhq.jfxapps.core.api.dnd.DragSourceFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.util.ClassUtils;
@@ -93,7 +93,7 @@ public final class ExternalDragSource extends AbstractDragSource {
 
     protected ExternalDragSource(
             DocumentManager documentManager,
-            InstanceWindow ownerWindow,
+            MainInstanceWindow ownerWindow,
             Optional<List<ClipboardDataFormat>> dataFormats) {
         super(ownerWindow.getScene().getWindow());
         this.targetDocument = documentManager.fxomDocument().get();

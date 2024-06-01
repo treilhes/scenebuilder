@@ -47,7 +47,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
-import com.gluonhq.jfxapps.core.api.ui.dock.DockType;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockType;
 import com.gluonhq.jfxapps.core.ui.dock.DockPanelController;
 import com.gluonhq.jfxapps.core.ui.dock.DockTypeSplitH;
 import com.gluonhq.jfxapps.core.ui.dock.preferences.document.DockMinimizedPreference;
