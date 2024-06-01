@@ -31,23 +31,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.manager.metadata;
+package com.gluonhq.jfxapps.app.manager.metadata.custom;
 
-import java.util.List;
-
-import com.gluonhq.jfxapps.app.manager.metadata.custom.ComponentClassMetadataCustomization;
-import com.gluonhq.jfxapps.app.manager.metadata.custom.ComponentPropertyMetadataCustomization;
-import com.gluonhq.jfxapps.app.manager.metadata.custom.ValuePropertyMetadataCustomization;
-import com.gluonhq.jfxapps.core.metadata.AbstractMetadata;
-import com.gluonhq.jfxapps.core.metadata.MetadataIntrospector;
-import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
-
-public class ManagerMetadata extends
-        AbstractMetadata<ComponentClassMetadataCustomization, ComponentPropertyMetadataCustomization, ValuePropertyMetadataCustomization> {
-
-    protected ManagerMetadata(
-            List<ComponentClassMetadata<?, ComponentClassMetadataCustomization, ComponentPropertyMetadataCustomization, ValuePropertyMetadataCustomization>> componentClassMetadatas,
-            MetadataIntrospector<ComponentClassMetadataCustomization, ComponentPropertyMetadataCustomization, ValuePropertyMetadataCustomization> metadataIntrospector) {
-        super(componentClassMetadatas, metadataIntrospector);
+/**
+ *
+ */
+public class ClassMetadataCusto {
+    public ClassMetadataCusto() {
+        super();
     }
 }

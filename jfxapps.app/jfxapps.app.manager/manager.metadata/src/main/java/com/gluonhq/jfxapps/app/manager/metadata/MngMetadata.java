@@ -31,16 +31,25 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.manager.metadata.custom;
+package com.gluonhq.jfxapps.app.manager.metadata;
 
-/**
- * This class describes an fxml component class
- *
- */
-public class ComponentClassMetadataCustomization {
+import java.util.List;
 
-    public ComponentClassMetadataCustomization() {
-        super();
+import com.gluonhq.jfxapps.app.manager.metadata.custom.ClassMetadataCusto;
+import com.gluonhq.jfxapps.app.manager.metadata.custom.ClassPropertyMetadataCusto;
+import com.gluonhq.jfxapps.app.manager.metadata.custom.ValuePropertyMetadataCusto;
+import com.gluonhq.jfxapps.core.metadata.AbstractMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+
+public class MngMetadata extends AbstractMetadata<
+    ClassMetadataCusto,
+    ComponentPropertyMetadata<ClassPropertyMetadataCusto, MngClassMetadata<?>>,
+    ValuePropertyMetadata<ValuePropertyMetadataCusto>,
+    MngClassMetadata<?>> {
+
+    protected MngMetadata(List<MngClassMetadata<?>> componentClassMetadatas) {
+        super(componentClassMetadatas);
+
     }
-
 }

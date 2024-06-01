@@ -31,22 +31,27 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.manager.metadata.custom;
+package com.gluonhq.jfxapps.app.manager.metadata;
 
-/**
- *
- *
- */
-public class ValuePropertyMetadataCustomization {
+import com.gluonhq.jfxapps.app.manager.metadata.custom.ClassMetadataCusto;
+import com.gluonhq.jfxapps.app.manager.metadata.custom.ClassPropertyMetadataCusto;
+import com.gluonhq.jfxapps.app.manager.metadata.custom.ValuePropertyMetadataCusto;
+import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 
-    protected ValuePropertyMetadataCustomization(Builder builder) {
-    }
+public class MngClassMetadata<T> extends ComponentClassMetadata<T,
+    ClassMetadataCusto,
+    ClassPropertyMetadataCusto,
+    ComponentPropertyMetadata<ClassPropertyMetadataCusto, MngClassMetadata<T>>,
+    ValuePropertyMetadataCusto,
+    ValuePropertyMetadata<ValuePropertyMetadataCusto>,
+    MngClassMetadata<?>> {
 
-    public static class Builder {
-
-        public ValuePropertyMetadataCustomization build() {
-            return new ValuePropertyMetadataCustomization(this);
-        }
+    public MngClassMetadata(Class<T> klass,
+            MngClassMetadata<?> parentMetadata,
+            ClassMetadataCusto customization) {
+        super(klass, parentMetadata, customization);
     }
 
 }

@@ -31,28 +31,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.manager.metadata.custom;
+package com.gluonhq.jfxapps.app.manager.metadata;
 
-/**
- * This class describes a property used as a placeholder for other component
- *
- */
-public class ComponentPropertyMetadataCustomization {
+import com.gluonhq.jfxapps.app.manager.metadata.custom.ClassPropertyMetadataCusto;
+import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
 
-    protected ComponentPropertyMetadataCustomization(Builder builder) {
-    }
+public class MngClassPropertyMetadata extends ComponentPropertyMetadata<ClassPropertyMetadataCusto, MngClassMetadata<?>> {
 
-
-    public static class Builder {
-
-        public Builder() {
-            super();
-        }
-
-
-        public ComponentPropertyMetadataCustomization build() {
-            return new ComponentPropertyMetadataCustomization(this);
-        }
+    protected MngClassPropertyMetadata(
+            AbstractBuilder<?, ?, ClassPropertyMetadataCusto, MngClassMetadata<?>> builder) {
+        super(builder);
     }
 
 }

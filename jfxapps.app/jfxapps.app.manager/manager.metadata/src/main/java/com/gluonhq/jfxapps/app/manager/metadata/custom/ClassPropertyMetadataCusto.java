@@ -31,41 +31,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.manager.metadata;
+package com.gluonhq.jfxapps.app.manager.metadata.custom;
 
-import java.beans.PropertyDescriptor;
-import java.util.Set;
-
-import com.gluonhq.jfxapps.app.manager.metadata.custom.ComponentClassMetadataCustomization;
-import com.gluonhq.jfxapps.app.manager.metadata.custom.ComponentPropertyMetadataCustomization;
-import com.gluonhq.jfxapps.app.manager.metadata.custom.ValuePropertyMetadataCustomization;
-import com.gluonhq.jfxapps.core.metadata.MetadataIntrospector;
-import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
-
-public class ManagerMetadataIntrospector extends
-        MetadataIntrospector<ComponentClassMetadataCustomization, ComponentPropertyMetadataCustomization, ValuePropertyMetadataCustomization> {
-
-    public ManagerMetadataIntrospector() {
+/**
+ * This class describes a property
+ *
+ */
+public class ClassPropertyMetadataCusto {
+    protected ClassPropertyMetadataCusto() {
     }
-
-    @Override
-    protected ComponentClassMetadataCustomization customizeComponent(Class<?> componentClass,
-            ComponentClassMetadata<?, ComponentClassMetadataCustomization, ComponentPropertyMetadataCustomization, ValuePropertyMetadataCustomization> ancestorMetadata,
-            Set<PropertyMetadata<?>> properties, Exception exception) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ComponentPropertyMetadataCustomization customizeComponentProperty(PropertyDescriptor d, int counter) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected ValuePropertyMetadataCustomization customizeValueProperty(PropertyDescriptor d, int counter) {
-        return null;
-    }
-
 }
