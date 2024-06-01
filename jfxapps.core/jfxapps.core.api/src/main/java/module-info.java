@@ -68,6 +68,7 @@ open module jfxapps.core.api {
     exports com.gluonhq.jfxapps.core.api.library;
 
     exports com.gluonhq.jfxapps.core.api.maven;
+    exports com.gluonhq.jfxapps.core.api.ui;
     exports com.gluonhq.jfxapps.core.api.ui.controller;
     exports com.gluonhq.jfxapps.core.api.ui.controller.selbar;
     exports com.gluonhq.jfxapps.core.api.ui.controller.menu;
