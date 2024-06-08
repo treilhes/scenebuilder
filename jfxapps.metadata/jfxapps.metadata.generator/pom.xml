@@ -70,6 +70,12 @@
             <version>11</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>11</version>
+            <scope>provided</scope>
+        </dependency>
 
 
     </dependencies>

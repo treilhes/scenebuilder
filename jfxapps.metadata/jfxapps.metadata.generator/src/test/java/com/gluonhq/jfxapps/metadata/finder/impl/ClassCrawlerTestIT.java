@@ -39,6 +39,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.AfterEach;
@@ -53,7 +54,10 @@ import com.gluonhq.jfxapps.metadata.java.model.tbd.Descriptor;
 import com.gluonhq.jfxapps.metadata.util.FxThreadinitializer;
 import com.gluonhq.jfxapps.metadata.util.Report;
 
+import javafx.application.Platform;
 import javafx.scene.control.Cell;
+import javafx.scene.layout.Pane;
+import javafx.scene.web.WebView;
 
 class ClassCrawlerTestIT {
     private static final Logger logger = LoggerFactory.getLogger(ClassCrawlerTestIT.class);
@@ -66,6 +70,21 @@ class ClassCrawlerTestIT {
     @AfterEach
     public void stopJFX() {
         FxThreadinitializer.stop();
+        System.out.println("STOP");
+    }
+
+    @Test
+    void should_exit_and_restart_fx_thread() throws Exception {
+        //Platform.runLater(() -> new WebView());
+
+
+        FxThreadinitializer.stop();
+        System.out.println();
+
+
+
+        FxThreadinitializer.initJFX("");
+        System.out.println("END");
     }
 
     @Test

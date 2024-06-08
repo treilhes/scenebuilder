@@ -16,8 +16,6 @@
         <module>manager.model</module>
         <module>manager.metadata</module>
         <module>manager.api</module>
-        <module>manager.metadata.model</module>
-        <module>manager.metadata.modeldata</module>
     </modules>
     
     <properties>
@@ -35,12 +33,7 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>manager.core</artifactId>
-                <version>${manager.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>manager.metadata</artifactId>
+                <artifactId>manager.metadata.customization</artifactId>
                 <version>${manager.version}</version>
             </dependency>
             <dependency>

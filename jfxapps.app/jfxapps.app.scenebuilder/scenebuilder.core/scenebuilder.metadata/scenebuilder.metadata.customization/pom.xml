@@ -1,0 +1,80 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.gluonhq.jfxapps</groupId>
+    <artifactId>scenebuilder.metadata</artifactId>
+    <version>${scenebuilder.version}</version>
+  </parent>
+  <artifactId>scenebuilder.metadata.customization</artifactId>
+  
+  <dependencies>
+      <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.app.starter</artifactId>
+            
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.app.starter.test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- The goal for this dependency is to force the build of
+        scenebuilder.metadata-maven-plugin into the maven reactor -->
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps-metadata-maven-plugin</artifactId>
+            <version>${jfxapps.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-invoker-plugin</artifactId>
+                <version>3.2.2</version>
+                <executions>
+                    <execution>
+                        <id>forked-install</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <projectsDirectory>${basedir}/..</projectsDirectory>
+                            <pomIncludes>
+                                <pomInclude>scenebuilder.metadata.javafxdata/pom.xml</pomInclude>
+                            </pomIncludes>
+                            <streamLogs>true</streamLogs>
+                            <goals>
+                                <goal>clean</goal>
+                                <goal>install</goal>
+                            </goals>
+                            <mavenOpts>--add-opens java.base/java.lang=ALL-UNNAMED</mavenOpts>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>forked-install2</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <projectsDirectory>${basedir}/..</projectsDirectory>
+                            <pomIncludes>
+                                <pomInclude>scenebuilder.metadata.javafx11/pom.xml</pomInclude>
+                                <pomInclude>scenebuilder.metadata.javafx12/pom.xml</pomInclude>
+                            </pomIncludes>
+                            <streamLogs>true</streamLogs>
+                            <goals>
+                                <goal>clean</goal>
+                                <goal>install</goal>
+                            </goals>
+                            <mavenOpts>--add-opens java.base/java.lang=ALL-UNNAMED</mavenOpts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

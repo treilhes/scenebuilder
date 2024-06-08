@@ -34,8 +34,6 @@
 package com.gluonhq.jfxapps.metadata.plugin;
 
 import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
@@ -49,9 +47,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.apache.maven.project.MavenProject;
 
-import com.gluonhq.jfxapps.metadata.finder.api.Executor;
 import com.gluonhq.jfxapps.metadata.finder.api.IClassCrawler;
 import com.gluonhq.jfxapps.metadata.finder.api.SearchContext;
 import com.gluonhq.jfxapps.metadata.finder.impl.ClassCrawler;
@@ -119,6 +115,9 @@ public class MetadataSourceMojo extends JfxAppsAbstractMojo {
     @Parameter(property = "targetValuePropertyCustomizationClass", required = false)
     String targetValuePropertyCustomizationClass;
 
+    static {
+        FxThreadinitializer.ENABLE_EXPERIMENTAL_FEATURES = false;
+    }
     /**
      * Default constructor.
      */
@@ -136,7 +135,7 @@ public class MetadataSourceMojo extends JfxAppsAbstractMojo {
 
         try {
 
-            if (!FxThreadinitializer.initJFX(javafxVersion).get()) {
+            if (!FxThreadinitializer.initJFX(javafxVersion)) {
                 throw new MojoExecutionException("Failed to initialize JavaFX thread");
             }
 

@@ -43,7 +43,7 @@ open module jfxapps.app.manager.main {
     //opens com.oracle.javafx.scenebuilder.app.manager.main.ui.cmp to jfxapps.boot.context, javafx.fxml;
 
     requires jfxapps.app.starter;
-    requires jfxapps.app.manager.model;
+    requires manager.model;
 //    requires jfxapps.core.api;
 //    requires jakarta.inject;
 //    requires scenebuilder.core.metadata;

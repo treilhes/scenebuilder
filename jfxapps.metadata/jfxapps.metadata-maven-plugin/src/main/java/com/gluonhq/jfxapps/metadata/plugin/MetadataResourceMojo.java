@@ -39,7 +39,6 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -50,8 +49,6 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-import com.gluonhq.jfxapps.metadata.bean.BeanMetaData;
-import com.gluonhq.jfxapps.metadata.bean.MetadataProducer;
 import com.gluonhq.jfxapps.metadata.finder.api.IClassCrawler;
 import com.gluonhq.jfxapps.metadata.finder.api.SearchContext;
 import com.gluonhq.jfxapps.metadata.finder.impl.ClassCrawler;
@@ -70,6 +67,9 @@ import javafx.application.Platform;
 @Mojo(name = "metadataResource", defaultPhase = LifecyclePhase.GENERATE_RESOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
 public class MetadataResourceMojo extends JfxAppsAbstractMojo {
 
+    static {
+        FxThreadinitializer.ENABLE_EXPERIMENTAL_FEATURES = false;
+    }
     /**
      * Default constructor.
      */
@@ -105,7 +105,7 @@ public class MetadataResourceMojo extends JfxAppsAbstractMojo {
             // Set the context class loader to the new URLClassLoader
             Thread.currentThread().setContextClassLoader(urlClassLoader);
 
-            if (!FxThreadinitializer.initJFX(javafxVersion).get()) {
+            if (!FxThreadinitializer.initJFX(javafxVersion)) {
                 throw new MojoExecutionException("Failed to initialize JavaFX thread");
             }
 

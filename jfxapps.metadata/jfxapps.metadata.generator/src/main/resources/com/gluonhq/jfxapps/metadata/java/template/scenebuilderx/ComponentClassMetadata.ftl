@@ -19,7 +19,7 @@ public class ${component.metadataClassSimpleName} extends ${componentSuperClassN
 
 <#macro valuePropertyMacro property customization>
     <#assign propertyMetadataClassName = property.metadataClass.name?replace("$", ".")>
-    <#assign genericCusto = context.valuePropertyCustomizationClassName!"<targetValuePropertyCustomizationClass> not set in plugin configuration!">
+    <#assign genericCusto = context.valuePropertyCustomizationClassName!"Void">
     <#assign contentClass = property.metadata.type.name?replace("$", ".")>
 
     public static final ${propertyMetadataClassName}<${genericCusto}> 
@@ -83,7 +83,7 @@ public class ${component.metadataClassSimpleName} extends ${componentSuperClassN
     <#if property.metadataClass??>
         <#assign propertyMetadataClassName = property.metadataClass.name?replace("$", ".")>
         ${logger.info("Processing component property " + component.metadata.name + "." + property.metadata.name + " : " + property.metadata.contentType)}
-        private final ${propertyMetadataClassName}<${context.componentPropertyCustomizationClassName!"<targetComponentPropertyCustomizationClass> not set in plugin configuration!"}> 
+        private final ${propertyMetadataClassName}
             ${property.memberName}PropertyMetadata;
     <#else>
         ${logger.info("MetadataClass not set! Discard component property " + component.metadata.name + "." + property.metadata.name + " : " + property.metadata.contentType)}
@@ -108,8 +108,8 @@ public class ${component.metadataClassSimpleName} extends ${componentSuperClassN
             <#if property.metadataClass??>
             ${logger.info("Processing 2 " + component.metadata.name + "." + property.metadata.name + " : " + property.metadata.contentType)}
             <#assign propertyMetadataClassName = property.metadataClass.name?replace("$", ".")>
-            
-            ${property.memberName}PropertyMetadata = new ${propertyMetadataClassName}.Builder<${context.componentPropertyCustomizationClassName!"<targetComponentPropertyCustomizationClass> not set in plugin configuration!"}>()
+
+            ${property.memberName}PropertyMetadata = new ${propertyMetadataClassName}.Builder()
                     .name(PropertyNames.${property.memberName}Name)
                     .classMetadata(<#if property.metadata.collection == true>${property.metadata.collectionType.simpleName?uncap_first}<#else>${property.metadata.type.simpleName?uncap_first}</#if>Metadata)
                     .isCollection(${property.metadata.collection})

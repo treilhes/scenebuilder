@@ -62,10 +62,10 @@ import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata.Visibility;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.StringPropertyMetadata;
-import com.oracle.javafx.scenebuilder.metadata.SbComponentClassMetadata;
-import com.oracle.javafx.scenebuilder.metadata.SbMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
 import com.oracle.javafx.scenebuilder.metadata.custom.ComponentPropertyMetadataCustomization;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbComponentClassMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
 
 import javafx.scene.Node;

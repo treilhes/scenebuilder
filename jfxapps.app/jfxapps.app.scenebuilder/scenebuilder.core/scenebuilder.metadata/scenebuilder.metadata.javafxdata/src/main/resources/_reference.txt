@@ -1,0 +1,62 @@
+This document contains the format used by the scenebuilder-maven-plugin to describe
+scenebuilder controls.
+
+For a control some.package.SomeControl. The file SomeControl.properties must be created in a package named: some.package.somecontrol
+
+It may contains the following data:
+
+--- Control definition : Abstract class or control hidden to Scenebuilder can omit this part ---
+SomeControl.category= [String] Category name or localized key
+SomeControl.resizeWhenTop= [Boolean] When a child control is changed a resize may occur on this element
+
+------ Control qualifiers : Abstract class or control hidden to Scenebuilder can omit this part ---
+SomeControl.qualifiers=default
+SomeControl.default.fxml=CardPane_default.fxml
+SomeControl.default.image=CardPane_default.png
+SomeControl.default.imagex2=CardPane_default@2x.png
+
+
+
+--- Control properties definition
+
+SomeProperty.freeChildPositioning= [Boolean] The container does not force the position of child elements
+
+package com.oracle.javafx.scenebuilder.metadata.bean;
+
+public interface BundleValues {
+
+	//class level
+	final String FREE_POSITIONING = "freeChildPositioning";
+	final String RESIZE_WHEN_TOP_ELEMENT = "resizeNeededWhenTop";
+	final String VERSION = "version";
+	final String QUALIFIERS = "qualifiers";
+	final String CATEGORY = "category";
+
+	//property level
+	final String INSPECTOR_SECTION = "section";
+	final String INSPECTOR_SUBSECTION = "subSection";
+	final String ORDER = "order";
+	final String METACLASS = "class";
+	final String TMP_METACLASS_KIND = "classKind";
+	final String HIDDEN = "hidden";
+	final String IS_COMPONENT = "component";
+	final String VISIBILITY = "hidden|standard|expert";
+
+	//both
+	final String IMAGE = "image";
+	final String IMAGE_X2 = "imagex2";
+
+
+	//qualifier level
+    final String FXML = "fxml";
+    final String LAMBDA_CHECK = "applicabilityCheck";
+
+
+	final String HIDDEN_PROPERTIES = "hiddens";
+    final String DISPLAY_NAME = "displayName";
+    final String DESCRIPTION = "description";
+
+
+
+
+}

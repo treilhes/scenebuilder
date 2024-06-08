@@ -46,7 +46,7 @@ import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.metadata.SbMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 @Component
 @Lazy

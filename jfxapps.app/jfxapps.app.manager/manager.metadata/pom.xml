@@ -8,17 +8,93 @@
         <version>${manager.version}</version>
     </parent>
     <artifactId>manager.metadata</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>manager.metadata.customization</module>
+        
+        <!--
+        Until javafx is able to shutdown properly and restart properly, 
+        we will not use the following modules directly
+        but we need to build those modules using a different process.
+        
+        Those modules are built at the end of the manager.metadata.customization module.
+         -->
+        <!--<module>manager.metadata.model</module>
+        <module>manager.metadata.modeldata</module>-->
+    </modules>
 
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.app.starter</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.app.starter.test</artifactId>
-            <scope>test</scope>
+            <artifactId>manager.model</artifactId>
         </dependency>
     </dependencies>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.gluonhq.jfxapps</groupId>
+                    <artifactId>jfxapps-metadata-maven-plugin</artifactId>
+                    <version>${jfxapps.version}</version>
+                    <configuration>
+                        <jarFilterPatterns>
+                                <jarFilterPatterns>.*[/\\](manager\.(.*?))[/\\].*</jarFilterPatterns>
+                        </jarFilterPatterns>
+                        <includePackages>
+                            <includePackage>
+                                com.gluonhq.jfxapps.app.manager.model</includePackage>
+                        </includePackages>
+                        <failOnError>true</failOnError>
+                        <javafxVersion>${javafx.version}</javafxVersion>
+                        <resourceFolder>./src/main/resources</resourceFolder>
+
+
+                        <targetPackage>com.gluonhq.jfxapps.app.manager.metadata.model</targetPackage>
+                        <extensionName>ManagerMetadataExtension</extensionName>
+                        <moduleName>manager.metadata.model</moduleName>
+                        <uuid>d22c9aec-adbd-4300-8075-8534d717a27f</uuid>
+                        <failOnError>false</failOnError>
+                        <javafxVersion>${javafx.version}</javafxVersion>
+
+                        <moduleRequires>
+                            <moduleRequire>manager.metadata.customization</moduleRequire>
+                            <moduleRequire>manager.model</moduleRequire>
+                        </moduleRequires>
+
+                        <targetComponentSuperClass>com.gluonhq.jfxapps.app.manager.metadata.custom.MngClassMetadata</targetComponentSuperClass>
+                        
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.gluonhq.jfxapps</groupId>
+                            <artifactId>manager.model</artifactId>
+                            <version>${manager.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>com.gluonhq.jfxapps</groupId>
+                            <artifactId>manager.metadata.customization</artifactId>
+                            <version>${manager.version}</version>
+                        </dependency>
+
+                        <dependency>
+                            <groupId>org.openjfx</groupId>
+                            <artifactId>javafx-fxml</artifactId>
+                            <version>${javafx.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.openjfx</groupId>
+                            <artifactId>javafx-web</artifactId>
+                            <version>${javafx.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.openjfx</groupId>
+                            <artifactId>javafx-swing</artifactId>
+                            <version>${javafx.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

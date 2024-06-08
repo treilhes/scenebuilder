@@ -1,4 +1,4 @@
-module jfxapps.app.manager.model {
+module manager.model {
     exports com.gluonhq.jfxapps.app.manager.model;
 
     requires javafx.base;

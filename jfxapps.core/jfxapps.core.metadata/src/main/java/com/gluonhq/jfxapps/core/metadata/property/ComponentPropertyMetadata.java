@@ -119,7 +119,7 @@ public class ComponentPropertyMetadata<PC, CCM extends ComponentClassMetadata> e
         return super.equals(obj);
     }
 
-    protected static abstract class AbstractBuilder<SELF, TOBUILD, PC, CCM extends ComponentClassMetadata>
+    public static abstract class AbstractBuilder<SELF, TOBUILD, PC, CCM extends ComponentClassMetadata>
             extends PropertyMetadata.AbstractBuilder<SELF, TOBUILD, PC> {
         /** The class metadata of the owner component. */
         protected CCM classMetadata;
@@ -136,22 +136,22 @@ public class ComponentPropertyMetadata<PC, CCM extends ComponentClassMetadata> e
             super();
         }
 
-        protected SELF classMetadata(CCM classMetadata) {
+        public SELF classMetadata(CCM classMetadata) {
             this.classMetadata = classMetadata;
             return self();
         }
 
-        protected SELF isCollection(boolean isCollection) {
+        public SELF isCollection(boolean isCollection) {
             this.collection = isCollection;
             return self();
         }
 
-        protected SELF isMain(boolean isMain) {
+        public SELF isMain(boolean isMain) {
             this.main = isMain;
             return self();
         }
 
-        protected SELF disableChildProperties(Set<PropertyName> disabledPropertyNames) {
+        public SELF disableChildProperties(Set<PropertyName> disabledPropertyNames) {
             this.disabledChildProperties.addAll(disabledPropertyNames);
             return self();
         }

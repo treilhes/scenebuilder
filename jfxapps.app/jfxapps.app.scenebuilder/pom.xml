@@ -80,7 +80,7 @@
 
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.metadata</artifactId>
+                <artifactId>scenebuilder.metadata.customization</artifactId>
                 <version>${project.version}</version>
             </dependency>
             
@@ -92,17 +92,11 @@
 
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.metadata.gluon5</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.selection</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
-            <!-- scenebuilder;ext -->
+            <!-- scenebuilder.ext -->
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.ext.library.control</artifactId>
@@ -243,7 +237,13 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.metadata.gluon</artifactId>
+                <artifactId>scenebuilder.gluon.metadata</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.metadata.gluon5</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

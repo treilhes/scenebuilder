@@ -16,8 +16,18 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>manager.metadata</artifactId>
+            <artifactId>manager.metadata.model</artifactId>
+            <!--<version>${manager.version}</version>-->
         </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>manager.metadata.modeldata</artifactId>
+            <!--<version>${manager.version}</version>-->
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>manager.metadata.customization</artifactId>
+        </dependency> 
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.app.starter</artifactId>

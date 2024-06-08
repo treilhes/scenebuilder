@@ -10,6 +10,6 @@
 
   <modules>
     <module>scenebuilder.gluon.ext</module>
-    <module>scenebuilder.metadata.gluon</module>
+    <module>scenebuilder.gluon.metadata</module>
   </modules>
 </project>
