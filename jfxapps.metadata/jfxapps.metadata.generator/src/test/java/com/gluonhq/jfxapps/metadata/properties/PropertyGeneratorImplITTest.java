@@ -82,7 +82,7 @@ class PropertyGeneratorImplITTest {
         context.setComponentCustomizationClass(ComponentCusto.class.getName());
         context.setValuePropertyCustomizationClass(ValuePropertyCusto.class.getName());
         context.setComponentPropertyCustomizationClass(ComponentPropertyCusto.class.getName());
-        context.setResourceFolder(tmpDir);
+        context.setOutputResourceFolder(tmpDir);
 
         PropertyGenerator generator = new PropertyGeneratorImpl(context);
 

@@ -41,7 +41,7 @@ import java.util.Optional;
 
 public class PropertyGenerationContext {
     private final Map<Constructor<?>, Class<?>[]> altConstructors = new HashMap<>();
-    private File resourceFolder;
+    private File outputResourceFolder;
 
     private Optional<Class<?>> componentCustomizationClass = Optional.empty();
     private Optional<Class<?>> componentPropertyCustomizationClass = Optional.empty();
@@ -57,12 +57,12 @@ public class PropertyGenerationContext {
         altConstructors.put(constructor, parameters);
     }
 
-    public File getResourceFolder() {
-        return resourceFolder;
+    public File getOutputResourceFolder() {
+        return outputResourceFolder;
     }
 
-    public void setResourceFolder(File resourceFolder) {
-        this.resourceFolder = resourceFolder;
+    public void setOutputResourceFolder(File outputResourceFolder) {
+        this.outputResourceFolder = outputResourceFolder;
     }
 
     public Optional<Class<?>> getComponentCustomizationClass() {

@@ -49,13 +49,13 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
+import com.gluonhq.jfxapps.metadata.finder.api.Descriptor;
 import com.gluonhq.jfxapps.metadata.finder.api.IClassCrawler;
 import com.gluonhq.jfxapps.metadata.finder.api.SearchContext;
 import com.gluonhq.jfxapps.metadata.finder.impl.ClassCrawler;
 import com.gluonhq.jfxapps.metadata.finder.impl.DescriptorCollector;
 import com.gluonhq.jfxapps.metadata.finder.impl.JarFinder;
 import com.gluonhq.jfxapps.metadata.finder.impl.MatchingJarCollector;
-import com.gluonhq.jfxapps.metadata.java.model.tbd.Descriptor;
 import com.gluonhq.jfxapps.metadata.properties.api.PropertyGenerationContext;
 import com.gluonhq.jfxapps.metadata.properties.api.PropertyGenerator;
 import com.gluonhq.jfxapps.metadata.properties.impl.PropertyGeneratorImpl;

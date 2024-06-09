@@ -292,7 +292,7 @@
 
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.core.ext.scenicview</artifactId>
+                <artifactId>jfxapps.ext.scenicview</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
 

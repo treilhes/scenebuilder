@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.metadata.properties.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.nio.file.Files;
@@ -55,7 +56,7 @@ import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
 import com.gluonhq.jfxapps.metadata.bean.BeanMetaData;
 import com.gluonhq.jfxapps.metadata.bean.MetadataProducer;
 import com.gluonhq.jfxapps.metadata.bean.PropertyMetaData;
-import com.gluonhq.jfxapps.metadata.java.model.tbd.Descriptor;
+import com.gluonhq.jfxapps.metadata.finder.api.Descriptor;
 import com.gluonhq.jfxapps.metadata.properties.api.PropertyGenerationContext;
 import com.gluonhq.jfxapps.metadata.properties.api.PropertyGenerator;
 import com.gluonhq.jfxapps.metadata.properties.model.Component;
@@ -122,9 +123,9 @@ public class PropertyGeneratorImpl implements PropertyGenerator {
 
             try {
 
-                var component = buildComponent(bm, beanMap, availableComponentsInClasspath);
+                var component = buildComponent(context.getOutputResourceFolder(), bm, beanMap, availableComponentsInClasspath);
 
-                save(bm.getType(), component);
+                save(bm.getType(), component, context.getOutputResourceFolder());
 
             } catch (Exception e) {
                 logger.error("Failed to generate properties for class {}", bm.getType(), e);
@@ -138,11 +139,12 @@ public class PropertyGeneratorImpl implements PropertyGenerator {
 
     @Override
     public Component<?, ?, ?> buildComponent(
+            File targetFolder,
             BeanMetaData<?> bm,
             Map<Class<?>, BeanMetaData<?>> beanMap,
             Set<Class<?>> availableComponents) throws StreamWriteException, DatabindException, IOException {
 
-        var component = load(bm.getType());
+        var component = load(bm.getType(), targetFolder);
 
         var componentCustomization = component.getCustomization();
 
@@ -190,19 +192,19 @@ public class PropertyGeneratorImpl implements PropertyGenerator {
         });
     }
 
-    private void save(Class<?> cls, Component<?, ?, ?> component)
+    private void save(Class<?> cls, Component<?, ?, ?> component, File targetFolder)
             throws StreamWriteException, DatabindException, IOException {
 
-        Path target = context.getResourceFolder().toPath().resolve(PropertyGenerator.propertyPath(cls));
+        Path target = targetFolder.toPath().resolve(PropertyGenerator.propertyPath(cls));
         Files.createDirectories(target.getParent());
         mapper.writeValue(target.toFile(), component);
 
     }
 
-    private Component<Object, Object, Object> load(Class<?> cls)
+    private Component<Object, Object, Object> load(Class<?> cls, File targetFolder)
             throws StreamWriteException, DatabindException, IOException {
 
-        Path target = context.getResourceFolder().toPath().resolve(PropertyGenerator.propertyPath(cls));
+        Path target = targetFolder.toPath().resolve(PropertyGenerator.propertyPath(cls));
 
         if (Files.exists(target)) {
             return mapper.readValue(target.toFile(), componentType);

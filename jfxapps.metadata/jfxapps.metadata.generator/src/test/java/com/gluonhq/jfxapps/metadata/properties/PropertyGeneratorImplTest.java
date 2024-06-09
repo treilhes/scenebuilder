@@ -99,7 +99,7 @@ class PropertyGeneratorImplTest {
     public void setup() {
         try {
             context = new PropertyGenerationContext();
-            context.setResourceFolder(tmpDir);
+            context.setOutputResourceFolder(tmpDir);
             context.setComponentCustomizationClass(ComponentCusto.class.getName());
             context.setComponentPropertyCustomizationClass(ComponentPropertyCusto.class.getName());
             context.setValuePropertyCustomizationClass(ValuePropertyCusto.class.getName());
@@ -118,7 +118,7 @@ class PropertyGeneratorImplTest {
         //when(propertyMetaData.isHidden()).thenReturn(true);
 
         PropertyGeneratorImpl generator = new PropertyGeneratorImpl(context);
-        var component = generator.buildComponent(beanMetaData, Map.of(), Set.of());
+        var component = generator.buildComponent(context.getOutputResourceFolder(), beanMetaData, Map.of(), Set.of());
 
         assertThat(component.getComponentProperties()).isEmpty();
         assertThat(component.getStaticValueProperties()).isEmpty();
@@ -134,7 +134,7 @@ class PropertyGeneratorImplTest {
         when(propertyMetaData.isLocal()).thenReturn(false);
 
         PropertyGeneratorImpl generator = new PropertyGeneratorImpl(context);
-        var component = generator.buildComponent(beanMetaData, Map.of(), Set.of());
+        var component = generator.buildComponent(context.getOutputResourceFolder(), beanMetaData, Map.of(), Set.of());
 
         assertThat(component.getComponentProperties()).isEmpty();
         assertThat(component.getStaticValueProperties()).isEmpty();
@@ -151,7 +151,7 @@ class PropertyGeneratorImplTest {
         when(propertyMetaData.isLocal()).thenReturn(true);
 
         PropertyGeneratorImpl generator = new PropertyGeneratorImpl(context);
-        var component = generator.buildComponent(beanMetaData, Map.of(), Set.of());
+        var component = generator.buildComponent(context.getOutputResourceFolder(), beanMetaData, Map.of(), Set.of());
 
         assertThat(component.getComponentProperties()).isEmpty();
         assertThat(component.getStaticValueProperties()).isEmpty();
@@ -169,7 +169,7 @@ class PropertyGeneratorImplTest {
         when(propertyMetaData.isStatic()).thenReturn(true);
 
         PropertyGeneratorImpl generator = new PropertyGeneratorImpl(context);
-        var component = generator.buildComponent(beanMetaData, Map.of(), Set.of());
+        var component = generator.buildComponent(context.getOutputResourceFolder(), beanMetaData, Map.of(), Set.of());
 
         assertThat(component.getComponentProperties()).isEmpty();
         assertThat(component.getStaticValueProperties()).containsKey(PROP_NAME);
@@ -186,7 +186,7 @@ class PropertyGeneratorImplTest {
         when(propertyMetaData.isLocal()).thenReturn(true);
 
         PropertyGeneratorImpl generator = new PropertyGeneratorImpl(context);
-        var component = generator.buildComponent(beanMetaData, Map.of(Root.class, beanMetaData2), Set.of());
+        var component = generator.buildComponent(context.getOutputResourceFolder(), beanMetaData, Map.of(Root.class, beanMetaData2), Set.of());
 
         assertThat(component.getComponentProperties()).containsKey(PROP_NAME);
         assertThat(component.getStaticValueProperties()).isEmpty();
@@ -203,7 +203,7 @@ class PropertyGeneratorImplTest {
         when(propertyMetaData.isLocal()).thenReturn(true);
 
         PropertyGeneratorImpl generator = new PropertyGeneratorImpl(context);
-        var component = generator.buildComponent(beanMetaData, Map.of(), Set.of(Root.class));
+        var component = generator.buildComponent(context.getOutputResourceFolder(), beanMetaData, Map.of(), Set.of(Root.class));
 
         assertThat(component.getComponentProperties()).containsKey(PROP_NAME);
         assertThat(component.getStaticValueProperties()).isEmpty();
@@ -216,7 +216,7 @@ class PropertyGeneratorImplTest {
         PropertyGeneratorImpl generator = new PropertyGeneratorImpl(context);
         generator.generateProperties(Set.of(Root.class), null);
 
-        Path target = context.getResourceFolder().toPath().resolve(PropertyGenerator.propertyPath(Root.class));
+        Path target = context.getOutputResourceFolder().toPath().resolve(PropertyGenerator.propertyPath(Root.class));
 
         assertTrue("File must be generated", Files.exists(target));
     }

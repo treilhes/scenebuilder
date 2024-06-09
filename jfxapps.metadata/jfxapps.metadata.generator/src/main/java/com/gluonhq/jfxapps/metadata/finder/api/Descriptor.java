@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.metadata.java.model.tbd;
+package com.gluonhq.jfxapps.metadata.finder.api;
 
 import java.io.File;
 import java.io.IOException;

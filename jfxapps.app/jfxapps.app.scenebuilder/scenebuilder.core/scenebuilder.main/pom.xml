@@ -202,11 +202,11 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>scenebuilder.core.ext.scenicview</artifactId>
+            <artifactId>jfxapps.ext.scenicview</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>scenebuilder.metadata.gluon5</artifactId>
+            <artifactId>scenebuilder.gluon.metadata.gluon5</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>

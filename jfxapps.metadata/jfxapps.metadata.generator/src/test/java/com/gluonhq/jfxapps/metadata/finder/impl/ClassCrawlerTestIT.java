@@ -48,9 +48,9 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.metadata.finder.api.Descriptor;
 import com.gluonhq.jfxapps.metadata.finder.api.IClassCrawler;
 import com.gluonhq.jfxapps.metadata.finder.api.SearchContext;
-import com.gluonhq.jfxapps.metadata.java.model.tbd.Descriptor;
 import com.gluonhq.jfxapps.metadata.util.FxThreadinitializer;
 import com.gluonhq.jfxapps.metadata.util.Report;
 

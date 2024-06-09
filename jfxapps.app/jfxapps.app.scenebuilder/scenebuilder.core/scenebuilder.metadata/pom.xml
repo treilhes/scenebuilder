@@ -21,6 +21,7 @@
                     <artifactId>jfxapps-metadata-maven-plugin</artifactId>
                     <version>${jfxapps.version}</version>
                     <configuration>
+                        <outputResourceFolder>${basedir}/src/main/resources</outputResourceFolder>
                         <jarFilterPatterns>
                             <jarFilterPatterns>.*[/\\](javafx-(.*?))[/\\].*</jarFilterPatterns>
                         </jarFilterPatterns>
@@ -107,7 +108,7 @@
                         <javafxVersion>${javafx.version}</javafxVersion>
                         
                         <moduleRequires>
-                            <moduleRequire>scenebuilder.metadata;customization</moduleRequire>
+                            <moduleRequire>scenebuilder.metadata</moduleRequire>
                             <moduleRequire>javafx.swing</moduleRequire>
                             <moduleRequire>javafx.media</moduleRequire>
                             <moduleRequire>javafx.controls</moduleRequire>
@@ -128,7 +129,6 @@
                         <targetComponentCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization</targetComponentCustomizationClass>
                         <targetComponentPropertyCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custom.ComponentPropertyMetadataCustomization</targetComponentPropertyCustomizationClass>
                         <targetValuePropertyCustomizationClass>com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization</targetValuePropertyCustomizationClass>
-                                
                     </configuration>
                     <dependencies>
                         <dependency>

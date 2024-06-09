@@ -57,13 +57,13 @@ import com.gluonhq.jfxapps.metadata.bean.BeanMetaData;
 import com.gluonhq.jfxapps.metadata.bean.MetadataProducer;
 import com.gluonhq.jfxapps.metadata.bean.PropertyMetaData;
 import com.gluonhq.jfxapps.metadata.bean.PropertyMetaData.Type;
+import com.gluonhq.jfxapps.metadata.finder.api.Descriptor;
 import com.gluonhq.jfxapps.metadata.java.api.ClassCustomization;
 import com.gluonhq.jfxapps.metadata.java.api.JavaGenerationContext;
 import com.gluonhq.jfxapps.metadata.java.model.Component;
 import com.gluonhq.jfxapps.metadata.java.model.ComponentProperty;
 import com.gluonhq.jfxapps.metadata.java.model.Context;
 import com.gluonhq.jfxapps.metadata.java.model.ValueProperty;
-import com.gluonhq.jfxapps.metadata.java.model.tbd.Descriptor;
 import com.gluonhq.jfxapps.metadata.java.template.scenebuilderx.TemplateGeneration;
 import com.gluonhq.jfxapps.metadata.properties.api.PropertyGenerationContext;
 import com.gluonhq.jfxapps.metadata.properties.api.PropertyGenerator;
@@ -78,7 +78,6 @@ public class JavaGeneratorImpl implements ClassCustomization {
     private static final Logger logger = LoggerFactory.getLogger(JavaGeneratorImpl.class);
 
     private final JavaPropsMapper mapper = new JavaPropsMapper();
-    private final PropertyGenerationContext propertyContext;
     private final JavaGenerationContext javaGenerationContext;
     private final JavaType componentType;
     private final TemplateGeneration generation = new TemplateGeneration();
@@ -86,7 +85,6 @@ public class JavaGeneratorImpl implements ClassCustomization {
 
     public JavaGeneratorImpl(PropertyGenerationContext propertyContext, JavaGenerationContext javaGenerationContext) {
 
-        this.propertyContext = propertyContext;
         this.javaGenerationContext = javaGenerationContext;
         this.converter = new MetadataProducer(propertyContext);
         TypeFactory typeFactory = TypeFactory.defaultInstance();
@@ -169,7 +167,7 @@ public class JavaGeneratorImpl implements ClassCustomization {
                 descriptor.put(c.getMetadata().getType(), c.getMetadataClassName());
                 packages.add(c.getMetadataClassPackage());
             }
-            generation.generateDescriptor(propertyContext, context, descriptor);
+            generation.generateDescriptor(javaGenerationContext, context, descriptor);
             generation.generateExtension(javaGenerationContext, context, localComponents.values());
             generation.generateModuleInfo(javaGenerationContext, context, packages);
             generation.generatePropertyNamesClass(javaGenerationContext, context, localComponents);
@@ -321,7 +319,7 @@ public class JavaGeneratorImpl implements ClassCustomization {
 
     private Component<?, ?, ?> load(Class<?> cls) throws StreamWriteException, DatabindException, IOException {
         logger.info("Loading class properties of {}", cls.getName());
-        Path target = propertyContext.getResourceFolder().toPath().resolve(PropertyGenerator.propertyPath(cls));
+        Path target = javaGenerationContext.getInputResourceFolder().toPath().resolve(PropertyGenerator.propertyPath(cls));
 
         if (Files.exists(target)) {
             return mapper.readValue(target.toFile(), componentType);

@@ -283,6 +283,7 @@ public abstract class AbstractHierarchyMask implements HierarchyMask {
             assert fxomObject instanceof FXOMElement;
 
             final var fxomElement = (FXOMElement) fxomObject;
+
             final var vpm = metadata.queryValueProperty(fxomElement, propertyName);
             final var description = vpm.getValueInSceneGraphObject(fxomElement); // resolved value
             return description == null ? null : description.toString();

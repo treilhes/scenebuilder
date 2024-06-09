@@ -73,9 +73,8 @@ public abstract class JfxAppsAbstractMojo extends AbstractMojo {
     @Parameter(property = "excludePackages", required = false)
     List<String> excludePackages;
 
-    /** The backup file. */
-    @Parameter(property = "resourceFolder", required = false, defaultValue = "${project.build.directory}/generated-resources/jfxapps")
-    File resourceFolder;
+    @Parameter(property = "outputResourceFolder", required = false, defaultValue = "${project.build.directory}/generated-resources/jfxapps")
+    File outputResourceFolder;
 
     @Parameter(property = "failOnError", required = false, defaultValue = "true")
     boolean failOnError = true;
@@ -174,10 +173,10 @@ public abstract class JfxAppsAbstractMojo extends AbstractMojo {
             throw new MojoExecutionException("Unable to override constructors", e);
         }
 
-        if (resourceFolder != null && !resourceFolder.exists()) {
-            resourceFolder.mkdirs();
+        if (outputResourceFolder != null && !outputResourceFolder.exists()) {
+            outputResourceFolder.mkdirs();
         }
-        propertyContext.setResourceFolder(resourceFolder);
+        propertyContext.setOutputResourceFolder(outputResourceFolder);
 
         try {
             propertyContext.setComponentCustomizationClass(componentCustomizationClass);

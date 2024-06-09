@@ -40,7 +40,6 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -48,6 +47,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
+import com.gluonhq.jfxapps.metadata.finder.api.Descriptor;
 import com.gluonhq.jfxapps.metadata.finder.api.IClassCrawler;
 import com.gluonhq.jfxapps.metadata.finder.api.SearchContext;
 import com.gluonhq.jfxapps.metadata.finder.impl.ClassCrawler;
@@ -56,7 +56,6 @@ import com.gluonhq.jfxapps.metadata.finder.impl.JarFinder;
 import com.gluonhq.jfxapps.metadata.finder.impl.MatchingJarCollector;
 import com.gluonhq.jfxapps.metadata.java.api.JavaGenerationContext;
 import com.gluonhq.jfxapps.metadata.java.impl.JavaGeneratorImpl;
-import com.gluonhq.jfxapps.metadata.java.model.tbd.Descriptor;
 import com.gluonhq.jfxapps.metadata.properties.api.PropertyGenerationContext;
 import com.gluonhq.jfxapps.metadata.util.FxThreadinitializer;
 import com.gluonhq.jfxapps.metadata.util.Report;
@@ -65,6 +64,10 @@ import javafx.application.Platform;
 
 @Mojo(name = "metadataSource", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
 public class MetadataSourceMojo extends JfxAppsAbstractMojo {
+
+    /** The backup file. */
+    @Parameter(property = "inputResourceFolder", required = false, defaultValue = "${project.directory}/src/main/resources")
+    File inputResourceFolder;
 
     @Parameter(property = "sourceFolder", required = false, defaultValue = "${project.build.directory}/generated-sources/jfxapps")
     File sourceFolder;
@@ -196,12 +199,6 @@ public class MetadataSourceMojo extends JfxAppsAbstractMojo {
 
     private void updateProject() {
         project.addCompileSourceRoot(sourceFolder.getPath());
-        project.addCompileSourceRoot(resourceFolder.getPath());
-
-        Resource r = new Resource();
-        r.setDirectory(resourceFolder.getAbsolutePath());
-        r.setTargetPath("");
-        project.addResource(r);
     }
 
     private JavaGenerationContext createJavaGenerationContext() throws MojoExecutionException {
@@ -213,9 +210,7 @@ public class MetadataSourceMojo extends JfxAppsAbstractMojo {
         }
         javaContext.setSourceFolder(sourceFolder);
 
-        if (resourceFolder != null && !resourceFolder.exists()) {
-            resourceFolder.mkdirs();
-        }
+        javaContext.setInputResourceFolder(inputResourceFolder);
 
         javaContext.setTargetPackage(targetPackage);
 

@@ -315,31 +315,35 @@ public class ComponentBase<CC, CPC, CPB extends ComponentPropertyBase<CPC>, VPC,
 
             var descriptor = componentNode.get("class");
 
-            if (descriptor != null) {
-                component.setName(mapper.treeToValue(descriptor.get("name"), stringType));
-                component.setShadows(mapper.treeToValue(descriptor.get("shadows"), shadowType));
-                component.setCustomization(mapper.treeToValue(descriptor.get("custo"), cc));
-            }
+            try {
+                if (descriptor != null) {
+                    component.setName(mapper.treeToValue(descriptor.get("name"), stringType));
+                    component.setShadows(mapper.treeToValue(descriptor.get("shadows"), shadowType));
+                    component.setCustomization(mapper.treeToValue(descriptor.get("custo"), cc));
+                }
 
-            Map componentProperties = (Map)mapper.treeToValue(componentNode.get("component"), componentPropertyMap);
-            if (componentProperties != null) {
-                componentProperties.keySet()
-                    .forEach(k -> logger.debug("componentProperties: {} -> {}", k, componentProperties.get(k)));
-                component.setComponentProperties(componentProperties);
-            }
+                Map componentProperties = (Map)mapper.treeToValue(componentNode.get("component"), componentPropertyMap);
+                if (componentProperties != null) {
+                    componentProperties.keySet()
+                        .forEach(k -> logger.debug("componentProperties: {} -> {}", k, componentProperties.get(k)));
+                    component.setComponentProperties(componentProperties);
+                }
 
-            var valueProperties = (Map)mapper.treeToValue(componentNode.get("property"), valuePropertyMap);
-            if (valueProperties != null) {
-                valueProperties.keySet()
-                    .forEach(k -> logger.debug("valueProperties: {} -> {}", k, valueProperties.get(k)));
-                component.setValueProperties(valueProperties);
-            }
+                var valueProperties = (Map)mapper.treeToValue(componentNode.get("property"), valuePropertyMap);
+                if (valueProperties != null) {
+                    valueProperties.keySet()
+                        .forEach(k -> logger.debug("valueProperties: {} -> {}", k, valueProperties.get(k)));
+                    component.setValueProperties(valueProperties);
+                }
 
-            var staticProperties = (Map)mapper.treeToValue(componentNode.get("static"), valuePropertyMap);
-            if (staticProperties != null) {
-                staticProperties.keySet()
-                     .forEach(k -> logger.debug("staticProperties: {} -> {}", k, staticProperties.get(k)));
-                component.setStaticValueProperties(staticProperties);
+                var staticProperties = (Map)mapper.treeToValue(componentNode.get("static"), valuePropertyMap);
+                if (staticProperties != null) {
+                    staticProperties.keySet()
+                         .forEach(k -> logger.debug("staticProperties: {} -> {}", k, staticProperties.get(k)));
+                    component.setStaticValueProperties(staticProperties);
+                }
+            } catch (Exception e) {
+                throw e;
             }
 
             return component;

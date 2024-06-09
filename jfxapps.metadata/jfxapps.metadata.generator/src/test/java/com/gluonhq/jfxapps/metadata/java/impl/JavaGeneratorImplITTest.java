@@ -40,8 +40,8 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import com.gluonhq.jfxapps.metadata.finder.api.Descriptor;
 import com.gluonhq.jfxapps.metadata.java.api.JavaGenerationContext;
-import com.gluonhq.jfxapps.metadata.java.model.tbd.Descriptor;
 import com.gluonhq.jfxapps.metadata.properties.api.PropertyGenerationContext;
 import com.gluonhq.jfxapps.metadata.properties.impl.PropertyGeneratorImpl;
 import com.gluonhq.jfxapps.metadata.sample.custo.ComponentCusto;
@@ -78,11 +78,12 @@ class JavaGeneratorImplITTest {
         propertyContext.setComponentCustomizationClass(ComponentCusto.class.getName());
         propertyContext.setValuePropertyCustomizationClass(ValuePropertyCusto.class.getName());
         propertyContext.setComponentPropertyCustomizationClass(ComponentPropertyCusto.class.getName());
-        propertyContext.setResourceFolder(resourceDir);
+        propertyContext.setOutputResourceFolder(resourceDir);
 
         JavaGenerationContext javaContext = new JavaGenerationContext();
         javaContext.setKeepLastPackages(2);
         javaContext.setSourceFolder(javaDir);
+        javaContext.setInputResourceFolder(resourceDir);
         javaContext.setTargetPackage("test.generation");
         javaContext.setUuid(UUID.randomUUID().toString());
         javaContext.setModuleName("some.module.name");

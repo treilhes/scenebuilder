@@ -63,7 +63,7 @@
                             <projectsDirectory>${basedir}/..</projectsDirectory>
                             <pomIncludes>
                                 <pomInclude>scenebuilder.metadata.javafx11/pom.xml</pomInclude>
-                                <pomInclude>scenebuilder.metadata.javafx12/pom.xml</pomInclude>
+                                <pomInclude>scenebuilder.metadata.javafx15/pom.xml</pomInclude>
                             </pomIncludes>
                             <streamLogs>true</streamLogs>
                             <goals>

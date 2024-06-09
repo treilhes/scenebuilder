@@ -40,13 +40,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.metadata.finder.api.Descriptor;
 import com.gluonhq.jfxapps.metadata.java.api.ClassCustomization;
 import com.gluonhq.jfxapps.metadata.java.api.JavaGenerationContext;
 import com.gluonhq.jfxapps.metadata.java.model.Component;
 import com.gluonhq.jfxapps.metadata.java.model.Context;
-import com.gluonhq.jfxapps.metadata.java.model.tbd.Descriptor;
 import com.gluonhq.jfxapps.metadata.java.template.TemplateGenerator;
-import com.gluonhq.jfxapps.metadata.properties.api.PropertyGenerationContext;
 
 public class TemplateGeneration {
 
@@ -83,30 +82,30 @@ public class TemplateGeneration {
 
         generateSource(context, inputs, template, relativePath);
     }
-    public void generateDescriptor(PropertyGenerationContext searchContext, Context templateContext, Descriptor descriptor) throws IOException {
+    public void generateDescriptor(JavaGenerationContext javaContext, Context templateContext, Descriptor descriptor) throws IOException {
         String relativePath = Descriptor.DESCRIPTOR_LOCATION;
         String template = "/com/gluonhq/jfxapps/metadata/java/template/scenebuilderx/Descriptor.ftl";
 
         Map<String, Object> inputs = Map.of("context", templateContext, "classToMetaMap", descriptor.getClassToMetaClass());
 
-        generateResource(searchContext, inputs, template, relativePath);
+        generateResource(javaContext, inputs, template, relativePath);
     }
 
-    public void generateServiceFile(PropertyGenerationContext searchContext, Map<String, Object> inputs) throws IOException {
+    public void generateServiceFile(JavaGenerationContext javaContext, Map<String, Object> inputs) throws IOException {
         String relativePath = "META-INF/services/com.oracle.javafx.scenebuilder.extension.Extension";
         String template = "/com/gluonhq/jfxapps/metadata/java/template/scenebuilderx/service.ftl";
-        generateResource(searchContext, inputs, template, relativePath);
+        generateResource(javaContext, inputs, template, relativePath);
     }
 
-    public void generateExtension(JavaGenerationContext searchContext, Context templateContext, Collection<Component<?, ?, ?>> components) throws IOException {
-        String javaPackage = searchContext.getTargetPackage();
+    public void generateExtension(JavaGenerationContext javaContext, Context templateContext, Collection<Component<?, ?, ?>> components) throws IOException {
+        String javaPackage = javaContext.getTargetPackage();
         String packagePath = javaPackage.replace('.', File.separatorChar);
-        String relativePath = packagePath + "/" + searchContext.getExtensionName() + ".java";
+        String relativePath = packagePath + "/" + javaContext.getExtensionName() + ".java";
         String template = "/com/gluonhq/jfxapps/metadata/java/template/scenebuilderx/Extension.ftl";
 
         Map<String, Object> inputs = Map.of("context", templateContext, "components", components);
 
-        generateSource(searchContext, inputs, template, relativePath);
+        generateSource(javaContext, inputs, template, relativePath);
     }
 
     public void generateModuleInfo(JavaGenerationContext searchContext, Context templateContext, Set<String> packages) throws IOException {
@@ -122,8 +121,8 @@ public class TemplateGeneration {
         return TemplateGenerator.generate(inputs, templateFileName);
     }
 
-    private void generateResource(PropertyGenerationContext searchContext, Map<String, Object> inputs, String templateFileName, String relativePath) throws IOException {
-        File targetFile = new File(searchContext.getResourceFolder(), relativePath);
+    private void generateResource(JavaGenerationContext javaContext, Map<String, Object> inputs, String templateFileName, String relativePath) throws IOException {
+        File targetFile = new File(javaContext.getSourceFolder(), relativePath);
 
         if (!targetFile.getParentFile().exists()) {
             targetFile.getParentFile().mkdirs();
@@ -132,8 +131,8 @@ public class TemplateGeneration {
         TemplateGenerator.generate(inputs, templateFileName, targetFile);
     }
 
-    private void generateSource(JavaGenerationContext searchContext, Map<String, Object> inputs, String templateFileName, String relativePath) throws IOException {
-        File targetFile = new File(searchContext.getSourceFolder(), relativePath);
+    private void generateSource(JavaGenerationContext javaContext, Map<String, Object> inputs, String templateFileName, String relativePath) throws IOException {
+        File targetFile = new File(javaContext.getSourceFolder(), relativePath);
 
         if (!targetFile.getParentFile().exists()) {
             targetFile.getParentFile().mkdirs();

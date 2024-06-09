@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class JavaGenerationContext {
+    private File inputResourceFolder;
     private File sourceFolder;
     private String targetPackage;
     private int keepLastPackages = 3;
@@ -66,6 +67,12 @@ public class JavaGenerationContext {
         this.sourceFolder = outputFolder;
     }
 
+    public File getInputResourceFolder() {
+        return inputResourceFolder;
+    }
+    public void setInputResourceFolder(File inputResourceFolder) {
+        this.inputResourceFolder = inputResourceFolder;
+    }
     public String getTargetPackage() {
         return targetPackage;
     }

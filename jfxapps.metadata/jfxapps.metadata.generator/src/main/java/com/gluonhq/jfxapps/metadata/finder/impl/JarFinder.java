@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.metadata.java.model.tbd.Descriptor;
+import com.gluonhq.jfxapps.metadata.finder.api.Descriptor;
 
 public class JarFinder {
 

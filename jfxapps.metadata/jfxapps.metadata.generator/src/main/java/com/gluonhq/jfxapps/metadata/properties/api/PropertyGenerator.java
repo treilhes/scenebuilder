@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.metadata.properties.api;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
@@ -41,7 +42,7 @@ import java.util.Set;
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.gluonhq.jfxapps.metadata.bean.BeanMetaData;
-import com.gluonhq.jfxapps.metadata.java.model.tbd.Descriptor;
+import com.gluonhq.jfxapps.metadata.finder.api.Descriptor;
 import com.gluonhq.jfxapps.metadata.properties.model.Component;
 
 public interface PropertyGenerator {
@@ -56,7 +57,7 @@ public interface PropertyGenerator {
      */
     void generateProperties(Set<Class<?>> classes, Set<Descriptor> descriptors);
 
-    Component<?, ?, ?> buildComponent(BeanMetaData<?> bm, Map<Class<?>, BeanMetaData<?>> beanMap,
+    Component<?, ?, ?> buildComponent(File targetFolder, BeanMetaData<?> bm, Map<Class<?>, BeanMetaData<?>> beanMap,
             Set<Class<?>> availableComponents) throws StreamWriteException, DatabindException, IOException;
 
     public static String propertyFileName(Class<?> cls) {
@@ -74,4 +75,5 @@ public interface PropertyGenerator {
     public static Path propertyPath(Class<?> cls) {
         return Path.of(propertyFolder(cls).toString(), propertyFileName(cls));
     }
+
 }
