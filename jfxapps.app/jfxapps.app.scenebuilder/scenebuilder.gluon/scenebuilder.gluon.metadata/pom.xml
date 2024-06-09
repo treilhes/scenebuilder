@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.gluonhq.jfxapps</groupId>
         <artifactId>scenebuilder.gluon</artifactId>
-        <version>${scenebuilder.version}</version>
+        <version>${scenebuilder.gluon.version}</version>
     </parent>
     <artifactId>scenebuilder.gluon.metadata</artifactId>
 	<packaging>pom</packaging>

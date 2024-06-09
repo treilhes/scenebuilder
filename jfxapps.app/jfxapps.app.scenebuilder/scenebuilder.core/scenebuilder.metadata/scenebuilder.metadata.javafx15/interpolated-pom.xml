@@ -3,40 +3,29 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.gluonhq.jfxapps</groupId>
-        <artifactId>scenebuilder.gluon.metadata</artifactId>
-        <version>${scenebuilder.gluon.version}</version>
+        <artifactId>scenebuilder.metadata</artifactId>
+        <version>${scenebuilder.version}</version>
     </parent>
-    <artifactId>scenebuilder.gluon.metadata.gluon5legacy</artifactId>
+    <artifactId>scenebuilder.metadata.javafx15</artifactId>
 
     <properties>
-        <javafx.version>11</javafx.version>
-        <gluon.version>5.0.0-jdk9</gluon.version>
+        <javafx.version>15</javafx.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>kit</artifactId>
-            <version>16.0.0-SNAPSHOT</version>
+            <artifactId>jfxapps.core.starter</artifactId>
             <exclusions>
                 <exclusion>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-fxml</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-web</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-swing</artifactId>
+                    <groupId>com.gluonhq.jfxapps</groupId>
+                    <artifactId>jfxapps.javafx.starter</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq</groupId>
-            <artifactId>charm-glisten</artifactId>
-            <version>${gluon.version}</version>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>scenebuilder.metadata.customization</artifactId>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -58,8 +47,8 @@
         <plugins>
             <plugin>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.metadata-maven-plugin</artifactId>
-                <version>${scenebuilder.version}</version>
+                <artifactId>jfxapps-metadata-maven-plugin</artifactId>
+                <version>${jfxapps.version}</version>
                 <executions>
                     <execution>
                         <id>generate-class-sources</id>
@@ -69,40 +58,22 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <jarFilterPatterns>
-                        <jarFilterPatterns>.*[/\\](charm-(.*?))[/\\].*</jarFilterPatterns>
-                    </jarFilterPatterns>
-                    <rootClasses>
-                        <rootClass>javafx.scene.Node</rootClass>
-                    </rootClasses>
-                    <includePackages>
-                        <includePackage>com.gluonhq.charm.glisten.control</includePackage>
-                    </includePackages>
-                    <targetPackage>com.oracle.javafx.scenebuilder.kit.metadata</targetPackage>
-                    <executorClass>com.oracle.javafx.scenebuilder.metadata.template.legacy.LegacyExecutor</executorClass>
-                </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>com.gluonhq.jfxapps</groupId>
-                        <artifactId>kit</artifactId>
-                        <version>16.0.0-SNAPSHOT</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.gluonhq.jfxapps</groupId>
-                        <artifactId>scenebuilder.metadata.javafx</artifactId>
+                        <artifactId>scenebuilder.metadata.javafxdata</artifactId>
                         <version>${scenebuilder.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>com.gluonhq.jfxapps</groupId>
-                        <artifactId>scenebuilder.metadata.gluon</artifactId>
+                        <artifactId>scenebuilder.metadata.customization</artifactId>
                         <version>${scenebuilder.version}</version>
-                    </dependency>
-                    <!-- https://mvnrepository.com/artifact/com.gluonhq/charm-glisten -->
-                    <dependency>
-                        <groupId>com.gluonhq</groupId>
-                        <artifactId>charm-glisten</artifactId>
-                        <version>${gluon.version}</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>com.gluonhq.jfxapps</groupId>
+                                <artifactId>scenebuilder.starter</artifactId>
+                            </exclusion>
+                        </exclusions>
                     </dependency>
                     <dependency>
                         <groupId>org.openjfx</groupId>

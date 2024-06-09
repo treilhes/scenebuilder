@@ -86,6 +86,12 @@
             
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.metadata.javafx11</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.metadata.javafx15</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -127,12 +133,6 @@
                 <artifactId>scenebuilder.ext.defaultx</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.ext.defaultx</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.ext.document</artifactId>
@@ -229,23 +229,7 @@
                 <artifactId>scenebuilder.ext.welcome</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <!-- scenebuilder.gluon -->
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.ext.gluon</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.gluon.metadata</artifactId>
-                <version>${project.version}</version>
-            </dependency>
             
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.metadata.gluon5</artifactId>
-                <version>${project.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

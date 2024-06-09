@@ -142,15 +142,7 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>scenebuilder.ext.exporter</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.ext.extension.library</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>scenebuilder.ext.gluon</artifactId>
-        </dependency>
+        
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>scenebuilder.ext.help.features</artifactId>
@@ -203,10 +195,6 @@
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.ext.scenicview</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>scenebuilder.gluon.metadata.gluon5</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
