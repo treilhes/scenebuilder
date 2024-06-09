@@ -12,7 +12,6 @@
     <module>jfxapps.ext.menu</module>
     <module>jfxapps.ext.about</module>
     <module>jfxapps.ext.certificate.manager</module>
-    <module>jfxapps.ext.extension.library</module>
     <module>jfxapps.ext.log.viewer</module>
     <module>jfxapps.ext.preference.editor</module>
     <module>jfxapps.ext.scenicview</module>
