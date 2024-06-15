@@ -31,14 +31,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import org.scenebuilder.fxml.api.FxmlApiExtension;
+import org.scenebuilder.fxml.api.SbApiExtension;
 
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 
-open module scenebuilder.fxml.api {
+open module scenebuilder.api {
     exports org.scenebuilder.fxml.api;
     exports org.scenebuilder.fxml.api.i18n;
-    exports org.scenebuilder.fxml.api.subjects;
 
     exports com.oracle.javafx.scenebuilder.api.control;
     exports com.oracle.javafx.scenebuilder.api.control.curve;
@@ -57,17 +56,15 @@ open module scenebuilder.fxml.api {
     exports com.oracle.javafx.scenebuilder.api.control.tring;
     exports com.oracle.javafx.scenebuilder.api.controls;
     exports com.oracle.javafx.scenebuilder.api.css;
+    exports com.oracle.javafx.scenebuilder.api.job;
     exports com.oracle.javafx.scenebuilder.api.mask;
     exports com.oracle.javafx.scenebuilder.api.script;
     exports com.oracle.javafx.scenebuilder.api.theme;
 
-    exports com.oracle.javafx.scenebuilder.fxml.api.selection;
-
     requires transitive jfxapps.core.api;
     requires transitive jfxapps.core.fxom;
-
     requires transitive scenebuilder.metadata;
-    requires transitive scenebuilder.app.starter;
+    requires transitive jfxapps.app.starter;
 
-    provides Extension with FxmlApiExtension;
+    provides Extension with SbApiExtension;
 }

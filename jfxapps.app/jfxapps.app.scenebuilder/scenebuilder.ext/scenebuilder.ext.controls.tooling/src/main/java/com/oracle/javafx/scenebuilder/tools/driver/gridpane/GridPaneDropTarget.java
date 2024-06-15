@@ -45,14 +45,14 @@ import com.gluonhq.jfxapps.core.api.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.control.droptarget.AbstractDropTarget;
 import com.gluonhq.jfxapps.core.api.control.droptarget.DropTargetFactory;
 import com.gluonhq.jfxapps.core.api.dnd.DragSource;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
+import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
-import com.gluonhq.jfxapps.core.job.editor.BatchJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.RemoveObjectJob;
 import com.gluonhq.jfxapps.util.GridBounds;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.ClearSelectionJob;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.InsertAsSubComponentJob;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.UpdateSelectionJob;
@@ -80,7 +80,7 @@ public final class GridPaneDropTarget extends AbstractDropTarget {
     }
 
     private final DesignHierarchyMask.Factory designMaskFactory;
-    private final BatchJob.Factory batchJobFactory;
+    private final com.gluonhq.jfxapps.core.api.job.base.Factory batchJobFactory;
     private final ClearSelectionJob.Factory clearSelectionJobFactory;
     private final RemoveObjectJob.Factory removeObjectJobFactory;
     private final InsertColumnJob.Factory insertColumnJobFactory;

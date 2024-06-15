@@ -33,9 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.api.control.resizer;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-
 import com.gluonhq.jfxapps.core.api.content.decoration.AbstractDecoration;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.ResizeGuide;
@@ -51,7 +50,7 @@ public abstract class AbstractResizeGuide<T extends Node> extends AbstractDecora
 
     public AbstractResizeGuide(
             Workspace workspace,
-            FxmlDocumentManager documentManager,
+            DocumentManager documentManager,
             Class<T> sceneGraphClass) {
         super(workspace, documentManager, sceneGraphClass);
     }

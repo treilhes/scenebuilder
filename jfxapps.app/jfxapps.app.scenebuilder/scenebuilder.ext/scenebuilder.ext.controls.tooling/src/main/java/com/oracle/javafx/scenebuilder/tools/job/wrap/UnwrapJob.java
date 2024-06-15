@@ -44,12 +44,13 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
-import com.gluonhq.jfxapps.core.api.job.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
+import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
@@ -63,7 +64,6 @@ import com.gluonhq.jfxapps.core.job.editor.atomic.RemovePropertyValueJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ToggleFxRootJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.SetDocumentRootJob;
 
 import javafx.geometry.Point2D;
@@ -91,7 +91,7 @@ public final class UnwrapJob extends BatchSelectionJob {
     private final IMetadata metadata;
     private final ModifyObjectJob.Factory modifyObjectJobFactory;
     private final WrapInJobFactory wrapInJobFactory;
-    private final DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory;
+    private final DSelectionGroupFactory.Factory objectSelectionGroupFactory;
 
  // @formatter:off
     protected UnwrapJob(
@@ -108,7 +108,7 @@ public final class UnwrapJob extends BatchSelectionJob {
             DesignHierarchyMask.Factory designMaskFactory,
             IMetadata metadata,
             WrapInJobFactory wrapInJobFactory,
-            DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory) {
+            DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);
         this.removePropertyJobFactory = removePropertyJobFactory;
@@ -133,10 +133,10 @@ public final class UnwrapJob extends BatchSelectionJob {
             return false;
         }
         final AbstractSelectionGroup asg = selection.getGroup();
-        if ((asg instanceof DefaultSelectionGroupFactory) == false) {
+        if ((asg instanceof DSelectionGroupFactory) == false) {
             return false;
         }
-        final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) asg;
+        final DSelectionGroupFactory osg = (DSelectionGroupFactory) asg;
         if (osg.getItems().size() != 1) {
             return false;
         }
@@ -214,8 +214,8 @@ public final class UnwrapJob extends BatchSelectionJob {
 
             final Selection selection = getSelection();
             final AbstractSelectionGroup asg = selection.getGroup();
-            assert asg instanceof DefaultSelectionGroupFactory; // Because of (1)
-            final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) asg;
+            assert asg instanceof DSelectionGroupFactory; // Because of (1)
+            final DSelectionGroupFactory osg = (DSelectionGroupFactory) asg;
             assert osg.getItems().size() == 1; // Because of (1)
 
             // Retrieve the old container (container to unwrap)

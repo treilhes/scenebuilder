@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,17 +34,11 @@
 
 package com.gluonhq.jfxapps.core.selection.job;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 
 /**
@@ -70,7 +64,7 @@ public final class BackupSelectionJob extends AbstractJob {
         this.selection = selection;
     }
 
-    protected void setJobParameters() {
+    public void setJobParameters() {
         try {
             if (selection.getGroup() == null) {
                 this.oldSelectionGroup = null;
@@ -107,24 +101,4 @@ public final class BackupSelectionJob extends AbstractJob {
 
     }
 
-    @Override
-    public String getDescription() {
-        // Not expected to reach the user
-        return getClass().getSimpleName();
-    }
-
-    @Singleton
-    public static class Factory extends JobFactory<BackupSelectionJob> {
-        public Factory(JfxAppContext sbContext) {
-            super(sbContext);
-        }
-
-        /**
-         * Create an {@link BackupSelectionJob} job
-         * @return the job to execute
-         */
-        public BackupSelectionJob getJob() {
-            return create(BackupSelectionJob.class, j -> j.setJobParameters());
-        }
-    }
 }

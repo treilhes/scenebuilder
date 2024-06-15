@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,16 +33,13 @@
  */
 package com.oracle.javafx.scenebuilder.fxml.job.editor;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.Size;
+import com.gluonhq.jfxapps.core.api.job.Job;
+import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.Size;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.job.JobFactory;
+import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 import com.oracle.javafx.scenebuilder.fxml.job.preferences.global.RootContainerHeightPreference;
 import com.oracle.javafx.scenebuilder.fxml.job.preferences.global.RootContainerWidthPreference;
 
@@ -53,31 +50,30 @@ import com.oracle.javafx.scenebuilder.fxml.job.preferences.global.RootContainerW
  * set to Region.USE_PREF_SIZE.
  * No action is taken unless the FXOMObject is an instance of Region or WebView.
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Prototype
 public final class UsePredefinedSizeJob extends AbstractJob {
 
-    private AbstractJob subJob;
-    private final UseSizeJob.Factory useSizeJobFactory;
+    private Job subJob;
+    private final SbJobsFactory sbJobsFactory;
     private final RootContainerHeightPreference rootContainerHeightPreference;
     private final RootContainerWidthPreference rootContainerWidthPreference;
 
     protected UsePredefinedSizeJob(
             JobExtensionFactory extensionFactory,
-            UseSizeJob.Factory useSizeJobFactory,
+            SbJobsFactory sbJobsFactory,
             RootContainerHeightPreference rootContainerHeightPreference,
             RootContainerWidthPreference rootContainerWidthPreference) {
         super(extensionFactory);
-        this.useSizeJobFactory = useSizeJobFactory;
+        this.sbJobsFactory = sbJobsFactory;
         this.rootContainerHeightPreference = rootContainerHeightPreference;
         this.rootContainerWidthPreference = rootContainerWidthPreference;
     }
 
 
-    protected void setJobParameters(Size size, FXOMObject fxomObject ) {
+    public void setJobParameters(Size size, FXOMObject fxomObject ) {
         final int width = getWidthFromSize(size);
         final int height = getHeightFromSize(size);
-        subJob = useSizeJobFactory.getJob(width, height, fxomObject);
+        subJob = sbJobsFactory.useSize(width, height, fxomObject);
     }
 
     private int getWidthFromSize(Size size) {
@@ -119,40 +115,11 @@ public final class UsePredefinedSizeJob extends AbstractJob {
 
     @Override
     public void doRedo() {
-        subJob.doRedo();
+        subJob.redo();
     }
 
     @Override
     public String getDescription() {
         return subJob.getDescription();
-    }
-
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    public static final class Factory extends JobFactory<UsePredefinedSizeJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
-            super(sbContext);
-        }
-
-        /**
-         * Create an {@link UsePredefinedSizeJob} job
-         *
-         * @param size the new size
-         * @param fxomObject the target {@link FXOMObject}, if null the target is {@link FXOMDocument#getFxomRoot()}
-         * @return the job to execute
-         */
-        public UsePredefinedSizeJob getJob(Size size, FXOMObject fxomObject) {
-            return create(UsePredefinedSizeJob.class, j -> j.setJobParameters(size, fxomObject));
-        }
-
-        /**
-         * Create an {@link UsePredefinedSizeJob} job that target {@link FXOMDocument#getFxomRoot()}
-         *
-         * @param size the new size
-         * @return the job to execute
-         */
-        public UsePredefinedSizeJob getJob(Size size) {
-            return create(UsePredefinedSizeJob.class, j -> j.setJobParameters(size, null));
-        }
     }
 }

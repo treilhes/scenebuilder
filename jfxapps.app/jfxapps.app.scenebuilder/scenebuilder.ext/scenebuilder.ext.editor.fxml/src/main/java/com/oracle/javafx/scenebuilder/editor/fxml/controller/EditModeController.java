@@ -54,10 +54,11 @@ import com.gluonhq.jfxapps.core.api.HierarchyMask.Accessory;
 import com.gluonhq.jfxapps.core.api.content.mode.AbstractModeController;
 import com.gluonhq.jfxapps.core.api.content.mode.Layer;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
@@ -80,7 +81,6 @@ import com.oracle.javafx.scenebuilder.api.control.Tring;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.api.control.outline.Outline;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractPring;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.DragGesture;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.ZoomGesture;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse.SelectAndMoveGesture;
@@ -408,8 +408,8 @@ public class EditModeController extends AbstractModeController implements Gestur
         final FXOMObject selectionAncestor = selection.getAncestor();
 
         // The code below handles selction of detached graph objects
-        if (!selection.isEmpty() && selection.getGroup() instanceof DefaultSelectionGroupFactory) {
-            DefaultSelectionGroupFactory selGroup = (DefaultSelectionGroupFactory) selection.getGroup();
+        if (!selection.isEmpty() && selection.getGroup() instanceof DSelectionGroupFactory) {
+            DSelectionGroupFactory selGroup = (DSelectionGroupFactory) selection.getGroup();
 
             if (selGroup.getItems().size() == 1 && selGroup.getHitItem().isViewable()
                     && selGroup.getHitItem().isDescendantOf(hitObject)
@@ -612,8 +612,8 @@ public class EditModeController extends AbstractModeController implements Gestur
             e.consume();
             break;
         case ENTER:
-            if (selection.getGroup() instanceof DefaultSelectionGroupFactory) {
-                final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) selection.getGroup();
+            if (selection.getGroup() instanceof DSelectionGroupFactory) {
+                final DSelectionGroupFactory osg = (DSelectionGroupFactory) selection.getGroup();
                 if (osg.getItems().size() == 1) {
                     final HierarchyMask mask = maskFactory.getMask(osg.getSortedItems().get(0));
                     final FXOMObject nodeFxomObject = mask.getClosestFxNode();

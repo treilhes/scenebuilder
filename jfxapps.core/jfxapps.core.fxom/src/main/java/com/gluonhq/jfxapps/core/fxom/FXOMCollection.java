@@ -40,7 +40,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.fxom.collector.OMCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
 import com.gluonhq.jfxapps.core.fxom.glue.GlueElement;
 
 /**
@@ -102,7 +102,7 @@ public class FXOMCollection extends FXOMObject {
     }
 
     @Override
-    public <T> T collect(OMCollector<T> collector) {
+    public <T> T collect(FXOMCollector<T> collector) {
 
         if (collector.accept(this)) {
             if (collector.needCollectObject()) {

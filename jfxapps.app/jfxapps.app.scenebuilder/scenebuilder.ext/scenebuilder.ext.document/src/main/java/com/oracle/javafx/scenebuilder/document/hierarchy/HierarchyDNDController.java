@@ -35,7 +35,6 @@ package com.oracle.javafx.scenebuilder.document.hierarchy;
 
 import java.util.Optional;
 
-import org.scenebuilder.fxml.api.HierarchyMask.Accessory;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -44,15 +43,16 @@ import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.HierarchyMask.Accessory;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.core.dnd.droptarget.AccessoryDropTarget;
 import com.gluonhq.jfxapps.core.core.dnd.droptarget.RootDropTarget;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.DocumentDragSource;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
@@ -804,9 +804,9 @@ System.out.println();
         }
 
         if (selection.isEmpty() == false) { // (1)
-            if (selection.getGroup() instanceof DefaultSelectionGroupFactory) {
+            if (selection.getGroup() instanceof SelectionGroupFactory) {
                 // A set of regular component (ie fxom objects) are selected
-                final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) selection.getGroup();
+                final SelectionGroupFactory osg = (SelectionGroupFactory) selection.getGroup();
 
                 // Abort dragging an empty place holder
                 for (TreeItem<HierarchyItem> selectedTreeItem : selectedTreeItems) {

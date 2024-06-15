@@ -38,25 +38,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.scenebuilder.fxml.api.HierarchyMask;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
+import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.job.editor.BatchJob;
-import com.gluonhq.jfxapps.core.job.editor.atomic.RelocateNodeJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.RemoveObjectJob;
+import com.gluonhq.jfxapps.core.selection.job.InsertAsSubComponentJob;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTarget;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.DropTargetFactory;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.api.util.CoordinateHelper;
-import com.oracle.javafx.scenebuilder.fxml.selection.job.InsertAsSubComponentJob;
+import com.oracle.javafx.scenebuilder.fxml.job.editor.atomic.RelocateNodeJob;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -70,11 +70,11 @@ import javafx.scene.Parent;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public final class ContainerXYDropTarget extends AbstractDropTarget {
 
-    private final DesignHierarchyMask.Factory designMaskFactory;
-    private final BatchJob.Factory batchJobFactory;
-    private final RelocateNodeJob.Factory relocateNodeJobFactory;
+    private final com.gluonhq.jfxapps.core.api.mask.Factory designMaskFactory;
+    private final com.gluonhq.jfxapps.core.api.job.base.Factory batchJobFactory;
+    private final com.oracle.javafx.scenebuilder.fxml.job.editor.atomic.Factory relocateNodeJobFactory;
     private final RemoveObjectJob.Factory removeObjectJobFactory;
-    private final InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory;
+    private final com.gluonhq.jfxapps.core.selection.job.Factory insertAsSubComponentJobFactory;
 
     private FXOMInstance targetContainer;
     private double sceneX;

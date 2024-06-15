@@ -33,9 +33,9 @@
  */
 package com.gluonhq.jfxapps.core.api.action;
 
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 
 /**
  *

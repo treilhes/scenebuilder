@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,9 +39,10 @@ import java.util.List;
 import java.util.Optional;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.JobPipeline;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
@@ -53,55 +54,51 @@ import javafx.beans.property.SimpleIntegerProperty;
 @ApplicationInstanceSingleton
 public class JobManagerImpl implements JobManager {
 
-	private static final int UNDO_STACK_MAX_SIZE = 50;
+    private static final int UNDO_STACK_MAX_SIZE = 50;
 
     private final int undoStackMaxSize;
-    private final List<AbstractJob> undoStack = new ArrayList<>();
-    private final List<AbstractJob> redoStack = new ArrayList<>();
+    private final List<Job> undoStack = new ArrayList<>();
+    private final List<Job> redoStack = new ArrayList<>();
     private final SimpleIntegerProperty revision = new SimpleIntegerProperty();
     private boolean lock;
 
     private final Optional<JobPipeline> jobPipeline;
 
-
-    public JobManagerImpl(
-    		DocumentManager documentManager,
-    		Optional<JobPipeline> jobPipeline) {
+    public JobManagerImpl(DocumentManager documentManager, Optional<JobPipeline> jobPipeline) {
 
         this.jobPipeline = jobPipeline;
         this.undoStackMaxSize = UNDO_STACK_MAX_SIZE;
 
-        revision.addListener((ob,o,n) -> documentManager.dirty().set(true));
+        revision.addListener((ob, o, n) -> documentManager.dirty().set(true));
 
         documentManager.fxomDocument().subscribe(om -> clear());
     }
 
-
     @Override
-    public List<AbstractJob> getUndoStack() {
+    public List<Job> getUndoStack() {
         return Collections.unmodifiableList(undoStack);
     }
 
     @Override
-    public List<AbstractJob> getRedoStack() {
+    public List<Job> getRedoStack() {
         return Collections.unmodifiableList(redoStack);
     }
 
     @Override
-    public void push(AbstractJob job) {
+    public void push(Job job) {
         assert job != null;
         assert job.isExecutable();
 
         if (lock) {
             // Method is called from a revision property listener
-            throw new IllegalStateException("Pushing jobs from another job or a job manager listener is forbidden"); //NOCHECK
+            throw new IllegalStateException("Pushing jobs from another job or a job manager listener is forbidden"); // NOCHECK
         }
 
         final AbstractJob fixJob = jobPipeline.orElse(JobPipeline.IDENTITY).buildPipeline(job);
         executeJob(fixJob);
         undoStack.add(0, fixJob);
         if (undoStack.size() > undoStackMaxSize) {
-            undoStack.remove(undoStack.size()-1);
+            undoStack.remove(undoStack.size() - 1);
         }
         redoStack.clear();
         incrementRevision();
@@ -112,7 +109,8 @@ public class JobManagerImpl implements JobManager {
     public void clear() {
         if (lock) {
             // Method is called from a revision property listener
-            throw new IllegalStateException("Clearing job stack from another job or a job manager listener is forbidden"); //NOCHECK
+            throw new IllegalStateException(
+                    "Clearing job stack from another job or a job manager listener is forbidden"); // NOCHECK
         }
 
         undoStack.clear();
@@ -142,10 +140,10 @@ public class JobManagerImpl implements JobManager {
 
         if (lock) {
             // Method is called from a revision property listener
-            throw new IllegalStateException("Undoing jobs from another job or a job manager listener is forbidden"); //NOCHECK
+            throw new IllegalStateException("Undoing jobs from another job or a job manager listener is forbidden"); // NOCHECK
         }
 
-        final AbstractJob job = undoStack.get(0);
+        final Job job = undoStack.get(0);
         undoJob(job);
         undoStack.remove(0);
         redoStack.add(0, job);
@@ -174,10 +172,10 @@ public class JobManagerImpl implements JobManager {
 
         if (lock) {
             // Method is called from a revision property listener
-            throw new IllegalStateException("Redoing jobs from another job or a job manager listener is forbidden"); //NOCHECK
+            throw new IllegalStateException("Redoing jobs from another job or a job manager listener is forbidden"); // NOCHECK
         }
 
-        final AbstractJob job = redoStack.get(0);
+        final Job job = redoStack.get(0);
         redoJob(job);
         redoStack.remove(0);
         undoStack.add(0, job);
@@ -185,8 +183,8 @@ public class JobManagerImpl implements JobManager {
     }
 
     /**
-     * Returns the property holding the revision number of this job manager.
-     * Job manager adds +1 to this number each time a job is done or undone.
+     * Returns the property holding the revision number of this job manager. Job
+     * manager adds +1 to this number each time a job is done or undone.
      *
      * @return the property holding the revision number of this job manager.
      */
@@ -198,11 +196,11 @@ public class JobManagerImpl implements JobManager {
     /**
      * Returns the job which has just been processed and which can be undone.
      *
-     * @return the current job, which is the one at index 0 in the undo stack.
-     * It can be null.
+     * @return the current job, which is the one at index 0 in the undo stack. It
+     *         can be null.
      */
     @Override
-    public AbstractJob getCurrentJob() {
+    public Job getCurrentJob() {
         if (undoStack.size() > 0) {
             return undoStack.get(0);
         } else {
@@ -210,12 +208,11 @@ public class JobManagerImpl implements JobManager {
         }
     }
 
-
     /*
      * Private
      */
 
-    private void executeJob(AbstractJob job) {
+    private void executeJob(Job job) {
         lock = true;
         try {
             job.execute();
@@ -224,8 +221,7 @@ public class JobManagerImpl implements JobManager {
         }
     }
 
-
-    private void undoJob(AbstractJob job) {
+    private void undoJob(Job job) {
         lock = true;
         try {
             job.undo();
@@ -234,8 +230,7 @@ public class JobManagerImpl implements JobManager {
         }
     }
 
-
-    private void redoJob(AbstractJob job) {
+    private void redoJob(Job job) {
         lock = true;
         try {
             job.redo();
@@ -244,11 +239,10 @@ public class JobManagerImpl implements JobManager {
         }
     }
 
-
     private void incrementRevision() {
         lock = true;
         try {
-            revision.set(revision.get()+1);
+            revision.set(revision.get() + 1);
         } finally {
             lock = false;
         }

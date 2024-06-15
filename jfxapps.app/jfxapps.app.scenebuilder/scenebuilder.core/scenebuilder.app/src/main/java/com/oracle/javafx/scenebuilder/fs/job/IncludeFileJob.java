@@ -48,10 +48,11 @@ import com.gluonhq.jfxapps.core.api.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
-import com.gluonhq.jfxapps.core.api.job.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
+import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
@@ -60,7 +61,6 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.selection.job.InsertAsSubComponentJob;
 import com.gluonhq.jfxapps.util.URLUtils;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 
 /**
  * Cannot include in non saved document<br/>

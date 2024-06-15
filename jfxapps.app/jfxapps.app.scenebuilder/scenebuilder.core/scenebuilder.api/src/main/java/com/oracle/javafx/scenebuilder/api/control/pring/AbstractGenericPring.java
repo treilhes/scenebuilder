@@ -35,8 +35,7 @@ package com.oracle.javafx.scenebuilder.api.control.pring;
 
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 
 import javafx.geometry.Bounds;
@@ -63,7 +62,7 @@ public abstract class AbstractGenericPring<T> extends AbstractPring<T> {
 
     public AbstractGenericPring(
             Workspace workspace,
-            FxmlDocumentManager documentManager,
+            DocumentManager documentManager,
             Class<T> sceneGraphClass) {
         super(workspace, documentManager, sceneGraphClass);
 

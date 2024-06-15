@@ -44,10 +44,10 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractKeyGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -94,9 +94,9 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
         final double moveX = extend * vectorX;
         final double moveY = extend * vectorY;
 
-        assert selection.getGroup() instanceof DefaultSelectionGroupFactory; // Because (1)
-        final DefaultSelectionGroupFactory osg
-                = (DefaultSelectionGroupFactory) selection.getGroup();
+        assert selection.getGroup() instanceof DSelectionGroupFactory; // Because (1)
+        final DSelectionGroupFactory osg
+                = (DSelectionGroupFactory) selection.getGroup();
 
         /*
          * Updates layoutX/layoutY of the selected scene graph objects.
@@ -113,10 +113,10 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
     protected void keyReleased() {
         keyPressed();
 
-        assert selection.getGroup() instanceof DefaultSelectionGroupFactory; // Because (1)
+        assert selection.getGroup() instanceof DSelectionGroupFactory; // Because (1)
 
-        final DefaultSelectionGroupFactory osg
-                = (DefaultSelectionGroupFactory) selection.getGroup();
+        final DSelectionGroupFactory osg
+                = (DSelectionGroupFactory) selection.getGroup();
 
         // Builds a RelocateSelectionJob
         final Map<FXOMObject, Point2D> locationMap = new HashMap<>();

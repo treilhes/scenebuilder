@@ -12,7 +12,7 @@ open module scenebuilder.ext.help.features {
 //    requires javafx.controls;
 //    requires javafx.fxml;
 //    requires javafx.graphics;
-    requires transitive scenebuilder.fxml.api;
+    requires transitive scenebuilder.api;
     requires scenebuilder.core.extension.api;
 //    requires spring.beans;
 //    requires spring.context;

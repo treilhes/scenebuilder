@@ -41,14 +41,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.job.editor.BatchJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
@@ -72,7 +72,7 @@ public final class ReIndexColumnContentJob extends AbstractJob {
 
     private final FXOMDocument fxomDocument;
     private final IMetadata metadata;
-    private final BatchJob.Factory batchJobFactory;
+    private final com.gluonhq.jfxapps.core.api.job.base.Factory batchJobFactory;
     private final ModifyObjectJob.Factory modifyObjectJobFactory;
     private final GridPaneHierarchyMask.Factory maskFactory;
 

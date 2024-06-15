@@ -172,17 +172,23 @@ public abstract class AbstractMetadata<
 
 
     @SuppressWarnings("unchecked")
-    public Set<ValuePropertyMetadata<VPM>> queryValueProperties(Set<Class<?>> componentClasses) {
-        final Set<ValuePropertyMetadata<VPM>> result = new HashSet<>();
+    public Set<VPM> queryValueProperties(Set<Class<?>> componentClasses) {
+        final Set<VPM> result = new HashSet<>();
         for (PropertyMetadata<?> propertyMetadata : queryProperties(componentClasses)) {
             if (propertyMetadata instanceof ValuePropertyMetadata vpc) {
-                result.add(vpc);
+                result.add((VPM)vpc);
             }
         }
         return result;
     }
 
 
+    /**
+     * Query a property metadat from its scenegraph object class and name
+     * @param componentClass the scenegraph object class
+     * @param targetName
+     * @return the property metadata or null if not found
+     */
     public PropertyMetadata<?> queryProperty(Class<?> componentClass, PropertyName targetName) {
         final Set<PropertyMetadata<?>> propertyMetadataSet = queryProperties(componentClass);
         final Iterator<PropertyMetadata<?>> iterator = propertyMetadataSet.iterator();
@@ -208,8 +214,8 @@ public abstract class AbstractMetadata<
 
 
     @SuppressWarnings("unchecked")
-    public ValuePropertyMetadata<VPM> queryValueProperty(FXOMElement fxomInstance, PropertyName targetName) {
-        final ValuePropertyMetadata<VPM> result;
+    public VPM queryValueProperty(FXOMElement fxomInstance, PropertyName targetName) {
+        final VPM result;
         assert fxomInstance != null;
         assert targetName != null;
 
@@ -221,7 +227,7 @@ public abstract class AbstractMetadata<
 
             final PropertyMetadata<?> m = queryProperty(componentClass, targetName);
             if (m instanceof ValuePropertyMetadata vpc) {
-                result = vpc;
+                result = (VPM)vpc;
             } else {
                 result = null;
             }
@@ -247,6 +253,35 @@ public abstract class AbstractMetadata<
             classMeta = classMeta.getParentMetadata();
         }
         return null;
+    }
+
+
+    /**
+     * During prune properties job a property is trimmed
+     * if the property is static
+     * if the property is transient (has a meaning in the current parent only)
+     * @param name
+     * @return
+     */
+
+    public boolean isPropertyTrimmingNeeded(Class<?> cls, PropertyName name) {
+        final boolean result;
+
+        if (name.getResidenceClass() != null) {
+            // It's a static property eg GridPane.rowIndex
+            // All static property are "parent related" and needs trimming
+            result = true;
+        } else {
+            //
+            var property = queryProperty(cls, name);
+            if (property instanceof ValuePropertyMetadata vpc) {
+                result = vpc.isTransient();
+            } else {
+                result = false;
+            }
+        }
+
+        return result;
     }
 }
 

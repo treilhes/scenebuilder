@@ -32,6 +32,8 @@
  */
 package com.gluonhq.jfxapps.core.api.job;
 
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+
 public interface JobExtension<T extends AbstractJob> {
 
 	void setExtendedJob(T job);

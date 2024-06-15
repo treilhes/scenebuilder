@@ -64,7 +64,7 @@ open module scenebuilder.ext.library.control {
     requires scenebuilder.core.library;
     //requires org.slf4j;
     //requires scenebuilder.ext.sb;
-    requires transitive scenebuilder.fxml.api;
+    requires transitive scenebuilder.api;
 
     requires scenebuilder.core.extension.api;
     requires scenebuilder.core.filesystem;

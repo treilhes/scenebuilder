@@ -46,7 +46,7 @@ open module scenebuilder.ext.document {
     requires scenebuilder.core.drag.and.drop;
     requires scenebuilder.core.jobs;
     requires scenebuilder.core.selection;
-    requires transitive scenebuilder.fxml.api;
+    requires transitive scenebuilder.api;
     requires scenebuilder.core.extension.api;
     requires scenebuilder.ext.menu;
 

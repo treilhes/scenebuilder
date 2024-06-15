@@ -44,10 +44,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.job.editor.atomic.AddPropertyJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.AddPropertyValueJob;
@@ -57,7 +58,6 @@ import com.gluonhq.jfxapps.core.job.editor.atomic.RemovePropertyJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.RemovePropertyValueJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ToggleFxRootJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.tools.job.wrap.FXOMObjectCourseComparator.UnidimensionalComparator;
 
@@ -81,7 +81,7 @@ public final class WrapInToolBarJob extends AbstractWrapInSubComponentJob {
             RemovePropertyJob.Factory removePropertyJobFactory,
             ModifyObjectJob.Factory modifyObjectJobFactory,
             AddPropertyJob.Factory addPropertyJobFactory,
-            DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory) {
+            DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
         super(extensionFactory, documentManager, selection, designMaskFactory, metadata, addPropertyValueJobFactory,
                 toggleFxRootJobFactory, modifyFxControllerJobFactory, setDocumentRootJobFactory, removePropertyValueJobFactory,
                 removePropertyJobFactory, modifyObjectJobFactory, addPropertyJobFactory, objectSelectionGroupFactory);

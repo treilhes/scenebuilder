@@ -35,8 +35,7 @@ package com.oracle.javafx.scenebuilder.api.control.tring;
 
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 
 import javafx.geometry.Bounds;
@@ -62,7 +61,7 @@ public abstract class AbstractGenericTring<T> extends AbstractTring<T> {
 
     public AbstractGenericTring(
             Workspace workspace,
-            FxmlDocumentManager documentManager,
+            DocumentManager documentManager,
             Class<T> sceneGraphClass) {
         super(workspace, documentManager, sceneGraphClass);
 

@@ -46,7 +46,7 @@ open module scenebuilder.ext.editor.fxml {
     exports com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse;
 
     requires scenebuilder.starter;
-    requires transitive scenebuilder.fxml.api;
+    requires transitive scenebuilder.api;
     requires scenebuilder.core.drag.and.drop;
 //    requires io.reactivex.rxjava2;
 //    requires java.logging;

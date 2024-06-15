@@ -35,13 +35,13 @@ package com.oracle.javafx.scenebuilder.editors.popupeditors;
 
 import org.scenebuilder.fxml.api.Documentation;
 
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.ui.controller.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
-import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
 
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;

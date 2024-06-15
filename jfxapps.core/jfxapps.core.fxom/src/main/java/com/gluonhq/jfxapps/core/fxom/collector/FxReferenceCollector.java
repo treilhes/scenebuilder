@@ -103,7 +103,7 @@ public class FxReferenceCollector {
         return new Reference(null, null);
     }
 
-    public static class FxReferenceBySource implements OMCollector<List<FXOMIntrinsic>>{
+    public static class FxReferenceBySource implements FXOMCollector<List<FXOMIntrinsic>>{
 
         private List<FXOMIntrinsic> result = new ArrayList<>();
 
@@ -122,7 +122,7 @@ public class FxReferenceCollector {
         }
 
         @Override
-        public Strategy collectionStragtegy() {
+        public Strategy collectionStrategy() {
             return Strategy.OBJECT;
         }
 
@@ -147,7 +147,7 @@ public class FxReferenceCollector {
 
     }
 
-    public static class ValueReference implements OMCollector<List<FXOMPropertyT>>{
+    public static class ValueReference implements FXOMCollector<List<FXOMPropertyT>>{
 
         private List<FXOMPropertyT> result = new ArrayList<>();
 
@@ -166,7 +166,7 @@ public class FxReferenceCollector {
         }
 
         @Override
-        public Strategy collectionStragtegy() {
+        public Strategy collectionStrategy() {
             return Strategy.PROPERTY;
         }
 
@@ -197,7 +197,7 @@ public class FxReferenceCollector {
 
     }
 
-    public static class Reference implements OMCollector<List<FXOMNode>>{
+    public static class Reference implements FXOMCollector<List<FXOMNode>>{
 
         private List<FXOMNode> result = new ArrayList<>();
 
@@ -216,7 +216,7 @@ public class FxReferenceCollector {
         }
 
         @Override
-        public Strategy collectionStragtegy() {
+        public Strategy collectionStrategy() {
             return Strategy.OBJECT_AND_PROPERTY;
         }
 

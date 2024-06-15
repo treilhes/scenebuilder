@@ -35,7 +35,7 @@ package com.gluonhq.jfxapps.core.fxom;
 
 import java.util.Map;
 
-import com.gluonhq.jfxapps.core.fxom.collector.OMCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
 import com.gluonhq.jfxapps.core.fxom.glue.GlueElement;
 import com.gluonhq.jfxapps.core.fxom.util.IndexedHashMap;
 import com.gluonhq.jfxapps.core.fxom.util.IndexedMap;
@@ -92,7 +92,7 @@ public abstract class FXOMElement extends FXOMObject {
     }
 
     @Override
-    public <T> T collect(OMCollector<T> collector) {
+    public <T> T collect(FXOMCollector<T> collector) {
 
         if (collector.accept(this)) {
             if (collector.needCollectObject()) {

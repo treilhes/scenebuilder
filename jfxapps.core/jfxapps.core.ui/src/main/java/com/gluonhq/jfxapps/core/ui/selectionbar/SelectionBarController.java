@@ -43,7 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -79,7 +79,7 @@ public class SelectionBarController extends AbstractFxmlPanelController implemen
     private final DocumentManager documentManager;
     private final Selection selection;
     private final Optional<SelectionBarContentFactory> barContentFactory;
-    private final DefaultSelectionGroupFactory defaultSelectionGroupFactory;
+    private final SelectionGroupFactory defaultSelectionGroupFactory;
 
     @FXML
     private HBox pathBox;
@@ -93,7 +93,7 @@ public class SelectionBarController extends AbstractFxmlPanelController implemen
             DocumentManager documentManager,
             JobManager jobManager,
             Selection selection,
-            DefaultSelectionGroupFactory defaultSelectionGroupFactory,
+            SelectionGroupFactory defaultSelectionGroupFactory,
             Optional<SelectionBarContentFactory> barContentFactory) {
         super(scenebuilderManager, documentManager, SelectionBarController.class.getResource("SelectionBar.fxml"), I18N.getBundle());
         this.documentManager = documentManager;

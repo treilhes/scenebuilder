@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
-import com.gluonhq.jfxapps.core.api.job.AbstractJobExtension;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJobExtension;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.job.editor.atomic.SetFxomRootJob;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;

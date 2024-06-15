@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.scenebuilder.fxml.api.FxmlApiExtension;
+import org.scenebuilder.fxml.api.SbApiExtension;
 import org.scenebuilder.fxml.core.i18n.I18NFxmlCoreExtension;
 
 import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
@@ -70,7 +70,7 @@ public class FxmlCoreExtensionExtension implements OpenExtension {
 
     @Override
     public UUID getParentId() {
-        return FxmlApiExtension.ID;
+        return SbApiExtension.ID;
     }
 
     @Override

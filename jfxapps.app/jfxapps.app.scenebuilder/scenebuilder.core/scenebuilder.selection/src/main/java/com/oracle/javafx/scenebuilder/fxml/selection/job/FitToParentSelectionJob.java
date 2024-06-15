@@ -44,17 +44,16 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
-import com.gluonhq.jfxapps.core.api.job.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.job.editor.FitToParentObjectJob;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.fxml.job.editor.FitToParentObjectJob;
 
 import javafx.scene.layout.AnchorPane;
 
@@ -63,8 +62,7 @@ import javafx.scene.layout.AnchorPane;
  * Force the selected objects {@link FXOMObject} to the same size of the parent {@link AnchorPane}
  * Subjob {@link FitToParentObjectJob}
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Prototype
 public final class FitToParentSelectionJob extends BatchDocumentJob {
 
     private static Logger logger = LoggerFactory.getLogger(FitToParentSelectionJob.class);

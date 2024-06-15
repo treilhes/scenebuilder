@@ -44,13 +44,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
-import com.gluonhq.jfxapps.core.api.job.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -126,8 +126,8 @@ public final class ModifySelectionToggleGroupJob extends BatchDocumentJob {
          * Creates some ModifyToggleGroupJob instances
          */
         if (executable) {
-            if (selection.getGroup() instanceof DefaultSelectionGroupFactory) {
-                final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) selection.getGroup();
+            if (selection.getGroup() instanceof DSelectionGroupFactory) {
+                final DSelectionGroupFactory osg = (DSelectionGroupFactory) selection.getGroup();
                 for (FXOMObject fxomObject : osg.getItems()) {
                     final AbstractJob subJob = modifyToggleGroupJobFactory.getJob(fxomObject, toggleGroupId);
                     if (subJob.isExecutable()) {

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,13 +33,44 @@
  */
 package com.gluonhq.jfxapps.core.api.editor.selection;
 
+import java.util.Collection;
+import java.util.Map;
+
+import com.gluonhq.jfxapps.core.api.mask.Accessory;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
+import jakarta.annotation.Nullable;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.scene.Node;
 
 public interface Selection {
+
+    /**
+     * Check if the current selection objects are all instances of the provided
+     * type,
+     *
+     * @param the required type of selected objects
+     * @return true if the current selection objects are all instances of the
+     *         provided type, false otherwise.
+     */
+    boolean isSelectionOfType(Class<?> type);
+
+    /**
+     * Check if the current selection objects are all instances of a {@link Control}
+     *
+     * @return true if the current selection objects are all instances of a
+     *         {@link Control}, false otherwise.
+     */
+    boolean isSelectionControl();
+
+    /**
+     * Check if the current selection objects are all instances of a {@link Node},
+     *
+     * @return true if the current selection objects are all instances of a
+     *         {@link Node}, false otherwise.
+     */
+    boolean isSelectionNode();
 
     /**
      * Returns the property holding the revision number of this selection.
@@ -48,6 +79,19 @@ public interface Selection {
      * @return the property holding the revision number of this selection.
      */
     ReadOnlyIntegerProperty revisionProperty();
+
+    /**
+     * Selection can be moved if true
+     *
+     * @return can be moved
+     */
+    boolean isMovable();
+
+    public Map<String, FXOMObject> collectSelectedFxIds();
+
+    public Accessory getTargetAccessory();
+
+    public void select(Accessory targetAccessory);
 
     /**
      * Returns the revision number of this selection.
@@ -65,7 +109,7 @@ public interface Selection {
      *
      * @param newGroup null or the selection group defining items to be selected
      */
-    void select(SelectionGroup newGroup);
+    void select(@Nullable SelectionGroup newGroup);
 
     boolean isSelected(SelectionGroup selectedGroup);
 
@@ -139,66 +183,59 @@ public interface Selection {
      */
     boolean isValid(FXOMDocument fxomDocument);
 
-//    /**
-//     * Check if the current selection objects are all instances of the provided type,
-//     * @param the required type of selected objects
-//     * @return true if the current selection objects are all instances of the provided type,
-//     * false otherwise.
-//     */
-//    boolean isSelectionOfType(Class<?> type);
+    /**
+     * Replaces the selected items by the specified fxom object and hit node.
+     * This routine adds +1 to the revision number.
+     *
+     * @param fxomObject the object to be selected
+     * @param hitNode null or the node hit by the mouse during selection
+     */
+    void select(FXOMObject fxomObject, Node hitNode);
 
-//    /**
-//     * Replaces the selected items by the specified fxom object and hit node.
-//     * This routine adds +1 to the revision number.
-//     *
-//     * @param fxomObject the object to be selected
-//     * @param hitNode null or the node hit by the mouse during selection
-//     */
-//    void select(O fxomObject, Node hitNode);
-//
-//    /**
-//     * Replaces the selected items by the specified fxom object.
-//     * This routine adds +1 to the revision number.
-//     *
-//     * @param fxomObject the object to be selected
-//     */
-//    void select(O fxomObject);
-//
-//    /**
-//     * Replaces the selected items by the specified fxom objects.
-//     * This routine adds +1 to the revision number.
-//     *
-//     * @param fxomObjects the objects to be selected
-//     */
-//    void select(Collection<O> fxomObjects);
-//
-//    /**
-//     * Replaces the selected items by the specified fxom objects.
-//     * This routine adds +1 to the revision number.
-//     *
-//     * @param fxomObjects the objects to be selected
-//     * @param hitObject the object hit by the mouse during selection
-//     * @param hitNode null or the node hit by the mouse during selection
-//     */
-//    void select(Collection<O> fxomObjects, O hitObject, Node hitNode);
+    /**
+     * Replaces the selected items by the specified fxom object.
+     * This routine adds +1 to the revision number.
+     *
+     * @param fxomObject the object to be selected
+     */
+    void select(FXOMObject fxomObject);
 
-//    /**
-//     * Update the hit object and hit point of the current selection.
-//     *
-//     * @param hitObject the object hit by the mouse during selection
-//     * @param hitNode null or the node hit by the mouse during selection
-//     */
-//    void updateHitObject(O hitObject, Node hitNode);
+    /**
+     * Replaces the selected items by the specified fxom objects.
+     * This routine adds +1 to the revision number.
+     *
+     * @param fxomObjects the objects to be selected
+     */
+    void select(Collection<FXOMObject> fxomObjects);
 
-//    /**
-//     * @param hitObject
-//     */
-//    void toggleSelection(O hitObject);
+    /**
+     * Replaces the selected items by the specified fxom objects.
+     * This routine adds +1 to the revision number.
+     *
+     * @param fxomObjects the objects to be selected
+     * @param hitObject the object hit by the mouse during selection
+     * @param hitNode null or the node hit by the mouse during selection
+     */
+    void select(Collection<FXOMObject> fxomObjects, FXOMObject hitObject, Node hitNode);
 
-//    void selectNext();
-//    void selectPrevious();
-//    void selectAll();
+    /**
+     * Update the hit object and hit point of the current selection.
+     *
+     * @param hitObject the object hit by the mouse during selection
+     * @param hitNode null or the node hit by the mouse during selection
+     */
+    void updateHitObject(FXOMObject hitObject, Node hitNode);
+
+    /**
+     * @param hitObject
+     */
+    void toggleSelection(FXOMObject hitObject);
+
+    void selectNext();
+    void selectPrevious();
+    void selectAll();
 
     boolean isSelected(FXOMObject fxomObject);
+
 
 }

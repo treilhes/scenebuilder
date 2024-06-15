@@ -19,7 +19,7 @@ open module scenebuilder.ext.inspector {
 //    requires org.slf4j;
 //    requires rxjavafx;
     //requires scenebuilder.ext.sb;
-    requires transitive scenebuilder.fxml.api;
+    requires transitive scenebuilder.api;
     requires scenebuilder.ext.editors;
     requires scenebuilder.core.extension.api;
     requires scenebuilder.core.selection;

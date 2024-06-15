@@ -39,6 +39,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.util.InheritanceMap;
 
 @Component
 public class DriverExtensionRegistry {

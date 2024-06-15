@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,28 +39,28 @@ import javafx.beans.property.ReadOnlyIntegerProperty;
 
 public interface JobManager {
 
-	List<AbstractJob> getUndoStack();
+    Job getCurrentJob();
 
-	void push(AbstractJob job);
+    List<Job> getUndoStack();
 
-	AbstractJob getCurrentJob();
+    List<Job> getRedoStack();
 
-	ReadOnlyIntegerProperty revisionProperty();
+    boolean canUndo();
 
-	boolean canRedo();
+    boolean canRedo();
 
-	String getRedoDescription();
+    String getUndoDescription();
 
-	void redo();
+    String getRedoDescription();
 
-	void clear();
+    void push(Job job);
 
-	boolean canUndo();
+    void undo();
 
-	String getUndoDescription();
+    void redo();
 
-	void undo();
+    void clear();
 
-	List<AbstractJob> getRedoStack();
+    ReadOnlyIntegerProperty revisionProperty();
 
 }

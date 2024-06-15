@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -51,11 +51,11 @@ public abstract class AbstractFactory<T> {
         this.sbContext = sbContext;
     }
 
-    protected T create(Class<T> tClass, Consumer<T> setup) {
+    protected <U extends T> T create(Class<U> tClass, Consumer<U> setup) {
 
         logger.debug("Creation of {}", tClass.getName());
 
-        T obj = sbContext.getBean(tClass);
+        U obj = sbContext.getBean(tClass);
         if (setup != null) {
             setup.accept(obj);
         }

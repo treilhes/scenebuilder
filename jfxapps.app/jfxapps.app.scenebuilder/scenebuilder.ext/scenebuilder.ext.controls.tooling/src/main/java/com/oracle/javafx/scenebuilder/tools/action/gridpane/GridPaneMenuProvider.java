@@ -40,7 +40,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.DefaultMenu;
@@ -81,7 +81,7 @@ public class GridPaneMenuProvider implements MenuItemProvider, ContextMenuItemPr
     @Override
     public List<ContextMenuItemAttachment> contextMenuItems() {
         Menu menu = menuBuilder.menu().id(MENU_ID).title(MENU_LABEL).build();
-        ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(menu, DefaultSelectionGroupFactory.class, UseComputedSizeAction.MENU_ID,
+        ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(menu, DSelectionGroupFactory.class, UseComputedSizeAction.MENU_ID,
                 PositionRequest.AsNextSibling, ORDER_WEIGHT);
         return Arrays.asList(attachment);
     }

@@ -55,7 +55,7 @@ public class PropertyCollector {
         return new SimpleProperties();
     }
 
-    public static class PropertyByName implements OMCollector<List<FXOMProperty>>{
+    public static class PropertyByName implements FXOMCollector<List<FXOMProperty>>{
 
         private List<FXOMProperty> result = new ArrayList<>();
 
@@ -69,7 +69,7 @@ public class PropertyCollector {
         }
 
         @Override
-        public Strategy collectionStragtegy() {
+        public Strategy collectionStrategy() {
             return Strategy.PROPERTY;
         }
 
@@ -92,7 +92,7 @@ public class PropertyCollector {
 
     }
 
-    public static class FxNullProperties implements OMCollector<List<FXOMPropertyT>>{
+    public static class FxNullProperties implements FXOMCollector<List<FXOMPropertyT>>{
 
         private final static String JAVAFX_NULL = "$null";
 
@@ -103,7 +103,7 @@ public class PropertyCollector {
         }
 
         @Override
-        public Strategy collectionStragtegy() {
+        public Strategy collectionStrategy() {
             return Strategy.PROPERTY;
         }
 
@@ -127,7 +127,7 @@ public class PropertyCollector {
 
     }
 
-    public static class SimpleProperties implements OMCollector<List<FXOMPropertyT>>{
+    public static class SimpleProperties implements FXOMCollector<List<FXOMPropertyT>>{
 
         private List<FXOMPropertyT> result = new ArrayList<>();
 
@@ -136,7 +136,7 @@ public class PropertyCollector {
         }
 
         @Override
-        public Strategy collectionStragtegy() {
+        public Strategy collectionStrategy() {
             return Strategy.PROPERTY;
         }
 

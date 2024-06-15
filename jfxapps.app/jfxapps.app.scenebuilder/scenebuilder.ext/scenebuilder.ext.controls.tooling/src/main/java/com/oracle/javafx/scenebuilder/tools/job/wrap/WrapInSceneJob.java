@@ -43,11 +43,12 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.HierarchyMask;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -62,7 +63,6 @@ import com.gluonhq.jfxapps.core.job.editor.atomic.RemovePropertyValueJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ReplaceObjectJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ToggleFxRootJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.SetDocumentRootJob;
 
 /**
@@ -87,7 +87,7 @@ public final class WrapInSceneJob extends AbstractWrapInJob {
             ModifyObjectJob.Factory modifyObjectJobFactory,
             AddPropertyJob.Factory addPropertyJobFactory,
             ReplaceObjectJob.Factory replaceObjectJobFactory,
-            DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory) {
+            DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
         super(extensionFactory, documentManager, selection, designMaskFactory, metadata, addPropertyValueJobFactory,
                 toggleFxRootJobFactory, modifyFxControllerJobFactory, setDocumentRootJobFactory, removePropertyValueJobFactory,
                 removePropertyJobFactory, modifyObjectJobFactory, objectSelectionGroupFactory);
@@ -105,8 +105,8 @@ public final class WrapInSceneJob extends AbstractWrapInJob {
 
         // Can wrap in ROOT property single selection only
         final Selection selection = getSelection();
-        assert selection.getGroup() instanceof DefaultSelectionGroupFactory; // Because of (1)
-        final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) selection.getGroup();
+        assert selection.getGroup() instanceof DSelectionGroupFactory; // Because of (1)
+        final DSelectionGroupFactory osg = (DSelectionGroupFactory) selection.getGroup();
         if (osg.getItems().size() != 1) {
             return false;
         }

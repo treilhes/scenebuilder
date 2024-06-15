@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,17 +34,14 @@
 
 package com.oracle.javafx.scenebuilder.fxml.job.editor.reference;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.job.Job;
+import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.job.JobFactory;
+import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 
 import javafx.scene.control.ToggleGroup;
 
@@ -53,32 +50,28 @@ import javafx.scene.control.ToggleGroup;
  * For {@link FXOMIntrinsic} delegates to {@link FixToggleGroupIntrinsicReferenceJob}
  * For {@link FXOMPropertyT} delegates to {@link FixToggleGroupExpressionReferenceJob}
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Prototype
 public final class FixToggleGroupReferenceJob  extends AbstractJob {
 
-    private AbstractJob subJob;
-    private final FixToggleGroupIntrinsicReferenceJob.Factory fixToggleGroupIntrinsicReferenceJobFactory;
-    private final FixToggleGroupExpressionReferenceJob.Factory fixToggleGroupExpressionReferenceJobFactory;
+    private final SbJobsFactory sbJobsFactory;
+    private Job subJob;
 
  // @formatter:off
     protected FixToggleGroupReferenceJob(
             JobExtensionFactory extensionFactory,
-            FixToggleGroupIntrinsicReferenceJob.Factory fixToggleGroupIntrinsicReferenceJobFactory,
-            FixToggleGroupExpressionReferenceJob.Factory fixToggleGroupExpressionReferenceJobFactory) {
+            SbJobsFactory sbJobsFactory) {
     // @formatter:on
         super(extensionFactory);
-        this.fixToggleGroupIntrinsicReferenceJobFactory = fixToggleGroupIntrinsicReferenceJobFactory;
-        this.fixToggleGroupExpressionReferenceJobFactory = fixToggleGroupExpressionReferenceJobFactory;
+        this.sbJobsFactory = sbJobsFactory;
     }
 
-    protected void setJobParameters(FXOMNode reference) {
+    public void setJobParameters(FXOMNode reference) {
         if (reference instanceof FXOMIntrinsic) {
             final FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) reference;
-            subJob = fixToggleGroupIntrinsicReferenceJobFactory.getJob(fxomIntrinsic);;
+            subJob = sbJobsFactory.fixToggleGroupIntrinsicReference(fxomIntrinsic);;
         } else if (reference instanceof FXOMPropertyT) {
             final FXOMPropertyT fxomProperty = (FXOMPropertyT) reference;
-            subJob = fixToggleGroupExpressionReferenceJobFactory.getJob(fxomProperty);
+            subJob = sbJobsFactory.fixToggleGroupExpressionReference(fxomProperty);
         } else {
             throw new RuntimeException("Bug"); //NOCHECK
         }
@@ -110,25 +103,6 @@ public final class FixToggleGroupReferenceJob  extends AbstractJob {
     @Override
     public String getDescription() {
         return subJob.getDescription();
-    }
-
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
-    public final static class Factory extends JobFactory<FixToggleGroupReferenceJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
-            super(sbContext);
-        }
-
-        /**
-         * Create an {@link FixToggleGroupReferenceJob} job.
-         *
-         * @param reference reference the {@link FXOMNode} containing the reference
-         * @return the job to execute
-         */
-        public FixToggleGroupReferenceJob getJob(FXOMNode reference) {
-            return create(FixToggleGroupReferenceJob.class, j -> j.setJobParameters(reference));
-        }
     }
 
 }

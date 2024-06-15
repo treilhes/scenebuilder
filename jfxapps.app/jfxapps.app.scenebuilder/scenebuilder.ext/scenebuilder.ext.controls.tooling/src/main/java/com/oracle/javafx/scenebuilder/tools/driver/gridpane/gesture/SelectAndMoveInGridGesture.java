@@ -43,7 +43,7 @@ import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.action.editor.EditorPlatform;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseDragGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
@@ -142,7 +142,7 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
                 selection.select(gridSelectionGroupFactory.getGroup(gridPaneInstance, feature, featureIndex));
             }
         } else { // Cases A and B
-            assert selection.getGroup() instanceof DefaultSelectionGroupFactory;
+            assert selection.getGroup() instanceof DSelectionGroupFactory;
             selection.select(gridSelectionGroupFactory.getGroup(gridPaneInstance, feature, featureIndex));
         }
     }

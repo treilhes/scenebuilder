@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 
 @Singleton
 public class JobExtensionFactory {

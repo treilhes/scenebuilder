@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,27 +36,21 @@ package com.oracle.javafx.scenebuilder.fxml.job.editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.HierarchyMask;
-import org.scenebuilder.fxml.api.HierarchyMask.Accessory;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.job.Job;
+import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.util.StringUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.job.JobExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.job.JobFactory;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.api.util.StringUtils;
-import com.oracle.javafx.scenebuilder.fxml.job.editor.atomic.ModifyObjectJob;
+import com.oracle.javafx.scenebuilder.api.mask.SbAccessoryProperty;
+import com.oracle.javafx.scenebuilder.api.mask.SbDesignHierarchyMask;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
@@ -69,37 +63,36 @@ import javafx.scene.web.WebView;
  * set to Region.USE_PREF_SIZE. No action is taken unless the FXOMObject is an
  * instance of Region or WebView.
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Prototype
 public final class UseSizeJob extends AbstractJob {
 
-    private final List<AbstractJob> subJobs = new ArrayList<>();
+    private final List<Job> subJobs = new ArrayList<>();
     private String description; // final but initialized lazily
     private double width;
     private double height;
     private FXOMObject fxomObject;
 
     private final FXOMDocument fxomDocument;
-    private final IMetadata metadata;
-    private final ModifyObjectJob.Factory modifyObjectJobFactory;
-    private final DesignHierarchyMask.Factory designMaskFactory;
+    private final SbMetadata metadata;
+    private final FxomJobsFactory fxomJobsFactory;
+    private final SbDesignHierarchyMask.Factory sbDesignHierarchyMask;
 
     // @formatter:off
     protected UseSizeJob(
             JobExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
-            IMetadata metadata,
-            DesignHierarchyMask.Factory designMaskFactory,
-            ModifyObjectJob.Factory modifyObjectJobFactory) {
+            DocumentManager documentManager,
+            SbMetadata metadata,
+            SbDesignHierarchyMask.Factory sbDesignHierarchyMask,
+            FxomJobsFactory fxomJobsFactory) {
      // @formatter:on
         super(extensionFactory);
         this.fxomDocument = documentManager.fxomDocument().get();
         this.metadata = metadata;
-        this.modifyObjectJobFactory = modifyObjectJobFactory;
-        this.designMaskFactory = designMaskFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
+        this.sbDesignHierarchyMask = sbDesignHierarchyMask;
     }
 
-    protected void setJobParameters(double width, double height, FXOMObject fxomObject) {
+    public void setJobParameters(double width, double height, FXOMObject fxomObject) {
         this.width = width;
         this.height = height;
         if (fxomObject != null) {
@@ -110,11 +103,11 @@ public final class UseSizeJob extends AbstractJob {
             } else {
                 fxomObject = fxomDocument.getFxomRoot();
 
-                if (fxomObject != null && fxomObject.getSceneGraphObject() instanceof Scene) {
+                if (fxomObject != null && fxomObject.getSceneGraphObject().isInstanceOf(Scene.class)) {
                     // Set the size of the scene's root
-                    HierarchyMask mask = designMaskFactory.getMask(fxomObject);
-                    // TODO to check
-                    Accessory accessory = mask.getAccessory(DesignHierarchyMask.AccessoryProperty.ROOT);
+                    var mask = sbDesignHierarchyMask.getMask(fxomObject);
+                    // TODO to check, do we have a way to not specify property by name?
+                    var accessory = mask.getAccessory(SbAccessoryProperty.ROOT);
                     List<FXOMObject> fxomObjects = mask.getAccessories(accessory, false);
 
                     assert fxomObjects.size() == 1;
@@ -126,6 +119,12 @@ public final class UseSizeJob extends AbstractJob {
         }
 
         buildSubJobs();
+
+        if (getDescription() == null) {
+            setDescription(I18N.getString("job.set.size", StringUtils.getStringFromDouble(width),
+                    StringUtils.getStringFromDouble(height)));
+        }
+
     }
 
     /*
@@ -139,7 +138,7 @@ public final class UseSizeJob extends AbstractJob {
     @Override
     public void doExecute() {
         fxomDocument.beginUpdate();
-        for (AbstractJob subJob : subJobs) {
+        for (Job subJob : subJobs) {
             subJob.execute();
         }
         fxomDocument.endUpdate();
@@ -157,7 +156,7 @@ public final class UseSizeJob extends AbstractJob {
     @Override
     public void doRedo() {
         fxomDocument.beginUpdate();
-        for (AbstractJob subJob : subJobs) {
+        for (Job subJob : subJobs) {
             subJob.redo();
         }
         fxomDocument.endUpdate();
@@ -185,20 +184,20 @@ public final class UseSizeJob extends AbstractJob {
         }
     }
 
-    private List<AbstractJob> modifyHeightJobs(final FXOMInstance candidate) {
-        final List<AbstractJob> result = new ArrayList<>();
+    private List<Job> modifyHeightJobs(final FXOMInstance candidate) {
+        final List<Job> result = new ArrayList<>();
 
-        final PropertyName maxHeight = new PropertyName("maxHeight"); // NOCHECK
-        final PropertyName minHeight = new PropertyName("minHeight"); // NOCHECK
-        final PropertyName prefHeight = new PropertyName("prefHeight"); // NOCHECK
+        final var maxHeight = new PropertyName("maxHeight"); // NOCHECK
+        final var minHeight = new PropertyName("minHeight"); // NOCHECK
+        final var prefHeight = new PropertyName("prefHeight"); // NOCHECK
 
-        final ValuePropertyMetadata maxHeightVPM = metadata.queryValueProperty(candidate, maxHeight);
-        final ValuePropertyMetadata minHeightVPM = metadata.queryValueProperty(candidate, minHeight);
-        final ValuePropertyMetadata prefHeightVPM = metadata.queryValueProperty(candidate, prefHeight);
+        final var maxHeightVPM = metadata.queryValueProperty(candidate, maxHeight);
+        final var minHeightVPM = metadata.queryValueProperty(candidate, minHeight);
+        final var prefHeightVPM = metadata.queryValueProperty(candidate, prefHeight);
 
-        final AbstractJob maxHeightJob = modifyObjectJobFactory.getJob(candidate, maxHeightVPM, Region.USE_PREF_SIZE);
-        final AbstractJob minHeightJob = modifyObjectJobFactory.getJob(candidate, minHeightVPM, Region.USE_PREF_SIZE);
-        final AbstractJob prefHeightJob = modifyObjectJobFactory.getJob(candidate, prefHeightVPM, height);
+        final var maxHeightJob = fxomJobsFactory.modifyObject(candidate, maxHeightVPM, Region.USE_PREF_SIZE);
+        final var minHeightJob = fxomJobsFactory.modifyObject(candidate, minHeightVPM, Region.USE_PREF_SIZE);
+        final var prefHeightJob = fxomJobsFactory.modifyObject(candidate, prefHeightVPM, height);
 
         if (maxHeightJob.isExecutable()) {
             result.add(maxHeightJob);
@@ -212,20 +211,20 @@ public final class UseSizeJob extends AbstractJob {
         return result;
     }
 
-    private List<AbstractJob> modifyWidthJobs(final FXOMInstance candidate) {
-        final List<AbstractJob> result = new ArrayList<>();
+    private List<Job> modifyWidthJobs(final FXOMInstance candidate) {
+        final List<Job> result = new ArrayList<>();
 
-        final PropertyName maxWidth = new PropertyName("maxWidth"); // NOCHECK
-        final PropertyName minWidth = new PropertyName("minWidth"); // NOCHECK
-        final PropertyName prefWidth = new PropertyName("prefWidth"); // NOCHECK
+        final var maxWidth = new PropertyName("maxWidth"); // NOCHECK
+        final var minWidth = new PropertyName("minWidth"); // NOCHECK
+        final var prefWidth = new PropertyName("prefWidth"); // NOCHECK
 
-        final ValuePropertyMetadata maxWidthVPM = metadata.queryValueProperty(candidate, maxWidth);
-        final ValuePropertyMetadata minWidthVPM = metadata.queryValueProperty(candidate, minWidth);
-        final ValuePropertyMetadata prefWidthVPM = metadata.queryValueProperty(candidate, prefWidth);
+        final var maxWidthVPM = metadata.queryValueProperty(candidate, maxWidth);
+        final var minWidthVPM = metadata.queryValueProperty(candidate, minWidth);
+        final var prefWidthVPM = metadata.queryValueProperty(candidate, prefWidth);
 
-        final AbstractJob maxWidthJob = modifyObjectJobFactory.getJob(candidate, maxWidthVPM, Region.USE_PREF_SIZE);
-        final AbstractJob minWidthJob = modifyObjectJobFactory.getJob(candidate, minWidthVPM, Region.USE_PREF_SIZE);
-        final AbstractJob prefWidthJob = modifyObjectJobFactory.getJob(candidate, prefWidthVPM, width);
+        final var maxWidthJob = fxomJobsFactory.modifyObject(candidate, maxWidthVPM, Region.USE_PREF_SIZE);
+        final var minWidthJob = fxomJobsFactory.modifyObject(candidate, minWidthVPM, Region.USE_PREF_SIZE);
+        final var prefWidthJob = fxomJobsFactory.modifyObject(candidate, prefWidthVPM, width);
 
         if (maxWidthJob.isExecutable()) {
             result.add(maxWidthJob);
@@ -237,37 +236,5 @@ public final class UseSizeJob extends AbstractJob {
             result.add(prefWidthJob);
         }
         return result;
-    }
-
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
-    public static final class Factory extends JobFactory<UseSizeJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
-            super(sbContext);
-        }
-
-        /**
-         * Create an {@link UseSizeJob} job
-         *
-         * @param width the new width
-         * @param height the new height
-         * @param fxomObject the target {@link FXOMObject}, if null the target is {@link FXOMDocument#getFxomRoot()}
-         * @return the job to execute
-         */
-        public UseSizeJob getJob(double width, double height, FXOMObject fxomObject) {
-            return create(UseSizeJob.class, j -> j.setJobParameters(width, height, fxomObject));
-        }
-
-        /**
-         * Create an {@link UseSizeJob} job that target {@link FXOMDocument#getFxomRoot()}
-         *
-         * @param width the new width
-         * @param height the new height
-         * @return the job to execute
-         */
-        public UseSizeJob getJob(double width, double height) {
-            return create(UseSizeJob.class, j -> j.setJobParameters(width, height, null));
-        }
     }
 }

@@ -37,8 +37,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import org.scenebuilder.fxml.api.HierarchyMask;
-import org.scenebuilder.fxml.api.HierarchyMask.Accessory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -47,17 +45,19 @@ import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.dnd.AbstractDropTarget;
 import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.dnd.DropTargetFactory;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
+import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.HierarchyMask.Accessory;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.job.editor.BatchJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ReIndexObjectJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.RemoveObjectJob;
 import com.gluonhq.jfxapps.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.InsertAsAccessoryJob;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.InsertAsSubComponentJob;
 
@@ -72,7 +72,7 @@ import javafx.scene.layout.BorderPane;
 public final class HierarchyDropTarget extends AbstractDropTarget {
 
     private final DesignHierarchyMask.Factory designMaskFactory;
-    private final BatchJob.Factory batchJobFactory;
+    private final com.gluonhq.jfxapps.core.api.job.base.Factory batchJobFactory;
     private final ReIndexObjectJob.Factory reIndexObjectJobFactory;
     private final RemoveObjectJob.Factory removeObjectJobFactory;
     private final InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory;

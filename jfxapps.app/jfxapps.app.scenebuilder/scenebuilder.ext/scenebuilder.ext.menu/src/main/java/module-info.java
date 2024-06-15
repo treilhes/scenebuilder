@@ -43,7 +43,7 @@ open module scenebuilder.ext.menu {
     exports com.oracle.javafx.scenebuilder.menu.action.view;
     exports com.oracle.javafx.scenebuilder.menu.i18n;
 
-    requires transitive scenebuilder.fxml.api;
+    requires transitive scenebuilder.api;
     requires transitive scenebuilder.core.filesystem;
     requires transitive scenebuilder.core.extension.api;
     requires scenebuilder.core.core;

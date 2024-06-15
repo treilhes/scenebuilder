@@ -40,9 +40,9 @@ import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ContextMenuItemAttachment;
@@ -61,7 +61,7 @@ import com.oracle.javafx.scenebuilder.fxml.selection.job.BringForwardJob;
         label = BringForwardAction.TITLE,
         positionRequest = PositionRequest.AsNextSibling)
 @ContextMenuItemAttachment(
-        selectionGroup = DefaultSelectionGroupFactory.class,
+        selectionGroup = DSelectionGroupFactory.class,
         id = BringForwardAction.MENU_ID,
         targetMenuId = SendToBackAction.MENU_ID,
         label = BringForwardAction.TITLE,

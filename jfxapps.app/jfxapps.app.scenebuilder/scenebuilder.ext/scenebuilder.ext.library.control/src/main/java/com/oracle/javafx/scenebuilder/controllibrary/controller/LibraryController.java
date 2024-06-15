@@ -41,6 +41,7 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.library.LibraryItem;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -49,7 +50,6 @@ import com.gluonhq.jfxapps.core.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.controllibrary.drag.source.ControlLibraryDragSource;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryListCell;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryListItem;
-import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
 
 import javafx.scene.control.ListView;
 import javafx.scene.input.Dragboard;

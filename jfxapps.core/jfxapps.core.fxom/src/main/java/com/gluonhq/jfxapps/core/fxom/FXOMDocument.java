@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import com.gluonhq.jfxapps.core.fxom.collector.OMCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
 import com.gluonhq.jfxapps.core.fxom.glue.GlueDocument;
 import com.gluonhq.jfxapps.core.fxom.sampledata.SampleDataGenerator;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
@@ -445,7 +445,7 @@ public class FXOMDocument {
         return getNamespaces().containsKey(fxId);
     }
 
-    public <T> T collect(OMCollector<T> collector) {
+    public <T> T collect(FXOMCollector<T> collector) {
         if (getFxomRoot() == null) {
             return collector.getCollected();
         } else {

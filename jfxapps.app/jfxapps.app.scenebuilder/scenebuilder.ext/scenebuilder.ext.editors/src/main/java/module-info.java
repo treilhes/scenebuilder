@@ -41,7 +41,7 @@ open module scenebuilder.ext.editors {
     exports com.oracle.javafx.scenebuilder.editors.popupeditors;
     exports com.oracle.javafx.scenebuilder.editors.control.effectpicker;
 
-    requires transitive scenebuilder.fxml.api;
+    requires transitive scenebuilder.api;
     requires scenebuilder.core.jobs;
     requires scenebuilder.core.selection;
 

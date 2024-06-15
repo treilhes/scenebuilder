@@ -10,7 +10,7 @@ open module scenebuilder.ext.dummy {
 //    requires javafx.controls;
 //    requires javafx.graphics;
     requires scenebuilder.starter;
-    requires transitive scenebuilder.fxml.api;
+    requires transitive scenebuilder.api;
     requires scenebuilder.core.extension.api;
 //    requires spring.beans;
 //    requires spring.context;

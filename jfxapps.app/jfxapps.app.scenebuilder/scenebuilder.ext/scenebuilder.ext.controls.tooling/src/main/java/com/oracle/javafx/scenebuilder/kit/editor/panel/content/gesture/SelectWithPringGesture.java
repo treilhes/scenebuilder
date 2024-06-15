@@ -40,7 +40,7 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseDragGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 
@@ -55,13 +55,13 @@ import javafx.scene.input.MouseEvent;
 public class SelectWithPringGesture extends AbstractMouseDragGesture {
 
     private final Selection selection;
-    private final DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory;
+    private final DSelectionGroupFactory.Factory objectSelectionGroupFactory;
     private FXOMInstance fxomInstance;
 
     protected SelectWithPringGesture(
             Content contentPanelController,
             Selection selection,
-            DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory) {
+            DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
         super(contentPanelController);
         this.selection = selection;
         this.objectSelectionGroupFactory = objectSelectionGroupFactory;

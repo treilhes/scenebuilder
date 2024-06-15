@@ -42,21 +42,20 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
-import com.gluonhq.jfxapps.core.api.job.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 
 /**
@@ -66,8 +65,7 @@ import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
  * If the new value is not DEFAULT it sets cache to true<br/>
  * FLAW: currently the modification of the cache property is not reflected in the inspector until you deselect adn reselect the object
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Prototype
 public final class ModifyCacheHintJob extends BatchDocumentJob {
 
     private int subJobCount = 0;
@@ -76,7 +74,7 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
 
     private final Selection selection;
     private final ModifyObjectJob.Factory modifyObjectJobFactory;
-    private final IMetadata metadata;
+    private final SbMetadata metadata;
 
     protected ValuePropertyMetadata propertyMetadata;
     protected Object newValue;
@@ -85,7 +83,7 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             Selection selection,
-            IMetadata metadata,
+            SbMetadata metadata,
             ModifyObjectJob.Factory modifyObjectJobFactory) {
         super(extensionFactory, documentManager);
         assert cacheHintPN.equals(propertyMetadata.getName());

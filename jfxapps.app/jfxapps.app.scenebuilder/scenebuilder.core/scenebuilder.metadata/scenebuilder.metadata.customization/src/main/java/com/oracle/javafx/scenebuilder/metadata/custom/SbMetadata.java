@@ -183,29 +183,6 @@ public class SbMetadata extends AbstractMetadata<
         subSectionMap.put("Code", ss2); //NOCHECK
     }
 
-
-    /**
-     * During prune properties job a property is trimmed
-     * if the property is static
-     * if the property is transient (has a meaning in the current parent only)
-     * @param name
-     * @return
-     */
-
-    public boolean isPropertyTrimmingNeeded(PropertyName name) {
-        final boolean result;
-
-        if (name.getResidenceClass() != null) {
-            // It's a static property eg GridPane.rowIndex
-            // All static property are "parent related" and needs trimming
-            result = true;
-        } else {
-            result = parentRelatedProperties.contains(name);
-        }
-
-        return result;
-    }
-
     public class SbMetadataIntrospector implements AbstractMetadata.MetadataIntrospector<SbComponentClassMetadata<?>>  {
 
         /**

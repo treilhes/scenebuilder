@@ -51,7 +51,7 @@ public class FxIncludeCollector {
         return new FxInclude(source);
     }
 
-    public static class FxInclude implements OMCollector<List<FXOMIntrinsic>>{
+    public static class FxInclude implements FXOMCollector<List<FXOMIntrinsic>>{
 
         private List<FXOMIntrinsic> result = new ArrayList<>();
 
@@ -63,7 +63,7 @@ public class FxIncludeCollector {
         }
 
         @Override
-        public Strategy collectionStragtegy() {
+        public Strategy collectionStrategy() {
             return Strategy.OBJECT;
         }
 

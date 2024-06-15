@@ -33,10 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.document.hierarchy.display;
 
-import org.scenebuilder.fxml.api.HierarchyMask;
-
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;

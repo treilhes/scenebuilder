@@ -43,13 +43,13 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
-import com.gluonhq.jfxapps.core.api.job.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
@@ -108,14 +108,14 @@ public final class SpanJob extends BatchDocumentJob {
         final AbstractSelectionGroup selectionGroup = selection.getGroup();
 
         // Do we have an asset selected which is a standard one (not a grid) ?
-        if (selectionGroup instanceof DefaultSelectionGroupFactory) {
+        if (selectionGroup instanceof DSelectionGroupFactory) {
             // Is that asset enclosed in a grid ?
             if (selectionGroup.getAncestor() != null
                     && selectionGroup.getAncestor().getSceneGraphObject() instanceof GridPane) {
                 GridPaneHierarchyMask gridDHM = maskFactory.getMask(selectionGroup.getAncestor());
                 int columnCount = gridDHM.getColumnsSize();
                 int rowCount = gridDHM.getRowsSize();
-                List<FXOMObject> items = ((DefaultSelectionGroupFactory)selectionGroup).getSortedItems();
+                List<FXOMObject> items = ((DSelectionGroupFactory)selectionGroup).getSortedItems();
 
                 // Create a job for all items then check each is executable.
                 // As soon as one is not executable the job list is made empty

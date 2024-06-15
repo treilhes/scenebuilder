@@ -45,14 +45,14 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
-import com.gluonhq.jfxapps.core.api.job.CompositeJob;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
+import com.gluonhq.jfxapps.core.api.job.base.CompositeJob;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.DebugMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.DefaultMenu;
-import com.gluonhq.jfxapps.core.job.editor.BatchJob;
 import com.gluonhq.jfxapps.core.job.editor.reference.UpdateReferencesJob;
 import com.gluonhq.jfxapps.util.MathUtils;
 

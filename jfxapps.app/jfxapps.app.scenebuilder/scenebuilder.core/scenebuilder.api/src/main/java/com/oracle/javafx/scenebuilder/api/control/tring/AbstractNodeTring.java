@@ -33,8 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.control.tring;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -50,7 +49,7 @@ public abstract class AbstractNodeTring<T extends Node> extends AbstractGenericT
 
     public AbstractNodeTring(
             Workspace workspace,
-            FxmlDocumentManager documentManager,
+            DocumentManager documentManager,
             Class<T> sceneGraphClass) {
         super(workspace, documentManager, sceneGraphClass);
     }

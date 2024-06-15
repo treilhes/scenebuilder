@@ -39,7 +39,7 @@ open module scenebuilder.fxml.core.selection {
     exports com.oracle.javafx.scenebuilder.selection.i18n;
     exports com.oracle.javafx.scenebuilder.fxml.selection.job;
 
-    requires transitive scenebuilder.fxml.api;
+    requires transitive scenebuilder.api;
     requires transitive scenebuilder.fxml.core.jobs;
     requires transitive scenebuilder.core.extension.api;
     requires scenebuilder.core.jobs;

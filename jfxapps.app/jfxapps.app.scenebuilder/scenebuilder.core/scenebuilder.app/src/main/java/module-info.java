@@ -42,7 +42,7 @@ open module scenebuilder.fxml.core {
     exports com.oracle.javafx.scenebuilder.core.doc;
     exports com.oracle.javafx.scenebuilder.core.editors;
 
-    requires transitive scenebuilder.fxml.api;
+    requires transitive scenebuilder.api;
     requires transitive scenebuilder.core.extension.api;
     requires jakarta.inject;
     requires jfxapps.core.controls;

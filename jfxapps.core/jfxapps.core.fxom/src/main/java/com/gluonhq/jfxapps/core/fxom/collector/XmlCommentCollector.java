@@ -46,7 +46,7 @@ public class XmlCommentCollector {
         return new XmlComment();
     }
 
-    public static class XmlComment implements OMCollector<List<FXOMComment>>{
+    public static class XmlComment implements FXOMCollector<List<FXOMComment>>{
 
         private List<FXOMComment> result = new ArrayList<>();
 
@@ -55,7 +55,7 @@ public class XmlCommentCollector {
         }
 
         @Override
-        public Strategy collectionStragtegy() {
+        public Strategy collectionStrategy() {
             return Strategy.OBJECT_AND_PROPERTY;
         }
 

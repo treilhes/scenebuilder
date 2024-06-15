@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,19 +33,16 @@
  */
 package com.gluonhq.jfxapps.core.job.editor.atomic;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 /**
- * This Job updates the FXOM document at execution time.
- * It set the root of a document {@link FXOMDocument} with the provided {@link FXOMObject}
+ * This Job updates the FXOM document at execution time. It set the root of a
+ * document {@link FXOMDocument} with the provided {@link FXOMObject}
  */
 @Prototype
 public final class SetFxomRootJob extends AbstractJob {
@@ -55,15 +52,13 @@ public final class SetFxomRootJob extends AbstractJob {
 
     private final FXOMDocument fxomDocument;
 
-    protected SetFxomRootJob(
-            JobExtensionFactory extensionFactory,
-            DocumentManager documentManager) {
+    protected SetFxomRootJob(JobExtensionFactory extensionFactory, DocumentManager documentManager) {
         super(extensionFactory);
         this.fxomDocument = documentManager.fxomDocument().get();
         assert fxomDocument != null;
     }
 
-    protected void setJobParameters(FXOMObject newRoot) {
+    public void setJobParameters(FXOMObject newRoot) {
         assert (newRoot == null) || (newRoot.getFxomDocument() == fxomDocument);
 
         this.newRoot = newRoot;
@@ -89,7 +84,8 @@ public final class SetFxomRootJob extends AbstractJob {
         fxomDocument.endUpdate();
 
         // TODO ensure the new framework show this alter
-        //WarnThemeAlert.showAlertIfRequired(getEditorController(), newRoot, getEditorController().getOwnerWindow());
+        // WarnThemeAlert.showAlertIfRequired(getEditorController(), newRoot,
+        // getEditorController().getOwnerWindow());
     }
 
     @Override
@@ -114,32 +110,11 @@ public final class SetFxomRootJob extends AbstractJob {
         assert fxomDocument.getFxomRoot() == newRoot;
     }
 
-    @Override
-    public String getDescription() {
-        // Not expected to reach the user
-        return getClass().getSimpleName();
+    public FXOMObject getNewRoot() {
+        return newRoot;
     }
 
-	public FXOMObject getNewRoot() {
-		return newRoot;
-	}
-
-	public FXOMObject getOldRoot() {
-		return oldRoot;
-	}
-
-	@Singleton
-    public static class Factory extends JobFactory<SetFxomRootJob> {
-        public Factory(JfxAppContext sbContext) {
-            super(sbContext);
-        }
-        /**
-         * Create an {@link SetFxomRootJob} job
-         * @param newRoot the new root of current {@link FXOMDocument}
-         * @return the job to execute
-         */
-        public SetFxomRootJob getJob(FXOMObject newRoot) {
-            return create(SetFxomRootJob.class, j -> j.setJobParameters(newRoot));
-        }
+    public FXOMObject getOldRoot() {
+        return oldRoot;
     }
 }

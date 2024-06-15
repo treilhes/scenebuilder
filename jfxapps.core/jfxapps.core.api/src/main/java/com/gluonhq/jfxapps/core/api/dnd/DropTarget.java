@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.dnd;
 
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 public interface DropTarget {

@@ -39,7 +39,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.DefaultMenu;
@@ -82,10 +82,10 @@ public class WrapInMenuItemProvider implements MenuItemProvider, ContextMenuItem
     @Override
     public List<ContextMenuItemAttachment> contextMenuItems() {
         Menu menu = menuBuilder.menu().id(MENU_ID).title(MENU_LABEL).build();
-        ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(menu, DefaultSelectionGroupFactory.class, SendBackwardAction.MENU_ID, PositionRequest.AsNextSibling);
+        ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(menu, DSelectionGroupFactory.class, SendBackwardAction.MENU_ID, PositionRequest.AsNextSibling);
         return List.of(
                 attachment,
-                ContextMenuItemAttachment.create(menuBuilder.separator().build(), DefaultSelectionGroupFactory.class, MENU_ID, PositionRequest.AsPreviousSibling)
+                ContextMenuItemAttachment.create(menuBuilder.separator().build(), DSelectionGroupFactory.class, MENU_ID, PositionRequest.AsPreviousSibling)
                 );
     }
 

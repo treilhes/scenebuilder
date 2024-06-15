@@ -51,6 +51,7 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.css.CssInternal;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.theme.StylesheetProvider;
@@ -60,7 +61,6 @@ import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.util.URLUtils;
-import com.oracle.javafx.scenebuilder.fxml.api.selection.SelectionState;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;

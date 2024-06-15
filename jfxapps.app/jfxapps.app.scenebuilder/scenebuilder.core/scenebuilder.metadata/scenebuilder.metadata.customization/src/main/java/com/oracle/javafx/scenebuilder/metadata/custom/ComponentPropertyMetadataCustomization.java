@@ -102,10 +102,10 @@ public class ComponentPropertyMetadataCustomization {
         return resizeNeededWhenTopElement;
     }
 
-    public ComponentPropertyMetadataCustomization setResizeNeededWhenTopElement(boolean resizeNeededWhenTopElement) {
-        this.resizeNeededWhenTopElement = resizeNeededWhenTopElement;
-        return this;
-    }
+//    public ComponentPropertyMetadataCustomization setResizeNeededWhenTopElement(boolean resizeNeededWhenTopElement) {
+//        this.resizeNeededWhenTopElement = resizeNeededWhenTopElement;
+//        return this;
+//    }
 
     public int getOrder() {
         return order;

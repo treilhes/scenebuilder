@@ -34,9 +34,9 @@
 package com.oracle.javafx.scenebuilder.fxml.job;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.job.JobPipeline;
-import com.oracle.javafx.scenebuilder.fxml.job.editor.reference.UpdateReferencesJob;
+import com.gluonhq.jfxapps.core.api.job.JobPipeline;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.job.editor.reference.UpdateReferencesJob;
 
 @ApplicationInstanceSingleton
 public class FxmlJobPipeline implements JobPipeline {

@@ -36,11 +36,11 @@ package com.oracle.javafx.scenebuilder.fxml.error;
 import java.net.URL;
 
 import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
+import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 
 /**
  *

@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
-import com.gluonhq.jfxapps.core.fxom.collector.OMCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
 import com.gluonhq.jfxapps.core.fxom.glue.GlueElement;
 import com.gluonhq.jfxapps.core.fxom.util.JavaLanguage;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
@@ -351,7 +351,7 @@ public abstract class FXOMObject extends FXOMNode {
      * Utilities
      */
 
-    public abstract <T> T collect(OMCollector<T> collector);
+    public abstract <T> T collect(FXOMCollector<T> collector);
 
     /*
      * Utilities
@@ -370,6 +370,10 @@ public abstract class FXOMObject extends FXOMNode {
             result = null;
         }
         return result;
+    }
+
+    public boolean hasParent() {
+        return getParentObject() != null;
     }
 
     public void removeFromParentObject() {

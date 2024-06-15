@@ -52,7 +52,7 @@ open module scenebuilder.ext.css.analyser {
 //    requires javafx.graphics;
 //    requires javafx.web;
 //    requires org.slf4j;
-    requires transitive scenebuilder.fxml.api;
+    requires transitive scenebuilder.api;
     requires transitive scenebuilder.core.core;
     requires scenebuilder.core.selection;
     requires scenebuilder.core.extension.api;

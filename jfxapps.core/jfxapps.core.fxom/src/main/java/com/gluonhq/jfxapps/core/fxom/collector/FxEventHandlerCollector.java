@@ -47,7 +47,7 @@ public class FxEventHandlerCollector {
         return new FxEventHandler();
     }
 
-    public static class FxEventHandler implements OMCollector<List<FXOMPropertyT>>{
+    public static class FxEventHandler implements FXOMCollector<List<FXOMPropertyT>>{
 
         private List<FXOMPropertyT> result = new ArrayList<>();
 
@@ -56,7 +56,7 @@ public class FxEventHandlerCollector {
         }
 
         @Override
-        public Strategy collectionStragtegy() {
+        public Strategy collectionStrategy() {
             return Strategy.PROPERTY;
         }
 

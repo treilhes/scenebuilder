@@ -11,11 +11,13 @@
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>scenebuilder.api</artifactId>
+            <artifactId>scenebuilder.app.starter</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.jobs</artifactId>
+            <artifactId>scenebuilder.app.starter.test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

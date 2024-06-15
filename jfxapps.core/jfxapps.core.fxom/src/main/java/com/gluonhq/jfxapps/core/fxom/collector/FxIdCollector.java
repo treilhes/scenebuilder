@@ -57,12 +57,12 @@ public class FxIdCollector {
      *
      * WARN: the behaviour of this method has a flaw and everywhere it is used contains the same flaw
      */
-    public static class FxIdMap implements OMCollector<Map<String, FXOMObject>>{
+    public static class FxIdMap implements FXOMCollector<Map<String, FXOMObject>>{
 
         private Map<String, FXOMObject> result = new HashMap<>();
 
         @Override
-        public Strategy collectionStragtegy() {
+        public Strategy collectionStrategy() {
             return Strategy.OBJECT;
         }
 
@@ -92,7 +92,7 @@ public class FxIdCollector {
      *
      * WARN: the behaviour of this method is ok but everywhere it is used contains a flaw
      */
-    public static class FirstFxId implements OMCollector<Optional<FXOMObject>>{
+    public static class FirstFxId implements FXOMCollector<Optional<FXOMObject>>{
 
         private Optional<FXOMObject> result = Optional.empty();
         private final String fxId;
@@ -114,7 +114,7 @@ public class FxIdCollector {
         }
 
         @Override
-        public Strategy collectionStragtegy() {
+        public Strategy collectionStrategy() {
             return Strategy.OBJECT;
         }
 

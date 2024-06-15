@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -48,15 +48,15 @@ import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
 import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.fxom.DesignHierarchyPath;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.job.editor.BatchJob;
-import com.gluonhq.jfxapps.core.selection.job.BackupSelectionJob;
-import com.gluonhq.jfxapps.core.selection.job.UpdateSelectionJob;
+import com.gluonhq.jfxapps.core.fxom.FXOMPath;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
@@ -71,24 +71,24 @@ public class DragController implements Drag {
 
     private static final Logger logger = LoggerFactory.getLogger(DragController.class);
 
+    private final JobManager jobManager;
+    private final DefaultSelectionGroupFactory defaultSelectionGroupFactory;
+    private final SelectionJobsFactory selectionJobFactory;
+    private final BatchJob.Factory batchJobFactory;
+    private final Selection selection;
+    private final DocumentManager documentManager;
+
     private final ObjectProperty<DragSource> dragSourceProperty = new SimpleObjectProperty<>(null);
     private final ObjectProperty<DropTarget> dropTargetProperty = new SimpleObjectProperty<>(null);
+
     private LiveUpdater liveUpdater;
-    private AbstractJob backupSelectionJob;
+    private Job backupSelectionJob;
     private boolean liveUpdateEnabled;
     private boolean dropAccepted;
     private DropTarget committedDropTarget;
     private Timer mouseTimer;
 
-    private final JobManager jobManager;
-    private final DefaultSelectionGroupFactory defaultSelectionGroupFactory;
-    private final BackupSelectionJob.Factory backupSelectionJobFactory;
-    private final UpdateSelectionJob.Factory updateSelectionJobFactory;
-    private final BatchJob.Factory batchJobFactory;
 
-    private final Selection selection;
-
-    private final DocumentManager documentManager;
 
     // @formatter:off
     public DragController(
@@ -96,16 +96,14 @@ public class DragController implements Drag {
             JobManager jobManager,
             DocumentManager documentManager,
             DefaultSelectionGroupFactory defaultSelectionGroupFactory,
-            BackupSelectionJob.Factory backupSelectionJobFactory,
-            UpdateSelectionJob.Factory updateSelectionJobFactory,
+            SelectionJobsFactory selectionJobFactory,
             BatchJob.Factory batchJobFactory) {
      // @formatter:on
         this.selection = selection;
         this.jobManager = jobManager;
         this.documentManager = documentManager;
         this.defaultSelectionGroupFactory = defaultSelectionGroupFactory;
-        this.backupSelectionJobFactory = backupSelectionJobFactory;
-        this.updateSelectionJobFactory = updateSelectionJobFactory;
+        this.selectionJobFactory = selectionJobFactory;
         this.batchJobFactory = batchJobFactory;
     }
 
@@ -126,7 +124,7 @@ public class DragController implements Drag {
         dropTargetProperty.set(null);
 
         // Backup and clear the selection
-        backupSelectionJob = backupSelectionJobFactory.getJob();
+        backupSelectionJob = selectionJobFactory.backupSelection();
         selection.clear();
 
         logger.info("Drop session started for {} objects", dragSource.getDraggedObjects().size());
@@ -155,7 +153,7 @@ public class DragController implements Drag {
             final SelectionGroup selectionGroup = defaultSelectionGroupFactory
                     .getGroup(getDragSource().getDraggedObjects(), null, null);
 
-            final AbstractJob selectJob = updateSelectionJobFactory.getJob(selectionGroup);
+            final Job selectJob = selectionJobFactory.updateSelection(selectionGroup);
             final BatchJob batchJob = batchJobFactory.getJob(dropJob.getDescription());
 
             if (committedDropTarget.isSelectRequiredAfterDrop()) {
@@ -340,12 +338,12 @@ public class DragController implements Drag {
             result = false;
         } else {
             final Set<? extends FXOMObject> draggedObjects = getDragSource().getDraggedObjects();
-            final DesignHierarchyPath dropTargetPath = new DesignHierarchyPath(newDropTarget.getTargetObject());
+            final FXOMPath dropTargetPath = new FXOMPath(newDropTarget.getTargetObject());
 
             result = false;
             for (FXOMObject draggedObject : draggedObjects) {
-                final DesignHierarchyPath draggedObjectPath = new DesignHierarchyPath(draggedObject);
-                final DesignHierarchyPath commonPath = draggedObjectPath.getCommonPathWith(dropTargetPath);
+                final FXOMPath draggedObjectPath = new FXOMPath(draggedObject);
+                final FXOMPath commonPath = draggedObjectPath.getCommonPathWith(dropTargetPath);
                 // If one of the dragged objects is in the parent chain
                 // of the drop target, we abort the DND gesture
                 if (commonPath.equals(draggedObjectPath)) {

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,14 +36,14 @@ package com.gluonhq.jfxapps.core.api.subjects;
 import java.nio.file.Path;
 import java.util.Map;
 
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.Primary;
 import com.gluonhq.jfxapps.core.api.css.StylesheetProvider;
-import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractCommonUiController;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.ReplaySubject;
@@ -88,7 +88,7 @@ public interface DocumentManager {
      */
     SubjectItem<I18nResourceProvider> i18nResourceConfig();
 
-    SubjectItem<Selection> selectionDidChange();
+    SubjectItem<SelectionState> selectionDidChange();
     //SubjectItem<SelectionState> selectionDidChange();
 
     /**
@@ -142,7 +142,7 @@ public interface DocumentManager {
         private final SubjectItem<StylesheetProvider> stylesheetConfig;
         private final SubjectItem<I18nResourceProvider> i18nResourceConfig;
         private final SubjectItem<FXOMDocument> omDocument;
-        private final SubjectItem<Selection> selectionDidChange;
+        private final SubjectItem<SelectionState> selectionDidChange;
         private final SubjectItem<Integer> sceneGraphRevisionDidChange;
         private final SubjectItem<Integer> cssRevisionDidChange;
         private final SubjectItem<ClassLoader> classLoaderDidChange;
@@ -177,7 +177,7 @@ public interface DocumentManager {
                         }
                     });
 
-            selectionDidChange = new SubjectItem<Selection>(subjects.getSelectionDidChange());
+            selectionDidChange = new SubjectItem<SelectionState>(subjects.getSelectionDidChange());
             sceneGraphRevisionDidChange = new SubjectItem<Integer>(subjects.getSceneGraphRevisionDidChange());
             cssRevisionDidChange = new SubjectItem<Integer>(subjects.getCssRevisionDidChange());
             classLoaderDidChange = new SubjectItem<ClassLoader>(subjects.getClassLoaderDidChange());
@@ -217,7 +217,7 @@ public interface DocumentManager {
         }
 
         @Override
-        public SubjectItem<Selection> selectionDidChange() {
+        public SubjectItem<SelectionState> selectionDidChange() {
             return selectionDidChange;
         }
 
@@ -266,8 +266,8 @@ public interface DocumentManager {
         private ReplaySubject<Boolean> dependenciesLoaded;
         private ReplaySubject<StylesheetProvider> stylesheetConfig;
         private ReplaySubject<I18nResourceProvider> i18nResourceConfig;
-        private ReplaySubject<FXOMDocument> omDocument;
-        private ReplaySubject<Selection> selectionDidChange;
+        private ReplaySubject<FXOMDocument> fxomDocument;
+        private ReplaySubject<SelectionState> selectionDidChange;
 
         private PublishSubject<Integer> sceneGraphRevisionDidChange;
         private PublishSubject<Integer> cssRevisionDidChange;
@@ -284,7 +284,7 @@ public interface DocumentManager {
             dependenciesLoaded = wrap(DocumentSubjects.class, "dependenciesLoaded", ReplaySubject.create(1)); // NOI18N
             stylesheetConfig = wrap(DocumentSubjects.class, "stylesheetConfig", ReplaySubject.create(1)); // NOI18N
             i18nResourceConfig = wrap(DocumentSubjects.class, "i18nResourceConfig", ReplaySubject.create(1)); // NOI18N
-            omDocument = wrap(DocumentSubjects.class, "omDocument", ReplaySubject.create(1)); // NOI18N
+            fxomDocument = wrap(DocumentSubjects.class, "fxomDocument", ReplaySubject.create(1)); // NOI18N
             selectionDidChange = wrap(DocumentSubjects.class, "selectionDidChange", ReplaySubject.create(1)); // NOI18N
             classLoaderDidChange = wrap(DocumentSubjects.class, "classLoaderDidChange", ReplaySubject.create(1)); // NOI18N
 
@@ -321,10 +321,10 @@ public interface DocumentManager {
         }
 
         public ReplaySubject<FXOMDocument> getFxomDocument() {
-            return omDocument;
+            return fxomDocument;
         }
 
-        public ReplaySubject<Selection> getSelectionDidChange() {
+        public ReplaySubject<SelectionState> getSelectionDidChange() {
             return selectionDidChange;
         }
 

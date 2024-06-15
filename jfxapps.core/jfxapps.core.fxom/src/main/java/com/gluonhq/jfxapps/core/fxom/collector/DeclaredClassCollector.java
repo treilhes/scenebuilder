@@ -48,7 +48,7 @@ public class DeclaredClassCollector {
         return new AllDeclaredClass();
     }
 
-    public static class AllDeclaredClass implements OMCollector<Set<Class<?>>> {
+    public static class AllDeclaredClass implements FXOMCollector<Set<Class<?>>> {
 
         Set<Class<?>> result = new HashSet<>();
 
@@ -57,7 +57,7 @@ public class DeclaredClassCollector {
         }
 
         @Override
-        public Strategy collectionStragtegy() {
+        public Strategy collectionStrategy() {
             return Strategy.OBJECT_AND_PROPERTY;
         }
 

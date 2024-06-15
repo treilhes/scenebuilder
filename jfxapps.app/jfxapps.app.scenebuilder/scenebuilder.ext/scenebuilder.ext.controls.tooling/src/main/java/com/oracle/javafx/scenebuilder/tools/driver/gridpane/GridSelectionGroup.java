@@ -51,9 +51,10 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
-import com.gluonhq.jfxapps.core.api.editor.selection.GroupFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
+import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -63,7 +64,6 @@ import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.value.IntegerPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.DeleteGridSelectionJob;
 
 import javafx.scene.Node;
@@ -88,7 +88,7 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
     private final DesignHierarchyMask.Factory designHierarchyMaskFactory;
     private final DeleteGridSelectionJob.Factory deleteGridSelectionJobFactory;
     private final GridSelectionGroup.Factory gridSelectionGroupFactory;
-    private final DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory;
+    private final DSelectionGroupFactory.Factory objectSelectionGroupFactory;
     private FXOMObject parentObject;
     private Type type;
     private final Set<Integer> indexes = new HashSet<>();
@@ -98,7 +98,7 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
             DesignHierarchyMask.Factory designHierarchyMaskFactory,
             DeleteGridSelectionJob.Factory deleteGridSelectionJobFactory,
             GridSelectionGroup.Factory gridSelectionGroupFactory,
-            DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory) {
+            DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
      // @formatter:on
         this.designHierarchyMaskFactory = designHierarchyMaskFactory;
         this.gridSelectionGroupFactory = gridSelectionGroupFactory;
@@ -380,7 +380,7 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
     @Component
     @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
     @Lazy
-    public static class Factory extends GroupFactory<GridSelectionGroup> {
+    public static class Factory extends DefaultSelectionGroupFactory<GridSelectionGroup> {
         public Factory(SceneBuilderBeanFactory sbContext) {
             super(sbContext);
         }

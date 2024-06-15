@@ -35,13 +35,12 @@ package com.oracle.javafx.scenebuilder.api.control.handles;
 
 import java.net.URL;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-
 import com.gluonhq.jfxapps.core.api.Gesture;
 import com.gluonhq.jfxapps.core.api.content.decoration.AbstractDecoration;
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture.Factory;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 
@@ -71,7 +70,7 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> implement
 
     public AbstractHandles(
             Workspace workspace,
-            FxmlDocumentManager documentManager,
+            DocumentManager documentManager,
             DiscardGesture.Factory discardGestureFactory,
             Class<T> sceneGraphClass) {
         super(workspace, documentManager, sceneGraphClass);

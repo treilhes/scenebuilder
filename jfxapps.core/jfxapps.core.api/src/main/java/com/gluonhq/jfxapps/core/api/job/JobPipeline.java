@@ -33,6 +33,8 @@
  */
 package com.gluonhq.jfxapps.core.api.job;
 
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+
 public interface JobPipeline {
     AbstractJob buildPipeline(AbstractJob executableJob);
 

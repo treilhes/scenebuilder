@@ -51,7 +51,7 @@ import com.gluonhq.jfxapps.core.api.om.OMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
+import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
 
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;

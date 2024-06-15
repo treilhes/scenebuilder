@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
@@ -66,14 +66,14 @@ public class GridPaneJobUtils {
     static List<FXOMObject> getTargetGridPanes(final Selection selection) {
 
         final AbstractSelectionGroup asg = selection.getGroup();
-        assert asg instanceof DefaultSelectionGroupFactory
+        assert asg instanceof DSelectionGroupFactory
                 || asg instanceof GridSelectionGroup;
 
         final List<FXOMObject> result = new ArrayList<>();
 
         // Selection == GridPanes
-        if (asg instanceof DefaultSelectionGroupFactory) {
-            final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) asg;
+        if (asg instanceof DSelectionGroupFactory) {
+            final DSelectionGroupFactory osg = (DSelectionGroupFactory) asg;
             result.addAll(osg.getItems());
         } //
         // Selection == GridPane rows or columns
@@ -139,8 +139,8 @@ public class GridPaneJobUtils {
         boolean result;
         final AbstractSelectionGroup asg = selection.getGroup();
 
-        if (asg instanceof DefaultSelectionGroupFactory) {
-            final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) asg;
+        if (asg instanceof DSelectionGroupFactory) {
+            final DSelectionGroupFactory osg = (DSelectionGroupFactory) asg;
             result = true;
             for (FXOMObject obj : osg.getItems()) {
                 if ((obj.getSceneGraphObject() instanceof GridPane) == false) {

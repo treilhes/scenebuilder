@@ -52,6 +52,7 @@ import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
+import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
 import com.gluonhq.jfxapps.core.core.dnd.droptarget.ContainerXYDropTarget;
 import com.gluonhq.jfxapps.core.core.dnd.droptarget.RootDropTarget;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -60,7 +61,6 @@ import com.gluonhq.jfxapps.util.MathUtils;
 import com.gluonhq.jfxapps.util.content.BoundsUtils;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;
 import com.oracle.javafx.scenebuilder.editor.fxml.guides.MovingGuideController;
 

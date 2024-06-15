@@ -36,7 +36,6 @@ package com.oracle.javafx.scenebuilder.document.hierarchy.treeview;
 import java.net.URL;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.HierarchyMask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
@@ -47,6 +46,7 @@ import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
 import com.gluonhq.jfxapps.core.api.error.ErrorReport;
 import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
 import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
+import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit.Type;
 import com.gluonhq.jfxapps.core.api.util.StringUtils;

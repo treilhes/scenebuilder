@@ -40,10 +40,11 @@ import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
 import com.gluonhq.jfxapps.core.api.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
@@ -55,7 +56,6 @@ import com.gluonhq.jfxapps.core.job.editor.atomic.RemovePropertyJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.RemovePropertyValueJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ToggleFxRootJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.SetDocumentRootJob;
 
 /**
@@ -75,7 +75,7 @@ public abstract class AbstractWrapInWindowJob extends AbstractWrapInJob {
             RemovePropertyJob.Factory removePropertyJobFactory,
             ModifyObjectJob.Factory modifyObjectJobFactory,
             AddPropertyJob.Factory addPropertyJobFactory,
-            DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory) {
+            DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
         super(extensionFactory, documentManager, selection, designMaskFactory, metadata, addPropertyValueJobFactory,
                 toggleFxRootJobFactory, modifyFxControllerJobFactory, setDocumentRootJobFactory, removePropertyValueJobFactory,
                 removePropertyJobFactory, modifyObjectJobFactory, objectSelectionGroupFactory);
@@ -91,11 +91,11 @@ public abstract class AbstractWrapInWindowJob extends AbstractWrapInJob {
         }
 
         final AbstractSelectionGroup asg = selection.getGroup();
-        if ((asg instanceof DefaultSelectionGroupFactory) == false) {
+        if ((asg instanceof DSelectionGroupFactory) == false) {
             return false;
         }
 
-        final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) asg;
+        final DSelectionGroupFactory osg = (DSelectionGroupFactory) asg;
         if (osg.hasSingleParent() == false) {
             return false;
         }

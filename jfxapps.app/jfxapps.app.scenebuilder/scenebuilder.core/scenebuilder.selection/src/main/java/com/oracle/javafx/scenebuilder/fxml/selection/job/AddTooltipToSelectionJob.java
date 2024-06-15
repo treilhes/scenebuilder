@@ -45,25 +45,24 @@ import java.util.Map;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.HierarchyMask;
-import com.gluonhq.jfxapps.core.api.HierarchyMask.Accessory;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
-import com.gluonhq.jfxapps.core.api.job.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
+import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.HierarchyMask.Accessory;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
-import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata.Qualifier;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
-import com.oracle.javafx.scenebuilder.selection.ObjectSelectionGroup;
+import com.gluonhq.jfxapps.core.selection.job.InsertAsAccessoryJob;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 import javafx.scene.control.Tooltip;
 
@@ -71,8 +70,7 @@ import javafx.scene.control.Tooltip;
  * Add a default tooltip into the currently selected objects if those objects have a tooltip property
  * @deprecated the new ui allow to insert a tooltip using standard drag and drop jobs
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Prototype
 @Deprecated
 public final class AddTooltipToSelectionJob extends BatchSelectionJob {
 
@@ -81,17 +79,17 @@ public final class AddTooltipToSelectionJob extends BatchSelectionJob {
     private final FXOMDocument fxomDocument;
     private final SceneBuilderManager sceneBuilderManager;
     private final DesignHierarchyMask.Factory designMaskFactory;
-    private final IMetadata metadata;
+    private final SbMetadata metadata;
     private final InsertAsAccessoryJob.Factory insertAsAccessoryJobFactory;
     private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
 
     protected AddTooltipToSelectionJob(
             JobExtensionFactory extensionFactory,
-            DocumentManager<FXOMDocument> documentManager,
+            DocumentManager documentManager,
             SceneBuilderManager sceneBuilderManager,
             Selection selection,
             DesignHierarchyMask.Factory designMaskFactory,
-            IMetadata metadata,
+            SbMetadata metadata,
             InsertAsAccessoryJob.Factory insertAsAccessoryJobFactory,
             ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
         super(extensionFactory, documentManager, selection);
@@ -125,7 +123,7 @@ public final class AddTooltipToSelectionJob extends BatchSelectionJob {
             final FXOMObject fxomObject = e.getKey();
             HierarchyMask designHierarchyMask = designMaskFactory.getMask(fxomObject);
             Accessory tooltipAccessory = designHierarchyMask
-                    .getAccessory(DesignHierarchyMask.AccessoryProperty.TOOLTIP);
+                    .getAccessory(com.gluonhq.jfxapps.core.api.mask.AccessoryProperty.TOOLTIP);
 
             if (tooltipAccessory == null) {
                 continue;

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,8 +34,10 @@
 package com.gluonhq.jfxapps.core.api.editor.selection;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
@@ -45,6 +47,9 @@ import javafx.scene.Node;
  * This interface must be implemented by classes expecting to represent a selection content
  */
 public interface SelectionGroup extends Cloneable {
+
+    public boolean isMovable();
+
     /**
      * Get the latest clicked/hit item in the selected {@link OMObject} collection
      * @return the latest clicked/hit item
@@ -66,15 +71,18 @@ public interface SelectionGroup extends Cloneable {
      * Get the collection of all the selected objects in the group
      * @return all the selected objects
      */
-    public Set<? extends FXOMObject> getItems();
+    public Set<FXOMObject> getItems();
     /**
      * If all the selected objects in the group are siblings it will return the selected
      * objects and all the remaining unselected siblings<br/>
      * <br/>
-     * What is a sibling object:<br/> - it is up to the implementor to decide but selectNext and selectPrevious will use it to navigate by default
+     * What is a sibling object:<br/>
+     * - if part of a collection ( {@link FXOMPropertyC} ) : all other objects in the collection<br/>
+     * - if part of a single valued ( {@link FXOMPropertyT} ) : all other objects in parent {@link FXOMPropertyT} properties<br/>
+     * - it is up to the implementor to decide but selectNext and selectPrevious will use it to navigate by default
      * @return the complete list of siblings objects or an empty list if selected objects are not siblings
      */
-    List<? extends FXOMObject> getSiblings();
+    List<FXOMObject> getSiblings();
 
     SelectionGroup selectAll();
 
@@ -82,10 +90,28 @@ public interface SelectionGroup extends Cloneable {
 
     SelectionGroup selectPrevious();
 
+    Node getCheckedHitNode();
+
+    SelectionGroup toggle(SelectionGroup toggleGroup);
+
+    boolean isSelected(SelectionGroup group);
+
+    Set<Object> getInnerItems();
+
+    /**
+     * Collect all the fx ids in the current selection.
+     *
+     * @return the map fx id : fxom object
+     */
+    Map<String, FXOMObject> collectSelectedFxIds();
+
+
     SelectionGroup clone() throws CloneNotSupportedException;
 
-    Node getCheckedHitNode();
-//    Job makeDeleteJob();
-    SelectionGroup toggle(SelectionGroup toggleGroup);
-    boolean isSelected(SelectionGroup group);
+    /**
+     * Make delete job.
+     *
+     * @return the job
+     */
+    Job makeDeleteJob();
 }

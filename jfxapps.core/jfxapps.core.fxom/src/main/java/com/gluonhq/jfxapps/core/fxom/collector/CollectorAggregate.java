@@ -40,27 +40,27 @@ import java.util.List;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 
-public class CollectorAggregate implements OMCollector<List<OMCollector<?>>> {
+public class CollectorAggregate implements FXOMCollector<List<FXOMCollector<?>>> {
 
-    public static CollectorAggregate of(OMCollector<?>... collectors ) {
+    public static CollectorAggregate of(FXOMCollector<?>... collectors ) {
         return new CollectorAggregate(List.of(collectors));
     }
 
-    public static CollectorAggregate of(Collection<OMCollector<?>> collectors ) {
+    public static CollectorAggregate of(Collection<FXOMCollector<?>> collectors ) {
         return new CollectorAggregate(new ArrayList<>(collectors));
     }
 
-    private final List<OMCollector<?>> collectors;
+    private final List<FXOMCollector<?>> collectors;
     private final Strategy strategy;
 
-    public CollectorAggregate(List<OMCollector<?>> collectors) {
+    public CollectorAggregate(List<FXOMCollector<?>> collectors) {
         super();
         this.collectors = collectors;
         this.strategy = aggregateStrategy();
     }
 
     @Override
-    public Strategy collectionStragtegy() {
+    public Strategy collectionStrategy() {
         return strategy;
     }
 
@@ -75,7 +75,7 @@ public class CollectorAggregate implements OMCollector<List<OMCollector<?>>> {
     }
 
     @Override
-    public List<OMCollector<?>> getCollected() {
+    public List<FXOMCollector<?>> getCollected() {
         return collectors;
     }
 
@@ -83,8 +83,8 @@ public class CollectorAggregate implements OMCollector<List<OMCollector<?>>> {
 
         boolean object = false;
         boolean property = false;
-        for (OMCollector<?> c : collectors) {
-            switch (c.collectionStragtegy()) {
+        for (FXOMCollector<?> c : collectors) {
+            switch (c.collectionStrategy()) {
                 case OBJECT_AND_PROPERTY:
                     return Strategy.OBJECT_AND_PROPERTY;
                 case OBJECT: {

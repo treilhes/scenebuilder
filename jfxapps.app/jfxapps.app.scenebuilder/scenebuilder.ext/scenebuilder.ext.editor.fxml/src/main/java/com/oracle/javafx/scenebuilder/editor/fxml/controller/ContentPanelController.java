@@ -50,10 +50,11 @@ import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
+import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
 import com.gluonhq.jfxapps.core.api.om.OMObject;
 import com.gluonhq.jfxapps.core.api.om.SceneGraphObject;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
@@ -73,7 +74,6 @@ import com.gluonhq.jfxapps.util.content.BoundsUtils;
 import com.gluonhq.jfxapps.util.content.Picker;
 import com.gluonhq.jfxapps.util.content.ScrollPaneBooster;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
-import com.oracle.javafx.scenebuilder.api.mask.DesignHierarchyMask;
 import com.oracle.javafx.scenebuilder.editor.fxml.preferences.global.AlignmentGuidesColorPreference;
 import com.oracle.javafx.scenebuilder.editor.fxml.preferences.global.BackgroundImagePreference;
 
@@ -406,8 +406,8 @@ public class ContentPanelController extends AbstractFxmlPanelController
         // Walk through the selected objects and computes the enclosing bounds.
         final BoundsUnion union = new BoundsUnion();
 
-        if (selection.getGroup() instanceof DefaultSelectionGroupFactory) {
-            final DefaultSelectionGroupFactory osg = (DefaultSelectionGroupFactory) selection.getGroup();
+        if (selection.getGroup() instanceof DSelectionGroupFactory) {
+            final DSelectionGroupFactory osg = (DSelectionGroupFactory) selection.getGroup();
             for (FXOMObject i : osg.getItems()) {
                 final HierarchyMask mask = maskFactory.getMask(i);
                 final FXOMObject nodeFxomObject = mask.getClosestFxNode();

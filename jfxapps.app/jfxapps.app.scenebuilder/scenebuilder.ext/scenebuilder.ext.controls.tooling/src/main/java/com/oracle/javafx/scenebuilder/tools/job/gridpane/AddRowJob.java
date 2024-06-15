@@ -47,12 +47,12 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
-import com.gluonhq.jfxapps.core.api.job.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
@@ -78,7 +78,7 @@ public final class AddRowJob extends BatchSelectionJob {
     private final AddRowConstraintsJob.Factory addRowConstraintsJobFactory;
     private final ReIndexRowContentJob.Factory reIndexRowContentJobFactory;
     private final GridPaneHierarchyMask.Factory maskFactory;
-    private final DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory;
+    private final DSelectionGroupFactory.Factory objectSelectionGroupFactory;
     private final GridSelectionGroup.Factory gridSelectionGroupFactory;
 
     /**
@@ -97,7 +97,7 @@ public final class AddRowJob extends BatchSelectionJob {
             AddRowConstraintsJob.Factory addRowConstraintsJobFactory,
             ReIndexRowContentJob.Factory reIndexRowContentJobFactory,
             GridPaneHierarchyMask.Factory maskFactory,
-            DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory,
+            DSelectionGroupFactory.Factory objectSelectionGroupFactory,
             GridSelectionGroup.Factory gridSelectionGroupFactory) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);

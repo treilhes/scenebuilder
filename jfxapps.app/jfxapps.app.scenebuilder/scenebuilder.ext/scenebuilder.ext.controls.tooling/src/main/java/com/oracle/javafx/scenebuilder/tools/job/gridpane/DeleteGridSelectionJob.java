@@ -45,12 +45,12 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.job.AbstractJob;
-import com.gluonhq.jfxapps.core.api.job.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
 
@@ -67,7 +67,7 @@ public final class DeleteGridSelectionJob extends BatchSelectionJob {
 
     private final DeleteColumnJob.Factory deleteColumnJobFactory;
     private final DeleteRowJob.Factory deleteRowJobFactory;
-    private final DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory;
+    private final DSelectionGroupFactory.Factory objectSelectionGroupFactory;
 
     private FXOMObject targetGridPane;
 
@@ -78,7 +78,7 @@ public final class DeleteGridSelectionJob extends BatchSelectionJob {
             Selection selection,
             DeleteColumnJob.Factory deleteColumnJobFactory,
             DeleteRowJob.Factory deleteRowJobFactory,
-            DefaultSelectionGroupFactory.Factory objectSelectionGroupFactory) {
+            DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
      // @formatter:on
         super(extensionFactory, documentManager, selection);
         this.deleteColumnJobFactory = deleteColumnJobFactory;

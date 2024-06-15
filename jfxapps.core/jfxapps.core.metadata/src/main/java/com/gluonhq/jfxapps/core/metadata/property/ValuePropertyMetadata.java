@@ -47,12 +47,16 @@ public abstract class ValuePropertyMetadata<VC> extends PropertyMetadata<VC> {
     /** Is property writable. */
     private final boolean readWrite;
 
+    /** Is property writable. */
+    private final boolean transientProperty;
+
     /** The default value alternatives. */
     private final Map<Class<?>, Object> defaultValueAlternatives = new HashMap<>();
 
     protected ValuePropertyMetadata(AbstractBuilder<?, ?, VC> builder) {
         super(builder);
         this.readWrite = builder.readWrite;
+        this.transientProperty = builder.transientProperty;
         this.defaultValueAlternatives.putAll(builder.defaultValueAlternatives);
     }
 
@@ -63,6 +67,15 @@ public abstract class ValuePropertyMetadata<VC> extends PropertyMetadata<VC> {
      */
     public boolean isReadWrite() {
         return readWrite;
+    }
+
+    /**
+     * Checks if the property is transient.
+     * A transient property is a property that is removed when the parent change.
+     * @return true, if the property is transient
+     */
+    public boolean isTransient() {
+        return transientProperty;
     }
 
     /**
@@ -164,6 +177,8 @@ public abstract class ValuePropertyMetadata<VC> extends PropertyMetadata<VC> {
         /** Is property writable. */
         private boolean readWrite;
 
+        private boolean transientProperty;
+
         /** The default value alternatives. */
         private final Map<Class<?>, Object> defaultValueAlternatives = new HashMap<>();
 
@@ -174,6 +189,11 @@ public abstract class ValuePropertyMetadata<VC> extends PropertyMetadata<VC> {
 
         public SELF readWrite(boolean readWrite) {
             this.readWrite = readWrite;
+            return self();
+        }
+
+        public SELF transientProperty(boolean transientProperty) {
+            this.transientProperty = transientProperty;
             return self();
         }
 

@@ -55,7 +55,7 @@ public class SceneGraphCollector {
         return new FindSceneGraph(object);
     }
 
-    public static class SceneGraph implements OMCollector<List<FXOMObject>>{
+    public static class SceneGraph implements FXOMCollector<List<FXOMObject>>{
 
         private List<FXOMObject> result = new ArrayList<>();
 
@@ -67,7 +67,7 @@ public class SceneGraphCollector {
         }
 
         @Override
-        public Strategy collectionStragtegy() {
+        public Strategy collectionStrategy() {
             return Strategy.OBJECT;
         }
 
@@ -93,7 +93,7 @@ public class SceneGraphCollector {
 
     }
 
-    public static class FindSceneGraph implements OMCollector<Optional<FXOMObject>>{
+    public static class FindSceneGraph implements FXOMCollector<Optional<FXOMObject>>{
 
         private Optional<FXOMObject> result = Optional.empty();
         private final Object object;
@@ -115,7 +115,7 @@ public class SceneGraphCollector {
         }
 
         @Override
-        public Strategy collectionStragtegy() {
+        public Strategy collectionStrategy() {
             return Strategy.OBJECT;
         }
 

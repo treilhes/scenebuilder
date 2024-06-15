@@ -42,7 +42,7 @@ open module scenebuilder.ext.source.view {
 
     requires scenebuilder.starter;
 
-    requires transitive scenebuilder.fxml.api;
+    requires transitive scenebuilder.api;
     requires scenebuilder.core.extension.api;
 
     requires scenebuilder.core.filesystem;

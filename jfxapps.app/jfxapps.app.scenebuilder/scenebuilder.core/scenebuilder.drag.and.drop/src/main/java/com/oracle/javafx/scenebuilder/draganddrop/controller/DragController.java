@@ -44,9 +44,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.fxom.DesignHierarchyPath;
+import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
+import com.gluonhq.jfxapps.core.fxom.FXOMPath;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.job.editor.BatchJob;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.dnd.Drag;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
@@ -85,7 +85,7 @@ public class DragController implements Drag {
     private final JobManager jobManager;
     private final BackupSelectionJob.Factory backupSelectionJobFactory;
     private final UpdateSelectionJob.Factory updateSelectionJobFactory;
-    private final BatchJob.Factory batchJobFactory;
+    private final com.gluonhq.jfxapps.core.api.job.base.Factory batchJobFactory;
 
     private final Selection selection;
 
@@ -323,12 +323,12 @@ public class DragController implements Drag {
             result = false;
         } else {
             final List<FXOMObject> draggedObjects = getDragSource().getDraggedObjects();
-            final DesignHierarchyPath dropTargetPath = new DesignHierarchyPath(newDropTarget.getTargetObject());
+            final FXOMPath dropTargetPath = new FXOMPath(newDropTarget.getTargetObject());
 
             result = false;
             for (FXOMObject draggedObject : draggedObjects) {
-                final DesignHierarchyPath draggedObjectPath = new DesignHierarchyPath(draggedObject);
-                final DesignHierarchyPath commonPath = draggedObjectPath.getCommonPathWith(dropTargetPath);
+                final FXOMPath draggedObjectPath = new FXOMPath(draggedObject);
+                final FXOMPath commonPath = draggedObjectPath.getCommonPathWith(dropTargetPath);
                 // If one of the dragged objects is in the parent chain
                 // of the drop target, we abort the DND gesture
                 if (commonPath.equals(draggedObjectPath)) {

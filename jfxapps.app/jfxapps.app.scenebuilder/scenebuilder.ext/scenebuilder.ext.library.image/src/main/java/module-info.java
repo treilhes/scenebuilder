@@ -52,7 +52,7 @@ open module scenebuilder.ext.library.image {
     requires scenebuilder.core.library;
 
     requires org.apache.fontbox;
-    requires transitive scenebuilder.fxml.api;
+    requires transitive scenebuilder.api;
     requires scenebuilder.core.extension.api;
     requires scenebuilder.core.extension.store;
     requires scenebuilder.core.filesystem;

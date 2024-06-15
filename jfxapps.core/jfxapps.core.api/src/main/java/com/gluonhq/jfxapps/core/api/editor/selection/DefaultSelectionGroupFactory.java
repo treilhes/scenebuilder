@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,15 +34,82 @@
 package com.gluonhq.jfxapps.core.api.editor.selection;
 
 import java.util.Collection;
+import java.util.Set;
 
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
+import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.scene.Node;
 
-/**
- *
- *
- */
-public interface DefaultSelectionGroupFactory {
-    SelectionGroup getGroup(Collection<? extends FXOMObject> fxomObjects, FXOMObject hitItem, Node hitNode);
+public final class DefaultSelectionGroupFactory extends AbstractFactory<SelectionGroup> {
+
+    private final SelectionGroupFactoryRegistry selectionGroupFactoryRegistry;
+
+    public DefaultSelectionGroupFactory(JfxAppContext sbContext, SelectionGroupFactoryRegistry selectionGroupFactoryRegistry) {
+        super(sbContext);
+        this.selectionGroupFactoryRegistry = selectionGroupFactoryRegistry;
+    }
+
+    public SelectionGroup getGroup(Collection<? extends FXOMObject> fxomObjects, FXOMObject hitItem, Node hitNode) {
+        Class<?> closest = findClosestCommonSuper(fxomObjects, hitItem);
+        var factory = selectionGroupFactoryRegistry.getImplementationInstance(closest);
+        return factory.getGroup(fxomObjects, hitItem, hitNode);
+    }
+
+
+    /**
+     * Gets the group.
+     *
+     * @param fxomObject the fxom object
+     * @param hitNode the hit node
+     * @return the group
+     */
+    public SelectionGroup getGroup(FXOMObject fxomObject, Node hitNode) {
+        return getGroup(fxomObject, hitNode);
+    }
+
+    /**
+     * Gets the group.
+     *
+     * @param fxomObjects the fxom objects
+     * @return the group
+     */
+    public SelectionGroup getGroup(Collection<FXOMObject> fxomObjects) {
+        FXOMObject hitItem = fxomObjects.isEmpty() ? null : fxomObjects.iterator().next();
+        return getGroup(fxomObjects, hitItem, null);
+    }
+
+    /**
+     * Gets the group.
+     *
+     * @param fxomInstance the fxom instance
+     * @return the group
+     */
+    public SelectionGroup getGroup(FXOMInstance fxomInstance) {
+        return getGroup(fxomInstance, null);
+    }
+
+    public SelectionGroup empty() {
+        FXOMObject hitItem = null;
+        Collection<FXOMObject> fxomObjects = Set.of();
+        return getGroup(fxomObjects, hitItem, null);
+    }
+
+    static Class<?> findClosestCommonSuper(Collection<? extends FXOMObject> fxomObjects, FXOMObject hitItem) {
+        var it = fxomObjects.iterator();
+        Class<?> closest = it.next().getSceneGraphObject().getObjectClass();
+        while (it.hasNext()) {
+            closest = findClosestCommonSuper(closest, it.next().getSceneGraphObject().getObjectClass());
+        }
+        closest = findClosestCommonSuper(closest, hitItem.getSceneGraphObject().getObjectClass());
+        return closest;
+    }
+
+    static Class<?> findClosestCommonSuper(Class<?> a, Class<?> b) {
+        while (!a.isAssignableFrom(b))
+            a = a.getSuperclass();
+        return a;
+    }
 }

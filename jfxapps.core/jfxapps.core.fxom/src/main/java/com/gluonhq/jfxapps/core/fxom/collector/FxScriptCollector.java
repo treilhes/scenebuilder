@@ -52,7 +52,7 @@ public class FxScriptCollector {
         return new FxScript(source);
     }
 
-    public static class FxScript implements OMCollector<List<FXOMScript>>{
+    public static class FxScript implements FXOMCollector<List<FXOMScript>>{
 
         private List<FXOMScript> result = new ArrayList<>();
 
@@ -64,7 +64,7 @@ public class FxScriptCollector {
         }
 
         @Override
-        public Strategy collectionStragtegy() {
+        public Strategy collectionStrategy() {
             return Strategy.OBJECT;
         }
 

@@ -44,7 +44,7 @@ import com.gluonhq.jfxapps.core.api.action.editor.EditorPlatform;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseDragGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -184,10 +184,10 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
 
         if (selectedHitObject != null) {
 
-            assert selection.getGroup() instanceof DefaultSelectionGroupFactory;
+            assert selection.getGroup() instanceof DSelectionGroupFactory;
 
-            final DefaultSelectionGroupFactory
-                    osg = (DefaultSelectionGroupFactory) selection.getGroup();
+            final DSelectionGroupFactory
+                    osg = (DSelectionGroupFactory) selection.getGroup();
 
             if (osg.hasSingleParent()) {
 

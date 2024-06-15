@@ -33,10 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.api.control.pring;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-
 import com.gluonhq.jfxapps.core.api.content.decoration.AbstractDecoration;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.oracle.javafx.scenebuilder.api.control.Pring;
 
@@ -53,7 +52,7 @@ public abstract class AbstractPring<T> extends AbstractDecoration<T> implements 
 
     public AbstractPring(
             Workspace workspace,
-            FxmlDocumentManager documentManager,
+            DocumentManager documentManager,
             Class<T> sceneGraphClass) {
         super(workspace, documentManager, sceneGraphClass);
     }

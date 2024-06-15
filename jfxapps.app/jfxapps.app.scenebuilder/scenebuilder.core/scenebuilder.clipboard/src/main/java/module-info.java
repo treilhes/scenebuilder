@@ -40,7 +40,7 @@ open module scenebuilder.fxml.clipboard {
     exports com.oracle.javafx.scenebuilder.fxml.clipboard.i18n;
 
     //requires scenebuilder.starter;
-    requires scenebuilder.fxml.api;
+    requires scenebuilder.api;
     requires scenebuilder.fxml.core.selection;
     //requires scenebuilder.core.extension.api;
 

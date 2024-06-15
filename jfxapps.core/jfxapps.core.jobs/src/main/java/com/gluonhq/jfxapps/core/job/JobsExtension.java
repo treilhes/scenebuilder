@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,8 +38,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.gluonhq.jfxapps.core.job.editor.BatchJob;
-import com.gluonhq.jfxapps.core.job.editor.atomic.SetFxomRootJob;
+import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
 import com.gluonhq.jfxapps.core.job.manager.JobManagerImpl;
 
 public class JobsExtension implements OpenExtension {
@@ -66,8 +65,7 @@ public class JobsExtension implements OpenExtension {
                 BatchJob.class,
                 BatchJob.Factory.class,
                 JobManagerImpl.class,
-                SetFxomRootJob.class,
-                SetFxomRootJob.Factory.class
+                FxomJobsFactoryImpl.class
             );
      // @formatter:on
     }
