@@ -83,10 +83,8 @@ import org.springdoc.webmvc.ui.SwaggerWelcomeCommon;
 import org.springdoc.webmvc.ui.SwaggerWelcomeWebMvc;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafProperties;
-import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebApplicationContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -120,16 +118,14 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.LocalContextOnly;
+import com.gluonhq.jfxapps.boot.context.bpp.OverridedBeanPostProcessor;
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.platform.InternalRestClient;
 //import org.springframework.data.repository.core.support.TransactionalRepositoryProxyPostProcessor;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.info.License;
-import io.swagger.v3.oas.models.servers.Server;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Table;
@@ -143,9 +139,7 @@ import jakarta.servlet.ServletException;
 @EnableJpaRepositories
 @EnableTransactionManagement
 @EnableWebMvc
-public class DefaultExtensionContextConfig implements WebMvcConfigurer {// extends
-                                                                        // WebApplicationContextServletContextAwareProcessor
-                                                                        // {
+public class DefaultExtensionContextConfig implements WebMvcConfigurer {
 
     private final static Logger logger = LoggerFactory.getLogger(DefaultExtensionContextConfig.class);
 
@@ -172,16 +166,12 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {// exten
         registry.addResourceHandler(internalContextPath + "/**").addResourceLocations("classpath:/static/");
     }
 
-    public final static List<Class<?>> classesToRegister = List.of(DefaultExtensionContextConfig.class,
+    public final static List<Class<?>> classesToRegister = List.of(
+            DefaultExtensionContextConfig.class,
+            OverridedBeanPostProcessor.class,
             JfxAppsExtensionRestController.class,
-
             SwaggerConfig.class,
-            // SwaggerUiConfigProperties.class,
-            // SwaggerUiConfigParameters.class,
-            // SwaggerUiOAuthProperties.class,
             SpringDocWebMvcConfiguration.class, MultipleOpenApiSupportConfiguration.class,
-            // SpringDocConfiguration.class,
-            // SpringDocConfigProperties.class,
             JacksonAutoConfiguration.class);
 
 //    @Bean

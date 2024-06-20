@@ -1,6 +1,7 @@
 open module jfxapps.boot.context {
     exports com.gluonhq.jfxapps.boot.context;
     exports com.gluonhq.jfxapps.boot.context.annotation;
+    exports com.gluonhq.jfxapps.boot.context.bpp;
     exports com.gluonhq.jfxapps.boot.context.config;
     exports com.gluonhq.jfxapps.boot.context.scope;
 
