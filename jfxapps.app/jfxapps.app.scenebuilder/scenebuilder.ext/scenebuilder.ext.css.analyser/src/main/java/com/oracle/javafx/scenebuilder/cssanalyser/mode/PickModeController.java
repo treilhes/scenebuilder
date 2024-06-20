@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,15 +40,16 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.content.mode.AbstractModeController;
+import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
-import com.oracle.javafx.scenebuilder.api.content.mode.AbstractModeController;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
-import com.oracle.javafx.scenebuilder.api.editor.images.ImageUtils;
-import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
 
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -60,19 +61,17 @@ import javafx.scene.input.MouseEvent;
  *
  */
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 public class PickModeController extends AbstractModeController {
 
     private final Driver driver;
-    private final FxmlDocumentManager documentManager;
+    private final DocumentManager documentManager;
     private final Selection selection;
     //private HitNodeChrome hitNodeChrome;
 
     public PickModeController(
             @Autowired Driver driver,
-            @Autowired FxmlDocumentManager documentManager,
+            @Autowired DocumentManager documentManager,
             @Autowired Selection selection,
     		@Autowired @Lazy Content contentPanelController) {
         super(contentPanelController);

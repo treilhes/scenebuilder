@@ -41,7 +41,7 @@ import org.springframework.beans.factory.InitializingBean;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -70,7 +70,7 @@ public class TableViewHandles extends AbstractNodeHandles<Node> implements Initi
 
     private final Group grips = new Group();
 	//private final SceneBuilderBeanFactory context;
-    private final DesignHierarchyMask.Factory maskFactory;
+    private final FXOMObjectMask.Factory maskFactory;
     private final ResizeTableColumnGesture.Factory resizeTableColumnGestureFactory;
 
     public TableViewHandles(
@@ -79,7 +79,7 @@ public class TableViewHandles extends AbstractNodeHandles<Node> implements Initi
             FxmlDocumentManager documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory,
-            DesignHierarchyMask.Factory maskFactory,
+            FXOMObjectMask.Factory maskFactory,
     		ResizeTableColumnGesture.Factory resizeTableColumnGestureFactory) {
         super(driver, workspace, documentManager, discardGestureFactory, resizeGestureFactory, Node.class);
         //this.context = context;

@@ -44,7 +44,7 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
@@ -56,7 +56,7 @@ import com.oracle.javafx.scenebuilder.api.control.droptarget.DropTargetFactory;
 import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
 import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
 import com.oracle.javafx.scenebuilder.api.util.CoordinateHelper;
-import com.oracle.javafx.scenebuilder.fxml.job.editor.atomic.RelocateNodeJob;
+import com.oracle.javafx.scenebuilder.job.internal.atomic.RelocateNodeJob;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -82,7 +82,7 @@ public final class ContainerXYDropTarget extends AbstractDropTarget {
 
     // @formatter:off
     protected ContainerXYDropTarget(
-            DesignHierarchyMask.Factory designMaskFactory,
+            FXOMObjectMask.Factory designMaskFactory,
             BatchJob.Factory batchJobFactory,
             RelocateNodeJob.Factory relocateNodeJobFactory,
             RemoveObjectJob.Factory removeObjectJobFactory,

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,45 +36,44 @@ package com.oracle.javafx.scenebuilder.tools.mask;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.mask.AbstractHierarchyMask;
-import com.gluonhq.jfxapps.core.api.mask.MaskFactory;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
+import com.gluonhq.jfxapps.core.api.mask.Accessory;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
+import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 
 import javafx.scene.layout.GridPane;
 
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-public class GridPaneHierarchyMask extends AbstractHierarchyMask {
+@Prototype
+public class GridPaneHierarchyMask {
 
-    private static final PropertyName ROW_CONSTRAINTS = new PropertyName("rowConstraints"); // NOCHECK
-    private static final PropertyName COLUMN_CONSTRAINTS = new PropertyName("columnConstraints"); // NOCHECK
-    private static final PropertyName CHILDREN = new PropertyName("children"); // NOCHECK
-
+    private final FXOMObjectMask.Factory maskFactory;
+    private final GridPaneChildMask.Factory gridChildMaskFactory;
+    private FXOMObjectMask mask;
+    private FXOMElement fxomElement;
     private Accessory childrenAccessory;
 
-    public GridPaneHierarchyMask(IMetadata metadata) {
-        super(metadata);
+    public GridPaneHierarchyMask(FXOMObjectMask.Factory maskFactory, GridPaneChildMask.Factory gridChildMaskFactory) {
+        super();
+        this.maskFactory = maskFactory;
+        this.gridChildMaskFactory = gridChildMaskFactory;
     }
 
-    @Override
     protected void setupMask(FXOMObject fxomObject) {
-        super.setupMask(fxomObject);
-        this.childrenAccessory = getAccessory(CHILDREN);
+        assert fxomObject instanceof FXOMElement;
+        fxomElement = (FXOMElement) mask.getFxomObject();
+        assert fxomElement.getSceneGraphObject().isInstanceOf(GridPane.class);
+
+        this.mask = maskFactory.getMask(fxomObject);
+        this.childrenAccessory = mask.getAccessory(GridPaneProperties.CHILDREN);
     }
 
     /**
@@ -83,11 +82,7 @@ public class GridPaneHierarchyMask extends AbstractHierarchyMask {
      * @return the number of columns constraints
      */
     public int getColumnsConstraintsSize() {
-        assert getFxomObject() instanceof FXOMInstance;
-        final FXOMInstance fxomInstance = (FXOMInstance) getFxomObject();
-        assert fxomInstance.getSceneGraphObject() instanceof GridPane;
-
-        final FXOMProperty fxomProperty = fxomInstance.getProperties().get(COLUMN_CONSTRAINTS);
+        final var fxomProperty = getFxomElement().getProperties().get(GridPaneProperties.COLUMN_CONSTRAINTS);
 
         final int result;
         if (fxomProperty == null) {
@@ -107,18 +102,15 @@ public class GridPaneHierarchyMask extends AbstractHierarchyMask {
      * @return the number of rows constraints
      */
     public int getRowsConstraintsSize() {
-        assert getFxomObject() instanceof FXOMInstance;
-        final FXOMInstance fxomInstance = (FXOMInstance) getFxomObject();
-        assert fxomInstance.getSceneGraphObject() instanceof GridPane;
 
-        final FXOMProperty fxomProperty = fxomInstance.getProperties().get(ROW_CONSTRAINTS);
+        final var fxomProperty = getFxomElement().getProperties().get(GridPaneProperties.ROW_CONSTRAINTS);
 
         final int result;
         if (fxomProperty == null) {
             result = 0;
         } else {
             assert fxomProperty instanceof FXOMPropertyC; // ie cannot be written as an XML attribute
-            final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
+            final var fxomPropertyC = (FXOMPropertyC) fxomProperty;
             result = fxomPropertyC.getChildren().size();
         }
 
@@ -133,15 +125,22 @@ public class GridPaneHierarchyMask extends AbstractHierarchyMask {
      * @return the number of columns
      */
     public int getColumnsSize() {
-        final Object sceneGraphObject;
+//        final Object sceneGraphObject;
+//        // For FXOMIntrinsic, we use the source sceneGraphObject
+//        if (getFxomObject() instanceof FXOMIntrinsic) {
+//            sceneGraphObject = ((FXOMIntrinsic) getFxomObject()).getSourceSceneGraphObject();
+//        } else {
+//            sceneGraphObject = getFxomObject().getSceneGraphObject();
+//        }
+
+        // FIXME here was a call to getSourceSceneGraphObject() if getFxomElement()
+        // instanceof FXOMIntrinsic
         // For FXOMIntrinsic, we use the source sceneGraphObject
-        if (getFxomObject() instanceof FXOMIntrinsic) {
-            sceneGraphObject = ((FXOMIntrinsic) getFxomObject()).getSourceSceneGraphObject();
-        } else {
-            sceneGraphObject = getFxomObject().getSceneGraphObject();
-        }
-        assert sceneGraphObject instanceof GridPane;
-        return Deprecation.getGridPaneColumnCount((GridPane) sceneGraphObject);
+        // that method is not present anymore, need to test the code to see if it is
+        // still working
+        final var sceneGraphObject = getFxomElement().getSceneGraphObject().getAs(GridPane.class);
+        assert sceneGraphObject != null;
+        return Deprecation.getGridPaneColumnCount(sceneGraphObject);
     }
 
     /**
@@ -152,27 +151,32 @@ public class GridPaneHierarchyMask extends AbstractHierarchyMask {
      * @return the number of rows
      */
     public int getRowsSize() {
-        final Object sceneGraphObject;
+//        final Object sceneGraphObject;
+//        // For FXOMIntrinsic, we use the source sceneGraphObject
+//        if (getFxomObject() instanceof FXOMIntrinsic) {
+//            sceneGraphObject = ((FXOMIntrinsic) getFxomObject()).getSourceSceneGraphObject();
+//        } else {
+//            sceneGraphObject = getFxomObject().getSceneGraphObject();
+//        }
+//        assert sceneGraphObject instanceof GridPane;
+
+        // FIXME here was a call to getSourceSceneGraphObject() if getFxomElement()
+        // instanceof FXOMIntrinsic
         // For FXOMIntrinsic, we use the source sceneGraphObject
-        if (getFxomObject() instanceof FXOMIntrinsic) {
-            sceneGraphObject = ((FXOMIntrinsic) getFxomObject()).getSourceSceneGraphObject();
-        } else {
-            sceneGraphObject = getFxomObject().getSceneGraphObject();
-        }
-        assert sceneGraphObject instanceof GridPane;
-        return Deprecation.getGridPaneRowCount((GridPane) sceneGraphObject);
+        // that method is not present anymore, need to test the code to see if it is
+        // still working
+        final var sceneGraphObject = getFxomElement().getSceneGraphObject().getAs(GridPane.class);
+        assert sceneGraphObject != null;
+
+        return Deprecation.getGridPaneRowCount(sceneGraphObject);
     }
 
     public List<FXOMObject> getColumnContentAtIndex(int index) {
         assert 0 <= index;
-        assert getFxomObject() instanceof FXOMInstance;
-        final FXOMInstance fxomInstance = (FXOMInstance) getFxomObject();
-        assert fxomInstance.getSceneGraphObject() instanceof GridPane;
 
         final List<FXOMObject> result = new ArrayList<>();
-        for (FXOMObject childObject:getSubComponents(childrenAccessory, false)) {
-            final GridPaneHierarchyMask childMask = new GridPaneHierarchyMask(getMetadata());
-            childMask.setupMask(childObject);
+        for (FXOMObject childObject : mask.getSubComponents(childrenAccessory, false)) {
+            final var childMask = gridChildMaskFactory.getMask(childObject);
             if (childMask.getColumnIndex() == index) {
                 result.add(childObject);
             }
@@ -182,14 +186,10 @@ public class GridPaneHierarchyMask extends AbstractHierarchyMask {
 
     public List<FXOMObject> getRowContentAtIndex(int index) {
         assert 0 <= index;
-        assert getFxomObject() instanceof FXOMInstance;
-        final FXOMInstance fxomInstance = (FXOMInstance) getFxomObject();
-        assert fxomInstance.getSceneGraphObject() instanceof GridPane;
 
         final List<FXOMObject> result = new ArrayList<>();
-        for (FXOMObject childObject:getSubComponents(childrenAccessory, false)) {
-            final GridPaneHierarchyMask childMask = new GridPaneHierarchyMask(getMetadata());
-            childMask.setupMask(childObject);
+        for (FXOMObject childObject : mask.getSubComponents(childrenAccessory, false)) {
+            final var childMask = gridChildMaskFactory.getMask(childObject);
             if (childMask.getRowIndex() == index) {
                 result.add(childObject);
             }
@@ -200,19 +200,16 @@ public class GridPaneHierarchyMask extends AbstractHierarchyMask {
     public FXOMObject getColumnConstraintsAtIndex(int index) {
 
         assert 0 <= index;
-        assert getFxomObject() instanceof FXOMInstance;
-        final FXOMInstance fxomInstance = (FXOMInstance) getFxomObject();
-        assert fxomInstance.getSceneGraphObject() instanceof GridPane;
 
         FXOMObject result = null;
 
         // Retrieve the constraints property
-        final PropertyName propertyName = new PropertyName("columnConstraints"); // NOCHECK
-        final FXOMProperty constraintsProperty = fxomInstance.getProperties().get(propertyName);
+        final var propertyName = GridPaneProperties.COLUMN_CONSTRAINTS;
+        final var constraintsProperty = getFxomElement().getProperties().get(propertyName);
 
         if (constraintsProperty != null) {
             assert constraintsProperty instanceof FXOMPropertyC;
-            final List<FXOMObject> constraintsValues = ((FXOMPropertyC) constraintsProperty).getChildren();
+            final var constraintsValues = ((FXOMPropertyC) constraintsProperty).getChildren();
             if (index < constraintsValues.size()) {
                 result = constraintsValues.get(index);
             }
@@ -224,19 +221,16 @@ public class GridPaneHierarchyMask extends AbstractHierarchyMask {
     public FXOMObject getRowConstraintsAtIndex(int index) {
 
         assert 0 <= index;
-        assert getFxomObject() instanceof FXOMInstance;
-        final FXOMInstance fxomInstance = (FXOMInstance) getFxomObject();
-        assert fxomInstance.getSceneGraphObject() instanceof GridPane;
 
         FXOMObject result = null;
 
         // Retrieve the constraints property
-        final PropertyName propertyName = new PropertyName("rowConstraints"); // NOCHECK
-        final FXOMProperty constraintsProperty = fxomInstance.getProperties().get(propertyName);
+        final var propertyName = GridPaneProperties.ROW_CONSTRAINTS;
+        final var constraintsProperty = getFxomElement().getProperties().get(propertyName);
 
         if (constraintsProperty != null) {
             assert constraintsProperty instanceof FXOMPropertyC;
-            final List<FXOMObject> constraintsValues = ((FXOMPropertyC) constraintsProperty).getChildren();
+            final var constraintsValues = ((FXOMPropertyC) constraintsProperty).getChildren();
             if (index < constraintsValues.size()) {
                 result = constraintsValues.get(index);
             }
@@ -245,66 +239,13 @@ public class GridPaneHierarchyMask extends AbstractHierarchyMask {
         return result;
     }
 
-    /**
-     * Returns the column index for this GridPane child mask.
-     *
-     * @return the column index
-     */
-    public int getColumnIndex() {
-        int result = 0;
-        if (getFxomObject() instanceof FXOMInstance) {
-            assert getFxomObject().getSceneGraphObject() != null;
-            final FXOMInstance fxomInstance = (FXOMInstance) getFxomObject();
-            result = getIndexFromGrid(fxomInstance, "columnIndex");
-        } else if (getFxomObject() instanceof FXOMIntrinsic) {
-            FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) getFxomObject();
-            FXOMInstance fxomInstance = fxomIntrinsic.createFxomInstanceFromIntrinsic();
-            result = getIndexFromGrid(fxomInstance, "columnIndex");
-        }
-        return result;
+    protected FXOMElement getFxomElement() {
+        return fxomElement;
     }
 
-    /**
-     * Returns the row index for this GridPane child mask.
-     *
-     * @return the row index
-     */
-    public int getRowIndex() {
-        int result = 0;
-        if (getFxomObject() instanceof FXOMInstance) {
-            assert getFxomObject().getSceneGraphObject() != null;
-            final FXOMInstance fxomInstance = (FXOMInstance) getFxomObject();
-            result = getIndexFromGrid(fxomInstance, "rowIndex");
-        } else if (getFxomObject() instanceof FXOMIntrinsic) {
-            FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) getFxomObject();
-            FXOMInstance fxomInstance = fxomIntrinsic.createFxomInstanceFromIntrinsic();
-            result = getIndexFromGrid(fxomInstance, "rowIndex");
-        }
-        return result;
-    }
-
-    private int getIndexFromGrid(final FXOMInstance fxomInstance, final String columnOrRow) {
-        int result;
-        final FXOMObject parentFxomObject = fxomInstance.getParentObject();
-        assert parentFxomObject.getSceneGraphObject() instanceof GridPane;
-
-        final PropertyName propertyName = new PropertyName(columnOrRow, GridPane.class); // NOCHECK
-        final ValuePropertyMetadata vpm = getMetadata().queryValueProperty(fxomInstance, propertyName);
-        final Object value = vpm.getValueObject(fxomInstance);
-        // TODO : when DTL-5920 will be fixed, the null check will become unecessary
-        if (value == null) {
-            result = 0;
-        } else {
-            assert value instanceof Integer;
-            result = ((Integer) value);
-        }
-        return result;
-    }
-
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    public static final class Factory extends MaskFactory<GridPaneHierarchyMask> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+    @Singleton
+    public static final class Factory extends AbstractFactory<GridPaneHierarchyMask> {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

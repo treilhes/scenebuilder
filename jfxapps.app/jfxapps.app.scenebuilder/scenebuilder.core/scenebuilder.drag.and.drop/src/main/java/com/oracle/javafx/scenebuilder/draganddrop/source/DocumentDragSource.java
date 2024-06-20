@@ -44,7 +44,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.HierarchyMask;
@@ -89,7 +89,7 @@ public final class DocumentDragSource extends AbstractDragSource {
 
     protected DocumentDragSource(
             ApplicationInstanceWindow window,
-            DesignHierarchyMask.Factory designMaskFactory) {
+            FXOMObjectMask.Factory designMaskFactory) {
         super(window.getScene().getWindow());
         this.designMaskFactory = designMaskFactory;
     }

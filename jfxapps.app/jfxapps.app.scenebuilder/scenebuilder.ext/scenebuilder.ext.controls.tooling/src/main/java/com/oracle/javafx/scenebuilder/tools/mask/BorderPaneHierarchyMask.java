@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,47 +33,52 @@
  */
 package com.oracle.javafx.scenebuilder.tools.mask;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.mask.AbstractHierarchyMask;
-import com.gluonhq.jfxapps.core.api.mask.MaskFactory;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
+import com.gluonhq.jfxapps.core.api.mask.Accessory;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
+import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
+
+import javafx.scene.layout.GridPane;
+
 
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-public class BorderPaneHierarchyMask extends AbstractHierarchyMask {
+@Prototype
+public class BorderPaneHierarchyMask {
 
-    private static final PropertyName TOP = new PropertyName("top"); //NOCHECK
-    private static final PropertyName BOTTOM = new PropertyName("bottom"); //NOCHECK
-    private static final PropertyName CENTER = new PropertyName("center"); //NOCHECK
-    private static final PropertyName LEFT = new PropertyName("left"); //NOCHECK
-    private static final PropertyName RIGHT = new PropertyName("right"); //NOCHECK
+    private final FXOMObjectMask.Factory maskFactory;
+    private FXOMObjectMask mask;
 
+    private FXOMElement fxomElement;
     private Accessory topAccessory;
     private Accessory bottomAccessory;
     private Accessory leftAccessory;
     private Accessory rightAccessory;
     private Accessory centerAccessory;
 
-    public BorderPaneHierarchyMask(IMetadata metadata) {
-        super(metadata);
+
+    public BorderPaneHierarchyMask(FXOMObjectMask.Factory maskFactory) {
+        this.maskFactory = maskFactory;
     }
 
-    @Override
     protected void setupMask(FXOMObject fxomObject) {
-        super.setupMask(fxomObject);
-        topAccessory = getAccessory(TOP);
-        bottomAccessory = getAccessory(BOTTOM);
-        leftAccessory = getAccessory(LEFT);
-        rightAccessory = getAccessory(RIGHT);
-        centerAccessory = getAccessory(CENTER);
+
+        assert fxomObject instanceof FXOMElement;
+        fxomElement = (FXOMElement) mask.getFxomObject();
+        assert fxomElement.getSceneGraphObject().isInstanceOf(GridPane.class);
+
+        this.mask = maskFactory.getMask(fxomObject);
+
+        topAccessory = mask.getAccessory(BorderPaneProperties.TOP);
+        bottomAccessory = mask.getAccessory(BorderPaneProperties.BOTTOM);
+        leftAccessory = mask.getAccessory(BorderPaneProperties.LEFT);
+        rightAccessory = mask.getAccessory(BorderPaneProperties.RIGHT);
+        centerAccessory = mask.getAccessory(BorderPaneProperties.CENTER);
     }
 
 
@@ -101,10 +106,13 @@ public class BorderPaneHierarchyMask extends AbstractHierarchyMask {
         return centerAccessory;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    public static final class Factory extends MaskFactory<BorderPaneHierarchyMask> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+    protected FXOMElement getFxomElement() {
+        return fxomElement;
+    }
+
+    @Singleton
+    public static final class Factory extends AbstractFactory<BorderPaneHierarchyMask> {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

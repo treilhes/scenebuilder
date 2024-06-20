@@ -32,14 +32,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.oracle.javafx.scenebuilder.fxml.job.SbJobsExtension;
+import com.oracle.javafx.scenebuilder.job.SbJobsExtension;
 
 open module scenebuilder.fxml.core.jobs {
-    exports com.oracle.javafx.scenebuilder.fxml.job;
-    exports com.oracle.javafx.scenebuilder.fxml.job.editor.atomic;
-    exports com.oracle.javafx.scenebuilder.fxml.job.editor.reference;
-    exports com.oracle.javafx.scenebuilder.fxml.job.editor;
-    exports com.oracle.javafx.scenebuilder.fxml.job.preferences.global;
+    exports com.oracle.javafx.scenebuilder.job;
+    exports com.oracle.javafx.scenebuilder.job.preferences.global;
 
     requires transitive jfxapps.core.api;
     requires transitive scenebuilder.api;

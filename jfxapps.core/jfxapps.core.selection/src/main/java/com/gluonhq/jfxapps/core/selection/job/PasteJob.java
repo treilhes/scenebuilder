@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
@@ -47,14 +48,13 @@ import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMCollection;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
 
 import javafx.scene.Node;
 import javafx.scene.input.Clipboard;
@@ -74,7 +74,7 @@ public final class PasteJob extends BatchSelectionJob {
     private final JobManager jobManager;
     private final FxomJobsFactory fxomJobsFactory;
     private final SelectionJobsFactory selectionJobsFactory;
-    private final DesignHierarchyMask.Factory designMaskFactory;
+    private final FXOMObjectMask.Factory designMaskFactory;
     private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
 
     private FXOMObject targetObject;
@@ -88,7 +88,7 @@ public final class PasteJob extends BatchSelectionJob {
             JobManager jobManager,
             FxomJobsFactory fxomJobsFactory,
             SelectionJobsFactory selectionJobsFactory,
-            DesignHierarchyMask.Factory designMaskFactory,
+            FXOMObjectMask.Factory designMaskFactory,
             ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);
@@ -146,25 +146,9 @@ public final class PasteJob extends BatchSelectionJob {
                     // Build InsertAsSubComponent jobs
                     final HierarchyMask targetMask = designMaskFactory.getMask(targetObject);
                     if (targetMask.isAcceptingSubComponent(newObjects)) {
-
-                        final double relocateDelta;
-                        if (targetMask.getMainAccessory() != null && targetMask.getMainAccessory().isFreeChildPositioning()) {
-                            final int pasteJobCount = countPasteJobs();
-                            relocateDelta = 10.0 * (pasteJobCount + 1);
-                        } else {
-                            relocateDelta = 0.0;
-                        }
                         for (FXOMObject newObject : newObjects) {
                             final AbstractJob subJob = selectionJobsFactory.insertAsSubComponent(newObject,targetObject,targetMask.getSubComponentCount(true));
                             result.add(0, subJob);
-                            if ((relocateDelta != 0.0) && newObject.getSceneGraphObject().isNode()) {
-                                final Node sceneGraphNode = newObject.getSceneGraphObject().getAs(Node.class);
-                                final Job relocateJob = relocateNodeJobFactory.getJob(
-                                        (FXOMInstance) newObject,
-                                        sceneGraphNode.getLayoutX() + relocateDelta,
-                                        sceneGraphNode.getLayoutY() + relocateDelta);
-                                result.add(relocateJob);
-                            }
                         }
                     }
                 }

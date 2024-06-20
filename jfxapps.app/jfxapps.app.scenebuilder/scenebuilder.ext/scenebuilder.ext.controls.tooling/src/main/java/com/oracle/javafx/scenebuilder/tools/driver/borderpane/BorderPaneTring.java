@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -43,8 +43,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.HierarchyMask.Accessory;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.core.dnd.droptarget.AccessoryDropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
 import com.oracle.javafx.scenebuilder.tools.mask.BorderPaneHierarchyMask;
@@ -59,8 +62,7 @@ import javafx.scene.layout.Region;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Prototype
 public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
 
     private static final Logger logger = LoggerFactory.getLogger(BorderPaneTring.class);
@@ -85,10 +87,10 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
     private final BorderPaneHierarchyMask.Factory borderPaneHierarchyMaskFactory;
 
     public BorderPaneTring(
-            Content contentPanelController,
-            FxmlDocumentManager documentManager,
+            Workspace workspace,
+            DocumentManager documentManager,
             BorderPaneHierarchyMask.Factory borderPaneHierarchyMaskFactory) {
-        super(contentPanelController, documentManager, BorderPane.class);
+        super(workspace, documentManager, BorderPane.class);
         this.borderPaneHierarchyMaskFactory = borderPaneHierarchyMaskFactory;
     }
 

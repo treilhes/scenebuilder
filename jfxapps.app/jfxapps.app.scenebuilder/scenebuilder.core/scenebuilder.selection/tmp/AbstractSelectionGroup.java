@@ -75,7 +75,6 @@ public abstract class AbstractSelectionGroup implements SelectionGroup {
     protected abstract Job makeDeleteJob();
     protected abstract AbstractSelectionGroup toggle(AbstractSelectionGroup toggleGroup);
     protected abstract boolean isSelected(AbstractSelectionGroup group);
-    protected abstract boolean isMovable();
 
 
 }

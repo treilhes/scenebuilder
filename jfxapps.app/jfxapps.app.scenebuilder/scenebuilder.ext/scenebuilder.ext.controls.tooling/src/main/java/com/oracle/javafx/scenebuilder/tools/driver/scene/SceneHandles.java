@@ -40,7 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -57,7 +57,7 @@ import javafx.scene.Scene;
 public class SceneHandles extends AbstractGenericHandles<Scene> {
     private Node sceneGraphObject;
     private FXOMObject root;
-    private final DesignHierarchyMask.Factory maskFactory;
+    private final FXOMObjectMask.Factory maskFactory;
 
     public SceneHandles(
             Driver driver,
@@ -65,7 +65,7 @@ public class SceneHandles extends AbstractGenericHandles<Scene> {
             FxmlDocumentManager documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory,
-            @Autowired DesignHierarchyMask.Factory maskFactory) {
+            @Autowired FXOMObjectMask.Factory maskFactory) {
         super(driver, workspace, documentManager, discardGestureFactory, resizeGestureFactory, Scene.class);
         this.maskFactory = maskFactory;
     }

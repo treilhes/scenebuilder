@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizeGuide;
@@ -64,10 +64,10 @@ import javafx.scene.paint.Color;
 public class NodeResizeGuide extends AbstractResizeGuide<Node> {
 
     private ResizingGuideController resizingGuideController;
-    private DesignHierarchyMask.Factory maskFactory;
+    private FXOMObjectMask.Factory maskFactory;
 
     public NodeResizeGuide(
-            DesignHierarchyMask.Factory maskFactory,
+            FXOMObjectMask.Factory maskFactory,
             Content contentPanelController,
             FxmlDocumentManager documentManager) {
         super(contentPanelController, documentManager, Node.class);

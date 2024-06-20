@@ -54,7 +54,7 @@ public final class DefaultSelectionGroupFactory extends AbstractFactory<Selectio
 
     public SelectionGroup getGroup(Collection<? extends FXOMObject> fxomObjects, FXOMObject hitItem, Node hitNode) {
         Class<?> closest = findClosestCommonSuper(fxomObjects, hitItem);
-        var factory = selectionGroupFactoryRegistry.getImplementationInstance(closest);
+        SelectionGroupFactory<?> factory = selectionGroupFactoryRegistry.getImplementationInstance(closest);
         return factory.getGroup(fxomObjects, hitItem, hitNode);
     }
 

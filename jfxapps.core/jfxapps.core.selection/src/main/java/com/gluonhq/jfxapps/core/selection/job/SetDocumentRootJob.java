@@ -38,20 +38,19 @@ import java.util.List;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.Size;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
-import com.gluonhq.jfxapps.core.job.editor.atomic.SetFxomRootJob;
-import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
 
 /**
  * This Job updates the FXOM document at execution time.
@@ -71,7 +70,7 @@ public final class SetDocumentRootJob extends BatchSelectionJob {
 
     private final FXOMDocument fxomDocument;
     private final FxomJobsFactory fxomJobsFactory;
-    private final DesignHierarchyMask.Factory designMaskFactory;
+    private final FXOMObjectMask.Factory designMaskFactory;
     private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
 
     protected SetDocumentRootJob(
@@ -79,7 +78,7 @@ public final class SetDocumentRootJob extends BatchSelectionJob {
             DocumentManager documentManager,
             Selection selection,
             FxomJobsFactory fxomJobsFactory,
-            DesignHierarchyMask.Factory designMaskFactory,
+            FXOMObjectMask.Factory designMaskFactory,
             ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
         super(extensionFactory, documentManager, selection);
         this.fxomDocument = documentManager.fxomDocument().get();

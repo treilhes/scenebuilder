@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.core.dnd.droptarget.AccessoryDropTarget;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -53,11 +53,11 @@ import javafx.scene.layout.VBox;
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 public final class VBoxDropTargetProvider extends AbstractDropTargetProvider {
 
-    private final DesignHierarchyMask.Factory maskFactory;
+    private final FXOMObjectMask.Factory maskFactory;
     private final AccessoryDropTarget.Factory accessoryDropTargetFactory;
 
     public VBoxDropTargetProvider(
-            DesignHierarchyMask.Factory maskFactory,
+            FXOMObjectMask.Factory maskFactory,
             AccessoryDropTarget.Factory accessoryDropTargetFactory) {
         super();
         this.maskFactory = maskFactory;

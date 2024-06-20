@@ -40,7 +40,7 @@ import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.error.AbstractErrorCollector;
 import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInclude;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
@@ -52,11 +52,11 @@ import com.oracle.javafx.scenebuilder.fxml.error.Type;
 @ApplicationInstanceSingleton
 public class UnresolvedObjectsCollector extends AbstractErrorCollector {
 
-    private final DesignHierarchyMask.Factory designHierarchyMaskFactory;
+    private final FXOMObjectMask.Factory designHierarchyMaskFactory;
     private final FxmlDocumentManager documentManager;
 
     public UnresolvedObjectsCollector(FxmlDocumentManager documentManager,
-            DesignHierarchyMask.Factory designHierarchyMaskFactory) {
+            FXOMObjectMask.Factory designHierarchyMaskFactory) {
         super();
         this.documentManager = documentManager;
         this.designHierarchyMaskFactory = designHierarchyMaskFactory;

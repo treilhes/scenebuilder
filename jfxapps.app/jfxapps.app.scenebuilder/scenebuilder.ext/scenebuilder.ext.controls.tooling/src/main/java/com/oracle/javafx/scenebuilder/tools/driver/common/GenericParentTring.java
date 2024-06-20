@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.core.dnd.droptarget.AccessoryDropTarget;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -65,13 +65,13 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
 
     private static final double CRACK_MIN_WIDTH = 6;
 
-    private final DesignHierarchyMask.Factory maskFactory;
+    private final FXOMObjectMask.Factory maskFactory;
 
     private int targetIndex = Integer.MIN_VALUE;
     private final Line crackLine = new Line();
 
     public GenericParentTring(
-            DesignHierarchyMask.Factory maskFactory,
+            FXOMObjectMask.Factory maskFactory,
             Content contentPanelController,
             FxmlDocumentManager documentManager) {
         super(contentPanelController, documentManager, Parent.class);

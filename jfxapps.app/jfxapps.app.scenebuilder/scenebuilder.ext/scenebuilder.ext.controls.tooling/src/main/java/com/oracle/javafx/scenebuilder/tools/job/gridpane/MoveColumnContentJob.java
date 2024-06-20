@@ -48,7 +48,7 @@ import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
@@ -76,7 +76,7 @@ public final class MoveColumnContentJob extends BatchDocumentJob {
     private int movingColumnIndex;
     private int columnIndexDelta;
 
-    private final DesignHierarchyMask.Factory GridPaneHierarchyMask;
+    private final FXOMObjectMask.Factory GridPaneHierarchyMask;
 
     private final MoveCellContentJob.Factory moveCellContentJobFactory;
 
@@ -85,7 +85,7 @@ public final class MoveColumnContentJob extends BatchDocumentJob {
             JobExtensionFactory extensionFactory,
             FxmlDocumentManager documentManager,
             MoveCellContentJob.Factory moveCellContentJobFactory,
-            DesignHierarchyMask.Factory GridPaneHierarchyMask) {
+            FXOMObjectMask.Factory GridPaneHierarchyMask) {
     // @formatter:on
         super(extensionFactory, documentManager);
         this.moveCellContentJobFactory = moveCellContentJobFactory;

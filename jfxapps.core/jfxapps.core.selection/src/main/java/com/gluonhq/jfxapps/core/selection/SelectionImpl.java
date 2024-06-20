@@ -40,9 +40,10 @@ import java.util.Objects;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
-import com.gluonhq.jfxapps.core.api.mask.Accessory;
+import com.gluonhq.jfxapps.core.api.editor.selection.TargetSelection;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -65,15 +66,20 @@ public class SelectionImpl implements Selection {
 
     private final DefaultSelectionGroupFactory defaultSelectionGroupFactory;
     private final SimpleIntegerProperty revision = new SimpleIntegerProperty();
+    private final TargetSelection targetSelection;
 
     private SelectionGroup group;
     private boolean lock;
     private long lastListenerInvocationTime;
     private int updateDepth;
-    private Accessory<?> targetAccessory;
 
-    public SelectionImpl(DocumentManager documentManager, DefaultSelectionGroupFactory defaultSelectionGroupFactory) {
+
+    public SelectionImpl(
+            DocumentManager documentManager,
+            TargetSelection targetSelection,
+            DefaultSelectionGroupFactory defaultSelectionGroupFactory) {
         super();
+        this.targetSelection = targetSelection;
         this.defaultSelectionGroupFactory = defaultSelectionGroupFactory;
         documentManager.fxomDocument().subscribe(fxom -> clear());
     }
@@ -97,7 +103,7 @@ public class SelectionImpl implements Selection {
 
         if (Objects.equals(this.group, newGroup) == false) {
             beginUpdate();
-            clearTargetAccessory();
+            targetSelection.clear();
             this.group = newGroup;
             endUpdate();
         }
@@ -609,15 +615,6 @@ public class SelectionImpl implements Selection {
         return true;
     }
 
-    /**
-     * Selection can be moved if true
-     * @return can be moved
-     */
-    @Override
-    public boolean isMovable() {
-        return group == null ? null : group.isMovable();
-    }
-
     @Override
     public void selectNext() {
         if (!isEmpty()) {
@@ -644,18 +641,5 @@ public class SelectionImpl implements Selection {
         return group == null ? Collections.emptyMap() : group.collectSelectedFxIds();
     }
 
-    @Override
-    public Accessory getTargetAccessory() {
-        return targetAccessory;
-    }
-
-    @Override
-    public void select(Accessory targetAccessory) {
-        this.targetAccessory = targetAccessory;
-    }
-
-    private void clearTargetAccessory() {
-        this.targetAccessory = null;
-    }
 }
 

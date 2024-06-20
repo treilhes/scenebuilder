@@ -53,7 +53,7 @@ import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
@@ -136,7 +136,7 @@ class DocumentUiTest {
     ExternalDragSource.Factory externalDragSourceFactory;
 
     @Mock
-    DesignHierarchyMask.Factory designHierarchyMaskFactory;
+    FXOMObjectMask.Factory designHierarchyMaskFactory;
 
     @Mock
     HierarchyTreeCell.Factory hierarchyTreeCellFactory;
@@ -148,7 +148,7 @@ class DocumentUiTest {
     MetadataInfoDisplayOption metadataInfoDisplayOption;
 
     @Mock
-    DesignHierarchyMask mask;
+    FXOMObjectMask mask;
 
     @Mock
     ComponentClassMetadata ccm;

@@ -62,8 +62,4 @@ public class SelectionGroupAccessor {
         return group == null ? null : group.toggle(toggleGroup);
     }
 
-    public boolean isMovable() {
-        return group == null ? false : group.isMovable();
-    }
-
 }

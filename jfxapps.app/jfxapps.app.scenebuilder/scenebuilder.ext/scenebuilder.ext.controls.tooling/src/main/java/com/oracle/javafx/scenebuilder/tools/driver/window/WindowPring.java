@@ -42,7 +42,7 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.HierarchyMask;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
@@ -56,13 +56,13 @@ import javafx.stage.Window;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public class WindowPring extends AbstractNodePring<Node> {
 
-    private final DesignHierarchyMask.Factory maskFactory;
+    private final FXOMObjectMask.Factory maskFactory;
 
     public WindowPring(
             Content contentPanelController,
             FxmlDocumentManager documentManager,
             SelectWithPringGesture.Factory selectWithPringGestureFactory,
-            DesignHierarchyMask.Factory maskFactory) {
+            FXOMObjectMask.Factory maskFactory) {
         super(contentPanelController, documentManager, selectWithPringGestureFactory, Node.class);
         this.maskFactory = maskFactory;
     }

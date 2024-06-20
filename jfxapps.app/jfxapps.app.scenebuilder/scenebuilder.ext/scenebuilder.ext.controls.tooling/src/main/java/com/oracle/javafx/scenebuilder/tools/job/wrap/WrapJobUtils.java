@@ -38,7 +38,7 @@ import java.util.List;
 
 import com.gluonhq.jfxapps.core.api.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.HierarchyMask.Accessory;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
@@ -64,7 +64,7 @@ public class WrapJobUtils {
      */
     //TODO heavy change here, to check!!
     static PropertyName getContainerPropertyName(
-        DesignHierarchyMask.Factory designMaskFactory, final FXOMInstance container, final List<FXOMObject> children) {
+        FXOMObjectMask.Factory designMaskFactory, final FXOMInstance container, final List<FXOMObject> children) {
         final HierarchyMask mask = designMaskFactory.getMask(container);
 
         List<Accessory> allAccessories = new ArrayList<>();

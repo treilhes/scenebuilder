@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.document.hierarchy.item;
 import java.net.URL;
 import java.util.Objects;
 
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
@@ -64,7 +64,7 @@ public class HierarchyItemBase implements HierarchyItem {
      *
      * @param fxomObject The FX object represented by this item
      */
-    public HierarchyItemBase(DesignHierarchyMask.Factory maskFactory, final FXOMObject fxomObject) {
+    public HierarchyItemBase(FXOMObjectMask.Factory maskFactory, final FXOMObject fxomObject) {
         assert fxomObject != null;
         this.mask = maskFactory.getMask(fxomObject);
     }

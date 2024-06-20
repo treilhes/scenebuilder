@@ -41,7 +41,7 @@ import org.scenebuilder.fxml.api.i18n.I18NFxmlApi;
 
 import com.gluonhq.jfxapps.boot.loader.extension.ApplicationExtension;
 import com.gluonhq.jfxapps.core.api.application.annotation.EditorDescriptor;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.oracle.javafx.scenebuilder.api.control.driver.DriverExtensionRegistry;
 import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
 import com.oracle.javafx.scenebuilder.api.control.inlineedit.SimilarInlineEditorBounds;
@@ -78,8 +78,8 @@ public class SbApiExtension implements ApplicationExtension  {
      // @formatter:off
         return Arrays.asList(
                 ParentRingColorPreference.class,
-                DesignHierarchyMask.class,
-                DesignHierarchyMask.Factory.class,
+                FXOMObjectMask.class,
+                FXOMObjectMask.Factory.class,
 
                 DriverExtensionRegistry.class,
                 GenericDriver.class,

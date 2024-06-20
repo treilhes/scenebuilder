@@ -57,7 +57,7 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.library.LibraryItem;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask.Accessory;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.DefaultMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuAttachment;
@@ -90,7 +90,7 @@ public class InsertControlAction extends AbstractAction {
     private final JobManager jobManager;
     private final FxmlDocumentManager documentManager;
     private final Selection selection;
-    private final DesignHierarchyMask.Factory designMaskFactory;
+    private final FXOMObjectMask.Factory designMaskFactory;
 
     private LibraryItem libraryItem;
 
@@ -99,7 +99,7 @@ public class InsertControlAction extends AbstractAction {
             FxmlDocumentManager documentManager,
             Selection selection,
             JobManager jobManager,
-            DesignHierarchyMask.Factory designMaskFactory,
+            FXOMObjectMask.Factory designMaskFactory,
             SetDocumentRootJob.Factory setDocumentRootJobFactory,
             InsertAsAccessoryJob.Factory insertAsAccessoryJobFactory) {
         super(extensionFactory);

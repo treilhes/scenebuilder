@@ -50,7 +50,7 @@ import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
@@ -81,7 +81,7 @@ public final class UnwrapJob extends BatchSelectionJob {
 
     private FXOMInstance oldContainer, newContainer;
     private List<FXOMObject> oldContainerChildren;
-    private final DesignHierarchyMask.Factory designMaskFactory;
+    private final FXOMObjectMask.Factory designMaskFactory;
     private final RemovePropertyJob.Factory removePropertyJobFactory;
     private final RemovePropertyValueJob.Factory removePropertyValueJobFactory;
     private final ToggleFxRootJob.Factory toggleFxRootJobFactory;
@@ -105,7 +105,7 @@ public final class UnwrapJob extends BatchSelectionJob {
             ModifyFxControllerJob.Factory modifyFxControllerJobFactory,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             ModifyObjectJob.Factory modifyObjectJobFactory,
-            DesignHierarchyMask.Factory designMaskFactory,
+            FXOMObjectMask.Factory designMaskFactory,
             IMetadata metadata,
             WrapInJobFactory wrapInJobFactory,
             DSelectionGroupFactory.Factory objectSelectionGroupFactory) {

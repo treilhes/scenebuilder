@@ -47,7 +47,7 @@ import com.gluonhq.jfxapps.core.api.control.droptarget.DropTargetFactory;
 import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
@@ -79,7 +79,7 @@ public final class GridPaneDropTarget extends AbstractDropTarget {
         TOP, CENTER, BOTTOM
     }
 
-    private final DesignHierarchyMask.Factory designMaskFactory;
+    private final FXOMObjectMask.Factory designMaskFactory;
     private final com.gluonhq.jfxapps.core.api.job.base.Factory batchJobFactory;
     private final ClearSelectionJob.Factory clearSelectionJobFactory;
     private final RemoveObjectJob.Factory removeObjectJobFactory;
@@ -97,7 +97,7 @@ public final class GridPaneDropTarget extends AbstractDropTarget {
 
     // @formatter:off
     protected GridPaneDropTarget(
-            DesignHierarchyMask.Factory designMaskFactory,
+            FXOMObjectMask.Factory designMaskFactory,
             BatchJob.Factory batchJobFactory,
             ClearSelectionJob.Factory clearSelectionJobFactory,
             RemoveObjectJob.Factory removeObjectJobFactory,

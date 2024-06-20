@@ -40,7 +40,7 @@ import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -86,7 +86,7 @@ public class TableColumnHandles extends AbstractResilientHandles<Object> {
     private TableView<?> tableView;
     private Node columnHeaderNode;
 	//private final SceneBuilderBeanFactory context;
-    private final DesignHierarchyMask.Factory maskFactory;
+    private final FXOMObjectMask.Factory maskFactory;
     private final ResizeTableColumnGesture.Factory resizeTableColumnGestureFactory;
 
     public TableColumnHandles(
@@ -95,7 +95,7 @@ public class TableColumnHandles extends AbstractResilientHandles<Object> {
             FxmlDocumentManager documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory,
-            DesignHierarchyMask.Factory maskFactory,
+            FXOMObjectMask.Factory maskFactory,
     		ResizeTableColumnGesture.Factory resizeTableColumnGestureFactory) {
         super(driver, workspace, documentManager, discardGestureFactory, resizeGestureFactory, Object.class);
 //        this.context = context;

@@ -40,7 +40,7 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.error.AbstractErrorCollector;
 import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.collector.PropertyCollector;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
@@ -51,11 +51,11 @@ import com.oracle.javafx.scenebuilder.fxml.error.Type;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class BindingExpressionCollector extends AbstractErrorCollector {
 
-    private final DesignHierarchyMask.Factory designHierarchyMaskFactory;
+    private final FXOMObjectMask.Factory designHierarchyMaskFactory;
     private final FxmlDocumentManager documentManager;
 
     public BindingExpressionCollector(FxmlDocumentManager documentManager,
-            DesignHierarchyMask.Factory designHierarchyMaskFactory) {
+            FXOMObjectMask.Factory designHierarchyMaskFactory) {
         super();
         this.documentManager = documentManager;
         this.designHierarchyMaskFactory = designHierarchyMaskFactory;

@@ -48,22 +48,22 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
+import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
 import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.value.IntegerPropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.util.InspectorPath;
+import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.DeleteGridSelectionJob;
 
 import javafx.scene.Node;
@@ -76,7 +76,7 @@ import javafx.scene.layout.RowConstraints;
  *
  */
 @Prototype
-public final class GridSelectionGroup extends AbstractSelectionGroup {
+public final class GridSelectionGroup implements SelectionGroup {
 
     static private final PropertyName rowConstraintsName = new PropertyName("rowConstraints");
     static private final PropertyName columnConstraintsName = new PropertyName("columnConstraints");
@@ -85,7 +85,7 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
         ROW, COLUMN
     };
 
-    private final DesignHierarchyMask.Factory designHierarchyMaskFactory;
+    private final FXOMObjectMask.Factory designHierarchyMaskFactory;
     private final DeleteGridSelectionJob.Factory deleteGridSelectionJobFactory;
     private final GridSelectionGroup.Factory gridSelectionGroupFactory;
     private final DSelectionGroupFactory.Factory objectSelectionGroupFactory;
@@ -95,7 +95,7 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
     protected final Set<FXOMObject> innerItems = new HashSet<>();
     // @formatter:off
     protected GridSelectionGroup(
-            DesignHierarchyMask.Factory designHierarchyMaskFactory,
+            FXOMObjectMask.Factory designHierarchyMaskFactory,
             DeleteGridSelectionJob.Factory deleteGridSelectionJobFactory,
             GridSelectionGroup.Factory gridSelectionGroupFactory,
             DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
@@ -308,7 +308,7 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
      * @param selected
      * @return
      */
-    private List<FXOMInstance> collect(PropertyName name, Class<?> extepectedClass, Set<Integer> selected) {
+    private List<FXOMInstance> collect(PropertyName name, Class<?> expectedClass, Set<Integer> selected) {
         final List<FXOMInstance> result = new ArrayList<>();
 
         final FXOMInstance gridPaneInstance = (FXOMInstance) parentObject;
@@ -318,8 +318,8 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
             final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
             int index = 0;
             for (FXOMObject v : fxomPropertyC.getChildren()) {
-                if (v.getSceneGraphObject() != null
-                        && extepectedClass.isAssignableFrom(v.getSceneGraphObject().getClass())) {
+                if (v.getSceneGraphObject().get() != null
+                        && expectedClass.isAssignableFrom(v.getSceneGraphObject().getObjectClass())) {
                     assert v instanceof FXOMInstance;
                     if (selected == null || selected.contains(index++)) {
                         result.add((FXOMInstance) v);
@@ -338,7 +338,7 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
     private List<FXOMObject> collectSelectedObjectsInColumn() {
         final List<FXOMObject> result = new ArrayList<>();
 
-        final DesignHierarchyMask m = designHierarchyMaskFactory.getMask(parentObject);
+        final FXOMObjectMask m = designHierarchyMaskFactory.getMask(parentObject);
         assert m.getMainAccessory() != null;
 
         for (FXOMObject childObject:m.getSubComponents(m.getMainAccessory(), false)) {
@@ -361,7 +361,7 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
     private List<FXOMObject> collectSelectedObjectsInRow() {
         final List<FXOMObject> result = new ArrayList<>();
 
-        final DesignHierarchyMask m = designHierarchyMaskFactory.getMask(parentObject);
+        final FXOMObjectMask m = designHierarchyMaskFactory.getMask(parentObject);
         assert m.getMainAccessory() != null;
 
         for (FXOMObject childObject:m.getSubComponents(m.getMainAccessory(), false)) {
@@ -467,11 +467,6 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
     }
 
     @Override
-    protected boolean isMovable() {
-        return false;
-    }
-
-    @Override
     public List<FXOMObject> getSiblings() {
         return Collections.unmodifiableList((List<FXOMObject>)(List)collectSiblingConstraintInstances());
     }
@@ -548,4 +543,5 @@ public final class GridSelectionGroup extends AbstractSelectionGroup {
         }
         return fxIdMap;
     }
+
 }

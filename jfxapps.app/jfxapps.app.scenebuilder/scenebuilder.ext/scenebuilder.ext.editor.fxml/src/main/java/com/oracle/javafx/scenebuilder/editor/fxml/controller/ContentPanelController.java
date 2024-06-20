@@ -54,7 +54,7 @@ import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.om.OMObject;
 import com.gluonhq.jfxapps.core.api.om.SceneGraphObject;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
@@ -145,7 +145,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
     private final FxmlDocumentManager documentManager;
     private final MessageLogger messageLogger;
     private final ContextMenu contextMenu;
-    private final DesignHierarchyMask.Factory maskFactory;
+    private final FXOMObjectMask.Factory maskFactory;
     private final Workspace workspaceController;
     private final HudWindow hudWindowController;
 
@@ -169,7 +169,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
             SceneBuilderManager scenebuilderManager,
             FxmlDocumentManager documentManager,
             Driver driver,
-            DesignHierarchyMask.Factory maskFactory,
+            FXOMObjectMask.Factory maskFactory,
             AlignmentGuidesColorPreference alignmentGuidesColorPreference,
             BackgroundImagePreference backgroundImagePreference,
             @Lazy HudWindow hudWindowController,

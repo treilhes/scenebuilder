@@ -47,7 +47,7 @@ import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -82,7 +82,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
     protected Class<?> newContainerClass;
     protected FXOMInstance oldContainer, newContainer;
     private final FXOMDocument fxomDocument;
-    private final DesignHierarchyMask.Factory designMaskFactory;
+    private final FXOMObjectMask.Factory designMaskFactory;
     private final IMetadata metadata;
     private final AddPropertyValueJob.Factory addPropertyValueJobFactory;
     private final ToggleFxRootJob.Factory toggleFxRootJobFactory;
@@ -97,7 +97,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
             JobExtensionFactory extensionFactory,
             FxmlDocumentManager documentManager,
             Selection selection,
-            DesignHierarchyMask.Factory designMaskFactory,
+            FXOMObjectMask.Factory designMaskFactory,
             IMetadata metadata,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             ToggleFxRootJob.Factory toggleFxRootJobFactory,

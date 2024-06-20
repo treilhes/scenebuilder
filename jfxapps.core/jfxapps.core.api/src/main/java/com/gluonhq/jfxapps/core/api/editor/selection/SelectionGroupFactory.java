@@ -52,5 +52,5 @@ public abstract class SelectionGroupFactory<T extends SelectionGroup> extends Ab
         registry.registerImplementationClass(Object.class, this.getClass());
     }
 
-    public abstract SelectionGroup getGroup(Collection<? extends FXOMObject> fxomObjects, FXOMObject hitItem, Node hitNode);
+    public abstract T getGroup(Collection<? extends FXOMObject> fxomObjects, FXOMObject hitItem, Node hitNode);
 }

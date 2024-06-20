@@ -73,4 +73,11 @@ public interface Job {
      * @param description the job description.
      */
     void setDescription(String description);
+
+    default boolean canBeMergedWith(Job other) {
+        return false;
+    }
+
+    default void mergeWith(Job other) {
+    }
 }

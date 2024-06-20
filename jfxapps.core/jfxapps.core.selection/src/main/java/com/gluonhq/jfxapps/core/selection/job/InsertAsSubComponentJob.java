@@ -40,13 +40,14 @@ import java.util.List;
 import java.util.Set;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMCollection;
@@ -57,7 +58,6 @@ import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
 
 /**
  * Job used to insert new FXOM objects into a sub component location.
@@ -68,7 +68,7 @@ import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
 public final class InsertAsSubComponentJob extends BatchSelectionJob {
 
     private final FxomJobsFactory fxomJobsFactory;
-    private final DesignHierarchyMask.Factory designMaskFactory;
+    private final FXOMObjectMask.Factory designMaskFactory;
     private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
     private final FXOMDocument fxomDocument;
 
@@ -81,7 +81,7 @@ public final class InsertAsSubComponentJob extends BatchSelectionJob {
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             Selection selection,
-            DesignHierarchyMask.Factory designMaskFactory,
+            FXOMObjectMask.Factory designMaskFactory,
             FxomJobsFactory fxomJobsFactory,
             ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
         // @formatter:on

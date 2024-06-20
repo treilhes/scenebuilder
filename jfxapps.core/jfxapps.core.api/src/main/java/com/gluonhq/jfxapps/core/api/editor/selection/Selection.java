@@ -80,18 +80,7 @@ public interface Selection {
      */
     ReadOnlyIntegerProperty revisionProperty();
 
-    /**
-     * Selection can be moved if true
-     *
-     * @return can be moved
-     */
-    boolean isMovable();
-
     public Map<String, FXOMObject> collectSelectedFxIds();
-
-    public Accessory getTargetAccessory();
-
-    public void select(Accessory targetAccessory);
 
     /**
      * Returns the revision number of this selection.

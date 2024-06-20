@@ -38,27 +38,26 @@ import java.util.List;
 import java.util.Set;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.TargetSelection;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.mask.Accessory;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMCollection;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
 
-import javafx.scene.Node;
 import javafx.scene.input.Clipboard;
 
 /**
@@ -69,12 +68,11 @@ import javafx.scene.input.Clipboard;
 @Prototype
 public final class PasteIntoJob extends BatchSelectionJob {
 
-    private final FxomJobsFactory fxomJobsFactory;
     private final SelectionJobsFactory selectionJobsFactory;
     private final FXOMDocument fxomDocument;
-    private final DesignHierarchyMask.Factory designMaskFactory;
+    private final FXOMObjectMask.Factory designMaskFactory;
     private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
-    private final JobManager jobManager;
+    private final TargetSelection<?> targetSelection;
 
     private List<FXOMObject> newObjects;
     private FXOMObject targetObject;
@@ -84,19 +82,17 @@ public final class PasteIntoJob extends BatchSelectionJob {
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             Selection selection,
-            JobManager jobManager,
-            FxomJobsFactory fxomJobsFactory,
+            TargetSelection<?> targetSelection,
             SelectionJobsFactory selectionJobsFactory,
-            DesignHierarchyMask.Factory designMaskFactory,
+            FXOMObjectMask.Factory designMaskFactory,
             ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);
         this.fxomDocument = documentManager.fxomDocument().get();
-        this.jobManager = jobManager;
-        this.fxomJobsFactory = fxomJobsFactory;
         this.selectionJobsFactory = selectionJobsFactory;
         this.designMaskFactory = designMaskFactory;
         this.objectSelectionGroupFactory = objectSelectionGroupFactory;
+        this.targetSelection = targetSelection;
     }
 
     public void setJobParameters() {
@@ -159,7 +155,7 @@ public final class PasteIntoJob extends BatchSelectionJob {
                     final HierarchyMask targetMask = designMaskFactory.getMask(targetObject);
 
                     // get user selected target
-                    Accessory targetAccessory = selection.getTargetAccessory();
+                    Accessory targetAccessory = targetSelection.getTargetAccessory();
 
                     if (targetAccessory == null) {
                         // no explicit target, so use main in first place
@@ -179,27 +175,10 @@ public final class PasteIntoJob extends BatchSelectionJob {
                     }
 
                     if (targetAccessory != null) {
-                        final double relocateDelta;
-                        if (targetAccessory.isFreeChildPositioning()) {
-                            final int pasteJobCount = countPasteJobs();
-                            relocateDelta = 10.0 * (pasteJobCount + 1);
-                        } else {
-                            relocateDelta = 0.0;
-                        }
 
                         for (FXOMObject newObject : newObjects) {
                             final Job subJob = selectionJobsFactory.insertAsAccessory(newObject, targetObject,
                                     targetAccessory, targetMask.getSubComponentCount(targetAccessory, true));
-
-                            if ((relocateDelta != 0.0) && newObject.getSceneGraphObject().isNode()) {
-                                final Node sceneGraphNode = newObject.getSceneGraphObject().getAs(Node.class);
-                                final Job relocateJob = fxomJobsFactory.relocateNode(
-                                        (FXOMInstance) newObject,
-                                        sceneGraphNode.getLayoutX() + relocateDelta,
-                                        sceneGraphNode.getLayoutY() + relocateDelta);
-                                result.add(relocateJob);
-                            }
-
                             result.add(0, subJob);
                         }
                     }
@@ -261,26 +240,5 @@ public final class PasteIntoJob extends BatchSelectionJob {
         final int objectCount = newObjects.size();
         return I18N.getString("label.action.edit.paste.into.n", objectCount);
     }
-
-    private int countPasteJobs() {
-        int result = 0;
-
-        final List<Job> undoStack = jobManager.getUndoStack();
-        for (Job job : undoStack) {
-            if (job instanceof PasteIntoJob) {
-                final PasteIntoJob pasteJob = (PasteIntoJob) job;
-                if (this.targetObject == pasteJob.targetObject) {
-                    result++;
-                } else {
-                    break;
-                }
-            } else {
-                break;
-            }
-        }
-
-        return result;
-    }
-
 
 }

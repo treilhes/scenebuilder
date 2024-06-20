@@ -52,7 +52,7 @@ import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
@@ -76,7 +76,7 @@ public final class ImportFileJob extends BatchSelectionJob {
     private final FXOMDocument fxomDocument;
     private final SetDocumentRootJob.Factory setDocumentRootJobFactory;
     private final InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory;
-    private final DesignHierarchyMask.Factory designMaskFactory;
+    private final FXOMObjectMask.Factory designMaskFactory;
     private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
 
     // @formatter:off
@@ -86,7 +86,7 @@ public final class ImportFileJob extends BatchSelectionJob {
             Selection selection,
             SetDocumentRootJob.Factory setDocumentRootJobFactory,
             InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory,
-            DesignHierarchyMask.Factory designMaskFactory,
+            FXOMObjectMask.Factory designMaskFactory,
             ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);

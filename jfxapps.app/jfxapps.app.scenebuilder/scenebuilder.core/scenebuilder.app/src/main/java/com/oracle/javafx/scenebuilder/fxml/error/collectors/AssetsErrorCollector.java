@@ -49,7 +49,7 @@ import com.gluonhq.jfxapps.core.api.error.AbstractErrorCollector;
 import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem.WatchingCallback;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMAssetIndex;
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.oracle.javafx.scenebuilder.fxml.error.CSSParsingReportImpl;
@@ -60,7 +60,7 @@ import com.oracle.javafx.scenebuilder.fxml.error.Type;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class AssetsErrorCollector extends AbstractErrorCollector implements WatchingCallback {
 
-    private final DesignHierarchyMask.Factory designHierarchyMaskFactory;
+    private final FXOMObjectMask.Factory designHierarchyMaskFactory;
     private final FxmlDocumentManager documentManager;
     private final Map<Path, CSSParsingReportImpl> cssParsingReports = new HashMap<>();
     private final FileSystem fileSystem;
@@ -70,7 +70,7 @@ public class AssetsErrorCollector extends AbstractErrorCollector implements Watc
             FileSystem fileSystem,
             ApplicationInstanceWindow documentWindow,
             FxmlDocumentManager documentManager,
-            DesignHierarchyMask.Factory designHierarchyMaskFactory) {
+            FXOMObjectMask.Factory designHierarchyMaskFactory) {
         super();
         this.fileSystem = fileSystem;
         this.documentWindow = documentWindow;

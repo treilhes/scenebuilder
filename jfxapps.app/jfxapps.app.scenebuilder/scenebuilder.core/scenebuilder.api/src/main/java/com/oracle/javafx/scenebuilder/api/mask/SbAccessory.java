@@ -36,6 +36,6 @@ package com.oracle.javafx.scenebuilder.api.mask;
 import com.gluonhq.jfxapps.core.api.mask.Accessory;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbComponentPropertyMetadata;
 
-    public interface SbAccessory extends Accessory<SbComponentPropertyMetadata>{
-        boolean isFreeChildPositioning();
-    }
+public interface SbAccessory extends Accessory<SbComponentPropertyMetadata> {
+    boolean isFreeChildPositioning();
+}

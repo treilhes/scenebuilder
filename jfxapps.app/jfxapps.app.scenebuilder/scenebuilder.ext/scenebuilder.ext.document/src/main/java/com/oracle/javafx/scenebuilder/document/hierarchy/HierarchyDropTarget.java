@@ -47,7 +47,7 @@ import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.dnd.DropTargetFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask.Accessory;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -71,7 +71,7 @@ import javafx.scene.layout.BorderPane;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public final class HierarchyDropTarget extends AbstractDropTarget {
 
-    private final DesignHierarchyMask.Factory designMaskFactory;
+    private final FXOMObjectMask.Factory designMaskFactory;
     private final com.gluonhq.jfxapps.core.api.job.base.Factory batchJobFactory;
     private final ReIndexObjectJob.Factory reIndexObjectJobFactory;
     private final RemoveObjectJob.Factory removeObjectJobFactory;
@@ -84,7 +84,7 @@ public final class HierarchyDropTarget extends AbstractDropTarget {
     private FXOMObject beforeChild;
 
     protected HierarchyDropTarget(
-            DesignHierarchyMask.Factory designMaskFactory,
+            FXOMObjectMask.Factory designMaskFactory,
             BatchJob.Factory batchJobFactory,
             ReIndexObjectJob.Factory reIndexObjectJobFactory,
             RemoveObjectJob.Factory removeObjectJobFactory,

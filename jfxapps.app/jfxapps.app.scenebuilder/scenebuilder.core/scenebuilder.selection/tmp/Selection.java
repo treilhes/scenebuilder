@@ -260,12 +260,6 @@ public interface Selection {
     boolean isSelectionOfType(Class<?> type);
 
     /**
-     * Selection can be moved if true
-     * @return can be moved
-     */
-    boolean isMovable();
-
-    /**
      * Replaces the selected items by the specified fxom object and hit node.
      * This routine adds +1 to the revision number.
      *

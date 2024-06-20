@@ -39,7 +39,7 @@ import java.util.Objects;
 
 import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask.Accessory;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -66,7 +66,7 @@ public class HierarchyItemAccessory extends HierarchyItemBase {
      * @param position The position of the FX object within the BorderPane
      */
     public HierarchyItemAccessory(
-            DesignHierarchyMask.Factory maskFactory,
+            FXOMObjectMask.Factory maskFactory,
             final HierarchyMask owner,
             final FXOMObject fxomObject,
             final Accessory position) {

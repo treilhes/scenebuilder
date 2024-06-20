@@ -44,7 +44,7 @@ import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
@@ -64,11 +64,11 @@ import com.oracle.javafx.scenebuilder.fxml.selection.job.SetDocumentRootJob;
  */
 public abstract class AbstractWrapInSubComponentJob extends AbstractWrapInJob {
 
-    private final DesignHierarchyMask.Factory designMaskFactory;
+    private final FXOMObjectMask.Factory designMaskFactory;
     private final AddPropertyJob.Factory addPropertyJobFactory;
 
     public AbstractWrapInSubComponentJob(JobExtensionFactory extensionFactory, FxmlDocumentManager documentManager,
-            Selection selection, DesignHierarchyMask.Factory designMaskFactory, IMetadata metadata,
+            Selection selection, FXOMObjectMask.Factory designMaskFactory, IMetadata metadata,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             ToggleFxRootJob.Factory toggleFxRootJobFactory,
             ModifyFxControllerJob.Factory modifyFxControllerJobFactory,

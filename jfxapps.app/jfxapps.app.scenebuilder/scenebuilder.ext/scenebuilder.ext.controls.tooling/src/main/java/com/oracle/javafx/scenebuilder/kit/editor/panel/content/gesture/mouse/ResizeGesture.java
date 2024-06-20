@@ -50,7 +50,7 @@ import com.gluonhq.jfxapps.core.api.content.mode.Layer;
 import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.HudWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
@@ -101,7 +101,7 @@ public class ResizeGesture extends AbstractMouseGesture {
     private boolean guidesDisabled;
 	private final Driver driver;
     private final IMetadata metadata;
-    private final DesignHierarchyMask.Factory designMaskFactory;
+    private final FXOMObjectMask.Factory designMaskFactory;
     private final ModifyObjectJob.Factory modifyObjectJobFactory;
 
     @SuppressWarnings("rawtypes")
@@ -128,7 +128,7 @@ public class ResizeGesture extends AbstractMouseGesture {
             IMetadata metadata,
             Driver driver,
             JobManager jobManager,
-            DesignHierarchyMask.Factory designMaskFactory,
+            FXOMObjectMask.Factory designMaskFactory,
             ModeManager modeManager,
             ModifyObjectJob.Factory modifyObjectJobFactory) {
         super(workspace);

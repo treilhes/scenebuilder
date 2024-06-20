@@ -40,7 +40,7 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.HierarchyMask;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.intersect.AbstractIntersectsBoundsCheck;
 
@@ -52,9 +52,9 @@ import javafx.scene.Scene;
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 public class SceneIntersectsBoundsCheck extends AbstractIntersectsBoundsCheck {
 
-    private final DesignHierarchyMask.Factory maskFactory;
+    private final FXOMObjectMask.Factory maskFactory;
 
-    public SceneIntersectsBoundsCheck(DesignHierarchyMask.Factory maskFactory) {
+    public SceneIntersectsBoundsCheck(FXOMObjectMask.Factory maskFactory) {
         super();
         this.maskFactory = maskFactory;
     }

@@ -53,7 +53,7 @@ import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.HudWindow;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
@@ -101,7 +101,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
     private final EnumMap<Tunable, Integer> tunableMap = new EnumMap<>(Tunable.class);
 
 	private final IMetadata metadata;
-	private final DesignHierarchyMask.Factory designMaskFactory;
+	private final FXOMObjectMask.Factory designMaskFactory;
 	private final JobManager jobManager;
 	private final Driver driver;
 	private final HudWindow hudWindow;
@@ -114,7 +114,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
 	        Content contentPanelController,
 	        IMetadata metadata,
 	        Driver driver,
-	        DesignHierarchyMask.Factory designMaskFactory,
+	        FXOMObjectMask.Factory designMaskFactory,
 	        JobManager jobManager,
 	        FxmlDocumentManager documentManager,
 	        HudWindow hudWindow,

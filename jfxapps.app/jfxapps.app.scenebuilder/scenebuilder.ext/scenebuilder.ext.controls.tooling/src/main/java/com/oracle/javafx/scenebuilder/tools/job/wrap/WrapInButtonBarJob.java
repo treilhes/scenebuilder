@@ -48,7 +48,7 @@ import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.job.editor.atomic.AddPropertyJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.AddPropertyValueJob;
@@ -72,7 +72,7 @@ import javafx.scene.control.ButtonBar;
 public final class WrapInButtonBarJob extends AbstractWrapInSubComponentJob {
 
     protected WrapInButtonBarJob(JobExtensionFactory extensionFactory, FxmlDocumentManager documentManager,
-            Selection selection, DesignHierarchyMask.Factory designMaskFactory, IMetadata metadata,
+            Selection selection, FXOMObjectMask.Factory designMaskFactory, IMetadata metadata,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             ToggleFxRootJob.Factory toggleFxRootJobFactory,
             ModifyFxControllerJob.Factory modifyFxControllerJobFactory,

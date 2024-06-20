@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,18 +31,15 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.core.extension.Extension;
+import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.selection.SelectionExtension;
 
 open module scenebuilder.fxml.core.selection {
     exports com.oracle.javafx.scenebuilder.selection;
     exports com.oracle.javafx.scenebuilder.selection.i18n;
-    exports com.oracle.javafx.scenebuilder.fxml.selection.job;
+    exports com.oracle.javafx.scenebuilder.selection.job;
 
     requires transitive scenebuilder.api;
-    requires transitive scenebuilder.fxml.core.jobs;
-    requires transitive scenebuilder.core.extension.api;
-    requires scenebuilder.core.jobs;
 
     provides Extension with SelectionExtension;
 }

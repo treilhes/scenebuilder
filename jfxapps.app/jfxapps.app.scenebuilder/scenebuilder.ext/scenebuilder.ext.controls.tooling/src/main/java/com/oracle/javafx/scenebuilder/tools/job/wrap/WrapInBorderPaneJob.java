@@ -47,7 +47,7 @@ import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
@@ -78,7 +78,7 @@ public final class WrapInBorderPaneJob extends AbstractWrapInJob {
             JobExtensionFactory extensionFactory,
             FxmlDocumentManager documentManager,
             Selection selection,
-            DesignHierarchyMask.Factory designMaskFactory,
+            FXOMObjectMask.Factory designMaskFactory,
             BorderPaneHierarchyMask.Factory borderPaneMaskFactory,
             IMetadata metadata,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,

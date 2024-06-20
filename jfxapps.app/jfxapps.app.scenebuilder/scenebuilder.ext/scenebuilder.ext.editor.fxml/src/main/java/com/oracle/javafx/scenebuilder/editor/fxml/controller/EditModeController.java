@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -58,7 +58,8 @@ import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
@@ -81,6 +82,7 @@ import com.oracle.javafx.scenebuilder.api.control.Tring;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.api.control.outline.Outline;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractPring;
+import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.DragGesture;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.ZoomGesture;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse.SelectAndMoveGesture;
@@ -133,7 +135,7 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     private final JobManager jobManager;
 
-    private final DesignHierarchyMask.Factory maskFactory;
+    private final SbFXOMObjectMask.Factory maskFactory;
 
     private final SelectWithMarqueeGesture.Factory selectWithMarqueeGestureFactory;
 
@@ -155,7 +157,7 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     private final ModifyObjectJob.Factory modifyObjectJobFactory;
 
-    private final FxmlDocumentManager documentManager;
+    private final DocumentManager documentManager;
 
     // @formatter:off
     public EditModeController(
@@ -168,8 +170,8 @@ public class EditModeController extends AbstractModeController implements Gestur
             InlineEdit inlineEdit,
             @Lazy Content contentPanelController,
             JobManager jobManager,
-            DesignHierarchyMask.Factory maskFactory,
-            FxmlDocumentManager documentManager,
+            SbFXOMObjectMask.Factory maskFactory,
+            DocumentManager documentManager,
             SelectWithMarqueeGesture.Factory selectWithMarqueeGestureFactory,
             SelectAndMoveGesture.Factory selectAndMoveGestureFactory,
             ZoomGesture.Factory zoomGestureFactory,
@@ -570,7 +572,7 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     private boolean inlineEditingDidRequestCommit(String newValue) {
         assert inlineEditedObject != null;
-        
+
         // Using PrefixedValue PLAIN_STRING allow to consider special characters (such as @, %,...)
         // as "standard" characters (i.e. to backslash them)
         final String newPlainValue = new PrefixedValue(PrefixedValue.Type.PLAIN_STRING, newValue).toString();
@@ -603,26 +605,29 @@ public class EditModeController extends AbstractModeController implements Gestur
         case UP:
         case DOWN:
         case LEFT:
-        case RIGHT:
-            if (selection.isMovable()) {
+        case RIGHT: {
+            var mask = maskFactory.getMask(selection.getAncestor());
+            if (mask.isMovable()) {
                 activateGesture(moveWithKeyGestureFactory.getGesture(), e);
             } else {
                 logger.debug("Selection is not movable");
             }
             e.consume();
             break;
-        case ENTER:
+        }
+        case ENTER: {
             if (selection.getGroup() instanceof DSelectionGroupFactory) {
                 final DSelectionGroupFactory osg = (DSelectionGroupFactory) selection.getGroup();
                 if (osg.getItems().size() == 1) {
-                    final HierarchyMask mask = maskFactory.getMask(osg.getSortedItems().get(0));
-                    final FXOMObject nodeFxomObject = mask.getClosestFxNode();
+                    final var mask = maskFactory.getMask(osg.getSortedItems().get(0));
+                    final var nodeFxomObject = mask.getClosestFxNode();
                     if (nodeFxomObject instanceof FXOMInstance) {
                         handleInlineEditing((FXOMInstance) nodeFxomObject);
                     }
                 }
             }
             break;
+        }
         default:
             // We let other key events flow up in the scene graph
             break;

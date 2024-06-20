@@ -44,7 +44,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask.Accessory;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -67,13 +67,13 @@ public class TreeItemFactory {
     private final Map<ExpandedKey, Boolean> treeItemsExpandedMapProperty = new HashMap<>();
 
     private final HierarchyTreeViewController hierarchyTreeView;
-    private final DesignHierarchyMask.Factory designHierarchyMaskFactory;
+    private final FXOMObjectMask.Factory designHierarchyMaskFactory;
     private final ShowExpertByDefaultPreference showExpertByDefaultPreference;
 
     public TreeItemFactory(
             HierarchyTreeViewController hierarchyTreeView,
             ShowExpertByDefaultPreference showExpertByDefaultPreference,
-            DesignHierarchyMask.Factory designHierarchyMaskFactory) {
+            FXOMObjectMask.Factory designHierarchyMaskFactory) {
         super();
         this.hierarchyTreeView = hierarchyTreeView;
         this.showExpertByDefaultPreference = showExpertByDefaultPreference;

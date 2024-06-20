@@ -52,7 +52,7 @@ import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.api.content.mode.Layer;
 import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
@@ -81,7 +81,7 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
     private final Driver driver;
     private Layer<Rudder> rudderLayer;
     private ModeManager modeManager;
-    private final DesignHierarchyMask.Factory maskFactory;
+    private final FXOMObjectMask.Factory maskFactory;
     private final Selection selection;
     private final FxmlDocumentManager documentManager;
 
@@ -89,7 +89,7 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
             FxmlDocumentManager documentManager,
             Driver driver,
             Selection selection,
-            DesignHierarchyMask.Factory maskFactory,
+            FXOMObjectMask.Factory maskFactory,
             @Lazy Content contentPanelController,
             @Lazy EditModeController editMode) {
         super(contentPanelController);

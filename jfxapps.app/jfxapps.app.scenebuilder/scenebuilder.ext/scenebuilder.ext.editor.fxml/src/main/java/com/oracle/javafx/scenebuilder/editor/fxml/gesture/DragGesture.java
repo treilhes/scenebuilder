@@ -52,7 +52,7 @@ import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.core.dnd.droptarget.ContainerXYDropTarget;
 import com.gluonhq.jfxapps.core.core.dnd.droptarget.RootDropTarget;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -104,7 +104,7 @@ public class DragGesture extends AbstractGesture {
     @SuppressWarnings("rawtypes")
     private Layer<Rudder> rudderLayer;
 
-    private final DesignHierarchyMask.Factory maskFactory;
+    private final FXOMObjectMask.Factory maskFactory;
     private final ExternalDragSource.Factory externalDragSourceFactory;
     private final RootDropTarget.Factory rootDropTargetFactory;
 
@@ -116,7 +116,7 @@ public class DragGesture extends AbstractGesture {
             ModeManager modeManager,
             Driver driver,
             FxmlDocumentManager documentManager,
-            DesignHierarchyMask.Factory maskFactory,
+            FXOMObjectMask.Factory maskFactory,
             ExternalDragSource.Factory externalDragSourceFactory,
             RootDropTarget.Factory rootDropTargetFactory) {
         super(contentPanelController);

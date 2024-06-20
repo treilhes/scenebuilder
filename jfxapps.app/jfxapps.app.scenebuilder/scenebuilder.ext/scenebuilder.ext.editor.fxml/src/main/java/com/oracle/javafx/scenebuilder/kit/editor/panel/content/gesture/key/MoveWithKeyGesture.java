@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,16 +42,20 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractKeyGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.job.editor.RelocateSelectionJob;
+import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
+import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -60,13 +64,13 @@ import javafx.scene.input.InputEvent;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Prototype
 public class MoveWithKeyGesture extends AbstractKeyGesture {
 
     private final Selection selection;
 	private final JobManager jobManager;
-	private final RelocateSelectionJob.Factory relocateSelectionJobFactory;
+	private final SbJobsFactory sbJobsFactory;
+	private final SbFXOMObjectMask.Factory sbFXOMObjectMaskFactory;
 
 	private double vectorX;
     private double vectorY;
@@ -75,12 +79,13 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
             Workspace workspace,
             Selection selection,
     		JobManager jobManager,
-    		RelocateSelectionJob.Factory relocateSelectionJobFactory) {
+    		SbJobsFactory sbJobsFactory,
+    		SbFXOMObjectMask.Factory sbFXOMObjectMaskFactory) {
         super(workspace);
         this.selection = selection;
         this.jobManager = jobManager;
-        this.relocateSelectionJobFactory = relocateSelectionJobFactory;
-        assert selection.isMovable(); // (1)
+        this.sbJobsFactory = sbJobsFactory;
+        this.sbFXOMObjectMaskFactory = sbFXOMObjectMaskFactory;
     }
 
     /*
@@ -102,8 +107,10 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
          * Updates layoutX/layoutY of the selected scene graph objects.
          */
         for (FXOMObject selectedObject : osg.getFlattenItems()) {
-            assert selectedObject.isNode(); // Because (1)
-            final Node node = (Node) selectedObject.getSceneGraphObject();
+            var mask = sbFXOMObjectMaskFactory.getMask(selectedObject);
+            assert mask.isMovable(); // (1)
+            assert selectedObject.getSceneGraphObject().isNode(); // Because (1)
+            final Node node = selectedObject.getSceneGraphObject().getAs(Node.class);
             node.setLayoutX(node.getLayoutX() + moveX);
             node.setLayoutY(node.getLayoutY() + moveY);
         }
@@ -121,30 +128,26 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
         // Builds a RelocateSelectionJob
         final Map<FXOMObject, Point2D> locationMap = new HashMap<>();
         for (FXOMObject selectedObject : osg.getItems()) {
-            assert selectedObject.isNode(); // Because (1)
+            var mask = sbFXOMObjectMaskFactory.getMask(selectedObject);
+            assert mask.isMovable(); // (1)
+            assert selectedObject.getSceneGraphObject().isNode(); // Because (1)
             assert selectedObject instanceof FXOMInstance;
 
-            final Node node = (Node) selectedObject.getSceneGraphObject();
+            final Node node = selectedObject.getSceneGraphObject().getAs(Node.class);
             final Point2D layoutXY = new Point2D(node.getLayoutX(), node.getLayoutY());
             locationMap.put(selectedObject, layoutXY);
         }
 
-        final RelocateSelectionJob newRelocateJob = relocateSelectionJobFactory.getJob(locationMap);
+        final Job newRelocateJob = sbJobsFactory.relocateSelection(locationMap);
 
         // ... and pushes it
         // If the current job is already a RelocateSelectionJob,
         // then we see if the new job can be merged with it.
 
-        AbstractJob currentJob = jobManager.getCurrentJob();
-
-        if (currentJob instanceof RelocateSelectionJob) {
-            final RelocateSelectionJob currentRelocateJob = (RelocateSelectionJob) currentJob;
-            if (currentRelocateJob.canBeMergedWith(newRelocateJob)) {
-                newRelocateJob.execute();
-                currentRelocateJob.mergeWith(newRelocateJob);
-            } else {
-                jobManager.push(newRelocateJob);
-            }
+        final var currentJob = jobManager.getCurrentJob();
+        if (currentJob.canBeMergedWith(newRelocateJob)) {
+            newRelocateJob.execute();
+            currentJob.mergeWith(newRelocateJob);
         } else {
             jobManager.push(newRelocateJob);
         }
@@ -155,7 +158,7 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
      */
     @Override
     public void start(InputEvent e, Observer observer) {
-        super.startApplication(e, observer);
+        super.start(e, observer);
 
         switch(getFirstKeyPressedEvent().getCode()) {
             case DOWN:

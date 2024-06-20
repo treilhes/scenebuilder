@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,98 +37,38 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.core.extension.AbstractExtension;
-import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.selection.job.BringForwardJob;
-import com.gluonhq.jfxapps.core.selection.job.BringToFrontJob;
-import com.gluonhq.jfxapps.core.selection.job.ClearSelectionJob;
-import com.gluonhq.jfxapps.core.selection.job.CutSelectionJob;
-import com.gluonhq.jfxapps.core.selection.job.DeleteObjectJob;
-import com.gluonhq.jfxapps.core.selection.job.DeleteObjectSelectionJob;
-import com.gluonhq.jfxapps.core.selection.job.DeleteSelectionJob;
-import com.gluonhq.jfxapps.core.selection.job.DuplicateSelectionJob;
-import com.gluonhq.jfxapps.core.selection.job.InsertAsAccessoryJob;
-import com.gluonhq.jfxapps.core.selection.job.InsertAsSubComponentJob;
-import com.gluonhq.jfxapps.core.selection.job.ModifySelectionJob;
-import com.gluonhq.jfxapps.core.selection.job.PasteIntoJob;
-import com.gluonhq.jfxapps.core.selection.job.PasteJob;
-import com.gluonhq.jfxapps.core.selection.job.SendBackwardJob;
-import com.gluonhq.jfxapps.core.selection.job.SendToBackJob;
-import com.gluonhq.jfxapps.core.selection.job.SetDocumentRootJob;
-import com.gluonhq.jfxapps.core.selection.job.TrimSelectionJob;
-import com.oracle.javafx.scenebuilder.fxml.selection.job.AddContextMenuToSelectionJob;
-import com.oracle.javafx.scenebuilder.fxml.selection.job.AddTooltipToSelectionJob;
-import com.oracle.javafx.scenebuilder.fxml.selection.job.FitToParentSelectionJob;
-import com.oracle.javafx.scenebuilder.fxml.selection.job.ModifyCacheHintJob;
-import com.oracle.javafx.scenebuilder.fxml.selection.job.UpdateSelectionJob;
-import com.oracle.javafx.scenebuilder.fxml.selection.job.UseComputedSizesSelectionJob;
-import com.oracle.javafx.scenebuilder.selection.i18n.I18NSelection;
-import com.oracle.javafx.scenebuilder.selection.job.BackupSelectionJob;
+import org.scenebuilder.fxml.api.SbApiExtension;
 
-public class SelectionExtension extends AbstractExtension {
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.oracle.javafx.scenebuilder.selection.i18n.I18NSelection;
+
+public class SelectionExtension implements OpenExtension {
+
+    public static final UUID ID = UUID.fromString("b07bac44-1093-4fb0-a489-6d1233930e62");
+
+    @Override
+    public UUID getParentId() {
+        return SbApiExtension.ID;
+    }
+
     @Override
     public UUID getId() {
-        return UUID.fromString("b07bac44-1093-4fb0-a489-6d1233930e62");
+        return ID;
     }
 
     @Override
-    public List<Class<?>> explicitClassToRegister() {
-     // @formatter:off
-        return Arrays.asList(
-                AddContextMenuToSelectionJob.class,
-                AddContextMenuToSelectionJob.Factory.class,
-                AddTooltipToSelectionJob.class,
-                AddTooltipToSelectionJob.Factory.class,
-                BackupSelectionJob.class,
-                BackupSelectionJob.Factory.class,
-                BringForwardJob.class,
-                BringForwardJob.Factory.class,
-                BringToFrontJob.class,
-                BringToFrontJob.Factory.class,
-                ClearSelectionJob.class,
-                ClearSelectionJob.Factory.class,
-                CutSelectionJob.class,
-                CutSelectionJob.Factory.class,
-                DeleteObjectJob.class,
-                DeleteObjectJob.Factory.class,
-                DeleteObjectSelectionJob.class,
-                DeleteObjectSelectionJob.Factory.class,
-                DeleteSelectionJob.class,
-                DeleteSelectionJob.Factory.class,
-                DuplicateSelectionJob.class,
-                DuplicateSelectionJob.Factory.class,
-                FitToParentSelectionJob.class,
-                FitToParentSelectionJob.Factory.class,
-                I18NSelection.class,
-                InsertAsAccessoryJob.class,
-                InsertAsAccessoryJob.Factory.class,
-                InsertAsSubComponentJob.class,
-                InsertAsSubComponentJob.Factory.class,
-                ModifyCacheHintJob.class,
-                ModifyCacheHintJob.Factory.class,
-                ModifySelectionJob.class,
-                ModifySelectionJob.Factory.class,
-                ObjectSelectionGroup.class,
-                ObjectSelectionGroup.Factory.class,
-                PasteIntoJob.class,
-                PasteIntoJob.Factory.class,
-                PasteJob.class,
-                PasteJob.Factory.class,
-                SelectionImpl.class,
-                SendBackwardJob.class,
-                SendBackwardJob.Factory.class,
-                SendToBackJob.class,
-                SendToBackJob.Factory.class,
-                SetDocumentRootJob.class,
-                SetDocumentRootJob.Factory.class,
-                TrimSelectionJob.class,
-                TrimSelectionJob.Factory.class,
-                UpdateSelectionJob.class,
-                UpdateSelectionJob.Factory.class,
-                UseComputedSizesSelectionJob.class,
-                UseComputedSizesSelectionJob.Factory.class
-
-            );
-     // @formatter:on
+    public List<Class<?>> localContextClasses() {
+        return List.of();
     }
+
+    @Override
+    public List<Class<?>> exportedContextClasses() {
+        // @formatter:off
+        return Arrays.asList(
+                SbSelectionJobsFactoryImpl.class,
+                I18NSelection.class
+        );
+        // @formatter:on
+    }
+
 }

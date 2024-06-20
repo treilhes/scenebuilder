@@ -42,7 +42,7 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -71,7 +71,7 @@ public final class ContainerZDropTargetBck extends AbstractDropTarget {
     private FXOMObject beforeChild;
 
     protected ContainerZDropTargetBck(
-            DesignHierarchyMask.Factory designMaskFactory,
+            FXOMObjectMask.Factory designMaskFactory,
             BatchJob.Factory batchJobFactory,
             ReIndexObjectJob.Factory reIndexObjectJobFactory,
             RemoveObjectJob.Factory removeObjectJobFactory,

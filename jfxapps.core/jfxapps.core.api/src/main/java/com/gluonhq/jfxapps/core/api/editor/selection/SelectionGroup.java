@@ -40,6 +40,7 @@ import java.util.Set;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
 
 import javafx.scene.Node;
 
@@ -48,23 +49,21 @@ import javafx.scene.Node;
  */
 public interface SelectionGroup extends Cloneable {
 
-    public boolean isMovable();
-
     /**
      * Get the latest clicked/hit item in the selected {@link OMObject} collection
      * @return the latest clicked/hit item
      */
     public FXOMObject getHitItem();
     /**
-     * Get the common ancestor {@link OMObject} to all selected {@link OMObject}
+     * Get the common ancestor {@link FXOMObject} to all selected {@link FXOMObject}
      * or null if root is selected
-     * @return the common ancestor {@link OMObject}
+     * @return the common ancestor {@link FXOMObject}
      */
     public FXOMObject getAncestor();
     /**
-     * A selection group is valid only if all the selected {@link OMObject} are part of the provided {@link FXOMDocument}
+     * A selection group is valid only if all the selected {@link FXOMObject} are part of the provided {@link FXOMDocument}
      * @param fxomDocument the owner document
-     * @return true if all the selected {@link OMObject} are part of the provided {@link FXOMDocument}
+     * @return true if all the selected {@link FXOMObject} are part of the provided {@link FXOMDocument}
      */
     public boolean isValid(FXOMDocument fxomDocument);
     /**
@@ -102,8 +101,18 @@ public interface SelectionGroup extends Cloneable {
      * Collect all the fx ids in the current selection.
      *
      * @return the map fx id : fxom object
+     * @deprecated use {@link #collect()} instead
      */
+    @Deprecated
     Map<String, FXOMObject> collectSelectedFxIds();
+
+    /**
+     * Collect items in the selection content
+     * @param <T> the collected item type
+     * @param collector the collector
+     * @return the collected item
+     */
+    <T> T collect(FXOMCollector<T> collector);
 
 
     SelectionGroup clone() throws CloneNotSupportedException;

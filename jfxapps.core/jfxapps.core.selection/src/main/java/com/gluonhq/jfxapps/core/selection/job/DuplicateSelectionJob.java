@@ -39,16 +39,15 @@ import java.util.List;
 import java.util.Map;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
-import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMCollection;
@@ -56,9 +55,6 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
-
-import javafx.scene.Node;
 
 /**
  * Duplicate all object in the current selection
@@ -68,11 +64,8 @@ import javafx.scene.Node;
 @Prototype
 public final class DuplicateSelectionJob extends BatchSelectionJob {
 
-    private final static double offset = 10;
-
-    private final FxomJobsFactory fxomJobsFactory;
     private final SelectionJobsFactory selectionJobsFactory;
-    private final DesignHierarchyMask.Factory designMaskFactory;
+    private final FXOMObjectMask.Factory designMaskFactory;
     private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
 
     private final Map<FXOMObject, FXOMObject> newFxomObjects = new LinkedHashMap<>();
@@ -84,15 +77,13 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
             DocumentManager documentManager,
             Selection selection,
             SelectionJobsFactory selectionJobsFactory,
-            FxomJobsFactory fxomJobsFactory,
-            DesignHierarchyMask.Factory designMaskFactory,
+            FXOMObjectMask.Factory designMaskFactory,
             ObjectSelectionGroup.Factory objectSelectionGroupFactory
             ) {
      // @formatter:on
         super(extensionFactory, documentManager, selection);
         this.fxomDocument = documentManager.fxomDocument().get();
         this.selectionJobsFactory = selectionJobsFactory;
-        this.fxomJobsFactory = fxomJobsFactory;
         this.designMaskFactory = designMaskFactory;
         this.objectSelectionGroupFactory = objectSelectionGroupFactory;
     }
@@ -131,26 +122,12 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
                 for (Map.Entry<FXOMObject, FXOMObject> entry : newFxomObjects.entrySet()) {
                     final FXOMObject selectedFxomObject = entry.getKey();
                     final FXOMObject newFxomObject = entry.getValue();
-                    final AbstractJob insertSubJob = selectionJobsFactory.insertAsSubComponentJobFactory.getJob(
+                    final Job insertSubJob = selectionJobsFactory.insertAsSubComponent(
                             newFxomObject,
                             targetObject,
                             targetMask.getSubComponentCount(true) + index++);
 
                     result.add(insertSubJob);
-                    final Object selectedSceneGraphObject = selectedFxomObject.getSceneGraphObject();
-                    // Relocate duplicated objects if needed
-                    if (selectedSceneGraphObject instanceof Node) {
-                        final Node selectedNode = (Node) selectedSceneGraphObject;
-                        final double newLayoutX = Math.round(selectedNode.getLayoutX() + offset);
-                        final double newLayoutY = Math.round(selectedNode.getLayoutY() + offset);
-                        assert newFxomObject instanceof FXOMInstance;
-                        final AbstractJob relocateSubJob = fxomJobsFactory.relocateNode(
-                                (FXOMInstance) newFxomObject,
-                                newLayoutX,
-                                newLayoutY
-                                );
-                        result.add(relocateSubJob);
-                    }
                 }
             }
         }

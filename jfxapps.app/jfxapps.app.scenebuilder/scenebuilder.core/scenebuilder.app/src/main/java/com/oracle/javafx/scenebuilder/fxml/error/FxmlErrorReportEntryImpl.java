@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.fxml.error;
 import java.net.URL;
 
 import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -48,7 +48,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
  */
 public class FxmlErrorReportEntryImpl implements ErrorReportEntry {
 
-    private final DesignHierarchyMask.Factory designHierarchyMaskFactory;
+    private final FXOMObjectMask.Factory designHierarchyMaskFactory;
 
     private final FXOMNode fxomNode;
     private final Type type;
@@ -56,7 +56,7 @@ public class FxmlErrorReportEntryImpl implements ErrorReportEntry {
     private final CSSParsingReportImpl cssParsingReport; // relevant for INVALID_CSS_CONTENT
 
     public FxmlErrorReportEntryImpl(FXOMNode fxomNode, Type type, CSSParsingReportImpl cssParsingReport,
-            DesignHierarchyMask.Factory designHierarchyMaskFactory) {
+            FXOMObjectMask.Factory designHierarchyMaskFactory) {
         assert fxomNode != null;
         assert (type == Type.INVALID_CSS_CONTENT) == (cssParsingReport != null);
 
@@ -67,7 +67,7 @@ public class FxmlErrorReportEntryImpl implements ErrorReportEntry {
     }
 
     public FxmlErrorReportEntryImpl(FXOMNode fxomNode, Type type,
-            DesignHierarchyMask.Factory designHierarchyMaskFactory) {
+            FXOMObjectMask.Factory designHierarchyMaskFactory) {
         this(fxomNode, type, null, designHierarchyMaskFactory);
     }
 
@@ -109,7 +109,7 @@ public class FxmlErrorReportEntryImpl implements ErrorReportEntry {
             result.append(fxomIntrinsic.getSource());
         } else if (fxomNode instanceof FXOMObject) {
             final FXOMObject fxomObject = (FXOMObject) fxomNode;
-            final DesignHierarchyMask mask = designHierarchyMaskFactory.getMask(fxomObject);
+            final FXOMObjectMask mask = designHierarchyMaskFactory.getMask(fxomObject);
             // TODO check if an accessory, maybe the main one must be passed here
             result.append(mask.getClassNameInfo(null));
         }

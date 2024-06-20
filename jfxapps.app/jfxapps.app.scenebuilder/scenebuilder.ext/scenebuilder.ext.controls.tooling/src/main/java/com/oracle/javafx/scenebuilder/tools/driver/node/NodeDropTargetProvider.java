@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.mask.DesignHierarchyMask;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.core.dnd.droptarget.AccessoryDropTarget;
 import com.gluonhq.jfxapps.core.core.dnd.droptarget.ContainerXYDropTarget;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -49,12 +49,12 @@ import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetP
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 public final class NodeDropTargetProvider extends AbstractDropTargetProvider {
 
-    private final DesignHierarchyMask.Factory maskFactory;
+    private final FXOMObjectMask.Factory maskFactory;
     private final AccessoryDropTarget.Factory accessoryDropTargetFactory;
     private final ContainerXYDropTarget.Factory containerXYDropTargetFactory;
 
     public NodeDropTargetProvider(
-            DesignHierarchyMask.Factory maskFactory,
+            FXOMObjectMask.Factory maskFactory,
             AccessoryDropTarget.Factory accessoryDropTargetFactory,
             ContainerXYDropTarget.Factory containerXYDropTargetFactory) {
         super();
