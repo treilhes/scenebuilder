@@ -141,7 +141,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
         }
         // Cannot wrap in Axis nodes
         for (FXOMObject fxomObject : osg.getItems()) {
-            if (fxomObject.getSceneGraphObject() instanceof Axis) {
+            if (fxomObject.getSceneGraphObject().isInstanceOf(Axis.class)) {
                 return false;
             }
         }
@@ -327,7 +327,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
 
             // Modify child LAYOUT bounds
             if (newContainerMask.getMainAccessory() != null && newContainerMask.getMainAccessory().isFreeChildPositioning()) {
-                assert child.getSceneGraphObject() instanceof Node;
+                assert child.getSceneGraphObject().isInstanceOf(Node.class);
                 final Node childNode = (Node) child.getSceneGraphObject();
                 final Bounds childBounds = childNode.getLayoutBounds();
 
@@ -341,7 +341,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
                 final AbstractJob modifyLayoutY = modifyObjectJobFactory.getJob((FXOMInstance) child, layoutYmeta, layoutY);
                 jobs.add(modifyLayoutY);
             } else {
-                assert child.getSceneGraphObject() instanceof Node;
+                assert child.getSceneGraphObject().isInstanceOf(Node.class);
 
                 final AbstractJob modifyLayoutX = modifyObjectJobFactory.getJob((FXOMInstance) child, layoutXmeta, 0.0);
                 jobs.add(modifyLayoutX);

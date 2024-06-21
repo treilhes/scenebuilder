@@ -75,7 +75,7 @@ public class SplitPaneRefresher implements FXOMRefresher {
             for (FXOMObject fxomObject : candidates) {
                 if (fxomObject instanceof FXOMInstance) {
                     final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-                    assert fxomInstance.getSceneGraphObject() instanceof SplitPane;
+                    assert fxomInstance.getSceneGraphObject().isInstanceOf(SplitPane.class);
 
                     final SplitPane splitPane = (SplitPane) fxomInstance.getSceneGraphObject();
                     splitPane.layout();

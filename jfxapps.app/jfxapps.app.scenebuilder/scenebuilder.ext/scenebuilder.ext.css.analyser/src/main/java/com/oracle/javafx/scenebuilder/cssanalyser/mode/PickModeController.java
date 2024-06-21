@@ -227,7 +227,7 @@ public class PickModeController extends AbstractModeController {
                 // Document content is not displayable in content panel
                 result = null;
             } else {
-                assert closestNodeObject.getSceneGraphObject() instanceof Node;
+                assert closestNodeObject.getSceneGraphObject().isInstanceOf(Node.class);
                 final Node closestNode = (Node)closestNodeObject.getSceneGraphObject();
                 if (closestNode.getScene() == content.getRoot().getScene()) {
                     result = new HitNodeChrome(content, documentManager, hitNode);

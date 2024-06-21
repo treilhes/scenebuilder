@@ -207,7 +207,7 @@ public class TableColumnHandles extends AbstractResilientHandles<Object> {
      */
 
     private TableColumn<?,?> getTableColumn() {
-        assert getSceneGraphObject() instanceof TableColumn;
+        assert getSceneGraphObject().isInstanceOf(TableColumn.class);
         return (TableColumn<?,?>) getSceneGraphObject();
     }
 

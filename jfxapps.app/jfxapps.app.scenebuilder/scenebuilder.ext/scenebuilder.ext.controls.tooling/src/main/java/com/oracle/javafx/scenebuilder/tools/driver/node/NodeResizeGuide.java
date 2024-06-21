@@ -159,7 +159,7 @@ public class NodeResizeGuide extends AbstractResizeGuide<Node> {
         assert fxomObject != null;
 
         if (fxomObject != getFxomObject()) {
-            if (fxomObject.getSceneGraphObject() instanceof Node) {
+            if (fxomObject.getSceneGraphObject().isInstanceOf(Node.class)) {
                 final Node sceneGraphNode = (Node) fxomObject.getSceneGraphObject();
                 resizingGuideController.addSampleBounds(sceneGraphNode);
             }

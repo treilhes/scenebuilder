@@ -107,7 +107,7 @@ public abstract class AbstractWrapInWindowJob extends AbstractWrapInJob {
 
         // Selected object must be an instance of javafx.scene.Scene
         for (FXOMObject fxomObject : osg.getItems()) {
-            if ((fxomObject.getSceneGraphObject() instanceof javafx.scene.Scene) == false) {
+            if ((fxomObject.getSceneGraphObject().isInstanceOf(javafx.scene.Scene.class)) == false) {
                 return false;
             }
         }

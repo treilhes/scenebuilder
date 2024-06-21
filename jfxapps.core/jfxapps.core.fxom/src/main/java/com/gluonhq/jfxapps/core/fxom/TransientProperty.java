@@ -153,7 +153,7 @@ class TransientProperty extends TransientNode {
         } else {
             // It is a property of type Map ; currently we don't support
             // map property editing ; so we create a fake value.
-            assert getSceneGraphObject() instanceof Map;
+            assert getSceneGraphObject().isInstanceOf(Map.class);
             result = new FXOMPropertyT(fxomDocument, name, "fake-value");
         }
 

@@ -94,7 +94,7 @@ public class ResizeTableColumnGesture extends AbstractMouseGesture {
 
 	protected void setupGestureParameters(FXOMInstance fxomInstance) {
 	    assert fxomInstance != null;
-        assert fxomInstance.getSceneGraphObject() instanceof TableColumn;
+        assert fxomInstance.getSceneGraphObject().isInstanceOf(TableColumn.class);
 
         this.columnInstance = fxomInstance;
     }
@@ -111,7 +111,7 @@ public class ResizeTableColumnGesture extends AbstractMouseGesture {
     @Override
     protected void mouseDragStarted() {
         assert resizer == null;
-        assert columnInstance.getSceneGraphObject() instanceof TableColumn;
+        assert columnInstance.getSceneGraphObject().isInstanceOf(TableColumn.class);
 
         resizer = new TableColumnResizer((TableColumn<?,?>)columnInstance.getSceneGraphObject());
 
@@ -194,7 +194,7 @@ public class ResizeTableColumnGesture extends AbstractMouseGesture {
      */
 
     private List<AbstractJob> makeResizeJob(FXOMObject columnObject, Map<PropertyName, Object> changeMap) {
-        assert columnObject.getSceneGraphObject() instanceof TableColumn;
+        assert columnObject.getSceneGraphObject().isInstanceOf(TableColumn.class);
         assert columnObject instanceof FXOMInstance;
 
         final List<AbstractJob> result = new ArrayList<>();

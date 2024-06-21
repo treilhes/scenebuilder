@@ -68,7 +68,7 @@ public final class HBoxDropTargetProvider extends AbstractDropTargetProvider {
     public DropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
 
         assert fxomObject instanceof FXOMInstance;
-        assert fxomObject.getSceneGraphObject() instanceof HBox;
+        assert fxomObject.getSceneGraphObject().isInstanceOf(HBox.class);
 
         final HBox hbox = (HBox) fxomObject.getSceneGraphObject();
         assert hbox.getScene() != null;

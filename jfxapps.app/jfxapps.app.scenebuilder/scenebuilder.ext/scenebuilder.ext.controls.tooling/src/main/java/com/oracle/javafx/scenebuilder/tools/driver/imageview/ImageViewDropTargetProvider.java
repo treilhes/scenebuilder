@@ -59,7 +59,7 @@ public final class ImageViewDropTargetProvider extends AbstractDropTargetProvide
     @Override
     public DropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
         assert fxomObject != null;
-        assert fxomObject.getSceneGraphObject() instanceof ImageView;
+        assert fxomObject.getSceneGraphObject().isInstanceOf(ImageView.class);
         return imageViewDropTargetFactory.getDropTarget(fxomObject);
     }
 

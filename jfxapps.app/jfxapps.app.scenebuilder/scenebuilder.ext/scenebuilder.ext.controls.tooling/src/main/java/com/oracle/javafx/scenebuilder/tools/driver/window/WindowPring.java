@@ -73,7 +73,7 @@ public class WindowPring extends AbstractNodePring<Node> {
 
     @Override
     public void setFxomObject(FXOMObject fxomObject) {
-        assert fxomObject.getSceneGraphObject() instanceof Window;
+        assert fxomObject.getSceneGraphObject().isInstanceOf(Window.class);
         HierarchyMask windowDesignHierarchyMask = maskFactory.getMask(fxomObject);
         List<FXOMObject> sceneContent = windowDesignHierarchyMask.getAccessories(windowDesignHierarchyMask.getMainAccessory(), false);
 
@@ -81,7 +81,7 @@ public class WindowPring extends AbstractNodePring<Node> {
 
         FXOMObject scene = sceneContent.get(0);
         assert scene != null : "makePring should have only been called if the Window has a scene";
-        assert scene.getSceneGraphObject() instanceof Scene;
+        assert scene.getSceneGraphObject().isInstanceOf(Scene.class);
         assert scene instanceof FXOMInstance;
         HierarchyMask sceneDesignHierarchyMask = maskFactory.getMask(scene);
         List<FXOMObject> rootContent = sceneDesignHierarchyMask.getAccessories(sceneDesignHierarchyMask.getMainAccessory(), false);
@@ -90,7 +90,7 @@ public class WindowPring extends AbstractNodePring<Node> {
 
         FXOMObject root = rootContent.get(0);
         assert root != null;
-        assert root.getSceneGraphObject() instanceof Node;
+        assert root.getSceneGraphObject().isInstanceOf(Node.class);
         assert root instanceof FXOMInstance;
 
         super.setFxomObject(root);

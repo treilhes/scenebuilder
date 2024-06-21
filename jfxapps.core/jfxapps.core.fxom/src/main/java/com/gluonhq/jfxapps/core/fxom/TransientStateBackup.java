@@ -117,7 +117,7 @@ class TransientStateBackup {
 //                final TabPane tabPane = (TabPane) sceneGraphObject;
 //                final FXOMObject tabObject = tabPaneMap.get(candidate);
 //                if ((tabObject != null) && (tabObject.getParentObject() == candidate)) {
-//                    assert tabObject.getSceneGraphObject() instanceof Tab;
+//                    assert tabObject.getSceneGraphObject().isInstanceOf(Tab.class);
 //                    final Tab tab = (Tab) tabObject.getSceneGraphObject();
 //                    assert tabPane.getTabs().contains(tab);
 //                    tabPane.getSelectionModel().select(tab);
@@ -126,7 +126,7 @@ class TransientStateBackup {
 //                final Accordion accordion  = (Accordion) sceneGraphObject;
 //                final FXOMObject titlePaneObject = accordionMap.get(candidate);
 //                if ((titlePaneObject != null) && (titlePaneObject.getParentObject() == candidate)) {
-//                    assert titlePaneObject.getSceneGraphObject() instanceof TitledPane;
+//                    assert titlePaneObject.getSceneGraphObject().isInstanceOf(TitledPane.class);
 //                    final TitledPane titledPane = (TitledPane) titlePaneObject.getSceneGraphObject();
 //                    assert accordion.getPanes().contains(titledPane);
 //                    accordion.setExpandedPane(titledPane);

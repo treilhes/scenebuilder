@@ -74,7 +74,7 @@ public class TreeTableColumnPring extends AbstractGenericPring<Object> {
 
     @Override
     public void initialize() {
-        assert getFxomInstance().getSceneGraphObject() instanceof TreeTableColumn;
+        assert getFxomInstance().getSceneGraphObject().isInstanceOf(TreeTableColumn.class);
     }
 
     public FXOMInstance getFxomInstance() {
@@ -134,7 +134,7 @@ public class TreeTableColumnPring extends AbstractGenericPring<Object> {
      */
 
     private TreeTableColumn<?,?> getTreeTableColumn() {
-        assert getSceneGraphObject() instanceof TreeTableColumn;
+        assert getSceneGraphObject().isInstanceOf(TreeTableColumn.class);
         return (TreeTableColumn<?,?>) getSceneGraphObject();
     }
 }

@@ -111,7 +111,7 @@ public final class SpanJob extends BatchDocumentJob {
         if (selectionGroup instanceof DSelectionGroupFactory) {
             // Is that asset enclosed in a grid ?
             if (selectionGroup.getAncestor() != null
-                    && selectionGroup.getAncestor().getSceneGraphObject() instanceof GridPane) {
+                    && selectionGroup.getAncestor().getSceneGraphObject().isInstanceOf(GridPane.class)) {
                 GridPaneHierarchyMask gridDHM = maskFactory.getMask(selectionGroup.getAncestor());
                 int columnCount = gridDHM.getColumnsSize();
                 int rowCount = gridDHM.getRowsSize();

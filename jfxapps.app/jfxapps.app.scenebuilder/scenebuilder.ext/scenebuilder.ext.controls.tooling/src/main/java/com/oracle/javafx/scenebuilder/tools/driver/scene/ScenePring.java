@@ -73,7 +73,7 @@ public class ScenePring extends AbstractNodePring<Node> {
     @Override
     public void setFxomObject(FXOMObject fxomObject) {
 
-        assert fxomObject.getSceneGraphObject() instanceof Scene;
+        assert fxomObject.getSceneGraphObject().isInstanceOf(Scene.class);
         HierarchyMask designHierarchyMask = maskFactory.getMask(fxomObject);
 
         List<FXOMObject> children = designHierarchyMask.getAccessories(designHierarchyMask.getMainAccessory(), false);
@@ -81,7 +81,7 @@ public class ScenePring extends AbstractNodePring<Node> {
         FXOMObject root = children.get(0);
 
         assert root != null;
-        assert root.getSceneGraphObject() instanceof Node;
+        assert root.getSceneGraphObject().isInstanceOf(Node.class);
         assert root instanceof FXOMInstance;
 
         super.setFxomObject(root);

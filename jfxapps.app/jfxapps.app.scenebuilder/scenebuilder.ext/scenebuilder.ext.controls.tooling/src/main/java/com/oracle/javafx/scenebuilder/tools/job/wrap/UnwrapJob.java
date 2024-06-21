@@ -195,9 +195,9 @@ public final class UnwrapJob extends BatchSelectionJob {
 //                        || parentContainerMask.isAcceptingAccessory(Accessory.ROOT)
 //                        || parentContainerMask.isAcceptingAccessory(Accessory.SCENE)
 //                        || parentContainerMask.getFxomObject().getSceneGraphObject() instanceof BorderPane
-//                        || parentContainerMask.getFxomObject().getSceneGraphObject() instanceof DialogPane;
+//                        || parentContainerMask.getFxomObject().getSceneGraphObject().isInstanceOf(DialogPane.class);
                 assert parentContainerMask.getFxomObject().getSceneGraphObject() instanceof BorderPane
-                    || parentContainerMask.getFxomObject().getSceneGraphObject() instanceof DialogPane;
+                    || parentContainerMask.getFxomObject().getSceneGraphObject().isInstanceOf(DialogPane.class);
                 if (childrenCount != 1) {
                     return false;
                 }
@@ -358,11 +358,11 @@ public final class UnwrapJob extends BatchSelectionJob {
         final List<AbstractJob> jobs = new ArrayList<>();
         final HierarchyMask newContainerMask = designMaskFactory.getMask(newContainer);
 
-        assert oldContainer.getSceneGraphObject() instanceof Node;
+        assert oldContainer.getSceneGraphObject().isInstanceOf(Node.class);
         final Node oldContainerNode = (Node) oldContainer.getSceneGraphObject();
 
         for (FXOMObject child : children) {
-            assert child.getSceneGraphObject() instanceof Node;
+            assert child.getSceneGraphObject().isInstanceOf(Node.class);
 
             final Node childNode = (Node) child.getSceneGraphObject();
             final double currentLayoutX = childNode.getLayoutX();

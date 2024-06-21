@@ -102,7 +102,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
     }
 
     protected void setupGestureParameters(FXOMInstance splitPaneInstance, int dividerIndex) {
-        assert splitPaneInstance.getSceneGraphObject() instanceof SplitPane;
+        assert splitPaneInstance.getSceneGraphObject().isInstanceOf(SplitPane.class);
         this.splitPaneInstance = splitPaneInstance;
         this.dividerIndex = dividerIndex;
     }
@@ -190,7 +190,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
      */
 
     private SplitPane getSplitPane() {
-        assert splitPaneInstance.getSceneGraphObject() instanceof SplitPane;
+        assert splitPaneInstance.getSceneGraphObject().isInstanceOf(SplitPane.class);
         return (SplitPane) splitPaneInstance.getSceneGraphObject();
     }
 

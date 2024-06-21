@@ -71,7 +71,7 @@ public class GridPaneTring extends AbstractNodeTring<GridPane> {
     public void defineDropTarget(DropTarget dropTarget) {
         assert dropTarget != null;
         assert dropTarget.getTargetObject() != null;
-        assert dropTarget.getTargetObject().getSceneGraphObject() instanceof GridPane;
+        assert dropTarget.getTargetObject().getSceneGraphObject().isInstanceOf(GridPane.class);
 
         if (dropTarget instanceof GridPaneDropTarget) { // use mosaic
             GridPaneDropTarget gridPaneDropTarget = (GridPaneDropTarget)dropTarget;

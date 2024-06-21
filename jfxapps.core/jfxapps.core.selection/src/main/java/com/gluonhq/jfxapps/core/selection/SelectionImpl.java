@@ -210,7 +210,7 @@ public class SelectionImpl implements Selection {
 //    public void select(FXOMInstance gridPaneObject, Type feature, int featureIndex) {
 //
 //        assert gridPaneObject != null;
-//        assert gridPaneObject.getSceneGraphObject() instanceof GridPane;
+//        assert gridPaneObject.getSceneGraphObject().isInstanceOf(GridPane.class);
 //
 //        select(gridSelectionGroupFactory.getGroup(gridPaneObject, feature, featureIndex));
 //    }
@@ -248,7 +248,7 @@ public class SelectionImpl implements Selection {
 //        final boolean result;
 //
 //        assert gridPaneObject != null;
-//        assert gridPaneObject.getSceneGraphObject() instanceof GridPane;
+//        assert gridPaneObject.getSceneGraphObject().isInstanceOf(GridPane.class);
 //
 //        if (group instanceof GridSelectionGroup) {
 //            final GridSelectionGroup gsg = (GridSelectionGroup) group;
@@ -338,7 +338,7 @@ public class SelectionImpl implements Selection {
 //    public void toggleSelection(FXOMInstance gridPaneObject, Type feature, int featureIndex) {
 //
 //        assert gridPaneObject != null;
-//        assert gridPaneObject.getSceneGraphObject() instanceof GridPane;
+//        assert gridPaneObject.getSceneGraphObject().isInstanceOf(GridPane.class);
 //
 //        final AbstractSelectionGroup newGroup;
 //        if (group instanceof GridSelectionGroup) {

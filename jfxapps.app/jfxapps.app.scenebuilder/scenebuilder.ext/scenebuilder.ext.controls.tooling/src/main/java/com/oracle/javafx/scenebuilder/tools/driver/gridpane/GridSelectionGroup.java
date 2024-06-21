@@ -108,7 +108,7 @@ public final class GridSelectionGroup implements SelectionGroup {
 
     protected void setGroupParameters(FXOMObject parentObject, Type type, Set<Integer> indexes) {
         assert parentObject != null;
-        assert parentObject.getSceneGraphObject() instanceof GridPane;
+        assert parentObject.getSceneGraphObject().isInstanceOf(GridPane.class);
         assert indexes != null;
         assert indexes.isEmpty() == false;
 
@@ -263,7 +263,7 @@ public final class GridSelectionGroup implements SelectionGroup {
 //            final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
 //            int index = 0;
 //            for (FXOMObject v : fxomPropertyC.getChildren()) {
-//                assert v.getSceneGraphObject() instanceof RowConstraints;
+//                assert v.getSceneGraphObject().isInstanceOf(RowConstraints.class);
 //                assert v instanceof FXOMInstance;
 //                if (indexes.contains(index++)) {
 //                    result.add((FXOMInstance) v);
@@ -288,7 +288,7 @@ public final class GridSelectionGroup implements SelectionGroup {
 //            final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
 //            int index = 0;
 //            for (FXOMObject v : fxomPropertyC.getChildren()) {
-//                assert v.getSceneGraphObject() instanceof ColumnConstraints;
+//                assert v.getSceneGraphObject().isInstanceOf(ColumnConstraints.class);
 //                assert v instanceof FXOMInstance;
 //                if (indexes.contains(index++)) {
 //                    result.add((FXOMInstance)v);
@@ -411,7 +411,7 @@ public final class GridSelectionGroup implements SelectionGroup {
             GridSelectionGroup gridToggleGroup = (GridSelectionGroup) toggleGroup;
 
             assert gridToggleGroup.getAncestor() != null;
-            assert gridToggleGroup.getAncestor().getSceneGraphObject() instanceof GridPane;
+            assert gridToggleGroup.getAncestor().getSceneGraphObject().isInstanceOf(GridPane.class);
 
             FXOMObject ancestor = gridToggleGroup.getAncestor();
             Type toggledFeature = gridToggleGroup.getType();

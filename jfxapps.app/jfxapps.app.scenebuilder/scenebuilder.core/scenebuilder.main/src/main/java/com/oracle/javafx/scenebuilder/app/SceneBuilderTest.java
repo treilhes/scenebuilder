@@ -185,7 +185,7 @@ public class SceneBuilderTest {
 //        assert fxomObject != null;
 //
 //        final Node result;
-//        if (fxomObject.getSceneGraphObject() instanceof Node) {
+//        if (fxomObject.getSceneGraphObject().isInstanceOf(Node.class)) {
 //            result = (Node) fxomObject.getSceneGraphObject();
 //        } else {
 //            result = null;

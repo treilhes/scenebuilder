@@ -66,7 +66,7 @@ public final class TextFlowDropTargetProvider extends AbstractDropTargetProvider
     @Override
     public DropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
         assert fxomObject instanceof FXOMInstance;
-        assert fxomObject.getSceneGraphObject() instanceof TextFlow;
+        assert fxomObject.getSceneGraphObject().isInstanceOf(TextFlow.class);
 
         HierarchyMask m = maskFactory.getMask(fxomObject);
 

@@ -67,7 +67,7 @@ public final class FlowPaneDropTargetProvider extends AbstractDropTargetProvider
     @Override
     public DropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
         assert fxomObject instanceof FXOMInstance;
-        assert fxomObject.getSceneGraphObject() instanceof FlowPane;
+        assert fxomObject.getSceneGraphObject().isInstanceOf(FlowPane.class);
 
         HierarchyMask m = maskFactory.getMask(fxomObject);
 

@@ -97,7 +97,7 @@ public final class ContainerXYDropTarget extends AbstractDropTarget {
 
     protected void setDropTargetParameters(FXOMInstance targetContainer, double sceneX, double sceneY) {
         assert targetContainer != null;
-        assert targetContainer.getSceneGraphObject() instanceof Parent;
+        assert targetContainer.getSceneGraphObject().isInstanceOf(Parent.class);
         this.targetContainer = targetContainer;
         this.sceneX = sceneX;
         this.sceneY = sceneY;
@@ -157,7 +157,7 @@ public final class ContainerXYDropTarget extends AbstractDropTarget {
         final BatchJob result;
         if (currentParent == targetContainer) {
             // It's a relocating job
-            assert hitObject.getSceneGraphObject() instanceof Node;
+            assert hitObject.getSceneGraphObject().isInstanceOf(Node.class);
             assert hitObject instanceof FXOMInstance;
 
             final boolean shouldRefreshSceneGraph = false;
@@ -165,7 +165,7 @@ public final class ContainerXYDropTarget extends AbstractDropTarget {
 
             final Point2D dxy = computeRelocationDXY((FXOMInstance) hitObject, hitX, hitY);
             for (FXOMObject draggedObject : dragSource.getDraggedObjects()) {
-                assert draggedObject.getSceneGraphObject() instanceof Node;
+                assert draggedObject.getSceneGraphObject().isInstanceOf(Node.class);
                 assert draggedObject instanceof FXOMInstance;
                 final Node draggedNode = (Node) draggedObject.getSceneGraphObject();
                 final double newLayoutX = Math.round(draggedNode.getLayoutX() + dxy.getX());
@@ -192,13 +192,13 @@ public final class ContainerXYDropTarget extends AbstractDropTarget {
             }
 
             // Computes dragged object positions relatively to hitObject
-            assert hitObject.getSceneGraphObject() instanceof Node;
+            assert hitObject.getSceneGraphObject().isInstanceOf(Node.class);
             final Node hitNode = (Node) hitObject.getSceneGraphObject();
             final double layoutX0 = hitNode.getLayoutX();
             final double layoutY0 = hitNode.getLayoutY();
             final Map<FXOMObject, Point2D> layoutDXY = new HashMap<>();
             for (FXOMObject draggedObject : draggedObjects) {
-                assert draggedObject.getSceneGraphObject() instanceof Node;
+                assert draggedObject.getSceneGraphObject().isInstanceOf(Node.class);
                 final Node draggedNode = (Node) draggedObject.getSceneGraphObject();
                 final double layoutDX = draggedNode.getLayoutX() - layoutX0;
                 final double layoutDY = draggedNode.getLayoutY() - layoutY0;
@@ -281,7 +281,7 @@ public final class ContainerXYDropTarget extends AbstractDropTarget {
 
     private Point2D computeRelocationDXY(FXOMInstance hitObject, double hitX, double hitY) {
         assert hitObject != null;
-        assert hitObject.getSceneGraphObject() instanceof Node;
+        assert hitObject.getSceneGraphObject().isInstanceOf(Node.class);
 
         /*
          * Converts (hitX, hitY) in hitObject parent coordinate space.

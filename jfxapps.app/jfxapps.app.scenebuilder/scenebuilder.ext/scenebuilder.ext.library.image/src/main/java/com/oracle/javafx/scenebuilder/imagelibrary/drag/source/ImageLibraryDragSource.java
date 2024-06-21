@@ -102,7 +102,7 @@ public final class ImageLibraryDragSource extends AbstractDragSource {
             libraryItemObject.moveToFxomDocument(targetDocument);
             assert itemDocument.getFxomRoot() == null;
 
-            if (libraryItemObject.getSceneGraphObject() instanceof Node) {
+            if (libraryItemObject.getSceneGraphObject().isInstanceOf(Node.class)) {
                 // We put the library item node in a Scene and layout it.
                 // This will allow ContainerXYDropTarget to measure this
                 // library item by calling Node.getLayoutBounds().
@@ -217,7 +217,7 @@ public final class ImageLibraryDragSource extends AbstractDragSource {
 
         result.getStylesheets().add(AbstractDragSource.getStylesheet().toString());
 
-        if (getLibraryItemObject().getSceneGraphObject() instanceof Node) {
+        if (getLibraryItemObject().getSceneGraphObject().isInstanceOf(Node.class)) {
             final Node sceneGraphNode = (Node) getLibraryItemObject().getSceneGraphObject();
             final DragSourceShadow shadowNode = new DragSourceShadow();
             shadowNode.setupForNode(sceneGraphNode);
@@ -250,7 +250,7 @@ public final class ImageLibraryDragSource extends AbstractDragSource {
         final boolean result;
 
         if (getLibraryItemObject() instanceof FXOMInstance) {
-            result = getLibraryItemObject().getSceneGraphObject() instanceof ImageView;
+            result = getLibraryItemObject().getSceneGraphObject().isInstanceOf(ImageView.class);
         } else {
             result = false;
         }
@@ -263,7 +263,7 @@ public final class ImageLibraryDragSource extends AbstractDragSource {
         final boolean result;
 
         if (getLibraryItemObject() instanceof FXOMInstance) {
-            result = getLibraryItemObject().getSceneGraphObject() instanceof Tooltip;
+            result = getLibraryItemObject().getSceneGraphObject().isInstanceOf(Tooltip.class);
         } else {
             result = false;
         }
@@ -276,7 +276,7 @@ public final class ImageLibraryDragSource extends AbstractDragSource {
         final boolean result;
 
         if (getLibraryItemObject() instanceof FXOMInstance) {
-            result = getLibraryItemObject().getSceneGraphObject() instanceof ContextMenu;
+            result = getLibraryItemObject().getSceneGraphObject().isInstanceOf(ContextMenu.class);
         } else {
             result = false;
         }

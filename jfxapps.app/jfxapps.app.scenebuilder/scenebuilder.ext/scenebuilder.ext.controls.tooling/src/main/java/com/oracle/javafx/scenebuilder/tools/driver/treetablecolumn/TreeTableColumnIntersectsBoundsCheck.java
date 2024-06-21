@@ -50,7 +50,7 @@ public class TreeTableColumnIntersectsBoundsCheck extends AbstractIntersectsBoun
 
     @Override
     public boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds) {
-        assert fxomObject.getSceneGraphObject() instanceof TreeTableColumn;
+        assert fxomObject.getSceneGraphObject().isInstanceOf(TreeTableColumn.class);
 
         final TreeTableColumn<?,?> tc
                 = (TreeTableColumn<?,?>) fxomObject.getSceneGraphObject();

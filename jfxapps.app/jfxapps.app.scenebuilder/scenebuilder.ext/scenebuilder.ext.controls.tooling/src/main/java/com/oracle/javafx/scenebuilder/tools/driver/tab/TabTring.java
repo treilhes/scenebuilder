@@ -72,7 +72,7 @@ public class TabTring extends AbstractTring<Tab> {
 
     @Override
     public void initialize() {
-        assert getFxomInstance().getSceneGraphObject() instanceof Tab;
+        assert getFxomInstance().getSceneGraphObject().isInstanceOf(Tab.class);
 
         tabOutline = new TabOutline(getSceneGraphObject());
         tabOutline.getRingPath().getStyleClass().add(TARGET_RING_CLASS);

@@ -455,7 +455,7 @@ public class DragGesture extends AbstractGesture {
 
         // Adds N, S, E, W and center lines for each child of the hitParent
         for (final FXOMObject child:hitParentMask.getSubComponents(false)) {
-            final boolean isNode = child.getSceneGraphObject() instanceof Node;
+            final boolean isNode = child.getSceneGraphObject().isInstanceOf(Node.class);
             if ((pickExcludes.contains(child) == false) && isNode) {
                 final Node childNode = (Node) child.getSceneGraphObject();
                 movingGuideController.addSampleBounds(childNode);
@@ -463,7 +463,7 @@ public class DragGesture extends AbstractGesture {
         }
 
         // Adds N, S, E, W and center lines of the hitParent itself
-        assert hitParent.getSceneGraphObject() instanceof Node; // Because (1)
+        assert hitParent.getSceneGraphObject().isInstanceOf(Node.class); // Because (1)
         final Node hitParentNode = (Node) hitParent.getSceneGraphObject();
         movingGuideController.addSampleBounds(hitParentNode);
 

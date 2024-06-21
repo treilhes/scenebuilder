@@ -63,14 +63,14 @@ public class WindowIntersectsBoundsCheck extends AbstractIntersectsBoundsCheck {
 
     @Override
     public boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds) {
-        assert fxomObject.getSceneGraphObject() instanceof Window;
+        assert fxomObject.getSceneGraphObject().isInstanceOf(Window.class);
         HierarchyMask windowDesignHierarchyMask = maskFactory.getMask(fxomObject);
         List<FXOMObject> sceneContent = windowDesignHierarchyMask.getAccessories(windowDesignHierarchyMask.getMainAccessory(), false);
         if (sceneContent.isEmpty()) {
             return false;
         }
         FXOMObject scene = sceneContent.get(0);
-        assert scene.getSceneGraphObject() instanceof Scene;
+        assert scene.getSceneGraphObject().isInstanceOf(Scene.class);
         assert scene instanceof FXOMInstance;
         HierarchyMask sceneDesignHierarchyMask = maskFactory.getMask(scene);
         List<FXOMObject> rootContent = sceneDesignHierarchyMask.getAccessories(sceneDesignHierarchyMask.getMainAccessory(), false);
@@ -80,7 +80,7 @@ public class WindowIntersectsBoundsCheck extends AbstractIntersectsBoundsCheck {
         FXOMObject root = rootContent.get(0);
 
         assert root != null;
-        assert root.getSceneGraphObject() instanceof Node;
+        assert root.getSceneGraphObject().isInstanceOf(Node.class);
         Node rootNode = (Node) root.getSceneGraphObject();
         Bounds rootNodeBounds = rootNode.localToScene(rootNode.getLayoutBounds(), true /* rootScene */);
         return rootNodeBounds.intersects(bounds);

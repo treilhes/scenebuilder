@@ -49,7 +49,7 @@ public class TableColumnInlineEditorBounds extends AbstractInlineEditorBounds {
 
     @Override
     public Node getBounds(FXOMObject fxomObject) {
-        assert fxomObject.getSceneGraphObject() instanceof TableColumn;
+        assert fxomObject.getSceneGraphObject().isInstanceOf(TableColumn.class);
         final TableColumn<?,?> tc = (TableColumn<?,?>) fxomObject.getSceneGraphObject();
         final TableViewDesignInfoX di = new TableViewDesignInfoX();
         return di.getColumnNode(tc);

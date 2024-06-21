@@ -88,7 +88,7 @@ public interface Selection {
     //    public void toggleSelection(FXOMInstance gridPaneObject, Type feature, int featureIndex) {
     //
     //        assert gridPaneObject != null;
-    //        assert gridPaneObject.getSceneGraphObject() instanceof GridPane;
+    //        assert gridPaneObject.getSceneGraphObject().isInstanceOf(GridPane.class);
     //
     //        final AbstractSelectionGroup newGroup;
     //        if (group instanceof GridSelectionGroup) {

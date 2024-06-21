@@ -77,7 +77,7 @@ public class HBoxTring extends AbstractNodeTring<HBox> {
     public void defineDropTarget(DropTarget dropTarget) {
         assert dropTarget instanceof AccessoryDropTarget; 
         assert dropTarget.getTargetObject() instanceof FXOMInstance;
-        assert dropTarget.getTargetObject().getSceneGraphObject() instanceof HBox;
+        assert dropTarget.getTargetObject().getSceneGraphObject().isInstanceOf(HBox.class);
         
         final AccessoryDropTarget zDropTarget = (AccessoryDropTarget) dropTarget;
         final int targetIndex;

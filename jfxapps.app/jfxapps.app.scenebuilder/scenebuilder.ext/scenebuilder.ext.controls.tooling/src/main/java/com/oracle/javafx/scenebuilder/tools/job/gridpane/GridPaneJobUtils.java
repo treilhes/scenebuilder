@@ -143,7 +143,7 @@ public class GridPaneJobUtils {
             final DSelectionGroupFactory osg = (DSelectionGroupFactory) asg;
             result = true;
             for (FXOMObject obj : osg.getItems()) {
-                if ((obj.getSceneGraphObject() instanceof GridPane) == false) {
+                if ((obj.getSceneGraphObject().isInstanceOf(GridPane.class)) == false) {
                     result = false;
                     break;
                 }

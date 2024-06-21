@@ -48,7 +48,7 @@ public class NodeIntersectsBoundsCheck extends AbstractIntersectsBoundsCheck {
 
     @Override
     public boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds) {
-        assert fxomObject.getSceneGraphObject() instanceof Node;
+        assert fxomObject.getSceneGraphObject().isInstanceOf(Node.class);
 
         // Note: bounds are in root scene coordinates
         final Node sceneGraphNode

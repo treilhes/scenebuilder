@@ -139,7 +139,7 @@ public class SelectAllAction extends AbstractAction {
 //                    final BorderPaneHierarchyMask mask = borderPaneMaskFactory.getMask(ancestor);
 //                    // BorderPane special case : use accessories
 //                    // TODO find a way to remove this special case
-//                    if (mask.getFxomObject().getSceneGraphObject() instanceof BorderPane) {
+//                    if (mask.getFxomObject().getSceneGraphObject().isInstanceOf(BorderPane.class)) {
 //                        final FXOMObject top = mask.getAccessory(mask.getTopAccessory());
 //                        final FXOMObject left = mask.getAccessory(mask.getLeftAccessory());
 //                        final FXOMObject center = mask.getAccessory(mask.getCenterAccessory());
@@ -209,7 +209,7 @@ public class SelectAllAction extends AbstractAction {
 //                final Set<FXOMObject> selectableObjects = new HashSet<>();
 //                // BorderPane special case : use accessories
 //                // TODO find a way to remove this special case
-//                if (mask.getFxomObject().getSceneGraphObject() instanceof BorderPane) {
+//                if (mask.getFxomObject().getSceneGraphObject().isInstanceOf(BorderPane.class)) {
 //                    final FXOMObject top = mask.getAccessory(mask.getTopAccessory());
 //                    final FXOMObject left = mask.getAccessory(mask.getLeftAccessory());
 //                    final FXOMObject center = mask.getAccessory(mask.getCenterAccessory());

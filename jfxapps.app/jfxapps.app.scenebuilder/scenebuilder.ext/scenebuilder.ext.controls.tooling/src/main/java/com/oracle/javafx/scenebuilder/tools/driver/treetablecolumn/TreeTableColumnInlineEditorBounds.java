@@ -49,7 +49,7 @@ public class TreeTableColumnInlineEditorBounds extends AbstractInlineEditorBound
 
     @Override
     public Node getBounds(FXOMObject fxomObject) {
-        assert fxomObject.getSceneGraphObject() instanceof TreeTableColumn;
+        assert fxomObject.getSceneGraphObject().isInstanceOf(TreeTableColumn.class);
         final TreeTableColumn<?,?> tc = (TreeTableColumn<?,?>) fxomObject.getSceneGraphObject();
         final TreeTableViewDesignInfoX di = new TreeTableViewDesignInfoX();
         return di.getColumnNode(tc);

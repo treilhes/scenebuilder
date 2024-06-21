@@ -1532,7 +1532,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 //        assert propNameStr.contains("columnSpan") || propNameStr.contains("rowSpan");
 //        int maxIndex = 0;
 //        for (FXOMInstance instance : getSelectedInstances()) {
-//            assert instance.getSceneGraphObject() instanceof Node;
+//            assert instance.getSceneGraphObject().isInstanceOf(Node.class);
 //            Integer index;
 //            Node node = (Node) instance.getSceneGraphObject();
 //            if (propNameStr.contains("columnSpan")) {//NOCHECK

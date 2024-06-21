@@ -94,7 +94,7 @@ public final class MoveColumnContentJob extends BatchDocumentJob {
 
     protected void setJobParameters(FXOMObject gridPaneObject, int movingColumnIndex, int columnIndexDelta) {
         assert gridPaneObject instanceof FXOMInstance;
-        assert gridPaneObject.getSceneGraphObject() instanceof GridPane;
+        assert gridPaneObject.getSceneGraphObject().isInstanceOf(GridPane.class);
         assert movingColumnIndex >= 0;
 
         this.gridPaneObject = (FXOMInstance)gridPaneObject;

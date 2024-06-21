@@ -90,7 +90,7 @@ public final class ImageViewDropTarget extends AbstractDropTarget {
 
     protected void setDropTargetParameters(FXOMObject targetImageView) {
         assert targetImageView instanceof FXOMInstance;
-        assert targetImageView.getSceneGraphObject() instanceof ImageView;
+        assert targetImageView.getSceneGraphObject().isInstanceOf(ImageView.class);
 
         this.targetImageView = (FXOMInstance) targetImageView;
     }

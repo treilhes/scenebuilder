@@ -112,7 +112,7 @@ class TransientObject extends TransientNode {
         if (declaredClass != null) {
             assert getSceneGraphObject() != null;
 
-            if (getSceneGraphObject() instanceof List) {
+            if (getSceneGraphObject().isInstanceOf(List.class)) {
                 assert properties.isEmpty();
 
                 result = new FXOMCollection(fxomDocument, getGlueElement(),

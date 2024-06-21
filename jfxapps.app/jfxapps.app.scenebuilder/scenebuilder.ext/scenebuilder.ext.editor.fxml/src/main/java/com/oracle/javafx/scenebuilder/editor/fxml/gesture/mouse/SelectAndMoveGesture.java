@@ -219,7 +219,7 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
             sceneGraphNode = document.getDisplayNode();
             return sceneGraphNode.sceneToLocal(hitSceneX, hitSceneY, true /* rootScene */);
         } else {
-            assert nodeObject.getSceneGraphObject() instanceof Node;
+            assert nodeObject.getSceneGraphObject().isInstanceOf(Node.class);
             return CoordinateHelper.sceneToLocal(nodeObject, hitSceneX, hitSceneY, true /* rootScene */);
         }
 

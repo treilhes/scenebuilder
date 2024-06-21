@@ -50,7 +50,7 @@ public class TableColumnIntersectsBoundsCheck extends AbstractIntersectsBoundsCh
 
     @Override
     public boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds) {
-        assert fxomObject.getSceneGraphObject() instanceof TableColumn;
+        assert fxomObject.getSceneGraphObject().isInstanceOf(TableColumn.class);
 
         final TableColumn<?,?> tc = (TableColumn<?,?>) fxomObject.getSceneGraphObject();
         final TableView<?> tv = tc.getTableView();

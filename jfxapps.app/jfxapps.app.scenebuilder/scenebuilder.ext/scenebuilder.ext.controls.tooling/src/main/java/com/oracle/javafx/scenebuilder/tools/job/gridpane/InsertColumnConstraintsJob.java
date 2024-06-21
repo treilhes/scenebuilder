@@ -80,7 +80,7 @@ public final class InsertColumnConstraintsJob extends AbstractJob {
 
     protected void setJobParameters(FXOMObject gridPaneObject, int columnIndex, int insertCount) {
         assert gridPaneObject instanceof FXOMInstance;
-        assert gridPaneObject.getSceneGraphObject() instanceof GridPane;
+        assert gridPaneObject.getSceneGraphObject().isInstanceOf(GridPane.class);
         assert columnIndex >= 0;
         assert columnIndex <= columnContraintsMeta.getValue((FXOMInstance)gridPaneObject).size();
         assert insertCount >= 1;

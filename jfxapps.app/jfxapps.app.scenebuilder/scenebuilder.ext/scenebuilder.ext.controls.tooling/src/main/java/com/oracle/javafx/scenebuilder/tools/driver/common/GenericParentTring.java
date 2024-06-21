@@ -106,7 +106,7 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
         FXOMObject fxomObject = fxomObjectMask.getFxomObject();
 
         assert fxomObject != null;
-        assert fxomObject.getSceneGraphObject() instanceof Parent;
+        assert fxomObject.getSceneGraphObject().isInstanceOf(Parent.class);
 
         final Parent parent = (Parent) fxomObject.getSceneGraphObject();
         final Point2D hitPoint = CoordinateHelper.sceneToLocal(fxomObject, sceneX, sceneY, true /* rootScene */);
@@ -290,7 +290,7 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
             }
         }
 
-        assert m.getFxomObject().getSceneGraphObject() instanceof Parent;
+        assert m.getFxomObject().getSceneGraphObject().isInstanceOf(Parent.class);
         final Parent parent = (Parent) m.getFxomObject().getSceneGraphObject();
         final double pCrackX, pCrackY0, pCrackY1;
         if (parent != skinParent) {
@@ -328,7 +328,7 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
         assert childIndex < m.getSubComponentCount(m.getMainAccessory(), false);
 
         final FXOMObject childObject = m.getSubComponentAtIndex(m.getMainAccessory(), childIndex, false);
-        assert childObject.getSceneGraphObject() instanceof Node;
+        assert childObject.getSceneGraphObject().isInstanceOf(Node.class);
 
         return (Node)childObject.getSceneGraphObject();
     }

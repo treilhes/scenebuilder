@@ -61,7 +61,7 @@ public class SceneIntersectsBoundsCheck extends AbstractIntersectsBoundsCheck {
 
     @Override
     public boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds) {
-        assert fxomObject.getSceneGraphObject() instanceof Scene;
+        assert fxomObject.getSceneGraphObject().isInstanceOf(Scene.class);
         HierarchyMask designHierarchyMask = maskFactory.getMask(fxomObject);
 
         List<FXOMObject> children = designHierarchyMask.getAccessories(designHierarchyMask.getMainAccessory(), false);
@@ -69,7 +69,7 @@ public class SceneIntersectsBoundsCheck extends AbstractIntersectsBoundsCheck {
         FXOMObject root = children.get(0);
 
         assert root != null;
-        assert root.getSceneGraphObject() instanceof Node;
+        assert root.getSceneGraphObject().isInstanceOf(Node.class);
         Node rootNode = (Node) root.getSceneGraphObject();
         final Bounds rootNodeBounds = rootNode.localToScene(rootNode.getLayoutBounds(), true /* rootScene */);
         return rootNodeBounds.intersects(bounds);

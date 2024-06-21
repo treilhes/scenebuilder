@@ -121,7 +121,7 @@ public final class GridPaneDropTarget extends AbstractDropTarget {
     protected void setDropTargetParameters(FXOMObject targetGridPane, int columnIndex, int rowIndex,
             ColumnArea targetColumnArea, RowArea targetRowArea) {
         assert targetGridPane != null;
-        assert targetGridPane.getSceneGraphObject() instanceof GridPane;
+        assert targetGridPane.getSceneGraphObject().isInstanceOf(GridPane.class);
         assert columnIndex >= 0;
         assert rowIndex >= 0;
 
@@ -167,7 +167,7 @@ public final class GridPaneDropTarget extends AbstractDropTarget {
             final HierarchyMask m = designMaskFactory.getMask(targetGridPane);
             if (m.isAcceptingSubComponent(dragSource.getDraggedObjects())) {
                 final FXOMObject draggedObject0 = dragSource.getDraggedObjects().get(0);
-                assert draggedObject0.getSceneGraphObject() instanceof Node;
+                assert draggedObject0.getSceneGraphObject().isInstanceOf(Node.class);
 
                 final Node draggedNode0 = (Node) draggedObject0.getSceneGraphObject();
                 final Integer columIndexObj = GridPane.getColumnIndex(draggedNode0);
@@ -218,7 +218,7 @@ public final class GridPaneDropTarget extends AbstractDropTarget {
 
         // Step #1
         final GridSnapshot gridSnapshot;
-        if ((currentParent != null) && (currentParent.getSceneGraphObject() instanceof GridPane)) {
+        if ((currentParent != null) && (currentParent.getSceneGraphObject().isInstanceOf(GridPane.class))) {
             gridSnapshot = new GridSnapshot(draggedObjects);
         } else {
             gridSnapshot = new GridSnapshot(draggedObjects, 1);

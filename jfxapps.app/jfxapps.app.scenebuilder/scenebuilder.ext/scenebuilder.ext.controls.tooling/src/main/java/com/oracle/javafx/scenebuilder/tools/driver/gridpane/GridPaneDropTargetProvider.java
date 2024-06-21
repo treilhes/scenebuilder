@@ -69,7 +69,7 @@ public final class GridPaneDropTargetProvider extends AbstractDropTargetProvider
 
     @Override
     public DropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
-        assert fxomObject.getSceneGraphObject() instanceof GridPane;
+        assert fxomObject.getSceneGraphObject().isInstanceOf(GridPane.class);
         assert fxomObject instanceof FXOMInstance;
 
         final AbstractDropTarget result;

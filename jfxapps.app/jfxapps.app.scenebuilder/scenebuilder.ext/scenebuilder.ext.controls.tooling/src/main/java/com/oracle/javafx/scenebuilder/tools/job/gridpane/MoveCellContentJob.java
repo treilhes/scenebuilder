@@ -90,7 +90,7 @@ public final class MoveCellContentJob extends AbstractJob {
 
     protected void setJobParameters(FXOMInstance fxomObject, int columnIndexDelta, int rowIndexDelta) {
         assert fxomObject != null;
-        assert fxomObject.getSceneGraphObject() instanceof Node;
+        assert fxomObject.getSceneGraphObject().isInstanceOf(Node.class);
 
         this.fxomObject = fxomObject;
         this.columnIndexDelta = columnIndexDelta;

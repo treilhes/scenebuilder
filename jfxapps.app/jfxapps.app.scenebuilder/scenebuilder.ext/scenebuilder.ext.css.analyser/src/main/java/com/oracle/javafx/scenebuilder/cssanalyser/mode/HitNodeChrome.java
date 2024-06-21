@@ -167,7 +167,7 @@ public class HitNodeChrome extends AbstractDecoration<Object> {
     private Node findClosestNode() {
         final FXOMObject nodeObject = getFxomObject().getClosestNode();
         assert nodeObject != null; // At least the root is a Node
-        assert nodeObject.getSceneGraphObject() instanceof Node;
+        assert nodeObject.getSceneGraphObject().isInstanceOf(Node.class);
         return (Node) nodeObject.getSceneGraphObject();
     }
 }

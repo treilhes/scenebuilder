@@ -79,7 +79,7 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
 
     private void setupGestureParameters(FXOMInstance gridPaneInstance, GridSelectionGroup.Type feature,
             int featureIndex) {
-        assert gridPaneInstance.getSceneGraphObject() instanceof GridPane;
+        assert gridPaneInstance.getSceneGraphObject().isInstanceOf(GridPane.class);
         this.gridPaneInstance = gridPaneInstance;
         this.feature = feature;
         this.featureIndex = featureIndex;

@@ -130,7 +130,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
     }
 
 	protected void setupGestureParameters(FXOMInstance fxomInstance, Tunable tunable) {
-        assert fxomInstance.getSceneGraphObject() instanceof Node;
+        assert fxomInstance.getSceneGraphObject().isInstanceOf(Node.class);
         this.fxomInstance = fxomInstance;
         this.editor = driver.makeCurveEditor(fxomInstance);
         tunableMap.put(tunable, -1);
@@ -197,14 +197,14 @@ public class EditCurveGesture extends AbstractMouseGesture {
         //assert hitParentMask.getMainAccessory() != null && hitParentMask.getMainAccessory().isFreeChildPositioning();
 
         for (final FXOMObject child:hitParentMask.getAccessories(hitParentMask.getMainAccessory(), false)) {
-            final boolean isNode = child.getSceneGraphObject() instanceof Node;
+            final boolean isNode = child.getSceneGraphObject().isInstanceOf(Node.class);
             if (isNode && child != fxomInstance) {
                 final Node childNode = (Node) child.getSceneGraphObject();
                 controller.addSampleBounds(childNode);
             }
         }
 
-        assert hitParent.getSceneGraphObject() instanceof Node;
+        assert hitParent.getSceneGraphObject().isInstanceOf(Node.class);
         final Node hitParentNode = (Node) hitParent.getSceneGraphObject();
         controller.addSampleBounds(hitParentNode);
 

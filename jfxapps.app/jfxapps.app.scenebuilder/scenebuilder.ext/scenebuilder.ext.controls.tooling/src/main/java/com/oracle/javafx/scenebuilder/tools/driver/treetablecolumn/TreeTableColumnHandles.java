@@ -211,7 +211,7 @@ public class TreeTableColumnHandles extends AbstractResilientHandles<Object> imp
      */
 
     private TreeTableColumn<?,?> getTreeTableColumn() {
-        assert getSceneGraphObject() instanceof TreeTableColumn;
+        assert getSceneGraphObject().isInstanceOf(TreeTableColumn.class);
         return (TreeTableColumn<?,?>) getSceneGraphObject();
     }
 

@@ -84,7 +84,7 @@ public class GridPanePring extends AbstractPring<GridPane> implements Initializi
 
     @Override
     public void initialize() {
-        assert getFxomInstance().getSceneGraphObject() instanceof GridPane;
+        assert getFxomInstance().getSceneGraphObject().isInstanceOf(GridPane.class);
         mosaic.setGridPane((GridPane)getFxomObject().getSceneGraphObject());
     }
 

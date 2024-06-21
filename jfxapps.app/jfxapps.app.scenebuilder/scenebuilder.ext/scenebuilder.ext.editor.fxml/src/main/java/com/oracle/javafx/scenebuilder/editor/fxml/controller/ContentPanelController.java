@@ -543,7 +543,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
                 .map(sgo -> sgo.getAs(Node.class)).forEach(picker.getExcludes()::add);
 
 //        for (FXOMObject exclude : excludes) {
-//            if (exclude.getSceneGraphObject() instanceof Node) {
+//            if (exclude.getSceneGraphObject().isInstanceOf(Node.class)) {
 //                picker.getExcludes().add((Node) exclude.getSceneGraphObject());
 //            }
 //        }

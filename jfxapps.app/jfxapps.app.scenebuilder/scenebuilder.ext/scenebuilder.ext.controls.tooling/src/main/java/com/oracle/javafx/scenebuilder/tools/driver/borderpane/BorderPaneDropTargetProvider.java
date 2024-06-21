@@ -72,7 +72,7 @@ public final class BorderPaneDropTargetProvider extends AbstractDropTargetProvid
 
     @Override
     public DropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
-        assert fxomObject.getSceneGraphObject() instanceof BorderPane;
+        assert fxomObject.getSceneGraphObject().isInstanceOf(BorderPane.class);
         assert fxomObject instanceof FXOMInstance;
 
         final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;

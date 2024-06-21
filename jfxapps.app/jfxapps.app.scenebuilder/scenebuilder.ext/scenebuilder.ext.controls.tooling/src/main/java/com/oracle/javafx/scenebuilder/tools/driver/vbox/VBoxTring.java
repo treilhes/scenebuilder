@@ -77,7 +77,7 @@ public class VBoxTring extends AbstractNodeTring<VBox> {
     public void defineDropTarget(DropTarget dropTarget) {
         assert dropTarget instanceof AccessoryDropTarget; 
         assert dropTarget.getTargetObject() instanceof FXOMInstance;
-        assert dropTarget.getTargetObject().getSceneGraphObject() instanceof VBox;
+        assert dropTarget.getTargetObject().getSceneGraphObject().isInstanceOf(VBox.class);
         
         final AccessoryDropTarget zDropTarget = (AccessoryDropTarget) dropTarget;
         final int targetIndex;

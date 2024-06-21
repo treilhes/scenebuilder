@@ -199,7 +199,7 @@ public final class HierarchyDropTarget extends AbstractDropTarget {
             final AbstractJob j = insertAsAccessoryJobFactory.getJob(draggedObject,targetContainer, accessory);
             result.addSubJob(j);
 
-            if ((targetContainer.getSceneGraphObject() instanceof BorderPane)
+            if ((targetContainer.getSceneGraphObject().isInstanceOf(BorderPane.class))
                     && (draggedObject instanceof FXOMInstance)) {
 
                 // We add a job which sets BorderPane.alignment=CENTER on draggedObject

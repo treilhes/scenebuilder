@@ -75,7 +75,7 @@ public class TableColumnPring extends AbstractGenericPring<Object> {
 
     @Override
     public void initialize() {
-        assert getFxomInstance().getSceneGraphObject() instanceof TableColumn;
+        assert getFxomInstance().getSceneGraphObject().isInstanceOf(TableColumn.class);
     }
 
     public FXOMInstance getFxomInstance() {
@@ -135,7 +135,7 @@ public class TableColumnPring extends AbstractGenericPring<Object> {
      */
 
     private TableColumn<?,?> getTableColumn() {
-        assert getSceneGraphObject() instanceof TableColumn;
+        assert getSceneGraphObject().isInstanceOf(TableColumn.class);
         return (TableColumn<?,?>) getSceneGraphObject();
     }
 }

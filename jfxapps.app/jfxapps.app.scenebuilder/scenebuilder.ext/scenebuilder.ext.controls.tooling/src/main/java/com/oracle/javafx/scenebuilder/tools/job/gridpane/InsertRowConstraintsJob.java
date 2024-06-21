@@ -81,7 +81,7 @@ public final class InsertRowConstraintsJob extends AbstractJob {
     protected void setJobParameters(FXOMObject gridPaneObject, int rowIndex, int insertCount) {
 
         assert gridPaneObject instanceof FXOMInstance;
-        assert gridPaneObject.getSceneGraphObject() instanceof GridPane;
+        assert gridPaneObject.getSceneGraphObject().isInstanceOf(GridPane.class);
         assert rowIndex >= 0;
         assert rowIndex <= rowContraintsMeta.getValue((FXOMInstance)gridPaneObject).size();
         assert insertCount >= 1;

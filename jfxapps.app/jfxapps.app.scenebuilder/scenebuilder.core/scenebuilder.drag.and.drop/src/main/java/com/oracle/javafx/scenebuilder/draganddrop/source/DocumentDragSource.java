@@ -134,7 +134,7 @@ public final class DocumentDragSource extends AbstractDragSource {
 
     private static Point2D computeDefaultHit(FXOMObject fxomObject) {
         final double hitX, hitY;
-        if (fxomObject.getSceneGraphObject() instanceof Node) {
+        if (fxomObject.getSceneGraphObject().isInstanceOf(Node.class)) {
             final Node sceneGraphNode = (Node) fxomObject.getSceneGraphObject();
             final Bounds lb = sceneGraphNode.getLayoutBounds();
             hitX = (lb.getMinX() + lb.getMaxX()) / 2.0;
@@ -162,9 +162,9 @@ public final class DocumentDragSource extends AbstractDragSource {
 
         boolean result = true;
         for (FXOMObject draggedObject : draggedObjects) {
-            if (draggedObject.getSceneGraphObject() instanceof Axis) {
+            if (draggedObject.getSceneGraphObject().isInstanceOf(Axis.class)) {
                 final FXOMObject parentObject = draggedObject.getParentObject();
-                if ((parentObject != null) && (parentObject.getSceneGraphObject() instanceof Chart)) {
+                if ((parentObject != null) && (parentObject.getSceneGraphObject().isInstanceOf(Chart.class))) {
                     result = false;
                     break;
                 }
@@ -234,7 +234,7 @@ public final class DocumentDragSource extends AbstractDragSource {
         result.getStylesheets().add(AbstractDragSource.getStylesheet().toString());
 
         for (FXOMObject draggedObject : draggedObjects) {
-            if (draggedObject.getSceneGraphObject() instanceof Node) {
+            if (draggedObject.getSceneGraphObject().isInstanceOf(Node.class)) {
                 final Node sceneGraphNode = (Node) draggedObject.getSceneGraphObject();
                 final DragSourceShadow shadowNode = new DragSourceShadow();
                 shadowNode.setupForNode(sceneGraphNode);
@@ -246,7 +246,7 @@ public final class DocumentDragSource extends AbstractDragSource {
 
         // Translate the group so that it renders (hitX, hitY) above (layoutX, layoutY).
         final Point2D hitPoint;
-        if (hitObject.getSceneGraphObject() instanceof Node) {
+        if (hitObject.getSceneGraphObject().isInstanceOf(Node.class)) {
             final Node hitNode = (Node) hitObject.getSceneGraphObject();
             hitPoint = hitNode.localToParent(hitX, hitY);
         } else {
