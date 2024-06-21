@@ -106,4 +106,6 @@ public interface HierarchyMask<A extends Accessory> {
      */
     String getNodeId();
 
+    A getAccessoryOf(FXOMObject childFxomObject);
+
 }

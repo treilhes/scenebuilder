@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,40 +37,54 @@ package com.gluonhq.jfxapps.core.clipboard.internal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
+import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDecoder;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
-import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Clipboard;
 
 /**
  *
  */
 @Prototype
-public class ClipboardEncoder {
+public class ClipboardDecoderImpl implements ClipboardDecoder {
 
     private final Optional<List<ClipboardDataFormat>> dataFormats;
+    private final AtomicInteger errorCount = new AtomicInteger();
+    private final AtomicReference<Exception> lastException = new AtomicReference<>();
 
-    public ClipboardEncoder(
+    public ClipboardDecoderImpl(
             Optional<List<ClipboardDataFormat>> dataFormats) {
         this.dataFormats = dataFormats;
     }
 
-    public boolean isEncodable(List<? extends FXOMObject> fxomObjects) {
-        return fxomObjects != null && fxomObjects.isEmpty() == false;
+    @Override
+    public List<FXOMObject> decode(Clipboard clipboard) {
+
+        List<FXOMObject> draggedObjects = dataFormats.orElse(Collections.emptyList()).stream()
+                .filter(cpf -> cpf.hasDecodableContent(clipboard))
+                .map(cpf -> cpf.quietDecode(clipboard, e -> {
+                    errorCount.incrementAndGet();
+                    lastException.set(e);
+                }))
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+
+        return draggedObjects;
     }
 
-    public ClipboardContent makeEncoding(List<? extends FXOMObject> fxomObjects) {
-        assert isEncodable(fxomObjects);
+    @Override
+    public int getErrorCount() {
+        return errorCount.get();
+    }
 
-        final ClipboardContent result = new ClipboardContent();
-
-        dataFormats.orElse(Collections.emptyList()).stream()
-            .filter(d -> d.isEncodable(fxomObjects))
-            .map(d -> d.encode(fxomObjects))
-            .forEach(cc -> result.putAll(cc));
-
-        return result;
+    @Override
+    public Exception getLastException() {
+        return lastException.get();
     }
 }

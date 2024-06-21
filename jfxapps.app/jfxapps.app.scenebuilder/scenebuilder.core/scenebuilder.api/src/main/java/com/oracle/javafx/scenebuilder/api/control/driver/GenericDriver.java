@@ -90,7 +90,7 @@ public class GenericDriver extends AbstractDriver {
 
     public <T> T make(Class<T> cls, FXOMObject fxomObject) {
         assert fxomObject instanceof FXOMInstance;
-        assert fxomObject.getSceneGraphObject() != null;
+        assert !fxomObject.getSceneGraphObject().isEmpty();
         return registry.getImplementationInstance(cls, fxomObject.getSceneGraphObject().getObjectClass());
     }
 
@@ -105,8 +105,8 @@ public class GenericDriver extends AbstractDriver {
         if (logger.isInfoEnabled()) {
             logger.info("driver makeHandles returned {} for object {}",
                     handles == null ? "null" : handles.getClass().getName(),
-                    fxomObject.getSceneGraphObject() == null ? "null"
-                            : fxomObject.getSceneGraphObject().getClass().getName());
+                    fxomObject.getSceneGraphObject().isEmpty() ? "null"
+                            : fxomObject.getSceneGraphObject().getObjectClass().getName());
         }
         return handles;
     }
@@ -121,8 +121,8 @@ public class GenericDriver extends AbstractDriver {
         if (logger.isInfoEnabled()) {
             logger.info("driver makePring returned {} for object {}",
                     pring == null ? "null" : pring.getClass().getName(),
-                    fxomObject.getSceneGraphObject() == null ? "null"
-                            : fxomObject.getSceneGraphObject().getClass().getName());
+                    fxomObject.getSceneGraphObject().isEmpty() ? "null"
+                            : fxomObject.getSceneGraphObject().getObjectClass().getName());
         }
         return pring;
     }
@@ -138,7 +138,7 @@ public class GenericDriver extends AbstractDriver {
         if (parentObject == null || node.getParent() == null) {// root element or detached graph
             relocater = new RootRelocater();
         } else {
-            final Object sceneGraphParent = parentObject.getSceneGraphObject();
+            final Object sceneGraphParent = parentObject.getSceneGraphObject().get();
             relocater = (AbstractRelocater)registry.getImplementationInstance(Relocater.class, sceneGraphParent.getClass());
         }
         if (relocater != null) {
@@ -182,8 +182,8 @@ public class GenericDriver extends AbstractDriver {
         if (logger.isInfoEnabled()) {
             logger.info("driver makeResizer returned {} for object {}",
                     resizer == null ? "null" : resizer.getClass().getName(),
-                    fxomObject.getSceneGraphObject() == null ? "null"
-                            : fxomObject.getSceneGraphObject().getClass().getName());
+                    fxomObject.getSceneGraphObject().isEmpty() ? "null"
+                            : fxomObject.getSceneGraphObject().getObjectClass().getName());
         }
         return resizer;
     }
@@ -198,8 +198,8 @@ public class GenericDriver extends AbstractDriver {
         if (logger.isInfoEnabled()) {
             logger.info("driver makeCurveEditor returned {} for object {}",
                     curveEditor == null ? "null" : curveEditor.getClass().getName(),
-                    fxomObject.getSceneGraphObject() == null ? "null"
-                            : fxomObject.getSceneGraphObject().getClass().getName());
+                    fxomObject.getSceneGraphObject().isEmpty() ? "null"
+                            : fxomObject.getSceneGraphObject().getObjectClass().getName());
         }
         return curveEditor;
     }
@@ -209,17 +209,17 @@ public class GenericDriver extends AbstractDriver {
         AbstractPickRefiner pickRefiner = (AbstractPickRefiner)make(PickRefiner.class, fxomObject);
 
         if (pickRefiner != null) {
-//            pickRefiner.setSceneGraphObject((Node)fxomObject.getSceneGraphObject());
+//            pickRefiner.setSceneGraphObject(fxomObject.getSceneGraphObject().getAs(Node.class));
 //            pickRefiner.initialize();
             FXOMObject refinedPick = pickRefiner.refinePick(hitNode, sceneX, sceneY, fxomObject);
 
             if (logger.isDebugEnabled()) {
                 logger.debug("driver refinePick used {} for object {} returned {} for (x: {}, y: {})",
                         pickRefiner == null ? "null" : pickRefiner.getClass().getName(),
-                        fxomObject.getSceneGraphObject() == null ? "null"
-                                : fxomObject.getSceneGraphObject().getClass().getName(),
-                                refinedPick.getSceneGraphObject() == null ? "null"
-                                : refinedPick.getSceneGraphObject().getClass().getName(),
+                        fxomObject.getSceneGraphObject().isEmpty() ? "null"
+                                : fxomObject.getSceneGraphObject().getObjectClass().getName(),
+                                refinedPick.getSceneGraphObject().isEmpty() ? "null"
+                                : refinedPick.getSceneGraphObject().getObjectClass().getName(),
                                 sceneX, sceneY);
             }
 
@@ -236,8 +236,8 @@ public class GenericDriver extends AbstractDriver {
         if (logger.isInfoEnabled()) {
             logger.info("driver makeDropTarget used {} for object {}",
                     factory == null ? "null" : factory.getClass().getName(),
-                    fxomObject.getSceneGraphObject() == null ? "null"
-                            : fxomObject.getSceneGraphObject().getClass().getName());
+                    fxomObject.getSceneGraphObject().isEmpty() ? "null"
+                            : fxomObject.getSceneGraphObject().getObjectClass().getName());
         }
 
         if (factory != null) {
@@ -253,8 +253,8 @@ public class GenericDriver extends AbstractDriver {
         if (logger.isInfoEnabled()) {
             logger.info("driver getInlineEditorBounds used {} for object {}",
                     inlineEditorBounds == null ? "null" : inlineEditorBounds.getClass().getName(),
-                    fxomObject.getSceneGraphObject() == null ? "null"
-                            : fxomObject.getSceneGraphObject().getClass().getName());
+                    fxomObject.getSceneGraphObject().isEmpty() ? "null"
+                            : fxomObject.getSceneGraphObject().getObjectClass().getName());
         }
 
         if (inlineEditorBounds != null) {
@@ -272,12 +272,12 @@ public class GenericDriver extends AbstractDriver {
         if (logger.isInfoEnabled()) {
             logger.info("driver intersectsBounds used {} for object {}",
                     intersectsBoundsCheck == null ? "null" : intersectsBoundsCheck.getClass().getName(),
-                    fxomObject.getSceneGraphObject() == null ? "null"
-                            : fxomObject.getSceneGraphObject().getClass().getName());
+                    fxomObject.getSceneGraphObject().isEmpty() ? "null"
+                            : fxomObject.getSceneGraphObject().getObjectClass().getName());
         }
 
         if (intersectsBoundsCheck != null) {
-            //intersectsBoundsCheck.setSceneGraphObject((Node)fxomObject.getSceneGraphObject());
+            //intersectsBoundsCheck.setSceneGraphObject(fxomObject.getSceneGraphObject().getAs(Node.class));
             //intersectsBoundsCheck.initialize();
             return intersectsBoundsCheck.intersectsBounds(fxomObject, bounds);
         }
@@ -295,8 +295,8 @@ public class GenericDriver extends AbstractDriver {
         if (logger.isInfoEnabled()) {
             logger.info("driver makeRudder returned {} for object {}",
                     rudder == null ? "null" : rudder.getClass().getName(),
-                    fxomObject.getSceneGraphObject() == null ? "null"
-                            : fxomObject.getSceneGraphObject().getClass().getName());
+                    fxomObject.getSceneGraphObject().isEmpty() ? "null"
+                            : fxomObject.getSceneGraphObject().getObjectClass().getName());
         }
         return rudder;
     }
@@ -312,8 +312,8 @@ public class GenericDriver extends AbstractDriver {
         if (logger.isInfoEnabled()) {
             logger.info("driver makeOutline returned {} for object {}",
                     outline == null ? "null" : outline.getClass().getName(),
-                    fxomObject.getSceneGraphObject() == null ? "null"
-                            : fxomObject.getSceneGraphObject().getClass().getName());
+                    fxomObject.getSceneGraphObject().isEmpty() ? "null"
+                            : fxomObject.getSceneGraphObject().getObjectClass().getName());
         }
         return outline;
     }
@@ -329,8 +329,8 @@ public class GenericDriver extends AbstractDriver {
         if (logger.isInfoEnabled()) {
             logger.info("driver makeResizeGuide returned {} for object {}",
                     resizeGuide == null ? "null" : resizeGuide.getClass().getName(),
-                    fxomObject.getSceneGraphObject() == null ? "null"
-                            : fxomObject.getSceneGraphObject().getClass().getName());
+                    fxomObject.getSceneGraphObject().isEmpty() ? "null"
+                            : fxomObject.getSceneGraphObject().getObjectClass().getName());
         }
         return resizeGuide;
     }
@@ -346,8 +346,8 @@ public class GenericDriver extends AbstractDriver {
         if (logger.isInfoEnabled()) {
             logger.info("driver makeShadow returned {} for object {}",
                     shadow == null ? "null" : shadow.getClass().getName(),
-                    fxomObject.getSceneGraphObject() == null ? "null"
-                            : fxomObject.getSceneGraphObject().getClass().getName());
+                    fxomObject.getSceneGraphObject().isEmpty() ? "null"
+                            : fxomObject.getSceneGraphObject().getObjectClass().getName());
         }
         return shadow;
     }

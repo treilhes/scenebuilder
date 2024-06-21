@@ -38,20 +38,18 @@ import java.util.List;
 import java.util.Set;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDecoder;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.TargetSelection;
-import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.mask.Accessory;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMCollection;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -68,11 +66,12 @@ import javafx.scene.input.Clipboard;
 @Prototype
 public final class PasteIntoJob extends BatchSelectionJob {
 
-    private final SelectionJobsFactory selectionJobsFactory;
     private final FXOMDocument fxomDocument;
-    private final FXOMObjectMask.Factory designMaskFactory;
-    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
     private final TargetSelection<?> targetSelection;
+    private final SelectionJobsFactory selectionJobsFactory;
+    private final FXOMObjectMask.Factory fxomObjectMaskFactory;
+    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
+    private final ClipboardDecoder clipboardDecoder;
 
     private List<FXOMObject> newObjects;
     private FXOMObject targetObject;
@@ -84,15 +83,17 @@ public final class PasteIntoJob extends BatchSelectionJob {
             Selection selection,
             TargetSelection<?> targetSelection,
             SelectionJobsFactory selectionJobsFactory,
-            FXOMObjectMask.Factory designMaskFactory,
-            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+            FXOMObjectMask.Factory fxomObjectMaskFactory,
+            ObjectSelectionGroup.Factory objectSelectionGroupFactory,
+            ClipboardDecoder clipboardDecoder) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);
         this.fxomDocument = documentManager.fxomDocument().get();
         this.selectionJobsFactory = selectionJobsFactory;
-        this.designMaskFactory = designMaskFactory;
+        this.fxomObjectMaskFactory = fxomObjectMaskFactory;
         this.objectSelectionGroupFactory = objectSelectionGroupFactory;
         this.targetSelection = targetSelection;
+        this.clipboardDecoder = clipboardDecoder;
     }
 
     public void setJobParameters() {
@@ -105,8 +106,7 @@ public final class PasteIntoJob extends BatchSelectionJob {
         if (fxomDocument != null) {
 
             // Retrieve the FXOMObjects from the clipboard
-            final ClipboardDecoder clipboardDecoder = new ClipboardDecoder(Clipboard.getSystemClipboard());
-            newObjects = clipboardDecoder.decode(fxomDocument);
+            newObjects = clipboardDecoder.decode(Clipboard.getSystemClipboard());
             assert newObjects != null; // But possible empty
 
             if (newObjects.isEmpty()) {
@@ -152,7 +152,7 @@ public final class PasteIntoJob extends BatchSelectionJob {
 
                 // Single target selection
                 if (selectedItems.size() == 1) {
-                    final HierarchyMask targetMask = designMaskFactory.getMask(targetObject);
+                    final var targetMask = fxomObjectMaskFactory.getMask(targetObject);
 
                     // get user selected target
                     Accessory targetAccessory = targetSelection.getTargetAccessory();

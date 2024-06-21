@@ -147,7 +147,7 @@ public class ControlExplorerUtil {
             logger.debug("Loading custom control file {}", fxmlFile);
             String content = Files.readString(fxmlFile, StandardCharsets.UTF_8);
             FXOMDocument result= new FXOMDocument(content, null, classLoader, null);
-            entryClass = result.getFxomRoot().getSceneGraphObject().getClass();
+            entryClass = result.getFxomRoot().getSceneGraphObject().getObjectClass();
             status = ControlReportEntryImpl.Status.OK;
             entryException = null;
         } catch (RuntimeException | IOException x) {

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,19 +31,49 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.core.extension.Extension;
-import com.oracle.javafx.scenebuilder.fxml.clipboard.FxmlClipboardExtension;
 
-open module scenebuilder.fxml.clipboard {
-    exports com.oracle.javafx.scenebuilder.fxml.clipboard;
-    exports com.oracle.javafx.scenebuilder.fxml.clipboard.internal;
-    exports com.oracle.javafx.scenebuilder.fxml.clipboard.i18n;
+package com.gluonhq.jfxapps.core.clipboard.internal;
 
-    //requires scenebuilder.starter;
-    requires scenebuilder.api;
-    requires scenebuilder.fxml.core.selection;
-    //requires scenebuilder.core.extension.api;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
+import com.gluonhq.jfxapps.core.api.clipboard.ClipboardEncoder;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
-    provides Extension with FxmlClipboardExtension;
+import javafx.scene.input.ClipboardContent;
+
+/**
+ *
+ */
+@Prototype
+public class ClipboardEncoderImpl implements ClipboardEncoder {
+
+    private final Optional<List<ClipboardDataFormat>> dataFormats;
+
+    public ClipboardEncoderImpl(
+            Optional<List<ClipboardDataFormat>> dataFormats) {
+        this.dataFormats = dataFormats;
+    }
+
+    @Override
+    public boolean isEncodable(List<? extends FXOMObject> fxomObjects) {
+        return fxomObjects != null && fxomObjects.isEmpty() == false;
+    }
+
+    @Override
+    public ClipboardContent makeEncoding(List<? extends FXOMObject> fxomObjects) {
+        assert isEncodable(fxomObjects);
+
+        final ClipboardContent result = new ClipboardContent();
+
+        dataFormats.orElse(Collections.emptyList()).stream()
+            .filter(d -> d.isEncodable(fxomObjects))
+            .map(d -> d.encode(fxomObjects))
+            .forEach(cc -> result.putAll(cc));
+
+        return result;
+    }
 }

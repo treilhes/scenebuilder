@@ -136,7 +136,7 @@ class SkeletonContext {
 
         public void addFxId(FXOMObject value) {
             String fxId = value.getFxId();
-            Class<?> type = value.getSceneGraphObject().getClass();
+            Class<?> type = value.getSceneGraphObject().getObjectClass();
 
             addImportsFor(FXML.class, type);
 

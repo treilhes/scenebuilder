@@ -50,12 +50,6 @@
 
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.clipboard</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.drag.and.drop</artifactId>
                 <version>${project.version}</version>
             </dependency>

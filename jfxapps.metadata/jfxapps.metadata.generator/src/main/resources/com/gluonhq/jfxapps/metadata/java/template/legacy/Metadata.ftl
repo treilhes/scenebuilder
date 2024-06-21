@@ -215,7 +215,7 @@ public class Metadata {
             if (fxomInstance.getDeclaredClass() == FXOMIntrinsic.class) {
                 componentClass = fxomInstance.getDeclaredClass();
             } else {
-                componentClass = fxomInstance.getSceneGraphObject().getClass();
+                componentClass = fxomInstance.getSceneGraphObject().getObjectClass();
             }
 
             final PropertyMetadata m = Metadata.getMetadata().queryProperty(componentClass, targetName);

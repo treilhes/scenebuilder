@@ -44,13 +44,13 @@ public interface ClipboardDataFormat {
 
     public boolean hasDecodableContent(javafx.scene.input.Clipboard clipboard);
 
-    public List<? extends FXOMObject> decode(javafx.scene.input.Clipboard clipboard, Consumer<Exception> errorHandler) throws Exception;
+    public List<FXOMObject> decode(javafx.scene.input.Clipboard clipboard, Consumer<Exception> errorHandler) throws Exception;
 
-    default public List<? extends FXOMObject> decode(javafx.scene.input.Clipboard clipboard) throws Exception {
+    default public List<FXOMObject> decode(javafx.scene.input.Clipboard clipboard) throws Exception {
         return decode(clipboard, null);
     }
 
-    default public List<? extends FXOMObject> quietDecode(javafx.scene.input.Clipboard clipboard, Consumer<Exception> errorHandler) {
+    default public List<FXOMObject> quietDecode(javafx.scene.input.Clipboard clipboard, Consumer<Exception> errorHandler) {
         try {
             return decode(clipboard, errorHandler);
         } catch (Exception e) {

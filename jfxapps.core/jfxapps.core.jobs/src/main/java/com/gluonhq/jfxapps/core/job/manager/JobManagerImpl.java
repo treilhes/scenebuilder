@@ -94,9 +94,10 @@ public class JobManagerImpl implements JobManager {
             throw new IllegalStateException("Pushing jobs from another job or a job manager listener is forbidden"); // NOCHECK
         }
 
-        final AbstractJob fixJob = jobPipeline.orElse(JobPipeline.IDENTITY).buildPipeline(job);
-        executeJob(fixJob);
-        undoStack.add(0, fixJob);
+        final Job pipelineJob = jobPipeline.orElse(JobPipeline.IDENTITY).buildPipeline(job);
+        executeJob(pipelineJob);
+
+        undoStack.add(0, pipelineJob);
         if (undoStack.size() > undoStackMaxSize) {
             undoStack.remove(undoStack.size() - 1);
         }

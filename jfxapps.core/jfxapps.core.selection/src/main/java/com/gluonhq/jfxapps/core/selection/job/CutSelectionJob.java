@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.clipboard.ClipboardEncoder;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
@@ -58,7 +59,7 @@ import javafx.scene.input.Clipboard;
 public final class CutSelectionJob extends InlineSelectionJob {
 
     private final SelectionJobsFactory selectionJobsFactory;
-
+    private final ClipboardEncoder clipboardEncoder;
     private Job deleteSelectionSubJob;
 
     // @formatter:off
@@ -66,10 +67,12 @@ public final class CutSelectionJob extends InlineSelectionJob {
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             Selection selection,
-            SelectionJobsFactory selectionJobsFactory) {
+            SelectionJobsFactory selectionJobsFactory,
+            ClipboardEncoder clipboardEncoder) {
      // @formatter:on
         super(extensionFactory, documentManager, selection);
         this.selectionJobsFactory = selectionJobsFactory;
+        this.clipboardEncoder = clipboardEncoder;
     }
 
     public void setJobParameters() {
@@ -94,9 +97,9 @@ public final class CutSelectionJob extends InlineSelectionJob {
             // Update clipboard with current selection BEFORE EXECUTING DELETE job
             final ObjectSelectionGroup osg = (ObjectSelectionGroup) getSelection().getGroup();
 
-            final ClipboardEncoder encoder = new ClipboardEncoder(osg.getSortedItems());
-            assert encoder.isEncodable();
-            Clipboard.getSystemClipboard().setContent(encoder.makeEncoding());
+            assert clipboardEncoder.isEncodable(osg.getSortedItems());
+
+            Clipboard.getSystemClipboard().setContent(clipboardEncoder.makeEncoding(osg.getSortedItems()));
 
             deleteSelectionSubJob = selectionJobsFactory.deleteSelection();
             if (deleteSelectionSubJob.isExecutable()) {

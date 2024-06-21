@@ -339,7 +339,7 @@ public class EditorUtils {
     }
 
     private static Node getFxNode(FXOMObject selectedInstance) {
-        Object selectedObj = selectedInstance.getSceneGraphObject();
+        Object selectedObj = selectedInstance.getSceneGraphObject().get();
         assert selectedObj instanceof Node;
         return (Node) selectedObj;
     }

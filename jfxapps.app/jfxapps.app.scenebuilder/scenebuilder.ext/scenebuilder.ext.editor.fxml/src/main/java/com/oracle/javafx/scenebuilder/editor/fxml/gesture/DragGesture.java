@@ -262,7 +262,7 @@ public class DragGesture extends AbstractGesture {
     private void dragOverHitObject(FXOMObject hitObject) {
         assert hitObject != null;
 
-        logger.debug("dragOverHitObject {}", hitObject == null ? "null" : hitObject.getSceneGraphObject().getClass().getName());
+        logger.debug("dragOverHitObject {}", hitObject == null ? "null" : hitObject.getSceneGraphObject().getObjectClass().getName());
 
         final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
         final DragSource dragSource = dragController.getDragSource();

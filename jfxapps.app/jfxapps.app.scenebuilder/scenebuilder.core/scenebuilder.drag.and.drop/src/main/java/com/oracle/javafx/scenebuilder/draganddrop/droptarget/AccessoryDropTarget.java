@@ -165,7 +165,7 @@ public final class AccessoryDropTarget extends AbstractDropTarget {
                                 Class<?> cls = ((FXOMElement)o).getDeclaredClass();
                                 return cls == null ? "null" : cls.getSimpleName();
                             } else {
-                                return o.getSceneGraphObject() == null ? "null" : o.getSceneGraphObject().getClass().getSimpleName();
+                                return o.getSceneGraphObject().isEmpty() ? "null" : o.getSceneGraphObject().getObjectClass().getSimpleName();
                             }
 
                         }).collect(Collectors.toList()));
@@ -220,7 +220,7 @@ public final class AccessoryDropTarget extends AbstractDropTarget {
 
                 // TODO why specifying a default alignment
                 // FIXME specific case to borderpane :(
-                if ((targetContainer.getSceneGraphObject() instanceof BorderPane)
+                if ((targetContainer.getSceneGraphObject().isInstanceOf(BorderPane.class))
                         && (draggedObject instanceof FXOMInstance)) {
 
                     // We add a job which sets BorderPane.alignment=CENTER on draggedObject

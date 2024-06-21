@@ -107,8 +107,8 @@ public abstract class AbstractHierarchyMask<
         assert fxomObject != null;
         this.fxomObject = fxomObject;
 
-        if (fxomObject.getSceneGraphObject() != null) {
-            logger.info("FxomObject [{}] has a scenegraph object of type {}", getFxomObject(), fxomObject.getSceneGraphObject().getClass());
+        if (!fxomObject.getSceneGraphObject().isEmpty()) {
+            logger.info("FxomObject [{}] has a scenegraph object of type {}", getFxomObject(), fxomObject.getSceneGraphObject().getObjectClass());
             this.componentClassMetadata = (CCM)metadata.queryComponentMetadata(getFxomObject().getMetadataClass());
         } else {
             logger.info("FxomObject [{}] has no scenegraph object", getFxomObject());
@@ -551,6 +551,19 @@ public abstract class AbstractHierarchyMask<
     @Override
     public A getMainAccessory() {
         return mainAccessory;
+    }
+
+    @Override
+    public A getAccessoryOf(FXOMObject childFxomObject) {
+        final var parentObject = childFxomObject.getParentObject();
+
+        if (parentObject != fxomObject) {
+            return null;
+        }
+
+        final var parentProperty = childFxomObject.getParentProperty();
+
+        return getAccessory(parentProperty.getName());
     }
 
 }

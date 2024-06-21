@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.fxml.clipboard.internal;
+package com.gluonhq.jfxapps.core.clipboard.internal.format;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,34 +39,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
-import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
-import com.gluonhq.jfxapps.core.api.om.OMObject;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.selection.ObjectSelectionGroup;
 
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class FileDataFormat implements ClipboardDataFormat {
 
     // FXML Format
     static final DataFormat FILE_DATA_FORMAT = DataFormat.FILES;
 
-    private final FxmlDocumentManager documentManager;
+    private final DocumentManager documentManager;
 
-    public FileDataFormat(
-            FxmlDocumentManager documentManager) {
+    public FileDataFormat(DocumentManager documentManager) {
         super();
         this.documentManager = documentManager;
     }
@@ -82,7 +74,7 @@ public class FileDataFormat implements ClipboardDataFormat {
     }
 
     @Override
-    public List<? extends OMObject> decode(Clipboard clipboard, Consumer<Exception> errorHandler) throws Exception {
+    public List<FXOMObject> decode(Clipboard clipboard, Consumer<Exception> errorHandler) throws Exception {
 
         FXOMDocument targetDocument = documentManager.fxomDocument().get();
         assert targetDocument != null;
@@ -116,12 +108,12 @@ public class FileDataFormat implements ClipboardDataFormat {
 
 
     @Override
-    public boolean isEncodable(List<? extends OMObject> omObjects) {
+    public boolean isEncodable(List<? extends FXOMObject> omObjects) {
         return false;
     }
 
     @Override
-    public ClipboardContent encode(List<? extends OMObject> omObjects) {
+    public ClipboardContent encode(List<? extends FXOMObject> omObjects) {
         throw new RuntimeException("Not implemented!");
     }
 

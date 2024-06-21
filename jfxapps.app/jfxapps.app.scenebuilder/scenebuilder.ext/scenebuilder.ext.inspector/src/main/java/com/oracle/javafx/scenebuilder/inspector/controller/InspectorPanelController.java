@@ -1052,7 +1052,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     private boolean checkIfStaticPropertyRelevantForIntrinsic(PropertyName propName) {
         FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) selectionState.getSelection().getHitItem();
         return fxomIntrinsic.getParentObject() != null && fxomIntrinsic.getParentProperty().getParentInstance()
-                .getSceneGraphObject().getClass() == propName.getResidenceClass();
+                .getSceneGraphObject().getObjectClass() == propName.getResidenceClass();
     }
 
     private boolean hasSearchPattern() {

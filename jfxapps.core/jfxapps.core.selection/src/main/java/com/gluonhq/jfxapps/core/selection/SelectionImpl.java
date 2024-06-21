@@ -604,7 +604,7 @@ public class SelectionImpl implements Selection {
     public boolean isSelectionOfType(Class<?> type) {
         if (group != null) {
             for (FXOMObject fxomObject : group.getItems()) {
-                final boolean isClass = type.isAssignableFrom(fxomObject.getSceneGraphObject().getClass());
+                final boolean isClass = type.isAssignableFrom(fxomObject.getSceneGraphObject().getObjectClass());
                 if (isClass == false) {
                     return false;
                 }

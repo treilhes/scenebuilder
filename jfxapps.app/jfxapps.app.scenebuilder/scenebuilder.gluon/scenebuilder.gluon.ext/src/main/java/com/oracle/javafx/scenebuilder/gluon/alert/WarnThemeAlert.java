@@ -93,7 +93,7 @@ public class WarnThemeAlert extends SBAlert {
     }
 
     public static boolean isGluon(FXOMObject fxomObject) {
-        return fxomObject != null && fxomObject.getSceneGraphObject() != null 
-                && fxomObject.getSceneGraphObject().getClass().getName().startsWith(GluonConstants.GLUON_PACKAGE);
+        return fxomObject != null && !fxomObject.getSceneGraphObject().isEmpty() 
+                && fxomObject.getSceneGraphObject().getObjectClass().getName().startsWith(GluonConstants.GLUON_PACKAGE);
     }
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,56 +31,28 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.oracle.javafx.scenebuilder.job;
 
-package com.gluonhq.jfxapps.core.clipboard.internal;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.job.Job;
+import com.gluonhq.jfxapps.core.api.job.JobPipeline;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
+@ApplicationInstanceSingleton
+public class SbJobPipeline implements JobPipeline {
 
-import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+    private final UpdateReferencesJob.Factory updateReferencesJobFactory;
 
-import javafx.scene.input.Clipboard;
 
-/**
- *
- */
-@Prototype
-public class ClipboardDecoder {
-
-    private final Optional<List<ClipboardDataFormat>> dataFormats;
-    private final AtomicInteger errorCount = new AtomicInteger();
-    private final AtomicReference<Exception> lastException = new AtomicReference<>();
-
-    public ClipboardDecoder(
-            Optional<List<ClipboardDataFormat>> dataFormats) {
-        this.dataFormats = dataFormats;
+    public SbJobPipeline(UpdateReferencesJob.Factory updateReferencesJobFactory) {
+        super();
+        this.updateReferencesJobFactory = updateReferencesJobFactory;
     }
 
-    public List<? extends FXOMObject> decode(Clipboard clipboard) {
 
-        List<? extends FXOMObject> draggedObjects = dataFormats.orElse(Collections.emptyList()).stream()
-                .filter(cpf -> cpf.hasDecodableContent(clipboard))
-                .map(cpf -> cpf.quietDecode(clipboard, e -> {
-                    errorCount.incrementAndGet();
-                    lastException.set(e);
-                }))
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-
-        return draggedObjects;
+    @Override
+    public Job buildPipeline(Job executableJob) {
+        final Job fixJob = updateReferencesJobFactory.getJob(executableJob);
+        return fixJob;
     }
 
-    public int getErrorCount() {
-        return errorCount.get();
-    }
-
-    public Exception getLastException() {
-        return lastException.get();
-    }
 }

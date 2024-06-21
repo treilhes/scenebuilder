@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDecoder;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
@@ -63,17 +64,17 @@ import javafx.scene.input.Clipboard;
 @Prototype
 public class PasteIntoJob extends BatchSelectionJob {
 
-    private final SelectionJobsFactory selectionJobsFactory;
-    private final SbJobsFactory sbJobsFactory;
     private final FXOMDocument fxomDocument;
-    private final SbFXOMObjectMask.Factory designMaskFactory;
-    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
-    private final JobManager jobManager;
     private final SbTargetSelection sbTargetSelection;
+    private final SelectionJobsFactory selectionJobsFactory;
+    private final SbFXOMObjectMask.Factory fxomObjectMaskFactory;
+    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
+    private final ClipboardDecoder clipboardDecoder;
+    private final JobManager jobManager;
+    private final SbJobsFactory sbJobsFactory;
 
     private List<FXOMObject> newObjects;
     private FXOMObject targetObject;
-
 
  // @formatter:off
     protected PasteIntoJob(
@@ -81,11 +82,12 @@ public class PasteIntoJob extends BatchSelectionJob {
             DocumentManager documentManager,
             Selection selection,
             SbTargetSelection sbTargetSelection,
-            JobManager jobManager,
             SelectionJobsFactory selectionJobsFactory,
-            SbJobsFactory sbJobsFactory,
-            SbFXOMObjectMask.Factory designMaskFactory,
-            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+            SbFXOMObjectMask.Factory fxomObjectMaskFactory,
+            ObjectSelectionGroup.Factory objectSelectionGroupFactory,
+            ClipboardDecoder clipboardDecoder,
+            JobManager jobManager,
+            SbJobsFactory sbJobsFactory) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);
         this.fxomDocument = documentManager.fxomDocument().get();
@@ -93,8 +95,9 @@ public class PasteIntoJob extends BatchSelectionJob {
         this.sbTargetSelection = sbTargetSelection;
         this.selectionJobsFactory = selectionJobsFactory;
         this.sbJobsFactory = sbJobsFactory;
-        this.designMaskFactory = designMaskFactory;
+        this.fxomObjectMaskFactory = fxomObjectMaskFactory;
         this.objectSelectionGroupFactory = objectSelectionGroupFactory;
+        this.clipboardDecoder = clipboardDecoder;
     }
 
     public void setJobParameters() {
@@ -107,8 +110,7 @@ public class PasteIntoJob extends BatchSelectionJob {
         if (fxomDocument != null) {
 
             // Retrieve the FXOMObjects from the clipboard
-            final ClipboardDecoder clipboardDecoder = new ClipboardDecoder(Clipboard.getSystemClipboard());
-            newObjects = clipboardDecoder.decode(fxomDocument);
+            newObjects = clipboardDecoder.decode(Clipboard.getSystemClipboard());
             assert newObjects != null; // But possible empty
 
             if (newObjects.isEmpty()) {
@@ -154,7 +156,7 @@ public class PasteIntoJob extends BatchSelectionJob {
 
                 // Single target selection
                 if (selectedItems.size() == 1) {
-                    final var targetMask = designMaskFactory.getMask(targetObject);
+                    final var targetMask = fxomObjectMaskFactory.getMask(targetObject);
 
                     // get user selected target
                     SbAccessory targetAccessory = sbTargetSelection.getTargetAccessory();

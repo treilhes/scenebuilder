@@ -276,7 +276,7 @@ public final class DocumentDragSource extends AbstractDragSource {
             int unresolvedCount = 0;
             for (FXOMObject o : draggedObjects) {
                 if (o.getSceneGraphObject() != null) {
-                    classes.add(o.getSceneGraphObject().getClass());
+                    classes.add(o.getSceneGraphObject().getObjectClass());
                 } else {
                     unresolvedCount++;
                 }

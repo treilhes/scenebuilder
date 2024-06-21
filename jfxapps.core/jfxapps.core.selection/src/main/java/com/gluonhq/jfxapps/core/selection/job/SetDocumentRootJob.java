@@ -116,13 +116,6 @@ public final class SetDocumentRootJob extends BatchSelectionJob {
             // Adds job that effectively modifes the root
             result.add(fxomJobsFactory.setFxomRoot(newRoot));
 
-            // If need, we add a job for resizing the root object
-            if ((newRoot != null) && usePredefinedSize) {
-                final HierarchyMask mask = designMaskFactory.getMask(newRoot);
-                if (mask.needResizeWhenTopElement()) {
-                    result.add(usePredefinedSizeJobFactory.getJob(Size.SIZE_DEFAULT, newRoot));
-                }
-            }
         }
         return result;
     }

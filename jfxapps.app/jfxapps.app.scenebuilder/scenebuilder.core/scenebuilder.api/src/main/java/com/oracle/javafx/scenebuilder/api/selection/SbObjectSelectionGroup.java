@@ -126,7 +126,7 @@ public class SbObjectSelectionGroup extends ObjectSelectionGroup implements SbSe
         assert fxomObject != null;
         this.items.add(fxomObject);
         this.hitItem = fxomObject;
-        this.hitSceneGraphObject = fxomObject.getSceneGraphObject();
+        this.hitSceneGraphObject = fxomObject.getSceneGraphObject().get();
         this.hitNode = hitNode;
     }
 
@@ -144,7 +144,7 @@ public class SbObjectSelectionGroup extends ObjectSelectionGroup implements SbSe
         assert fxomObjects.contains(hitItem);
         this.items.addAll(fxomObjects);
         this.hitItem = hitItem;
-        this.hitSceneGraphObject = this.hitItem.getSceneGraphObject();
+        this.hitSceneGraphObject = this.hitItem.getSceneGraphObject().get();
         this.hitNode = hitNode;
     }
 
@@ -218,7 +218,7 @@ public class SbObjectSelectionGroup extends ObjectSelectionGroup implements SbSe
         } else {
             final FXOMObject closestNodeObject = hitItem.getClosestNode();
             if (closestNodeObject != null) {
-                result = closestNodeObject.getSceneGraphObject().getAs(Node.class);;
+                result = closestNodeObject.getSceneGraphObject().getAs(Node.class);
             } else {
                 result = null;
             }

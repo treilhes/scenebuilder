@@ -179,7 +179,7 @@ public final class RelocateSelectionJob extends BatchDocumentJob {
             int unresolvedCount = 0;
             for (FXOMObject o : movedObjects) {
                 if (o.getSceneGraphObject() != null) {
-                    classes.add(o.getSceneGraphObject().getClass());
+                    classes.add(o.getSceneGraphObject().getObjectClass());
                 } else {
                     unresolvedCount++;
                 }

@@ -143,8 +143,8 @@ public class FxIdDisplayOption extends AbstractDisplayOption {
             if (controllerClass != null && fxId != null) {
                 //final URL location = editorController.getFxmlLocation();
                 final URL location = fxomDocument.getLocation();
-                final Class<?> clazz = fxomObject.getSceneGraphObject() == null ? null
-                        : fxomObject.getSceneGraphObject().getClass();
+                final Class<?> clazz = fxomObject.getSceneGraphObject().isEmpty() ? null
+                        : fxomObject.getSceneGraphObject().getObjectClass();
 
                 final List<String> fxIds1 = glossary.queryFxIds(location, controllerClass, clazz);
                 if (fxIds1.contains(fxId) == false) {

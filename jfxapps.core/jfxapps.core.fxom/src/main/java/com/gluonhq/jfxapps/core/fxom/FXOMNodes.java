@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -626,8 +626,8 @@ public class FXOMNodes {
                         if (propertyName.getResidenceClass() == null) {
                             //TODO test me
                             FXOMElement parent = intrinsic.getParentProperty().getParentInstance();
-                            if (parent.getSceneGraphObject() != null) {
-                                Class<?> parentClass = parent.getSceneGraphObject().getClass();
+                            if (!parent.getSceneGraphObject().isEmpty()) {
+                                Class<?> parentClass = parent.getSceneGraphObject().getObjectClass();
                                 result = getWeakProperties().stream().anyMatch(wp -> {
                                     return wp.getPropertyName().equals(propertyName.getName())
                                             && wp.getPropertyOwnerType().isAssignableFrom(parentClass);
@@ -657,7 +657,7 @@ public class FXOMNodes {
                     //TODO test me
                     FXOMElement parent = property.getParentInstance();
                     if (parent.getSceneGraphObject() != null) {
-                        Class<?> parentClass = parent.getSceneGraphObject().getClass();
+                        Class<?> parentClass = parent.getSceneGraphObject().getObjectClass();
                         result = getWeakProperties().stream().anyMatch(wp -> {
                             return wp.getPropertyName().equals(propertyName.getName())
                                     && wp.getPropertyOwnerType().isAssignableFrom(parentClass);

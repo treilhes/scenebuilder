@@ -47,8 +47,8 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
+import com.gluonhq.jfxapps.core.api.mask.Accessory;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMCollection;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -65,7 +65,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 public final class DuplicateSelectionJob extends BatchSelectionJob {
 
     private final SelectionJobsFactory selectionJobsFactory;
-    private final FXOMObjectMask.Factory designMaskFactory;
+    private final FXOMObjectMask.Factory fxomObjectMaskFactory;
     private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
 
     private final Map<FXOMObject, FXOMObject> newFxomObjects = new LinkedHashMap<>();
@@ -77,14 +77,14 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
             DocumentManager documentManager,
             Selection selection,
             SelectionJobsFactory selectionJobsFactory,
-            FXOMObjectMask.Factory designMaskFactory,
+            FXOMObjectMask.Factory fxomObjectMaskFactory,
             ObjectSelectionGroup.Factory objectSelectionGroupFactory
             ) {
      // @formatter:on
         super(extensionFactory, documentManager, selection);
         this.fxomDocument = documentManager.fxomDocument().get();
         this.selectionJobsFactory = selectionJobsFactory;
-        this.designMaskFactory = designMaskFactory;
+        this.fxomObjectMaskFactory = fxomObjectMaskFactory;
         this.objectSelectionGroupFactory = objectSelectionGroupFactory;
     }
 
@@ -105,7 +105,14 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
             assert targetObject != null; // Because of (1)
             final FXOMDocument targetDocument = fxomDocument;
 
+            // Build jobs
+            final var targetMask = fxomObjectMaskFactory.getMask(targetObject);
+            Accessory<?> targetAccessory = null;
+
             for (FXOMObject selectedObject : osg.getSortedItems()) {
+                if (targetAccessory == null) {
+                    targetAccessory = targetMask.getAccessoryOf(selectedObject);
+                }
                 final FXOMDocument newDocument = FXOMNodes.newDocument(selectedObject);
                 final FXOMObject newObject = newDocument.getFxomRoot();
                 newObject.moveToFxomDocument(targetDocument);
@@ -114,18 +121,18 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
             }
             assert newFxomObjects.isEmpty() == false; // Because of (1)
 
-            // Build InsertAsSubComponent jobs
-            final HierarchyMask targetMask = designMaskFactory.getMask(targetObject);
 
-            if (targetMask.isAcceptingSubComponent(newFxomObjects.keySet())) {
+
+            if (targetMask.isAcceptingAccessory(targetAccessory, newFxomObjects.keySet())) {
                 int index = 0;
                 for (Map.Entry<FXOMObject, FXOMObject> entry : newFxomObjects.entrySet()) {
                     final FXOMObject selectedFxomObject = entry.getKey();
                     final FXOMObject newFxomObject = entry.getValue();
-                    final Job insertSubJob = selectionJobsFactory.insertAsSubComponent(
+                    final Job insertSubJob = selectionJobsFactory.insertAsAccessory(
                             newFxomObject,
                             targetObject,
-                            targetMask.getSubComponentCount(true) + index++);
+                            targetAccessory,
+                            targetMask.getSubComponentCount(targetAccessory,true) + index++);
 
                     result.add(insertSubJob);
                 }
@@ -175,11 +182,22 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
         }
         final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
         for (FXOMObject fxomObject : osg.getItems()) {
-            if (fxomObject.getSceneGraphObject() == null) { // Unresolved custom type
+            if (fxomObject.getSceneGraphObject().isEmpty()) { // Unresolved custom type
                 return false;
             }
         }
-        return osg.hasSingleParent() == true;
+        if (!osg.hasSingleParent()) {
+            return false;
+        }
+
+        // parent property must be a collection
+        final var firstFxomObject = osg.getItems().iterator().next();
+        final var mask = fxomObjectMaskFactory.getMask(firstFxomObject.getParentObject());
+        final var propertyMetadata = mask.getAccessoryOf(firstFxomObject);
+        if (!propertyMetadata.isCollection()) {
+            return false;
+        }
+        return true;
     }
 
     private String makeSingleSelectionDescription() {

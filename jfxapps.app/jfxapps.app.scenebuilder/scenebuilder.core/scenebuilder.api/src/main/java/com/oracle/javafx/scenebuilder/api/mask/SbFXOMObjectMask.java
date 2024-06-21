@@ -92,7 +92,7 @@ public class SbFXOMObjectMask
 //        else if (fxomObject instanceof FXOMIntrinsic) {
 //            sceneGraphObject = ((FXOMIntrinsic) fxomObject).getSourceSceneGraphObject();
         } else {
-            sceneGraphObject = fxomObject.getSceneGraphObject();
+            sceneGraphObject = fxomObject.getSceneGraphObject().get();
         }
 
         if (sceneGraphObject == null) {

@@ -66,7 +66,7 @@ public final class NodeDropTargetProvider extends AbstractDropTargetProvider {
     @Override
     public DropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
         assert fxomObject instanceof FXOMInstance;
-        assert fxomObject.getSceneGraphObject() != null; // Because mouse cannot be above a unresolved component
+        assert !fxomObject.getSceneGraphObject().isEmpty(); // Because mouse cannot be above a unresolved component
 
         final DropTarget result;
 

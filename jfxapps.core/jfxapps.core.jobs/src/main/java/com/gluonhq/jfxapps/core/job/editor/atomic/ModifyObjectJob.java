@@ -84,7 +84,7 @@ public final class ModifyObjectJob extends AbstractJob {
         this.oldValue = propertyMetadata.getValueObject(fxomElement);
 
         setDescription(I18N.getString("label.action.edit.set.1", propertyMetadata.getName().toString(),
-                        fxomElement.getSceneGraphObject().getClass().getSimpleName()));
+                        fxomElement.getSceneGraphObject().getObjectClass().getSimpleName()));
 
     }
     /*

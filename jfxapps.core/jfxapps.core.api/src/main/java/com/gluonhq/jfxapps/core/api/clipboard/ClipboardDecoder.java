@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,33 +31,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.fxml.clipboard;
+package com.gluonhq.jfxapps.core.api.clipboard;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
-import com.gluonhq.jfxapps.core.extension.AbstractExtension;
-import com.oracle.javafx.scenebuilder.fxml.clipboard.i18n.I18NFxmlClipboard;
-import com.oracle.javafx.scenebuilder.fxml.clipboard.internal.FileDataFormat;
-import com.oracle.javafx.scenebuilder.fxml.clipboard.internal.FxmlDataFormat;
-import com.oracle.javafx.scenebuilder.fxml.clipboard.internal.ScenebuilderDataFormat;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
-public class FxmlClipboardExtension extends AbstractExtension {
-    @Override
-    public UUID getId() {
-        return UUID.fromString("b6335a6e-ffeb-4d14-bab0-9565476bd22b");
-    }
+import javafx.scene.input.Clipboard;
 
-    @Override
-    public List<Class<?>> explicitClassToRegister() {
-     // @formatter:off
-        return Arrays.asList(
-                FileDataFormat.class,
-                FxmlDataFormat.class,
-                ScenebuilderDataFormat.class,
-                I18NFxmlClipboard.class
-            );
-     // @formatter:on
-    }
+public interface ClipboardDecoder {
+
+    List<FXOMObject> decode(Clipboard clipboard);
+
+    int getErrorCount();
+
+    Exception getLastException();
+
 }

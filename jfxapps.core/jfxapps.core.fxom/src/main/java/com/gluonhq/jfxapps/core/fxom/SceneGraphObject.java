@@ -60,8 +60,8 @@ public class SceneGraphObject {
         return object;
     }
 
-    public Object get() {
-        return object.orElse(null);
+    public <T> T get() {
+        return (T)object.orElse(null);
     }
 
     public Class<?> getObjectClass() {

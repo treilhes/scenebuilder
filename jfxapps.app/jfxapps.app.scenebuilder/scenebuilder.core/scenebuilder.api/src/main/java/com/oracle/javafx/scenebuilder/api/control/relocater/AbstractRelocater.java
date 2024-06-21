@@ -58,7 +58,7 @@ public abstract class AbstractRelocater<T extends Node> implements Relocater<T> 
     }
 
     public void setFxomObject(FXOMObject fxomObject) {
-        assert fxomObject.getSceneGraphObject() != null;
+        assert !fxomObject.getSceneGraphObject().isEmpty();
         assert fxomObject.getSceneGraphObject().isNode();
         assert fxomObject.getSceneGraphObject().hasParent() || fxomObject.isDetachedGraph();
 
@@ -66,7 +66,7 @@ public abstract class AbstractRelocater<T extends Node> implements Relocater<T> 
         this.sceneGraphObject = fxomObject.getSceneGraphObject().getAs(Node.class);
 
         assert fxomObject.getParentObject() == null ||
-                parentClass.isAssignableFrom(fxomObject.getParentObject().getSceneGraphObject().getClass());
+                parentClass.isAssignableFrom(fxomObject.getParentObject().getSceneGraphObject().getObjectClass());
     }
 
     @Override
