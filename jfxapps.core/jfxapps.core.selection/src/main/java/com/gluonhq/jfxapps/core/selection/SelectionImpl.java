@@ -47,6 +47,7 @@ import com.gluonhq.jfxapps.core.api.editor.selection.TargetSelection;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 
 import jakarta.annotation.Nullable;
 import javafx.beans.property.ReadOnlyIntegerProperty;
@@ -638,7 +639,7 @@ public class SelectionImpl implements Selection {
 
     @Override
     public Map<String, FXOMObject> collectSelectedFxIds() {
-        return group == null ? Collections.emptyMap() : group.collectSelectedFxIds();
+        return group == null ? Collections.emptyMap() : group.collect(FxCollector.fxIdsMap());
     }
 
 }

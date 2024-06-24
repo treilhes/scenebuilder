@@ -63,7 +63,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPath;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 
 import javafx.scene.Node;
@@ -590,20 +590,6 @@ public class SbObjectSelectionGroup extends ObjectSelectionGroup implements SbSe
     @Override
     public Set<Object> getInnerItems() {
         return Collections.emptySet();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Deprecated
-    public Map<String, FXOMObject> collectSelectedFxIds() {
-        // Collects fx:ids in selected objects and their descendants.
-        final Map<String, FXOMObject> fxIdMap = new HashMap<>();
-        for (FXOMObject selectedObject : getItems()) {
-            fxIdMap.putAll(selectedObject.collect(FxIdCollector.fxIdsMap()));
-        }
-        return fxIdMap;
     }
 
     /**

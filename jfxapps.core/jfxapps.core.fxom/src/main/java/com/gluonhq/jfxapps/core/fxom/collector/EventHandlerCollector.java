@@ -36,7 +36,6 @@ package com.gluonhq.jfxapps.core.fxom.collector;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;

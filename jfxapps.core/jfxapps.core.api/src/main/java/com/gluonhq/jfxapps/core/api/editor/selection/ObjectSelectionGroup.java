@@ -36,10 +36,8 @@ package com.gluonhq.jfxapps.core.api.editor.selection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -59,7 +57,6 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPath;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
-import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 
 import javafx.scene.Node;
 
@@ -576,20 +573,6 @@ public class ObjectSelectionGroup implements SelectionGroup {
     @Override
     public Set<Object> getInnerItems() {
         return Collections.emptySet();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Deprecated
-    public Map<String, FXOMObject> collectSelectedFxIds() {
-        // Collects fx:ids in selected objects and their descendants.
-        final Map<String, FXOMObject> fxIdMap = new HashMap<>();
-        for (FXOMObject selectedObject : getItems()) {
-            fxIdMap.putAll(selectedObject.collect(FxCollector.fxIdsMap()));
-        }
-        return fxIdMap;
     }
 
     /**

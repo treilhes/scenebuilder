@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,21 +39,15 @@ import java.util.List;
 
 import org.scenebuilder.fxml.api.Content;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
-import com.gluonhq.jfxapps.core.api.job.base.CompositeJob;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.DebugMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.DefaultMenu;
-import com.gluonhq.jfxapps.core.job.editor.reference.UpdateReferencesJob;
 import com.gluonhq.jfxapps.util.MathUtils;
 
 import javafx.geometry.Point2D;
@@ -66,9 +60,7 @@ import javafx.scene.control.SeparatorMenuItem;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 public class DebugMenuController implements DebugMenu {
 
     private final Menu menu = new Menu("Debug"); //NOCHECK
@@ -200,8 +192,8 @@ public class DebugMenuController implements DebugMenu {
 
     private void undoRedoStackMenuShowing(Menu menu) {
 
-        final List<AbstractJob> redoStack = jobManager.getRedoStack();
-        final List<AbstractJob> undoStack = jobManager.getUndoStack();
+        final List<Job> redoStack = jobManager.getRedoStack();
+        final List<Job> undoStack = jobManager.getUndoStack();
 
         final List<MenuItem> menuItems = menu.getItems();
 
@@ -209,7 +201,7 @@ public class DebugMenuController implements DebugMenu {
         if (redoStack.isEmpty()) {
             menuItems.add(makeMenuItem("Redo Stack Empty", true)); //NOCHECK
         } else {
-            for (AbstractJob job : redoStack) {
+            for (Job job : redoStack) {
                 menuItems.add(0, makeJobMenuItem(job));
             }
         }
@@ -219,7 +211,7 @@ public class DebugMenuController implements DebugMenu {
         if (undoStack.isEmpty()) {
             menuItems.add(makeMenuItem("Undo Stack Empty", true)); //NOCHECK
         } else {
-            for (AbstractJob job : undoStack) {
+            for (Job job : undoStack) {
                 menuItems.add(makeJobMenuItem(job));
             }
         }
@@ -234,23 +226,13 @@ public class DebugMenuController implements DebugMenu {
     }
 
 
-    private MenuItem makeJobMenuItem(AbstractJob job) {
+    private MenuItem makeJobMenuItem(Job job) {
         final MenuItem result;
 
-        if (job instanceof CompositeJob) {
-            final CompositeJob compositeJob = (CompositeJob)job;
-            final Menu newMenu = new Menu(compositeJob.getClass().getSimpleName());
-            addJobMenuItems(compositeJob.getSubJobs(), newMenu);
-            result = newMenu;
-        } else if (job instanceof BatchJob) {
-            final BatchJob batchJob = (BatchJob)job;
-            final Menu newMenu = new Menu(batchJob.getClass().getSimpleName());
-            addJobMenuItems(batchJob.getSubJobs(), newMenu);
-            result = newMenu;
-        } else if (job instanceof UpdateReferencesJob) {
-            final UpdateReferencesJob fixReferencesJob = (UpdateReferencesJob)job;
-            final Menu newMenu = new Menu(fixReferencesJob.getClass().getSimpleName());
-            addJobMenuItems(fixReferencesJob, newMenu);
+        final var subJobs = job.getSubJobs();
+        if (!subJobs.isEmpty()) {
+            final Menu newMenu = new Menu(job.getClass().getSimpleName());
+            addJobMenuItems(subJobs, newMenu);
             result = newMenu;
         } else {
             result = new MenuItem(job.getClass().getSimpleName());
@@ -259,23 +241,13 @@ public class DebugMenuController implements DebugMenu {
         return result;
     }
 
-    private void addJobMenuItems(List<AbstractJob> jobs, Menu targetMenu) {
-        for (AbstractJob job : jobs) {
+    private void addJobMenuItems(List<Job> jobs, Menu targetMenu) {
+        for (Job job : jobs) {
             targetMenu.getItems().add(makeJobMenuItem(job));
         }
 
         if (targetMenu.getItems().isEmpty()) {
             targetMenu.getItems().add(makeMenuItem("Empty", true)); //NOCHECK
-        }
-    }
-
-
-    private void addJobMenuItems(UpdateReferencesJob j, Menu targetMenu) {
-        targetMenu.getItems().add(makeJobMenuItem(j.getSubJob()));
-        final List<AbstractJob> fixJobs = j.getFixJobs();
-        if (fixJobs.isEmpty() == false) {
-            targetMenu.getItems().add(new SeparatorMenuItem());
-            addJobMenuItems(fixJobs, targetMenu);
         }
     }
 

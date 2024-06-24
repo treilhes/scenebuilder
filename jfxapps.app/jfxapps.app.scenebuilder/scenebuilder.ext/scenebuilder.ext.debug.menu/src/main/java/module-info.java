@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.core.extension.Extension;
+import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.debugmenu.DebugMenuExtension;
 
 open module scenebuilder.ext.debug.menu {
@@ -41,18 +41,8 @@ open module scenebuilder.ext.debug.menu {
     exports com.oracle.javafx.scenebuilder.debugmenu.view;
     exports com.oracle.javafx.scenebuilder.debugmenu;
 
-//    requires io.reactivex.rxjava2;
-//    requires javafx.base;
-//    requires javafx.controls;
-//    requires javafx.fxml;
-//    requires javafx.graphics;
-    requires scenebuilder.starter;
-    requires scenebuilder.core.jobs;
+    requires scenebuilder.app.starter;
     requires transitive scenebuilder.api;
-    requires scenebuilder.core.extension.api;
-    requires scenebuilder.ext.menu;
-//    requires spring.beans;
-//    requires spring.context;
 
     provides Extension with DebugMenuExtension;
 }

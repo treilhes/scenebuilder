@@ -34,6 +34,7 @@
 
 package com.gluonhq.jfxapps.core.job.editor.reference;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -51,7 +52,12 @@ import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
+import com.gluonhq.jfxapps.core.fxom.collector.CompositeCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.ExpressionCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.ExpressionCollector.ExpressionReference;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector.FxCopyBySource;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector.FxReferenceBySource;
 
 /**
  * This Job updates the FXOM document at execution time. Delete an
@@ -113,8 +119,21 @@ public final class DeleteRefereeObjectJob extends InlineDocumentJob {
             result = node;
         } else {
             final FXOMObject fxomRoot = fxomDocument.getFxomRoot();
-            final List<FXOMNode> references = fxomRoot.collect(FxCollector.referenceById(nodeFxId, target));
-            if (references.isEmpty()) {
+
+            final ExpressionReference expressionRef = ExpressionCollector.expressionReferenceById(nodeFxId, target);
+            final FxCopyBySource fxCopyRef = FxCollector.fxCopyBySource(nodeFxId, target);
+            final FxReferenceBySource fxReferenceRef = FxCollector.fxReferenceBySource(nodeFxId, target);
+
+            fxomRoot.collect(CompositeCollector.of(expressionRef, fxCopyRef, fxReferenceRef));
+
+            final List<FXOMNode> references = new ArrayList<>();
+            references.addAll(expressionRef.getCollected());
+            references.addAll(fxCopyRef.getCollected());
+            references.addAll(fxReferenceRef.getCollected());
+
+            final boolean notFound = references.isEmpty();
+
+            if (notFound) {
                 // node has an fx:id but this one is not referenced
                 // outside of the delete target : it can be deleted safely
                 result = node;
@@ -124,7 +143,9 @@ public final class DeleteRefereeObjectJob extends InlineDocumentJob {
                 // => we remove all the weak references between node and R
                 // => we combine node with R
                 FXOMNode firstReference = null;
+
                 for (FXOMNode r : references) {
+                    //FIXME weak reference is deprecated (need update)
                     if (FXOMNodes.isWeakReference(r)) {
                         // This weak reference will become a forward reference
                         // after the deletion => we remove it.

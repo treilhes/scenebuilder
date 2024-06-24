@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,16 +36,12 @@ package com.oracle.javafx.scenebuilder.debugmenu.view;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
 import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
 import com.gluonhq.jfxapps.core.api.preferences.Preference;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
@@ -61,9 +57,7 @@ import javafx.scene.layout.VBox;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 @ViewAttachment(name = DebugPreferencesView.VIEW_NAME, id = DebugPreferencesView.VIEW_ID, debug = true)
 public class DebugPreferencesView extends AbstractFxmlViewController {
 
@@ -84,7 +78,7 @@ public class DebugPreferencesView extends AbstractFxmlViewController {
      * @param fxmlURL
      * @param resources
      */
-    public DebugPreferencesView(SceneBuilderManager scenebuilderManager, FxmlDocumentManager documentManager,
+    public DebugPreferencesView(SceneBuilderManager scenebuilderManager, DocumentManager documentManager,
             ViewMenuController viewMenuController,
             List<ManagedGlobalPreference> globalPreferences,
             List<ManagedDocumentPreference> documentPreferences) {

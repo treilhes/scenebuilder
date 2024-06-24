@@ -44,8 +44,6 @@ import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
 import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
 import com.gluonhq.jfxapps.core.api.mask.AbstractHierarchyMask;
-import com.gluonhq.jfxapps.core.api.mask.Accessory;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.util.StringUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
@@ -133,7 +131,9 @@ public class SbFXOMObjectMask
         // For FXOMIntrinsic, we use the source sceneGraphObject
         if (fxomObject instanceof FXOMIntrinsic) {
             final FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) fxomObject;
-            sceneGraphObject = fxomIntrinsic.getSourceSceneGraphObject();
+            assert fxomIntrinsic.getSceneGraphObject().isFromExternalSource();
+            sceneGraphObject = fxomIntrinsic.getSceneGraphObject().get();
+
             switch (fxomIntrinsic.getType()) {
             case FX_COPY:
                 // Add FXML prefix for included FXML file

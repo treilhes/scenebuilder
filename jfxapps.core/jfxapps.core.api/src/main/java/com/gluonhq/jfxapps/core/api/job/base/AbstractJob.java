@@ -34,6 +34,7 @@
 package com.gluonhq.jfxapps.core.api.job.base;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -62,6 +63,8 @@ public abstract class AbstractJob implements Job {
     private final List<JobExtension<?>> extensions = new ArrayList<>();
 
     private String description;
+
+    private final List<Job> subJobs = new ArrayList<>();
 
     public AbstractJob(JobExtensionFactory extensionFactory) {
 
@@ -157,6 +160,26 @@ public abstract class AbstractJob implements Job {
     public abstract void doExecute();
     public abstract void doUndo();
     public abstract void doRedo();
+
+    public void addSubJob(Job subJob) {
+        assert subJob != null;
+        this.subJobs.add(subJob);
+    }
+
+    public void addSubJobs(List<Job> subJobs) {
+        assert subJobs != null;
+        this.subJobs.addAll(subJobs);
+    }
+
+    @Override
+    public List<Job> getSubJobs() {
+        return Collections.unmodifiableList(subJobs);
+    }
+
+    public void prependSubJob(Job subJob) {
+        assert subJob != null;
+        this.subJobs.add(0, subJob);
+    }
 
 
 }

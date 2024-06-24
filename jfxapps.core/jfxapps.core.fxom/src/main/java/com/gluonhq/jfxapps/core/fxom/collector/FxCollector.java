@@ -47,8 +47,6 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.FXOMScript;
-import com.gluonhq.jfxapps.core.fxom.util.JavaLanguage;
-import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 
 public class FxCollector {
 
@@ -56,13 +54,6 @@ public class FxCollector {
         return new FxReferenceBySource(source, null);
     }
 
-    /**
-     * Collect all {@link FXOMNode} ({@link FXOMIntrinsic} or {@link FXOMPropertyT} referencing the source id
-     *
-     * @param source
-     * @param excludedFromSearch
-     * @return
-     */
     public static FxReferenceBySource fxReferenceBySource(String source, FXOMObject excludedFromSearch) {
         return new FxReferenceBySource(source, excludedFromSearch == null ? null : Set.of(excludedFromSearch));
     }
@@ -75,20 +66,23 @@ public class FxCollector {
         return new FxReferenceBySource(null, null);
     }
 
-    public static Reference referenceById(String referenceId) {
-        return new Reference(referenceId, null);
+    public static FxCopyBySource fxCopyBySource(String source) {
+        return new FxCopyBySource(source, null);
     }
 
-    public static Reference referenceById(String referenceId, FXOMObject excludedFromSearch) {
-        return new Reference(referenceId, excludedFromSearch == null ? null : Set.of(excludedFromSearch));
+    /**
+     * Collect all {@link FXOMNode} ({@link FXOMIntrinsic} or {@link FXOMPropertyT} referencing the source id
+     *
+     * @param source
+     * @param excludedFromSearch
+     * @return
+     */
+    public static FxCopyBySource fxCopyBySource(String source, FXOMObject excludedFromSearch) {
+        return new FxCopyBySource(source, excludedFromSearch == null ? null : Set.of(excludedFromSearch));
     }
 
-    public static Reference referenceById(String referenceId, Set<FXOMObject> excludedFromSearch) {
-        return new Reference(referenceId, excludedFromSearch);
-    }
-
-    public static Reference allReferences() {
-        return new Reference(null, null);
+    public static FxCopyBySource fxCopyBySource(String source, Set<FXOMObject> excludedFromSearch) {
+        return new FxCopyBySource(source, excludedFromSearch);
     }
 
     public static class FxReferenceBySource implements FXOMCollector<List<FXOMIntrinsic>>{
@@ -174,60 +168,6 @@ public class FxCollector {
 
         @Override
         public List<FXOMIntrinsic> getCollected() {
-            return result;
-        }
-
-    }
-
-    public static class Reference implements FXOMCollector<List<FXOMNode>>{
-
-        private List<FXOMNode> result = new ArrayList<>();
-
-        private final String source;
-        private final Set<FXOMObject> excludedFromSearch;
-
-        public Reference(String source, Set<FXOMObject> excludedFromSearch) {
-            super();
-            this.source = source;
-            this.excludedFromSearch = excludedFromSearch;
-        }
-
-        @Override
-        public boolean accept(FXOMObject object) {
-            return excludedFromSearch == null || !excludedFromSearch.contains(object);
-        }
-
-        @Override
-        public Strategy collectionStrategy() {
-            return Strategy.OBJECT_AND_PROPERTY;
-        }
-
-        @Override
-        public void collect(FXOMObject object) {
-            if (object instanceof FXOMIntrinsic fi) {
-                if ((fi.getType() == Type.FX_REFERENCE) && ((source == null) || source.equals(fi.getSource()))) {
-                    result.add(fi);
-                }
-            }
-        }
-
-        @Override
-        public void collect(FXOMProperty property) {
-            if (property instanceof FXOMPropertyT pt) {
-                final PrefixedValue pv = new PrefixedValue(pt.getValue());
-                if (pv.isExpression()) {
-                    final String suffix = pv.getSuffix();
-                    if (JavaLanguage.isIdentifier(suffix)) {
-                        if ((source == null) || source.equals(suffix)) {
-                            result.add(pt);
-                        }
-                    }
-                }
-            }
-        }
-
-        @Override
-        public List<FXOMNode> getCollected() {
             return result;
         }
 

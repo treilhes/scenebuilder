@@ -98,15 +98,6 @@ public interface SelectionGroup extends Cloneable {
     Set<Object> getInnerItems();
 
     /**
-     * Collect all the fx ids in the current selection.
-     *
-     * @return the map fx id : fxom object
-     * @deprecated use {@link #collect()} instead
-     */
-    @Deprecated
-    Map<String, FXOMObject> collectSelectedFxIds();
-
-    /**
      * Collect items in the selection content
      * @param <T> the collected item type
      * @param collector the collector

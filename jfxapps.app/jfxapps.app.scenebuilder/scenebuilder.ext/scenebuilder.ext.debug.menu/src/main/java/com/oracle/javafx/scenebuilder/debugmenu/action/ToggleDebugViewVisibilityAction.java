@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -46,6 +46,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
@@ -64,8 +66,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.toggle.view", descriptionKey = "action.description.toggle.view")
 public class ToggleDebugViewVisibilityAction extends AbstractToggleViewVisibilityAction {
 
@@ -77,9 +78,7 @@ public class ToggleDebugViewVisibilityAction extends AbstractToggleViewVisibilit
         super(extensionFactory, dockViewController);
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-    @Lazy
+    @ApplicationInstanceSingleton
     public class ViewMenuProvider implements MenuItemProvider {
 
         private final static String DEBUG_MENU_ID = "debugMenu";
@@ -89,11 +88,11 @@ public class ToggleDebugViewVisibilityAction extends AbstractToggleViewVisibilit
         private final MenuBuilder menuBuiler;
 
         private final ActionFactory actionFactory;
-        private final SceneBuilderBeanFactory context;
+        private final JfxAppContext context;
 
         public ViewMenuProvider(
                 ActionFactory actionFactory,
-                SceneBuilderBeanFactory context,
+                JfxAppContext context,
                 @Lazy DockViewController dockViewController,
                 MenuBuilder menuBuiler
                 ) {

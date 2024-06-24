@@ -56,7 +56,6 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 @Prototype
 public final class BatchJob extends AbstractJob {
 
-    private final List<Job> subJobs = new ArrayList<>();
     private boolean shouldRefreshSceneGraph;
     private boolean shouldUpdateSelection;
     private final FXOMDocument fxomDocument;
@@ -79,24 +78,7 @@ public final class BatchJob extends AbstractJob {
         this.shouldUpdateSelection = shouldUpdateSelection;
     }
 
-    public void addSubJob(Job subJob) {
-        assert subJob != null;
-        this.subJobs.add(subJob);
-    }
 
-    public void addSubJobs(List<Job> subJobs) {
-        assert subJobs != null;
-        this.subJobs.addAll(subJobs);
-    }
-
-    public void prependSubJob(Job subJob) {
-        assert subJob != null;
-        this.subJobs.add(0, subJob);
-    }
-
-    public List<Job> getSubJobs() {
-        return Collections.unmodifiableList(subJobs);
-    }
 
     /*
      * Job
@@ -104,7 +86,7 @@ public final class BatchJob extends AbstractJob {
 
     @Override
     public boolean isExecutable() {
-        return subJobs.isEmpty() == false;
+        return getSubJobs().isEmpty() == false;
     }
 
     @Override
@@ -115,7 +97,7 @@ public final class BatchJob extends AbstractJob {
         if (shouldRefreshSceneGraph) {
             fxomDocument.beginUpdate();
         }
-        for (Job subJob : subJobs) {
+        for (Job subJob : getSubJobs()) {
             subJob.execute();
         }
         if (shouldRefreshSceneGraph) {
@@ -134,6 +116,8 @@ public final class BatchJob extends AbstractJob {
         if (shouldRefreshSceneGraph) {
             fxomDocument.beginUpdate();
         }
+
+        final var subJobs = getSubJobs();
         for (int i = subJobs.size() - 1; i >= 0; i--) {
             subJobs.get(i).undo();
         }
@@ -153,6 +137,8 @@ public final class BatchJob extends AbstractJob {
         if (shouldRefreshSceneGraph) {
             fxomDocument.beginUpdate();
         }
+
+        final var subJobs = getSubJobs();
         for (Job subJob : subJobs) {
             subJob.redo();
         }

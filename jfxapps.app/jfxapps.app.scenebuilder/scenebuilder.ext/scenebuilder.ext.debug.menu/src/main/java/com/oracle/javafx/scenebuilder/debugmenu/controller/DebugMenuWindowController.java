@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,15 +36,11 @@ package com.oracle.javafx.scenebuilder.debugmenu.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.application.ApplicationInstanceWindow;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.util.FXOMDocumentUtils;
@@ -59,9 +55,7 @@ import javafx.scene.input.DataFormat;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 public class DebugMenuWindowController extends AbstractFxmlWindowController {
 
     @FXML
@@ -70,13 +64,13 @@ public class DebugMenuWindowController extends AbstractFxmlWindowController {
     private FXOMDocument fxomDocument;
     private String documentName;
     private boolean dirty = false;
-    private final FxmlDocumentManager documentManager;
+    private final DocumentManager documentManager;
 
     public DebugMenuWindowController(
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
-            ApplicationInstanceWindow document,
-            FxmlDocumentManager documentManager
+            InstanceWindow document,
+            DocumentManager documentManager
             ) {
         super(sceneBuilderManager, iconSetting, DebugMenuWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle(),
                 document); // NOI18N

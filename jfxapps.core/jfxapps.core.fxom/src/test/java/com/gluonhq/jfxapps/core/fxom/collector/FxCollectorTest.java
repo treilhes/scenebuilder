@@ -46,7 +46,6 @@ import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
-import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
 import com.gluonhq.jfxapps.core.fxom.testutil.FxmlUtil;
@@ -93,38 +92,6 @@ class FxCollectorTest {
                 .collect(FxCollector.fxReferenceBySource(null, excluded));
 
         assertEquals(1, items.size());
-    }
-
-    @Test
-    public void should_return_the_right_number_of_reference_with_id() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.REFERRER);
-
-        String ref = "referred1";
-        List<FXOMNode> items = fxomDocument.getFxomRoot().collect(FxCollector.referenceById(ref));
-
-        assertEquals(1, items.size());
-    }
-
-    @Test
-    public void should_return_the_right_number_of_reference() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.REFERRER);
-
-        List<FXOMNode> items = fxomDocument.getFxomRoot().collect(FxCollector.allReferences());
-
-        assertEquals(5, items.size());
-    }
-
-    @Test
-    public void should_return_the_right_number_of_reference_with_the_most_nested_excluded() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.REFERRER);
-
-        Map<String, FXOMObject> fxIds = fxomDocument.getFxomRoot().collect(FxCollector.fxIdsMap());
-
-        FXOMObject excluded = fxIds.get("excluded");
-
-        List<FXOMNode> items = fxomDocument.getFxomRoot().collect(FxCollector.referenceById(null, excluded));
-
-        assertEquals(2, items.size());
     }
 
     private enum FxmlTestInfo implements FilenameProvider {

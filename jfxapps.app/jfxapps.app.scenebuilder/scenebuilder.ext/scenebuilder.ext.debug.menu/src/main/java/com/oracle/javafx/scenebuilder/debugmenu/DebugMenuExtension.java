@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,10 +34,13 @@
 package com.oracle.javafx.scenebuilder.debugmenu;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.core.extension.AbstractExtension;
+import org.scenebuilder.fxml.api.SbApiExtension;
+
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.debugmenu.action.ToggleDebugViewVisibilityAction;
 import com.oracle.javafx.scenebuilder.debugmenu.controller.DebugMenuController;
 import com.oracle.javafx.scenebuilder.debugmenu.controller.DebugMenuWindowController;
@@ -45,14 +48,26 @@ import com.oracle.javafx.scenebuilder.debugmenu.i18n.I18NDebugMenu;
 import com.oracle.javafx.scenebuilder.debugmenu.menu.DebugMenuMenuProvider;
 import com.oracle.javafx.scenebuilder.debugmenu.view.DebugPreferencesView;
 
-public class DebugMenuExtension extends AbstractExtension {
+public class DebugMenuExtension implements OpenExtension {
+
+    public static final UUID ID = UUID.fromString("b97afbec-1861-4b39-9cee-4bd4f541afe3");
     @Override
-    public UUID getId() {
-        return UUID.fromString("b97afbec-1861-4b39-9cee-4bd4f541afe3");
+    public UUID getParentId() {
+        return SbApiExtension.ID;
     }
 
     @Override
-    public List<Class<?>> explicitClassToRegister() {
+    public UUID getId() {
+        return ID;
+    }
+
+    @Override
+    public List<Class<?>> localContextClasses() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
             DebugMenuController.class,
@@ -66,4 +81,5 @@ public class DebugMenuExtension extends AbstractExtension {
             );
      // @formatter:on
     }
+
 }

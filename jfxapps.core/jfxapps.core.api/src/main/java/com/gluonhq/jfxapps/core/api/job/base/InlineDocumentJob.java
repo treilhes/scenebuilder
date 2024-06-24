@@ -49,7 +49,6 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
  */
 public abstract class InlineDocumentJob extends CompositeJob {
 
-    private List<Job> subJobs;
     private final FXOMDocument fxomDocument;
 
     protected InlineDocumentJob(JobExtensionFactory extensionFactory, DocumentManager documentManager) {
@@ -58,22 +57,19 @@ public abstract class InlineDocumentJob extends CompositeJob {
     }
 
     @Override
-    public final List<Job> getSubJobs() {
-        return subJobs;
-    }
-
-    @Override
     public void doExecute() {
         fxomDocument.beginUpdate();
-        subJobs = Collections.unmodifiableList(makeAndExecuteSubJobs());
+        addSubJobs(makeAndExecuteSubJobs());
         fxomDocument.endUpdate();
     }
 
     @Override
     public void doUndo() {
         fxomDocument.beginUpdate();
-        for (int i = getSubJobs().size() - 1; i >= 0; i--) {
-            getSubJobs().get(i).undo();
+
+        final var subJobs = getSubJobs();
+        for (int i = subJobs.size() - 1; i >= 0; i--) {
+            subJobs.get(i).undo();
         }
         fxomDocument.endUpdate();
     }

@@ -33,6 +33,8 @@
  */
 package com.gluonhq.jfxapps.core.api.job;
 
+import java.util.List;
+
 /**
  *
  */
@@ -74,10 +76,13 @@ public interface Job {
      */
     void setDescription(String description);
 
+    List<Job> getSubJobs();
+
     default boolean canBeMergedWith(Job other) {
         return false;
     }
 
     default void mergeWith(Job other) {
     }
+
 }

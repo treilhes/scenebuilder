@@ -33,9 +33,6 @@
  */
 package com.gluonhq.jfxapps.core.api.job.base;
 
-import java.util.List;
-
-import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 
 /**
@@ -55,8 +52,6 @@ public abstract class CompositeJob extends AbstractJob {
         }
         return super.getDescription();
     }
-
-    public abstract List<Job> getSubJobs();
 
     protected abstract String makeDescription();
 }
