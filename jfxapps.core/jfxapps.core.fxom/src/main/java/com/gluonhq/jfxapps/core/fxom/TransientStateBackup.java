@@ -68,7 +68,7 @@ class TransientStateBackup {
                 .findFirst()
                 .ifPresent(f -> f.backup(candidate));
             
-//            final Object sceneGraphObject = candidate.getSceneGraphObject();
+//            final Object sceneGraphObject = candidate.getSceneGraphObject().get();
 //            if (sceneGraphObject instanceof TabPane) {
 //                final TabPane tabPane = (TabPane) sceneGraphObject;
 //                final Tab currentTab = tabPane.getSelectionModel().getSelectedItem();
@@ -112,13 +112,13 @@ class TransientStateBackup {
             .findFirst()
             .ifPresent(f -> f.restore(candidate));
             
-//            final Object sceneGraphObject = candidate.getSceneGraphObject();
+//            final Object sceneGraphObject = candidate.getSceneGraphObject().get();
 //            if (sceneGraphObject instanceof TabPane) {
 //                final TabPane tabPane = (TabPane) sceneGraphObject;
 //                final FXOMObject tabObject = tabPaneMap.get(candidate);
 //                if ((tabObject != null) && (tabObject.getParentObject() == candidate)) {
 //                    assert tabObject.getSceneGraphObject().isInstanceOf(Tab.class);
-//                    final Tab tab = (Tab) tabObject.getSceneGraphObject();
+//                    final Tab tab = tabObject.getSceneGraphObject().getAs(Tab.class);
 //                    assert tabPane.getTabs().contains(tab);
 //                    tabPane.getSelectionModel().select(tab);
 //                }
@@ -127,7 +127,7 @@ class TransientStateBackup {
 //                final FXOMObject titlePaneObject = accordionMap.get(candidate);
 //                if ((titlePaneObject != null) && (titlePaneObject.getParentObject() == candidate)) {
 //                    assert titlePaneObject.getSceneGraphObject().isInstanceOf(TitledPane.class);
-//                    final TitledPane titledPane = (TitledPane) titlePaneObject.getSceneGraphObject();
+//                    final TitledPane titledPane = titlePaneObject.getSceneGraphObject().getAs(TitledPane.class);
 //                    assert accordion.getPanes().contains(titledPane);
 //                    accordion.setExpandedPane(titledPane);
 //                }

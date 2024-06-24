@@ -58,7 +58,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.FXOMVirtual;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 import com.gluonhq.jfxapps.core.fxom.util.JavaLanguage;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
@@ -210,18 +210,10 @@ public final class ReferencesUpdaterJob extends InlineDocumentJob {
             // 2) else r is a strong reference
             // => we expand the reference
 
-            final FXOMObject declarer = fxomDocument.collect(FxIdCollector.findFirstById(fxId)).orElse(null);
-
-            // 0)
-            if (FXOMNodes.isToggleGroupReference(r)) {
-                final Job fixJob = fxomJobsFactory.fixToggleGroupReference(r);
-                fixJob.execute();
-                jobCollector.add(fixJob);
-                declaredFxIds.add(fxId);
-            }
+            final FXOMObject declarer = fxomDocument.collect(FxCollector.fxIdFindFirst(fxId)).orElse(null);
 
             // 1
-            else if (FXOMNodes.isWeakReference(r)) {
+            if (FXOMNodes.isWeakReference(r)) {
                 final Job removeJob = fxomJobsFactory.removeNode(r);
                 removeJob.execute();
                 jobCollector.add(removeJob);
@@ -237,11 +229,6 @@ public final class ReferencesUpdaterJob extends InlineDocumentJob {
                 jobCollector.add(expandJob);
             }
         }
-    }
-
-    @Override
-    protected String makeDescription() {
-        return this.getClass().getName();
     }
 
     @Override

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -61,7 +61,7 @@ public abstract class FXOMIntrinsic extends FXOMElement {
     }
 
     //private final Map<PropertyName, FXOMProperty> properties = new LinkedHashMap<>();
-    private Object sourceSceneGraphObject;
+    //private Object sourceSceneGraphObject;
 
 
     FXOMIntrinsic(FXOMDocument document, GlueElement glueElement, Object targetSceneGraphObject,  List<FXOMProperty> properties) {
@@ -141,18 +141,20 @@ public abstract class FXOMIntrinsic extends FXOMElement {
         }
     }
 
-    public Object getSourceSceneGraphObject() {
-        return sourceSceneGraphObject;
-    }
+//
+//    public Object getSourceSceneGraphObject() {
+//        return sourceSceneGraphObject;
+//    }
 
     public void setSourceSceneGraphObject(Object sourceSceneGraphObject) {
-        this.sourceSceneGraphObject = sourceSceneGraphObject;
+        getSceneGraphObject().update(sourceSceneGraphObject, true);
+        //this.sourceSceneGraphObject = sourceSceneGraphObject;
         setDeclaredClass(sourceSceneGraphObject == null ? null : sourceSceneGraphObject.getClass());
     }
 
     public FXOMInstance createFxomInstanceFromIntrinsic() {
         FXOMInstance fxomInstance = new FXOMInstance(this.getFxomDocument(), this.getGlueElement());
-        fxomInstance.setSceneGraphObject(this.getSourceSceneGraphObject());
+        fxomInstance.setSceneGraphObject(this.getSceneGraphObject().get());
         fxomInstance.setDeclaredClass(this.getClass());
         if(!this.getProperties().isEmpty()) {
             fxomInstance.fillProperties(this.getProperties());

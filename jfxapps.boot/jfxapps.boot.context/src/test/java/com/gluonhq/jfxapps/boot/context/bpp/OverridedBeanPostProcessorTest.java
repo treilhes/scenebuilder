@@ -67,6 +67,7 @@ class OverridedBeanPostProcessorTest {
 
         assertNotNull(override.getOverridedBean());
         assertNotEquals(modified, override.getOverridedBean());
+        assertNotEquals(modified.method2(PRM), override.getOverridedBean().method2(PRM));
 
         ctx.close();
     }

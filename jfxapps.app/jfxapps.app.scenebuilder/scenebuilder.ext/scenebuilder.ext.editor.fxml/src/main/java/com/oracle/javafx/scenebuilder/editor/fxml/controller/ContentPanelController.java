@@ -412,7 +412,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
                 final HierarchyMask mask = maskFactory.getMask(i);
                 final FXOMObject nodeFxomObject = mask.getClosestFxNode();
                 if (nodeFxomObject != null) {
-                    final Node node = (Node) nodeFxomObject.getSceneGraphObject();
+                    final Node node = nodeFxomObject.getSceneGraphObject().getAs(Node.class);
                     assert node.getLayoutBounds() != null;
                     final Bounds nodeBounds = node.localToScene(node.getLayoutBounds(), true /* rootScene */);
                     assert nodeBounds != null;
@@ -544,7 +544,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
 
 //        for (FXOMObject exclude : excludes) {
 //            if (exclude.getSceneGraphObject().isInstanceOf(Node.class)) {
-//                picker.getExcludes().add((Node) exclude.getSceneGraphObject());
+//                picker.getExcludes().add(exclude.getSceneGraphObject().getAs(Node.class));
 //            }
 //        }
 

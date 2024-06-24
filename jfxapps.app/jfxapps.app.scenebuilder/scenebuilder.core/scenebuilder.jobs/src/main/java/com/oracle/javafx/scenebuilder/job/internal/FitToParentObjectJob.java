@@ -194,7 +194,7 @@ public final class FitToParentObjectJob extends BatchDocumentJob {
     protected String makeDescription() {
         final StringBuilder sb = new StringBuilder();
         sb.append("Fit to Parent ");
-        final Object sceneGraphObject = fxomInstance.getSceneGraphObject();
+        final Object sceneGraphObject = fxomInstance.getSceneGraphObject().get();
         assert sceneGraphObject != null;
         sb.append(sceneGraphObject.getClass().getSimpleName());
         return sb.toString();

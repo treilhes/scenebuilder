@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,8 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
-import com.gluonhq.jfxapps.core.fxom.collector.FxReferenceCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 
 import javafx.scene.control.ToggleGroup;
 
@@ -54,7 +53,7 @@ public class FXOMFxIdIndex {
     public FXOMFxIdIndex(FXOMDocument fxomDocument) {
         assert fxomDocument != null;
         this.fxomDocument = fxomDocument;
-        this.fxIds = fxomDocument.collect(FxIdCollector.fxIdsMap());
+        this.fxIds = fxomDocument.collect(FxCollector.fxIdsMap());
     }
 
     public FXOMDocument getFxomDocument() {
@@ -94,7 +93,7 @@ public class FXOMFxIdIndex {
      * @return true if fxomObject subtree is self-contained
      */
     public boolean isSelfContained(FXOMObject fxomObject) {
-        final List<FXOMIntrinsic> references = fxomObject.collect(FxReferenceCollector.allFxReferences());
+        final List<FXOMIntrinsic> references = fxomObject.collect(FxCollector.allFxReferences());
         int externalCount = 0;
         for (FXOMIntrinsic reference : references) {
             assert reference.getSource() != null;

@@ -109,7 +109,7 @@ public final class ReIndexObjectJob extends AbstractJob {
         sb.append("Move ");
 
         if (reindexedObject instanceof FXOMInstance) {
-            final Object sceneGraphObject = reindexedObject.getSceneGraphObject();
+            final Object sceneGraphObject = reindexedObject.getSceneGraphObject().get();
             if (sceneGraphObject != null) {
                 sb.append(sceneGraphObject.getClass().getSimpleName());
             } else {

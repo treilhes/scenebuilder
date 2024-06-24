@@ -75,7 +75,7 @@ public final class GridPaneDropTargetProvider extends AbstractDropTargetProvider
         final AbstractDropTarget result;
 
         final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-        final GridPane gridPane = (GridPane) fxomInstance.getSceneGraphObject();
+        final GridPane gridPane = fxomInstance.getSceneGraphObject().getAs(GridPane.class);
         final int columnCount = Deprecation.getGridPaneColumnCount(gridPane);
         final int rowCount = Deprecation.getGridPaneRowCount(gridPane);
 

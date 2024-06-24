@@ -51,7 +51,7 @@ import org.testfx.framework.junit5.Start;
 import com.gluonhq.jfxapps.core.fxom.FXOMComment;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMSaver;
-import com.gluonhq.jfxapps.core.fxom.collector.XmlCommentCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.CommentCollector;
 import com.gluonhq.jfxapps.core.fxom.fx.CloneFixture;
 import com.gluonhq.jfxapps.core.fxom.fx.IOFixture;
 
@@ -133,7 +133,7 @@ public class FxomFxCommentTagTest {
             String content = new String(stream.readAllBytes());
             FXOMDocument fxomDocument = new FXOMDocument(content, null, FxomFxCommentTagTest.class.getClassLoader(), null);
 
-            List<FXOMComment> comments = fxomDocument.getFxomRoot().collect(XmlCommentCollector.allComments());
+            List<FXOMComment> comments = fxomDocument.getFxomRoot().collect(CommentCollector.allComments());
 
             assertEquals(1, comments.size());
 

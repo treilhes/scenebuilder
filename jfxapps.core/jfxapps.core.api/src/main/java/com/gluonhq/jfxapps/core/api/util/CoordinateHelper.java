@@ -101,7 +101,7 @@ public class CoordinateHelper {
             final SubScene subScene = NodeHelper
                     .getSubScene(fxomObject.getClosestMainGraphNode().getSceneGraphObject().getAs(Node.class));
             // final SubScene subScene =
-            // NodeHelper.getSubScene((Node)fxomObject.getSceneGraphObject());
+            // NodeHelper.getSubScene(fxomObject.getSceneGraphObject().getAs(Node.class));
             if (subScene != null) {
                 sceneXY = SceneUtils.subSceneToScene(subScene, sceneXY);
             }
@@ -159,7 +159,7 @@ public class CoordinateHelper {
         Point2D tempPt = new Point2D(sceneX, sceneY);
 
         // final SubScene subScene =
-        // NodeHelper.getSubScene((Node)fxomObject.getSceneGraphObject());
+        // NodeHelper.getSubScene(fxomObject.getSceneGraphObject().getAs(Node.class));
         final SubScene subScene = NodeHelper
                 .getSubScene(fxomObject.getClosestMainGraphNode().getSceneGraphObject().getAs(Node.class));
         if (subScene != null) {

@@ -169,7 +169,7 @@ public final class GridPaneDropTarget extends AbstractDropTarget {
                 final FXOMObject draggedObject0 = dragSource.getDraggedObjects().get(0);
                 assert draggedObject0.getSceneGraphObject().isInstanceOf(Node.class);
 
-                final Node draggedNode0 = (Node) draggedObject0.getSceneGraphObject();
+                final Node draggedNode0 = draggedObject0.getSceneGraphObject().getAs(Node.class);
                 final Integer columIndexObj = GridPane.getColumnIndex(draggedNode0);
                 final Integer rowIndexObj = GridPane.getRowIndex(draggedNode0);
                 final int currentColumnIndex = (columIndexObj == null) ? 0 : columIndexObj;
@@ -201,7 +201,7 @@ public final class GridPaneDropTarget extends AbstractDropTarget {
         final FXOMObject hitObject = dragSource.getHitObject();
         final FXOMObject currentParent = hitObject.getParentObject();
         final boolean reparenting = (currentParent != targetGridPane);
-        final GridPane gridPane = (GridPane) targetGridPane.getSceneGraphObject();
+        final GridPane gridPane = targetGridPane.getSceneGraphObject().getAs(GridPane.class);
 
         // Steps:
         //

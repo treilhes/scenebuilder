@@ -44,7 +44,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
-import com.gluonhq.jfxapps.core.fxom.collector.FxReferenceCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 import com.gluonhq.jfxapps.core.fxom.collector.PropertyCollector;
 import com.gluonhq.jfxapps.core.fxom.ext.FXOMNormalizer;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
@@ -145,7 +145,7 @@ public class ExpandedPaneNormalizer implements FXOMNormalizer {
 
         final FXOMObject fxomRoot = p.getFxomDocument().getFxomRoot();
         final List<FXOMIntrinsic> references = fxomRoot
-                .collect(FxReferenceCollector.fxReferenceBySource(titledPane.getFxId()));
+                .collect(FxCollector.fxReferenceBySource(titledPane.getFxId()));
         assert references.size() == 1;
         final FXOMIntrinsic reference = references.get(0);
         assert reference.getSource().equals(titledPane.getFxId());

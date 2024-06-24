@@ -39,54 +39,43 @@ import java.util.List;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
-import com.gluonhq.jfxapps.core.fxom.FXOMScript;
-import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic.Type;
+import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 
-public class FxScriptCollector {
+public class EventHandlerCollector {
 
-    public static FxScript allFxScripts() {
-        return new FxScript(null);
+    public static FxEventHandler allEventHandlers() {
+        return new FxEventHandler();
     }
 
-    public static FxScript fxScriptBySource(String source) {
-        return new FxScript(source);
-    }
+    public static class FxEventHandler implements FXOMCollector<List<FXOMPropertyT>>{
 
-    public static class FxScript implements FXOMCollector<List<FXOMScript>>{
+        private List<FXOMPropertyT> result = new ArrayList<>();
 
-        private List<FXOMScript> result = new ArrayList<>();
-
-        private final String source;
-
-        public FxScript(String source) {
+        public FxEventHandler() {
             super();
-            this.source = source;
         }
 
         @Override
         public Strategy collectionStrategy() {
-            return Strategy.OBJECT;
+            return Strategy.PROPERTY;
         }
 
         @Override
         public void collect(FXOMObject object) {
-            if (object instanceof FXOMScript fs) {
-                if ((source == null) || source.equals(fs.getSource())) {
-                    result.add(fs);
+        }
+
+        @Override
+        public void collect(FXOMProperty property) {
+            if (property instanceof FXOMPropertyT pt) {
+                if (pt.getName().getName().startsWith("on") && pt.getValue().startsWith("#")) {
+                    result.add(pt);
                 }
             }
         }
 
         @Override
-        public void collect(FXOMProperty property) {
-
-        }
-
-        @Override
-        public List<FXOMScript> getCollected() {
+        public List<FXOMPropertyT> getCollected() {
             return result;
         }
-
     }
-
 }

@@ -36,46 +36,46 @@ package com.gluonhq.jfxapps.core.fxom.collector;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
+import com.gluonhq.jfxapps.core.fxom.FXOMComment;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
-import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 
-public class FxEventHandlerCollector {
+public class CommentCollector {
 
-    public static FxEventHandler allEventHandlers() {
-        return new FxEventHandler();
+    public static XmlComment allComments() {
+        return new XmlComment();
     }
 
-    public static class FxEventHandler implements FXOMCollector<List<FXOMPropertyT>>{
+    public static class XmlComment implements FXOMCollector<List<FXOMComment>>{
 
-        private List<FXOMPropertyT> result = new ArrayList<>();
+        private List<FXOMComment> result = new ArrayList<>();
 
-        public FxEventHandler() {
+        public XmlComment() {
             super();
         }
 
         @Override
         public Strategy collectionStrategy() {
-            return Strategy.PROPERTY;
+            return Strategy.OBJECT_AND_PROPERTY;
         }
 
         @Override
         public void collect(FXOMObject object) {
-        }
-
-        @Override
-        public void collect(FXOMProperty property) {
-            if (property instanceof FXOMPropertyT pt) {
-                if (pt.getName().getName().startsWith("on") && pt.getValue().startsWith("#")) {
-                    result.add(pt);
-                }
+            if (object instanceof FXOMComment fc) {
+                result.add(fc);
             }
         }
 
         @Override
-        public List<FXOMPropertyT> getCollected() {
+        public void collect(FXOMProperty property) {
+
+        }
+
+        @Override
+        public List<FXOMComment> getCollected() {
             return result;
         }
+
     }
+
 }

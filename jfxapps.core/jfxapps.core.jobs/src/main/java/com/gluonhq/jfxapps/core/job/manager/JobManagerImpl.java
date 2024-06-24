@@ -35,15 +35,27 @@ package com.gluonhq.jfxapps.core.job.manager;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.context.annotation.NonNull;
+import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.JobPipeline;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.collector.CompositeCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.ExpressionCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.ExpressionCollector.ExpressionReference;
+import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector.FxIdMap;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector.FxReferenceBySource;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -51,23 +63,37 @@ import javafx.beans.property.SimpleIntegerProperty;
 /**
  * @treatAsPrivate
  */
+/**
+ *
+ */
+/**
+ *
+ */
 @ApplicationInstanceSingleton
 public class JobManagerImpl implements JobManager {
 
     private static final int UNDO_STACK_MAX_SIZE = 50;
 
-    private final int undoStackMaxSize;
+    private final DocumentManager documentManager;
+    private final JobPipelineFactory jobPipelineFactory;
+    private final BatchJob.Factory batchJobFactory;
+
     private final List<Job> undoStack = new ArrayList<>();
     private final List<Job> redoStack = new ArrayList<>();
     private final SimpleIntegerProperty revision = new SimpleIntegerProperty();
     private boolean lock;
 
-    private final Optional<JobPipeline> jobPipeline;
 
-    public JobManagerImpl(DocumentManager documentManager, Optional<JobPipeline> jobPipeline) {
 
-        this.jobPipeline = jobPipeline;
-        this.undoStackMaxSize = UNDO_STACK_MAX_SIZE;
+
+
+    public JobManagerImpl(
+            DocumentManager documentManager,
+            JobPipelineFactory jobPipelineFactory,
+            BatchJob.Factory batchJobFactory) {
+        this.documentManager = documentManager;
+        this.jobPipelineFactory = jobPipelineFactory;
+        this.batchJobFactory = batchJobFactory;
 
         revision.addListener((ob, o, n) -> documentManager.dirty().set(true));
 
@@ -84,8 +110,12 @@ public class JobManagerImpl implements JobManager {
         return Collections.unmodifiableList(redoStack);
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void push(Job job) {
+    public Job push(Job job) {
         assert job != null;
         assert job.isExecutable();
 
@@ -94,16 +124,19 @@ public class JobManagerImpl implements JobManager {
             throw new IllegalStateException("Pushing jobs from another job or a job manager listener is forbidden"); // NOCHECK
         }
 
-        final Job pipelineJob = jobPipeline.orElse(JobPipeline.IDENTITY).buildPipeline(job);
-        executeJob(pipelineJob);
+        final var defaultJobPipeline = new DefaultJobPipeline();
+        final var jobPipeline = jobPipelineFactory.get();
+        final var composite = new CompositeJobPipeline(defaultJobPipeline, jobPipeline);
+        final var executedJob = executePipeline(composite, job);
 
-        undoStack.add(0, pipelineJob);
-        if (undoStack.size() > undoStackMaxSize) {
+        undoStack.add(0, executedJob);
+        if (undoStack.size() > UNDO_STACK_MAX_SIZE) {
             undoStack.remove(undoStack.size() - 1);
         }
         redoStack.clear();
         incrementRevision();
 
+        return executedJob;
     }
 
     @Override
@@ -213,10 +246,45 @@ public class JobManagerImpl implements JobManager {
      * Private
      */
 
-    private void executeJob(Job job) {
+    private Job executePipeline(JobPipeline pipeline, Job job) {
+        final var batch = batchJobFactory.getJob();
+
         lock = true;
         try {
+
+            final var preExecutionCollectors = pipeline.preExecutionCollectors();
+            final var document = documentManager.fxomDocument().get();
+
+            if (document != null) {
+                final var composite = CompositeCollector.of(preExecutionCollectors.values());
+                if (!composite.isEmpty()) {
+                    document.collect(composite);
+                }
+            }
+
+            final var preExecutionJob = pipeline.preExecutionJob(null);
+            if (preExecutionJob != null) {
+                batch.addSubJob(preExecutionJob);
+            }
+
             job.execute();
+            batch.addSubJob(job);
+            batch.setDescription(job.getDescription());
+
+            final var postExecutionCollectors = pipeline.postExecutionCollectors();
+            if (document != null) {
+                final var composite = CompositeCollector.of(postExecutionCollectors.values());
+                if (!composite.isEmpty()) {
+                    document.collect(composite);
+                }
+            }
+
+            final var postExecutionJob = pipeline.postExecutionJob(null);
+            if (postExecutionJob != null) {
+                batch.addSubJob(postExecutionJob);
+            }
+
+            return batch;
         } finally {
             lock = false;
         }
@@ -248,4 +316,151 @@ public class JobManagerImpl implements JobManager {
             lock = false;
         }
     }
+
+    protected class DefaultJobPipeline implements JobPipeline{
+
+
+        protected DefaultJobPipeline() {
+            final ExpressionReference fxValueReference = ExpressionCollector.allExpressionReferences();
+            final FxReferenceBySource fxIntrinsicReference = FxCollector.allFxReferences();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Map<String, FXOMCollector<?>> preExecutionCollectors() {
+            return Map.of();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Map<String, FXOMCollector<?>> postExecutionCollectors() {
+            return Map.of();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Job preExecutionJob(Map<String, FXOMObject> preIdMap) {
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Job postExecutionJob(Map<String, FXOMObject> preIdMap) {
+            return null;
+        }
+    }
+
+    private class CompositeJobPipeline implements JobPipeline{
+
+        final DefaultJobPipeline defaultPipeline;
+        final JobPipeline customPipeline;
+        final FxIdMap preIdCollector = FxCollector.fxIdsMap();
+        final FxIdMap postIdCollector = FxCollector.fxIdsMap();
+
+        protected CompositeJobPipeline(@NonNull DefaultJobPipeline defaultPipeline, JobPipeline customPipeline) {
+            this.defaultPipeline = defaultPipeline;
+            this.customPipeline = customPipeline;
+
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Map<String, FXOMCollector<?>> preExecutionCollectors() {
+            Map<String, FXOMCollector<?>> result = new HashMap<>();
+
+            result.put(preIdCollector.toString(), preIdCollector);
+
+            if (defaultPipeline != null && defaultPipeline.preExecutionCollectors() != null) {
+                result.putAll(defaultPipeline.preExecutionCollectors());
+            }
+            if (customPipeline != null && customPipeline.preExecutionCollectors() != null) {
+                result.putAll(customPipeline.preExecutionCollectors());
+            }
+            return result;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Map<String, FXOMCollector<?>> postExecutionCollectors() {
+            Map<String, FXOMCollector<?>> result = new HashMap<>();
+
+            result.put(postIdCollector.toString(), preIdCollector);
+
+            if (defaultPipeline != null && defaultPipeline.postExecutionCollectors() != null) {
+                result.putAll(defaultPipeline.postExecutionCollectors());
+            }
+            if (customPipeline != null && customPipeline.postExecutionCollectors() != null) {
+                result.putAll(customPipeline.postExecutionCollectors());
+            }
+
+            return result;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Job preExecutionJob(Map<String, FXOMObject> preIdMap) {
+            final var batch = batchJobFactory.getJob();
+
+            preIdMap = preIdCollector.getCollected();
+
+            final var defaultJob = defaultPipeline != null ? defaultPipeline.preExecutionJob(preIdMap) : null;
+            if (defaultJob != null) {
+                batch.addSubJob(defaultJob);
+            }
+
+            final var customJob = customPipeline != null ? customPipeline.preExecutionJob(preIdMap) : null;
+            if (customJob != null) {
+                batch.addSubJob(customJob);
+            }
+            return batch;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Job postExecutionJob(Map<String, FXOMObject> postIdMap) {
+            final var batch = batchJobFactory.getJob();
+
+            postIdMap = postIdCollector.getCollected();
+
+            final var defaultJob = defaultPipeline != null ? defaultPipeline.postExecutionJob(postIdMap) : null;
+            if (defaultJob != null) {
+                batch.addSubJob(defaultJob);
+            }
+
+            final var customJob = customPipeline != null ? customPipeline.postExecutionJob(postIdMap) : null;
+            if (customJob != null) {
+                batch.addSubJob(customJob);
+            }
+            return batch;
+        }
+    }
+
+    @ApplicationInstanceSingleton
+    protected static class JobPipelineFactory extends AbstractFactory<JobPipeline>{
+
+        public JobPipelineFactory(JfxAppContext sbContext) {
+            super(sbContext);
+        }
+
+        public JobPipeline get() {
+            return create(JobPipeline.class, null);
+        }
+    }
+
 }

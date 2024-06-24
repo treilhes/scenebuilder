@@ -41,6 +41,7 @@ import javafx.scene.Scene;
 
 public class SceneGraphObject {
 
+    private boolean fromExternalSource;
     private Optional<Object> object;
 
     public SceneGraphObject() {
@@ -52,8 +53,9 @@ public class SceneGraphObject {
         object = Optional.ofNullable(scenGraphObject);
     }
 
-    protected void update(Object sceneGraphObject) {
+    protected void update(Object sceneGraphObject, boolean fromExternalSource) {
         this.object = Optional.ofNullable(sceneGraphObject);
+        this.fromExternalSource = fromExternalSource;
     }
 
     public Optional<Object> getOptional() {
@@ -124,5 +126,8 @@ public class SceneGraphObject {
         return getScene() != null;
     }
 
+    public boolean isFromExternalSource() {
+        return fromExternalSource;
+    }
 
 }

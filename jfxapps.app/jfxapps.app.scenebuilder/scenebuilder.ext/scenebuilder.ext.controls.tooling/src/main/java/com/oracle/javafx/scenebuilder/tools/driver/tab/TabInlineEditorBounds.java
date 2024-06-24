@@ -50,7 +50,7 @@ public class TabInlineEditorBounds extends AbstractInlineEditorBounds {
     @Override
     public Node getBounds(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject().isInstanceOf(Tab.class);
-        final Tab tab = (Tab) fxomObject.getSceneGraphObject();
+        final Tab tab = fxomObject.getSceneGraphObject().getAs(Tab.class);
         final TabPaneDesignInfoX di = new TabPaneDesignInfoX();
         return di.getTabNode(tab.getTabPane(), tab);
     }

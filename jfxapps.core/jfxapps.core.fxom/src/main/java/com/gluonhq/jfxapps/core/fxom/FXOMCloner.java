@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.gluonhq.jfxapps.core.fxom.collector.FxReferenceCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 import com.gluonhq.jfxapps.core.fxom.glue.GlueElement;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
@@ -181,7 +181,7 @@ public class FXOMCloner {
                 final String sourceFxId = source.getSource();
                 assert sourceFxId != null;
                 sourceObject = clonee.getFxomDocument().collect(
-                        com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector.findFirstById(sourceFxId))
+                        FxCollector.fxIdFindFirst(sourceFxId))
                         .get();
                 if (isInsideClonee(sourceObject) || addedFxIds.contains(sourceFxId)) {
                     shallowClone = true;
@@ -318,7 +318,7 @@ public class FXOMCloner {
             final String sourceFxId = pv.getSuffix();
             assert sourceFxId != null;
             sourceObject = clonee.getFxomDocument()
-                    .collect(com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector.findFirstById(sourceFxId))
+                    .collect(FxCollector.fxIdFindFirst(sourceFxId))
                     .get();
             assert sourceObject != null : "sourceFxId=" + sourceFxId;
             if (isInsideClonee(sourceObject) || addedFxIds.contains(sourceFxId)) {
@@ -395,7 +395,7 @@ public class FXOMCloner {
     private void renameFxIds(FXOMObject clone, boolean preserveCloneeFxId) {
 
         final Map<String, FXOMObject> fxIds = clone
-                .collect(com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector.fxIdsMap());
+                .collect(FxCollector.fxIdsMap());
 
         if (preserveCloneeFxId && (clonee.getFxId() != null)) {
             // We don't apply renaming to the fx:id of the clonee
@@ -423,7 +423,7 @@ public class FXOMCloner {
                 declarer.setFxId(renamedFxId);
 
                 // 2)
-                for (FXOMIntrinsic reference : clone.collect(FxReferenceCollector.fxReferenceBySource(candidateFxId))) {
+                for (FXOMIntrinsic reference : clone.collect(FxCollector.fxReferenceBySource(candidateFxId))) {
                     assert reference.getSource().equals(candidateFxId);
                     reference.setSource(renamedFxId);
                 }

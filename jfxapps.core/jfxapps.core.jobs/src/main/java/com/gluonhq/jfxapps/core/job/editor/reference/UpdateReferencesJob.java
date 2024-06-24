@@ -42,13 +42,16 @@ import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
+import com.gluonhq.jfxapps.core.api.job.JobPipeline;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 /**
  * This job look for all reference in an {@link FXOMDocument} and update them with the referee content
+ * @deprecated default {@link JobPipeline} now handles references
  */
+@Deprecated
 @Prototype
 public final class UpdateReferencesJob extends AbstractJob {
 

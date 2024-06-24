@@ -78,7 +78,7 @@ public abstract class CallbackPropertyMetadata<VC> extends ValuePropertyMetadata
                 assert fxomPropertyC.getChildren().size() == 1;
 
                 final FXOMObject valueFxomObject = fxomPropertyC.getChildren().get(0);
-                final Object sceneGraphObject = valueFxomObject.getSceneGraphObject();
+                final Object sceneGraphObject = valueFxomObject.getSceneGraphObject().get();
 
                 result = castValue(sceneGraphObject);
             } else {
@@ -90,7 +90,7 @@ public abstract class CallbackPropertyMetadata<VC> extends ValuePropertyMetadata
                 result = defaultValue;
             }
         } else {
-            result = castValue(getName().getValue(fxomInstance.getSceneGraphObject()));
+            result = castValue(getName().getValue(fxomInstance.getSceneGraphObject().get()));
         }
 
         return result;

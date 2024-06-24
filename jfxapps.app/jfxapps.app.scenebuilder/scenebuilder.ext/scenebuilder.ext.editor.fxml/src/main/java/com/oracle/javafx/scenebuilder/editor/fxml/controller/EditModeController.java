@@ -728,7 +728,7 @@ public class EditModeController extends AbstractModeController implements Gestur
             final FXOMObject candidate = candidates.get(0);
             candidates.remove(0);
             if (candidate.isNode()) {
-                final Node sgo = (Node) candidate.getSceneGraphObject();
+                final Node sgo = candidate.getSceneGraphObject().getAs(Node.class);
                 // if (sgo.getScene() == getRoot().getScene()) {
                 if (sgo.getScene() == ((Node) fxomDocument.getSceneGraphRoot()).getScene()) {
                     result.add(candidate);

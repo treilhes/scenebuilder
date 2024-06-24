@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -147,7 +147,7 @@ public final class UnwrapJob extends BatchSelectionJob {
         final FXOMInstance containerInstance = (FXOMInstance) container;
 
         // Unresolved custom type
-        if (container.getSceneGraphObject() == null) {
+        if (container.getSceneGraphObject().isEmpty()) {
             return false;
         }
 
@@ -189,14 +189,14 @@ public final class UnwrapJob extends BatchSelectionJob {
             } else {
                 // those cases are handled by sub component now
                 // TODO what about collection
-                // TODO whata about graphics
+                // TODO what about graphics
 //                assert parentContainerMask.isAcceptingAccessory(Accessory.CONTENT)
 //                        || parentContainerMask.isAcceptingAccessory(Accessory.GRAPHIC)
 //                        || parentContainerMask.isAcceptingAccessory(Accessory.ROOT)
 //                        || parentContainerMask.isAcceptingAccessory(Accessory.SCENE)
-//                        || parentContainerMask.getFxomObject().getSceneGraphObject() instanceof BorderPane
+//                        || parentContainerMask.getFxomObject().getSceneGraphObject().isInstanceOf(BorderPane.class)
 //                        || parentContainerMask.getFxomObject().getSceneGraphObject().isInstanceOf(DialogPane.class);
-                assert parentContainerMask.getFxomObject().getSceneGraphObject() instanceof BorderPane
+                assert parentContainerMask.getFxomObject().getSceneGraphObject().isInstanceOf(BorderPane.class)
                     || parentContainerMask.getFxomObject().getSceneGraphObject().isInstanceOf(DialogPane.class);
                 if (childrenCount != 1) {
                     return false;
@@ -359,12 +359,12 @@ public final class UnwrapJob extends BatchSelectionJob {
         final HierarchyMask newContainerMask = designMaskFactory.getMask(newContainer);
 
         assert oldContainer.getSceneGraphObject().isInstanceOf(Node.class);
-        final Node oldContainerNode = (Node) oldContainer.getSceneGraphObject();
+        final Node oldContainerNode = oldContainer.getSceneGraphObject().getAs(Node.class);
 
         for (FXOMObject child : children) {
             assert child.getSceneGraphObject().isInstanceOf(Node.class);
 
-            final Node childNode = (Node) child.getSceneGraphObject();
+            final Node childNode = child.getSceneGraphObject().getAs(Node.class);
             final double currentLayoutX = childNode.getLayoutX();
             final double currentLayoutY = childNode.getLayoutY();
 

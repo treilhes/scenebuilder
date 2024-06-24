@@ -60,7 +60,7 @@ public class GridSnapshotItem {
             assert fxomObject != null;
             assert fxomObject.getSceneGraphObject().isInstanceOf(Node.class);
             
-            final Node node = (Node) fxomObject.getSceneGraphObject();
+            final Node node = fxomObject.getSceneGraphObject().getAs(Node.class);
             this.columnIndex = GridPane.getColumnIndex(node);
             this.rowIndex = GridPane.getRowIndex(node);
             this.columnSpan = GridPane.getColumnSpan(node);

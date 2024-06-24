@@ -457,14 +457,14 @@ public class DragGesture extends AbstractGesture {
         for (final FXOMObject child:hitParentMask.getSubComponents(false)) {
             final boolean isNode = child.getSceneGraphObject().isInstanceOf(Node.class);
             if ((pickExcludes.contains(child) == false) && isNode) {
-                final Node childNode = (Node) child.getSceneGraphObject();
+                final Node childNode = child.getSceneGraphObject().getAs(Node.class);
                 movingGuideController.addSampleBounds(childNode);
             }
         }
 
         // Adds N, S, E, W and center lines of the hitParent itself
         assert hitParent.getSceneGraphObject().isInstanceOf(Node.class); // Because (1)
-        final Node hitParentNode = (Node) hitParent.getSceneGraphObject();
+        final Node hitParentNode = hitParent.getSceneGraphObject().getAs(Node.class);
         movingGuideController.addSampleBounds(hitParentNode);
 
         // If bounds of hitParent are larger enough then adds the margin boundaries

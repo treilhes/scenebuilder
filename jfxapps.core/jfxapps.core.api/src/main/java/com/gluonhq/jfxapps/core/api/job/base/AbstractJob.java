@@ -64,7 +64,11 @@ public abstract class AbstractJob implements Job {
     private String description;
 
     public AbstractJob(JobExtensionFactory extensionFactory) {
-        extensions.addAll(extensionFactory.getExtensions(this));
+
+        if (extensionFactory != null) {
+            extensions.addAll(extensionFactory.getExtensions(this));
+        }
+
         // Should normally not reach the user
         setDescription(getClass().getSimpleName());
     }

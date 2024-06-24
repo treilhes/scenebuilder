@@ -53,7 +53,15 @@ public interface JobManager {
 
     String getRedoDescription();
 
-    void push(Job job);
+    /**
+     * Push a job to the pipeline, it will be executed, wrapped and added to the
+     * undo stack
+     *
+     * @param job
+     * @return the job executed, it may be different from the one passed as
+     *         parameter as the pipeline may have added some others
+     */
+    Job push(Job job);
 
     void undo();
 

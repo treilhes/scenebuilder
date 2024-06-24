@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -45,7 +45,6 @@ import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMScript;
-import com.gluonhq.jfxapps.core.fxom.collector.FxScriptCollector;
 import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
 import com.gluonhq.jfxapps.core.fxom.testutil.FxmlUtil;
 
@@ -64,7 +63,7 @@ public class FxScriptCollectorTest {
     public void should_return_the_right_number_of_fxscripts() {
         FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.FX_SCRIPTS);
 
-        List<FXOMScript> items = fxomDocument.getFxomRoot().collect(FxScriptCollector.allFxScripts());
+        List<FXOMScript> items = fxomDocument.getFxomRoot().collect(FxCollector.allFxScripts());
 
         assertEquals(3, items.size());
     }
@@ -74,7 +73,7 @@ public class FxScriptCollectorTest {
         FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.FX_SCRIPTS);
 
         String source = "script2.js";
-        List<FXOMScript> items = fxomDocument.getFxomRoot().collect(FxScriptCollector.fxScriptBySource(source));
+        List<FXOMScript> items = fxomDocument.getFxomRoot().collect(FxCollector.fxScriptBySource(source));
 
         assertEquals(2, items.size());
     }

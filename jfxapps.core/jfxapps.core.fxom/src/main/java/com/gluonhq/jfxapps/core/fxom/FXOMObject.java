@@ -36,8 +36,8 @@ package com.gluonhq.jfxapps.core.fxom;
 import java.util.List;
 import java.util.Map;
 
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
 import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 import com.gluonhq.jfxapps.core.fxom.glue.GlueElement;
 import com.gluonhq.jfxapps.core.fxom.util.JavaLanguage;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
@@ -254,7 +254,7 @@ public abstract class FXOMObject extends FXOMNode {
     }
 
     public void setSceneGraphObject(Object sceneGraphObject) {
-        this.sceneGraphObject.update(sceneGraphObject);
+        this.sceneGraphObject.update(sceneGraphObject, false);
     }
 
     public FXOMObject getNextSlibing() {
@@ -612,8 +612,8 @@ public abstract class FXOMObject extends FXOMNode {
             documentLocationWillChange(destination.getLocation());
         }
 
-        final Map<String, FXOMObject> destinationFxIds = destination.collect(FxIdCollector.fxIdsMap());
-        final Map<String, FXOMObject> importedFxIds = collect(FxIdCollector.fxIdsMap());
+        final Map<String, FXOMObject> destinationFxIds = destination.collect(FxCollector.fxIdsMap());
+        final Map<String, FXOMObject> importedFxIds = collect(FxCollector.fxIdsMap());
         final FXOMFxIdMerger merger = new FXOMFxIdMerger(destinationFxIds.keySet(), importedFxIds.keySet());
         for (Map.Entry<String, FXOMObject> e : importedFxIds.entrySet()) {
             final String originalFxId = e.getKey();

@@ -52,7 +52,7 @@ public class NodeIntersectsBoundsCheck extends AbstractIntersectsBoundsCheck {
 
         // Note: bounds are in root scene coordinates
         final Node sceneGraphNode
-                = (Node) fxomObject.getSceneGraphObject();
+                = fxomObject.getSceneGraphObject().getAs(Node.class);
         final Bounds sceneGraphNodeBounds
                 = sceneGraphNode.localToScene(sceneGraphNode.getLayoutBounds(), true /* rootScene */);
 

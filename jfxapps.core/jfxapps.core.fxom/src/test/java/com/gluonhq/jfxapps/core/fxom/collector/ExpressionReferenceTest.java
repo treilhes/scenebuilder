@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -45,12 +45,8 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
-import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
-import com.gluonhq.jfxapps.core.fxom.collector.FxReferenceCollector;
 import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
 import com.gluonhq.jfxapps.core.fxom.testutil.FxmlUtil;
 
@@ -58,7 +54,7 @@ import javafx.stage.Stage;
 
 @ExtendWith(ApplicationExtension.class)
 @SetSystemProperty(key = "javafx.allowjs", value = "true")
-class FxReferenceCollectorTest {
+class ExpressionReferenceTest {
 
     @Start
     private void start(Stage stage) {
@@ -66,76 +62,11 @@ class FxReferenceCollectorTest {
     }
 
     @Test
-    public void should_return_the_right_number_of_fxReference_with_id() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.REFERRER);
-
-        String ref = "referred1";
-        List<FXOMIntrinsic> items = fxomDocument.getFxomRoot().collect(FxReferenceCollector.fxReferenceBySource(ref));
-
-        assertEquals(1, items.size());
-    }
-
-    @Test
-    public void should_return_the_right_number_of_fxReference() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.REFERRER);
-
-        List<FXOMIntrinsic> items = fxomDocument.getFxomRoot().collect(FxReferenceCollector.allFxReferences());
-
-        assertEquals(3, items.size());
-    }
-
-    @Test
-    public void should_return_the_right_number_of_fxReference_with_the_most_nested_excluded() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.REFERRER);
-
-        Map<String, FXOMObject> fxIds = fxomDocument.getFxomRoot().collect(FxIdCollector.fxIdsMap());
-
-        FXOMObject excluded = fxIds.get("excluded");
-
-        List<FXOMIntrinsic> items = fxomDocument.getFxomRoot()
-                .collect(FxReferenceCollector.fxReferenceBySource(null, excluded));
-
-        assertEquals(1, items.size());
-    }
-
-    @Test
-    public void should_return_the_right_number_of_reference_with_id() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.REFERRER);
-
-        String ref = "referred1";
-        List<FXOMNode> items = fxomDocument.getFxomRoot().collect(FxReferenceCollector.referenceById(ref));
-
-        assertEquals(1, items.size());
-    }
-
-    @Test
-    public void should_return_the_right_number_of_reference() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.REFERRER);
-
-        List<FXOMNode> items = fxomDocument.getFxomRoot().collect(FxReferenceCollector.allReferences());
-
-        assertEquals(5, items.size());
-    }
-
-    @Test
-    public void should_return_the_right_number_of_reference_with_the_most_nested_excluded() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.REFERRER);
-
-        Map<String, FXOMObject> fxIds = fxomDocument.getFxomRoot().collect(FxIdCollector.fxIdsMap());
-
-        FXOMObject excluded = fxIds.get("excluded");
-
-        List<FXOMNode> items = fxomDocument.getFxomRoot().collect(FxReferenceCollector.referenceById(null, excluded));
-
-        assertEquals(2, items.size());
-    }
-
-    @Test
     public void should_return_the_right_number_of_value_reference_with_id() {
         FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.REFERRER);
 
         String ref = "circleblue";
-        List<FXOMPropertyT> items = fxomDocument.getFxomRoot().collect(FxReferenceCollector.valueReferenceById(ref));
+        List<FXOMPropertyT> items = fxomDocument.getFxomRoot().collect(ExpressionCollector.expressionReferenceById(ref));
 
         assertEquals(1, items.size());
     }
@@ -144,7 +75,7 @@ class FxReferenceCollectorTest {
     public void should_return_the_right_number_of_value_reference() {
         FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.REFERRER);
 
-        List<FXOMPropertyT> items = fxomDocument.getFxomRoot().collect(FxReferenceCollector.allValueReferences());
+        List<FXOMPropertyT> items = fxomDocument.getFxomRoot().collect(ExpressionCollector.allExpressionReferences());
 
         assertEquals(2, items.size());
     }
@@ -153,12 +84,12 @@ class FxReferenceCollectorTest {
     public void should_return_the_right_number_of_value_reference_with_the_most_nested_excluded() {
         FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.REFERRER);
 
-        Map<String, FXOMObject> fxIds = fxomDocument.getFxomRoot().collect(FxIdCollector.fxIdsMap());
+        Map<String, FXOMObject> fxIds = fxomDocument.getFxomRoot().collect(FxCollector.fxIdsMap());
 
         FXOMObject excluded = fxIds.get("excluded");
 
         List<FXOMPropertyT> items = fxomDocument.getFxomRoot()
-                .collect(FxReferenceCollector.valueReferenceById(null, excluded));
+                .collect(ExpressionCollector.expressionReferenceById(null, excluded));
 
         assertEquals(1, items.size());
     }

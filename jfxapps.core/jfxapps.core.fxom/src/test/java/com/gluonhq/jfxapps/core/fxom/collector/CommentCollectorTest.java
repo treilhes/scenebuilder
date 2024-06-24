@@ -33,59 +33,57 @@
  */
 package com.gluonhq.jfxapps.core.fxom.collector;
 
-import java.util.ArrayList;
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
-import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic.Type;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junitpioneer.jupiter.SetSystemProperty;
+import org.testfx.framework.junit5.ApplicationExtension;
+import org.testfx.framework.junit5.Start;
 
-public class FxIncludeCollector {
+import com.gluonhq.jfxapps.core.fxom.FXOMComment;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.collector.CommentCollector;
+import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
+import com.gluonhq.jfxapps.core.fxom.testutil.FxmlUtil;
 
-    public static FxInclude allFxIncludes() {
-        return new FxInclude(null);
-    }
+import javafx.stage.Stage;
 
-    public static FxInclude fxIncludeBySource(String source) {
-        return new FxInclude(source);
-    }
+@ExtendWith(ApplicationExtension.class)
+@SetSystemProperty(key = "javafx.allowjs", value = "true")
+class CommentCollectorTest {
 
-    public static class FxInclude implements FXOMCollector<List<FXOMIntrinsic>>{
-
-        private List<FXOMIntrinsic> result = new ArrayList<>();
-
-        private final String source;
-
-        public FxInclude(String source) {
-            super();
-            this.source = source;
-        }
-
-        @Override
-        public Strategy collectionStrategy() {
-            return Strategy.OBJECT;
-        }
-
-        @Override
-        public void collect(FXOMObject object) {
-            if (object instanceof FXOMIntrinsic fi) {
-                if ((fi.getType() == Type.FX_INCLUDE) && ((source == null) || source.equals(fi.getSource()))) {
-                    result.add(fi);
-                }
-            }
-        }
-
-        @Override
-        public void collect(FXOMProperty property) {
-
-        }
-
-        @Override
-        public List<FXOMIntrinsic> getCollected() {
-            return result;
-        }
+    @Start
+    private void start(Stage stage) {
 
     }
 
+    @Test
+    public void should_return_the_right_number_of_comments() {
+        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.COMMENTS);
+
+        List<FXOMComment> items = fxomDocument.getFxomRoot().collect(CommentCollector.allComments());
+
+        // when support of first node comment will be enabled
+        //assertEquals(5, items.size());
+        // for the time being
+        assertEquals(4, items.size());
+    }
+
+    private enum FxmlTestInfo implements FilenameProvider {
+        COMMENTS("comments");
+
+        private String filename;
+
+        FxmlTestInfo(String filename) {
+            this.filename = filename;
+        }
+
+        @Override
+        public String getFilename() {
+            return filename;
+        }
+    }
 }

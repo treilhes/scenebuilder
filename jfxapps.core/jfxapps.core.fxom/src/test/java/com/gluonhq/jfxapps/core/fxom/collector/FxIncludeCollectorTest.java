@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -45,7 +45,6 @@ import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIncludeCollector;
 import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
 import com.gluonhq.jfxapps.core.fxom.testutil.FxmlUtil;
 
@@ -64,7 +63,7 @@ class FxIncludeCollectorTest {
     public void should_return_the_right_number_of_fxincludes() {
         FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.FX_INCLUDES);
 
-        List<FXOMIntrinsic> items = fxomDocument.getFxomRoot().collect(FxIncludeCollector.allFxIncludes());
+        List<FXOMIntrinsic> items = fxomDocument.getFxomRoot().collect(FxCollector.allFxIncludes());
 
         assertEquals(4, items.size());
     }
@@ -74,7 +73,7 @@ class FxIncludeCollectorTest {
         FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.FX_INCLUDES);
 
         String source = "referred1.fxml";
-        List<FXOMIntrinsic> items = fxomDocument.getFxomRoot().collect(FxIncludeCollector.fxIncludeBySource(source));
+        List<FXOMIntrinsic> items = fxomDocument.getFxomRoot().collect(FxCollector.fxIncludeBySource(source));
 
         assertEquals(1, items.size());
     }

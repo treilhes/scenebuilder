@@ -89,7 +89,7 @@ public class EnumerationPropertyMetadata<VC> extends ValuePropertyMetadata<VC> {
                 }
             }
         } else {
-            final Object o = getName().getValue(fxomInstance.getSceneGraphObject());
+            final Object o = getName().getValue(fxomInstance.getSceneGraphObject().get());
             if (o == null) {
                 result = getDefaultValue();
             } else {

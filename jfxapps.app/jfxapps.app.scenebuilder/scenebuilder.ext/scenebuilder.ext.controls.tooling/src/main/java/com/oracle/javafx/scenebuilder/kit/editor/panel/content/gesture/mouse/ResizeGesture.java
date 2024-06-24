@@ -332,7 +332,7 @@ public class ResizeGesture extends AbstractMouseGesture {
             relocater.revertToOriginalLocation();
         }
 
-        final Node sceneGraphObject = resizer.getSceneGraphObject();
+        final Node sceneGraphObject = resizer.getSceneGraphObject().get();
         Parent parentToLayout = resizer.getFxomObject().getClosestMainGraphNode().getClosestParent()
                 .getSceneGraphObject().getAs(Parent.class);
 

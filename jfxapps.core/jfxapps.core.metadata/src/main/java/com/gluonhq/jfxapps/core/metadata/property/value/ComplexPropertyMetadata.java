@@ -39,7 +39,7 @@ import java.util.Optional;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 
 /**
@@ -69,7 +69,7 @@ public abstract class ComplexPropertyMetadata<T,VC> extends SingleValuePropertyM
             final String fxId = pv.getSuffix();
 
             Optional<FXOMObject> targetObject = fxomProperty.getFxomDocument()
-                    .collect(FxIdCollector.findFirstById(fxId));
+                    .collect(FxCollector.fxIdFindFirst(fxId));
 
             if (targetObject.isEmpty()) {
                 // Emergency code
@@ -102,7 +102,7 @@ public abstract class ComplexPropertyMetadata<T,VC> extends SingleValuePropertyM
 
     @Override
     public T makeValueFromFxomInstance(FXOMInstance valueFxomInstance) {
-        return getValueClass().cast(valueFxomInstance.getSceneGraphObject());
+        return getValueClass().cast(valueFxomInstance.getSceneGraphObject().get());
     }
 
     protected static abstract class AbstractBuilder<SELF, TOBUILD, T,VC> extends SingleValuePropertyMetadata.AbstractBuilder<SELF, TOBUILD, T,VC> {

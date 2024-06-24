@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -45,7 +46,7 @@ package com.oracle.javafx.scenebuilder.app;
  * However some internals must be disclosed:
  *
  * - FXOMObject : represents a design object ; it is paired with an object
- *   in the user scene graph ; FXOMObject.getSceneGraphObject() returns the
+ *   in the user scene graph ; FXOMObject.getSceneGraphObject().get() returns the
  *   matching scene graph object : sometimes it's a plain Node (eg Button),
  *   sometimes not (eg a Tab, a TableColumn...).
  *
@@ -172,7 +173,7 @@ public class SceneBuilderTest {
 //
 //    /**
 //     * Returns the node in content panel matching a given fxom object.
-//     * This method invokes FXOMObject.getSceneGraphObject() and checks if
+//     * This method invokes FXOMObject.getSceneGraphObject().get() and checks if
 //     * it is a Node. If it's not, it returns null.
 //     *
 //     * @param documentScene a scene holding a document window
@@ -186,7 +187,7 @@ public class SceneBuilderTest {
 //
 //        final Node result;
 //        if (fxomObject.getSceneGraphObject().isInstanceOf(Node.class)) {
-//            result = (Node) fxomObject.getSceneGraphObject();
+//            result = fxomObject.getSceneGraphObject().getAs(Node.class);
 //        } else {
 //            result = null;
 //        }

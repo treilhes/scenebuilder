@@ -81,7 +81,7 @@ public class SelectionStateImpl implements BasicSelection, SelectionState {
         if (selectionCssState.containsKey(instance)) {
             return selectionCssState.get(instance);
         } else {
-            Map<StyleableProperty, List<Style>> state = CssInternal.getCssState(instance.getSceneGraphObject());
+            Map<StyleableProperty, List<Style>> state = CssInternal.getCssState(instance.getSceneGraphObject().get());
             selectionCssState.put(instance, state);
             return state;
         }
@@ -165,7 +165,7 @@ public class SelectionStateImpl implements BasicSelection, SelectionState {
 
         unresolvedInstances.clear();
         for (FXOMElement instance : selectedInstances) {
-            if (instance.getSceneGraphObject() == null) {
+            if (instance.getSceneGraphObject().isEmpty()) {
                 unresolvedInstances.add(instance);
             }
         }

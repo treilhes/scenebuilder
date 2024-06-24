@@ -241,7 +241,7 @@ public class PasteIntoJob extends BatchSelectionJob {
         assert newObjects.size() == 1;
         final FXOMObject newObject = newObjects.get(0);
         if (newObject instanceof FXOMInstance) {
-            final Object sceneGraphObject = newObject.getSceneGraphObject();
+            final Object sceneGraphObject = newObject.getSceneGraphObject().get();
             if (sceneGraphObject != null) {
                 result = I18N.getString("label.action.edit.paste.into.1", sceneGraphObject.getClass().getSimpleName());
             } else {

@@ -47,14 +47,14 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 
 /**
  * This Job updates the FXOM document at execution time.
  * Replace the reference id from the {@link FXOMPropertyT} by the original referee {@link FXOMObject}<br/>
  * The referee is moved from his original location
- * Use the dedicated {@link Factory} to create an instance
+ * Use the dedicated {@link FxomJobsFactory} to create an instance
  */
 @Prototype
 public final class CombineExpressionReferenceJob extends InlineDocumentJob {
@@ -86,7 +86,7 @@ public final class CombineExpressionReferenceJob extends InlineDocumentJob {
 
         // 1) Locate the referee
         final String fxId = FXOMNodes.extractReferenceSource(reference);
-        final FXOMObject referee = fxomDocument.collect(FxIdCollector.findFirstById(fxId)).orElse(null);
+        final FXOMObject referee = fxomDocument.collect(FxCollector.fxIdFindFirst(fxId)).orElse(null);
 
         // 2) Remove the referee
         final Job removeJob = fxomJobsFactory.removeObject(referee);

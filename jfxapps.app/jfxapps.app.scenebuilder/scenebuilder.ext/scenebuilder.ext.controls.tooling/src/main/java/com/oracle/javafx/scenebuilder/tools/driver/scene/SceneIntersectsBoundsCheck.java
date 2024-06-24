@@ -70,7 +70,7 @@ public class SceneIntersectsBoundsCheck extends AbstractIntersectsBoundsCheck {
 
         assert root != null;
         assert root.getSceneGraphObject().isInstanceOf(Node.class);
-        Node rootNode = (Node) root.getSceneGraphObject();
+        Node rootNode = root.getSceneGraphObject().getAs(Node.class);
         final Bounds rootNodeBounds = rootNode.localToScene(rootNode.getLayoutBounds(), true /* rootScene */);
         return rootNodeBounds.intersects(bounds);
     }

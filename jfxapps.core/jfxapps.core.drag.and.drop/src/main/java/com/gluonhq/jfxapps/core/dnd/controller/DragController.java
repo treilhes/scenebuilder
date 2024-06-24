@@ -154,7 +154,9 @@ public class DragController implements Drag {
                     .getGroup(getDragSource().getDraggedObjects(), null, null);
 
             final Job selectJob = selectionJobFactory.updateSelection(selectionGroup);
-            final BatchJob batchJob = batchJobFactory.getJob(dropJob.getDescription());
+
+            final BatchJob batchJob = batchJobFactory.getJob();
+            batchJob.setDescription(dropJob.getDescription());
 
             if (committedDropTarget.isSelectRequiredAfterDrop()) {
                 batchJob.addSubJob(backupSelectionJob);

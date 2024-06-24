@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -252,7 +252,7 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
     }
 
     protected void updateSceneGraphObject() {
-        this.sceneGraphObject = sceneGraphClass.cast(fxomObject.getSceneGraphObject());
+        this.sceneGraphObject = sceneGraphClass.cast(fxomObject.getSceneGraphObject().get());
     }
 
     /**
@@ -268,7 +268,7 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
 
         // not needed for now CoordinateHelper does not depend on scene
         // more shapes does not have any scene but clip does
-        //assert ((Node)fxomObject.getSceneGraphObject()).getScene() == getRootNode().getScene();
+        //assert (fxomObject.getSceneGraphObject().getAs(Node.class)).getScene() == getRootNode().getScene();
 
         final Transform t1 = CoordinateHelper.localToSceneTransform(fxomObject);
         final Transform t2 = workspace.getContentSubScene().getLocalToSceneTransform();

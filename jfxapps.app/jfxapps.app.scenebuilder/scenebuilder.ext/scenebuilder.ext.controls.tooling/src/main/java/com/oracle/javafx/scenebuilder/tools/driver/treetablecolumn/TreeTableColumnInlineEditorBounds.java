@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -50,7 +51,7 @@ public class TreeTableColumnInlineEditorBounds extends AbstractInlineEditorBound
     @Override
     public Node getBounds(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject().isInstanceOf(TreeTableColumn.class);
-        final TreeTableColumn<?,?> tc = (TreeTableColumn<?,?>) fxomObject.getSceneGraphObject();
+        final TreeTableColumn<?,?> tc = fxomObject.getSceneGraphObject().getAs(TreeTableColumn.class);
         final TreeTableViewDesignInfoX di = new TreeTableViewDesignInfoX();
         return di.getColumnNode(tc);
     }

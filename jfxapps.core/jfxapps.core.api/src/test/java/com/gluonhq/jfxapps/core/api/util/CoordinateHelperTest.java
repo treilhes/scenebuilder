@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -46,10 +46,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
@@ -84,7 +83,7 @@ class CoordinateHelperTest {
             stage.setScene(new Scene(root, 300, 300));
             stage.show();
 
-            Map<String, FXOMObject> fxomObjects = newFxomDocument.collect(FxIdCollector.fxIdsMap());
+            Map<String, FXOMObject> fxomObjects = newFxomDocument.collect(FxCollector.fxIdsMap());
             rectangle = fxomObjects.get("rectangle");
             circle = fxomObjects.get("circle");
 

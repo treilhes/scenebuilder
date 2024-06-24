@@ -120,7 +120,7 @@ public class SplitPaneDesignInfoX  {
      */
 
     public double[] simulateDividerMove(FXOMObject fxomSplitPane, int dividerIndex, double sceneX, double sceneY) {
-        final SplitPane splitPane = (SplitPane)fxomSplitPane.getSceneGraphObject();
+        final SplitPane splitPane = fxomSplitPane.getSceneGraphObject().getAs(SplitPane.class);
         final List<SplitPane.Divider> dividers = splitPane.getDividers();
         final double currentPos = dividers.get(dividerIndex).getPosition();
         final Point2D p = CoordinateHelper.sceneToLocal(fxomSplitPane, sceneX, sceneY, true /* rootScene */);

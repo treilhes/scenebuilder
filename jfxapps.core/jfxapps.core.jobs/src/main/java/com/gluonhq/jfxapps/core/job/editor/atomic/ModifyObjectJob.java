@@ -75,7 +75,7 @@ public final class ModifyObjectJob extends AbstractJob {
      */
     public void setJobParameters(FXOMElement fxomElement, ValuePropertyMetadata propertyMetadata, Object newValue) {
         assert fxomElement != null;
-        assert fxomElement.getSceneGraphObject() != null;
+        assert !fxomElement.getSceneGraphObject().isEmpty();
         assert propertyMetadata != null;
 
         this.fxomElement = fxomElement;

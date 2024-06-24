@@ -112,7 +112,7 @@ public abstract class SingleValuePropertyMetadata<T, VC> extends ValuePropertyMe
             if (valueClass == null) {
                 logger.error("valueClass is null for Class : {}", this.getClass());
             }
-            result = valueClass.cast(getName().getValue(fxomInstance.getSceneGraphObject()));
+            result = valueClass.cast(getName().getValue(fxomInstance.getSceneGraphObject().get()));
         }
 
         return result;

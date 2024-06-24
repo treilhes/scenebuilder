@@ -183,7 +183,7 @@ public class SbObjectSelectionGroup extends ObjectSelectionGroup implements SbSe
      */
     @Override
     public boolean isExpired() {
-        return hitItem.getSceneGraphObject() != hitSceneGraphObject;
+        return hitItem.getSceneGraphObject().get() != hitSceneGraphObject;
     }
 
     /**

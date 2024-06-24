@@ -223,8 +223,8 @@ public final class WrapInGridPaneJob extends AbstractWrapInSubComponentJob {
             }
             if (lastObject != null) {
                 if (comparator.compare(lastObject, currentObject) != 0) {
-                    final Node lastNode = (Node) lastObject.getSceneGraphObject();
-                    final Node currentNode = (Node) currentObject.getSceneGraphObject();
+                    final Node lastNode = lastObject.getSceneGraphObject().getAs(Node.class);
+                    final Node currentNode = currentObject.getSceneGraphObject().getAs(Node.class);
                     final Bounds lastBounds = lastNode.getBoundsInParent();
                     final Bounds currentBounds = currentNode.getBoundsInParent();
                     if (course.getMinY(currentBounds) >= course.getMaxY(lastBounds) - OVERLAP_FUZZ) {
@@ -245,7 +245,7 @@ public final class WrapInGridPaneJob extends AbstractWrapInSubComponentJob {
             double[] columnWidth, double[] rowHeight) {
 
         for (FXOMObject fxomObject : fxomObjects) {
-            final Node node = (Node) fxomObject.getSceneGraphObject();
+            final Node node = fxomObject.getSceneGraphObject().getAs(Node.class);
             final double width = node.getBoundsInLocal().getWidth();
             final double height = node.getBoundsInLocal().getHeight();
             final int[] ind = indices.get(fxomObject);

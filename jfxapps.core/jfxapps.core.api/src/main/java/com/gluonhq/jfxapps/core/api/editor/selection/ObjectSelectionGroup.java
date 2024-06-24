@@ -59,7 +59,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPath;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 
 import javafx.scene.Node;
 
@@ -119,7 +119,7 @@ public class ObjectSelectionGroup implements SelectionGroup {
         assert fxomObject != null;
         this.items.add(fxomObject);
         this.hitItem = fxomObject;
-        this.hitSceneGraphObject = fxomObject.getSceneGraphObject();
+        this.hitSceneGraphObject = fxomObject.getSceneGraphObject().get();
         this.hitNode = hitNode;
     }
 
@@ -136,7 +136,7 @@ public class ObjectSelectionGroup implements SelectionGroup {
         assert fxomObjects.contains(hitItem);
         this.items.addAll(fxomObjects);
         this.hitItem = hitItem;
-        this.hitSceneGraphObject = this.hitItem.getSceneGraphObject();
+        this.hitSceneGraphObject = this.hitItem.getSceneGraphObject().get();
         this.hitNode = hitNode;
     }
 
@@ -173,7 +173,7 @@ public class ObjectSelectionGroup implements SelectionGroup {
      * @return true, if is expired
      */
     public boolean isExpired() {
-        return hitItem.getSceneGraphObject() != hitSceneGraphObject;
+        return hitItem.getSceneGraphObject().get() != hitSceneGraphObject;
     }
 
     /**
@@ -587,7 +587,7 @@ public class ObjectSelectionGroup implements SelectionGroup {
         // Collects fx:ids in selected objects and their descendants.
         final Map<String, FXOMObject> fxIdMap = new HashMap<>();
         for (FXOMObject selectedObject : getItems()) {
-            fxIdMap.putAll(selectedObject.collect(FxIdCollector.fxIdsMap()));
+            fxIdMap.putAll(selectedObject.collect(FxCollector.fxIdsMap()));
         }
         return fxIdMap;
     }

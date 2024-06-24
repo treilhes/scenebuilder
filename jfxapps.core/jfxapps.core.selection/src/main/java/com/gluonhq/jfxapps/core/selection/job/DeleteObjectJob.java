@@ -140,7 +140,7 @@ public final class DeleteObjectJob extends InlineDocumentJob {
         sb.append("Delete ");
 
         if (targetFxomObject instanceof FXOMInstance) {
-            final Object sceneGraphObject = targetFxomObject.getSceneGraphObject();
+            final Object sceneGraphObject = targetFxomObject.getSceneGraphObject().get();
             if (sceneGraphObject != null) {
                 sb.append(sceneGraphObject.getClass().getSimpleName());
             } else {

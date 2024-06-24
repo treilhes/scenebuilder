@@ -47,7 +47,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 
 /**
  * This job find the reference id contained in source attribute of an {@link FXOMIntrinsic}
@@ -90,7 +90,7 @@ public final class ExpandIntrinsicReferenceJob extends InlineDocumentJob {
 
         // 1) clone the referee
         final String fxId = FXOMNodes.extractReferenceSource(reference);
-        final FXOMObject referee = fxomDocument.collect(FxIdCollector.findFirstById(fxId)).orElse(null);
+        final FXOMObject referee = fxomDocument.collect(FxCollector.fxIdFindFirst(fxId)).orElse(null);
         final FXOMObject refereeClone = cloner.clone(referee);
 
         // 2) replace the reference by the referee clone

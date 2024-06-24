@@ -33,26 +33,37 @@
  */
 package com.oracle.javafx.scenebuilder.job;
 
+import java.util.Map;
+
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobPipeline;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
 
 @ApplicationInstanceSingleton
 public class SbJobPipeline implements JobPipeline {
 
-    private final UpdateReferencesJob.Factory updateReferencesJobFactory;
-
-
-    public SbJobPipeline(UpdateReferencesJob.Factory updateReferencesJobFactory) {
-        super();
-        this.updateReferencesJobFactory = updateReferencesJobFactory;
+    @Override
+    public Map<String, FXOMCollector<?>> preExecutionCollectors() {
+        return null;
     }
-
 
     @Override
-    public Job buildPipeline(Job executableJob) {
-        final Job fixJob = updateReferencesJobFactory.getJob(executableJob);
-        return fixJob;
+    public Map<String, FXOMCollector<?>> postExecutionCollectors() {
+        return null;
     }
+
+    @Override
+    public Job preExecutionJob(Map<String, FXOMObject> preIdMap) {
+        return null;
+    }
+
+    @Override
+    public Job postExecutionJob(Map<String, FXOMObject> postIdMap) {
+        return null;
+    }
+
+
 
 }

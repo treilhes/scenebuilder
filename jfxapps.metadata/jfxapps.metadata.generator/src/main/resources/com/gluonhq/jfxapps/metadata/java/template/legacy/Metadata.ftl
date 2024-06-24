@@ -207,7 +207,7 @@ public class Metadata {
         assert fxomInstance != null;
         assert targetName != null;
 
-        if (fxomInstance.getSceneGraphObject() == null) {
+        if (fxomInstance.getSceneGraphObject().isEmpty()) {
             // FXOM object is unresolved
             result = null;
         } else {

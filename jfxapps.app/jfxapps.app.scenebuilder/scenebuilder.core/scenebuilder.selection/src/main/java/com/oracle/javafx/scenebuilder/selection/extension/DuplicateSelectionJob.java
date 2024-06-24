@@ -141,7 +141,7 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
                             targetMask.getSubComponentCount(targetAccessory,true) + index++);
 
                     result.add(insertSubJob);
-                    final Object selectedSceneGraphObject = selectedFxomObject.getSceneGraphObject();
+                    final Object selectedSceneGraphObject = selectedFxomObject.getSceneGraphObject().get();
                     // Relocate duplicated objects if needed
                     if (selectedSceneGraphObject instanceof Node) {
                         final Node selectedNode = (Node) selectedSceneGraphObject;
@@ -225,7 +225,7 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
 
         final FXOMObject newObject = newFxomObjects.values().iterator().next();
         if (newObject instanceof FXOMInstance) {
-            final Object sceneGraphObject = newObject.getSceneGraphObject();
+            final Object sceneGraphObject = newObject.getSceneGraphObject().get();
             if (sceneGraphObject != null) {
                 result = I18N.getString("label.action.edit.duplicate.1", sceneGraphObject.getClass().getSimpleName());
             } else {

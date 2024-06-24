@@ -149,7 +149,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
         if (parent == null) { // selection == root object
             return true;
         }
-        final Object parentSceneGraphObject = parent.getSceneGraphObject();
+        final Object parentSceneGraphObject = parent.getSceneGraphObject().get();
         if (parentSceneGraphObject instanceof BorderPane
                 || parentSceneGraphObject instanceof DialogPane) {
             return osg.getItems().size() == 1;
@@ -328,7 +328,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
             // Modify child LAYOUT bounds
             if (newContainerMask.getMainAccessory() != null && newContainerMask.getMainAccessory().isFreeChildPositioning()) {
                 assert child.getSceneGraphObject().isInstanceOf(Node.class);
-                final Node childNode = (Node) child.getSceneGraphObject();
+                final Node childNode = child.getSceneGraphObject().getAs(Node.class);
                 final Bounds childBounds = childNode.getLayoutBounds();
 
                 final Point2D point = childNode.localToParent(

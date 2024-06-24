@@ -193,7 +193,7 @@ public class CssInternal {
             if (fxRoot == null) {
                 fxRoot = instance.getFxomDocument().getSceneGraphRoot();
             }
-            Object fxObject = instance.getSceneGraphObject();
+            Object fxObject = instance.getSceneGraphObject().get();
             classesMap.putAll(getFxObjectClassesMap(fxObject, fxRoot));
         }
 

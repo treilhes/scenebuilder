@@ -59,12 +59,11 @@ public final class BatchJob extends AbstractJob {
     private final List<Job> subJobs = new ArrayList<>();
     private boolean shouldRefreshSceneGraph;
     private boolean shouldUpdateSelection;
-    private String description;
     private final FXOMDocument fxomDocument;
     private final Selection selection;
 
     // @formatter:off
-    protected BatchJob(
+    public BatchJob(
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             Selection selection) {
@@ -74,9 +73,8 @@ public final class BatchJob extends AbstractJob {
         this.selection = selection;
     }
 
-    protected void setJobParameters(String description, boolean shouldRefreshSceneGraph,
+    protected void setJobParameters(boolean shouldRefreshSceneGraph,
             boolean shouldUpdateSelection) {
-        this.description = description == null ? getClass().getSimpleName() : description;
         this.shouldRefreshSceneGraph = shouldRefreshSceneGraph;
         this.shouldUpdateSelection = shouldUpdateSelection;
     }
@@ -166,11 +164,6 @@ public final class BatchJob extends AbstractJob {
         }
     }
 
-    @Override
-    public String getDescription() {
-        return description;
-    }
-
     @Singleton
     @Lazy
     public static class Factory extends JobFactory<BatchJob> {
@@ -181,7 +174,6 @@ public final class BatchJob extends AbstractJob {
         /**
          * Create a {@link BatchJob} job
          *
-         * @param description             the job description (or class name if null)
          * @param shouldRefreshSceneGraph if true wrap jobs execution between
          *                                {@link FXOMDocument#beginUpdate()} /
          *                                {@link FXOMDocument#endUpdate()}
@@ -190,44 +182,33 @@ public final class BatchJob extends AbstractJob {
          *                                {@link Selection#endUpdate()}
          * @return the job to execute
          */
-        public BatchJob getJob(String description, boolean shouldRefreshSceneGraph, boolean shouldUpdateSelection) {
+        public BatchJob getJob(boolean shouldRefreshSceneGraph, boolean shouldUpdateSelection) {
             return create(BatchJob.class,
-                    j -> j.setJobParameters(description, shouldRefreshSceneGraph, shouldUpdateSelection));
+                    j -> j.setJobParameters(shouldRefreshSceneGraph, shouldUpdateSelection));
         }
 
         /**
          * Create a {@link BatchJob} job
          *
-         * @param description             the job description (or class name if null)
          * @param shouldRefreshSceneGraph if true wrap jobs execution between
          *                                {@link FXOMDocument#beginUpdate()} /
          *                                {@link FXOMDocument#endUpdate()}
          * @return the job to execute
          */
-        public BatchJob getJob(String description, boolean shouldRefreshSceneGraph) {
+        public BatchJob getJob(boolean shouldRefreshSceneGraph) {
             return create(BatchJob.class,
-                    j -> j.setJobParameters(description, shouldRefreshSceneGraph, true));
+                    j -> j.setJobParameters(shouldRefreshSceneGraph, true));
         }
 
         /**
          * Create a {@link BatchJob} job and notify {@link FXOMDocument} and
          * {@link Selection} updates
          *
-         * @param description the job description (or class name if null)
-         * @return the job to execute
-         */
-        public BatchJob getJob(String description) {
-            return getJob(description, true, true);
-        }
-
-        /**
-         * Create a default {@link BatchJob} job and notify {@link FXOMDocument} and
-         * {@link Selection} updates
-         *
          * @return the job to execute
          */
         public BatchJob getJob() {
-            return getJob(null, true, true);
+            return getJob(true, true);
         }
+
     }
 }

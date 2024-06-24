@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -127,7 +127,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
 
     @Override
     protected void mouseDragged() {
-        final SplitPane splitPane = (SplitPane)splitPaneInstance.getSceneGraphObject();
+        final SplitPane splitPane = splitPaneInstance.getSceneGraphObject().getAs(SplitPane.class);
         final double sceneX = getLastMouseEvent().getSceneX();
         final double sceneY = getLastMouseEvent().getSceneY();
         final double[] newDividerPositions
@@ -191,7 +191,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
 
     private SplitPane getSplitPane() {
         assert splitPaneInstance.getSceneGraphObject().isInstanceOf(SplitPane.class);
-        return (SplitPane) splitPaneInstance.getSceneGraphObject();
+        return splitPaneInstance.getSceneGraphObject().getAs(SplitPane.class);
     }
 
     private void setupAndOpenHudWindow() {
@@ -213,7 +213,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
                 break;
         }
         hudWindowController.setRelativePosition(cp);
-        hudWindowController.openWindow((Node)splitPaneInstance.getClosestMainGraphNode().getSceneGraphObject());
+        hudWindowController.openWindow(splitPaneInstance.getClosestMainGraphNode().getSceneGraphObject().getAs(Node.class));
     }
 
     private void updateHudWindow() {

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -706,7 +706,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
                 // Else, we don't have an FXOMInstance
                 Object pickObject = selection.getCheckedHitNode();
                 FXOMInstance fxomInstance = getFXOMInstance(selection);
-                if (fxomInstance != null && fxomInstance.getSceneGraphObject() == pickObject) {
+                if (fxomInstance != null && fxomInstance.getSceneGraphObject().get() == pickObject) {
                     selectedObject = fxomInstance;
                 } else {
                     selectedObject = pickObject;
@@ -849,7 +849,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
             }
             enclosingFXOMObj = fxomDoc.collect(SceneGraphCollector.findSceneGraphObject(node)).get();
         }
-        Object enclosingObj = enclosingFXOMObj.getSceneGraphObject();
+        Object enclosingObj = enclosingFXOMObj.getSceneGraphObject().get();
         assert enclosingObj instanceof Node;
         return (Node) enclosingObj;
     }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -50,7 +51,7 @@ public class TableColumnInlineEditorBounds extends AbstractInlineEditorBounds {
     @Override
     public Node getBounds(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject().isInstanceOf(TableColumn.class);
-        final TableColumn<?,?> tc = (TableColumn<?,?>) fxomObject.getSceneGraphObject();
+        final TableColumn<?,?> tc = fxomObject.getSceneGraphObject().getAs(TableColumn.class);
         final TableViewDesignInfoX di = new TableViewDesignInfoX();
         return di.getColumnNode(tc);
     }

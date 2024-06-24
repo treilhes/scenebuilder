@@ -128,9 +128,9 @@ public class GridPaneHierarchyMask {
 //        final Object sceneGraphObject;
 //        // For FXOMIntrinsic, we use the source sceneGraphObject
 //        if (getFxomObject() instanceof FXOMIntrinsic) {
-//            sceneGraphObject = ((FXOMIntrinsic) getFxomObject()).getSourceSceneGraphObject();
+//            sceneGraphObject = ((FXOMIntrinsic) getFxomObject()).getSourceSceneGraphObject().get();
 //        } else {
-//            sceneGraphObject = getFxomObject().getSceneGraphObject();
+//            sceneGraphObject = getFxomObject().getSceneGraphObject().get();
 //        }
 
         // FIXME here was a call to getSourceSceneGraphObject() if getFxomElement()

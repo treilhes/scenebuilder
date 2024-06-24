@@ -60,7 +60,7 @@ public class ObjectPropertyMetadata<VC> extends SingleValuePropertyMetadata<Obje
 
     @Override
     public Object makeValueFromFxomInstance(FXOMInstance valueFxomInstance) {
-        return valueFxomInstance.getSceneGraphObject();
+        return valueFxomInstance.getSceneGraphObject().get();
     }
 
     @Override

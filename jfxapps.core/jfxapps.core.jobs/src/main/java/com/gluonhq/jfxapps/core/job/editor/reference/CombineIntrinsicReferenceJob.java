@@ -47,7 +47,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 
 /**
  * This Job updates the FXOM document at execution time.
@@ -84,7 +84,7 @@ public final class CombineIntrinsicReferenceJob extends InlineDocumentJob {
 
         // 1) Locate the referee
         final String fxId = FXOMNodes.extractReferenceSource(reference);
-        final FXOMObject referee = fxomDocument.collect(FxIdCollector.findFirstById(fxId)).orElse(null);
+        final FXOMObject referee = fxomDocument.collect(FxCollector.fxIdFindFirst(fxId)).orElse(null);
 
         // 2) Remove the referee
         // FIXME i think removing the referee is not a valid move if the reference is an fx:copy, a test/check must be done

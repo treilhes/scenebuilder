@@ -77,7 +77,7 @@ public final class BorderPaneDropTargetProvider extends AbstractDropTargetProvid
 
         final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
         final BorderPaneHierarchyMask mask = borderPaneHierarchyMaskFactory.getMask(fxomObject);
-        final BorderPane borderPane = (BorderPane) fxomInstance.getSceneGraphObject();
+        final BorderPane borderPane = fxomInstance.getSceneGraphObject().getAs(BorderPane.class);
         final Point2D hitPoint = CoordinateHelper.sceneToLocal(fxomInstance, sceneX, sceneY, true /* rootScene */);
         final double hitX = hitPoint.getX();
         final double hitY = hitPoint.getY();

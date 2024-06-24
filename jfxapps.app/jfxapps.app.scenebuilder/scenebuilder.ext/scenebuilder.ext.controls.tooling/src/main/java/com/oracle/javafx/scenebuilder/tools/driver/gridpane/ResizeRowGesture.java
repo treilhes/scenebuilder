@@ -103,7 +103,7 @@ public class ResizeRowGesture extends AbstractMouseGesture {
 
         this.gridPaneHandles = gridPaneHandles;
         this.fxomInstance = gridPaneHandles.getFxomInstance(); // Shortcut
-        this.gridPane = (GridPane) fxomInstance.getSceneGraphObject(); // Shortcut
+        this.gridPane = fxomInstance.getSceneGraphObject().getAs(GridPane.class); // Shortcut
         this.rowIndex = rowIndex;
 
         assert this.rowIndex < Deprecation.getGridPaneRowCount(this.gridPane);

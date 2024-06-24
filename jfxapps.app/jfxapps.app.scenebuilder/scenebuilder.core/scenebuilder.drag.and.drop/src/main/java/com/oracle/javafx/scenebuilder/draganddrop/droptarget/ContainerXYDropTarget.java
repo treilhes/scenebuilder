@@ -167,7 +167,7 @@ public final class ContainerXYDropTarget extends AbstractDropTarget {
             for (FXOMObject draggedObject : dragSource.getDraggedObjects()) {
                 assert draggedObject.getSceneGraphObject().isInstanceOf(Node.class);
                 assert draggedObject instanceof FXOMInstance;
-                final Node draggedNode = (Node) draggedObject.getSceneGraphObject();
+                final Node draggedNode = draggedObject.getSceneGraphObject().getAs(Node.class);
                 final double newLayoutX = Math.round(draggedNode.getLayoutX() + dxy.getX());
                 final double newLayoutY = Math.round(draggedNode.getLayoutY() + dxy.getY());
                 result.addSubJob(relocateNodeJobFactory.getJob((FXOMInstance) draggedObject, newLayoutX, newLayoutY));
@@ -193,13 +193,13 @@ public final class ContainerXYDropTarget extends AbstractDropTarget {
 
             // Computes dragged object positions relatively to hitObject
             assert hitObject.getSceneGraphObject().isInstanceOf(Node.class);
-            final Node hitNode = (Node) hitObject.getSceneGraphObject();
+            final Node hitNode = hitObject.getSceneGraphObject().getAs(Node.class);
             final double layoutX0 = hitNode.getLayoutX();
             final double layoutY0 = hitNode.getLayoutY();
             final Map<FXOMObject, Point2D> layoutDXY = new HashMap<>();
             for (FXOMObject draggedObject : draggedObjects) {
                 assert draggedObject.getSceneGraphObject().isInstanceOf(Node.class);
-                final Node draggedNode = (Node) draggedObject.getSceneGraphObject();
+                final Node draggedNode = draggedObject.getSceneGraphObject().getAs(Node.class);
                 final double layoutDX = draggedNode.getLayoutX() - layoutX0;
                 final double layoutDY = draggedNode.getLayoutY() - layoutY0;
                 layoutDXY.put(draggedObject, new Point2D(layoutDX, layoutDY));
@@ -286,7 +286,7 @@ public final class ContainerXYDropTarget extends AbstractDropTarget {
         /*
          * Converts (hitX, hitY) in hitObject parent coordinate space.
          */
-        final Node sceneGraphNode = (Node) hitObject.getSceneGraphObject();
+        final Node sceneGraphNode = hitObject.getSceneGraphObject().getAs(Node.class);
         final Point2D currentHit = sceneGraphNode.localToParent(hitX, hitY);
 
         /*

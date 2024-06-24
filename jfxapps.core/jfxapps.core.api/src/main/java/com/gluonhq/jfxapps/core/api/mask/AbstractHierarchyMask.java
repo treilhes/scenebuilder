@@ -49,7 +49,6 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
@@ -251,12 +250,7 @@ public abstract class AbstractHierarchyMask<
             logger.info("virtual object {} accepted into accessory: {}", getFxomObject(), accessory.getName());
             return true;
         } else {
-            final Object sceneGraphObject;
-            if (fxomObject instanceof FXOMIntrinsic) {
-                sceneGraphObject = ((FXOMIntrinsic) fxomObject).getSourceSceneGraphObject();
-            } else {
-                sceneGraphObject = fxomObject.getSceneGraphObject();
-            }
+            final Object sceneGraphObject = fxomObject.getSceneGraphObject().get();
 
             if (accessory.isAccepting(sceneGraphObject)) {
                 logger.info("object {} accepted into accessory:{} this object {}",

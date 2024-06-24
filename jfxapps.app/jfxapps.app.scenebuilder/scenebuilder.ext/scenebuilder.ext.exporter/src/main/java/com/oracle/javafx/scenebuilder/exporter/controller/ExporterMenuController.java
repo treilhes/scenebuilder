@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -67,7 +68,7 @@ public class ExporterMenuController {
     private final FxmlDocumentManager documentManager;
 
     public ExporterMenuController(
-            @Autowired @Lazy EditorInstanceWindow document, 
+            @Autowired @Lazy EditorInstanceWindow document,
             @Autowired @Lazy FxmlDocumentManager documentManager,
             @Autowired List<ExportFormat> formats) {
         this.document = document;
@@ -134,7 +135,7 @@ public class ExporterMenuController {
 
             if (format.isPresent()) {
                 FXOMDocument fd = documentManager.fxomDocument().get();
-                Node rootNode = (Node)fd.getFxomRoot().getSceneGraphObject();
+                Node rootNode = fd.getFxomRoot().getSceneGraphObject().getAs(Node.class);
                 format.get().exportScene(rootNode, result);
             }
         }

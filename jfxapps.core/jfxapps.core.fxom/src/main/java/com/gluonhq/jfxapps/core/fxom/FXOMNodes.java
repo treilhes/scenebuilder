@@ -84,6 +84,8 @@ public class FXOMNodes {
     //TODO the content is set in stone, how to expand it? Who may want to expand it?
     // anyway this is not the right place for this method
     // UPDATE: now it is extensible but legacy values still need to come from metadata
+    // UPDATE: weak properties must be handled by sb and not discarded
+    @Deprecated
     public static Set<WeakProperty> getWeakProperties() {
 
 //            weakPropertyNames.add("labelFor");
@@ -216,7 +218,7 @@ public class FXOMNodes {
                 final String includeRef
                         = pv.toString().substring(FXMLLoader.RELATIVE_PATH_PREFIX.length());
                 result = new FXOMInclude(targetDocument, includeRef);
-                result.setSourceSceneGraphObject(transientDoc.getFxomRoot().getSceneGraphObject());
+                result.setSourceSceneGraphObject(transientDoc.getFxomRoot().getSceneGraphObject().get());
             }
         }
 
@@ -510,7 +512,7 @@ public class FXOMNodes {
         final List<FXOMObject> result = new ArrayList<>();
 
         for (FXOMObject o : serializeObjects(fxomObject)) {
-            if (o.getSceneGraphObject() == null) {
+            if (o.getSceneGraphObject().isEmpty()) {
                 result.add(o);
             }
         }
@@ -577,105 +579,72 @@ public class FXOMNodes {
         return result;
     }
 
-
-    private static final PropertyName toggleGroupName = new PropertyName("toggleGroup");
-
-    public static boolean isToggleGroupReference(FXOMNode node) {
-        final boolean result;
-
-        if (extractReferenceSource(node) == null) {
-            result = false;
-        } else {
-            if (node instanceof FXOMIntrinsic) {
-                final FXOMIntrinsic intrinsic = (FXOMIntrinsic) node;
-                final FXOMProperty parentProperty = intrinsic.getParentProperty();
-                if (parentProperty == null) {
-                    result = false;
-                } else {
-                    result = parentProperty.getName().equals(toggleGroupName);
-                }
-            } else if (node instanceof FXOMPropertyT) {
-                final FXOMPropertyT property = (FXOMPropertyT) node;
-                result = property.getName().equals(toggleGroupName);
-            } else {
-                result = false;
-            }
-        }
-
-        return result;
-    }
-
-
-    public static FXOMPropertyC makeToggleGroup(FXOMDocument fxomDocument, String fxId) {
-        final FXOMInstance toggleGroup = new FXOMInstance(fxomDocument, ToggleGroup.class);
-        toggleGroup.setFxId(fxId);
-        return new FXOMPropertyC(fxomDocument, toggleGroupName, toggleGroup);
-    }
-
-
+    /**
+     *
+     * @param node
+     * @return
+     * @deprecated There's no weak reference in JavaFX, ref must be kept and handled by the application
+     */
+    @Deprecated
     public static boolean isWeakReference(FXOMNode node) {
-        final boolean result;
-
-        if (node instanceof FXOMIntrinsic) {
-            final FXOMIntrinsic intrinsic = (FXOMIntrinsic) node;
+        if (node instanceof FXOMIntrinsic intrinsic) {
             switch(intrinsic.getType()) {
                 case FX_REFERENCE:
                 case FX_COPY:
-                    if (intrinsic.getParentProperty() != null) {
-                        final PropertyName propertyName = intrinsic.getParentProperty().getName();
-                        if (propertyName.getResidenceClass() == null) {
-                            //TODO test me
-                            FXOMElement parent = intrinsic.getParentProperty().getParentInstance();
-                            if (!parent.getSceneGraphObject().isEmpty()) {
-                                Class<?> parentClass = parent.getSceneGraphObject().getObjectClass();
-                                result = getWeakProperties().stream().anyMatch(wp -> {
-                                    return wp.getPropertyName().equals(propertyName.getName())
-                                            && wp.getPropertyOwnerType().isAssignableFrom(parentClass);
-                                });
-                            } else {
-                                result = false;
-                            }
-                        } else {
-                            result = false;
-                        }
-                    } else {
-                        result = false;
-                    }
-                    break;
-                default:
-                    result = false;
-            }
-        } else if (node instanceof FXOMPropertyT) {
-            final FXOMPropertyT property = (FXOMPropertyT) node;
-            final PrefixedValue pv = new PrefixedValue(property.getValue());
-            if (pv.isExpression() && JavaLanguage.isIdentifier(pv.getSuffix())) {
-                final PropertyName propertyName = property.getName();
-                if (propertyName.getResidenceClass() == null) {
-                    //Before
-                    //result = getWeakPropertyNames().contains(propertyName.getName());
 
+                    if (intrinsic.getParentProperty() == null) {
+                        return false;
+                    }
+                    final PropertyName propertyName = intrinsic.getParentProperty().getName();
+                    if (propertyName.getResidenceClass() != null) {
+                        return false;
+                    }
                     //TODO test me
-                    FXOMElement parent = property.getParentInstance();
-                    if (parent.getSceneGraphObject() != null) {
-                        Class<?> parentClass = parent.getSceneGraphObject().getObjectClass();
-                        result = getWeakProperties().stream().anyMatch(wp -> {
-                            return wp.getPropertyName().equals(propertyName.getName())
-                                    && wp.getPropertyOwnerType().isAssignableFrom(parentClass);
-                        });
-                    } else {
-                        result = false;
+                    FXOMElement parent = intrinsic.getParentProperty().getParentInstance();
+                    if (parent.getSceneGraphObject().isEmpty()) {
+                        return false;
                     }
-                } else {
-                    result = false;
-                }
-            } else {
-                result = false;
-            }
-        } else {
-            result = false;
-        }
 
-        return result;
+                    Class<?> parentClass = parent.getSceneGraphObject().getObjectClass();
+                    return getWeakProperties().stream().anyMatch(wp -> {
+                        return wp.getPropertyName().equals(propertyName.getName())
+                                && wp.getPropertyOwnerType().isAssignableFrom(parentClass);
+                    });
+
+                default:
+                    return false;
+            }
+        } else if (node instanceof FXOMPropertyT property) {
+
+            final PrefixedValue pv = new PrefixedValue(property.getValue());
+
+            if (!pv.isExpression() || !JavaLanguage.isIdentifier(pv.getSuffix())) {
+                return false;
+            }
+
+            final PropertyName propertyName = property.getName();
+
+            if (propertyName.getResidenceClass() != null) {
+                return false;
+            }
+
+            //Before
+            //result = getWeakPropertyNames().contains(propertyName.getName());
+
+            //TODO test me
+            FXOMElement parent = property.getParentInstance();
+
+            if (parent.getSceneGraphObject().isEmpty()) {
+                return false;
+            }
+            Class<?> parentClass = parent.getSceneGraphObject().getObjectClass();
+            return getWeakProperties().stream().anyMatch(wp -> {
+                return wp.getPropertyName().equals(propertyName.getName())
+                        && wp.getPropertyOwnerType().isAssignableFrom(parentClass);
+            });
+        } else {
+            return false;
+        }
     }
 
 

@@ -167,7 +167,7 @@ public final class RelocateSelectionJob extends BatchDocumentJob {
         final Set<FXOMObject> movedObjects = locationMap.keySet();
         if (locationMap.size() == 1) {
             final FXOMObject movedObject = movedObjects.iterator().next();
-            final Object sceneGraphObject = movedObject.getSceneGraphObject();
+            final Object sceneGraphObject = movedObject.getSceneGraphObject().get();
             if (sceneGraphObject == null) {
                 result = I18N.getString("drop.job.move.single.unresolved");
             } else {
@@ -178,7 +178,7 @@ public final class RelocateSelectionJob extends BatchDocumentJob {
             final Set<Class<?>> classes = new HashSet<>();
             int unresolvedCount = 0;
             for (FXOMObject o : movedObjects) {
-                if (o.getSceneGraphObject() != null) {
+                if (!o.getSceneGraphObject().isEmpty()) {
                     classes.add(o.getSceneGraphObject().getObjectClass());
                 } else {
                     unresolvedCount++;

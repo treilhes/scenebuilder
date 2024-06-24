@@ -135,8 +135,8 @@ public final class WrapInSplitPaneJob extends AbstractWrapInSubComponentJob {
         for (FXOMObject currentObject : fxomObjects) {
             if (lastObject != null) {
                 if (comparator.compare(lastObject, currentObject) != 0) {
-                    final Node lastNode = (Node) lastObject.getSceneGraphObject();
-                    final Node currentNode = (Node) currentObject.getSceneGraphObject();
+                    final Node lastNode = lastObject.getSceneGraphObject().getAs(Node.class);
+                    final Node currentNode = currentObject.getSceneGraphObject().getAs(Node.class);
                     final Bounds lastBounds = lastNode.getBoundsInParent();
                     final Bounds currentBounds = currentNode.getBoundsInParent();
                     if (course.getMinY(currentBounds) >= course.getMaxY(lastBounds)) {

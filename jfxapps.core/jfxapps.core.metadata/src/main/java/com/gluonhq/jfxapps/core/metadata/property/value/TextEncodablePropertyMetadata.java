@@ -60,7 +60,7 @@ public abstract class TextEncodablePropertyMetadata<T, VC> extends SingleValuePr
 
     @Override
     public T makeValueFromFxomInstance(FXOMInstance valueFxomInstance) {
-        return getValueClass().cast(valueFxomInstance.getSceneGraphObject());
+        return getValueClass().cast(valueFxomInstance.getSceneGraphObject().get());
     }
 
     @Override

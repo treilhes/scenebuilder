@@ -131,7 +131,7 @@ public abstract class ValuePropertyMetadata<VC> extends PropertyMetadata<VC> {
      */
     public void setValueInSceneGraphObject(FXOMElement fxomInstance, Object value) {
         assert fxomInstance != null;
-        assert fxomInstance.getSceneGraphObject() != null;
+        assert !fxomInstance.getSceneGraphObject().isEmpty();
         getName().setValue(fxomInstance.getSceneGraphObject(), value);
     }
 
@@ -149,7 +149,7 @@ public abstract class ValuePropertyMetadata<VC> extends PropertyMetadata<VC> {
      */
     public Object getValueInSceneGraphObject(FXOMElement fxomInstance) {
         assert fxomInstance != null;
-        return getName().getValue(fxomInstance.getSceneGraphObject());
+        return getName().getValue(fxomInstance.getSceneGraphObject().get());
     }
 
     /*

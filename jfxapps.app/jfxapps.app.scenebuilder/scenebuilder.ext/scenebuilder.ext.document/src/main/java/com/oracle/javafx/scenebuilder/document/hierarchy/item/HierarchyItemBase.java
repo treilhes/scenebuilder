@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -167,7 +167,7 @@ public class HierarchyItemBase implements HierarchyItem {
 //        if (mask == null) {
 //            return null;
 //        }
-//        final Object sceneGraphObject = mask.getFxomObject().getSceneGraphObject();
+//        final Object sceneGraphObject = mask.getFxomObject().getSceneGraphObject().get();
 //        if (sceneGraphObject == null) {
 //            // For now, handle display label for scenegraph objects only
 //            return null;

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -106,7 +106,7 @@ public final class ControlLibraryDragSource extends AbstractDragSource {
                 // We put the library item node in a Scene and layout it.
                 // This will allow ContainerXYDropTarget to measure this
                 // library item by calling Node.getLayoutBounds().
-                final Node sceneGraphNode = (Node) libraryItemObject.getSceneGraphObject();
+                final Node sceneGraphNode = libraryItemObject.getSceneGraphObject().getAs(Node.class);
                 final Group group = new Group();
                 group.getChildren().add(sceneGraphNode);
                 final Scene scene = new Scene(group); // Not used but required
@@ -153,7 +153,7 @@ public final class ControlLibraryDragSource extends AbstractDragSource {
         if (hitObject == null) {
             result = Double.NaN;
         } else if (hitObject.isNode()) {
-            final Node hitNode = (Node) hitObject.getSceneGraphObject();
+            final Node hitNode = hitObject.getSceneGraphObject().getAs(Node.class);
             final Bounds b = hitNode.getLayoutBounds();
             result = (b.getMinX() + b.getMaxX()) / 2.0;
         } else {
@@ -171,7 +171,7 @@ public final class ControlLibraryDragSource extends AbstractDragSource {
         if (hitObject == null) {
             result = Double.NaN;
         } else if (hitObject.isNode()) {
-            final Node hitNode = (Node) hitObject.getSceneGraphObject();
+            final Node hitNode = hitObject.getSceneGraphObject().getAs(Node.class);
             final Bounds b = hitNode.getLayoutBounds();
             result = (b.getMinY() + b.getMaxY()) / 2.0;
         } else {
@@ -218,7 +218,7 @@ public final class ControlLibraryDragSource extends AbstractDragSource {
         result.getStylesheets().add(AbstractDragSource.getStylesheet().toString());
 
         if (getLibraryItemObject().getSceneGraphObject().isInstanceOf(Node.class)) {
-            final Node sceneGraphNode = (Node) getLibraryItemObject().getSceneGraphObject();
+            final Node sceneGraphNode = getLibraryItemObject().getSceneGraphObject().get();
             final DragSourceShadow shadowNode = new DragSourceShadow();
             shadowNode.setupForNode(sceneGraphNode);
             result.getChildren().add(shadowNode);

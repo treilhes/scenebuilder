@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -152,7 +153,7 @@ class FXOMRefresher {
         assert currentObject != null;
         assert newObject != null;
         assert currentObject.getClass() == newObject.getClass();
-        currentObject.setSceneGraphObject(newObject.getSceneGraphObject());
+        currentObject.setSceneGraphObject(newObject.getSceneGraphObject().get());
         if (currentObject instanceof FXOMInstance) {
             refreshFxomInstance((FXOMInstance) currentObject, (FXOMInstance) newObject);
         } else if (currentObject instanceof FXOMCollection) {
@@ -199,7 +200,11 @@ class FXOMRefresher {
     private void refreshFxomIntrinsic(FXOMIntrinsic currentIntrinsic, FXOMIntrinsic newIntrinsic) {
         assert currentIntrinsic != null;
         assert newIntrinsic != null;
-        currentIntrinsic.setSourceSceneGraphObject(newIntrinsic.getSourceSceneGraphObject());
+        if (newIntrinsic.getSceneGraphObject().isFromExternalSource()) {
+            currentIntrinsic.setSourceSceneGraphObject(newIntrinsic.getSceneGraphObject().get());
+        } else {
+            currentIntrinsic.setSceneGraphObject(newIntrinsic.getSceneGraphObject().get());
+        }
         currentIntrinsic.getProperties().clear();
         currentIntrinsic.fillProperties(newIntrinsic.getProperties());
     }
@@ -253,15 +258,16 @@ class FXOMRefresher {
     }
 
     private void handleRefreshIntrinsic(FXOMObject currentObject, FXOMObject newObject) {
-        if (currentObject instanceof FXOMIntrinsic && newObject instanceof FXOMIntrinsic) {
-            refreshFxomObject(currentObject, newObject);
-        } else if (newObject instanceof FXOMIntrinsic) {
-            FXOMInstance fxomInstance = ((FXOMIntrinsic) newObject).createFxomInstanceFromIntrinsic();
-            refreshFxomObject(currentObject, fxomInstance);
-        } else if (currentObject instanceof FXOMIntrinsic) {
-            FXOMInstance fxomInstance = ((FXOMIntrinsic) currentObject).createFxomInstanceFromIntrinsic();
-            refreshFxomObject(fxomInstance, newObject);
-        }
+//        if (currentObject instanceof FXOMIntrinsic && newObject instanceof FXOMIntrinsic) {
+//            refreshFxomObject(currentObject, newObject);
+//        } else if (newObject instanceof FXOMIntrinsic) {
+//            FXOMInstance fxomInstance = ((FXOMIntrinsic) newObject).createFxomInstanceFromIntrinsic();
+//            refreshFxomObject(currentObject, fxomInstance);
+//        } else if (currentObject instanceof FXOMIntrinsic) {
+//            FXOMInstance fxomInstance = ((FXOMIntrinsic) currentObject).createFxomInstanceFromIntrinsic();
+//            refreshFxomObject(fxomInstance, newObject);
+//        }
+        refreshFxomObject(currentObject, newObject);
     }
 
 //    /*
@@ -295,7 +301,7 @@ class FXOMRefresher {
 //                    final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
 //                    assert fxomInstance.getSceneGraphObject().isInstanceOf(SplitPane.class);
 //                    final SplitPane splitPane
-//                            = (SplitPane) fxomInstance.getSceneGraphObject();
+//                            = fxomInstance.getSceneGraphObject().getAs(SplitPane.class);
 //                    splitPane.layout();
 //                    final ValuePropertyMetadata vpm
 //                            = metadata.queryValueProperty(fxomInstance, dividerPositionsName);

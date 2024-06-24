@@ -197,7 +197,7 @@ public final class InsertAsAccessoryJob extends BatchSelectionJob {
         sb.append("Insert ");
 
         if (newObject instanceof FXOMInstance) {
-            final Object sceneGraphObject = newObject.getSceneGraphObject();
+            final Object sceneGraphObject = newObject.getSceneGraphObject().get();
             if (sceneGraphObject != null) {
                 sb.append(sceneGraphObject.getClass().getSimpleName());
             } else {

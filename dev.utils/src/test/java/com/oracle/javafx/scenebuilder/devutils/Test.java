@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,6 +34,7 @@
 package com.oracle.javafx.scenebuilder.devutils;
 
 import com.oracle.javafx.scenebuilder.devutils.tbview.TestAnim;
+import com.oracle.javafx.scenebuilder.devutils.tbview.TestExternalFile;
 import com.oracle.javafx.scenebuilder.devutils.test.AppTester;
 
 import javafx.beans.property.DoubleProperty;
@@ -47,9 +48,10 @@ public class Test extends AppTester {
     @Override
     public void start(Stage stage) {
 
+        new TestExternalFile().start(stage, "C:\\Users\\ptreilhes\\Desktop\\test.fxml");
         //new TestFs().start(stage);
 
-        new TestAnim().start(stage);
+        //new TestAnim().start(stage);
         //new TestContent().start(stage);
         //new TestContent2().start(stage);
         //new TestContent5().start(stage);

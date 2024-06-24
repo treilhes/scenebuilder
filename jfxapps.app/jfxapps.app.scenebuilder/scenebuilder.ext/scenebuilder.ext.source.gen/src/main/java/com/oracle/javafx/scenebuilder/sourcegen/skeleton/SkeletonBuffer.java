@@ -40,7 +40,7 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
-import com.gluonhq.jfxapps.core.fxom.collector.FxEventHandlerCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.EventHandlerCollector;
 import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
 import com.oracle.javafx.scenebuilder.sourcegen.util.eventnames.FindEventNamesUtil;
 
@@ -107,7 +107,7 @@ class SkeletonBuffer {
         // need to initialize the internal events map
         FindEventNamesUtil.initializeEventsMap();
 
-        for (FXOMPropertyT eventHandler : document.getFxomRoot().collect(FxEventHandlerCollector.allEventHandlers())) {
+        for (FXOMPropertyT eventHandler : document.getFxomRoot().collect(EventHandlerCollector.allEventHandlers())) {
             builder.addEventHandler(eventHandler);
         }
     }

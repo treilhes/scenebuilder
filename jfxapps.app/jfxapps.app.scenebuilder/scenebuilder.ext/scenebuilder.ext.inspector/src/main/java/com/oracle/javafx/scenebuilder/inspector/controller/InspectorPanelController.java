@@ -1534,7 +1534,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 //        for (FXOMInstance instance : getSelectedInstances()) {
 //            assert instance.getSceneGraphObject().isInstanceOf(Node.class);
 //            Integer index;
-//            Node node = (Node) instance.getSceneGraphObject();
+//            Node node = instance.getSceneGraphObject().getAs(Node.class);
 //            if (propNameStr.contains("columnSpan")) {//NOCHECK
 //                index = GridPane.getColumnIndex(node);
 //            } else {
@@ -1557,7 +1557,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 //            if (commonParent == null) {
 //                return null;
 //            }
-//            Object parentObj = commonParent.getSceneGraphObject();
+//            Object parentObj = commonParent.getSceneGraphObject().get();
 //            assert parentObj instanceof GridPane;
 //            return (GridPane) parentObj;
 //    }

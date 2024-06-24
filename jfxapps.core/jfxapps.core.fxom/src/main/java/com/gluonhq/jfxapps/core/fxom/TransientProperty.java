@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -153,7 +154,7 @@ class TransientProperty extends TransientNode {
         } else {
             // It is a property of type Map ; currently we don't support
             // map property editing ; so we create a fake value.
-            assert getSceneGraphObject().isInstanceOf(Map.class);
+            assert getSceneGraphObject() instanceof Map;
             result = new FXOMPropertyT(fxomDocument, name, "fake-value");
         }
 

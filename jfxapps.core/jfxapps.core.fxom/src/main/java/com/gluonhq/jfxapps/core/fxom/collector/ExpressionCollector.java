@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,47 +35,80 @@ package com.gluonhq.jfxapps.core.fxom.collector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMComment;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
+import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
+import com.gluonhq.jfxapps.core.fxom.util.JavaLanguage;
+import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 
-public class XmlCommentCollector {
+public class ExpressionCollector {
 
-    public static XmlComment allComments() {
-        return new XmlComment();
-    }
+    public static class ExpressionReference implements FXOMCollector<List<FXOMPropertyT>>{
 
-    public static class XmlComment implements FXOMCollector<List<FXOMComment>>{
+        private List<FXOMPropertyT> result = new ArrayList<>();
 
-        private List<FXOMComment> result = new ArrayList<>();
+        private final String source;
+        private final Set<FXOMObject> excludedFromSearch;
 
-        public XmlComment() {
+        public ExpressionReference(String source, Set<FXOMObject> excludedFromSearch) {
             super();
+            this.source = source;
+            this.excludedFromSearch = excludedFromSearch;
+        }
+
+        @Override
+        public boolean accept(FXOMObject object) {
+            return excludedFromSearch == null || !excludedFromSearch.contains(object);
         }
 
         @Override
         public Strategy collectionStrategy() {
-            return Strategy.OBJECT_AND_PROPERTY;
+            return Strategy.PROPERTY;
         }
 
         @Override
         public void collect(FXOMObject object) {
-            if (object instanceof FXOMComment fc) {
-                result.add(fc);
-            }
+
         }
 
         @Override
         public void collect(FXOMProperty property) {
-
+            if (property instanceof FXOMPropertyT pt) {
+                final PrefixedValue pv = new PrefixedValue(pt.getValue());
+                if (pv.isExpression()) {
+                    final String suffix = pv.getSuffix();
+                    if (JavaLanguage.isIdentifier(suffix)) {
+                        if ((source == null) || source.equals(suffix)) {
+                            result.add(pt);
+                        }
+                    }
+                }
+            }
         }
 
         @Override
-        public List<FXOMComment> getCollected() {
+        public List<FXOMPropertyT> getCollected() {
             return result;
         }
 
+    }
+
+    public static ExpressionReference allExpressionReferences() {
+        return new ExpressionReference(null, null);
+    }
+
+    public static ExpressionReference expressionReferenceById(String referenceId) {
+        return new ExpressionReference(referenceId, null);
+    }
+
+    public static ExpressionReference expressionReferenceById(String referenceId, FXOMObject excludedFromSearch) {
+        return new ExpressionReference(referenceId, excludedFromSearch == null ? null : Set.of(excludedFromSearch));
+    }
+
+    public static ExpressionReference expressionReferenceById(String referenceId, Set<FXOMObject> excludedFromSearch) {
+        return new ExpressionReference(referenceId, excludedFromSearch);
     }
 
 }

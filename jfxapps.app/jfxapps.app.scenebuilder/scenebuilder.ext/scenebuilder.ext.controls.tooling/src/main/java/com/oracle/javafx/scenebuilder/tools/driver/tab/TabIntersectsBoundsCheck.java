@@ -51,7 +51,7 @@ public class TabIntersectsBoundsCheck extends AbstractIntersectsBoundsCheck {
     public boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds) {
         assert fxomObject.getSceneGraphObject().isInstanceOf(Tab.class);
 
-        final Tab tab = (Tab) fxomObject.getSceneGraphObject();
+        final Tab tab = fxomObject.getSceneGraphObject().getAs(Tab.class);
         final boolean result;
         if (tab.isSelected()) {
             final TabPane tabPane

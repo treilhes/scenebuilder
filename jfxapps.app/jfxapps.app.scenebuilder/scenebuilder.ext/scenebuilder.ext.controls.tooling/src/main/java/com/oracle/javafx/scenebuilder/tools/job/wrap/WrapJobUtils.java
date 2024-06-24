@@ -88,7 +88,7 @@ public class WrapJobUtils {
         assert fxomObjects != null && fxomObjects.isEmpty() == false;
         Bounds result = null;
         for (FXOMObject fxomObject : fxomObjects) {
-            final Object scenegraphObject = fxomObject.getSceneGraphObject();
+            final Object scenegraphObject = fxomObject.getSceneGraphObject().get();
             assert scenegraphObject instanceof Node;
             final Node node = (Node) scenegraphObject;
             if (result == null) {

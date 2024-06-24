@@ -175,7 +175,7 @@ public final class UseSizeJob extends AbstractJob {
 
         if (fxomDocument != null && (fxomObject instanceof FXOMInstance)) {
             final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-            final Object sceneGraphObject = fxomInstance.getSceneGraphObject();
+            final Object sceneGraphObject = fxomInstance.getSceneGraphObject().get();
 
             if (sceneGraphObject instanceof WebView || sceneGraphObject instanceof Region) {
                 subJobs.addAll(modifyHeightJobs(fxomInstance));

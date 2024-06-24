@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -47,7 +47,6 @@ import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
 import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
 import com.gluonhq.jfxapps.core.fxom.testutil.FxmlUtil;
 
@@ -67,7 +66,7 @@ class FxIdCollectorTest {
     public void should_return_the_right_number_of_fxid() {
         FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.FX_IDS);
 
-        Map<String, FXOMObject> items = fxomDocument.getFxomRoot().collect(FxIdCollector.fxIdsMap());
+        Map<String, FXOMObject> items = fxomDocument.getFxomRoot().collect(FxCollector.fxIdsMap());
 
         assertEquals(6, items.size());
     }
@@ -81,21 +80,21 @@ class FxIdCollectorTest {
         Optional<FXOMObject> item = null;
 
         id = "btnClip";
-        item = fxomDocument.getFxomRoot().collect(FxIdCollector.findFirstById(id));
+        item = fxomDocument.getFxomRoot().collect(FxCollector.fxIdFindFirst(id));
 
         assertTrue(!item.isEmpty());
         assertTrue(item.get().getSceneGraphObject().isInstanceOf(Button.class));
         assertTrue(item.get().getSceneGraphObject().getAs(Button.class).getText().equals(value));
 
         id = "btnDefine";
-        item = fxomDocument.getFxomRoot().collect(FxIdCollector.findFirstById(id));
+        item = fxomDocument.getFxomRoot().collect(FxCollector.fxIdFindFirst(id));
 
         assertTrue(!item.isEmpty());
         assertTrue(item.get().getSceneGraphObject().isInstanceOf(Button.class));
         assertTrue(item.get().getSceneGraphObject().getAs(Button.class).getText().equals(value));
 
         id = "btn";
-        item = fxomDocument.getFxomRoot().collect(FxIdCollector.findFirstById(id));
+        item = fxomDocument.getFxomRoot().collect(FxCollector.fxIdFindFirst(id));
 
         assertTrue(!item.isEmpty());
         assertTrue(item.get().getSceneGraphObject().isInstanceOf(Button.class));

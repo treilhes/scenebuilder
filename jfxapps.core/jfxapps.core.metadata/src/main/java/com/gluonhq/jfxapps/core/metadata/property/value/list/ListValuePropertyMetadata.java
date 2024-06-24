@@ -119,7 +119,7 @@ public abstract class ListValuePropertyMetadata<T,VC> extends ValuePropertyMetad
             }
         } else {
             assert getName() != null;
-            final List<?> items = (List<?>) getName().getValue(fxomInstance.getSceneGraphObject());
+            final List<?> items = (List<?>) getName().getValue(fxomInstance.getSceneGraphObject().get());
             result = new ArrayList<>();
             for (Object item : items) {
                 result.add(getItemClass().cast(item));

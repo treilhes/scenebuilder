@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,7 +44,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.gluonhq.jfxapps.core.fxom.collector.FxIncludeCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 import com.gluonhq.jfxapps.core.fxom.collector.PropertyCollector;
 import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
 import com.gluonhq.jfxapps.core.fxom.util.FXMLFormatUtils;
@@ -119,7 +119,7 @@ public class FXOMAssetIndex {
             /*
              * Collects fx:include
              */
-            for (FXOMIntrinsic fxomInclude : fxomRoot.collect(FxIncludeCollector.allFxIncludes())) {
+            for (FXOMIntrinsic fxomInclude : fxomRoot.collect(FxCollector.allFxIncludes())) {
                 final String equivalentValue = FXMLLoader.RELATIVE_PATH_PREFIX + fxomInclude.getSource();
                 final Path path = extractPath(equivalentValue);
                 if (path != null) {

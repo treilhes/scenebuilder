@@ -177,6 +177,10 @@ public class OverridedBeanPostProcessor implements BeanPostProcessor {
         Map<Method, Method> methodMap = new HashMap<>();
         for (var cls : overrides) {
             for (Method overrideMethod : cls.getMethods()) {
+                if (overrideMethod.getDeclaringClass() != cls) {
+                    // no need to process methods from super classes
+                    continue;
+                }
                 try {
                     Method originalMethod = beanClass.getMethod(overrideMethod.getName(),
                             overrideMethod.getParameterTypes());

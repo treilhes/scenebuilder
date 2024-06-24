@@ -101,7 +101,7 @@ public class ResizeColumnGesture extends AbstractMouseGesture {
 
         this.gridPaneHandles = gridPaneHandles;
         this.fxomInstance = gridPaneHandles.getFxomInstance(); // Shortcut
-        this.gridPane = (GridPane) fxomInstance.getSceneGraphObject(); // Shortcut
+        this.gridPane = fxomInstance.getSceneGraphObject().getAs(GridPane.class); // Shortcut
         this.columnIndex = columnIndex;
 
         assert this.columnIndex < Deprecation.getGridPaneColumnCount(this.gridPane);

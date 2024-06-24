@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -136,8 +136,8 @@ public class EditCurveGesture extends AbstractMouseGesture {
         tunableMap.put(tunable, -1);
 
         FXOMObject parent = fxomInstance.getClosestParent();
-        if (parent != null && parent.getSceneGraphObject() != null) {
-            this.closestParent = ((Parent)parent.getSceneGraphObject());
+        if (parent != null && !parent.getSceneGraphObject().isEmpty()) {
+            this.closestParent = (parent.getSceneGraphObject().getAs(Parent.class));
         } else {
             this.closestParent = null;
         }
@@ -174,7 +174,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
     @Override
     protected void mouseDragStarted() {
         assert editor != null;
-        assert editor.getSceneGraphObject() == fxomInstance.getSceneGraphObject();
+        assert editor.getSceneGraphObject() == fxomInstance.getSceneGraphObject().get();
 
         controller = editor.createController(tunableMap);
 
@@ -199,13 +199,13 @@ public class EditCurveGesture extends AbstractMouseGesture {
         for (final FXOMObject child:hitParentMask.getAccessories(hitParentMask.getMainAccessory(), false)) {
             final boolean isNode = child.getSceneGraphObject().isInstanceOf(Node.class);
             if (isNode && child != fxomInstance) {
-                final Node childNode = (Node) child.getSceneGraphObject();
+                final Node childNode = child.getSceneGraphObject().getAs(Node.class);
                 controller.addSampleBounds(childNode);
             }
         }
 
         assert hitParent.getSceneGraphObject().isInstanceOf(Node.class);
-        final Node hitParentNode = (Node) hitParent.getSceneGraphObject();
+        final Node hitParentNode = hitParent.getSceneGraphObject().getAs(Node.class);
         controller.addSampleBounds(hitParentNode);
 
         setupAndOpenHudWindow();
@@ -302,7 +302,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
         if (editor == null || controller == null) {
             return;
         }
-        //final Node sceneGraphObject = editor.getSceneGraphObject();
+        //final Node sceneGraphObject = editor.getSceneGraphObject().get();
         closestParent.layout();
 
         final double currentSceneX = getLastMouseEvent().getSceneX();
@@ -358,7 +358,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
         updateHudWindow();
 
         hudWindow.setRelativePosition(CardinalPoint.E);
-        hudWindow.openWindow((Node)editor.getFxomObject().getClosestMainGraphNode().getSceneGraphObject());
+        hudWindow.openWindow(editor.getFxomObject().getClosestMainGraphNode().getSceneGraphObject().getAs(Node.class));
     }
 
     private void updateHudWindow() {

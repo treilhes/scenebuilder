@@ -136,12 +136,12 @@ public class FXOMObjectCourseComparator {
 
         @Override
         public int compare(FXOMObject o1, FXOMObject o2) {
-            assert o1.getSceneGraphObject() != null
+            assert !o1.getSceneGraphObject().isEmpty()
                     && o1.getSceneGraphObject().isInstanceOf(Node.class);
-            assert o2.getSceneGraphObject() != null
+            assert !o2.getSceneGraphObject().isEmpty()
                     && o2.getSceneGraphObject().isInstanceOf(Node.class);
-            final Node n1 = (Node) o1.getSceneGraphObject();
-            final Node n2 = (Node) o2.getSceneGraphObject();
+            final Node n1 = o1.getSceneGraphObject().getAs(Node.class);
+            final Node n2 = o2.getSceneGraphObject().getAs(Node.class);
             final Bounds b1 = n1.getBoundsInParent();
             final Bounds b2 = n2.getBoundsInParent();
             int test1 = compareBounds(b1, b2);
@@ -201,12 +201,12 @@ public class FXOMObjectCourseComparator {
 
         @Override
         public int compare(FXOMObject o1, FXOMObject o2) {
-            assert o1.getSceneGraphObject() != null
+            assert !o1.getSceneGraphObject().isEmpty()
                     && o1.getSceneGraphObject().isInstanceOf(Node.class);
-            assert o2.getSceneGraphObject() != null
+            assert !o2.getSceneGraphObject().isEmpty()
                     && o2.getSceneGraphObject().isInstanceOf(Node.class);
-            final Node n1 = (Node) o1.getSceneGraphObject();
-            final Node n2 = (Node) o2.getSceneGraphObject();
+            final Node n1 = o1.getSceneGraphObject().getAs(Node.class);
+            final Node n2 = o2.getSceneGraphObject().getAs(Node.class);
             final Bounds b1 = n1.getBoundsInParent();
             final Bounds b2 = n2.getBoundsInParent();
             return compareBounds(b1, b2);

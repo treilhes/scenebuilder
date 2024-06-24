@@ -66,7 +66,7 @@ public class GridPaneNormalizer implements FXOMNormalizer {
         assert fxomGridPane instanceof FXOMInstance;
         assert fxomGridPane.getSceneGraphObject().isInstanceOf(GridPane.class);
 
-        final GridPane gridPane = (GridPane) fxomGridPane.getSceneGraphObject();
+        final GridPane gridPane = fxomGridPane.getSceneGraphObject().getAs(GridPane.class);
         final int columnCount = Deprecation.getGridPaneColumnCount(gridPane);
         final int rowCount = Deprecation.getGridPaneRowCount(gridPane);
         columnConstraintsMeta.unpack((FXOMInstance) fxomGridPane, columnCount);

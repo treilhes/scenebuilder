@@ -177,7 +177,7 @@ public class PickModeController extends AbstractModeController {
             hitNode = null;
         } else {
             final FXOMObject fxomRoot = fxomDocument.getFxomRoot();
-            final Object sceneGraphRoot = fxomRoot.getSceneGraphObject();
+            final Object sceneGraphRoot = fxomRoot.getSceneGraphObject().get();
             if (sceneGraphRoot instanceof Node) {
                 hitNode = Deprecation.pick((Node)sceneGraphRoot, e.getSceneX(), e.getSceneY());
                 FXOMObject fxomObject = null;
@@ -228,7 +228,7 @@ public class PickModeController extends AbstractModeController {
                 result = null;
             } else {
                 assert closestNodeObject.getSceneGraphObject().isInstanceOf(Node.class);
-                final Node closestNode = (Node)closestNodeObject.getSceneGraphObject();
+                final Node closestNode = closestNodeObject.getSceneGraphObject().getAs(Node.class);
                 if (closestNode.getScene() == content.getRoot().getScene()) {
                     result = new HitNodeChrome(content, documentManager, hitNode);
                     result.setFxomObject(hitItem);

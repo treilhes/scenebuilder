@@ -70,7 +70,7 @@ public final class HBoxDropTargetProvider extends AbstractDropTargetProvider {
         assert fxomObject instanceof FXOMInstance;
         assert fxomObject.getSceneGraphObject().isInstanceOf(HBox.class);
 
-        final HBox hbox = (HBox) fxomObject.getSceneGraphObject();
+        final HBox hbox = fxomObject.getSceneGraphObject().getAs(HBox.class);
         assert hbox.getScene() != null;
 
         final double localX = CoordinateHelper.sceneToLocal(fxomObject, sceneX, sceneY, true /* rootScene */).getX();

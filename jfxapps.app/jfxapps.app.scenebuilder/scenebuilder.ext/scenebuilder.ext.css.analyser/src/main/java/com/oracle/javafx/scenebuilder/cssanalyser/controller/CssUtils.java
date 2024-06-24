@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -62,22 +63,22 @@ public class CssUtils {
 
 //    /**
 //     * This method is used to create a barrier between the SB and the user scene graph.
-//     * @param parent 
+//     * @param parent
 //     */
 //    public static Group createCSSFrontier(){
 //        Group grp = Deprecation.createGroupWithNullParentStylesheets();
 //        /*
-//         * Doing so, when caspian lookup resolution occurs for a Node D&D from a SB user, 
-//         * if there is no redefinition in the Author space, 
+//         * Doing so, when caspian lookup resolution occurs for a Node D&D from a SB user,
+//         * if there is no redefinition in the Author space,
 //         * then this container is reached and the caspian lookups are resolved.
 //         */
 //        grp.getStyleClass().add("root"); //NOCHECK
 //        return grp;
 //    }
-//    
+//
 //    // Reseting is the process to set the value to its initial value.
 //    private static <N extends Node> void resetCssProperty(N node, CssMetaData<N,?> p) {
-//        try {            
+//        try {
 //            Object val = getResetValue(node, p);
 //            @SuppressWarnings("unchecked") //NOCHECK
 //            CssMetaData<Node, Object> sp = (CssMetaData<Node, Object>) p;
@@ -92,7 +93,7 @@ public class CssUtils {
 //    private static <N extends Node> Object getResetValue(N node, CssMetaData<N, ?> sp) {
 //        // The best value depends on the nature of the property.
 //        // If this is a styleable only property with no bean property associated
-//        // then we need to use the initialValue. 
+//        // then we need to use the initialValue.
 //        // If there is a Prop, then use it as the reset value.
 //        // See DTL-4049 and DTL-4087
 //        StyleableProperty<?> property = sp.getStyleableProperty(node);
@@ -110,14 +111,14 @@ public class CssUtils {
 //        }
 //        return value;
 //    }
-//    
+//
 //    /**
 //     * Will try first to put the property in a state that makes it OK
 //     * to receive USER AGENT styling.
 //     * If this is not possible, will call prop.set(bean, value);
 //     * @param bean
 //     * @param prop
-//     * @param value 
+//     * @param value
 //     */
 //    public static void setProperty(Object bean, Prop prop, Object value) {
 //        if (bean != null) {
@@ -144,7 +145,7 @@ public class CssUtils {
 //            } catch (RuntimeException ex) {
 //                Utils.println("can't set Bean property " + prop.name + " on " + bean.getClass() + " :" + ex.toString()); //NOCHECK
 //            }
-//            
+//
 //            if(!set){
 //                prop.set(bean, value);
 //            }
@@ -190,7 +191,7 @@ public class CssUtils {
 //        if (node.getScene() == null) {
 //            return;
 //        }
-//        
+//
 //        // First reset the skin
 //        if (node instanceof Control) {
 //            Node skinNode = getSkinNode((Control) node);
@@ -202,20 +203,20 @@ public class CssUtils {
 //               resetSubStructure(skinNode);
 //            }
 //        }
-//        
-//        // Then properties that are in the control that could suppercede the 
+//
+//        // Then properties that are in the control that could suppercede the
 //        // previously set values.
 //        @SuppressWarnings("rawtypes")
 //        final List<CssMetaData<? extends Styleable, ?>> lst = node.getCssMetaData();
 //        for(CssMetaData<?,?> stp : lst){
 //            @SuppressWarnings("unchecked") //NOCHECK
 //            final CssMetaData<Node, ?> st = (CssMetaData<Node, ?>)stp;
-//            
+//
 //            // Skip the skin
 //            if(st.getProperty().equals("-fx-skin")) { //NOCHECK
 //                continue;
 //            }
-//            
+//
 //            @SuppressWarnings("unchecked") //NOCHECK
 //            StyleableProperty<?> val = st.getStyleableProperty(node);
 //            boolean needsReset = false;
@@ -239,7 +240,7 @@ public class CssUtils {
 //                resetCssProperty(node, st);
 //            }
 //        }
-//        
+//
 //        // Clear the map from any collected value.
 //        // TODO FX8: the statement below started to trigger NPE since FX8 b68,
 //        // hence the temporary wrap in null check test. Still have to ensure
@@ -270,7 +271,7 @@ public class CssUtils {
 //            frame.printWarning("messagebar.cannot.edit", ex, info);
 //        }
 //    }
-//    
+//
 //    public static File retrieveCssFile(Frame frame, ComponentPath path, String styleclass) {
 //        // First check in the parent chain. The nearest first.
 //        ComponentPath truncated = path.getNearestParentNodePath();
@@ -346,7 +347,7 @@ public class CssUtils {
 //    public static ParsedValue<?, ?> getValueFor(String styleClass, String property) {
 //        return getValueFor(STYLE_SHEET_TOOL_CSS, styleClass, property);
 //    }
-//    
+//
 //    public static final String TOOL;
 //    static {
 //        if (Utils.IS_MAC) {
@@ -357,10 +358,10 @@ public class CssUtils {
 //            TOOL = "tool"; //NOCHECK
 //        }
 //    }
-//    
-//    
+//
+//
 //    public static final String THEME_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/SceneBuilderTheme.css"); //NOCHECK
-//    
+//
 //    public static final String TOOL_ROOT_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/ToolRoot.css"); //NOCHECK
 //    public static final String CONTENT_VIEW_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/ContentView.css"); //NOCHECK
 //    public static final String MESSAGE_BAR_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/MessageBar.css"); //NOCHECK
@@ -370,11 +371,11 @@ public class CssUtils {
 //    public static final String CSS_VIEWER_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/CssViewer.css"); //NOCHECK
 //
 //    public static final String POPUP_CSS = Utils.getResourceURL(Frame.class, "css_stylesheets/Popup.css"); //NOCHECK
-//    
+//
 //    public static final String SCENE_BUILDER_THEME_STYLECLASS = "SCENE_BUILDER_THEME"; //NOCHECK
 //    private static final String SCENE_BUILDER_WIN_FONT_STYLECLASS = "SCENE_BUILDER_WIN_FONT"; //NOCHECK
 //    private static final String SCENE_BUILDER_WINXP_FONT_STYLECLASS = "SCENE_BUILDER_WINXP_FONT"; //NOCHECK
-//    
+//
 //    public static final String CONTENT_AREA_ID = "JFX_SB_ContentArea"; //NOCHECK
 //    private static final String ROOT_STYLECLASS = "root"; //NOCHECK
 //    private static Stylesheet STYLE_SHEET_TOOL_CSS = null;
@@ -382,7 +383,7 @@ public class CssUtils {
 //
 //    static Set<FileChooser.ExtensionFilter> SS_EXTENSIONS =
 //            Collections.singleton(new FileChooser.ExtensionFilter(Utils.getI18N().getString("popup.style.sheets"), "*.css", "*.bss")); //NOCHECK
-//    
+//
 //    static {
 //        try {
 //            STYLE_SHEET_TOOL_CSS = new CssParser().parse(new URL(TOOL_ROOT_CSS));
@@ -394,7 +395,7 @@ public class CssUtils {
 //        ALTERNATE_STYLECLASSES.put(TabPane.class, alternates);
 //    }
 //    //Properties that are impacting CSS/Pages.
-//    private static final Set<Prop> CSS_IMPACT = 
+//    private static final Set<Prop> CSS_IMPACT =
 //            SetBuilder.<Prop>make().
 //            add(PropUtils.Parent_STYLESHEETS).
 //            add(PropUtils.Node_ID).add(PropUtils.Styleable_STYLE_CLASS).add(PropUtils.Node_STYLE).
@@ -402,11 +403,11 @@ public class CssUtils {
 //            add(PropUtils.PopupControl_ID).add(PropUtils.PopupControl_STYLE).
 //            add(PropUtils.Menu_ITEMS).buildUnmodifiable();
 //    private static final WeakIdentityHashMap<Parent, List<StyleClasses>> STYLECLASSES_SETS = WeakIdentityHashMap.make();
-//    
+//
 //    public static void trackNode(final Node node) {
 //        attachMapToNode(node);
 //    }
-//    
+//
 //    public static void stopTrackingNode(Node node) {
 //        @SuppressWarnings("rawtypes")
 //        Map<StyleableProperty<?>, List<Style>> smap = Deprecation.getStyleMap(node);
@@ -434,7 +435,7 @@ public class CssUtils {
 ////                Utils.println("Cannot remove style classes", ex); //NOCHECK
 ////            }
 ////        }
-////        parent.getStylesheets().clear();       
+////        parent.getStylesheets().clear();
 ////    }
 //
 ////    public static void loadAuthorCssFiles(Frame frame) {
@@ -527,8 +528,8 @@ public class CssUtils {
 //            }
 //        }
 //        return null;
-//    }   
-//    
+//    }
+//
 //    /**
 //     * When a visual is dragged, we want it to be contained in a StageViewContent container
 //     * Doing so, it complies with the style of the dropped content.
@@ -542,7 +543,7 @@ public class CssUtils {
 //        // We need to take into concideration drop targets (if we want to)
 ////        Parent p = getParent(frame);
 ////        fakeScene.getStylesheets().setAll(p.getStylesheets());
-//        
+//
 //        fakeScene.getChildren().add(visual);
 //        return fakeScene;
 //    }
@@ -550,14 +551,14 @@ public class CssUtils {
 //    private static Parent getParent(Frame frame){
 //        return frame.getStageView().getBackstagePane().getScenePreviewGroup();
 //    }
-//    
+//
 //    private static final class ContextMenuListener implements ChangeListener<ContextMenu> {
 //        private final Node node;
 //
 //        public ContextMenuListener(Node node) {
 //            this.node = node;
 //        }
-//        
+//
 //        @Override
 //        public void changed(ObservableValue<? extends ContextMenu> arg0, ContextMenu oldValue, ContextMenu newValue) {
 //            if (newValue != null) {
@@ -566,7 +567,7 @@ public class CssUtils {
 //            }
 //        }
 //    }
-//    
+//
 //
 //    private static final class SubObjectsVisitor implements ComponentPathEventHandler {
 //
@@ -583,7 +584,7 @@ public class CssUtils {
 //
 //        @Override
 //        public Visit push(ComponentReference ref) {
-//            // Do not visit nodes that are in the scene graph except for 
+//            // Do not visit nodes that are in the scene graph except for
 //            // the child of Skinnable (eg: TabPane)
 //            // This occurs when visiting indexed childs located in the scene graph.
 //            // These childs are root of visit so style their non visibles.
@@ -626,10 +627,10 @@ public class CssUtils {
 //        if (project == null || e.getNode().getParent() == null) {
 //            return;
 //        }
-//        
+//
 //        // Make synchronous call to processCSS to be done outside critical path.
-//        // It has to be deferred, otherwise it interferes with wrap in SplitPane 
-//        // Start to listen in the same tick, CSS can resolve lookup in a tick 
+//        // It has to be deferred, otherwise it interferes with wrap in SplitPane
+//        // Start to listen in the same tick, CSS can resolve lookup in a tick
 //        // running in between now and the following runLater.
 //        startListeningToCssErrors();
 //        SbPlatform.runLater(new Runnable() {
@@ -640,7 +641,7 @@ public class CssUtils {
 //            }
 //        });
 //    }
-//    
+//
 //    @CoverageCritical
 //    private static void doApplyCss(final Project project, final Element e) {
 //        try {
@@ -657,7 +658,7 @@ public class CssUtils {
 //            boolean projectDisplayed = project.isProjectDisplayed();
 //            // Visit the remaining paths to find menu/tooltip/...
 //            if (!projectDisplayed) {
-//                // Do nothing: there will be a call to refreshCSS when the 
+//                // Do nothing: there will be a call to refreshCSS when the
 //                // project root is added to the scenegraph.
 //            } else {
 //                if (e.getNode() instanceof Skinnable) {
@@ -691,7 +692,7 @@ public class CssUtils {
 //            stopListeningToCssErrors();
 //        }
 //    }
-//    
+//
     public static Node getFirstAncestorWithNonNullScene(Node node) {
         Node ancestor = node;
         while ((ancestor != null) && (ancestor.getScene() == null)) {
@@ -718,7 +719,7 @@ public class CssUtils {
 //        assert inSceneNode.getScene() != null;
 //        return inSceneNode;
 //    }
-//    
+//
 //    private static boolean styleObject(final Node node, final ComponentReference ref) {
 //        try {
 //            Object obj = ref.getChildComponent();
@@ -788,23 +789,23 @@ public class CssUtils {
 //    private static Styleable getStyleable(Object object) {
 //        if(object instanceof Styleable){
 //            return (Styleable) object;
-//        } 
+//        }
 //        return null;
 //    }
-//    
+//
 //    private static void styleStyleable(Node ownerNode, Styleable styleable) {
 //        Scene scene = ownerNode.getScene();
 //        assert ownerNode.getScene() != null;
 //        Parent parentNode = ownerNode.getParent();
 //        styleStyleable(parentNode, styleable);
 //    }
-//    
+//
 //    private static void styleStyleable(Parent parent, Styleable control) {
 //        Node node =  Deprecation.getNode(control);
 //        if(node == null) {
 //            return;
 //        }
-//        
+//
 //        trackNode(node);
 //        double current = node.getOpacity();
 //        node.setOpacity(0);
@@ -840,7 +841,7 @@ public class CssUtils {
 //    public static boolean needPageRefresh(Prop property) {
 //        return CSS_IMPACT.contains(property) || Prop.isTooltip(property) || Prop.isContextMenu(property);
 //    }
-//    
+//
 //    private static class CssParsingListener implements ListChangeListener<CssError> {
 //        @Override
 //        public void onChanged(Change<? extends CssError> change) {
@@ -854,7 +855,7 @@ public class CssUtils {
 //                        Project proj;
 //                        Scene scene = error.getScene();
 //                        if(scene == null) {
-//                            // We have a single case where we asked for error and receive a null scene, this is the 
+//                            // We have a single case where we asked for error and receive a null scene, this is the
 //                            // loading time case. The parsing is done before the project is associated
 //                            // to any Frame (@see lookupImagesInCssFile).
 //                            if(LOADING_PROJECT == null){
@@ -879,7 +880,7 @@ public class CssUtils {
 //                            Utils.println("No Project to route CSS error " + error.getMessage());//NOCHECK
 //                            continue;
 //                        }
-//                        
+//
 //                        // CSS file added by user
 //                        if(error instanceof StylesheetParsingError){
 //                            StylesheetParsingError serror = (StylesheetParsingError) error;
@@ -894,7 +895,7 @@ public class CssUtils {
 //                                continue;
 //                            }
 //                            printMessage(project, serror);
-//                        } else {                           
+//                        } else {
 //                            if(error instanceof PropertySetError){// Semantic error, eg: invalid value type, unresolved lookup
 //                                PropertySetError perror = (PropertySetError) error;
 //                                Styleable faultyNode = perror.getStyleable();
@@ -919,7 +920,7 @@ public class CssUtils {
 //                                }
 //                            }
 //                        }
-//                    }    
+//                    }
 //                }
 //            }
 //        }
@@ -939,10 +940,10 @@ public class CssUtils {
 //            }
 //            parent = parent.getStyleableParent();
 //        }
-//        
+//
 //        return false;
 //    }
-//    
+//
 //    private static class CssInlineStyleListener implements ListChangeListener<CssError> {
 //
 //        List<CssError> errors = Utils.newList();
@@ -968,11 +969,11 @@ public class CssUtils {
 //            return errors;
 //        }
 //    }
-//    
+//
 //    private static void printMessage(final Project project, final CssError error) {
 //        printMessage(project, error.getMessage());
 //    }
-//    
+//
 //    private static void printMessage(final Project project, final StylesheetParsingError error) {
 //        URL url = error.getURL();
 //        String fileName = url.toExternalForm();
@@ -981,7 +982,7 @@ public class CssUtils {
 //        }
 //        printMessage(project, fileName + " " + error.getMessage()); //NOCHECK
 //    }
-//    
+//
 //    private static void printMessage(final Project project, final String message) {
 //        if (Utils.isRunningUnitTests()) {
 //            Utils.printWarning(project, message);
@@ -994,7 +995,7 @@ public class CssUtils {
 //            });
 //        }
 //    }
-//    
+//
 //    private static Project LOADING_PROJECT;
 //    private static boolean CSS_ADVERTISE;
 //    public static void startListeningToCssErrors() {
@@ -1004,7 +1005,7 @@ public class CssUtils {
 //    public static void stopListeningToCssErrors() {
 //        CSS_ADVERTISE = false;
 //    }
-//    
+//
 //    // Should be private, used by unit tests
 //    static void startListeningToCssErrors(Project project) {
 //        startListeningToCssErrors();
@@ -1015,7 +1016,7 @@ public class CssUtils {
 //            CssError.setCurrentScene(frame.getScene());
 //        }
 //    }
-//    
+//
 //    // Should be private, used by unit tests
 //    static void stopListeningToCssErrors(Project proj) {
 //        stopListeningToCssErrors();
@@ -1027,11 +1028,11 @@ public class CssUtils {
 //    static {
 //        CssParser.errorsProperty().addListener(cssListener);
 //    }
-//    
+//
 //    public static void updateStylesheets(Project project, Parent parent, File file) {
 //        startListeningToCssErrors();
 //        try {
-//            
+//
 //            // This is done outside any transaction.
 //            // replace the file that has been updated. And only this file.
 //            // Replacing the whole list fires unwanted file parsing.
@@ -1080,10 +1081,10 @@ public class CssUtils {
 //            frame.printWarning("messagebar.cannot.load.css.files", ex);
 //        }
 //    }
-//    
+//
 //    public static void close(Frame frame) {
 //        // Happens in unit tests.
-//        if(frame.getStageView() == null || 
+//        if(frame.getStageView() == null ||
 //                frame.getStageView().getBackstagePane() == null){
 //            return;
 //        }
@@ -1135,7 +1136,7 @@ public class CssUtils {
 //        }
 //        return fullSet;
 //    }
-//    
+//
 //    public static Set<String> retrieveAlternateStyleClasses(Class<?> type){
 //        Set<String> alternates = ALTERNATE_STYLECLASSES.get(type);
 //        Set<String> fullSet = new HashSet<>();
@@ -1167,10 +1168,10 @@ public class CssUtils {
 //            stopListeningToCssErrors(project);
 //            CssParser.errorsProperty().removeListener(listener);
 //        }
-//        
+//
 //        return s != null && listener.getErrors().isEmpty();
 //    }
-//    
+//
 //    public static void addStyleSheet(Frame frame){
 //        FileChooserWrapper fileChooser = FileChooserWrapper.create().
 //                extensionFilters(SS_EXTENSIONS).
@@ -1187,7 +1188,7 @@ public class CssUtils {
 //            }
 //        }
 //    }
-//    
+//
 //    public static void removeStyleSheet(Frame frame, File f) {
 //        assert f != null;
 //        Project p = frame.getProject();
@@ -1197,7 +1198,7 @@ public class CssUtils {
 //        newLst.remove(f);
 //        p.setStylesheets(newLst);
 //    }
-//    
+//
 //    private static final Set<String> IMG_PROPERTIES = Utils.newSet();
 //    static {
 //        // String
@@ -1209,17 +1210,17 @@ public class CssUtils {
 //        // String[]
 //        IMG_PROPERTIES.add("-fx-border-image-source");//NOCHECK
 //    }
-//    
+//
 //    private static class StyleableStub implements Styleable {
 //        private final String style;
 //        private StyleableStub(String style){
 //            this.style = style;
 //        }
-//        @Override 
+//        @Override
 //        public String getTypeSelector() {
 //            return null;
 //        }
-//        
+//
 //        @Override
 //        public String getId() {
 //            return null;
@@ -1251,7 +1252,7 @@ public class CssUtils {
 //            return null; // TODO Return something useful
 //        }
 //    }
-//    
+//
 //    public static Set<String> lookupImagesInStyle(String style) {
 //        if (style != null) {
 //            try {
@@ -1263,7 +1264,7 @@ public class CssUtils {
 //        }
 //        return null;
 //    }
-//    
+//
 //    public static Set<String> lookupImagesInCssFile(Project project, URI uri, boolean isRemoval) {
 //        if (uri != null) {
 //            if (!isRemoval) {
@@ -1282,7 +1283,7 @@ public class CssUtils {
 //        }
 //        return null;
 //    }
-//    
+//
 //    private static Set<String> lookupImagesInStylesheet(Stylesheet s) {
 //        Set<String> files = Utils.newSet();
 //        try {
@@ -1328,15 +1329,15 @@ public class CssUtils {
 //            } // else fallback on platform font size.
 //        }
 //    }
-//    
+//
 //    // Only applies to Windows 7 and Vista, XP keep its 11px menu.
 //    public static void workaroundForRT19435(MenuItem menu){
 //        if (Utils.IS_WINDOWS_7 || Utils.IS_WINDOWS_VISTA) {
 //            menu.setStyle("-fx-font-size: 1.083em;");//NOCHECK
-//        } 
+//        }
 //    }
-//    
-//    
+//
+//
 //    /**
 //     * Returns the first stylable node above the specified node inside the
 //     * specified component.
@@ -1345,28 +1346,28 @@ public class CssUtils {
 //     */
 //    public static Node findEnclosingStylableNode(ComponentPath pickedPath, Node pickedNode) {
 //        final Node result;
-//        
+//
 //        assert pickedPath != null;
 //        assert pickedNode != null;
-//        
+//
 //        if ((pickedNode == pickedPath.getTargetChild()) || (pickedNode instanceof Skin)) {
 //            // pickedNode matches the component or the Skin node
 //            result = null;
 //        } else {
 //            result = pickedNode;
 //        }
-//        
+//
 //        return result;
 //    }
-    
+
     public static Object getSceneGraphObject(Object selectedObject) {
         if (selectedObject instanceof FXOMObject) {
-            return ((FXOMObject) selectedObject).getSceneGraphObject();
+            return ((FXOMObject) selectedObject).getSceneGraphObject().get();
         } else {
             return selectedObject;
         }
     }
-    
+
     public static Node getSelectedNode(Object selectedObject) {
         return CssUtils.getNode(CssUtils.getSceneGraphObject(selectedObject));
     }

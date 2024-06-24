@@ -258,7 +258,7 @@ public class GenericDriver extends AbstractDriver {
         }
 
         if (inlineEditorBounds != null) {
-            //inlineEditorBounds.setSceneGraphObject((Node)fxomObject.getSceneGraphObject());
+            //inlineEditorBounds.setSceneGraphObject(fxomObject.getSceneGraphObject().getAs(Node.class));
             //inlineEditorBounds.initialize();
             return inlineEditorBounds.getBounds(fxomObject);
         }

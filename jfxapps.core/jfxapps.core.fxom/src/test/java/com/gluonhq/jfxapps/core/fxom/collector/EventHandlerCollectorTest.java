@@ -33,77 +33,54 @@
  */
 package com.gluonhq.jfxapps.core.fxom.collector;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junitpioneer.jupiter.SetSystemProperty;
+import org.testfx.framework.junit5.ApplicationExtension;
+import org.testfx.framework.junit5.Start;
 
-public class CollectorAggregate implements FXOMCollector<List<FXOMCollector<?>>> {
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
+import com.gluonhq.jfxapps.core.fxom.collector.EventHandlerCollector;
+import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
+import com.gluonhq.jfxapps.core.fxom.testutil.FxmlUtil;
 
-    public static CollectorAggregate of(FXOMCollector<?>... collectors ) {
-        return new CollectorAggregate(List.of(collectors));
+import javafx.stage.Stage;
+
+@ExtendWith(ApplicationExtension.class)
+@SetSystemProperty(key = "javafx.allowjs", value = "true")
+class EventHandlerCollectorTest {
+
+    @Start
+    private void start(Stage stage) {
+
     }
 
-    public static CollectorAggregate of(Collection<FXOMCollector<?>> collectors ) {
-        return new CollectorAggregate(new ArrayList<>(collectors));
+    @Test
+    public void should_return_the_right_number_of_handlers() {
+        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.EVENT_HANDLERS);
+
+        List<FXOMPropertyT> items = fxomDocument.getFxomRoot().collect(EventHandlerCollector.allEventHandlers());
+
+        assertEquals(5, items.size());
     }
 
-    private final List<FXOMCollector<?>> collectors;
-    private final Strategy strategy;
+    private enum FxmlTestInfo implements FilenameProvider {
+        EVENT_HANDLERS("fxEventHandlers");
 
-    public CollectorAggregate(List<FXOMCollector<?>> collectors) {
-        super();
-        this.collectors = collectors;
-        this.strategy = aggregateStrategy();
-    }
+        private String filename;
 
-    @Override
-    public Strategy collectionStrategy() {
-        return strategy;
-    }
-
-    @Override
-    public void collect(FXOMObject object) {
-        collectors.forEach(c -> c.accept(object));
-    }
-
-    @Override
-    public void collect(FXOMProperty property) {
-        collectors.forEach(c -> c.accept(property));
-    }
-
-    @Override
-    public List<FXOMCollector<?>> getCollected() {
-        return collectors;
-    }
-
-    private Strategy aggregateStrategy() {
-
-        boolean object = false;
-        boolean property = false;
-        for (FXOMCollector<?> c : collectors) {
-            switch (c.collectionStrategy()) {
-                case OBJECT_AND_PROPERTY:
-                    return Strategy.OBJECT_AND_PROPERTY;
-                case OBJECT: {
-                    object = true;
-                    break;
-                }
-                case PROPERTY: {
-                    property = true;
-                    break;
-                }
-            }
+        FxmlTestInfo(String filename) {
+            this.filename = filename;
         }
 
-        if (object && property) {
-            return Strategy.OBJECT_AND_PROPERTY;
-        } else if (object) {
-            return Strategy.OBJECT;
-        } else {
-            return Strategy.PROPERTY;
+        @Override
+        public String getFilename() {
+            return filename;
         }
     }
 }

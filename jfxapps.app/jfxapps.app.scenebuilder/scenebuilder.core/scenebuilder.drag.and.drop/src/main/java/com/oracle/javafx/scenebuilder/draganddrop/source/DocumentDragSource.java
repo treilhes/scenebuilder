@@ -120,7 +120,7 @@ public final class DocumentDragSource extends AbstractDragSource {
         } else {
             final FXOMObject draggedObject = draggedObjects.get(0);
             if (draggedObject instanceof FXOMInstance) {
-                final Object sceneGraphObject = draggedObject.getSceneGraphObject();
+                final Object sceneGraphObject = draggedObject.getSceneGraphObject().get();
                 this.singleImageViewOnly = sceneGraphObject instanceof ImageView;
                 this.singleTooltipOnly = sceneGraphObject instanceof Tooltip;
                 this.singleContextMenuOnly = sceneGraphObject instanceof ContextMenu;
@@ -135,7 +135,7 @@ public final class DocumentDragSource extends AbstractDragSource {
     private static Point2D computeDefaultHit(FXOMObject fxomObject) {
         final double hitX, hitY;
         if (fxomObject.getSceneGraphObject().isInstanceOf(Node.class)) {
-            final Node sceneGraphNode = (Node) fxomObject.getSceneGraphObject();
+            final Node sceneGraphNode = fxomObject.getSceneGraphObject().getAs(Node.class);
             final Bounds lb = sceneGraphNode.getLayoutBounds();
             hitX = (lb.getMinX() + lb.getMaxX()) / 2.0;
             hitY = (lb.getMinY() + lb.getMaxY()) / 2.0;
@@ -235,7 +235,7 @@ public final class DocumentDragSource extends AbstractDragSource {
 
         for (FXOMObject draggedObject : draggedObjects) {
             if (draggedObject.getSceneGraphObject().isInstanceOf(Node.class)) {
-                final Node sceneGraphNode = (Node) draggedObject.getSceneGraphObject();
+                final Node sceneGraphNode = draggedObject.getSceneGraphObject().getAs(Node.class);
                 final DragSourceShadow shadowNode = new DragSourceShadow();
                 shadowNode.setupForNode(sceneGraphNode);
 //                assert shadowNode.getLayoutBounds().equals(sceneGraphNode.getLayoutBounds());
@@ -247,7 +247,7 @@ public final class DocumentDragSource extends AbstractDragSource {
         // Translate the group so that it renders (hitX, hitY) above (layoutX, layoutY).
         final Point2D hitPoint;
         if (hitObject.getSceneGraphObject().isInstanceOf(Node.class)) {
-            final Node hitNode = (Node) hitObject.getSceneGraphObject();
+            final Node hitNode = hitObject.getSceneGraphObject().getAs(Node.class);
             hitPoint = hitNode.localToParent(hitX, hitY);
         } else {
             hitPoint = Point2D.ZERO;
@@ -264,7 +264,7 @@ public final class DocumentDragSource extends AbstractDragSource {
 
         if (draggedObjects.size() == 1) {
             final FXOMObject draggedObject = draggedObjects.get(0);
-            final Object sceneGraphObject = draggedObject.getSceneGraphObject();
+            final Object sceneGraphObject = draggedObject.getSceneGraphObject().get();
             if (sceneGraphObject == null) {
                 result = I18N.getString("drop.job.move.single.unresolved");
             } else {
@@ -275,7 +275,7 @@ public final class DocumentDragSource extends AbstractDragSource {
             final Set<Class<?>> classes = new HashSet<>();
             int unresolvedCount = 0;
             for (FXOMObject o : draggedObjects) {
-                if (o.getSceneGraphObject() != null) {
+                if (!o.getSceneGraphObject().isEmpty()) {
                     classes.add(o.getSceneGraphObject().getObjectClass());
                 } else {
                     unresolvedCount++;

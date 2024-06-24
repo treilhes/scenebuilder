@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -73,9 +73,9 @@ public class GridPaneTring extends AbstractNodeTring<GridPane> {
         assert dropTarget.getTargetObject() != null;
         assert dropTarget.getTargetObject().getSceneGraphObject().isInstanceOf(GridPane.class);
 
-        if (dropTarget instanceof GridPaneDropTarget) { // use mosaic
+        if (dropTarget instanceof GridPaneDropTarget gridPaneDropTarget) { // use mosaic
             GridPaneDropTarget gridPaneDropTarget = (GridPaneDropTarget)dropTarget;
-            mosaic.setGridPane((GridPane)gridPaneDropTarget.getTargetObject().getSceneGraphObject());
+            mosaic.setGridPane(gridPaneDropTarget.getTargetObject().getSceneGraphObject().getAs(GridPane.class));
 
             final int targetColumnIndex
                     = gridPaneDropTarget.getTargetColumnIndex();

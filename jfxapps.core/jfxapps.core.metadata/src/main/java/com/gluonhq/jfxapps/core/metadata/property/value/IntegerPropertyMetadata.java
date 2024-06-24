@@ -133,7 +133,7 @@ public class IntegerPropertyMetadata<VC> extends NumberPropertyMetadata<Integer,
                 if (commonParent == null) {
                     return null;
                 }
-                Object parentObj = commonParent.getSceneGraphObject();
+                Object parentObj = commonParent.getSceneGraphObject().get();
                 assert parentObj instanceof GridPane;
                 return (GridPane) parentObj;
         }

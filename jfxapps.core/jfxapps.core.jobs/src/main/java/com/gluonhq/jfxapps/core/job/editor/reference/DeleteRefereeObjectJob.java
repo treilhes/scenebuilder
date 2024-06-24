@@ -51,7 +51,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
-import com.gluonhq.jfxapps.core.fxom.collector.FxReferenceCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 
 /**
  * This Job updates the FXOM document at execution time. Delete an
@@ -113,7 +113,7 @@ public final class DeleteRefereeObjectJob extends InlineDocumentJob {
             result = node;
         } else {
             final FXOMObject fxomRoot = fxomDocument.getFxomRoot();
-            final List<FXOMNode> references = fxomRoot.collect(FxReferenceCollector.referenceById(nodeFxId, target));
+            final List<FXOMNode> references = fxomRoot.collect(FxCollector.referenceById(nodeFxId, target));
             if (references.isEmpty()) {
                 // node has an fx:id but this one is not referenced
                 // outside of the delete target : it can be deleted safely

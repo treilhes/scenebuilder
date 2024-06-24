@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -388,7 +388,7 @@ class FXOMLoader implements LoadListener {
             } else {
                 assert currentParent == null;
                 final FXOMObject currentFxomObject = currentProperty.makeFxomObject(document);
-                document.updateRoots(currentFxomObject, currentFxomObject.getSceneGraphObject());
+                document.updateRoots(currentFxomObject, currentFxomObject.getSceneGraphObject().get());
             }
 
         } else if (currentTransientNode instanceof TransientObject) {
@@ -413,7 +413,7 @@ class FXOMLoader implements LoadListener {
                 // Nothing to do for now
             } else {
                 assert currentParent == null;
-                document.updateRoots(currentFxomObject, currentFxomObject.getSceneGraphObject());
+                document.updateRoots(currentFxomObject, currentFxomObject.getSceneGraphObject().get());
             }
 
         } else if (currentTransientNode instanceof TransientIntrinsic) {
@@ -432,7 +432,7 @@ class FXOMLoader implements LoadListener {
                 // Nothing to do for now
             } else {
                 assert currentParent == null;
-                document.updateRoots(currentFxomIntrinsic, currentFxomIntrinsic.getSceneGraphObject());
+                document.updateRoots(currentFxomIntrinsic, currentFxomIntrinsic.getSceneGraphObject().get());
             }
         } else if (currentTransientNode instanceof TransientProperty) {
             final TransientProperty currentProperty = (TransientProperty) currentTransientNode;
