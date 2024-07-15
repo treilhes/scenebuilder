@@ -84,6 +84,7 @@ import org.springdoc.webmvc.ui.SwaggerWelcomeWebMvc;
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafProperties;
 import org.springframework.context.ApplicationContext;
@@ -362,19 +363,23 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
     @Bean("entityManagerFactory")
     LocalContainerEntityManagerFactoryBean localEntityManagerFactory(DataSource dataSource,
             JpaVendorAdapter jpaVendorAdapter, List<Extension> ext, JfxAppContext ctx) {
-        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        LocalContainerEntityManagerFactoryBean em = null;
 
+        //FIXME : we should be able to get the package name from the extension
+        // directly from the annotations, instead this dirty solution provides the extension package name
+        // as the root package to scan for the entitiess
         var packageName = ext.stream()
                 .filter(e -> e.getClass().getClassLoader() == ctx.getBeanClassLoader())
                 .map(e -> e.getClass().getPackageName()).findAny();
 
-        packageName.ifPresent(p -> {
+        if (packageName.isPresent()) {
+            em = new LocalContainerEntityManagerFactoryBean();
             em.setDataSource(dataSource);
             em.setJpaVendorAdapter(jpaVendorAdapter);
             em.setPersistenceUnitPostProcessors(new JfxAppsPersistenceRulesCheck());
-            em.setPackagesToScan(p);
+            em.setPackagesToScan(packageName.get());
             em.setJpaProperties(hibernateProperties());
-        });
+        }
 
         return em;
     }
@@ -383,6 +388,7 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
      * This method is used to create the transaction manager for the local context
      * Mainly here to propagate the classloader
      */
+    @ConditionalOnBean(name = "entityManagerFactory")
     @Bean(name = "transactionManager")
     PlatformTransactionManager localTransactionManager(EntityManagerFactory factory, DataSource dataSource) {
         JpaTransactionManager tm = new JpaTransactionManager();
@@ -399,6 +405,7 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
      * @param mngr the entity manager
      * @return the repository factory
      */
+    @ConditionalOnBean(name = "entityManagerFactory")
     @Bean
     RepositoryFactorySupport factoryBean(EntityManager mngr) {
         return new JpaRepositoryFactory(mngr);
@@ -555,15 +562,6 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
         }
 
     }
-//    @Bean("org.springdoc.core.properties.SwaggerUiConfigProperties")
-//    SwaggerUiConfigProperties swaggerUiConfigProperties() {
-//        var param = new SwaggerUiConfigProperties();
-//
-//        //param.setConfigUrl(externalContextPath + "/v3/api-docs/swagger-config");
-//        //param.setPath(externalContextPath + "/swagger-ui.html");
-//
-//        return param;
-//    }
 
     @Bean
     ServerBaseUrlCustomizer serverBaseUrlCustomizer() {
