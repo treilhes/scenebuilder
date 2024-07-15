@@ -34,21 +34,26 @@
 package com.gluonhq.jfxapps.core.fxom.collector;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Map;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.junitpioneer.jupiter.SetSystemProperty;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
-import com.gluonhq.jfxapps.core.fxom.testutil.FxmlUtil;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector.FxIdUniqueMap;
 
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
@@ -57,23 +62,114 @@ import javafx.stage.Stage;
 @SetSystemProperty(key = "javafx.allowjs", value = "true")
 class FxIdCollectorTest {
 
+    private static final String INCLUDE = """
+            <?import javafx.scene.layout.Pane?>
+            <Pane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" />
+            """;
+
+    @TempDir
+    static Path tempDir;
+
     @Start
     private void start(Stage stage) {
 
     }
 
-    @Test
-    public void should_return_the_right_number_of_fxid() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.FX_IDS);
-
-        Map<String, FXOMObject> items = fxomDocument.getFxomRoot().collect(FxCollector.fxIdsMap());
-
-        assertEquals(6, items.size());
+    @BeforeAll
+    public static void init() throws Exception {
+        Files.writeString(tempDir.resolve("included.fxml"), INCLUDE, StandardOpenOption.CREATE);
     }
 
     @Test
-    public void should_return_the_first_occurence_for_each_fxid() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.FIRST_FX_IDS);
+    public void should_return_the_right_number_of_fxid() throws Exception {
+        String fxml = """
+                <?import javafx.scene.control.Button?>
+                <?import javafx.scene.layout.Pane?>
+
+                <Pane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+                   <fx:define>
+                        <fx:include fx:id="id1" source="included.fxml" />
+                        <fx:include fx:id="id2" source="included.fxml" />
+                        <Button fx:id="id3" text="somebutton" />
+                   </fx:define>
+                   <children>
+                      <Pane fx:id="id4">
+                         <children>
+                            <Button fx:id="id5"/>
+                            <fx:reference fx:id="id6" source="id1">
+                                <children>
+                                  <fx:reference fx:id="id7" source="id2" />
+                               </children>
+                            </fx:reference>
+                            <fx:reference fx:id="id8" source="id3"/>
+                         </children>
+                      </Pane>
+                   </children>
+                </Pane>
+                """;
+
+        FXOMDocument fxomDocument = new FXOMDocument(fxml, tempDir.toAbsolutePath().toUri().toURL(), null, null);
+
+        Map<String, FXOMObject> items = fxomDocument.getFxomRoot().collect(FxCollector.fxIdsUniqueMap());
+
+        assertEquals(8, items.size());
+    }
+
+    @Test
+    public void should_throw_a_non_unique_exception_on_duplicate_id() throws Exception {
+        String fxml = """
+                <?import javafx.scene.control.Button?>
+                <?import javafx.scene.layout.Pane?>
+
+                <Pane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+                   <children>
+                      <Button fx:id="id1"/>
+                      <Button fx:id="id1"/>
+                   </children>
+                </Pane>
+                """;
+
+        FXOMDocument fxomDocument = new FXOMDocument(fxml);
+        boolean ENSURE_UNICITY = true;
+
+        assertThrows(FxIdUniqueMap.DuplicateIdException.class,
+                () -> fxomDocument.getFxomRoot().collect(FxCollector.fxIdsUniqueMap(ENSURE_UNICITY)));
+    }
+
+    @Test
+    public void should_return_the_first_occurence_for_each_fxid() throws Exception {
+        String fxml = """
+                <?import javafx.scene.control.Button?>
+                <?import javafx.scene.layout.Pane?>
+                <?import javafx.scene.shape.Circle?>
+
+                <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+                   <fx:define>
+                        <fx:include fx:id="referred1" source="included.fxml" />
+                        <fx:include fx:id="referred2" source="included.fxml" />
+                        <Button fx:id="somebutton" mnemonicParsing="false" text="somebutton" />
+                        <Button fx:id="btnClip" mnemonicParsing="false" text="first" />
+                        <Button fx:id="btnClip" mnemonicParsing="false" text="second" />
+                        <Button fx:id="btnDefine" mnemonicParsing="false" text="first" />
+                        <Button fx:id="btnDefine" mnemonicParsing="false" text="second" />
+                   </fx:define>
+                   <children>
+                      <Pane layoutX="200.0" layoutY="100.0" prefHeight="200.0" prefWidth="200.0" clip="$btnClip">
+                         <children>
+                            <Button fx:id="btn" mnemonicParsing="false" text="first" />
+                            <Button fx:id="btn" mnemonicParsing="false" text="second" />
+                            <fx:reference fx:id="excluded" source="referred1" layoutX="100.0" layoutY="100.0">
+                                <children>
+                                  <fx:reference source="referred2" layoutX="100.0" layoutY="100.0"/>
+                               </children>
+                            </fx:reference>
+                            <fx:reference source="somebutton" layoutX="200.0" layoutY="100.0"/>
+                         </children>
+                      </Pane>
+                   </children>
+                </Pane>
+                """;
+        FXOMDocument fxomDocument = new FXOMDocument(fxml, tempDir.toAbsolutePath().toUri().toURL(), null, null);
 
         final String value = "first";
         String id = null;
@@ -101,18 +197,4 @@ class FxIdCollectorTest {
         assertTrue(item.get().getSceneGraphObject().getAs(Button.class).getText().equals(value));
     }
 
-    private enum FxmlTestInfo implements FilenameProvider {
-        FX_IDS("fxIds"), FIRST_FX_IDS("firstFxIds");
-
-        private String filename;
-
-        FxmlTestInfo(String filename) {
-            this.filename = filename;
-        }
-
-        @Override
-        public String getFilename() {
-            return filename;
-        }
-    }
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,54 +33,51 @@
  */
 package com.oracle.javafx.scenebuilder.draganddrop.droptarget;
 
-import java.util.List;
 import java.util.Objects;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.dnd.AbstractDropTarget;
+import com.gluonhq.jfxapps.core.api.dnd.DragSource;
+import com.gluonhq.jfxapps.core.api.dnd.DropTargetFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
-import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.job.editor.atomic.ReIndexObjectJob;
-import com.gluonhq.jfxapps.core.job.editor.atomic.RemoveObjectJob;
-import com.gluonhq.jfxapps.core.selection.job.InsertAsSubComponentJob;
-import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTarget;
-import com.oracle.javafx.scenebuilder.api.control.droptarget.DropTargetFactory;
-import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
+import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
+import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public final class ContainerZDropTargetBck extends AbstractDropTarget {
 
-    private final com.gluonhq.jfxapps.core.api.mask.Factory designMaskFactory;
-    private final com.gluonhq.jfxapps.core.api.job.base.Factory batchJobFactory;
-    private final ReIndexObjectJob.Factory reIndexObjectJobFactory;
-    private final RemoveObjectJob.Factory removeObjectJobFactory;
-    private final com.gluonhq.jfxapps.core.selection.job.Factory insertAsSubComponentJobFactory;
+    private final SbFXOMObjectMask.Factory designMaskFactory;
+    private final BatchJob.Factory batchJobFactory;
+    private final SelectionJobsFactory selectionJobsFactory;
+    private final FxomJobsFactory fxomJobsFactory;
+    private final SbJobsFactory sbJobsFactory;
 
     private FXOMInstance targetContainer;
     private FXOMObject beforeChild;
 
     protected ContainerZDropTargetBck(
-            FXOMObjectMask.Factory designMaskFactory,
+            SbFXOMObjectMask.Factory designMaskFactory,
             BatchJob.Factory batchJobFactory,
-            ReIndexObjectJob.Factory reIndexObjectJobFactory,
-            RemoveObjectJob.Factory removeObjectJobFactory,
-            InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory) {
+            SelectionJobsFactory selectionJobsFactory,
+            FxomJobsFactory fxomJobsFactory,
+            SbJobsFactory sbJobsFactory) {
         this.designMaskFactory = designMaskFactory;
         this.batchJobFactory = batchJobFactory;
-        this.reIndexObjectJobFactory = reIndexObjectJobFactory;
-        this.removeObjectJobFactory = removeObjectJobFactory;
-        this.insertAsSubComponentJobFactory = insertAsSubComponentJobFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
+        this.sbJobsFactory = sbJobsFactory;
     }
 
     protected void setDropTargetParameters(FXOMInstance targetContainer, FXOMObject beforeChild) {
@@ -135,15 +132,16 @@ public final class ContainerZDropTargetBck extends AbstractDropTarget {
         assert dragSource.getDraggedObjects().isEmpty() == false;
 
         final boolean shouldRefreshSceneGraph = true;
-        final BatchJob result = batchJobFactory.getJob(dragSource.makeDropJobDescription(), shouldRefreshSceneGraph);
+        final BatchJob result = batchJobFactory.getJob(shouldRefreshSceneGraph);
+        result.setDescription(dragSource.makeDropJobDescription());
 
-        final List<FXOMObject> draggedObjects = dragSource.getDraggedObjects();
+        final var draggedObjects = dragSource.getDraggedObjects();
         final FXOMObject currentParent = draggedObjects.get(0).getParentObject();
 
         if (currentParent == targetContainer) {
             // It's a re-indexing job
             for (FXOMObject draggedObject : dragSource.getDraggedObjects()) {
-                result.addSubJob(reIndexObjectJobFactory.getJob(draggedObject, beforeChild));
+                result.addSubJob(fxomJobsFactory.reIndexObject(draggedObject, beforeChild));
             }
         } else {
             // It's a reparening job :
@@ -152,19 +150,19 @@ public final class ContainerZDropTargetBck extends AbstractDropTarget {
 
             if (currentParent != null) {
                 for (FXOMObject draggedObject : draggedObjects) {
-                    result.addSubJob(removeObjectJobFactory.getJob(draggedObject));
+                    result.addSubJob(fxomJobsFactory.removeObject(draggedObject));
                 }
             }
             int targetIndex;
             if (beforeChild == null) {
-                final HierarchyMask m = designMaskFactory.getMask(targetContainer);
+                final var m = designMaskFactory.getMask(targetContainer);
                 targetIndex = m.getSubComponentCount(true);
             } else {
                 targetIndex = beforeChild.getIndexInParentProperty();
                 assert targetIndex != -1;
             }
             for (FXOMObject draggedObject : draggedObjects) {
-                final AbstractJob j = insertAsSubComponentJobFactory.getJob(draggedObject,targetContainer, targetIndex++);
+                final Job j = selectionJobsFactory.insertAsSubComponent(draggedObject,targetContainer, targetIndex++);
                 result.addSubJob(j);
             }
         }
@@ -213,11 +211,9 @@ public final class ContainerZDropTargetBck extends AbstractDropTarget {
         return "ContainerZDropTarget{" + "targetContainer=" + targetContainer + ", beforeChild=" + beforeChild + '}'; //NOCHECK
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
+    @ApplicationInstanceSingleton
     public static class Factory extends DropTargetFactory<ContainerZDropTargetBck> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

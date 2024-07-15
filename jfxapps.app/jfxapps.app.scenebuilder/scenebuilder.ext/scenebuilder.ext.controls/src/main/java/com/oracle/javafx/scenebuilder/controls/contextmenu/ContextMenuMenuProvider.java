@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,8 +36,6 @@ package com.oracle.javafx.scenebuilder.controls.contextmenu;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
@@ -50,48 +49,45 @@ import javafx.scene.control.MenuItem;
 //@Lazy
 public class ContextMenuMenuProvider implements MenuItemProvider {
 
-	private final static String REF_MENU_ID = "TBD";
+    private final static String REF_MENU_ID = "TBD";
 
-	private final SceneBuilderBeanFactory context;
+    private final JfxAppContext context;
 
-	public ContextMenuMenuProvider(
-			@Autowired SceneBuilderBeanFactory context
-			) {
-		this.context = context;
-	}
+    public ContextMenuMenuProvider(JfxAppContext context) {
+        this.context = context;
+    }
 
-	@Override
-	public List<MenuItemAttachment> menuItems() {
-		return Arrays.asList(
-				new ContextMenuMenuAttachment()
-				);
-	}
+    @Override
+    public List<MenuItemAttachment> menuItems() {
+        return Arrays.asList(new ContextMenuMenuAttachment());
+    }
 
-	public class ContextMenuMenuAttachment implements MenuItemAttachment {
+    public class ContextMenuMenuAttachment implements MenuItemAttachment {
 
-		private Menu menu = null;
+        private Menu menu = null;
 
-		public ContextMenuMenuAttachment() {}
+        public ContextMenuMenuAttachment() {
+        }
 
-		@Override
-		public String getTargetId() {
-			return REF_MENU_ID;
-		}
+        @Override
+        public String getTargetId() {
+            return REF_MENU_ID;
+        }
 
-		@Override
-		public PositionRequest getPositionRequest() {
-			return PositionRequest.AsNextSibling;
-		}
+        @Override
+        public PositionRequest getPositionRequest() {
+            return PositionRequest.AsNextSibling;
+        }
 
-		@Override
-		public MenuItem getMenuItem() {
+        @Override
+        public MenuItem getMenuItem() {
 
-			if (menu != null) {
-				return menu;
-			}
+            if (menu != null) {
+                return menu;
+            }
 
-			menu = new Menu("xxx");
-			return menu;
-		}
-	}
+            menu = new Menu("xxx");
+            return menu;
+        }
+    }
 }

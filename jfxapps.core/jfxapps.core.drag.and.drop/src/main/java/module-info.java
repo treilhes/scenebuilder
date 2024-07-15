@@ -40,8 +40,6 @@ open module jfxapps.core.drag.and.drop{
     exports com.gluonhq.jfxapps.core.dnd.source;
 
     requires transitive jfxapps.core.api;
-    requires jfxapps.core.jobs;
-    requires jfxapps.core.selection;
 
     provides Extension with DragAndDropExtension;
 }

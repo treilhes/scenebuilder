@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,7 +37,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import org.scenebuilder.fxml.api.SbApiExtension;
+
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.preview.actions.SetPreviewSizeAction;
 import com.oracle.javafx.scenebuilder.preview.actions.SetRootSizeExtension;
 import com.oracle.javafx.scenebuilder.preview.actions.ShowPreviewAction;
@@ -45,15 +47,27 @@ import com.oracle.javafx.scenebuilder.preview.actions.ShowPreviewDialogAction;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 import com.oracle.javafx.scenebuilder.preview.menu.PreviewMenuProvider;
 
-public class PreviewExtension extends AbstractExtension {
+public class PreviewExtension implements OpenExtension {
+
+    public static final UUID ID = UUID.fromString("bfef2604-9c6a-4ce4-9e14-7e4f27ad6715");
 
     @Override
-    public UUID getId() {
-        return UUID.fromString("bfef2604-9c6a-4ce4-9e14-7e4f27ad6715");
+    public UUID getParentId() {
+        return SbApiExtension.ID;
     }
 
     @Override
-    public List<Class<?>> explicitClassToRegister() {
+    public UUID getId() {
+        return ID;
+    }
+
+    @Override
+    public List<Class<?>> localContextClasses() {
+        return List.of();
+    }
+
+    @Override
+    public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
                 PreviewWindowController.class,
@@ -65,4 +79,6 @@ public class PreviewExtension extends AbstractExtension {
             );
      // @formatter:on
     }
+
+
 }

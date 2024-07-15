@@ -46,7 +46,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewContent;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
-import com.gluonhq.jfxapps.util.NodeUtils;
+import com.gluonhq.jfxapps.util.javafx.NodeUtils;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;

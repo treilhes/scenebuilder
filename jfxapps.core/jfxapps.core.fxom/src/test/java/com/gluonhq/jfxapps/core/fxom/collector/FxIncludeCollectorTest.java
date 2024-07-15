@@ -35,18 +35,21 @@ package com.gluonhq.jfxapps.core.fxom.collector;
 
 import static org.junit.Assert.assertEquals;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.junitpioneer.jupiter.SetSystemProperty;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
-import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
-import com.gluonhq.jfxapps.core.fxom.testutil.FxmlUtil;
 
 import javafx.stage.Stage;
 
@@ -54,14 +57,53 @@ import javafx.stage.Stage;
 @SetSystemProperty(key = "javafx.allowjs", value = "true")
 class FxIncludeCollectorTest {
 
+    private static final String INCLUDE = """
+            <?import javafx.scene.layout.Pane?>
+            <Pane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" />
+            """;
+
+    private static final String FXML = """
+            <?import javafx.scene.control.Button?>
+            <?import javafx.scene.layout.Pane?>
+            <?import javafx.scene.shape.Circle?>
+
+            <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+               <fx:define>
+                    <fx:include fx:id="referred1" source="included.fxml" />
+                    <fx:include fx:id="referred2" source="included.fxml" />
+               </fx:define>
+               <children>
+                  <Pane layoutX="200.0" layoutY="100.0" prefHeight="200.0" prefWidth="200.0" clip="$circleblue">
+                     <children>
+                        <fx:include fx:id="referred3" source="included.fxml" />
+                        <fx:reference fx:id="excluded" source="referred1" layoutX="100.0" layoutY="100.0">
+                            <children>
+                              <fx:include fx:id="referred4" source="included2.fxml" />
+                           </children>
+                        </fx:reference>
+                     </children>
+                  </Pane>
+               </children>
+            </Pane>
+            """;
+
+    @TempDir
+    static Path tempDir;
+
     @Start
     private void start(Stage stage) {
 
     }
 
+    @BeforeAll
+    public static void init() throws Exception {
+        Files.writeString(tempDir.resolve("included.fxml"), INCLUDE, StandardOpenOption.CREATE);
+        Files.writeString(tempDir.resolve("included2.fxml"), INCLUDE, StandardOpenOption.CREATE);
+    }
+
     @Test
-    public void should_return_the_right_number_of_fxincludes() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.FX_INCLUDES);
+    public void should_return_the_right_number_of_fxincludes() throws Exception {
+        FXOMDocument fxomDocument = new FXOMDocument(FXML, tempDir.toAbsolutePath().toUri().toURL(), null, null);
 
         List<FXOMIntrinsic> items = fxomDocument.getFxomRoot().collect(FxCollector.allFxIncludes());
 
@@ -69,27 +111,13 @@ class FxIncludeCollectorTest {
     }
 
     @Test
-    public void should_return_the_right_number_of_fxincludes_by_source() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.FX_INCLUDES);
+    public void should_return_the_right_number_of_fxincludes_by_source() throws Exception {
+        FXOMDocument fxomDocument = new FXOMDocument(FXML, tempDir.toAbsolutePath().toUri().toURL(), null, null);
 
-        String source = "referred1.fxml";
+        String source = "included2.fxml";
         List<FXOMIntrinsic> items = fxomDocument.getFxomRoot().collect(FxCollector.fxIncludeBySource(source));
 
         assertEquals(1, items.size());
     }
 
-    private enum FxmlTestInfo implements FilenameProvider {
-        FX_INCLUDES("fxIncludes");
-
-        private String filename;
-
-        FxmlTestInfo(String filename) {
-            this.filename = filename;
-        }
-
-        @Override
-        public String getFilename() {
-            return filename;
-        }
-    }
 }

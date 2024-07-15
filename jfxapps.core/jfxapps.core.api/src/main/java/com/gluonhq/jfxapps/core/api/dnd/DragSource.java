@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.dnd;
 
+import java.util.List;
 import java.util.Set;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -42,7 +43,7 @@ import javafx.scene.input.TransferMode;
 
 public interface DragSource {
 
-    Set<? extends FXOMObject> getDraggedObjects();
+    List<? extends FXOMObject> getDraggedObjects();
 
     String makeDropJobDescription();
 

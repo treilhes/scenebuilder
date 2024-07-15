@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,9 +33,10 @@
  */
 package com.oracle.javafx.scenebuilder.app;
 
-import com.gluonhq.jfxapps.core.launcher.app.SceneBuilderBootstrap;
+//import com.gluonhq.jfxapps.core.launcher.app.SceneBuilderBootstrap;
 
 //@SpringBootApplication
+@Deprecated
 public class SceneBuilderApp {
 
 	/**
@@ -45,7 +46,7 @@ public class SceneBuilderApp {
      */
 	public static void main(String[] args) {
 	    //System.setProperty("polyglot.js.nashorn-compat", "true"); // NOCHECK
-        SceneBuilderBootstrap.startApplication(args);
+        //SceneBuilderBootstrap.startApplication(args);
 	}
 
 }

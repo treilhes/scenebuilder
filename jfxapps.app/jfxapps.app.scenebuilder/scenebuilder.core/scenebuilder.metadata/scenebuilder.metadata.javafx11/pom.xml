@@ -28,6 +28,10 @@
             <artifactId>scenebuilder.metadata.customization</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>scenebuilder.metadata.javafx.fx</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>

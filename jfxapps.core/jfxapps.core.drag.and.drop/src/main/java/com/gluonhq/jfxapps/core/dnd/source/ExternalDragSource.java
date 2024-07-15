@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -51,6 +51,7 @@ import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
+import com.gluonhq.jfxapps.core.api.dnd.AbstractDragSource;
 import com.gluonhq.jfxapps.core.api.dnd.DragSourceFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
@@ -76,7 +77,7 @@ public final class ExternalDragSource extends AbstractDragSource {
 
     private Dragboard dragboard;
     private FXOMDocument targetDocument;
-    private Set<FXOMObject> draggedObjects; // Initialized lazily
+    private List<FXOMObject> draggedObjects; // Initialized lazily
     private List<File> inputFiles; // Initialized lazily
 //    private boolean nodeOnly; // Iniitalized lazily
 //    private boolean singleImageViewOnly; // Initiated lazily
@@ -101,9 +102,9 @@ public final class ExternalDragSource extends AbstractDragSource {
         assert targetDocument != null;
     }
 
-    protected void setDragSourceParameters(Dragboard clipboardContent) {
-        assert clipboardContent != null;
-        this.dragboard = clipboardContent;
+    public void setDragSourceParameters(Dragboard dragboard) {
+        assert dragboard != null;
+        this.dragboard = dragboard;
     }
 
     public int getErrorCount() {
@@ -127,7 +128,7 @@ public final class ExternalDragSource extends AbstractDragSource {
 
 
     @Override
-    public Set<? extends FXOMObject> getDraggedObjects() {
+    public List<? extends FXOMObject> getDraggedObjects() {
 
         AtomicInteger errorCount = new AtomicInteger();
         AtomicReference<Exception> lastException = new AtomicReference<>();
@@ -149,7 +150,7 @@ public final class ExternalDragSource extends AbstractDragSource {
                     lastException.set(e);
                 }))
                 .flatMap(List::stream)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
             inputFiles = new ArrayList<>();
             inputFiles.addAll(dragboard.getFiles());
 
@@ -404,18 +405,7 @@ public final class ExternalDragSource extends AbstractDragSource {
 //        return result;
 //    }
 
-    @Singleton
-    @Lazy
-    public static class Factory extends DragSourceFactory<ExternalDragSource> {
-        public Factory(JfxAppContext sbContext) {
-            super(sbContext);
-        }
 
-        public ExternalDragSource getDragSource(Dragboard clipboardContent) {
-            return create(ExternalDragSource.class, j -> j.setDragSourceParameters(clipboardContent));
-        }
-
-    }
 
     @Override
     public TransferMode getTransferMode() {

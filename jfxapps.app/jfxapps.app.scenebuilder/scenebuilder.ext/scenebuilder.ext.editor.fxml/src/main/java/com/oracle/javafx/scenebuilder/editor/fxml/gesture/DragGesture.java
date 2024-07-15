@@ -58,7 +58,7 @@ import com.gluonhq.jfxapps.core.core.dnd.droptarget.RootDropTarget;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.util.MathUtils;
-import com.gluonhq.jfxapps.util.content.BoundsUtils;
+import com.gluonhq.jfxapps.util.javafx.BoundsUtils;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.core.editor.drag.source.ExternalDragSource;

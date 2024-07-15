@@ -394,8 +394,7 @@ public class FXOMCloner {
 
     private void renameFxIds(FXOMObject clone, boolean preserveCloneeFxId) {
 
-        final Map<String, FXOMObject> fxIds = clone
-                .collect(FxCollector.fxIdsMap());
+        final Map<String, FXOMObject> fxIds = clone.collect(FxCollector.fxIdsUniqueMap());
 
         if (preserveCloneeFxId && (clonee.getFxId() != null)) {
             // We don't apply renaming to the fx:id of the clonee

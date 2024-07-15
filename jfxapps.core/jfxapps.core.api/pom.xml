@@ -32,17 +32,22 @@
             <artifactId>jfxapps.core.utils</artifactId>
         </dependency>
         
+        
         <!-- https://mvnrepository.com/artifact/org.pdfsam.rxjava3/rxjavafx -->
         <dependency>
             <groupId>org.pdfsam.rxjava3</groupId>
             <artifactId>rxjavafx</artifactId>
-            <version>${rxjavafx.version}</version>
         </dependency>
-        
+                
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.boot.starter</artifactId>
-            <scope>provided</scope>
+            <artifactId>jfxapps.core.starter</artifactId>
+            <exclusions>
+                <exclusion>
+                  <groupId>*</groupId>
+                  <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>

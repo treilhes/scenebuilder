@@ -47,7 +47,7 @@ import java.util.TreeMap;
 import org.junit.jupiter.api.Test;
 import org.junitpioneer.jupiter.SetSystemProperty;
 
-import com.gluonhq.jfxapps.core.fxom.util.IndexedHashMap;
+import com.gluonhq.jfxapps.util.IndexedHashMap;
 
 @SetSystemProperty(key = "javafx.allowjs", value = "true")
 class IndexedHashMapTest {

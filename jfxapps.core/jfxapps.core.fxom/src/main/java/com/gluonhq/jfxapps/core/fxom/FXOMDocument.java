@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -49,6 +49,7 @@ import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
 import com.gluonhq.jfxapps.core.fxom.glue.GlueDocument;
 import com.gluonhq.jfxapps.core.fxom.sampledata.SampleDataGenerator;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
+import com.gluonhq.jfxapps.core.fxom.util.FXMLLoaderInstrument;
 import com.gluonhq.jfxapps.util.URLUtils;
 
 import javafx.beans.property.ObjectProperty;
@@ -118,6 +119,10 @@ public class FXOMDocument {
         }
     }
 
+    public FXOMDocument(String fxmlText) throws IOException {
+        this(fxmlText, null, null, null);
+    }
+
     public FXOMDocument(String fxmlText, URL location, ClassLoader classLoader, ResourceBundle resources, boolean normalize) throws IOException {
         this.locationProperty.set(location);
         this.glue = new GlueDocument(fxmlText);
@@ -126,6 +131,7 @@ public class FXOMDocument {
         initialDeclaredClasses = new ArrayList<>();
         if (this.glue.getMainElement() != null) {
             final FXOMLoader loader = new FXOMLoader(this);
+
             loader.load(fxmlText);
             if (normalize) {
                 final FXOMNormalizer normalizer = new FXOMNormalizer(this);

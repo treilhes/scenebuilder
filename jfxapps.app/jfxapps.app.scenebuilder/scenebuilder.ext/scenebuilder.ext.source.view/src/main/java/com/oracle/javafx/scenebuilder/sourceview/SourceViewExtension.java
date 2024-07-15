@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,19 +37,34 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
+import org.scenebuilder.fxml.api.SbApiExtension;
+
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.sourceview.actions.GenerateFxmlContentAction;
 import com.oracle.javafx.scenebuilder.sourceview.controller.SourceViewWindowController;
 import com.oracle.javafx.scenebuilder.sourceview.i18n.I18NSourceView;
 
-public class SourceViewExtension extends AbstractExtension {
+public class SourceViewExtension implements OpenExtension {
+
+    public static final UUID ID = UUID.fromString("de080267-dca0-41ac-afda-9f9a5223a9cc");
+
+    @Override
+    public UUID getParentId() {
+        return SbApiExtension.ID;
+    }
+
     @Override
     public UUID getId() {
-        return UUID.fromString("de080267-dca0-41ac-afda-9f9a5223a9cc");
+        return ID;
     }
-    
+
     @Override
-    public List<Class<?>> explicitClassToRegister() {
+    public List<Class<?>> localContextClasses() {
+        return List.of();
+    }
+
+    @Override
+    public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
                 GenerateFxmlContentAction.class,
@@ -57,4 +73,5 @@ public class SourceViewExtension extends AbstractExtension {
             );
      // @formatter:on
     }
+
 }

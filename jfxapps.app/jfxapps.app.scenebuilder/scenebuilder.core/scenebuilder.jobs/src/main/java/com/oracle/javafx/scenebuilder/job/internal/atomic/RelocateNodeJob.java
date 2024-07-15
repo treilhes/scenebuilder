@@ -40,8 +40,8 @@ import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata;
-import com.gluonhq.jfxapps.util.AnchorUtils;
 import com.gluonhq.jfxapps.util.MathUtils;
+import com.gluonhq.jfxapps.util.javafx.AnchorUtils;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 import javafx.geometry.Bounds;

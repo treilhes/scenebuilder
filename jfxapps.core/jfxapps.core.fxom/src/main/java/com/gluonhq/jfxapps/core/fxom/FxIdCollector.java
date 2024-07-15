@@ -55,7 +55,7 @@ class FxIdCollector {
     }
 
     public FxIdCollector(FXOMDocument fxomDocument) {
-        this(fxomDocument.collect(FxCollector.fxIdsMap()).keySet());
+        this(fxomDocument.collect(FxCollector.fxIdsUniqueMap()).keySet());
     }
 
     public String importFxId(String sourceFxId) {

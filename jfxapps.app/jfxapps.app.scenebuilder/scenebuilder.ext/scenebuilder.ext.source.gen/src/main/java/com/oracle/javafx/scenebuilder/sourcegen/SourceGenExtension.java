@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,20 +37,34 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.core.extension.AbstractExtension;
+import org.scenebuilder.fxml.api.SbApiExtension;
+
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.sourcegen.actions.GenerateSkeletonContentAction;
 import com.oracle.javafx.scenebuilder.sourcegen.i18n.I18NSourceGen;
 import com.oracle.javafx.scenebuilder.sourcegen.skeleton.SkeletonViewController;
 
-public class SourceGenExtension extends AbstractExtension {
+public class SourceGenExtension implements OpenExtension {
+
+    public static final UUID ID = UUID.fromString("ead87e42-0619-4d9c-8671-87d7a27e3277");
 
     @Override
-    public UUID getId() {
-        return UUID.fromString("ead87e42-0619-4d9c-8671-87d7a27e3277");
+    public UUID getParentId() {
+        return SbApiExtension.ID;
     }
 
     @Override
-    public List<Class<?>> explicitClassToRegister() {
+    public UUID getId() {
+        return ID;
+    }
+
+    @Override
+    public List<Class<?>> localContextClasses() {
+        return List.of();
+    }
+
+    @Override
+    public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
                 GenerateSkeletonContentAction.class,
@@ -58,4 +73,5 @@ public class SourceGenExtension extends AbstractExtension {
             );
      // @formatter:on
     }
+
 }

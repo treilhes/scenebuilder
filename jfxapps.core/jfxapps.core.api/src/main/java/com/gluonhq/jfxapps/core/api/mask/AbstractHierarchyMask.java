@@ -276,7 +276,7 @@ public abstract class AbstractHierarchyMask<
      * @return
      */
     @Override
-    public boolean isAcceptingAccessory(final A accessory, final Collection<FXOMObject> fxomObjects) {
+    public boolean isAcceptingAccessory(final A accessory, final Collection<? extends FXOMObject> fxomObjects) {
 
         if (accessory != null && fxomObjects != null) {
             final boolean forbidenItemExists = fxomObjects.stream().anyMatch(fo -> !isAcceptingAccessory(accessory, fo));
@@ -358,7 +358,7 @@ public abstract class AbstractHierarchyMask<
      * @return
      */
     @Override
-    public boolean isAcceptingSubComponent(final Collection<FXOMObject> fxomObjects) {
+    public boolean isAcceptingSubComponent(final Collection<? extends FXOMObject> fxomObjects) {
         if (mainAccessory != null) {
 
             boolean hasRealObjects = fxomObjects.stream().anyMatch(Predicate.not(FXOMObject::isVirtual));

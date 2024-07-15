@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,6 +37,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import org.scenebuilder.fxml.api.SbApiExtension;
+
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.cssanalyser.actions.CopyStyleablePathAction;
 import com.oracle.javafx.scenebuilder.cssanalyser.actions.CssViewAsMenuProvider;
 import com.oracle.javafx.scenebuilder.cssanalyser.actions.CssViewToggle;
@@ -51,16 +54,28 @@ import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelDelegate;
 import com.oracle.javafx.scenebuilder.cssanalyser.i18n.I18NCssAnalyser;
 import com.oracle.javafx.scenebuilder.cssanalyser.mode.PickModeController;
 import com.oracle.javafx.scenebuilder.cssanalyser.preferences.global.CssTableColumnsOrderingReversedPreference;
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-public class CssAnalyserExtension extends AbstractExtension {
+public class CssAnalyserExtension implements OpenExtension {
+
+    public static final UUID ID = UUID.fromString("3155d7db-8df0-466c-b19a-8a8b9204fcb4");
+
     @Override
-    public UUID getId() {
-        return UUID.fromString("3155d7db-8df0-466c-b19a-8a8b9204fcb4");
+    public UUID getParentId() {
+        return SbApiExtension.ID;
     }
 
     @Override
-    public List<Class<?>> explicitClassToRegister() {
+    public UUID getId() {
+        return ID;
+    }
+
+    @Override
+    public List<Class<?>> localContextClasses() {
+        return List.of();
+    }
+
+    @Override
+    public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
             I18NCssAnalyser.class,

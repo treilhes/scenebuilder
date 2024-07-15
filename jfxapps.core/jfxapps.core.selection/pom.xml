@@ -12,10 +12,11 @@
     <artifactId>jfxapps.core.selection</artifactId>
 
     <dependencies>
-        <!--<dependency>
+        <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.jobs</artifactId>
-        </dependency>-->
+            <artifactId>jfxapps.core.api</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.starter</artifactId>

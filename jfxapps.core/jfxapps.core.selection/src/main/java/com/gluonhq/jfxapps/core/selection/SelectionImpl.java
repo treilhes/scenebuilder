@@ -639,7 +639,7 @@ public class SelectionImpl implements Selection {
 
     @Override
     public Map<String, FXOMObject> collectSelectedFxIds() {
-        return group == null ? Collections.emptyMap() : group.collect(FxCollector.fxIdsMap());
+        return group == null ? Collections.emptyMap() : group.collect(FxCollector.fxIdsUniqueMap());
     }
 
 }

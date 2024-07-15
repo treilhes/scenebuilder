@@ -38,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -47,6 +48,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
@@ -62,6 +64,9 @@ class JobManagerImplTest {
     private JobPipelineFactory jobPipelineFactory;
 
     @Mock
+    FxomJobsFactory fxomJobsFactory;
+
+    @Mock
     private BatchJob.Factory batchJobFactory;
 
     @Mock
@@ -74,9 +79,12 @@ class JobManagerImplTest {
         jobManager = new JobManagerImpl(
                 documentManager,
                 jobPipelineFactory,
+                fxomJobsFactory,
                 batchJobFactory);
 
         when(batchJobFactory.getJob()).thenAnswer(invocation -> new BatchJob(null, documentManager ,null));
+        when(fxomJobsFactory.fixUndeclaredExpressionReference(any(), any())).thenAnswer(invocation -> new BatchJob(null, documentManager ,null));
+        when(fxomJobsFactory.fixUndeclaredIntrinsic(any(), any())).thenAnswer(invocation -> new BatchJob(null, documentManager ,null));
     }
 
     @Test

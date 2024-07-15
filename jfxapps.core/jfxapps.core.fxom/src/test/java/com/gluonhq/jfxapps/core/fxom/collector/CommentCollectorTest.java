@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,10 +35,13 @@ package com.gluonhq.jfxapps.core.fxom.collector;
 
 import static org.junit.Assert.assertEquals;
 
+import java.nio.file.Path;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.junitpioneer.jupiter.SetSystemProperty;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
@@ -54,35 +57,57 @@ import javafx.stage.Stage;
 @SetSystemProperty(key = "javafx.allowjs", value = "true")
 class CommentCollectorTest {
 
+    private final static String MAIN = """
+            <?import javafx.scene.control.Button?>
+            <?import javafx.scene.layout.Pane?>
+
+            <!-- some comment1 , not supported actualy, that's why the test fails-->
+            <Pane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+                <!-- some comment2 -->
+               <fx:define>
+                    <Pane fx:id="vPane" />
+                    <Pane fx:id="vPane2" />
+               </fx:define>
+               <children>
+                  <!-- some comment3 -->
+                  <Pane>
+                     <children>
+                        <!-- some comment4 -->
+                        <Button />
+                        <fx:reference source="vPane">
+                            <children>
+                              <!-- some comment5 -->
+                              <fx:reference source="vPane2"/>
+                           </children>
+                        </fx:reference>
+                     </children>
+                  </Pane>
+               </children>
+            </Pane>
+            """;
+
+    @TempDir
+    static Path tempDir;
+
+    FXOMDocument fxomDocument;
+
     @Start
     private void start(Stage stage) {
 
     }
 
+    @BeforeEach
+    public void setup() throws Exception {
+        fxomDocument = new FXOMDocument(MAIN);
+    }
+
     @Test
     public void should_return_the_right_number_of_comments() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.COMMENTS);
-
         List<FXOMComment> items = fxomDocument.getFxomRoot().collect(CommentCollector.allComments());
 
         // when support of first node comment will be enabled
         //assertEquals(5, items.size());
         // for the time being
         assertEquals(4, items.size());
-    }
-
-    private enum FxmlTestInfo implements FilenameProvider {
-        COMMENTS("comments");
-
-        private String filename;
-
-        FxmlTestInfo(String filename) {
-            this.filename = filename;
-        }
-
-        @Override
-        public String getFilename() {
-            return filename;
-        }
     }
 }

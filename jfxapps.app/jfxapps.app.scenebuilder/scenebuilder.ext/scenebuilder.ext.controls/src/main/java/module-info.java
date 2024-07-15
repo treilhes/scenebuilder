@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.core.extension.Extension;
+import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.fxom.ext.FXOMNormalizer;
 import com.gluonhq.jfxapps.core.fxom.ext.FXOMRefresher;
 import com.gluonhq.jfxapps.core.fxom.ext.FileLoader;
@@ -52,25 +52,9 @@ import com.oracle.javafx.scenebuilder.controls.fxom.TabPaneStateBackup;
 open module scenebuilder.ext.controls {
     exports com.oracle.javafx.scenebuilder.controls.contextmenu;
     exports com.oracle.javafx.scenebuilder.controls;
-    //exports com.oracle.javafx.scenebuilder.controls.metadata;
-    //exports com.oracle.javafx.scenebuilder.controls.mask;
-    //opens com.oracle.javafx.scenebuilder.controls.metadata to spring.core;
 
-    requires scenebuilder.starter;
-//    requires javafx.base;
-//    requires javafx.controls;
-//    requires javafx.graphics;
-//    requires javafx.media;
-//    requires javafx.swing;
-//    requires javafx.web;
+    requires scenebuilder.app.starter;
     requires transitive scenebuilder.api;
-    requires scenebuilder.core.extension.api;
-    requires scenebuilder.core.fxom;
-    requires scenebuilder.core.metadata;
-    requires scenebuilder.metadata.javafx;
-
-//    requires spring.beans;
-//    requires spring.context;
 
     provides Extension with BaseControlsExtension;
     provides FXOMNormalizer with ExpandedPaneNormalizer, GridPaneNormalizer;

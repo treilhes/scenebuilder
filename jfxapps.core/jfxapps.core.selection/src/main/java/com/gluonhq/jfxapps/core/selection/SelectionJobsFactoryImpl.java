@@ -56,6 +56,7 @@ import com.gluonhq.jfxapps.core.selection.job.DeleteObjectSelectionJob;
 import com.gluonhq.jfxapps.core.selection.job.DeleteSelectionJob;
 import com.gluonhq.jfxapps.core.selection.job.DuplicateSelectionJob;
 import com.gluonhq.jfxapps.core.selection.job.InsertAsAccessoryJob;
+import com.gluonhq.jfxapps.core.selection.job.InsertAsSubComponentJob;
 import com.gluonhq.jfxapps.core.selection.job.ModifySelectionJob;
 import com.gluonhq.jfxapps.core.selection.job.PasteIntoJob;
 import com.gluonhq.jfxapps.core.selection.job.SendBackwardJob;
@@ -236,27 +237,6 @@ public class SelectionJobsFactoryImpl extends JobFactory<Job> implements Selecti
      * {@link FXOMDocument} with the provided {@link FXOMObject}<br/>
      * The provided {@link FXOMObject} is cleaned from obsolete properties
      * {@link FXOMProperty}<br/>
-     * and resized according user preferences.<br/>
-     *
-     * @param newRoot           the {@link FXOMObject} menat to be the new root of
-     *                          the current document
-     * @param usePredefinedSize if true, newRoot will be resized according user
-     *                          predefined size
-     * @param description       the job description
-     * @return the job to execute
-     */
-    // TODO usePredefinedSize is a scenebuilder concept, not a jfxapps one. Should
-    // be removed
-    @Override
-    public Job setDocumentRoot(FXOMObject newRoot, boolean usePredefinedSize, String description) {
-        return create(SetDocumentRootJob.class, j -> j.setJobParameters(newRoot, usePredefinedSize, description));
-    }
-
-    /**
-     * updates the FXOM document at execution time. It set the root of a document
-     * {@link FXOMDocument} with the provided {@link FXOMObject}<br/>
-     * The provided {@link FXOMObject} is cleaned from obsolete properties
-     * {@link FXOMProperty}<br/>
      *
      * With default description (class name) and usePredefinedSize = false
      *
@@ -266,7 +246,9 @@ public class SelectionJobsFactoryImpl extends JobFactory<Job> implements Selecti
      */
     @Override
     public Job setDocumentRoot(FXOMObject newRoot) {
-        return create(SetDocumentRootJob.class, j -> j.setJobParameters(newRoot, false, "Set root"));
+        Job job = create(SetDocumentRootJob.class, j -> j.setJobParameters(newRoot));
+        job.setDescription("Set root");
+        return job;
     }
 
     /**
@@ -301,5 +283,10 @@ public class SelectionJobsFactoryImpl extends JobFactory<Job> implements Selecti
     @Override
     public Job updateSelection(SelectionGroup group) {
         return create(UpdateSelectionJob.class, j -> j.setJobParameters(group));
+    }
+
+    @Override
+    public Job insertAsSubComponent(FXOMObject newObject, FXOMObject targetObject, int targetIndex) {
+        return create(InsertAsSubComponentJob.class, j -> j.setJobParameters(newObject, targetObject, targetIndex));
     }
 }

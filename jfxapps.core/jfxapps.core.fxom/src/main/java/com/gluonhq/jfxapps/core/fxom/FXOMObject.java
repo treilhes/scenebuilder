@@ -85,10 +85,6 @@ public abstract class FXOMObject extends FXOMNode {
     public FXOMCollection getParentCollection() {
         return parentCollection;
     }
-//
-//    public FXOMDefine getParentDefine() {
-//        return parentDefine;
-//    }
 
     public void addToParentProperty(int index, FXOMProperty newParentProperty) {
 
@@ -612,8 +608,8 @@ public abstract class FXOMObject extends FXOMNode {
             documentLocationWillChange(destination.getLocation());
         }
 
-        final Map<String, FXOMObject> destinationFxIds = destination.collect(FxCollector.fxIdsMap());
-        final Map<String, FXOMObject> importedFxIds = collect(FxCollector.fxIdsMap());
+        final Map<String, FXOMObject> destinationFxIds = destination.collect(FxCollector.fxIdsUniqueMap());
+        final Map<String, FXOMObject> importedFxIds = collect(FxCollector.fxIdsUniqueMap());
         final FXOMFxIdMerger merger = new FXOMFxIdMerger(destinationFxIds.keySet(), importedFxIds.keySet());
         for (Map.Entry<String, FXOMObject> e : importedFxIds.entrySet()) {
             final String originalFxId = e.getKey();
@@ -750,6 +746,11 @@ public abstract class FXOMObject extends FXOMNode {
      */
     public boolean isVirtual() {
         return false;
+    }
+
+    @Override
+    public FXOMPath getPath() {
+        return FXOMPath.of(this);
     }
 
     public abstract Class<?> getMetadataClass();

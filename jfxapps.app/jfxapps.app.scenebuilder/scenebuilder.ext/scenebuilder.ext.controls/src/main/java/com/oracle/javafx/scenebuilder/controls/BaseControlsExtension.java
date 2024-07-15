@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,18 +37,32 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.core.extension.AbstractExtension;
+import org.scenebuilder.fxml.api.SbApiExtension;
+
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.controls.contextmenu.ContextMenuMenuProvider;
 
-public class BaseControlsExtension extends AbstractExtension {
+public class BaseControlsExtension implements OpenExtension {
+
+    public final static UUID ID = UUID.fromString("aca5161a-89c1-47a8-bb54-bb376d1f1b38");
 
     @Override
-    public UUID getId() {
-        return UUID.fromString("aca5161a-89c1-47a8-bb54-bb376d1f1b38");
+    public UUID getParentId() {
+        return SbApiExtension.ID;
     }
 
     @Override
-    public List<Class<?>> explicitClassToRegister() {
+    public UUID getId() {
+        return ID;
+    }
+
+    @Override
+    public List<Class<?>> localContextClasses() {
+        return List.of();
+    }
+
+    @Override
+    public List<Class<?>> exportedContextClasses() {
         return Arrays.asList(
                 BaseDocumentationUrlBuilder.class,
                 ContextMenuMenuProvider.class

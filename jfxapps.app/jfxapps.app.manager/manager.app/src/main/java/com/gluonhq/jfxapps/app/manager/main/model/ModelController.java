@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.app.manager.main.model;
 
-import com.gluonhq.jfxapps.app.manager.main.api.Model;
+import com.gluonhq.jfxapps.app.manager.api.ui.Model;
 import com.gluonhq.jfxapps.app.manager.model.AppModel;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 

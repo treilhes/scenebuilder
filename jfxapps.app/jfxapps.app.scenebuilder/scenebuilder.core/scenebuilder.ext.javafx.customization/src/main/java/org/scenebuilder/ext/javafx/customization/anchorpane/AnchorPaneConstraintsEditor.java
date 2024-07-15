@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,18 +42,20 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.ui.controller.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
-import com.gluonhq.jfxapps.core.fxml.api.selection.SelectionState;
 import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertiesEditor;
-import com.oracle.javafx.scenebuilder.core.editors.AbstractPropertyEditor;
-import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
+import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertiesEditor;
+import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor;
+import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
+import com.oracle.javafx.scenebuilder.metadata.custom.addon.AnchorPropertyGroupMetadata;
 
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -70,8 +72,7 @@ import javafx.scene.layout.Region;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
 
     private static final String ANCHOR_ENABLED_COLOR = "-sb-line-art-accent";
@@ -208,8 +209,7 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
     /*
      * Editor for a single constraint (e.g. topAnchor)
      */
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+    @ApplicationInstancePrototype
     public static class ConstraintEditor extends AbstractPropertyEditor {
 
         private ToggleButton toggleButton;
@@ -379,10 +379,9 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
             return (FXOMInstance) selectedInstances.toArray()[0];
         }
 
-        @Component
-        @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+        @ApplicationInstancePrototype
         public static class Factory extends AbstractFactory<ConstraintEditor> {
-            public Factory(SceneBuilderBeanFactory sbContext) {
+            public Factory(JfxAppContext sbContext) {
                 super(sbContext);
             }
 

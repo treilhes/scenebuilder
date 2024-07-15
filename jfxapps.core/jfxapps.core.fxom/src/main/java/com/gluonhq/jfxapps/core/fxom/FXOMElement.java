@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,9 +37,9 @@ import java.util.Map;
 
 import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
 import com.gluonhq.jfxapps.core.fxom.glue.GlueElement;
-import com.gluonhq.jfxapps.core.fxom.util.IndexedHashMap;
-import com.gluonhq.jfxapps.core.fxom.util.IndexedMap;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.util.IndexedHashMap;
+import com.gluonhq.jfxapps.util.IndexedMap;
 
 public abstract class FXOMElement extends FXOMObject {
 
@@ -99,17 +99,31 @@ public abstract class FXOMElement extends FXOMObject {
                 collector.collect(this);
             }
 
+            if (collector.endCollection()) {
+                return collector.getCollected();
+            }
+
             if (collector.needCollectProperty()) {
                 for (FXOMProperty p : getProperties().values()) {
                     if (collector.accept(p)){
                         collector.collect(p);
+                        if (collector.endCollection()) {
+                            break;
+                        }
                     }
                 }
+            }
+
+            if (collector.endCollection()) {
+                return collector.getCollected();
             }
 
             for (FXOMObject i : getChildObjects()) {
                 if (i.getParentProperty() == null || collector.accept(i.getParentProperty())){
                     i.collect(collector);
+                    if (collector.endCollection()) {
+                        break;
+                    }
                 }
             }
         }

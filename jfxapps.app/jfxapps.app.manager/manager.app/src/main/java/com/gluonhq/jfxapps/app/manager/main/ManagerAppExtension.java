@@ -36,30 +36,24 @@ package com.gluonhq.jfxapps.app.manager.main;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.app.manager.main.api.ApplicationCard;
-import com.gluonhq.jfxapps.app.manager.main.api.ExtensionCard;
+import com.gluonhq.jfxapps.app.manager.api.ManagerApiExtension;
 import com.gluonhq.jfxapps.app.manager.main.model.ModelController;
 import com.gluonhq.jfxapps.app.manager.main.ui.ManagerUiTemplate;
 import com.gluonhq.jfxapps.app.manager.main.ui.WindowIconSettings;
 import com.gluonhq.jfxapps.app.manager.main.ui.cmp.ApplicationCardController;
 import com.gluonhq.jfxapps.app.manager.main.ui.cmp.ExtensionCardController;
 import com.gluonhq.jfxapps.app.manager.main.ui.cmp.MainContentController;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.boot.loader.extension.ApplicationExtension;
-import com.gluonhq.jfxapps.core.api.application.annotation.EditorDescriptor;
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 
-@EditorDescriptor(
-            label = "manager.app.label",
-            licence = "BSD",
-            licenceFile = "LICENSE",
-            description = "manager.app.description",
-            image = "manager.png",
-            imageX2 = "manager@2x.png",
-            extensions = {"jfxmngr"}
-        )
-public class ManagerAppExtension implements ApplicationExtension  {
+public class ManagerAppExtension implements OpenExtension  {
 
-    public final static UUID ID = ApplicationExtension.MANAGER_APP_ID;
+    public final static UUID ID = UUID.fromString("703493dd-e56f-491c-8517-feeff54407d5");
+
+
+    @Override
+    public UUID getParentId() {
+        return ManagerApiExtension.ID;
+    }
 
     @Override
     public UUID getId() {
@@ -67,13 +61,16 @@ public class ManagerAppExtension implements ApplicationExtension  {
     }
 
     @Override
+    public List<Class<?>> exportedContextClasses() {
+        return List.of();
+    }
+
+    @Override
     public List<Class<?>> localContextClasses() {
         return List.of(
                 WindowIconSettings.class,
                 ManagerUiTemplate.class,
-                ApplicationCard.Factory.class,
                 ApplicationCardController.class,
-                ExtensionCard.Factory.class,
                 ExtensionCardController.class,
                 MainContentController.class,
                 ModelController.class

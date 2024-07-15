@@ -40,7 +40,7 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.util.content.LineEquation;
+import com.gluonhq.jfxapps.util.javafx.LineEquation;
 import com.oracle.javafx.scenebuilder.api.control.rudder.AbstractRudder;
 
 import javafx.geometry.Bounds;

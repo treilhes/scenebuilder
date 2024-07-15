@@ -1,6 +1,6 @@
 module jfxapps.core.utils {
     exports com.gluonhq.jfxapps.util;
-    exports com.gluonhq.jfxapps.util.content;
+    exports com.gluonhq.jfxapps.util.javafx;
 
 //    requires transitive jfxapps.starter;
 //    requires java.desktop;

@@ -34,9 +34,13 @@
 package com.gluonhq.jfxapps.core.fxom.collector;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
+import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
@@ -45,7 +49,12 @@ import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 
 public class ExpressionCollector {
 
-    public static class ExpressionReference implements FXOMCollector<List<FXOMPropertyT>>{
+    /**
+     * Collects all {@link FXOMPropertyT} that are expressions and have a suffix
+     * that is a valid Java identifier. The collected list retains the same order as
+     * the order the items were collected.
+     */
+    public static class ExpressionReference implements FXOMCollector<List<FXOMPropertyT>> {
 
         private List<FXOMPropertyT> result = new ArrayList<>();
 
@@ -95,6 +104,68 @@ public class ExpressionCollector {
 
     }
 
+    /**
+     * Collects all {@link FXOMPropertyT} that are expressions and have a suffix
+     * that is a valid Java identifier and for which the referee was not already
+     * found/declared at the time of the collection. Also collect
+     * {@link FXOMIntrinsic} for which the referee source was not already
+     * found/declared at the time of the collection. return a map of
+     * {@link FXOMNode} ({@link FXOMIntrinsic} or {@link FXOMPropertyT}) to the
+     * undeclared reference.
+     */
+    public static class UndeclaredExpressionReference implements FXOMCollector<Map<FXOMNode, String>> {
+
+        private Map<FXOMNode, String> result = new HashMap<>();
+
+        private final List<String> declaredFxIds = new ArrayList<>();
+
+        public UndeclaredExpressionReference() {
+            super();
+        }
+
+        @Override
+        public Strategy collectionStrategy() {
+            return Strategy.OBJECT_AND_PROPERTY;
+        }
+
+        @Override
+        public void collect(FXOMObject object) {
+            if (object.getFxId() != null) {
+                declaredFxIds.add(object.getFxId());
+            }
+
+            if (object instanceof FXOMIntrinsic intrinsic) {
+                if (intrinsic.getSource() != null) {
+                    final String fxId = intrinsic.getSource();
+                    if (!declaredFxIds.contains(fxId)) {
+                        result.put(intrinsic, fxId);
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void collect(FXOMProperty property) {
+            if (property instanceof FXOMPropertyT pt) {
+                final PrefixedValue pv = new PrefixedValue(pt.getValue());
+                if (pv.isExpression()) {
+                    final String fxId = pv.getSuffix();
+                    if (JavaLanguage.isIdentifier(fxId)) {
+                        if (!declaredFxIds.contains(fxId)) {
+                            result.put(pt, fxId);
+                        }
+                    }
+                }
+            }
+        }
+
+        @Override
+        public Map<FXOMNode, String> getCollected() {
+            return result;
+        }
+
+    }
+
     public static ExpressionReference allExpressionReferences() {
         return new ExpressionReference(null, null);
     }
@@ -111,4 +182,7 @@ public class ExpressionCollector {
         return new ExpressionReference(referenceId, excludedFromSearch);
     }
 
+    public static UndeclaredExpressionReference allUndeclaredExpressionReferences() {
+        return new UndeclaredExpressionReference();
+    }
 }

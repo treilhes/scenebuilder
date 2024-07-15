@@ -17,7 +17,7 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.boot.starter</artifactId>
+            <artifactId>jfxapps.core.starter</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>

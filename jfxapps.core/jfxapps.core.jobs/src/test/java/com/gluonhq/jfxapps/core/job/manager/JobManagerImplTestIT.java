@@ -45,6 +45,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
@@ -59,6 +60,9 @@ class JobManagerImplTestIT {
     private JobPipelineFactory jobPipelineFactory;
 
     @Mock
+    FxomJobsFactory fxomJobsFactory;
+
+    @Mock
     private BatchJob.Factory batchJobFactory;
 
     @Mock
@@ -71,6 +75,7 @@ class JobManagerImplTestIT {
         jobManager = new JobManagerImpl(
                 documentManager,
                 jobPipelineFactory,
+                fxomJobsFactory,
                 batchJobFactory);
 
         when(batchJobFactory.getJob()).thenAnswer(invocation -> new BatchJob(null, documentManager ,null));

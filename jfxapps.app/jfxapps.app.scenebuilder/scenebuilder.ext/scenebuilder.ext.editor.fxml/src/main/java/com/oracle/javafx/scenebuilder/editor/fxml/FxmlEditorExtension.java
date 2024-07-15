@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,9 +37,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.core.extension.AbstractExtension;
-import com.gluonhq.jfxapps.core.ui.controller.HudWindowController;
-import com.gluonhq.jfxapps.core.ui.controller.WorkspaceController;
+import org.scenebuilder.fxml.api.SbApiExtension;
+
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.BringForwardAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.BringToFrontAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.FocusContentAction;
@@ -65,14 +65,27 @@ import com.oracle.javafx.scenebuilder.editor.fxml.preferences.global.AlignmentGu
 import com.oracle.javafx.scenebuilder.editor.fxml.preferences.global.BackgroundImagePreference;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key.MoveWithKeyGesture;
 
-public class FxmlEditorExtension extends AbstractExtension {
+public class FxmlEditorExtension implements OpenExtension {
+
+    public static final UUID ID = UUID.fromString("6f7b35c8-8883-4e10-bb7f-c6e85d1b54be");
+
     @Override
-    public UUID getId() {
-        return UUID.fromString("6f7b35c8-8883-4e10-bb7f-c6e85d1b54be");
+    public UUID getParentId() {
+        return SbApiExtension.ID;
     }
 
     @Override
-    public List<Class<?>> explicitClassToRegister() {
+    public UUID getId() {
+        return ID;
+    }
+
+    @Override
+    public List<Class<?>> localContextClasses() {
+        return List.of();
+    }
+
+    @Override
+    public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
                 AlignmentGuidesColorPreference.class,

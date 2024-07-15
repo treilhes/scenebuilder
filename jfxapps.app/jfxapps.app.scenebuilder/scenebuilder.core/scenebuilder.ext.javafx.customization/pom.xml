@@ -14,6 +14,11 @@
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>scenebuilder.app.starter</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>scenebuilder.metadata.javafx15</artifactId>
             <scope>provided</scope>
         </dependency>

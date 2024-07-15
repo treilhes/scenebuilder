@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,11 +44,11 @@ import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 public class WelcomeDialogInitializer implements InitWithApplication {
 
 
-    private final SceneBuilderBeanFactory context;
+    private final JfxAppContext context;
     private final InstancesManager main;
 
     public WelcomeDialogInitializer(
-            SceneBuilderBeanFactory context,
+            JfxAppContext context,
             InstancesManager main) {
         super();
         this.context = context;

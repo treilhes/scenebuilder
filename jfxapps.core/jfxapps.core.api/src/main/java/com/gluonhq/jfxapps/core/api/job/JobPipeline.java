@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.job;
 
+import java.util.List;
 import java.util.Map;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -72,16 +73,16 @@ public interface JobPipeline {
      * @param preIdMap an read/write map of id/objects that have been collected by the default collector
      * @return a job
      */
-    Job preExecutionJob(Map<String, FXOMObject> preIdMap);
+    Job preExecutionJob(Map<String, List<FXOMObject>> preIdMap);
     /**
      * Job that will be executed after execution of collectors provided by {@link #postExecutionCollectors()}
      * and after the main job is executed
      *
      * The job must be executed before returning.
      *
-     * * @param preIdMap an read/write map of id/objects that have been collected by the default collector
+     * @param preIdMap an read/write map of id/objects that have been collected by the default collector
      * @return a job
      */
-    Job postExecutionJob(Map<String, FXOMObject> postIdMap);
+    Job postExecutionJob(Map<String, List<FXOMObject>> postIdMap);
 
 }

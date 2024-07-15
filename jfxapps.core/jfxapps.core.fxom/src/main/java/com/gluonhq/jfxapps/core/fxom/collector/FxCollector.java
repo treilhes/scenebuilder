@@ -62,16 +62,68 @@ public class FxCollector {
         return new FxReferenceBySource(source, excludedFromSearch);
     }
 
-    public static FxReferenceBySource allFxReferences() {
-        return new FxReferenceBySource(null, null);
+    public static FxCopyBySource allFxCopy() {
+        return new FxCopyBySource(null, null);
     }
 
     public static FxCopyBySource fxCopyBySource(String source) {
         return new FxCopyBySource(source, null);
     }
 
+    public static FxScript allFxScripts() {
+        return new FxScript(null);
+    }
+
+    public static FxScript fxScriptBySource(String source) {
+        return new FxScript(source);
+    }
+
+    public static FxInclude allFxIncludes() {
+        return new FxInclude(null);
+    }
+
+    public static FxInclude fxIncludeBySource(String source) {
+        return new FxInclude(source);
+    }
+
+    public static FxIdFirst fxIdFindFirst(String fxId) {
+        return new FxIdFirst(fxId);
+    }
+
     /**
-     * Collect all {@link FXOMNode} ({@link FXOMIntrinsic} or {@link FXOMPropertyT} referencing the source id
+     * collect all fxom element with an fx:id attribute<br/>
+     * @return a map indexed by fx id and containing the latest associated fxom object
+     * @deprecated use {@link #fxIdMap()} instead
+     */
+    //FIXME remove this method in the future and replace by fxIdMap()
+    @Deprecated
+    public static FxIdUniqueMap fxIdsUniqueMap() {
+        return new FxIdUniqueMap(false);
+    }
+
+    /**
+     * collect all fxom element with an fx:id attribute<br/>
+     * @param ensureUnicity if true, throw an exception if a duplicate fx:id is found
+     * @return a map indexed by fx id and containing the associated fxom object
+     * @throws FxIdUniqueMap.DuplicateIdException if a duplicate fx:id is found
+     */
+    @Deprecated
+    public static FxIdUniqueMap fxIdsUniqueMap(boolean ensureUnicity) {
+        return new FxIdUniqueMap(ensureUnicity);
+    }
+
+    /**
+     * Collect all fxom element with an fx:id attribute<br/>
+     *
+     * @return a map indexed by fx id and containing a list of associated fxom object
+     */
+    public static FxIdsMap fxIdMap() {
+        return new FxIdsMap();
+    }
+
+    /**
+     * Collect all {@link FXOMNode} ({@link FXOMIntrinsic} or {@link FXOMPropertyT}
+     * referencing the source id
      *
      * @param source
      * @param excludedFromSearch
@@ -85,7 +137,15 @@ public class FxCollector {
         return new FxCopyBySource(source, excludedFromSearch);
     }
 
-    public static class FxReferenceBySource implements FXOMCollector<List<FXOMIntrinsic>>{
+    public static FxReferenceBySource allFxReferences() {
+        return new FxReferenceBySource(null, null);
+    }
+
+    /**
+     * Collects all {@link FXOMIntrinsic} with type {@link Type#FX_REFERENCE}
+     * The collected list retains the same order as the order the items were collected.
+     */
+    public static class FxReferenceBySource implements FXOMCollector<List<FXOMIntrinsic>> {
 
         private List<FXOMIntrinsic> result = new ArrayList<>();
 
@@ -129,7 +189,12 @@ public class FxCollector {
 
     }
 
-    public static class FxCopyBySource implements FXOMCollector<List<FXOMIntrinsic>>{
+
+    /**
+     * Collects all {@link FXOMIntrinsic} with type {@link Type#FX_COPY}
+     * The collected list retains the same order as the order the items were collected.
+     */
+    public static class FxCopyBySource implements FXOMCollector<List<FXOMIntrinsic>> {
 
         private List<FXOMIntrinsic> result = new ArrayList<>();
 
@@ -173,7 +238,11 @@ public class FxCollector {
 
     }
 
-    public static class FxScript implements FXOMCollector<List<FXOMScript>>{
+    /**
+     * Collects all {@link FXOMScript}
+     * The collected list retains the same order as the order the items were collected.
+     */
+    public static class FxScript implements FXOMCollector<List<FXOMScript>> {
 
         private List<FXOMScript> result = new ArrayList<>();
 
@@ -210,7 +279,7 @@ public class FxCollector {
 
     }
 
-    public static class FxInclude implements FXOMCollector<List<FXOMIntrinsic>>{
+    public static class FxInclude implements FXOMCollector<List<FXOMIntrinsic>> {
 
         private List<FXOMIntrinsic> result = new ArrayList<>();
 
@@ -248,13 +317,14 @@ public class FxCollector {
     }
 
     /**
-     * As a replacement for the method FXOMObject searchWithFxId(String fxId)
-     * Javafx can load two components with the same fx id (at least for now)
-     * So this collector mimic the same behaviour returning the first occurence
+     * As a replacement for the method FXOMObject searchWithFxId(String fxId) Javafx
+     * can load two components with the same fx id (at least for now) So this
+     * collector mimic the same behaviour returning the first occurence
      *
-     * WARN: the behaviour of this method is ok but everywhere it is used contains a flaw
+     * WARN: the behaviour of this method is ok but everywhere it is used contains a
+     * flaw
      */
-    public static class FxIdFirst implements FXOMCollector<Optional<FXOMObject>>{
+    public static class FxIdFirst implements FXOMCollector<Optional<FXOMObject>> {
 
         private Optional<FXOMObject> result = Optional.empty();
         private final String fxId;
@@ -300,15 +370,28 @@ public class FxCollector {
     }
 
     /**
-     * As a replacement for the method void collectFxIds(Map<String, FXOMObject> result)
-     * Javafx can load two components with the same fx id (at least for now)
-     * So this collector mimic the same behaviour returing the last occurence
+     * Collect all fxom element with an fx:id attribute<br/>
+     * As a replacement for the method void collectFxIds(Map<String, FXOMObject>
+     * result)<br/>
+     * <br/>
+     * WARN: the behaviour of this method has a flaw and everywhere it is used
+     * contains the same flaw<br/>
+     * <br/>
+     * FLAW: Javafx can load two components with the same fx id (at least for
+     * now)<br/>
+     * so this collector mimic the same behaviour returing the last occurence<br/>
      *
-     * WARN: the behaviour of this method has a flaw and everywhere it is used contains the same flaw
+     * @deprecated use {@link FxIdsMap} instead
      */
-    public static class FxIdMap implements FXOMCollector<Map<String, FXOMObject>>{
+    @Deprecated
+    public static class FxIdUniqueMap implements FXOMCollector<Map<String, FXOMObject>> {
 
-        private Map<String, FXOMObject> result = new HashMap<>();
+        private final boolean ensureUnicity;
+        private final Map<String, FXOMObject> result = new HashMap<>();
+
+        public FxIdUniqueMap(boolean ensureUnicity) {
+            this.ensureUnicity = ensureUnicity;
+        }
 
         @Override
         public Strategy collectionStrategy() {
@@ -319,6 +402,9 @@ public class FxCollector {
         public void collect(FXOMObject object) {
             final String fxId = object.getFxId();
             if (fxId != null) {
+                if (ensureUnicity && result.containsKey(fxId)) {
+                    throw new DuplicateIdException(fxId);
+                }
                 result.put(fxId, object);
             }
         }
@@ -332,29 +418,44 @@ public class FxCollector {
         public Map<String, FXOMObject> getCollected() {
             return result;
         }
+
+        public static class DuplicateIdException extends RuntimeException{
+            private static final long serialVersionUID = 1L;
+
+            public DuplicateIdException(String fxId) {
+                super("Duplicate fx:id : " + fxId);
+            }
+        }
     }
 
-    public static FxScript allFxScripts() {
-        return new FxScript(null);
-    }
+    /**
+     * Collect all fxom element with an fx:id attribute<br/>
+     */
+    public static class FxIdsMap implements FXOMCollector<Map<String, List<FXOMObject>>> {
 
-    public static FxScript fxScriptBySource(String source) {
-        return new FxScript(source);
-    }
+        private Map<String, List<FXOMObject>> result = new HashMap<>();
 
-    public static FxInclude allFxIncludes() {
-        return new FxInclude(null);
-    }
+        @Override
+        public Strategy collectionStrategy() {
+            return Strategy.OBJECT;
+        }
 
-    public static FxInclude fxIncludeBySource(String source) {
-        return new FxInclude(source);
-    }
+        @Override
+        public void collect(FXOMObject object) {
+            final String fxId = object.getFxId();
+            if (fxId != null) {
+                result.putIfAbsent(fxId, new ArrayList<>()).add(object);
+            }
+        }
 
-    public static FxIdFirst fxIdFindFirst(String fxId) {
-        return new FxIdFirst(fxId);
-    }
+        @Override
+        public void collect(FXOMProperty property) {
 
-    public static FxIdMap fxIdsMap() {
-        return new FxIdMap();
+        }
+
+        @Override
+        public Map<String, List<FXOMObject>> getCollected() {
+            return result;
+        }
     }
 }

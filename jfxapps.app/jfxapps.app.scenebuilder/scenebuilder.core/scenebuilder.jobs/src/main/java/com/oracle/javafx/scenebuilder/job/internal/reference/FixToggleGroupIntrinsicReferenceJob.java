@@ -49,7 +49,8 @@ import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
+import com.oracle.javafx.scenebuilder.api.util.ToggleGroupHelper;
 
 import javafx.scene.control.ToggleGroup;
 
@@ -94,7 +95,7 @@ public final class FixToggleGroupIntrinsicReferenceJob extends InlineDocumentJob
 
         // 1) Locates the referee
         final String fxId = FXOMNodes.extractReferenceSource(reference);
-        final FXOMObject referee = fxomDocument.collect(FxIdCollector.findFirstById(fxId)).orElse(null);
+        final FXOMObject referee = fxomDocument.collect(FxCollector.fxIdFindFirst(fxId)).orElse(null);
 
         // @formatter:off
         /*
@@ -161,7 +162,7 @@ public final class FixToggleGroupIntrinsicReferenceJob extends InlineDocumentJob
             result.add(removeReferenceJob);
 
             // 2b.2) Creates and adds toggle group
-            final FXOMPropertyC newToggleGroup = FXOMNodes.makeToggleGroup(fxomDocument, fxId);
+            final FXOMPropertyC newToggleGroup = ToggleGroupHelper.makeToggleGroup(fxomDocument, fxId);
             final Job addJob = fxomJobsFactory.addProperty(newToggleGroup, referenceParentInstance, referenceIndexInParentInstance);
             addJob.execute();
             result.add(addJob);

@@ -58,6 +58,8 @@ module jfxapps.boot.starter {
     requires transitive jakarta.persistence;
     requires transitive jakarta.validation;
 
+    requires transitive net.bytebuddy;
+
     requires transitive org.apache.tomcat.embed.core;
     requires transitive org.aspectj.weaver;
     requires transitive org.hibernate.orm.core;
@@ -85,4 +87,6 @@ module jfxapps.boot.starter {
 
     requires transitive thymeleaf;
     requires transitive thymeleaf.spring6;
+
+
 }

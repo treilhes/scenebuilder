@@ -38,6 +38,7 @@ open module jfxapps.core.accelerators {
     exports com.gluonhq.jfxapps.core.accelerators;
     exports com.gluonhq.jfxapps.core.accelerators.i18n;
 
+    requires transitive jfxapps.core.api;
     requires transitive jfxapps.core.starter;
 
     provides Extension with AcceleratorsExtension;

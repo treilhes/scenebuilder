@@ -10,6 +10,13 @@
     <artifactId>jfxapps.core.accelerators</artifactId>
 
     <dependencies>
+        
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.starter</artifactId>

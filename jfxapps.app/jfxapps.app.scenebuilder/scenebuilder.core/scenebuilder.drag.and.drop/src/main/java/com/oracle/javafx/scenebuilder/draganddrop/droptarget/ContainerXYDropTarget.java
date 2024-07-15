@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,29 +34,25 @@
 package com.oracle.javafx.scenebuilder.draganddrop.droptarget;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.dnd.AbstractDropTarget;
+import com.gluonhq.jfxapps.core.api.dnd.DragSource;
+import com.gluonhq.jfxapps.core.api.dnd.DropTargetFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
-import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
+import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.job.editor.atomic.RemoveObjectJob;
-import com.gluonhq.jfxapps.core.selection.job.InsertAsSubComponentJob;
-import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTarget;
-import com.oracle.javafx.scenebuilder.api.control.droptarget.DropTargetFactory;
-import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
-import com.oracle.javafx.scenebuilder.api.job.AbstractJob;
-import com.oracle.javafx.scenebuilder.api.util.CoordinateHelper;
-import com.oracle.javafx.scenebuilder.job.internal.atomic.RelocateNodeJob;
+import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
+import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -66,15 +62,14 @@ import javafx.scene.Parent;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public final class ContainerXYDropTarget extends AbstractDropTarget {
 
-    private final com.gluonhq.jfxapps.core.api.mask.Factory designMaskFactory;
-    private final com.gluonhq.jfxapps.core.api.job.base.Factory batchJobFactory;
-    private final com.oracle.javafx.scenebuilder.fxml.job.editor.atomic.Factory relocateNodeJobFactory;
-    private final RemoveObjectJob.Factory removeObjectJobFactory;
-    private final com.gluonhq.jfxapps.core.selection.job.Factory insertAsSubComponentJobFactory;
+    private final SbFXOMObjectMask.Factory designMaskFactory;
+    private final BatchJob.Factory batchJobFactory;
+    private final SelectionJobsFactory selectionJobsFactory;
+    private final FxomJobsFactory fxomJobsFactory;
+    private final SbJobsFactory sbJobsFactory;
 
     private FXOMInstance targetContainer;
     private double sceneX;
@@ -82,20 +77,20 @@ public final class ContainerXYDropTarget extends AbstractDropTarget {
 
     // @formatter:off
     protected ContainerXYDropTarget(
-            FXOMObjectMask.Factory designMaskFactory,
+            SbFXOMObjectMask.Factory designMaskFactory,
             BatchJob.Factory batchJobFactory,
-            RelocateNodeJob.Factory relocateNodeJobFactory,
-            RemoveObjectJob.Factory removeObjectJobFactory,
-            InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory) {
+            SelectionJobsFactory selectionJobsFactory,
+            FxomJobsFactory fxomJobsFactory,
+            SbJobsFactory sbJobsFactory) {
      // @formatter:on
         this.designMaskFactory = designMaskFactory;
         this.batchJobFactory = batchJobFactory;
-        this.relocateNodeJobFactory = relocateNodeJobFactory;
-        this.removeObjectJobFactory = removeObjectJobFactory;
-        this.insertAsSubComponentJobFactory = insertAsSubComponentJobFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
+        this.sbJobsFactory = sbJobsFactory;
     }
 
-    protected void setDropTargetParameters(FXOMInstance targetContainer, double sceneX, double sceneY) {
+    public void setDropTargetParameters(FXOMInstance targetContainer, double sceneX, double sceneY) {
         assert targetContainer != null;
         assert targetContainer.getSceneGraphObject().isInstanceOf(Parent.class);
         this.targetContainer = targetContainer;
@@ -136,7 +131,7 @@ public final class ContainerXYDropTarget extends AbstractDropTarget {
             if (containsIntrinsic) {
                 result = false;
             } else {
-                final HierarchyMask m = designMaskFactory.getMask(targetContainer);
+                final var m = designMaskFactory.getMask(targetContainer);
                 result = m.isAcceptingSubComponent(dragSource.getDraggedObjects());
             }
         }
@@ -145,14 +140,14 @@ public final class ContainerXYDropTarget extends AbstractDropTarget {
     }
 
     @Override
-    public AbstractJob makeDropJob(DragSource dragSource) {
+    public Job makeDropJob(DragSource dragSource) {
         assert acceptDragSource(dragSource);
 
-        final List<FXOMObject> draggedObjects = dragSource.getDraggedObjects();
-        final FXOMObject hitObject = dragSource.getHitObject();
-        final double hitX = dragSource.getHitX();
-        final double hitY = dragSource.getHitY();
-        final FXOMObject currentParent = hitObject.getParentObject();
+        final var draggedObjects = dragSource.getDraggedObjects();
+        final var hitObject = dragSource.getHitObject();
+        final var hitX = dragSource.getHitX();
+        final var hitY = dragSource.getHitY();
+        final var currentParent = hitObject.getParentObject();
 
         final BatchJob result;
         if (currentParent == targetContainer) {
@@ -161,16 +156,19 @@ public final class ContainerXYDropTarget extends AbstractDropTarget {
             assert hitObject instanceof FXOMInstance;
 
             final boolean shouldRefreshSceneGraph = false;
-            result = batchJobFactory.getJob(dragSource.makeDropJobDescription(), shouldRefreshSceneGraph);
+            result = batchJobFactory.getJob(shouldRefreshSceneGraph);
+            result.setDescription(dragSource.makeDropJobDescription());
 
             final Point2D dxy = computeRelocationDXY((FXOMInstance) hitObject, hitX, hitY);
             for (FXOMObject draggedObject : dragSource.getDraggedObjects()) {
                 assert draggedObject.getSceneGraphObject().isInstanceOf(Node.class);
                 assert draggedObject instanceof FXOMInstance;
-                final Node draggedNode = draggedObject.getSceneGraphObject().getAs(Node.class);
-                final double newLayoutX = Math.round(draggedNode.getLayoutX() + dxy.getX());
-                final double newLayoutY = Math.round(draggedNode.getLayoutY() + dxy.getY());
-                result.addSubJob(relocateNodeJobFactory.getJob((FXOMInstance) draggedObject, newLayoutX, newLayoutY));
+                final var draggedNode = draggedObject.getSceneGraphObject().getAs(Node.class);
+                final var newLayoutX = Math.round(draggedNode.getLayoutX() + dxy.getX());
+                final var newLayoutY = Math.round(draggedNode.getLayoutY() + dxy.getY());
+                final var job = sbJobsFactory.relocateNode((FXOMInstance) draggedObject, newLayoutX, newLayoutY);
+
+                result.addSubJob(job);
             }
         } else {
             // It's a reparening job :
@@ -180,15 +178,16 @@ public final class ContainerXYDropTarget extends AbstractDropTarget {
             // - adjust toggle group declaration (if any)
 
             final boolean shouldRefreshSceneGraph = true;
-            result = batchJobFactory.getJob(dragSource.makeDropJobDescription(), shouldRefreshSceneGraph);
+            result = batchJobFactory.getJob(shouldRefreshSceneGraph);
+            result.setDescription(dragSource.makeDropJobDescription());
 
             if (currentParent != null) {
                 for (FXOMObject draggedObject : draggedObjects) {
-                    result.addSubJob(removeObjectJobFactory.getJob(draggedObject));
+                    result.addSubJob(fxomJobsFactory.removeObject(draggedObject));
                 }
             }
             for (FXOMObject draggedObject : draggedObjects) {
-                result.addSubJob(insertAsSubComponentJobFactory.getJob(draggedObject, targetContainer, -1));
+                result.addSubJob(selectionJobsFactory.insertAsSubComponent(draggedObject, targetContainer, -1));
             }
 
             // Computes dragged object positions relatively to hitObject
@@ -222,7 +221,7 @@ public final class ContainerXYDropTarget extends AbstractDropTarget {
                 assert dxy != null;
                 final double newLayoutX = Math.round(targetOriginX + dxy.getX());
                 final double newLayoutY = Math.round(targetOriginY + dxy.getY());
-                result.addSubJob(relocateNodeJobFactory.getJob((FXOMInstance) draggedObject, newLayoutX, newLayoutY));
+                result.addSubJob(sbJobsFactory.relocateNode((FXOMInstance) draggedObject, newLayoutX, newLayoutY));
             }
         }
 
@@ -300,11 +299,9 @@ public final class ContainerXYDropTarget extends AbstractDropTarget {
         return new Point2D(dx, dy);
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
+    @ApplicationInstanceSingleton
     public static class Factory extends DropTargetFactory<ContainerXYDropTarget> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

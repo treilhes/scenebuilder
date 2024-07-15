@@ -13,13 +13,17 @@
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.starter</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.starter.test</artifactId>
         </dependency>
-        
+
         <!--
         https://mvnrepository.com/artifact/org.mock-server/mockserver-junit-jupiter -->
         <dependency>

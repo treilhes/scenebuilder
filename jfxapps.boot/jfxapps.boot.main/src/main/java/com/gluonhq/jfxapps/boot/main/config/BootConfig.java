@@ -52,10 +52,11 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 
 @SpringBootApplication
-@EnableAspectJAutoProxy
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableWebMvc
 @Import({RegistryConfig.class, ContextConfig.class, LoaderConfig.class, LayerConfig.class, PlatformConfig.class, RepositoryConfig.class})
 public class BootConfig {
+
 
     @Bean
     OpenAPI myOpenAPI() {
@@ -67,6 +68,7 @@ public class BootConfig {
 //      prodServer.setUrl(prodUrl);
 //      prodServer.setDescription("Server URL in Production environment");
 
+        //FIXME update those fake datas before delivery
       Contact contact = new Contact();
       contact.setEmail("bezkoder@gmail.com");
       contact.setName("BezKoder");

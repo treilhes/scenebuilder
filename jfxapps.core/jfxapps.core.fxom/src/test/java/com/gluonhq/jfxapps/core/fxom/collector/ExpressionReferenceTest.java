@@ -35,16 +35,25 @@ package com.gluonhq.jfxapps.core.fxom.collector;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.junitpioneer.jupiter.SetSystemProperty;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
@@ -56,56 +65,184 @@ import javafx.stage.Stage;
 @SetSystemProperty(key = "javafx.allowjs", value = "true")
 class ExpressionReferenceTest {
 
+    private final static String MAIN = """
+            <?import javafx.scene.control.Button?>
+            <?import javafx.scene.layout.Pane?>
+            <?import javafx.scene.shape.Circle?>
+            <?import java.lang.String?>
+
+            <Pane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+               <fx:define>
+                    <String fx:id="somestring" fx:value="SomeStringValue"/>
+                    <fx:include fx:id="referred1" source="referred1.fxml" />
+                    <fx:include fx:id="referred2" source="referred2.fxml" />
+                    <Button fx:id="somebutton" mnemonicParsing="false" text="somebutton" />
+                    <Circle fx:id="circleblue" fill="DODGERBLUE" radius="300.0" stroke="BLACK" strokeType="INSIDE" />
+                    <Circle fx:id="circleblue2" fill="DODGERBLUE" radius="300.0" stroke="BLACK" strokeType="INSIDE" />
+               </fx:define>
+               <children>
+                  <Pane clip="$circleblue">
+                     <children>
+                        <Button fx:id="somebutton2" text="$somestring" />
+                        <fx:reference fx:id="excluded" source="referred1" layoutX="100.0" layoutY="100.0">
+                            <children>
+                              <fx:reference source="referred2" layoutX="100.0" layoutY="100.0" clip="$circleblue2"/>
+                           </children>
+                        </fx:reference>
+                        <fx:reference fx:id="refToSomebutton" source="somebutton" layoutX="200.0" layoutY="100.0"/>
+                     </children>
+                  </Pane>
+               </children>
+            </Pane>
+            """;
+
+    private final static String REFERRED1 = """
+            <?import javafx.scene.control.Button?>
+            <?import javafx.scene.layout.Pane?>
+
+            <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="95.0" prefWidth="299.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+               <children>
+                  <Button layoutX="124.0" layoutY="35.0" mnemonicParsing="false" text="Referred1" />
+               </children>
+            </Pane>
+            """;
+
+    private final static String REFERRED2 = """
+            <?import javafx.scene.control.Button?>
+            <?import javafx.scene.layout.Pane?>
+
+            <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="95.0" prefWidth="299.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+               <children>
+                  <Button layoutX="41.0" layoutY="35.0" mnemonicParsing="false" text="Referred2" />
+               </children>
+            </Pane>
+            """;
+
+    @TempDir
+    static Path tempDir;
+
+    FXOMDocument fxomDocument;
+
     @Start
     private void start(Stage stage) {
 
     }
 
+    @BeforeAll
+    public static void init() throws Exception {
+        Files.writeString(tempDir.resolve("referred1.fxml"), REFERRED1, StandardOpenOption.CREATE);
+        Files.writeString(tempDir.resolve("referred2.fxml"), REFERRED2, StandardOpenOption.CREATE);
+    }
+
+    @BeforeEach
+    public void setup() throws Exception {
+        fxomDocument = new FXOMDocument(MAIN, tempDir.toAbsolutePath().toUri().toURL(), null, null);
+    }
+
     @Test
     public void should_return_the_right_number_of_value_reference_with_id() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.REFERRER);
-
         String ref = "circleblue";
-        List<FXOMPropertyT> items = fxomDocument.getFxomRoot().collect(ExpressionCollector.expressionReferenceById(ref));
+        List<FXOMPropertyT> items = fxomDocument.getFxomRoot()
+                .collect(ExpressionCollector.expressionReferenceById(ref));
 
         assertEquals(1, items.size());
     }
 
     @Test
     public void should_return_the_right_number_of_value_reference() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.REFERRER);
-
         List<FXOMPropertyT> items = fxomDocument.getFxomRoot().collect(ExpressionCollector.allExpressionReferences());
 
-        assertEquals(2, items.size());
+        assertEquals(3, items.size());
     }
 
     @Test
     public void should_return_the_right_number_of_value_reference_with_the_most_nested_excluded() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.REFERRER);
-
-        Map<String, FXOMObject> fxIds = fxomDocument.getFxomRoot().collect(FxCollector.fxIdsMap());
+        Map<String, FXOMObject> fxIds = fxomDocument.getFxomRoot().collect(FxCollector.fxIdsUniqueMap());
 
         FXOMObject excluded = fxIds.get("excluded");
 
         List<FXOMPropertyT> items = fxomDocument.getFxomRoot()
                 .collect(ExpressionCollector.expressionReferenceById(null, excluded));
 
-        assertEquals(1, items.size());
+        assertEquals(2, items.size());
     }
 
-    private enum FxmlTestInfo implements FilenameProvider {
-        REFERRER("referrer");
+    @Test
+    @Disabled
+    public void must_return_the_right_number_of_undeclared_reference() throws IOException {
+        String fxml = """
+                <?import javafx.scene.control.Button?>
+                <?import javafx.scene.layout.Pane?>
+                <?import javafx.scene.shape.Circle?>
+                <?import java.lang.String?>
 
-        private String filename;
+                <Pane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+                   <fx:define>
+                        <String fx:id="somestring" fx:value="SomeStringValue"/>
+                        <Button fx:id="somebutton" mnemonicParsing="false" text="somebutton" />
+                        <Circle fx:id="circleblue" fill="DODGERBLUE" radius="300.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fx:id="circleblue2" fill="DODGERBLUE" radius="300.0" stroke="BLACK" strokeType="INSIDE" />
+                   </fx:define>
+                   <fx:define>
+                        <Pane fx:id="referred1"/>
+                   </fx:define>
+                   <children>
+                      <Pane clip="$circleblue">
+                         <children>
+                            <Button fx:id="somebutton2" text="$somestringXX" />
+                            <fx:reference fx:id="excluded" source="referred1" layoutX="100.0" layoutY="100.0">
+                                <children>
+                                  <fx:reference source="referred2" layoutX="100.0" layoutY="100.0" clip="$circleblue2"/>
+                               </children>
+                            </fx:reference>
+                            <fx:reference fx:id="refToSomebutton" source="somebutton" layoutX="200.0" layoutY="100.0"/>
+                         </children>
+                      </Pane>
+                   </children>
 
-        FxmlTestInfo(String filename) {
-            this.filename = filename;
-        }
+                </Pane>
 
-        @Override
-        public String getFilename() {
-            return filename;
-        }
+                """;
+
+        FXOMDocument fxomDocument = new FXOMDocument(fxml);
+        var items = fxomDocument.collect(ExpressionCollector.allUndeclaredExpressionReferences());
+
+        assertEquals(2, items.size());
+    }
+
+    @Test
+    public void must_return_the_right_number_of_undeclared_reference_omitting_fx_reference() throws IOException {
+        String fxml = """
+                <?import javafx.scene.control.Button?>
+                <?import javafx.scene.layout.Pane?>
+                <?import javafx.scene.shape.Circle?>
+                <?import java.lang.String?>
+
+                <Pane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+                   <fx:define>
+                        <String fx:id="somestring" fx:value="SomeStringValue"/>
+                        <Button fx:id="somebutton" mnemonicParsing="false" text="somebutton" />
+                        <Circle fx:id="circleblue" fill="DODGERBLUE" radius="300.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Circle fx:id="circleblue2" fill="DODGERBLUE" radius="300.0" stroke="BLACK" strokeType="INSIDE" />
+                   </fx:define>
+                   <fx:define>
+                        <Pane fx:id="referred1"/>
+                   </fx:define>
+                   <children>
+                      <Pane clip="$circleblue">
+                         <children>
+                            <Button fx:id="somebutton2" text="$somestringXX" />
+                         </children>
+                      </Pane>
+                   </children>
+
+                </Pane>
+
+                """;
+
+        FXOMDocument fxomDocument = new FXOMDocument(fxml);
+        var items = fxomDocument.collect(ExpressionCollector.allUndeclaredExpressionReferences());
+
+        assertEquals(1, items.size());
     }
 }

@@ -41,7 +41,7 @@ import com.gluonhq.jfxapps.core.api.di.FxmlController;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
-import com.gluonhq.jfxapps.util.NodeUtils;
+import com.gluonhq.jfxapps.util.javafx.NodeUtils;
 
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;

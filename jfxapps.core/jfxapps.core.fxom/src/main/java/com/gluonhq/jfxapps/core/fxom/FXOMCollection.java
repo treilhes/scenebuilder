@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -109,9 +109,17 @@ public class FXOMCollection extends FXOMObject {
                 collector.collect(this);
             }
 
+            if (collector.endCollection()) {
+                return collector.getCollected();
+            }
+
             for (FXOMObject i : items) {
                 if (i.getParentProperty() == null || collector.accept(i.getParentProperty())){
                     i.collect(collector);
+
+                    if (collector.endCollection()) {
+                        break;
+                    }
                 }
             }
         }

@@ -34,7 +34,7 @@
 package com.oracle.javafx.scenebuilder.tools.job.gridpane;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.util.GridBounds;
+import com.gluonhq.jfxapps.util.javafx.GridBounds;
 
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;

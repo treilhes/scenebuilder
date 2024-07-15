@@ -40,20 +40,16 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.job.internal.UseComputedSizesObjectJob;
+import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 
 /**
  * This job apply the constant USE_COMPUTED_SIZE on width and height on the
@@ -65,27 +61,27 @@ public final class UseComputedSizesSelectionJob extends BatchDocumentJob {
     private static Logger logger = LoggerFactory.getLogger(UseComputedSizesSelectionJob.class);
 
     private final Selection selection;
-    private final UseComputedSizesObjectJob.Factory useComputedSizesObjectJobFactory;
+    private final SbJobsFactory sbJobsFactory;
 
     // @formatter:off
     protected UseComputedSizesSelectionJob(
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             Selection selection,
-            UseComputedSizesObjectJob.Factory useComputedSizesObjectJobFactory) {
+            SbJobsFactory sbJobsFactory) {
     // @formatter:on
         super(extensionFactory, documentManager);
         this.selection = selection;
-        this.useComputedSizesObjectJobFactory = useComputedSizesObjectJobFactory;
+        this.sbJobsFactory = sbJobsFactory;
     }
 
     public void setJobParameters() {
     }
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
+    protected List<Job> makeSubJobs() {
 
-        final List<AbstractJob> result = new ArrayList<>();
+        final List<Job> result = new ArrayList<>();
 
         final Set<FXOMInstance> candidates = new HashSet<>();
 
@@ -100,7 +96,7 @@ public final class UseComputedSizesSelectionJob extends BatchDocumentJob {
         }
 
         for (FXOMInstance candidate : candidates) {
-            final AbstractJob subJob = useComputedSizesObjectJobFactory.getJob(candidate);
+            final Job subJob = sbJobsFactory.useComputedSizesObject(candidate);
             if (subJob.isExecutable()) {
                 result.add(subJob);
             }

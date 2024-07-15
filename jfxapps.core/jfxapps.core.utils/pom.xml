@@ -21,11 +21,6 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.boot.starter</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.starter.test</artifactId>
             <scope>test</scope>
         </dependency>

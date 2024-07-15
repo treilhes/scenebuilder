@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,34 +37,41 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.oracle.javafx.scenebuilder.draganddrop.droptarget.AccessoryDropTarget;
+import org.scenebuilder.fxml.api.SbApiExtension;
+
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.draganddrop.droptarget.ContainerXYDropTarget;
 import com.oracle.javafx.scenebuilder.draganddrop.droptarget.ContainerZDropTargetBck;
-import com.oracle.javafx.scenebuilder.draganddrop.droptarget.RootDropTarget;
-import com.oracle.javafx.scenebuilder.draganddrop.source.DocumentDragSource;
-import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
 
-public class DragAndDropExtension extends AbstractExtension {
+public class DragAndDropExtension implements OpenExtension {
+
+    public static final UUID ID = UUID.fromString("4b8621ea-685b-4ebc-8ccd-a7f269bfaad7");
+
     @Override
-    public UUID getId() {
-        return UUID.fromString("4b8621ea-685b-4ebc-8ccd-a7f269bfaad7");
+    public UUID getParentId() {
+        return SbApiExtension.ID;
     }
 
     @Override
-    public List<Class<?>> explicitClassToRegister() {
+    public UUID getId() {
+        return ID;
+    }
+
+    @Override
+    public List<Class<?>> localContextClasses() {
+        return List.of();
+    }
+
+    @Override
+    public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
-                AccessoryDropTarget.class,
-                AccessoryDropTarget.Factory.class,
                 ContainerXYDropTarget.class,
                 ContainerXYDropTarget.Factory.class,
                 ContainerZDropTargetBck.class,
-                ContainerZDropTargetBck.Factory.class,
-                DocumentDragSource.class,
-                DocumentDragSource.Factory.class,
-                RootDropTarget.class,
-                RootDropTarget.Factory.class
+                ContainerZDropTargetBck.Factory.class
             );
      // @formatter:on
     }
+
 }

@@ -12,8 +12,6 @@
       <module>jfxapps.app.registry.optional</module>
       <module>jfxapps.app.fxmlrunner</module>
       <module>jfxapps.app.manager</module>
-      <module>jfxapps.app.scenebuilder</module>
-      <module>jfxapps.app.starter</module>
-      <module>jfxapps.app.starter.test</module>
+      <!--<module>jfxapps.app.scenebuilder</module>-->
   </modules>
 </project>

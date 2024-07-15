@@ -83,7 +83,7 @@ class CoordinateHelperTest {
             stage.setScene(new Scene(root, 300, 300));
             stage.show();
 
-            Map<String, FXOMObject> fxomObjects = newFxomDocument.collect(FxCollector.fxIdsMap());
+            Map<String, FXOMObject> fxomObjects = newFxomDocument.collect(FxCollector.fxIdsUniqueMap());
             rectangle = fxomObjects.get("rectangle");
             circle = fxomObjects.get("circle");
 

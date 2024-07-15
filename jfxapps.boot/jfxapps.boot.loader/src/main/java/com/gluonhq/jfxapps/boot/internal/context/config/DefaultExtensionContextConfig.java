@@ -81,6 +81,7 @@ import org.springdoc.webmvc.ui.SwaggerUiHome;
 import org.springdoc.webmvc.ui.SwaggerWebMvcConfigurer;
 import org.springdoc.webmvc.ui.SwaggerWelcomeCommon;
 import org.springdoc.webmvc.ui.SwaggerWelcomeWebMvc;
+import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
@@ -134,8 +135,22 @@ import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 
+/**
+ * This class is the default configuration for an extension context. It is used
+ * to configure the extension context with the necessary beans to support the
+ * extension.<br/>
+ * <br/>
+ * The following main features are supported:<br/>
+ * - JPA repositories<br/>
+ * - Transaction management<br/>
+ * - Aspect oriented programming<br/>
+ * - Web MVC<br/>
+ * - Swagger documentation<br/>
+ * - Thymeleaf template engine<br/>
+ *
+ */
 @Configuration
-@EnableAspectJAutoProxy
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableJpaRepositories
 @EnableTransactionManagement
 @EnableWebMvc
@@ -168,18 +183,28 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
 
     public final static List<Class<?>> classesToRegister = List.of(
             DefaultExtensionContextConfig.class,
+            // default spring beans
+            org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.class,
+            org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.class,
+            org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor.class,
+            com.gluonhq.jfxapps.boot.context.bpp.OverridedBeanPostProcessor.class,
+            //org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator.class,
+            org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor.class,
+
             OverridedBeanPostProcessor.class,
             JfxAppsExtensionRestController.class,
             SwaggerConfig.class,
-            SpringDocWebMvcConfiguration.class, MultipleOpenApiSupportConfiguration.class,
+            SpringDocWebMvcConfiguration.class,
+            MultipleOpenApiSupportConfiguration.class,
             JacksonAutoConfiguration.class);
 
-//    @Bean
-//    @Primary
-//    SpringDocConfiguration SpringDocConfiguration() {
-//        return new SpringDocConfiguration();
-//
-//    }
+    @Bean
+    AnnotationAwareAspectJAutoProxyCreator annotationAwareAspectJAutoProxyCreator() {
+        final var processor = new AnnotationAwareAspectJAutoProxyCreator();
+        processor.setProxyTargetClass(true);
+        return processor;
+
+    }
 
     @Bean(name = "templateEngine")
     public SpringTemplateEngine springTemplateEngine() {
@@ -338,16 +363,18 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
     LocalContainerEntityManagerFactoryBean localEntityManagerFactory(DataSource dataSource,
             JpaVendorAdapter jpaVendorAdapter, List<Extension> ext, JfxAppContext ctx) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(dataSource);
-        em.setJpaVendorAdapter(jpaVendorAdapter);
 
-        em.setPersistenceUnitPostProcessors(new JfxAppsPersistenceRulesCheck());
-
-        var packageName = ext.stream().filter(e -> e.getClass().getClassLoader() == ctx.getBeanClassLoader())
+        var packageName = ext.stream()
+                .filter(e -> e.getClass().getClassLoader() == ctx.getBeanClassLoader())
                 .map(e -> e.getClass().getPackageName()).findAny();
 
-        em.setPackagesToScan(packageName.get());
-        em.setJpaProperties(hibernateProperties());
+        packageName.ifPresent(p -> {
+            em.setDataSource(dataSource);
+            em.setJpaVendorAdapter(jpaVendorAdapter);
+            em.setPersistenceUnitPostProcessors(new JfxAppsPersistenceRulesCheck());
+            em.setPackagesToScan(p);
+            em.setJpaProperties(hibernateProperties());
+        });
 
         return em;
     }

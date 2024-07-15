@@ -42,28 +42,6 @@ import javafx.scene.layout.AnchorPane;
 public interface SbSelectionJobsFactory {
 
     /**
-     * Add a default context menu into the currently selected objects if those
-     * objects have a contextMenu property
-     *
-     * @return the job to execute
-     * @deprecated the new ui allow to insert a context menu using standard drag and
-     *             drop jobs
-     */
-    @Deprecated
-    Job addContextMenuToSelection();
-
-    /**
-     * Add a default tooltip into the currently selected objects if those objects
-     * have a tooltip property
-     *
-     * @return the job to execute
-     * @deprecated the new ui allow to insert a tooltip using standard drag and drop
-     *             jobs
-     */
-    @Deprecated
-    Job addTooltipToSelection();
-
-    /**
      * Only if parent object is {@link AnchorPane} Force the selected objects
      * {@link FXOMObject} to the same size of the parent {@link AnchorPane}
      *
@@ -96,5 +74,20 @@ public interface SbSelectionJobsFactory {
      * @return the job to execute
      */
     Job useComputedSizesSelection();
+
+    /**
+     * updates the FXOM document at execution time. It set the root of a document
+     * {@link FXOMDocument} with the provided {@link FXOMObject}<br/>
+     * The provided {@link FXOMObject} is cleaned from obsolete properties
+     * {@link FXOMProperty}<br/>
+     * and resized according user preferences.<br/>
+     *
+     * @param newRoot           the {@link FXOMObject} menat to be the new root of
+     *                          the current document
+     * @param usePredefinedSize if true, newRoot will be resized according user
+     *                          predefined size
+     * @return the job to execute
+     */
+    Job setDocumentRoot(FXOMObject newRoot, boolean usePredefinedSize);
 
 }

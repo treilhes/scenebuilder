@@ -80,6 +80,12 @@
             
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.metadata.javafx.fx</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.metadata.javafx11</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -87,6 +93,18 @@
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.metadata.javafx15</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.metadata.javafx21</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.metadata.sbjavafx</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

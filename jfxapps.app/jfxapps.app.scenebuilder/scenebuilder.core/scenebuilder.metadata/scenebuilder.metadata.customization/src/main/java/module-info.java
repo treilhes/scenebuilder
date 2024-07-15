@@ -1,7 +1,6 @@
-module scenebuilder.metadata {
-    exports com.oracle.javafx.scenebuilder.metadata.custom.fx;
+module scenebuilder.metadata.customization {
     exports com.oracle.javafx.scenebuilder.metadata.custom;
 
     requires transitive jfxapps.core.metadata;
-    requires jfxapps.app.starter;
+    requires jfxapps.core.starter;
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,19 +39,33 @@ import java.util.UUID;
 
 import org.scenebuilder.ext.javafx.customization.anchorpane.AnchorPaneConstraintsEditor;
 import org.scenebuilder.ext.javafx.customization.anchorpane.AnchorPaneEditorProvider;
-import org.scenebuilder.ext.javafx.customization.anchorpane.NodeMetadataAddin;
 import org.scenebuilder.ext.javafx.customization.i18n.I18NJavafxCustomization;
+import org.scenebuilder.fxml.api.SbApiExtension;
 
-import com.gluonhq.jfxapps.core.extension.AbstractExtension;
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.oracle.javafx.scenebuilder.metadata.custom.addon.NodeMetadataAddin;
 
-public class JavafxCustomizationExtension extends AbstractExtension {
+public class JavafxCustomizationExtension implements OpenExtension {
+
+    public static final UUID ID = UUID.fromString("7ef911ef-da42-4adc-a89a-f6c4a8825283");
+
     @Override
-    public UUID getId() {
-        return UUID.fromString("7ef911ef-da42-4adc-a89a-f6c4a8825283");
+    public UUID getParentId() {
+        return SbApiExtension.ID;
     }
 
     @Override
-    public List<Class<?>> explicitClassToRegister() {
+    public UUID getId() {
+        return ID;
+    }
+
+    @Override
+    public List<Class<?>> localContextClasses() {
+        return List.of();
+    }
+
+    @Override
+    public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
                 AnchorPaneConstraintsEditor.class,

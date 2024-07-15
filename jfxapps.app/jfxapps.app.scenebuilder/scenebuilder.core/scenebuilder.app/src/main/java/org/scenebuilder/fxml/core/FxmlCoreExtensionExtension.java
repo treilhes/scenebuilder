@@ -41,7 +41,6 @@ import org.scenebuilder.fxml.api.SbApiExtension;
 import org.scenebuilder.fxml.core.i18n.I18NFxmlCoreExtension;
 
 import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.gluonhq.jfxapps.core.fs.preference.global.WildcardImportsPreference;
 import com.oracle.javafx.scenebuilder.core.doc.DocumentationImpl;
 import com.oracle.javafx.scenebuilder.core.editors.ControllerClassEditor;
 import com.oracle.javafx.scenebuilder.core.editors.CoreEditors;

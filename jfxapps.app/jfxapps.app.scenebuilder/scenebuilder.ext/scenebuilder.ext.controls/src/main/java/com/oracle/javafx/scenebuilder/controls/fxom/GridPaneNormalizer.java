@@ -33,8 +33,6 @@
  */
 package com.oracle.javafx.scenebuilder.controls.fxom;
 
-import java.net.URL;
-
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;

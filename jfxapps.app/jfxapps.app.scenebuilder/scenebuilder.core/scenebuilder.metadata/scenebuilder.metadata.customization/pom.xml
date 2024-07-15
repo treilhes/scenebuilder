@@ -1,21 +1,22 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.gluonhq.jfxapps</groupId>
-    <artifactId>scenebuilder.metadata</artifactId>
-    <version>${scenebuilder.version}</version>
-  </parent>
-  <artifactId>scenebuilder.metadata.customization</artifactId>
-  
-  <dependencies>
-      <dependency>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.gluonhq.jfxapps</groupId>
+        <artifactId>scenebuilder.metadata</artifactId>
+        <version>${scenebuilder.version}</version>
+    </parent>
+    <artifactId>scenebuilder.metadata.customization</artifactId>
+
+    <dependencies>
+        <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.app.starter</artifactId>
-            
+            <artifactId>jfxapps.core.starter</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.app.starter.test</artifactId>
+            <artifactId>jfxapps.core.starter.test</artifactId>
             <scope>test</scope>
         </dependency>
         <!-- The goal for this dependency is to force the build of
@@ -27,13 +28,14 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-invoker-plugin</artifactId>
-                <version>3.2.2</version>
                 <executions>
+                    <!-- This execution is used to run javafxdata first
+                    as pomIncludes does not allow to order builds -->
                     <execution>
                         <id>forked-install</id>
                         <phase>install</phase>
@@ -53,6 +55,8 @@
                             <mavenOpts>--add-opens java.base/java.lang=ALL-UNNAMED</mavenOpts>
                         </configuration>
                     </execution>
+                    <!-- This execution is used to run javafx after javafxdata
+                    as pomIncludes does not allow to order builds -->
                     <execution>
                         <id>forked-install2</id>
                         <phase>install</phase>
@@ -64,6 +68,7 @@
                             <pomIncludes>
                                 <pomInclude>scenebuilder.metadata.javafx11/pom.xml</pomInclude>
                                 <pomInclude>scenebuilder.metadata.javafx15/pom.xml</pomInclude>
+                                <pomInclude>scenebuilder.metadata.javafx22/pom.xml</pomInclude>
                             </pomIncludes>
                             <streamLogs>true</streamLogs>
                             <goals>

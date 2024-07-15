@@ -39,8 +39,8 @@ import java.util.Map;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.dialog.AbstractModalDialog;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.dialog.AbstractModalDialog;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

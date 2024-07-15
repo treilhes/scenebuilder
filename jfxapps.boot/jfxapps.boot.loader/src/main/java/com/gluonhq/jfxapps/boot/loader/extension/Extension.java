@@ -40,7 +40,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.layer.Layer;
-import com.gluonhq.jfxapps.spring.core.patch.PatchLink;
 
 /**
  * Some rules about extensions <br>
@@ -68,7 +67,7 @@ public sealed interface Extension permits OpenExtension, SealedExtension, RootEx
 
         logger.info("Add read to spring.core for {}", module.getName());
 
-        PatchLink.addRead(module);
+        com.gluonhq.jfxapps.spring.core.patch.PatchLink.addRead(module);
         com.gluonhq.jfxapps.hibernate.core.patch.PatchLink.addRead(module);
     }
 //    InputStream getLicense();

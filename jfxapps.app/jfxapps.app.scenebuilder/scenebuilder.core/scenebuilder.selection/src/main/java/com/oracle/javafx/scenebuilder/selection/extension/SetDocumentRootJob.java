@@ -58,16 +58,12 @@ import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
  * It set the root of a document {@link FXOMDocument} with the provided {@link FXOMObject}<br/>
  * The provided {@link FXOMObject} is cleaned from obsolete properties {@link FXOMProperty}<br/>
  * and resized according user preferences.<br/>
- * Subjob {@link PrunePropertiesJob}<br/>
- * Subjob {@link SetFxomRootJob}<br/>
- * Subjob {@link UsePredefinedSizeJob}<br/>
  */
 @Prototype
 public final class SetDocumentRootJob extends BatchSelectionJob {
 
     private FXOMObject newRoot;
     private boolean usePredefinedSize;
-    private String description;
 
     private final FXOMDocument fxomDocument;
     private final FxomJobsFactory fxomJobsFactory;
@@ -93,13 +89,11 @@ public final class SetDocumentRootJob extends BatchSelectionJob {
         this.objectSelectionGroupFactory = objectSelectionGroupFactory;
     }
 
-    public void setJobParameters(FXOMObject newRoot, boolean usePredefinedSize, String description) {
+    public void setJobParameters(FXOMObject newRoot, boolean usePredefinedSize) {
         assert (newRoot == null) || (newRoot.getFxomDocument() == fxomDocument);
-        assert description != null;
 
         this.newRoot = newRoot;
         this.usePredefinedSize = usePredefinedSize;
-        this.description = description == null ? this.getClass().getName() : description;
     }
 
     public FXOMObject getNewRoot() {
@@ -133,7 +127,7 @@ public final class SetDocumentRootJob extends BatchSelectionJob {
 
     @Override
     protected String makeDescription() {
-        return description;
+        return getDescription();
     }
 
     @Override

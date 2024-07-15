@@ -206,9 +206,9 @@ public class ContextBootstraper {
             }
         }
 
-        if (parent != null) {
-            classes.addAll(parent.getBeanClassesForType(BeanPostProcessor.class));
-        }
+//        if (parent != null) {
+//            classes.addAll(parent.getBeanClassesForType(BeanPostProcessor.class));
+//        }
 
         ClassLoader classloader = currentLayer.getLoader();
         JfxAppContext context = contextManager.create(parentContextId, layerId, classloader, classes, childrenDeportedClasses, singletonInstances,

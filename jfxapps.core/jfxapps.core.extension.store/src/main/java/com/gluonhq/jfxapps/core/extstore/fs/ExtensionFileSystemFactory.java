@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.ui.controller.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 
 @ApplicationSingleton
 public class ExtensionFileSystemFactory {

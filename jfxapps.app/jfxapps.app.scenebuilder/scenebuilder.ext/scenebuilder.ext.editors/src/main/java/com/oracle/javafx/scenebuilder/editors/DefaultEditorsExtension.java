@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,7 +37,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.core.extension.AbstractExtension;
+import org.scenebuilder.fxml.api.SbApiExtension;
+
+import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.editors.actions.SetEffectAction;
 import com.oracle.javafx.scenebuilder.editors.control.BooleanEditor;
 import com.oracle.javafx.scenebuilder.editors.control.BoundedDoubleEditor;
@@ -80,15 +82,27 @@ import com.oracle.javafx.scenebuilder.editors.popupeditors.KeyCombinationPopupEd
 import com.oracle.javafx.scenebuilder.editors.popupeditors.Rectangle2DPopupEditor;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.StringPopupEditor;
 
-public class DefaultEditorsExtension extends AbstractExtension {
+public class DefaultEditorsExtension implements OpenExtension {
+
+    public static final UUID ID = UUID.fromString("c53b7a09-ad00-4774-b0a1-0d67773ab2b4");
 
     @Override
-    public UUID getId() {
-        return UUID.fromString("c53b7a09-ad00-4774-b0a1-0d67773ab2b4");
+    public UUID getParentId() {
+        return SbApiExtension.ID;
     }
 
     @Override
-    public List<Class<?>> explicitClassToRegister() {
+    public UUID getId() {
+        return ID;
+    }
+
+    @Override
+    public List<Class<?>> localContextClasses() {
+        return List.of();
+    }
+
+    @Override
+    public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
                 I18NDefaultEditors.class,
@@ -140,4 +154,5 @@ public class DefaultEditorsExtension extends AbstractExtension {
             );
      // @formatter:on
     }
+
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,7 +39,10 @@ import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.dnd.controller.DragController;
+import com.gluonhq.jfxapps.core.dnd.source.DocumentDragSource;
 import com.gluonhq.jfxapps.core.dnd.source.ExternalDragSource;
+import com.gluonhq.jfxapps.core.dnd.target.AccessoryDropTarget;
+import com.gluonhq.jfxapps.core.dnd.target.RootDropTarget;
 
 public class DragAndDropExtension implements OpenExtension {
     @Override
@@ -62,9 +65,14 @@ public class DragAndDropExtension implements OpenExtension {
     public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
+                DefaultDragSourceFactoryImpl.class,
+                DefaultDropTargetFactoryImpl.class,
+                DragController.class,
+                DocumentDragSource.class,
                 ExternalDragSource.class,
-                ExternalDragSource.Factory.class,
-                DragController.class
+                AccessoryDropTarget.class,
+                RootDropTarget.class
+
             );
      // @formatter:on
     }

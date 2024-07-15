@@ -98,9 +98,9 @@
                             <argLine>
                                 --illegal-access=permit
                                 --patch-module
-		                        spring.core=${com.gluonhq.jfxapps:spring.core.patch:jar}
-		                        --patch-module
-		                        org.hibernate.orm.core=${com.gluonhq.jfxapps:org.hibernate.orm.core.patch:jar}
+                                spring.core=${com.gluonhq.jfxapps:spring.core.patch:jar}
+                                --patch-module
+                                org.hibernate.orm.core=${com.gluonhq.jfxapps:org.hibernate.orm.core.patch:jar}
                             </argLine>
                         </configuration>
                         <goals>

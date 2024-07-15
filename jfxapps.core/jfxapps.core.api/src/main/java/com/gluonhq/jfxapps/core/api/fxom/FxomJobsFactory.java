@@ -33,6 +33,9 @@
  */
 package com.gluonhq.jfxapps.core.api.fxom;
 
+import java.util.List;
+import java.util.Map;
+
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.fxom.FXOMCloner;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -259,31 +262,6 @@ public interface FxomJobsFactory {
     Job expandReference(FXOMNode reference, FXOMCloner cloner);
 
     /**
-     * look for all reference in an {@link FXOMDocument} and for each reference r:
-     * <br/>
-     * r is a forward reference<br/>
-     * 0) r is a toggleGroup reference<br/>
-     * => if toggle group exists, we swap it with the reference<br/>
-     * => if not, replace the reference by a new toggle group<br/>
-     * 1) r is a weak reference (like labelFor)<br/>
-     * => we remove the reference<br/>
-     * 2) else r is a strong reference<br/>
-     * => we expand the reference<br/>
-     *
-     * @return the job to execute
-     */
-    Job referencesUpdater();
-
-    /**
-     * look for all reference in an {@link FXOMDocument} and update them with the
-     * referee content
-     *
-     * @param subJob the sub job
-     * @return the job to execute
-     */
-    Job updateReferences(Job subJob);
-
-    /**
      * used to remove properties from an {@link FXOMObject} if the property is
      * either:<br/>
      * 1) static like GridPane.columnIndex and the new parent class is different
@@ -297,4 +275,34 @@ public interface FxomJobsFactory {
      * @return the job to execute
      */
     Job pruneProperties(FXOMObject fxomObject, FXOMObject targetParent);
+
+    /**
+     * look for all reference expression ($someId) in an {@link FXOMDocument} and for each reference r:
+     * <br/>
+     * if r is a forward reference (the referenced id is declared after the
+     * reference itself)<br/>
+     * we expand the reference by cloning the referee<br/>
+     *
+     * @param idMap       the map of id to object, collected from the document if
+     *                    null
+     * @param expressions the list of expression, collected from the document if
+     *                    null
+     * @return the job
+     */
+    Job fixUndeclaredExpressionReference(Map<String, List<FXOMObject>> idMap, List<FXOMPropertyT> expressions);
+
+    /**
+     * look for all reference or copy in an {@link FXOMDocument} and for each item r:
+     * <br/>
+     * if r is a forward reference (the referenced source is declared after the
+     * reference itself)<br/>
+     * we expand the reference by cloning the referee<br/>
+     *
+     * @param idMap       the map of id to object, collected from the document if
+     *                    null
+     * @param intrinsics the list of intrinsics, collected from the document if
+     *                    null
+     * @return the job
+     */
+    Job fixUndeclaredIntrinsic(Map<String, List<FXOMObject>> idMap, List<FXOMIntrinsic> intrinsics);
 }

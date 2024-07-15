@@ -55,8 +55,18 @@ public class CompositeCollector implements FXOMCollector<List<FXOMCollector<?>>>
 
     public CompositeCollector(List<FXOMCollector<?>> collectors) {
         super();
-        this.collectors = collectors;
+        this.collectors = new ArrayList<>(collectors);
         this.strategy = aggregateStrategy();
+    }
+
+    public void add(FXOMCollector<?> collector) {
+        collectors.add(collector);
+        aggregateStrategy();
+    }
+
+    public void addAll(List<FXOMCollector<?>> collectors) {
+        collectors.addAll(collectors);
+        aggregateStrategy();
     }
 
     @Override

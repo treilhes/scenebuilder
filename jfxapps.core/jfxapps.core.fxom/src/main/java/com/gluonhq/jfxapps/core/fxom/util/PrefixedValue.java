@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -50,7 +51,7 @@ import javafx.fxml.FXMLLoader;
  *
  */
 public class PrefixedValue {
-    
+
     public enum Type {
         DOCUMENT_RELATIVE_PATH,
         CLASSLOADER_RELATIVE_PATH,
@@ -60,20 +61,24 @@ public class PrefixedValue {
         PLAIN_STRING,
         INVALID
     }
-    
+
+    public static PrefixedValue of(String value) {
+        return new PrefixedValue(value);
+    }
+
     private final String value;
     private final Type type;
-    
+
     public PrefixedValue(String value) {
         assert value != null;
         this.value = value;
         this.type = getPrefixedValueType(this.value);
     }
-    
+
     public PrefixedValue(Type type, String suffix) {
         assert type != Type.INVALID;
         assert suffix != null;
-        
+
         this.type = type;
         switch(this.type) {
             case DOCUMENT_RELATIVE_PATH: {
@@ -99,8 +104,8 @@ public class PrefixedValue {
                 break;
             }
             case PLAIN_STRING: {
-                if (suffix.startsWith(FXMLLoader.ESCAPE_PREFIX) 
-                        || suffix.startsWith(FXMLLoader.RELATIVE_PATH_PREFIX) 
+                if (suffix.startsWith(FXMLLoader.ESCAPE_PREFIX)
+                        || suffix.startsWith(FXMLLoader.RELATIVE_PATH_PREFIX)
                         || suffix.startsWith(FXMLLoader.RESOURCE_KEY_PREFIX)
                         || suffix.startsWith(FXMLLoader.EXPRESSION_PREFIX)) {
                     this.value = FXMLLoader.ESCAPE_PREFIX + suffix;
@@ -116,42 +121,42 @@ public class PrefixedValue {
             }
         }
     }
-    
+
     public Type getType() {
         return type;
     }
-    
+
     public boolean isDocumentRelativePath() {
         return type == Type.DOCUMENT_RELATIVE_PATH;
     }
-    
+
     public boolean isClassLoaderRelativePath() {
         return type == Type.CLASSLOADER_RELATIVE_PATH;
     }
-    
+
     public boolean isResourceKey() {
         return type == Type.RESOURCE_KEY;
     }
-    
+
     public boolean isExpression() {
         return type == Type.EXPRESSION;
     }
-    
+
     public boolean isBindingExpression() {
         return type == Type.BINDING_EXPRESSION;
     }
-    
+
     public boolean isPlainString() {
         return type == Type.PLAIN_STRING;
     }
-    
+
     public boolean isInvalid() {
         return type == Type.INVALID;
     }
-    
+
     public String getSuffix() {
         final String result;
-        
+
         switch(this.type) {
             case DOCUMENT_RELATIVE_PATH: {
                 assert value.startsWith(FXMLLoader.RELATIVE_PATH_PREFIX);
@@ -201,14 +206,14 @@ public class PrefixedValue {
                 result = null;
             }
         }
-        
+
         return result;
     }
-    
+
     public URL resolveDocumentRelativePath(URL document) {
         assert document != null;
         assert type == Type.DOCUMENT_RELATIVE_PATH;
-        
+
         URL result;
         try {
             final String path = value.substring(FXMLLoader.RELATIVE_PATH_PREFIX.length());
@@ -216,24 +221,24 @@ public class PrefixedValue {
         } catch(MalformedURLException x) {
             result = null;
         }
-        
+
         return result;
     }
-    
+
     public URL resolveClassLoaderRelativePath(ClassLoader classLoader) {
         assert classLoader != null;
         assert type == Type.CLASSLOADER_RELATIVE_PATH;
         assert value.startsWith(FXMLLoader.RELATIVE_PATH_PREFIX+"/");
-        
+
         final String path = value.substring(FXMLLoader.RELATIVE_PATH_PREFIX.length()+1);
         return classLoader.getResource(path);
     }
-    
+
     public String resolveResourceKey(ResourceBundle resources) {
         assert resources != null;
         assert type == Type.RESOURCE_KEY;
         assert value.startsWith(FXMLLoader.RESOURCE_KEY_PREFIX);
-        
+
         String result;
         try {
             final String key = value.substring(FXMLLoader.RESOURCE_KEY_PREFIX.length());
@@ -241,13 +246,13 @@ public class PrefixedValue {
         } catch(MissingResourceException x) {
             result = null;
         }
-        
+
         return result;
     }
-    
+
     public static Type getPrefixedValueType(String prefixedValue) {
         final Type result;
-        
+
         String v = prefixedValue;
         if (v.startsWith(FXMLLoader.ESCAPE_PREFIX)) {
             v = v.substring(FXMLLoader.ESCAPE_PREFIX.length());
@@ -306,9 +311,9 @@ public class PrefixedValue {
 
         return result;
     }
-    
+
     public static PrefixedValue makePrefixedValue(URL assetURL, URL documentURL) {
-        
+
         final File assetFile, documentFile;
         try {
             assetFile = new File(assetURL.toURI());
@@ -317,7 +322,7 @@ public class PrefixedValue {
             throw new IllegalArgumentException(x);
         }
         final File parentFile = documentFile.getParentFile();
-        
+
         final PrefixedValue result;
         if ((parentFile == null) || parentFile.equals(assetFile)) {
             throw new IllegalArgumentException(documentURL.toString());
@@ -325,15 +330,15 @@ public class PrefixedValue {
             final Path relativePath = parentFile.toPath().relativize(assetFile.toPath());
             result = new PrefixedValue(Type.DOCUMENT_RELATIVE_PATH, relativePath.toString());
         }
-        
+
         return result;
     }
-    
-    
+
+
     /*
      * Object
      */
-    
+
     @Override
     public String toString() {
         return value;
@@ -364,15 +369,15 @@ public class PrefixedValue {
         }
         return true;
     }
-    
-    
+
+
     /*
      * Private
      */
-        
+
     private static String encodePath(File file) {
         final String result;
-        
+
         try {
             if (file.isAbsolute()) {
                 result = file.toURI().toURL().getPath();
@@ -387,13 +392,13 @@ public class PrefixedValue {
         } catch(MalformedURLException x) {
             throw new IllegalStateException(x);
         }
-        
+
         return result;
     }
-    
+
     private static File decodePath(String encoding) {
         File result;
-        
+
         try {
             if (encoding.startsWith("/")) { //NOCHECK
                 result = new File(new URI("file:" + encoding)) ; //NOCHECK
@@ -407,14 +412,14 @@ public class PrefixedValue {
                 final Path relativePath = tmpPath.relativize(absolutePath);
                 result = relativePath.toFile();
             }
-            
+
             assert encoding.equals(encodePath(result));
-            
+
         } catch(MalformedURLException | URISyntaxException x) {
             result = new File(encoding);
         }
-        
-        
+
+
         return result;
     }
 }

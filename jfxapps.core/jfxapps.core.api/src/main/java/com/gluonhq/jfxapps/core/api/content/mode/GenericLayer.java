@@ -43,7 +43,7 @@ import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.util.IOUtils;
+import com.gluonhq.jfxapps.util.javafx.IOUtils;
 
 import javafx.event.EventHandler;
 import javafx.scene.Group;

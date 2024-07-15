@@ -43,18 +43,22 @@ import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.NonNull;
 import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.JobPipeline;
 import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.collector.CompositeCollector;
 import com.gluonhq.jfxapps.core.fxom.collector.ExpressionCollector;
 import com.gluonhq.jfxapps.core.fxom.collector.ExpressionCollector.ExpressionReference;
 import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
-import com.gluonhq.jfxapps.core.fxom.collector.FxCollector.FxIdMap;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector.FxCopyBySource;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector.FxIdsMap;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector.FxReferenceBySource;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
@@ -76,6 +80,8 @@ public class JobManagerImpl implements JobManager {
 
     private final DocumentManager documentManager;
     private final JobPipelineFactory jobPipelineFactory;
+    private final FxomJobsFactory fxomJobsFactory;
+
     private final BatchJob.Factory batchJobFactory;
 
     private final List<Job> undoStack = new ArrayList<>();
@@ -90,9 +96,11 @@ public class JobManagerImpl implements JobManager {
     public JobManagerImpl(
             DocumentManager documentManager,
             JobPipelineFactory jobPipelineFactory,
+            FxomJobsFactory fxomJobsFactory,
             BatchJob.Factory batchJobFactory) {
         this.documentManager = documentManager;
         this.jobPipelineFactory = jobPipelineFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
         this.batchJobFactory = batchJobFactory;
 
         revision.addListener((ob, o, n) -> documentManager.dirty().set(true));
@@ -319,10 +327,12 @@ public class JobManagerImpl implements JobManager {
 
     protected class DefaultJobPipeline implements JobPipeline{
 
+        private final ExpressionReference expressionReferences = ExpressionCollector.allExpressionReferences();
+        private final FxReferenceBySource fxReferences = FxCollector.allFxReferences();
+        private final FxCopyBySource fxCopies = FxCollector.allFxCopy();
 
         protected DefaultJobPipeline() {
-            final ExpressionReference fxValueReference = ExpressionCollector.allExpressionReferences();
-            final FxReferenceBySource fxIntrinsicReference = FxCollector.allFxReferences();
+
         }
 
         /**
@@ -338,14 +348,17 @@ public class JobManagerImpl implements JobManager {
          */
         @Override
         public Map<String, FXOMCollector<?>> postExecutionCollectors() {
-            return Map.of();
+            return Map.of(
+                    expressionReferences.toString(), expressionReferences,
+                    fxReferences.toString(), fxReferences,
+                    fxCopies.toString(), fxCopies);
         }
 
         /**
          * {@inheritDoc}
          */
         @Override
-        public Job preExecutionJob(Map<String, FXOMObject> preIdMap) {
+        public Job preExecutionJob(Map<String, List<FXOMObject>> preIdMap) {
             return null;
         }
 
@@ -353,8 +366,29 @@ public class JobManagerImpl implements JobManager {
          * {@inheritDoc}
          */
         @Override
-        public Job postExecutionJob(Map<String, FXOMObject> preIdMap) {
-            return null;
+        public Job postExecutionJob(Map<String, List<FXOMObject>> postIdMap) {
+            final var batchJob = batchJobFactory.getJob();
+
+            List<FXOMPropertyT> expressions = expressionReferences.getCollected();
+
+            final var fixExprReference = fxomJobsFactory.fixUndeclaredExpressionReference(postIdMap, expressions);
+            fixExprReference.execute();
+            batchJob.addSubJob(fixExprReference);
+
+            List<FXOMIntrinsic> intrinsics = new ArrayList(fxReferences.getCollected());
+            intrinsics.addAll(fxCopies.getCollected());
+
+            final var fixReference = fxomJobsFactory.fixUndeclaredIntrinsic(postIdMap, intrinsics);
+            fixReference.execute();
+            batchJob.addSubJob(fixReference);
+
+//            if (FXOMNodes.isWeakReference(r)) {
+//                final Job removeJob = fxomJobsFactory.removeNode(r);
+//                removeJob.execute();
+//                jobCollector.add(removeJob);
+//            }
+
+            return batchJob;
         }
     }
 
@@ -362,8 +396,8 @@ public class JobManagerImpl implements JobManager {
 
         final DefaultJobPipeline defaultPipeline;
         final JobPipeline customPipeline;
-        final FxIdMap preIdCollector = FxCollector.fxIdsMap();
-        final FxIdMap postIdCollector = FxCollector.fxIdsMap();
+        final FxIdsMap preIdCollector = FxCollector.fxIdMap();
+        final FxIdsMap postIdCollector = FxCollector.fxIdMap();
 
         protected CompositeJobPipeline(@NonNull DefaultJobPipeline defaultPipeline, JobPipeline customPipeline) {
             this.defaultPipeline = defaultPipeline;
@@ -412,7 +446,7 @@ public class JobManagerImpl implements JobManager {
          * {@inheritDoc}
          */
         @Override
-        public Job preExecutionJob(Map<String, FXOMObject> preIdMap) {
+        public Job preExecutionJob(Map<String, List<FXOMObject>> preIdMap) {
             final var batch = batchJobFactory.getJob();
 
             preIdMap = preIdCollector.getCollected();
@@ -433,7 +467,7 @@ public class JobManagerImpl implements JobManager {
          * {@inheritDoc}
          */
         @Override
-        public Job postExecutionJob(Map<String, FXOMObject> postIdMap) {
+        public Job postExecutionJob(Map<String, List<FXOMObject>> postIdMap) {
             final var batch = batchJobFactory.getJob();
 
             postIdMap = postIdCollector.getCollected();

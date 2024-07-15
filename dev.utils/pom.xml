@@ -28,7 +28,7 @@
         </dependency>-->
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.app.starter.test</artifactId>
+            <artifactId>jfxapps.core.starter.test</artifactId>
             <scope>test</scope>
         </dependency>
 

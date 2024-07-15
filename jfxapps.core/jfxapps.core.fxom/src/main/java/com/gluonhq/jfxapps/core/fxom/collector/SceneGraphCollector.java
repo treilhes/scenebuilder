@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,11 +44,19 @@ import com.gluonhq.jfxapps.core.fxom.SceneGraphObject;
 public class SceneGraphCollector {
 
     public static SceneGraph allSceneGraphObjects() {
-        return new SceneGraph(null);
+        return new SceneGraph(null, false);
+    }
+
+    public static SceneGraph allLocalSceneGraphObjects() {
+        return new SceneGraph(null, true);
     }
 
     public static SceneGraph sceneGraphObjectByClass(Class<?> cls) {
-        return new SceneGraph(cls);
+        return new SceneGraph(cls, false);
+    }
+
+    public static SceneGraph localSceneGraphObjectByClass(Class<?> cls) {
+        return new SceneGraph(cls, true);
     }
 
     public static FindSceneGraph findSceneGraphObject(Object object) {
@@ -61,9 +69,12 @@ public class SceneGraphCollector {
 
         private final Class<?> cls;
 
-        public SceneGraph(Class<?> cls) {
+        private final boolean onlyLocal;
+
+        public SceneGraph(Class<?> cls, boolean onlyLocal) {
             super();
             this.cls = cls;
+            this.onlyLocal = onlyLocal;
         }
 
         @Override
@@ -75,7 +86,11 @@ public class SceneGraphCollector {
         public void collect(FXOMObject object) {
             SceneGraphObject sgo = object.getSceneGraphObject();
             if (sgo != null && !sgo.isEmpty()) {
-                if (cls == null || sgo.getObjectClass() == cls) {
+
+                boolean classMatch = cls == null || sgo.getObjectClass() == cls;
+                boolean localMatch = !onlyLocal || !sgo.isFromExternalSource();
+
+                if (classMatch && localMatch) {
                     result.add(object);
                 }
             }
@@ -106,12 +121,12 @@ public class SceneGraphCollector {
 
         @Override
         public boolean accept(FXOMObject object) {
-            return result.isEmpty();
+            return true;
         }
 
         @Override
         public boolean accept(FXOMProperty property) {
-            return result.isEmpty();
+            return true;
         }
 
         @Override
@@ -136,5 +151,12 @@ public class SceneGraphCollector {
         public Optional<FXOMObject> getCollected() {
             return result;
         }
+
+        @Override
+        public boolean endCollection() {
+            return !result.isEmpty();
+        }
+
+
     }
 }

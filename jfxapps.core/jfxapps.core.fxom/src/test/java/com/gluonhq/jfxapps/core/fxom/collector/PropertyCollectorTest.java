@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,6 +35,7 @@ package com.gluonhq.jfxapps.core.fxom.collector;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import org.junit.jupiter.api.Test;
@@ -46,8 +47,6 @@ import org.testfx.framework.junit5.Start;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
-import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
-import com.gluonhq.jfxapps.core.fxom.testutil.FxmlUtil;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 
 import javafx.stage.Stage;
@@ -65,8 +64,40 @@ public class PropertyCollectorTest {
     }
 
     @Test
-    public void should_return_the_right_number_of_properties() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo._32_PROPS);
+    public void should_return_the_right_number_of_properties() throws IOException {
+        String fxml = """
+                <?import javafx.scene.control.Button?>
+                <?import javafx.scene.control.ComboBox?>
+                <?import javafx.scene.control.ScrollPane?>
+                <?import javafx.scene.control.TextField?>
+                <?import javafx.scene.layout.AnchorPane?>
+                <?import javafx.scene.layout.Pane?>
+
+                <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+                    <children>
+                      <Pane prefHeight="200.0" prefWidth="200.0">
+                         <children>
+                            <Button mnemonicParsing="false" text="Button" />
+                         </children>
+                      </Pane>
+                        <ComboBox layoutX="46.0" layoutY="175.0" prefWidth="150.0" />
+                        <TextField layoutX="345.0" layoutY="264.0" />
+                        <Button layoutX="58.0" layoutY="14.0" mnemonicParsing="false" text="Button" />
+                        <Button layoutX="84.0" layoutY="87.0" mnemonicParsing="false" text="Button" />
+                      <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                               <children>
+                                    <Button mnemonicParsing="false" text="Button" />
+                                    <TextField text="ccccc" />
+                               </children>
+                            </AnchorPane>
+                        </content>
+                      </ScrollPane>
+                    </children>
+                </AnchorPane>
+                """;
+        FXOMDocument fxomDocument = new FXOMDocument(fxml);
 
         Collection<FXOMPropertyT> properties = fxomDocument.getFxomRoot()
                 .collect(PropertyCollector.allSimpleProperties());
@@ -75,8 +106,42 @@ public class PropertyCollectorTest {
     }
 
     @Test
-    public void should_return_the_right_number_of_text_properties() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo._5_TEXT_PROPS);
+    public void should_return_the_right_number_of_text_properties() throws Exception {
+        String fxml = """
+                <?import javafx.scene.control.Button?>
+                <?import javafx.scene.control.ComboBox?>
+                <?import javafx.scene.control.ScrollPane?>
+                <?import javafx.scene.control.TextField?>
+                <?import javafx.scene.layout.AnchorPane?>
+                <?import javafx.scene.layout.Pane?>
+
+                <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+                    <children>
+                      <Pane prefHeight="200.0" prefWidth="200.0">
+                         <children>
+                            <Button mnemonicParsing="false" text="Button" />
+                         </children>
+                      </Pane>
+                        <ComboBox layoutX="46.0" layoutY="175.0" prefWidth="150.0" />
+                        <TextField layoutX="345.0" layoutY="264.0" />
+                        <Button layoutX="58.0" layoutY="14.0" mnemonicParsing="false" text="Button" />
+                        <Button layoutX="84.0" layoutY="87.0" mnemonicParsing="false" text="Button" />
+                      <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                               <children>
+                                    <Button mnemonicParsing="false" text="Button" />
+                                    <TextField text="ccccc" />
+                               </children>
+                            </AnchorPane>
+                        </content>
+                      </ScrollPane>
+                    </children>
+                </AnchorPane>
+
+                """;
+
+        FXOMDocument fxomDocument = new FXOMDocument(fxml);
 
         PropertyName text = new PropertyName("text");
 
@@ -86,26 +151,44 @@ public class PropertyCollectorTest {
     }
 
     @Test
-    public void should_return_the_right_number_of_fxnull_values() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo._5_NULL_PROPS);
+    public void should_return_the_right_number_of_fxnull_values() throws Exception {
+        String fxml = """
+                <?import javafx.scene.control.Button?>
+                <?import javafx.scene.control.ComboBox?>
+                <?import javafx.scene.control.ScrollPane?>
+                <?import javafx.scene.control.TextField?>
+                <?import javafx.scene.layout.AnchorPane?>
+                <?import javafx.scene.layout.Pane?>
+
+                <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+                    <children>
+                      <Pane prefHeight="200.0" prefWidth="200.0">
+                         <children>
+                            <Button mnemonicParsing="false" text="$null" />
+                         </children>
+                      </Pane>
+                        <ComboBox layoutX="46.0" layoutY="175.0" prefWidth="150.0" />
+                        <TextField layoutX="345.0" layoutY="264.0" />
+                        <Button layoutX="58.0" layoutY="14.0" mnemonicParsing="false" text="$null" />
+                        <Button layoutX="84.0" layoutY="87.0" mnemonicParsing="false" text="$null" />
+                      <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                               <children>
+                                    <Button mnemonicParsing="false" text="$null" />
+                                    <TextField text="$null" />
+                               </children>
+                            </AnchorPane>
+                        </content>
+                      </ScrollPane>
+                    </children>
+                </AnchorPane>
+                """;
+        FXOMDocument fxomDocument = new FXOMDocument(fxml);
 
         Collection<FXOMPropertyT> properties = fxomDocument.getFxomRoot().collect(PropertyCollector.fxNullProperties());
 
         assertEquals(5, properties.size());
     }
 
-    private enum FxmlTestInfo implements FilenameProvider {
-        _32_PROPS("32_props"), _5_TEXT_PROPS("5_text_props"), _5_NULL_PROPS("5_null_props");
-
-        private String filename;
-
-        FxmlTestInfo(String filename) {
-            this.filename = filename;
-        }
-
-        @Override
-        public String getFilename() {
-            return filename;
-        }
-    }
 }

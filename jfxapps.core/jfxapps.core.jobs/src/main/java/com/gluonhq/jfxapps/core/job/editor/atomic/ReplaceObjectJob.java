@@ -58,8 +58,7 @@ public final class ReplaceObjectJob extends AbstractJob {
     private int indexInParentProperty;
     private int indexInParentCollection;
 
-    protected ReplaceObjectJob(
-            JobExtensionFactory extensionFactory) {
+    public ReplaceObjectJob(JobExtensionFactory extensionFactory) {
         super(extensionFactory);
     }
 

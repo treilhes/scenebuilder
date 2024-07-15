@@ -53,7 +53,7 @@ public class FXOMFxIdIndex {
     public FXOMFxIdIndex(FXOMDocument fxomDocument) {
         assert fxomDocument != null;
         this.fxomDocument = fxomDocument;
-        this.fxIds = fxomDocument.collect(FxCollector.fxIdsMap());
+        this.fxIds = fxomDocument.collect(FxCollector.fxIdsUniqueMap());
     }
 
     public FXOMDocument getFxomDocument() {

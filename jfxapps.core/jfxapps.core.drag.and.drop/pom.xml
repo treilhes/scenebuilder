@@ -12,23 +12,25 @@
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.starter</artifactId>
             <scope>provided</scope>
         </dependency>
+        
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.starter.test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- TODO remove those dependencies after refactor -->
         <dependency>
+            <!-- Required to provide clipboardataformat instance -->
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.jobs</artifactId>
+            <artifactId>jfxapps.core.clipboard</artifactId>
+            <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.selection</artifactId>
-        </dependency>
-        <!-- TODO END remove those dependencies after refactor -->
     </dependencies>
 </project>

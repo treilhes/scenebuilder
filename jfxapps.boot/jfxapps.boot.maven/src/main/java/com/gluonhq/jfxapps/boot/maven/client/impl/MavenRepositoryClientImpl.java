@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,12 +34,16 @@
 package com.gluonhq.jfxapps.boot.maven.client.impl;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -59,6 +63,7 @@ import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 @Component
 public class MavenRepositoryClientImpl implements RepositoryClient {
 
+    private static final Logger log = LoggerFactory.getLogger(MavenRepositoryClientImpl.class);
     private final RepositoryManager repositoryManager;
     private final RepositoryConfig config;
     private final SearchService searchService;
@@ -75,7 +80,21 @@ public class MavenRepositoryClientImpl implements RepositoryClient {
         this.repositoryFolder = config.getDirectory() != null ? config.getDirectory() : platform.defaultUserM2Repository();
         this.repositoryManager = repositoryManager;
         this.searchService = new SearchService();
-        this.offline = false;
+        // FIXME: offline mode should be set to true when no connection is available
+        // when no connection is available, the client wait for some timeouts which cause an extremely slow startup
+        // i think it must be some automatic detection of the connection status and the status must be periodicaly checked
+        // to switch back to online mode asap
+        try {
+            InetAddress address = InetAddress.getByName("8.8.8.8"); // Google's public DNS server
+            this.offline = !address.isReachable(2000); // Timeout in milliseconds
+        } catch (IOException e) {
+            // Handle exceptions, possibly log them
+        } finally {
+            if (this.offline) {
+                log.info("Unable to reach google dns fallback to Offline mode");
+            }
+        }
+
         this.maven = new MavenRepositorySystem(repositoryFolder, repositoryManager, this.offline);
     }
 

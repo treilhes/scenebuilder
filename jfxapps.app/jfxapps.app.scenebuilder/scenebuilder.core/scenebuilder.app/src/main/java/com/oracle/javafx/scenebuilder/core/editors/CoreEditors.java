@@ -42,6 +42,8 @@ import com.gluonhq.jfxapps.core.metadata.property.FxControllerMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.FxIdMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.api.editors.EditorMapProvider;
+import com.oracle.javafx.scenebuilder.api.editors.PropertyEditor;
 
 @Component
 public class CoreEditors implements EditorMapProvider {

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,8 +39,9 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.editors.EditorMapProvider;
-import com.oracle.javafx.scenebuilder.core.editors.PropertyEditor;
+import com.oracle.javafx.scenebuilder.api.editors.EditorMapProvider;
+import com.oracle.javafx.scenebuilder.api.editors.PropertyEditor;
+import com.oracle.javafx.scenebuilder.metadata.custom.addon.AnchorPropertyGroupMetadata;
 
 @Component
 public class AnchorPaneEditorProvider implements EditorMapProvider {

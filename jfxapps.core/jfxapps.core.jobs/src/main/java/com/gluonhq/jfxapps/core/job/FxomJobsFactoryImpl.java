@@ -33,6 +33,11 @@
  */
 package com.gluonhq.jfxapps.core.job;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.lang.Nullable;
+
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
@@ -69,8 +74,8 @@ import com.gluonhq.jfxapps.core.job.editor.reference.DeleteRefereeObjectJob;
 import com.gluonhq.jfxapps.core.job.editor.reference.ExpandExpressionReferenceJob;
 import com.gluonhq.jfxapps.core.job.editor.reference.ExpandIntrinsicReferenceJob;
 import com.gluonhq.jfxapps.core.job.editor.reference.ExpandReferenceJob;
-import com.gluonhq.jfxapps.core.job.editor.reference.ReferencesUpdaterJob;
-import com.gluonhq.jfxapps.core.job.editor.reference.UpdateReferencesJob;
+import com.gluonhq.jfxapps.core.job.editor.reference.FixUndeclaredExpressionReferenceJob;
+import com.gluonhq.jfxapps.core.job.editor.reference.FixUndeclaredIntrinsicJob;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 
 /**
@@ -269,23 +274,22 @@ public class FxomJobsFactoryImpl extends JobFactory<Job> implements FxomJobsFact
      * {@inheritDoc}
      */
     @Override
-    public Job referencesUpdater() {
-        return create(ReferencesUpdaterJob.class, j -> j.setJobParameters());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Job updateReferences(Job subJob) {
-        return create(UpdateReferencesJob.class, j -> j.setJobParameters(subJob));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Job pruneProperties(FXOMObject fxomObject, FXOMObject targetParent) {
         return create(PrunePropertiesJob.class, j -> j.setJobParameters(fxomObject, targetParent));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Job fixUndeclaredExpressionReference(@Nullable Map<String, List<FXOMObject>> idMap,
+            @Nullable List<FXOMPropertyT> expressions) {
+        return create(FixUndeclaredExpressionReferenceJob.class, j -> j.setJobParameters(idMap, expressions));
+    }
+
+    @Override
+    public Job fixUndeclaredIntrinsic(@Nullable Map<String, List<FXOMObject>> idMap,
+            @Nullable List<FXOMIntrinsic> intrinsics) {
+        return create(FixUndeclaredIntrinsicJob.class, j -> j.setJobParameters(idMap, intrinsics));
     }
 }

@@ -65,4 +65,8 @@ public interface FXOMCollector<T> {
     default boolean accept(FXOMProperty property) {
         return true;
     }
+
+    default boolean endCollection() {
+        return false;
+    }
 }

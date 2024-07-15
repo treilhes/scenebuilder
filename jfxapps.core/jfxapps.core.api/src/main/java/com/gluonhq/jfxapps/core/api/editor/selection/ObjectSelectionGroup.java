@@ -264,39 +264,8 @@ public class ObjectSelectionGroup implements SelectionGroup {
      */
     @Override
     public FXOMObject getAncestor() {
-        final FXOMObject result;
-
         assert items.isEmpty() == false;
-
-        switch(items.size()) {
-
-            case 0:
-                result = null;
-                break;
-
-            case 1:
-                result = items.iterator().next().getParentObject();
-                break;
-
-            default:
-                FXOMPath commonPath = null;
-                for (FXOMObject i : items) {
-                    final FXOMObject parent = i.getParentObject();
-                    if (parent != null) {
-                        final FXOMPath dph = new FXOMPath(parent);
-                        if (commonPath == null) {
-                            commonPath = dph;
-                        } else {
-                            commonPath = commonPath.getCommonPathWith(dph);
-                        }
-                    }
-                }
-                assert commonPath != null; // Else it would mean root is selected twice
-                result = commonPath.getLeaf();
-                break;
-        }
-
-        return result;
+        return FXOMPath.commonAncestor(items);
     }
 
     /**
@@ -582,6 +551,10 @@ public class ObjectSelectionGroup implements SelectionGroup {
     public <T> T collect(FXOMCollector<T> collector) {
         for (FXOMObject selectedObject : getItems()) {
             selectedObject.collect(collector);
+
+            if (collector.endCollection()) {
+                break;
+            }
         }
         return collector.getCollected();
     }

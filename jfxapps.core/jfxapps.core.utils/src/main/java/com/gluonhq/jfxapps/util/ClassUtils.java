@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.util;
 
+import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -43,7 +44,7 @@ public final class ClassUtils {
 
     private ClassUtils(){}
 
-    public static <T> Class<?> findSharedBaseClass(Set<T> objects, Function<T, Class<?>> getClassFunc){
+    public static <T> Class<?> findSharedBaseClass(Collection<T> objects, Function<T, Class<?>> getClassFunc){
         Deque<Class<?>> orderedBaseClasses = new LinkedList<>();
 
         for (T o:objects) {

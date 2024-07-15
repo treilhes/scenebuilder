@@ -16,8 +16,11 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.utils</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>javafx.fxml.patch.link</artifactId>
+        </dependency>
 
-        
         <dependency>
             <groupId>org.graalvm.js</groupId>
             <artifactId>js</artifactId>
@@ -36,19 +39,40 @@
             <artifactId>jfxapps.javafx.starter</artifactId>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.starter</artifactId>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.starter.test</artifactId>
             <scope>test</scope>
         </dependency>
 
-    </dependencies>
 
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <!--<useIncrementalCompilation>false</useIncrementalCompilation>-->
+                    <compilerArgs>
+                        <!-- Enable instrumentation -->
+                        <arg>--patch-module</arg>
+                        <arg>javafx.fxml=D:\Dev\eclipse\scenebuilderx\scenebuilder\jfxapps.core\jfxapps.core.jpms.patches\javafx.fxml.patch\target\javafx.fxml.patch-17.0.0-SNAPSHOT.jar</arg>
+                        <!-- Enable access to com.sun.javafx.fxml.FXMLLoaderHelper for staticLoad in FXOMLOader-->
+                        <arg>--add-exports</arg>
+                        <arg>javafx.fxml/com.sun.javafx.fxml=jfxapps.core.fxom</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+
+
+        </plugins>
+    </build>
 </project>

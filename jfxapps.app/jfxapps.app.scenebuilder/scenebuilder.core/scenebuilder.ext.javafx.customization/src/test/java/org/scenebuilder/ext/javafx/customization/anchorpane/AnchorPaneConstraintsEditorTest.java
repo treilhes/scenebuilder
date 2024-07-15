@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -47,12 +47,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.scenebuilder.ext.javafx.customization.anchorpane.AnchorPaneConstraintsEditor.ConstraintEditor;
 import org.testfx.framework.junit5.ApplicationExtension;
 
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.fxml.api.selection.SelectionState;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata.NullableCoordinateDoublePropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.util.InspectorPath;
+import com.oracle.javafx.scenebuilder.metadata.custom.addon.AnchorPropertyGroupMetadata;
 
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -65,11 +65,11 @@ public class AnchorPaneConstraintsEditorTest {
     }
 
     static DoublePropertyMetadata someAnchorProp(String name) {
-        return new NullableCoordinateDoublePropertyMetadata.Builder()
+        return new NullableCoordinateDoublePropertyMetadata.Builder<Void>()
                 .name(new PropertyName(name))
                 .readWrite(true)
                 .defaultValue(null)
-                .inspectorPath(InspectorPath.UNUSED).build();
+                .build();
     }
     static AnchorPropertyGroupMetadata someAnchorGroupProp() {
         return new AnchorPropertyGroupMetadata.Builder()

@@ -33,10 +33,10 @@
  */
 package com.gluonhq.jfxapps.app.manager.main.ui.cmp;
 
-import com.gluonhq.jfxapps.app.manager.main.api.ApplicationCard;
-import com.gluonhq.jfxapps.app.manager.main.api.ExtensionCard;
-import com.gluonhq.jfxapps.app.manager.main.api.MainContent;
-import com.gluonhq.jfxapps.app.manager.main.api.Model;
+import com.gluonhq.jfxapps.app.manager.api.ui.ApplicationCard;
+import com.gluonhq.jfxapps.app.manager.api.ui.ExtensionCard;
+import com.gluonhq.jfxapps.app.manager.api.ui.MainContent;
+import com.gluonhq.jfxapps.app.manager.api.ui.Model;
 import com.gluonhq.jfxapps.app.manager.model.AppModel;
 import com.gluonhq.jfxapps.app.manager.model.Application;
 import com.gluonhq.jfxapps.app.manager.model.Extension;

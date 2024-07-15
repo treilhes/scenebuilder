@@ -40,5 +40,7 @@
         <module>jfxapps.core.registry</module>
         <module>jfxapps.javafx.starter</module>
         <module>jfxapps.core.controls</module>
+
+        <module>jfxapps.core.jpms.patches</module>
     </modules>
 </project>

@@ -35,10 +35,15 @@ package com.gluonhq.jfxapps.core.fxom.collector;
 
 import static org.junit.Assert.assertEquals;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.junitpioneer.jupiter.SetSystemProperty;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
@@ -54,14 +59,57 @@ import javafx.stage.Stage;
 @SetSystemProperty(key = "javafx.allowjs", value = "true")
 public class FxScriptCollectorTest {
 
+    private static final String INCLUDE = """
+            <?import javafx.scene.layout.Pane?>
+            <Pane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" />
+            """;
+
+    private static final String FXML = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <?language javascript?>
+
+            <?import javafx.scene.control.Button?>
+            <?import javafx.scene.layout.Pane?>
+            <?import javafx.scene.shape.Circle?>
+
+            <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+               <fx:define>
+                    <fx:include fx:id="referred1" source="included.fxml" />
+               </fx:define>
+               <children>
+                  <Pane layoutX="200.0" layoutY="100.0" prefHeight="200.0" prefWidth="200.0" clip="$circleblue">
+                     <children>
+                        <fx:script source="script1.js" />
+                        <Button mnemonicParsing="false" text="referrerx" />
+                        <fx:reference fx:id="excluded" source="referred1" layoutX="100.0" layoutY="100.0">
+                            <children>
+                              <fx:script source="script2.js" />
+                           </children>
+                        </fx:reference>
+                        <fx:script source="script2.js" />
+                     </children>
+                  </Pane>
+               </children>
+            </Pane>
+
+            """;
+
+    @TempDir
+    static Path tempDir;
+
     @Start
     private void start(Stage stage) {
 
     }
 
+    @BeforeAll
+    public static void init() throws Exception {
+        Files.writeString(tempDir.resolve("included.fxml"), INCLUDE, StandardOpenOption.CREATE);
+    }
+
     @Test
-    public void should_return_the_right_number_of_fxscripts() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.FX_SCRIPTS);
+    public void should_return_the_right_number_of_fxscripts() throws Exception {
+        FXOMDocument fxomDocument = new FXOMDocument(FXML, tempDir.toAbsolutePath().toUri().toURL(), null, null);
 
         List<FXOMScript> items = fxomDocument.getFxomRoot().collect(FxCollector.allFxScripts());
 
@@ -69,8 +117,8 @@ public class FxScriptCollectorTest {
     }
 
     @Test
-    public void should_return_the_right_number_of_fxincludes_by_source() {
-        FXOMDocument fxomDocument = FxmlUtil.fromFile(this, FxmlTestInfo.FX_SCRIPTS);
+    public void should_return_the_right_number_of_fxincludes_by_source() throws Exception {
+        FXOMDocument fxomDocument = new FXOMDocument(FXML, tempDir.toAbsolutePath().toUri().toURL(), null, null);
 
         String source = "script2.js";
         List<FXOMScript> items = fxomDocument.getFxomRoot().collect(FxCollector.fxScriptBySource(source));
@@ -78,18 +126,4 @@ public class FxScriptCollectorTest {
         assertEquals(2, items.size());
     }
 
-    private enum FxmlTestInfo implements FilenameProvider {
-        FX_SCRIPTS("fxScripts");
-
-        private String filename;
-
-        FxmlTestInfo(String filename) {
-            this.filename = filename;
-        }
-
-        @Override
-        public String getFilename() {
-            return filename;
-        }
-    }
 }

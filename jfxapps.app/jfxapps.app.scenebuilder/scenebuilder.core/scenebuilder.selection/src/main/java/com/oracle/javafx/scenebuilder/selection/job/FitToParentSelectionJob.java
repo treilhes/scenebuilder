@@ -40,27 +40,24 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.job.internal.FitToParentObjectJob;
+import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 
 import javafx.scene.layout.AnchorPane;
 
 /**
  * Only if parent object is {@link AnchorPane}
  * Force the selected objects {@link FXOMObject} to the same size of the parent {@link AnchorPane}
- * Subjob {@link FitToParentObjectJob}
+ * Subjob {@link SbJobsFactory#fitToParentObject(FXOMInstance)}
  */
 @Prototype
 public final class FitToParentSelectionJob extends BatchDocumentJob {
@@ -68,32 +65,32 @@ public final class FitToParentSelectionJob extends BatchDocumentJob {
     private static Logger logger = LoggerFactory.getLogger(FitToParentSelectionJob.class);
 
     private final Selection selection;
-    private final FitToParentObjectJob.Factory fitToParentObjectJobFactory;
+    private final SbJobsFactory sbJobsFactory;
 
  // @formatter:off
     protected FitToParentSelectionJob(
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             Selection selection,
-            FitToParentObjectJob.Factory fitToParentObjectJobFactory) {
+            SbJobsFactory sbJobsFactory) {
     // @formatter:on
         super(extensionFactory, documentManager);
         this.selection = selection;
-        this.fitToParentObjectJobFactory = fitToParentObjectJobFactory;
+        this.sbJobsFactory = sbJobsFactory;
     }
 
     public void setJobParameters() {
     }
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
+    protected List<Job> makeSubJobs() {
 
-        final List<AbstractJob> result = new ArrayList<>();
+        final List<Job> result = new ArrayList<>();
 
         final Set<FXOMInstance> candidates = new HashSet<>();
 
-        if (selection.getGroup() instanceof ObjectSelectionGroup) {
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
+        if (selection.getGroup() != null) {
+            final SelectionGroup osg = selection.getGroup();
             for (FXOMObject fxomObject : osg.getItems()) {
                 if (fxomObject instanceof FXOMInstance) {
                     candidates.add((FXOMInstance) fxomObject);
@@ -101,7 +98,7 @@ public final class FitToParentSelectionJob extends BatchDocumentJob {
             }
 
             for (FXOMInstance candidate : candidates) {
-                final AbstractJob subJob = fitToParentObjectJobFactory.getJob(candidate);
+                final Job subJob = sbJobsFactory.fitToParentObject(candidate);
                 if (subJob.isExecutable()) {
                     result.add(subJob);
                 } else {
@@ -112,11 +109,10 @@ public final class FitToParentSelectionJob extends BatchDocumentJob {
                 }
             }
         } else {
-            logger.warn("Not implemented for : " + selection.getGroup());
+            logger.warn("Not implemented for null groups: " + selection.getGroup());
 //            assert selection.getGroup() == null :
 //                    "Add implementation for " + selection.getGroup();
         }
-
 
         return result;
     }

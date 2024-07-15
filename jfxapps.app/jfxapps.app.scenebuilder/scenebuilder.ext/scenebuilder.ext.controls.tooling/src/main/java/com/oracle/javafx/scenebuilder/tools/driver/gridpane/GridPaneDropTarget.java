@@ -52,7 +52,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
 import com.gluonhq.jfxapps.core.job.editor.atomic.RemoveObjectJob;
-import com.gluonhq.jfxapps.util.GridBounds;
+import com.gluonhq.jfxapps.util.javafx.GridBounds;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.ClearSelectionJob;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.InsertAsSubComponentJob;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.UpdateSelectionJob;

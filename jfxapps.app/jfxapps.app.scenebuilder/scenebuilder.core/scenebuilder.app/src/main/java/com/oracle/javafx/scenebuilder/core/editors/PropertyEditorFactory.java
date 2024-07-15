@@ -46,6 +46,8 @@ import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.api.editors.EditorMapProvider;
+import com.oracle.javafx.scenebuilder.api.editors.PropertyEditor;
 
 @ApplicationSingleton
 public class PropertyEditorFactory {

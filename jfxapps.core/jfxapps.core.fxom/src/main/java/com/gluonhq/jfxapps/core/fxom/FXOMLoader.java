@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.core.fxom.ext.LoaderCapabilitiesManager;
 import com.gluonhq.jfxapps.core.fxom.glue.GlueCursor;
 import com.gluonhq.jfxapps.core.fxom.glue.GlueDocument;
+import com.gluonhq.jfxapps.core.fxom.util.FXMLLoaderInstrument;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.sun.javafx.fxml.FXMLLoaderHelper;
 
@@ -89,6 +90,7 @@ class FXOMLoader implements LoadListener {
         assert document != null;
         assert document.getGlue().getMainElement() != null;
         this.document = document;
+        //FXMLLoaderInstrument.preload();
     }
 
     public void load(String fxmlText) throws java.io.IOException {
@@ -103,6 +105,11 @@ class FXOMLoader implements LoadListener {
 
         classloader = new TransientClassLoader(classLoader);
         fxmlLoader = new FXMLLoader();
+
+        // instrumentation was tested here but a bit too early, commented until it is time to do it
+//        var instrument = FXMLLoaderInstrument.of(fxmlLoader);
+//        fxmlLoader = instrument.getInstrumentedLoader();
+
         fxmlLoader.setLocation(document.getLocation());
         fxmlLoader.setResources(new ResourceKeyCollector(document.getResources()));
         fxmlLoader.setClassLoader(classloader);

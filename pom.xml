@@ -19,10 +19,10 @@
         <module>jfxapps.app</module>
         <module>jfxapps.boot</module>
         <module>jfxapps.core</module>
-        <module>jfxapps.ext</module>
+        <!--<module>jfxapps.ext</module>-->
         <module>jfxapps.metadata</module>
         <module>jfxapps.registry</module>
-        
+
     </modules>
 
     <properties>
@@ -60,12 +60,12 @@
             <!-- jfxapps.app -->
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.app.starter</artifactId>
+                <artifactId>jfxapps.core.starter</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.app.starter.test</artifactId>
+                <artifactId>jfxapps.core.starter.test</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
 
@@ -200,6 +200,16 @@
             </dependency>-->
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>javafx.fxml.patch</artifactId>
+                <version>${jfxapps.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>javafx.fxml.patch.link</artifactId>
+                <version>${jfxapps.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.core.library</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
@@ -303,6 +313,13 @@
                 <version>${org.mapstruct.version}</version>
             </dependency>
 
+            <!-- https://mvnrepository.com/artifact/org.pdfsam.rxjava3/rxjavafx -->
+            <dependency>
+                <groupId>org.pdfsam.rxjava3</groupId>
+                <artifactId>rxjavafx</artifactId>
+                <version>${rxjavafx.version}</version>
+            </dependency>
+            
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -460,27 +477,30 @@
                     <configuration>
                         <!--<useIncrementalCompilation>false</useIncrementalCompilation>-->
                         <compilerArgs>
+
                             <arg>--add-exports</arg>
                             <arg>
                                 spring.core/org.springframework.core.patch=jfxapps.boot.layer</arg>
                             <arg>--add-exports</arg>
                             <arg>
-                                javafx.graphics/com.sun.javafx.geometry=scenebuilder.core.fxom</arg>
-                            <arg>--add-exports</arg>
-                            <arg>
                                 javafx.graphics/com.sun.javafx.geometry=jfxapps.core.api</arg>
-                            <arg>--add-exports</arg>
-                            <arg>
-                                javafx.graphics/com.sun.javafx.scene=scenebuilder.core.fxom</arg>
                             <arg>--add-exports</arg>
                             <arg>
                                 javafx.graphics/com.sun.javafx.scene=jfxapps.core.api</arg>
                             <arg>--add-exports</arg>
                             <arg>
-                                javafx.graphics/com.sun.javafx.scene=scenebuilder.fxml.api</arg>
+                                javafx.fxml/com.sun.javafx.fxml=jfxapps.core.fxom</arg>
                             <arg>--add-exports</arg>
                             <arg>
-                                javafx.fxml/com.sun.javafx.fxml=jfxapps.core.fxom</arg>
+                                javafx.graphics/com.sun.javafx.geometry=scenebuilder.core.fxom</arg>
+
+                            <arg>--add-exports</arg>
+                            <arg>
+                                javafx.graphics/com.sun.javafx.scene=scenebuilder.core.fxom</arg>
+                            <arg>--add-exports</arg>
+                            <arg>
+                                javafx.graphics/com.sun.javafx.scene=scenebuilder.fxml.api</arg>
+
                             <arg>--add-exports</arg>
                             <arg>
                                 javafx.graphics/com.sun.javafx.scene=scenebuilder.ext.css.analyser</arg>
@@ -502,6 +522,10 @@
                             </goals>
                             <configuration>
                                 <compilerArgs>
+
+                                    <arg>--add-exports</arg>
+                                    <arg>
+                                        javafx.graphics/com.sun.javafx.application=ALLUUU</arg>
                                     <arg>--add-exports</arg>
                                     <arg>
                                         javafx.graphics/com.sun.javafx.application=ALL-UNNAMED</arg>
@@ -570,6 +594,11 @@
                     <version>3.3.1-SNAPSHOT</version>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-invoker-plugin</artifactId>
+                    <version>3.2.2</version>
+                </plugin>
+                <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
                     <version>1.0.0</version>
@@ -578,8 +607,51 @@
                             <pluginExecutions>
                                 <pluginExecution>
                                     <pluginExecutionFilter>
+                                        <groupId>org.codehaus.mojo</groupId>
+                                        <artifactId>flatten-maven-plugin</artifactId>
+                                        <versionRange>[1.0.0,)</versionRange>
+                                        <goals>
+                                            <goal>flatten</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-jar-plugin</artifactId>
+                                        <versionRange>[1.0.0,)</versionRange>
+                                        <goals>
+                                            <goal>jar</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-invoker-plugin</artifactId>
+                                        <versionRange>[1.0.0,)</versionRange>
+                                        <goals>
+                                            <goal>run</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
                                         <groupId>com.gluonhq.jfxapps</groupId>
-                                        <artifactId>jfxapps-metadata-maven-plugin</artifactId>
+                                        <artifactId>
+                                            jfxapps-metadata-maven-plugin</artifactId>
                                         <versionRange>[1.0.0,)</versionRange>
                                         <goals>
                                             <goal>metadataSource</goal>

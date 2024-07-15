@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
 import com.gluonhq.jfxapps.core.fxom.ext.TransientStateBackup;
 
 import javafx.scene.control.Tab;
@@ -47,7 +48,7 @@ public class TabPaneStateBackup implements TransientStateBackup {
     private final Map<FXOMObject, FXOMObject> tabPaneMap = new HashMap<>();
     @Override
     public boolean canHandle(FXOMObject candidate) {
-        return candidate.getSceneGraphObject().get() instanceof TabPane;
+        return candidate.getSceneGraphObject().isInstanceOf(TabPane.class);
     }
 
     @Override
@@ -55,11 +56,10 @@ public class TabPaneStateBackup implements TransientStateBackup {
         final TabPane tabPane = candidate.getSceneGraphObject().getAs(TabPane.class);
         final Tab currentTab = tabPane.getSelectionModel().getSelectedItem();
         if (currentTab != null) {
-            final FXOMObject tabObject
-                    = candidate.searchWithSceneGraphObject(currentTab);
-            if (tabObject != null) {
-                tabPaneMap.put(candidate, tabObject);
-            }
+            final var tabObject
+                    = candidate.collect(SceneGraphCollector.findSceneGraphObject(currentTab));
+
+            tabObject.ifPresent(o -> tabPaneMap.put(candidate, o));
         }
     }
 

@@ -11,6 +11,8 @@
 
     <modules>
         <module>scenebuilder.metadata.customization</module>
+        <module>scenebuilder.metadata.javafx.fx</module>
+        <module>scenebuilder.metadata.sbjavafx</module>
     </modules>
     
     <build>
@@ -108,7 +110,7 @@
                         <javafxVersion>${javafx.version}</javafxVersion>
                         
                         <moduleRequires>
-                            <moduleRequire>scenebuilder.metadata</moduleRequire>
+                            <moduleRequire>scenebuilder.metadata.customization</moduleRequire>
                             <moduleRequire>javafx.swing</moduleRequire>
                             <moduleRequire>javafx.media</moduleRequire>
                             <moduleRequire>javafx.controls</moduleRequire>

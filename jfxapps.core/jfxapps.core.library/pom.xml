@@ -10,6 +10,11 @@
     </parent>
 
     <dependencies>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.api</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <!-- TODO remove those dependencies after refactor -->
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>

@@ -38,22 +38,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
@@ -68,13 +64,15 @@ import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 @Prototype
 public final class ModifyCacheHintJob extends BatchDocumentJob {
 
-    private int subJobCount = 0;
-    private final PropertyName cachePN = new PropertyName("cache"); //NOCHECK
-    private final PropertyName cacheHintPN = new PropertyName("cacheHint"); //NOCHECK
+    private static final PropertyName cachePN = new PropertyName("cache"); //NOCHECK
+    private static final PropertyName cacheHintPN = new PropertyName("cacheHint"); //NOCHECK
 
     private final Selection selection;
-    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
     private final SbMetadata metadata;
+
+    private int subJobCount = 0;
+
 
     protected ValuePropertyMetadata propertyMetadata;
     protected Object newValue;
@@ -84,13 +82,13 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
             DocumentManager documentManager,
             Selection selection,
             SbMetadata metadata,
-            ModifyObjectJob.Factory modifyObjectJobFactory) {
+            FxomJobsFactory fxomJobsFactory) {
         super(extensionFactory, documentManager);
         assert cacheHintPN.equals(propertyMetadata.getName());
 
         this.selection = selection;
         this.metadata = metadata;
-        this.modifyObjectJobFactory = modifyObjectJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
     }
 
     public void setJobParameters(ValuePropertyMetadata propertyMetadata, Object newValue) {
@@ -99,13 +97,13 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
     }
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
+    protected List<Job> makeSubJobs() {
 
-        final List<AbstractJob> result = new ArrayList<>();
+        final List<Job> result = new ArrayList<>();
         final Set<FXOMInstance> candidates = new HashSet<>();
 
-        if (selection.getGroup() instanceof ObjectSelectionGroup) {
-            final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
+        if (selection.getGroup() != null) {
+            final SelectionGroup osg = selection.getGroup();
             for (FXOMObject fxomObject : osg.getItems()) {
                 if (fxomObject instanceof FXOMInstance) {
                     candidates.add((FXOMInstance) fxomObject);
@@ -118,7 +116,7 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
         // Add ModifyObject jobs
         for (FXOMInstance fxomInstance : candidates) {
             // ModifyObject job for the cacheHint property
-            final AbstractJob subJob1 = modifyObjectJobFactory.getJob(null, fxomInstance, propertyMetadata, newValue);
+            final Job subJob1 = fxomJobsFactory.modifyObject(fxomInstance, propertyMetadata, newValue);
 
             if (subJob1.isExecutable()) {
                 result.add(subJob1);
@@ -127,7 +125,7 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
             // ModifyObject job for the cache property
             if ("DEFAULT".equals(newValue) == false) { //NOCHECK
                 final ValuePropertyMetadata cacheVPM = metadata.queryValueProperty(fxomInstance, cachePN);
-                final AbstractJob subJob2 = modifyObjectJobFactory.getJob(null, fxomInstance, cacheVPM, Boolean.TRUE);
+                final Job subJob2 = fxomJobsFactory.modifyObject(fxomInstance, cacheVPM, Boolean.TRUE);
                 if (subJob2.isExecutable()) {
                     result.add(subJob2);
                 }

@@ -182,24 +182,6 @@ public interface SelectionJobsFactory {
      * {@link FXOMDocument} with the provided {@link FXOMObject}<br/>
      * The provided {@link FXOMObject} is cleaned from obsolete properties
      * {@link FXOMProperty}<br/>
-     * and resized according user preferences.<br/>
-     *
-     * @param newRoot           the {@link FXOMObject} menat to be the new root of
-     *                          the current document
-     * @param usePredefinedSize if true, newRoot will be resized according user
-     *                          predefined size
-     * @param description       the job description
-     * @return the job to execute
-     */
-    Job setDocumentRoot(FXOMObject newRoot, boolean usePredefinedSize, String description);
-
-    /**
-     * updates the FXOM document at execution time. It set the root of a document
-     * {@link FXOMDocument} with the provided {@link FXOMObject}<br/>
-     * The provided {@link FXOMObject} is cleaned from obsolete properties
-     * {@link FXOMProperty}<br/>
-     *
-     * With default description (class name) and usePredefinedSize = false
      *
      * @param newRoot the {@link FXOMObject} menat to be the new root of the current
      *                document
@@ -234,6 +216,9 @@ public interface SelectionJobsFactory {
      * @return the job to execute
      */
     Job updateSelection(SelectionGroup group);
+
+    @Deprecated
+    Job insertAsSubComponent(FXOMObject newObject, FXOMObject targetObject, int targetIndex);
 
 
 }

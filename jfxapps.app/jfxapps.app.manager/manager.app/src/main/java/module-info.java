@@ -36,15 +36,17 @@ import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 
 open module jfxapps.app.manager.main {
     exports com.gluonhq.jfxapps.app.manager.main;
-    exports com.gluonhq.jfxapps.app.manager.main.api;
 
     //opens com.oracle.javafx.scenebuilder.app.manager.main.api to jfxapps.boot.context, javafx.fxml;
     //opens com.oracle.javafx.scenebuilder.app.manager.main.ui to jfxapps.boot.context, javafx.fxml;
     //opens com.oracle.javafx.scenebuilder.app.manager.main.ui.cmp to jfxapps.boot.context, javafx.fxml;
 
-    requires jfxapps.app.starter;
+    requires manager.api;
     requires manager.model;
-//    requires jfxapps.core.api;
+    requires jfxapps.core.starter;
+
+
+//
 //    requires jakarta.inject;
 //    requires scenebuilder.core.metadata;
 //    requires jfxapps.boot.context;

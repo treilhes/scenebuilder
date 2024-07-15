@@ -92,7 +92,7 @@ public final class InsertAsSubComponentJob extends BatchSelectionJob {
         this.objectSelectionGroupFactory = objectSelectionGroupFactory;
     }
 
-    protected void setJobParameters(FXOMObject newObject, FXOMObject targetObject, int targetIndex) {
+    public void setJobParameters(FXOMObject newObject, FXOMObject targetObject, int targetIndex) {
         assert newObject != null;
         assert targetObject != null;
         assert targetIndex >= -1;

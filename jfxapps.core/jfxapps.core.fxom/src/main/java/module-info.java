@@ -57,11 +57,14 @@ open module jfxapps.core.fxom {
     requires org.slf4j;
 
     requires jfxapps.core.utils;
+    requires jfxapps.javafx.fxml.patch.link;
+
     requires java.scripting;
     requires javafx.fxml;
     requires javafx.controls;
     requires java.xml;
     requires java.desktop;
+    requires net.bytebuddy;
 
     uses FXOMNormalizer;
     uses FXOMRefresher;

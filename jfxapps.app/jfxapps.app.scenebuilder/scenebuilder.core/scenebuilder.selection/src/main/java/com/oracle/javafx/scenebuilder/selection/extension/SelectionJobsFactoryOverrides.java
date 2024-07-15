@@ -69,5 +69,8 @@ public class SelectionJobsFactoryOverrides extends JobFactory<Job> {
         return create(PasteIntoJob.class, j -> j.setJobParameters());
     }
 
+    public Job setDocumentRoot(FXOMObject newRoot) {
+        return create(SetDocumentRootJob.class, j -> j.setJobParameters(newRoot, true));
+    }
 
 }

@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.dnd.controller;
 
-import java.util.Set;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -148,14 +148,14 @@ public class DragController implements Drag {
         if (committedDropTarget != null) {
             assert committedDropTarget.acceptDragSource(getDragSource());
 
-            final AbstractJob dropJob = committedDropTarget.makeDropJob(getDragSource());
+            final var dropJob = committedDropTarget.makeDropJob(getDragSource());
 
-            final SelectionGroup selectionGroup = defaultSelectionGroupFactory
+            final var selectionGroup = defaultSelectionGroupFactory
                     .getGroup(getDragSource().getDraggedObjects(), null, null);
 
-            final Job selectJob = selectionJobFactory.updateSelection(selectionGroup);
+            final var selectJob = selectionJobFactory.updateSelection(selectionGroup);
 
-            final BatchJob batchJob = batchJobFactory.getJob();
+            final var batchJob = batchJobFactory.getJob();
             batchJob.setDescription(dropJob.getDescription());
 
             if (committedDropTarget.isSelectRequiredAfterDrop()) {
@@ -219,12 +219,12 @@ public class DragController implements Drag {
             assert getDropTarget().acceptDragSource(getDragSource());
             assert getDragSource().getDraggedObjects().isEmpty() == false;
 
-            final Set<? extends FXOMObject> items = getDragSource().getDraggedObjects();
+            final List<? extends FXOMObject> items = getDragSource().getDraggedObjects();
 
             items.stream().findFirst().ifPresent(firstObject -> {
 
-                final FXOMObject currentParent = firstObject.getParentObject();
-                final FXOMObject nextParent = getDropTarget().getTargetObject();
+                final var currentParent = firstObject.getParentObject();
+                final var nextParent = getDropTarget().getTargetObject();
 
                 logger.debug("Drop accepted from {} to {} for {} objects",
                         currentParent == null ? "null" : currentParent.getClass().getName(),
@@ -339,13 +339,13 @@ public class DragController implements Drag {
             // dragSource is dragged over an empty document
             result = false;
         } else {
-            final Set<? extends FXOMObject> draggedObjects = getDragSource().getDraggedObjects();
-            final FXOMPath dropTargetPath = new FXOMPath(newDropTarget.getTargetObject());
+            final var draggedObjects = getDragSource().getDraggedObjects();
+            final var dropTargetPath = FXOMPath.of(newDropTarget.getTargetObject());
 
             result = false;
             for (FXOMObject draggedObject : draggedObjects) {
-                final FXOMPath draggedObjectPath = new FXOMPath(draggedObject);
-                final FXOMPath commonPath = draggedObjectPath.getCommonPathWith(dropTargetPath);
+                final var draggedObjectPath = FXOMPath.of(draggedObject);
+                final var commonPath = draggedObjectPath.getCommonPathWith(dropTargetPath);
                 // If one of the dragged objects is in the parent chain
                 // of the drop target, we abort the DND gesture
                 if (commonPath.equals(draggedObjectPath)) {

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,25 +31,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.draganddrop.DragAndDropExtension;
-import com.oracle.javafx.scenebuilder.extension.Extension;
 
 open module scenebuilder.fxml.core.drag.and.drop{
     exports com.oracle.javafx.scenebuilder.draganddrop.droptarget;
     exports com.oracle.javafx.scenebuilder.draganddrop;
-    exports com.oracle.javafx.scenebuilder.draganddrop.controller;
 
-    requires scenebuilder.starter;
-//    requires javafx.base;
-//    requires javafx.graphics;
-    requires scenebuilder.core.jobs;
-    requires scenebuilder.core.selection;
-    //requires org.slf4j;
-    requires transitive scenebuilder.core.core;
-    requires scenebuilder.core.extension.api;
-//    requires spring.beans;
-//    requires spring.context;
-//    requires spring.core;
+    requires transitive scenebuilder.api;
+    requires jfxapps.core.utils;
+    requires scenebuilder.app.starter;
 
     provides Extension with DragAndDropExtension;
 }

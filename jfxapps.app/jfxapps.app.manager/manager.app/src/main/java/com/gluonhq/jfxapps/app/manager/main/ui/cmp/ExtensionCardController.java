@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.app.manager.main.ui.cmp;
 
-import com.gluonhq.jfxapps.app.manager.main.api.ExtensionCard;
+import com.gluonhq.jfxapps.app.manager.api.ui.ExtensionCard;
 import com.gluonhq.jfxapps.app.manager.model.Extension;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;

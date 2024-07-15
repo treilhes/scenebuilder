@@ -36,43 +36,19 @@ package com.oracle.javafx.scenebuilder.selection;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.selection.SbSelectionJobsFactory;
-import com.oracle.javafx.scenebuilder.selection.job.AddContextMenuToSelectionJob;
-import com.oracle.javafx.scenebuilder.selection.job.AddTooltipToSelectionJob;
+import com.oracle.javafx.scenebuilder.selection.extension.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.selection.job.FitToParentSelectionJob;
 import com.oracle.javafx.scenebuilder.selection.job.ModifyCacheHintJob;
 import com.oracle.javafx.scenebuilder.selection.job.UseComputedSizesSelectionJob;
 
-import javafx.scene.layout.AnchorPane;
-
 public class SbSelectionJobsFactoryImpl extends JobFactory<Job> implements SbSelectionJobsFactory {
     public SbSelectionJobsFactoryImpl(JfxAppContext context) {
         super(context);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * Create an {@link AddContextMenuToSelectionJob} job
-     *
-     */
-    @Deprecated
-    @Override
-    public Job addContextMenuToSelection() {
-        return create(AddContextMenuToSelectionJob.class, j -> j.setJobParameters());
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * Create an {@link AddTooltipToSelectionJob} job
-     */
-    @Deprecated
-    @Override
-    public Job addTooltipToSelection() {
-        return create(AddTooltipToSelectionJob.class, j -> j.setJobParameters());
     }
 
     /**
@@ -104,4 +80,14 @@ public class SbSelectionJobsFactoryImpl extends JobFactory<Job> implements SbSel
     public Job useComputedSizesSelection() {
         return create(UseComputedSizesSelectionJob.class, j -> j.setJobParameters());
     }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Job setDocumentRoot(FXOMObject newRoot, boolean usePredefinedSize) {
+        return create(SetDocumentRootJob.class, j -> j.setJobParameters(newRoot, usePredefinedSize));
+    }
+
 }

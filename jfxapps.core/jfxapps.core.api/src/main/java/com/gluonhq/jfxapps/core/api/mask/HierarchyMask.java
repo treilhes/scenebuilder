@@ -79,11 +79,11 @@ public interface HierarchyMask<A extends Accessory> {
 
     public boolean isAcceptingSubComponent(FXOMObject newObject);
 
-    public boolean isAcceptingSubComponent(Collection<FXOMObject> fxomObjects);
+    public boolean isAcceptingSubComponent(Collection<? extends FXOMObject> fxomObjects);
 
     public List<FXOMObject> getSubComponents(boolean includeVirtuals);
 
-    public boolean isAcceptingAccessory(A targetAccessory, Collection<FXOMObject> draggedObject);
+    public boolean isAcceptingAccessory(A targetAccessory, Collection<? extends FXOMObject> draggedObject);
 
     public String getFxId();
 

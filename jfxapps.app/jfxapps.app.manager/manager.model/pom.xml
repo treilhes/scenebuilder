@@ -12,12 +12,17 @@
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.app.starter</artifactId>
+            <artifactId>jfxapps.core.api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.app.starter.test</artifactId>
+            <artifactId>jfxapps.core.starter</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.starter.test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

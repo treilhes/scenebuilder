@@ -27,7 +27,7 @@ jfxapps:
         path: ../../jfxapps.core/jfxapps.core.utils/target/classes
       - groupId: com.gluonhq.jfxapps
         artifactId: jfxapps.app.manager.main
-        path: ../../jfxapps.app/jfxapps.app.manager/jfxapps.app.manager.main/target/classes
+        path: ../../jfxapps.app/jfxapps.app.manager/manager.app/target/classes
 
 server:
   port: 8080
