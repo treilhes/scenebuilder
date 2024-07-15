@@ -38,6 +38,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * An annotation to indicate that a bean should only be injected from the local context.
+ * This is useful when you want to inject a bean that is available in the local context
+ * and also in one or more parent contexts, but you want to make sure that the local
+ * instance is injected.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.FIELD})
 public @interface LocalContextOnly {
