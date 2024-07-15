@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.LocalContextOnly;
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 
 @RestController
@@ -47,9 +48,9 @@ public class JfxAppsExtensionRestController {
 
     private final Extension extension;
 
-    public JfxAppsExtensionRestController(JfxAppContext context) {
+    public JfxAppsExtensionRestController(@LocalContextOnly Extension extension) {
         super();
-        this.extension = context.getLocalBean(Extension.class);;
+        this.extension = extension;
     }
 
     @GetMapping

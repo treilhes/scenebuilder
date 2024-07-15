@@ -362,24 +362,19 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
      */
     @Bean("entityManagerFactory")
     LocalContainerEntityManagerFactoryBean localEntityManagerFactory(DataSource dataSource,
-            JpaVendorAdapter jpaVendorAdapter, List<Extension> ext, JfxAppContext ctx) {
-        LocalContainerEntityManagerFactoryBean em = null;
+            JpaVendorAdapter jpaVendorAdapter, @LocalContextOnly Extension extension, JfxAppContext ctx) {
 
         //FIXME : we should be able to get the package name from the extension
         // directly from the annotations, instead this dirty solution provides the extension package name
         // as the root package to scan for the entitiess
-        var packageName = ext.stream()
-                .filter(e -> e.getClass().getClassLoader() == ctx.getBeanClassLoader())
-                .map(e -> e.getClass().getPackageName()).findAny();
+        var packageName = extension.getClass().getPackageName();
 
-        if (packageName.isPresent()) {
-            em = new LocalContainerEntityManagerFactoryBean();
-            em.setDataSource(dataSource);
-            em.setJpaVendorAdapter(jpaVendorAdapter);
-            em.setPersistenceUnitPostProcessors(new JfxAppsPersistenceRulesCheck());
-            em.setPackagesToScan(packageName.get());
-            em.setJpaProperties(hibernateProperties());
-        }
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(dataSource);
+        em.setJpaVendorAdapter(jpaVendorAdapter);
+        em.setPersistenceUnitPostProcessors(new JfxAppsPersistenceRulesCheck());
+        em.setPackagesToScan(packageName);
+        em.setJpaProperties(hibernateProperties());
 
         return em;
     }
@@ -388,7 +383,6 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
      * This method is used to create the transaction manager for the local context
      * Mainly here to propagate the classloader
      */
-    @ConditionalOnBean(name = "entityManagerFactory")
     @Bean(name = "transactionManager")
     PlatformTransactionManager localTransactionManager(EntityManagerFactory factory, DataSource dataSource) {
         JpaTransactionManager tm = new JpaTransactionManager();
