@@ -39,10 +39,10 @@ import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.di.SbPlatform;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.DefaultMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.gluonhq.jfxapps.ext.scenicview.controller.ScenicViewStarter;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 @Prototype
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")

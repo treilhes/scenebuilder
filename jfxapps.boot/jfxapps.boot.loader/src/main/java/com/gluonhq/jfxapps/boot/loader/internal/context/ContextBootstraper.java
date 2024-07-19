@@ -186,7 +186,6 @@ public class ContextBootstraper {
         extensionLocalClasses.addAll(findLocalClasses(loader, parentContextId, currentLayer));
 
         classes.addAll(childrenExportedClasses);
-        classes.addAll(extensionLocalClasses);
         classes.addAll(DefaultExtensionContextConfig.classesToRegister);
 
         boolean isSealed = loader.loadService(currentLayer, Extension.class).stream()
@@ -206,9 +205,16 @@ public class ContextBootstraper {
             }
         }
 
-//        if (parent != null) {
-//            classes.addAll(parent.getBeanClassesForType(BeanPostProcessor.class));
-//        }
+        if (parent != null) {
+            classes.addAll(extensionLocalClasses);
+        } else {
+            // root extension is the only one to deport local classes
+            final var partionedByDeportable = extensionLocalClasses.stream()
+                    .collect(Collectors.partitioningBy(this::isDeportableClass));
+
+            classes.addAll(partionedByDeportable.get(Boolean.FALSE));
+            childrenDeportedClasses.addAll(partionedByDeportable.get(Boolean.TRUE));
+        }
 
         ClassLoader classloader = currentLayer.getLoader();
         JfxAppContext context = contextManager.create(parentContextId, layerId, classloader, classes, childrenDeportedClasses, singletonInstances,
@@ -218,12 +224,13 @@ public class ContextBootstraper {
     }
 
     /**
-     * Accept class in sealed extension.
-     *
+     * true if the class is annotated with one of the deportable annotations.
+     * A deportable class is a class that is not registered in the context but is
+     * deported to a child context for loading.
      * @param cls the cls
      * @return true, if successful
      */
-    private boolean acceptClassInSealedExtension(Class<?> cls) {
+    private boolean isDeportableClass(Class<?> cls) {
         return deportableAnnotations.stream().anyMatch(a -> cls.getDeclaredAnnotationsByType(a).length > 0);
     }
 
@@ -275,7 +282,7 @@ public class ContextBootstraper {
                     .map(OpenExtension.class::cast)
                     .peek(e -> validateExtension(e, extensionId, parentId))
                     .flatMap(e -> e.exportedContextClasses().stream())
-                    .collect(Collectors.groupingBy(c -> acceptClassInSealedExtension(c) ? ExportType.DEPORTED : ExportType.EXPORTED));
+                    .collect(Collectors.groupingBy(c -> isDeportableClass(c) ? ExportType.DEPORTED : ExportType.EXPORTED));
 
         } catch (InvalidExtensionException.Unchecked e) {
             throw new InvalidExtensionException(e);

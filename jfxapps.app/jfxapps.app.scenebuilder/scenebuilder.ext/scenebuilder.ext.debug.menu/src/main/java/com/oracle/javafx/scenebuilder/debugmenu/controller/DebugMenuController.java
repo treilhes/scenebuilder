@@ -45,10 +45,10 @@ import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.DebugMenu;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.DefaultMenu;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.util.MathUtils;
+import com.oracle.javafx.scenebuilder.api.menu.DebugMenu;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -30,9 +31,17 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.api.ui.controller.menu;
+package com.gluonhq.jfxapps.app.manager.api.menu;
 
-public interface DebugMenu {
-    public void show();
-    public void hide();
+public interface DefaultMenu {
+	public final static String FILE_MENU_ID = "fileMenu";//NOCHECK
+	public final static String EDIT_MENU_ID = "editMenu";//NOCHECK
+	public final static String VIEW_MENU_ID = "viewMenu";//NOCHECK
+	//public final static String INSERT_MENU_ID = "insertMenu";//NOCHECK
+	public final static String MODIFY_MENU_ID = "modifyMenu";//NOCHECK
+	public final static String ARRANGE_MENU_ID = "arrangeMenu";//NOCHECK
+	public final static String PREVIEW_MENU_ID = "previewMenu";//NOCHECK
+	public final static String WINDOW_MENU_ID = "windowMenu";//NOCHECK
+	public final static String HELP_MENU_ID = "helpMenu"; //NOCHECK
+	public final static String DEBUG_MENU_ID = "debugMenu";//NOCHECK
 }

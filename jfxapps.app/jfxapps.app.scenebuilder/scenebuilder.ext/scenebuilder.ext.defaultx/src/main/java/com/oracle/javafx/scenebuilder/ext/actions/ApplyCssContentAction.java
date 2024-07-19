@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,27 +36,23 @@ package com.oracle.javafx.scenebuilder.ext.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithDocument;
-import com.gluonhq.jfxapps.core.api.theme.StylesheetProvider;
+import com.gluonhq.jfxapps.core.api.css.StylesheetProvider;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Prototype
 @ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report")
 public class ApplyCssContentAction extends AbstractAction implements InitWithDocument {
 
     private ApplyCssContentConfig config;
 
-    private final FxmlDocumentManager documentManager;
+    private final DocumentManager documentManager;
 
-    public ApplyCssContentAction(ActionExtensionFactory extensionFactory, FxmlDocumentManager documentManager) {
+    public ApplyCssContentAction(ActionExtensionFactory extensionFactory, DocumentManager documentManager) {
         super(extensionFactory);
         this.documentManager = documentManager;
     }

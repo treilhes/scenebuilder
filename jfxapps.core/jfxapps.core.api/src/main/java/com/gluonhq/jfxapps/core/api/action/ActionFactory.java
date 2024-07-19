@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,10 +34,10 @@
 package com.gluonhq.jfxapps.core.api.action;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
 
-@Singleton
+@ApplicationInstanceSingleton
 public final class ActionFactory extends AbstractFactory<Action> {
 
     public ActionFactory(JfxAppContext sbContext) {

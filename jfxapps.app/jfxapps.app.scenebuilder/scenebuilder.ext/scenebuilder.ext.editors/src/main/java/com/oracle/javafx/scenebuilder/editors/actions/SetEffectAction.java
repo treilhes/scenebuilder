@@ -54,7 +54,6 @@ import com.gluonhq.jfxapps.core.api.application.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.DefaultMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
@@ -64,6 +63,7 @@ import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.control.effect.EffectProvider;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.ModifySelectionJob;
 
 import javafx.scene.Node;

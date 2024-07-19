@@ -74,7 +74,24 @@
                                             <version>${project.version}</version>
                                         </dependency>
                                     </extension>
+                                    <extension>
+                                        <uuid>628bafb6-dea7-4bac-b0dc-9044683d7877</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>jfxapps.core.menu</artifactId>
+                                            <version>${project.version}</version>
+                                        </dependency>
+                                    </extension>
                                     
+                                    <!-- temp -->
+                                    <extension>
+                                        <uuid>be3f6ad5-2591-485a-b2e8-8d714cbd6b2a</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>jfxapps.ext.about</artifactId>
+                                            <version>${jfxapps.version}</version>
+                                        </dependency>
+                                    </extension>
                                 </extensions>
                             </application>
                         </applications>

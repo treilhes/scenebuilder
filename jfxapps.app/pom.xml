@@ -14,4 +14,9 @@
       <module>jfxapps.app.manager</module>
       <!--<module>jfxapps.app.scenebuilder</module>-->
   </modules>
+  
+  <properties>
+      <manager.version>1.0.0-SNAPSHOT</manager.version>
+      <scenebuilder.version>17.0.0-SNAPSHOT</scenebuilder.version>
+  </properties>
 </project>

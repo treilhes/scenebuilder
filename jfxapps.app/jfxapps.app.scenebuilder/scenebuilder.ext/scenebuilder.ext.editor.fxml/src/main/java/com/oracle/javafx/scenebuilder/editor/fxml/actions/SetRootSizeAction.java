@@ -48,12 +48,12 @@ import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.DefaultMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.job.editor.UsePredefinedSizeJob;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;

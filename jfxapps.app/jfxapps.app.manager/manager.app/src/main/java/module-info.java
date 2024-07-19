@@ -36,6 +36,7 @@ import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 
 open module jfxapps.app.manager.main {
     exports com.gluonhq.jfxapps.app.manager.main;
+    exports com.gluonhq.jfxapps.app.manager.main.menu;
 
     //opens com.oracle.javafx.scenebuilder.app.manager.main.api to jfxapps.boot.context, javafx.fxml;
     //opens com.oracle.javafx.scenebuilder.app.manager.main.ui to jfxapps.boot.context, javafx.fxml;

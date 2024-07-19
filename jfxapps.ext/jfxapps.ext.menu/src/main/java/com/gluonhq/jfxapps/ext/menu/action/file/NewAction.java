@@ -41,10 +41,10 @@ import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.DefaultMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.gluonhq.jfxapps.ext.menu.action.LoadBlankAction;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 @Prototype
 @ActionMeta(

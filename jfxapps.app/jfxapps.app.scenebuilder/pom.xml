@@ -16,10 +16,6 @@
         <module>scenebuilder.ext</module>
         <module>scenebuilder.gluon</module>
     </modules>
-    
-    <properties>
-        <scenebuilder.version>17.0.0-SNAPSHOT</scenebuilder.version>
-    </properties>
 
     <dependencyManagement>
         <dependencies>

@@ -61,7 +61,6 @@ import com.gluonhq.jfxapps.core.ui.dock.preferences.document.LastViewVisibilityP
 import com.gluonhq.jfxapps.core.ui.editor.messagelog.MessageLog;
 import com.gluonhq.jfxapps.core.ui.i18n.I18NLayout;
 import com.gluonhq.jfxapps.core.ui.inlineedit.InlineEditController;
-import com.gluonhq.jfxapps.core.ui.menubar.MenuBarController;
 import com.gluonhq.jfxapps.core.ui.message.MessageBarController;
 import com.gluonhq.jfxapps.core.ui.message.MessagePanelController;
 import com.gluonhq.jfxapps.core.ui.message.MessagePopupController;
@@ -102,7 +101,6 @@ public class BaseUiExtension implements OpenExtension {
 
                 //EditorInstancesController.class,
                 MaximizedPreference.class,
-                MenuBarController.class,
                 MessageBarController.class,
                 MessageLog.class,
                 MessagePanelController.class,

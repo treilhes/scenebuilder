@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,22 +30,9 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.oracle.javafx.scenebuilder.ext.BasicThemeAndResourceExtension;
+package com.oracle.javafx.scenebuilder.api.menu;
 
-open module scenebuilder.ext.defaultx {
-    exports com.oracle.javafx.scenebuilder.ext.theme.group;
-    exports com.oracle.javafx.scenebuilder.ext.controller;
-    exports com.oracle.javafx.scenebuilder.ext.menu;
-    exports com.oracle.javafx.scenebuilder.ext;
-    exports com.oracle.javafx.scenebuilder.ext.theme;
-    exports com.oracle.javafx.scenebuilder.ext.theme.global;
-    exports com.oracle.javafx.scenebuilder.ext.actions;
-    exports com.oracle.javafx.scenebuilder.ext.theme.document;
-
-    //requires scenebuilder.starter;
-    requires transitive scenebuilder.api;
-    requires transitive jfxapps.core.api;
-
-    provides Extension with BasicThemeAndResourceExtension;
+public interface DebugMenu {
+    public void show();
+    public void hide();
 }

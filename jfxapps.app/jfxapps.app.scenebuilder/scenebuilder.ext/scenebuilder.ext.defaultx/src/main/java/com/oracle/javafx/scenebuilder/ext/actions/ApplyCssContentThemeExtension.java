@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,25 +33,21 @@
  */
 package com.oracle.javafx.scenebuilder.ext.actions;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractActionExtension;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@Prototype
 public class ApplyCssContentThemeExtension extends AbstractActionExtension<ApplyCssContentAction> {
 
     private final ThemeDocumentPreference themePreference;
-    private final SceneBuilderBeanFactory context;
+    private final JfxAppContext context;
 
-    public ApplyCssContentThemeExtension(@Autowired SceneBuilderBeanFactory context,
-            @Autowired @Lazy ThemeDocumentPreference themePreference) {
+    public ApplyCssContentThemeExtension(JfxAppContext context, @Lazy ThemeDocumentPreference themePreference) {
         super();
         this.context = context;
         this.themePreference = themePreference;

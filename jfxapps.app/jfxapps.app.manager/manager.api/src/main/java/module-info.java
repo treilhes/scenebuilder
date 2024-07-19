@@ -36,6 +36,7 @@ import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 
 open module manager.api {
     exports com.gluonhq.jfxapps.app.manager.api;
+    exports com.gluonhq.jfxapps.app.manager.api.menu;
     exports com.gluonhq.jfxapps.app.manager.api.ui;
 
     requires transitive jfxapps.core.api;

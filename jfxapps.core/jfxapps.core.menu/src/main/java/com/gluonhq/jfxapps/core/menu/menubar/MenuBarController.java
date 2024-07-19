@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.ui.menubar;
+package com.gluonhq.jfxapps.core.menu.menubar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,9 +45,10 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
@@ -76,7 +77,7 @@ import javafx.scene.layout.StackPane;
 /**
  *
  */
-@com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton
+@ApplicationInstanceSingleton
 //@Conditional(EditorPlatform.IS_MAC_CONDITION.class)
 public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBar {
     private final static Logger logger = LoggerFactory.getLogger(MenuBarController.class);
@@ -135,7 +136,7 @@ public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.contro
     @PostConstruct
     public void init() throws Exception {
         systemMenuBarController = this;
-        // setupMenuBar()
+        //setupMenuBar();
     }
 
     private void setupMenuBar() {
@@ -464,7 +465,7 @@ public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.contro
     public MenuBar getMenuBar() {
 
         if (menuBar == null) {
-            FXMLUtils.load(this, "MenuBar.fxml");
+            FXMLUtils.load(this, MenuBarController.class.getResource("MenuBar.fxml"), I18N.getBundle());
             controllerDidLoadFxml();
         }
 

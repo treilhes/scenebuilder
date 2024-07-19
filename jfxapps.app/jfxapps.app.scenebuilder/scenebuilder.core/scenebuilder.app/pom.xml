@@ -15,6 +15,7 @@
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>scenebuilder.api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>

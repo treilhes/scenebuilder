@@ -81,6 +81,7 @@ import org.springdoc.webmvc.ui.SwaggerUiHome;
 import org.springdoc.webmvc.ui.SwaggerWebMvcConfigurer;
 import org.springdoc.webmvc.ui.SwaggerWelcomeCommon;
 import org.springdoc.webmvc.ui.SwaggerWelcomeWebMvc;
+import org.springframework.aop.TargetSource;
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -90,11 +91,13 @@ import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
+import org.springframework.lang.Nullable;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -142,6 +145,7 @@ import jakarta.servlet.ServletException;
  * extension.<br/>
  * <br/>
  * The following main features are supported:<br/>
+ * - local optional application.properties for the extension context<br/>
  * - JPA repositories<br/>
  * - Transaction management<br/>
  * - Aspect oriented programming<br/>
@@ -151,10 +155,11 @@ import jakarta.servlet.ServletException;
  *
  */
 @Configuration
-@EnableAspectJAutoProxy(proxyTargetClass = true)
+//@EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableJpaRepositories
 @EnableTransactionManagement
 @EnableWebMvc
+@PropertySource(value = "classpath:/application.properties", ignoreResourceNotFound = true)
 public class DefaultExtensionContextConfig implements WebMvcConfigurer {
 
     private final static Logger logger = LoggerFactory.getLogger(DefaultExtensionContextConfig.class);
@@ -200,10 +205,23 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
             JacksonAutoConfiguration.class);
 
     @Bean
+    @Order(Ordered.HIGHEST_PRECEDENCE)
     AnnotationAwareAspectJAutoProxyCreator annotationAwareAspectJAutoProxyCreator() {
-        final var processor = new AnnotationAwareAspectJAutoProxyCreator();
+        final var processor = new MyAnnotationAwareAspectJAutoProxyCreator();
         processor.setProxyTargetClass(true);
+        processor.setBeanClassLoader(context.getBeanClassLoader());
         return processor;
+
+    }
+
+    public static class MyAnnotationAwareAspectJAutoProxyCreator extends AnnotationAwareAspectJAutoProxyCreator {
+
+        @Override
+        protected Object createProxy(Class<?> beanClass, @Nullable String beanName,
+                @Nullable Object[] specificInterceptors, TargetSource targetSource) {
+            this.setProxyClassLoader(beanClass.getClassLoader());
+            return super.createProxy(beanClass, beanName, specificInterceptors, targetSource);
+        }
 
     }
 
@@ -621,4 +639,5 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
           .title(context.getId().toString());
       return new OpenAPI().info(info);
     }
+
 }

@@ -20,13 +20,22 @@ jfxapps:
         artifactId: jfxapps.core.filesystem
         path: ../../jfxapps.core/jfxapps.core.filesystem/target/classes
       - groupId: com.gluonhq.jfxapps
+        artifactId: jfxapps.core.menu
+        path: ../../jfxapps.core/jfxapps.core.menu/target/classes
+      - groupId: com.gluonhq.jfxapps
         artifactId: jfxapps.core.preferences
         path: ../../jfxapps.core/jfxapps.core.preferences/target/classes
       - groupId: com.gluonhq.jfxapps
         artifactId: jfxapps.core.utils
         path: ../../jfxapps.core/jfxapps.core.utils/target/classes
       - groupId: com.gluonhq.jfxapps
-        artifactId: jfxapps.app.manager.main
+        artifactId: jfxapps.ext.about
+        path: ../../jfxapps.ext/jfxapps.ext.about/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: manager.api
+        path: ../../jfxapps.app/jfxapps.app.manager/manager.api/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: manager.app
         path: ../../jfxapps.app/jfxapps.app.manager/manager.app/target/classes
 
 server:

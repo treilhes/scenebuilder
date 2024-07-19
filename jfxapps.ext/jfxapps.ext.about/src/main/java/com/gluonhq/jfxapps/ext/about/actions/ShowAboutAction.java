@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.ext.about.actions;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
@@ -44,7 +44,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttach
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.ext.about.controller.AboutWindowController;
 
-@Prototype
+@ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
 @MenuItemAttachment(
         id = ShowAboutAction.ABOUT_MENU_ID,
@@ -76,7 +76,7 @@ public class ShowAboutAction extends AbstractAction {
     @Override
     public ActionStatus doPerform() {
         aboutWindowController.openWindow();
-        iconSetting.setWindowIcon(aboutWindowController.getStage());
+        //iconSetting.setWindowIcon(aboutWindowController.getStage());
         return ActionStatus.DONE;
     }
 }

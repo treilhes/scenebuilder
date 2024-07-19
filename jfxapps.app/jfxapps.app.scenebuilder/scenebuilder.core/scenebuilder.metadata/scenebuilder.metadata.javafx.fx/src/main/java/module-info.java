@@ -5,7 +5,7 @@ module scenebuilder.metadata.javafx.fx {
     requires javafx.controls;
     requires javafx.graphics;
     requires jfxapps.boot.loader;
-    requires jfxapps.core.api;
+    //requires jfxapps.core.api;
     requires jfxapps.core.fxom;
     requires jfxapps.core.metadata;
     requires scenebuilder.metadata.customization;

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.ui.controller.menu;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
@@ -62,17 +63,21 @@ public class MenuBuilder {
     private static final Logger logger = LoggerFactory.getLogger(MenuBuilder.class);
 
     private final ActionFactory actionFactory;
-    private final Accelerators acceleratorsController;
+    private final Optional<Accelerators> acceleratorsController;
     private final JfxAppContext context;
 
     public MenuBuilder(
             ActionFactory actionFactory,
-            Accelerators acceleratorsController,
+            Optional<Accelerators> acceleratorsController,
             JfxAppContext context) {
         super();
         this.actionFactory = actionFactory;
         this.acceleratorsController = acceleratorsController;
         this.context = context;
+
+        if (!this.acceleratorsController.isPresent()) {
+            logger.warn("No Accelerators instance found custom shortcuts disabled!");
+        }
     }
 
     public InternalMenuBuilder menu() {
@@ -221,12 +226,12 @@ public class MenuBuilder {
 
             if (viewClass != null) {
                 if (AbstractCommonUiController.class.isAssignableFrom(viewClass)) {
-                    acceleratorsController.bind(action, item, (Class<? extends AbstractCommonUiController>)viewClass);
+                    acceleratorsController.ifPresent(a -> a.bind(action, item, (Class<? extends AbstractCommonUiController>)viewClass));
                 } else {
                     logger.error("The view {} does not inherit from {}. View accelerators discarded !", viewClass, AbstractCommonUiController.class);
                 }
             } else {
-                acceleratorsController.bind(action, item);
+                acceleratorsController.ifPresent(a -> a.bind(action, item));
             }
 
 

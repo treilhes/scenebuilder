@@ -37,7 +37,6 @@ import com.gluonhq.jfxapps.core.ui.BaseUiExtension;
 open module jfxapps.core.ui {
     exports com.gluonhq.jfxapps.core.ui.preferences.document;
     exports com.gluonhq.jfxapps.core.ui.editor.messagelog;
-    exports com.gluonhq.jfxapps.core.ui.menubar;
     exports com.gluonhq.jfxapps.core.ui.controller;
     exports com.gluonhq.jfxapps.core.ui.dialog;
     exports com.gluonhq.jfxapps.core.ui.i18n;

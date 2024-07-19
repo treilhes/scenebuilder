@@ -12,11 +12,17 @@
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.starter</artifactId>
+            <artifactId>scenebuilder.metadata.customization</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>scenebuilder.metadata.customization</artifactId>
+            <artifactId>jfxapps.core.metadata</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.starter</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>

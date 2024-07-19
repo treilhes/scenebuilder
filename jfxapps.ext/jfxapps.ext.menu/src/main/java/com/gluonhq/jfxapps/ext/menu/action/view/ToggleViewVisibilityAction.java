@@ -53,12 +53,12 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.DefaultMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.ext.menu.action.AbstractToggleViewVisibilityAction;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 
 import javafx.scene.control.Menu;

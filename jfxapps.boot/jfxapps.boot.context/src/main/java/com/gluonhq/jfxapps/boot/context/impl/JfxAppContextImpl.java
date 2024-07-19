@@ -380,7 +380,7 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
                 if (dependencyType.isInterface()) {
                     pf.addInterface(dependencyType);
                 }
-                return pf.getProxy(getBeanClassLoader());
+                return pf.getProxy(dependencyType.getClassLoader());
             }
 
         }

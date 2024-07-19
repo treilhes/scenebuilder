@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.app.manager.api.ManagerApiExtension;
+import com.gluonhq.jfxapps.app.manager.main.menu.MainMenuProvider;
 import com.gluonhq.jfxapps.app.manager.main.model.ModelController;
 import com.gluonhq.jfxapps.app.manager.main.ui.ManagerUiTemplate;
 import com.gluonhq.jfxapps.app.manager.main.ui.WindowIconSettings;
@@ -62,19 +63,20 @@ public class ManagerAppExtension implements OpenExtension  {
 
     @Override
     public List<Class<?>> exportedContextClasses() {
-        return List.of();
-    }
-
-    @Override
-    public List<Class<?>> localContextClasses() {
         return List.of(
                 WindowIconSettings.class,
                 ManagerUiTemplate.class,
                 ApplicationCardController.class,
                 ExtensionCardController.class,
                 MainContentController.class,
+                MainMenuProvider.class,
                 ModelController.class
                 );
+    }
+
+    @Override
+    public List<Class<?>> localContextClasses() {
+        return List.of();
     }
 
 }

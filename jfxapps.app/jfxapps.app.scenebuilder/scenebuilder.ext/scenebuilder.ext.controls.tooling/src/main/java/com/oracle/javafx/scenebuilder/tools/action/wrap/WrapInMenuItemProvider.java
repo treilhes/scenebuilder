@@ -42,11 +42,11 @@ import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.DefaultMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.SendBackwardAction;
 
 import javafx.scene.control.Menu;

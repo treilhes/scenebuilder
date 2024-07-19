@@ -35,6 +35,8 @@ package com.gluonhq.jfxapps.core.api.application.javafx.internal;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
@@ -50,6 +52,7 @@ import javafx.scene.Parent;
 @DeportedSingleton
 public class FxmlControllerBeanPostProcessor implements BeanPostProcessor {
 
+    private static final Logger logger = LoggerFactory.getLogger(FxmlControllerBeanPostProcessor.class);
     /**
      * Instantiates a new fxml controller bean post processor.
      */
@@ -85,6 +88,7 @@ public class FxmlControllerBeanPostProcessor implements BeanPostProcessor {
                 controller.setRoot((Parent) loader.load());
                 controller.controllerDidLoadFxml();
             } catch (RuntimeException | IOException x) {
+                logger.error("Failed to load {} with {}", loader.getLocation(), loader.getController(), x); // NOI18N
                 throw new RuntimeException(
                         String.format("Failed to load %s with %s",
                                 loader.getLocation(), loader.getController()), x); // NOI18N

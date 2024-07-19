@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,6 +42,7 @@ import com.gluonhq.jfxapps.core.menu.i18n.I18NMenu;
 import com.gluonhq.jfxapps.core.menu.items.AnnotatedActionContextMenuItemProvider;
 import com.gluonhq.jfxapps.core.menu.items.AnnotatedActionMenuItemProvider;
 import com.gluonhq.jfxapps.core.menu.items.AnnotatedActionViewMenuItemProvider;
+import com.gluonhq.jfxapps.core.menu.menubar.MenuBarController;
 
 public class MenuExtension implements OpenExtension {
     @Override
@@ -66,7 +67,8 @@ public class MenuExtension implements OpenExtension {
                 AnnotatedActionContextMenuItemProvider.class,
                 AnnotatedActionMenuItemProvider.class,
                 AnnotatedActionViewMenuItemProvider.class,
-                I18NMenu.class
+                I18NMenu.class,
+                MenuBarController.class
             );
      // @formatter:on
     }

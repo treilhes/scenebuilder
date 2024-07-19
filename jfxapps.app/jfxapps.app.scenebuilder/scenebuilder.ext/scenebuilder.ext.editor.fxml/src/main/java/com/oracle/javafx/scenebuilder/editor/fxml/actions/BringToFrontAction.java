@@ -44,11 +44,11 @@ import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.DefaultMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.menu.action.file.RevealIncludedFxmlAction;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.fxml.selection.job.BringToFrontJob;
 
 @Component

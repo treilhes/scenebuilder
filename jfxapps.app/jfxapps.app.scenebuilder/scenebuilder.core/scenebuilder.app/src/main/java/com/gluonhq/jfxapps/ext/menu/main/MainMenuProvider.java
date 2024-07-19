@@ -40,11 +40,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.DefaultMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 import javafx.scene.control.Menu;
 
