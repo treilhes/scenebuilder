@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,8 +36,10 @@ package com.gluonhq.jfxapps.core.api.ui.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.gluonhq.jfxapps.core.api.di.FxmlController;
+import org.springframework.lang.NonNull;
+
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 
@@ -45,7 +47,7 @@ import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
  * AbstractFxmlController is the abstract base class for all the
  * controller which build their UI components from an FXML file.
  *
- * Subclasses should provide a {@link AbstractFxmlPanelController#controllerDidLoadFxml() }
+ * Subclasses should provide a {@link AbstractFxmlController#controllerDidLoadFxml() }
  * method in charge of finishing the initialization of the UI components
  * loaded from the FXML file.
  *
@@ -53,59 +55,43 @@ import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
  */
 public abstract class AbstractFxmlController extends AbstractPanelController implements FxmlController{
 
+    private final I18N i18n;
     private final URL fxmlURL;
 
     /**
      * Base constructor for invocation by the subclasses.
-     * @param api api agregator
+     * @param i18n
+     * @param scenebuilderManager
+     * @param documentManager
      * @param fxmlURL the URL of the FXML file to be loaded (cannot be null)
      */
+    // @formatter:off
     protected AbstractFxmlController(
+            I18N i18n,
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
             URL fxmlURL) {
+     // @formatter:on
         super(scenebuilderManager, documentManager);
+        this.i18n = i18n;
         this.fxmlURL = fxmlURL;
-        assert fxmlURL != null : "Check the name of the FXML file used by "
-                + getClass().getSimpleName();
+        assert fxmlURL != null : "Check the name of the FXML file used by " + getClass().getSimpleName();
     }
 
     @Override
-	public URL getFxmlURL() {
-		return this.fxmlURL;
-	}
+    @NonNull
+    public URL getFxmlURL() {
+        return fxmlURL;
+    }
 
-	@Override
-	public ResourceBundle getResources() {
-		return I18N.getBundle();
-	}
+    @Override
+    public ResourceBundle getResources() {
+        return i18n.getBundle();
+    }
 
-    /*
-     * AbstractPanelController
-     */
-
-//	/**
-//     * This implementation loads the FXML file using the URL passed to
-//     * {@link AbstractFxmlPanelController}.
-//     * Subclass implementation should make sure that this method can be invoked
-//     * outside of the JavaFX thread
-//     */
-//    @Override
-//    public void makePanel() {
-//        final FXMLLoader loader = new FXMLLoader();
-//
-//        loader.setController(this);
-//        loader.setLocation(fxmlURL);
-//        loader.setResources(I18N.getBundle());
-//        try {
-//            setRoot((Parent)loader.load());
-//            controllerDidLoadFxml();
-//        } catch (RuntimeException | IOException x) {
-//            System.out.println("loader.getController()=" + loader.getController());
-//            System.out.println("loader.getLocation()=" + loader.getLocation());
-//            throw new RuntimeException("Failed to load " + fxmlURL.getFile(), x); //NOCHECK
-//        }
-//    }
+    protected I18N getI18n() {
+        return i18n;
+    }
 
     /*
      * Protected

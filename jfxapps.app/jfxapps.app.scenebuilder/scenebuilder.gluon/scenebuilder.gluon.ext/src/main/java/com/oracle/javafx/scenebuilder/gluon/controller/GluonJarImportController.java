@@ -42,8 +42,8 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.WelcomeDialog;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.editors.ApplicationInstance;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
@@ -96,7 +96,7 @@ public class GluonJarImportController {
             }
 
             if (shouldShowImportGluonJarAlert) {
-                SbPlatform.runOnFxThread(() -> {
+                JfxAppPlatform.runOnFxThread(() -> {
                     ApplicationInstance dwc = main.getFrontInstance();
                     if (dwc == null) {
                         //TODO when started to fast will throw IndexOutOfBoundsException

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
@@ -66,9 +67,10 @@ public class SearchController extends AbstractFxmlController implements ViewSear
     private StackPane searchIcon;
 
     public SearchController(
+            I18N i18n,
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager) {
-        super(scenebuilderManager, documentManager, SearchController.class.getResource("Search.fxml"));
+        super(i18n, scenebuilderManager, documentManager, SearchController.class.getResource("Search.fxml"));
     }
 
     @FXML

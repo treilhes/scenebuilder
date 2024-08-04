@@ -46,8 +46,8 @@ import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
+import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 
@@ -101,6 +101,9 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
     public final static LayoutFormat DEFAULT_LAYOUT_FORMAT = LayoutFormat.SIMPLE_LINE_CENTERED;
     private static final Image cssIcon = new Image(
             AbstractPropertyEditor.class.getResource("css-icon.png").toExternalForm());
+
+    private final I18N i18n;
+
     private Hyperlink propName;
     private HBox propNameNode;
     private MenuButton menu;
@@ -127,7 +130,7 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
     private boolean handlingError = false;
     private LayoutFormat layoutFormat = DEFAULT_LAYOUT_FORMAT;
 
-    private final MenuItem resetvalueMenuItem = new MenuItem(I18N.getString("inspector.editors.resetvalue"));
+    private final MenuItem resetvalueMenuItem;
     private FadeTransition fadeTransition = null;
     private boolean genericModesHandled = false;
 
@@ -139,13 +142,16 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
 
 
     public AbstractPropertyEditor(
+            I18N i18n,
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem
             ) {
+        this.i18n = i18n;
         this.dialog = dialog;
         this.documentation = documentation;
         this.fileSystem = fileSystem;
+        this.resetvalueMenuItem = new MenuItem(i18n.getString("inspector.editors.resetvalue"));
         initialize();
     }
 
@@ -564,7 +570,7 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
 
             // menu
             if (showCssMenuItem == null) {
-                showCssMenuItem = new MenuItem(I18N.getString("inspector.css.showcss"));
+                showCssMenuItem = new MenuItem(i18n.getString("inspector.css.showcss"));
                 showCssMenuItem.setOnAction(e -> {
                     assert cssInfo != null;
                     if (cssInfo.isInline()) {
@@ -635,16 +641,16 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
         }
 
         Alert alertDialog = dialog.customAlert(source.getScene().getWindow());
-        alertDialog.setTitle(I18N.getString("inspector.error.title"));
-        alertDialog.setMessage(I18N.getString("inspector.error.message"));
-        alertDialog.setDetails(I18N.getString("inspector.error.details", value, getPropertyNameText()));
+        alertDialog.setTitle(i18n.getString("inspector.error.title"));
+        alertDialog.setMessage(i18n.getString("inspector.error.message"));
+        alertDialog.setDetails(i18n.getString("inspector.error.details", value, getPropertyNameText()));
         // OK button is "Previous value"
         alertDialog.setOKButtonVisible(true);
-        alertDialog.setOKButtonTitle(I18N.getString("inspector.error.previousvalue"));
+        alertDialog.setOKButtonTitle(i18n.getString("inspector.error.previousvalue"));
         // Cancel button
         alertDialog.setDefaultButtonID(ButtonID.CANCEL);
         alertDialog.setShowDefaultButton(true);
-        alertDialog.setCancelButtonTitle(I18N.getString("inspector.error.cancel"));
+        alertDialog.setCancelButtonTitle(i18n.getString("inspector.error.cancel"));
 
         ButtonID buttonClicked = alertDialog.showAndWait();
         if (buttonClicked == ButtonID.OK) {

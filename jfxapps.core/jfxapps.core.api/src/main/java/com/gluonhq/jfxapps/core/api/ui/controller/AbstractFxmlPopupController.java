@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.core.api.ui.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.gluonhq.jfxapps.core.api.di.FxmlController;
+import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 

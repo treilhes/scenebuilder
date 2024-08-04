@@ -49,7 +49,7 @@ import org.testfx.framework.junit5.Start;
 import com.gluonhq.jfxapps.boot.context.ApplicationInstance;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 
 import javafx.stage.Stage;
 
@@ -102,7 +102,7 @@ public class SbPlatformTest {
             }
         });
 
-        SbPlatform.runOnFxThreadWithScope(f1, futureTask::run);
+        JfxAppPlatform.runOnFxThreadWithScope(f1, futureTask::run);
 
         latch.await();
 
@@ -116,7 +116,7 @@ public class SbPlatformTest {
     void documentScopeNotCreatedThrowException() {
         final FakeDocument f1 = new FakeDocument(null); // no scope created
         Assertions.assertThrows(RuntimeException.class, () -> {
-            SbPlatform.runOnFxThreadWithScope(f1, () -> {});
+            JfxAppPlatform.runOnFxThreadWithScope(f1, () -> {});
         });
     }
 
@@ -142,7 +142,7 @@ public class SbPlatformTest {
             }
         });
 
-        SbPlatform.runOnFxThreadWithScope(f1, futureTask::run);
+        JfxAppPlatform.runOnFxThreadWithScope(f1, futureTask::run);
 
         latch.await();
 
@@ -181,7 +181,7 @@ public class SbPlatformTest {
         FutureTask<Runnable> futureTask1 = new FutureTask<>(() -> {
             try {
                 final DocumentScopedObject scoped = context.getBean(DocumentScopedObject.class);
-                SbPlatform.runOnFxThreadWithScope(f2, futureTask2::run);
+                JfxAppPlatform.runOnFxThreadWithScope(f2, futureTask2::run);
                 final DocumentScopedObject scoped2 = context.getBean(DocumentScopedObject.class);
                 return () -> {
                     assertEquals(f1.getDocumentScopedObject(), scoped);
@@ -192,7 +192,7 @@ public class SbPlatformTest {
             }
         });
 
-        SbPlatform.runOnFxThreadWithScope(f1, futureTask1::run);
+        JfxAppPlatform.runOnFxThreadWithScope(f1, futureTask1::run);
 
         latch.await();
 

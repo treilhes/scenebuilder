@@ -53,20 +53,26 @@ import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 /**
- * This job replace the current document root by the selected {@link FXOMObject} discarding all ancestors and siblings
+ * This job replace the current document root by the selected {@link FXOMObject}
+ * discarding all ancestors and siblings
  *
- *  This job is composed of subjobs:<br/>
- *      0) Remove fx:controller/fx:root (if defined) from the old root object if any<br/>
- *      1) Unselect the candidate<br/>
- *          => {@link ClearSelectionJob}<br/>
- *      2) Disconnect the candidate from its existing parent<br/>
- *          => {@link DeleteObjectJob}<br/>
- *      3) Set the candidate as the root of the document<br/>
- *          => {@link SetDocumentRootJob}<br/>
- *      4) Add fx:controller/fx:root (if defined) to the new root object<br/>
+ * This job is composed of subjobs:<br/>
+ * 0) Remove fx:controller/fx:root (if defined) from the old root object if
+ * any<br/>
+ * 1) Unselect the candidate<br/>
+ * => {@link ClearSelectionJob}<br/>
+ * 2) Disconnect the candidate from its existing parent<br/>
+ * => {@link DeleteObjectJob}<br/>
+ * 3) Set the candidate as the root of the document<br/>
+ * => {@link SetDocumentRootJob}<br/>
+ * 4) Add fx:controller/fx:root (if defined) to the new root object<br/>
  */
 @Prototype
 public final class TrimSelectionJob extends BatchSelectionJob {
+
+    private static final String I18N_LABEL_ACTION_EDIT_TRIM = "label.action.edit.trim";
+
+    private final I18N i18n;
 
     private final FXOMDocument fxomDocument;
     private final FxomJobsFactory fxomJobsFactory;
@@ -74,6 +80,7 @@ public final class TrimSelectionJob extends BatchSelectionJob {
 
     // @formatter:off
     protected TrimSelectionJob(
+            I18N i18n,
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             Selection selection,
@@ -81,6 +88,7 @@ public final class TrimSelectionJob extends BatchSelectionJob {
             FxomJobsFactory fxomJobsFactory) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);
+        this.i18n = i18n;
         this.fxomDocument = documentManager.fxomDocument().get();
         this.selectionJobsFactory = selectionJobsFactory;
         this.fxomJobsFactory = fxomJobsFactory;
@@ -102,15 +110,12 @@ public final class TrimSelectionJob extends BatchSelectionJob {
             final FXOMObject candidateRoot = osg.getItems().iterator().next();
 
             /*
-             *  This job is composed of subjobs:
-             *      0) Remove fx:controller/fx:root (if defined) from the old root object if any
-             *      1) Unselect the candidate
-             *          => ClearSelectionJob
-             *      2) Disconnect the candidate from its existing parent
-             *          => DeleteObjectJob
-             *      3) Set the candidate as the root of the document
-             *          => SetDocumentRootJob
-             *      4) Add fx:controller/fx:root (if defined) to the new root object
+             * This job is composed of subjobs: 0) Remove fx:controller/fx:root (if defined)
+             * from the old root object if any 1) Unselect the candidate =>
+             * ClearSelectionJob 2) Disconnect the candidate from its existing parent =>
+             * DeleteObjectJob 3) Set the candidate as the root of the document =>
+             * SetDocumentRootJob 4) Add fx:controller/fx:root (if defined) to the new root
+             * object
              */
             assert oldRoot instanceof FXOMInstance;
             boolean isFxRoot = ((FXOMInstance) oldRoot).isFxRoot();
@@ -147,7 +152,7 @@ public final class TrimSelectionJob extends BatchSelectionJob {
 
     @Override
     protected String makeDescription() {
-        return I18N.getString("label.action.edit.trim");
+        return i18n.getString(I18N_LABEL_ACTION_EDIT_TRIM);
     }
 
     @Override
@@ -164,9 +169,9 @@ public final class TrimSelectionJob extends BatchSelectionJob {
             final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
             if (osg.getItems().size() == 1) {
                 // We can trim if:
-                //  - object is an FXOMInstance
-                //  - object is not already the root
-                //  - object is self contained
+                // - object is an FXOMInstance
+                // - object is not already the root
+                // - object is self contained
                 final FXOMObject fxomObject = osg.getItems().iterator().next();
                 if (fxomObject instanceof FXOMInstance) {
                     final FXOMDocument fxomDocument = fxomObject.getFxomDocument();
@@ -181,7 +186,7 @@ public final class TrimSelectionJob extends BatchSelectionJob {
             }
         } else {
             // selection.getGroup() instanceof GridSelectionGroup
-            //      => cannot trim a selected row/column in a grid pane
+            // => cannot trim a selected row/column in a grid pane
             result = false;
         }
 

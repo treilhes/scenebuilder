@@ -13,9 +13,11 @@
       <module>jfxapps.app.fxmlrunner</module>
       <module>jfxapps.app.manager</module>
       <!--<module>jfxapps.app.scenebuilder</module>-->
+      <module>jfxapps.app.devtools</module>
   </modules>
   
   <properties>
+      <devtools.version>1.0.0-SNAPSHOT</devtools.version>
       <manager.version>1.0.0-SNAPSHOT</manager.version>
       <scenebuilder.version>17.0.0-SNAPSHOT</scenebuilder.version>
   </properties>

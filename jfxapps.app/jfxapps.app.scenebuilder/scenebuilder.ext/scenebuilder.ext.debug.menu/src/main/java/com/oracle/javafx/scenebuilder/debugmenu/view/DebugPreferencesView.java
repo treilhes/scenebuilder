@@ -78,12 +78,16 @@ public class DebugPreferencesView extends AbstractFxmlViewController {
      * @param fxmlURL
      * @param resources
      */
-    public DebugPreferencesView(SceneBuilderManager scenebuilderManager, DocumentManager documentManager,
+    // @formatter:off
+    public DebugPreferencesView(
+            I18N i18n,
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager,
             ViewMenuController viewMenuController,
             List<ManagedGlobalPreference> globalPreferences,
             List<ManagedDocumentPreference> documentPreferences) {
-        super(scenebuilderManager, documentManager, viewMenuController, DebugPreferencesView.class.getResource("DebugPreferences.fxml"),
-                I18N.getBundle());
+     // @formatter:on
+        super(i18n, scenebuilderManager, documentManager, viewMenuController, DebugPreferencesView.class.getResource("DebugPreferences.fxml"));
         this.globalPreferences = globalPreferences;
         this.documentPreferences = documentPreferences;
     }

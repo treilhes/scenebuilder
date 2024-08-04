@@ -27,6 +27,7 @@
 
     <properties>
         <jfxapps.version>17.0.0-SNAPSHOT</jfxapps.version>
+
         <!-- compiler -->
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <maven.compiler.release>21</maven.compiler.release>
@@ -57,18 +58,7 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- jfxapps.app -->
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.core.starter</artifactId>
-                <version>${jfxapps.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.core.starter.test</artifactId>
-                <version>${jfxapps.version}</version>
-            </dependency>
-
+            
             <!-- jfxapps.boot -->
 
             <dependency>
@@ -257,6 +247,11 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.ext.about.api</artifactId>
+                <version>${jfxapps.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.ext.certificate.manager</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
@@ -290,19 +285,21 @@
                 <artifactId>jfxapps.ext.container</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.ext.scenicview</artifactId>
+                <version>${jfxapps.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.ext.scenicview.api</artifactId>
+                <version>${jfxapps.version}</version>
+            </dependency>
 
             <!-- jfxapps.registry -->
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.registry.model</artifactId>
-                <version>${jfxapps.version}</version>
-            </dependency>
-
-            <!-- remaining -->
-
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.ext.scenicview</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
 

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,11 +40,11 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
  */
 public interface ToolTheme extends ToolStylesheetProvider {
 
-	public static String name(Class<? extends ToolTheme> cls) {
+	public static String name(I18N i18n, Class<? extends ToolTheme> cls) {
 		ToolThemeMeta themeMeta = cls.getAnnotation(ToolThemeMeta.class);
 		if (themeMeta == null) {
 			throw new RuntimeException("Class implementing ToolTheme interface must be annotated with @ToolThemeMeta");
 		}
-		return I18N.getString(themeMeta.name());
+		return i18n.getString(themeMeta.name());
 	}
 }

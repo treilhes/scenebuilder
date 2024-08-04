@@ -56,10 +56,10 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.CombinedResourceBundle;
 import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
@@ -226,7 +226,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
         logger.info("File Event : file created ({})", target.toFile().getName());
         if (watchCallbacks.containsKey(target)) {
             logger.info("File Event sent : file created ({})", target.toFile().getName());
-            SbPlatform.runOnFxThreadWithActiveScope(() -> watchCallbacks.get(target).forEach(c -> c.created(target)));
+            JfxAppPlatform.runOnFxThreadWithActiveScope(() -> watchCallbacks.get(target).forEach(c -> c.created(target)));
         }
     }
 
@@ -237,7 +237,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
         logger.info("File Event : file deleted ({})", target.toFile().getName());
         if (watchCallbacks.containsKey(target)) {
             logger.info("File Event sent : file deleted ({})", target.toFile().getName());
-            SbPlatform.runOnFxThreadWithActiveScope(() -> watchCallbacks.get(target).forEach(c -> c.deleted(target)));
+            JfxAppPlatform.runOnFxThreadWithActiveScope(() -> watchCallbacks.get(target).forEach(c -> c.deleted(target)));
         }
     }
 
@@ -248,7 +248,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
         logger.info("File Event : file modified ({})", target.toFile().getName());
         if (watchCallbacks.containsKey(target)) {
             logger.info("File Event sent : file modified ({})", target.toFile().getName());
-            SbPlatform.runOnFxThreadWithActiveScope(() -> watchCallbacks.get(target).forEach(c -> c.modified(target)));
+            JfxAppPlatform.runOnFxThreadWithActiveScope(() -> watchCallbacks.get(target).forEach(c -> c.modified(target)));
         }
     }
 

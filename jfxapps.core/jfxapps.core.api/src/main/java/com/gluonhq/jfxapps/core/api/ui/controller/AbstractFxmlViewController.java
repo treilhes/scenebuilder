@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,7 +34,6 @@
 package com.gluonhq.jfxapps.core.api.ui.controller;
 
 import java.net.URL;
-import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,14 +60,14 @@ import javafx.scene.control.MenuButton;
  * controller which build their UI components from an FXML file.
  *
  * Subclasses should provide a
- * {@link AbstractFxmlPanelController#controllerDidLoadFxml() } method in charge
+ * {@link AbstractFxmlController#controllerDidLoadFxml() } method in charge
  * of finishing the initialization of the UI components loaded from the FXML
  * file.
  *
  * It provides input controls for filtering, a placeholder menu and basic
  * docking functionalities
  */
-public abstract class AbstractFxmlViewController extends AbstractFxmlPanelController implements View, ViewContent { // ,
+public abstract class AbstractFxmlViewController extends AbstractFxmlController implements View, ViewContent { // ,
                                                                                                                     // ViewMenuProvider
                                                                                                                     // {
 
@@ -84,7 +83,7 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlPanelContro
     private final DocumentManager documentManager;
 
     private ObjectProperty<Dock> parentDock = new SimpleObjectProperty<>();
-    private BooleanProperty minimizedProperty = new SimpleBooleanProperty();
+    //private BooleanProperty minimizedProperty = new SimpleBooleanProperty();
 
     /*
      * Public
@@ -96,14 +95,18 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlPanelContro
      * @param fxmlURL   the URL of the FXML file to be loaded (cannot be null)
      * @param resources I18n resource bundle
      */
-    public AbstractFxmlViewController(SceneBuilderManager scenebuilderManager, DocumentManager documentManager,
-            ViewMenuController viewMenuController, URL fxmlURL, ResourceBundle resources) {
-        super(scenebuilderManager, documentManager, fxmlURL, resources); // NOCHECK
+    public AbstractFxmlViewController(
+            I18N i18n,
+            SceneBuilderManager scenebuilderManager,
+            DocumentManager documentManager,
+            ViewMenuController viewMenuController,
+            URL fxmlURL) {
+        super(i18n, scenebuilderManager, documentManager, fxmlURL); // NOCHECK
         this.viewMenuController = viewMenuController;
         this.documentManager = documentManager;
 
         String viewName = getViewName();
-        nameProperty = new SimpleStringProperty(I18N.getStringOrDefault(viewName, viewName));
+        nameProperty = new SimpleStringProperty(i18n.getStringOrDefault(viewName, viewName));
 
     }
 

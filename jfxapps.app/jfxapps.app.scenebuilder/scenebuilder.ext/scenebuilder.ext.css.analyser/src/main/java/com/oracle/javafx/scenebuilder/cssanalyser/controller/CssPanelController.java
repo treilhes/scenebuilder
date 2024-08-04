@@ -326,7 +326,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     }
 
     /**
-     * AbstractFxmlPanelController.
+     * AbstractFxmlController.
      *
      */
     @Override

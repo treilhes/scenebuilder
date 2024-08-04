@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.action;
 
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
@@ -46,10 +47,11 @@ public abstract class AbstractJobAction<T extends JobFactory<? extends AbstractJ
     private final JobManager jobManager;
 
     public AbstractJobAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             T factory,
             JobManager jobManager) {
-        super(extensionFactory);
+        super(i18n, extensionFactory);
         this.factory = factory;
         this.jobManager = jobManager;
     }

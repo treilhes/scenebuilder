@@ -7,13 +7,19 @@
     </appender>
 
     <springProfile name="dev">
-        <logger name="com.gluonhq" level="DEBUG"/>
-        <logger name="org.springframework" level="INFO"/>
-        <logger name="org.springframework.aop" level="INFO"/>
-        <logger name="org.springframework.orm.jpa" level="INFO"/>
+        <logger name="com.gluonhqjfxapps" level="ERROR"/>
+        
+        <logger name="com.gluonhq.jfxapps.core.api" level="DEBUG"/>
+        <logger name="com.gluonhq.jfxapps.core.ui" level="DEBUG"/>
+        <logger name="com.gluonhq.jfxapps.ext.scenicview" level="DEBUG"/>
         
         
-        <root level="INFO">
+        <logger name="org.springframework" level="ERROR"/>
+        <logger name="org.springframework.aop" level="ERROR"/>
+        <logger name="org.springframework.orm.jpa" level="ERROR"/>
+        
+        
+        <root level="ERROR">
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>

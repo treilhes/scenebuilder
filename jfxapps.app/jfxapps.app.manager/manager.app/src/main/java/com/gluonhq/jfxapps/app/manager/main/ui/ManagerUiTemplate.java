@@ -49,6 +49,9 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBar;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 
 import jakarta.inject.Provider;
+import javafx.event.Event;
+import javafx.event.EventDispatchChain;
+import javafx.event.EventDispatcher;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.SplitPane;
@@ -78,6 +81,7 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements M
 
     // @formatter:off
     public ManagerUiTemplate(
+            I18N i18n,
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
             Provider<BottomDividerVPosPreference> bottomDividerVPos,
@@ -85,7 +89,7 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements M
             MenuBar menuBar,
             MainContent mainContent,
             WindowPreferenceTracker tracker) {
-        super(sceneBuilderManager, iconSetting, ManagerUiTemplate.class.getResource("ManagerUiTemplate.fxml"), I18N.getBundle(), false);
+        super(i18n, sceneBuilderManager, iconSetting, ManagerUiTemplate.class.getResource("ManagerUiTemplate.fxml"), false);
         // @formatter:on
 
         this.bottomDockController = bottomDockController;
@@ -109,6 +113,7 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements M
 
     @Override
     public void controllerDidLoadFxml() {
+        super.controllerDidLoadFxml();
         assert getRoot() instanceof VBox;
         final VBox rootVBox = (VBox) getRoot();
         rootVBox.getChildren().add(0, menuBar.getMenuBar());

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,10 +42,9 @@ import java.util.stream.Stream;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
 import com.gluonhq.jfxapps.core.api.maven.GetMavenArtifactDialog;
 import com.gluonhq.jfxapps.core.api.maven.RepositoryManager;
@@ -77,29 +76,7 @@ import javafx.stage.Stage;
 @Prototype
 public class LibraryDialogController extends AbstractFxmlWindowController{
 
-    @FXML
-    private ListView<DialogListItem> libraryListView;
-
-    @FXML
-    private Label listLabel;
-
-    @FXML
-    private Hyperlink searchRepositoryLink;
-
-    @FXML
-    private Hyperlink selectArtifactLink;
-
-    @FXML
-    private Hyperlink selectFileLink;
-
-    @FXML
-    private Hyperlink manageRepositoriesLink;
-
-    @FXML
-    private Hyperlink classesLink;
-
-
-    //private LibraryStoreConfiguration libraryConfiguration;
+        //private LibraryStoreConfiguration libraryConfiguration;
     //private LibraryStore libraryStore;
     private final Stage owner;
 
@@ -131,7 +108,29 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     private final GetMavenArtifactDialog getMavenArtifactDialog;
     private final LibraryMappers mappers;
 
+    @FXML
+    private ListView<DialogListItem> libraryListView;
+
+    @FXML
+    private Label listLabel;
+
+    @FXML
+    private Hyperlink searchRepositoryLink;
+
+    @FXML
+    private Hyperlink selectArtifactLink;
+
+    @FXML
+    private Hyperlink selectFileLink;
+
+    @FXML
+    private Hyperlink manageRepositoriesLink;
+
+    @FXML
+    private Hyperlink classesLink;
+
     public LibraryDialogController(
+            I18N i18n,
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
             JfxAppContext context,
@@ -144,8 +143,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
             SearchMavenArtifactDialog searchMavenArtifactDialog,
             GetMavenArtifactDialog getMavenArtifactDialog,
             LibraryMappers mappers) {
-        super(sceneBuilderManager, iconSetting, LibraryDialogController.class.getResource("LibraryDialog.fxml"), I18N.getBundle(),
-                document); // NOI18N
+        super(i18n, sceneBuilderManager, iconSetting, LibraryDialogController.class.getResource("LibraryDialog.fxml"),document); // NOI18N
         this.owner = document.getStage();
         this.context = context;
         this.sceneBuilderManager = sceneBuilderManager;
@@ -198,7 +196,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     public void controllerDidLoadFxml() {
         super.controllerDidLoadFxml();
 
-        this.classesLink.setTooltip(new Tooltip(I18N.getString("library.dialog.hyperlink.tooltip")));
+        this.classesLink.setTooltip(new Tooltip(getI18n().getString("library.dialog.hyperlink.tooltip")));
     }
 
     @Override
@@ -226,7 +224,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     public void openWindow() {
         assert library != null;
         super.openWindow();
-        super.getStage().setTitle(I18N.getString("library.dialog.title"));
+        super.getStage().setTitle(getI18n().getString("library.dialog.title"));
 
         String title = library.getDialogConfiguration().getTitleLabel();
         if (title != null && !title.isEmpty()) {
@@ -247,11 +245,11 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
         Stream<DialogListItem> filesStream = library.getStore().getFilesOrFolders().stream()
             .map(f -> new LibraryDialogListItem(this, f));
 
-        SbPlatform.runOnFxThread(() -> {
+        JfxAppPlatform.runOnFxThread(() -> {
             libraryListView.getItems().setAll(Stream.concat(artifactStream, filesStream)
                     .sorted(new DialogListItemComparator())
                     .collect(Collectors.toList()));
-            libraryListView.setCellFactory(param -> new LibraryDialogListCell());
+            libraryListView.setCellFactory(param -> new LibraryDialogListCell(getI18n()));
         });
     }
 
@@ -367,7 +365,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
 
     // TODO find usage in previous version reimplement then delete
     private void logInfoMessage(String key, Object... args) {
-        messageLogger.logInfoMessage(key, I18N.getBundle(), args);
+        messageLogger.logInfoMessage(key, getI18n().getBundle(), args);
     }
 
     private void updatePreferences(LibraryArtifact mavenArtifact) {

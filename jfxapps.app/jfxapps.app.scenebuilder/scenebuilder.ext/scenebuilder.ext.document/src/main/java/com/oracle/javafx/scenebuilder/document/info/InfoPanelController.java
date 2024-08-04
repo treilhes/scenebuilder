@@ -46,14 +46,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPanelController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -85,7 +85,7 @@ import javafx.scene.layout.VBox;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class InfoPanelController extends AbstractFxmlPanelController {
+public class InfoPanelController extends AbstractFxmlController {
 
     @FXML private TableColumn<IndexEntry,String> leftTableColumn;
     @FXML private TableColumn<IndexEntry,FXOMObject> rightTableColumn;
@@ -181,7 +181,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
     }
 
     /*
-     * AbstractFxmlPanelController
+     * AbstractFxmlController
      */
     @Override
     public void controllerDidLoadFxml() {
@@ -509,7 +509,7 @@ public class InfoPanelController extends AbstractFxmlPanelController {
         if (controllerClassEditor != null) {
             // The listener on fxmlLocationProperty is called before the file
             // denoted by the location is created on disk, hence the runLater.
-            SbPlatform.runOnFxThread(() -> {
+            JfxAppPlatform.runOnFxThread(() -> {
                 controllerClassEditor.setUpdateFromModel(true);
                 controllerClassEditor.reset(null, null);
                 controllerClassEditor.setUpdateFromModel(false);

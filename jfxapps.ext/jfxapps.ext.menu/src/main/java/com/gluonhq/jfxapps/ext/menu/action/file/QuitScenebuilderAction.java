@@ -46,8 +46,8 @@ import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
@@ -114,7 +114,7 @@ public class QuitScenebuilderAction extends AbstractAction {
 
         case 1: {
             final ApplicationInstance dwc0 = pendingDocs.get(0);
-            ActionStatus result = SbPlatform.runWithScope(dwc0, () -> actionFactory.create(CloseFileAction.class).checkAndPerform());
+            ActionStatus result = JfxAppPlatform.runWithScope(dwc0, () -> actionFactory.create(CloseFileAction.class).checkAndPerform());
             exitConfirmed = result == ActionStatus.DONE;
             break;
         }
@@ -135,7 +135,7 @@ public class QuitScenebuilderAction extends AbstractAction {
                 int i = 0;
                 ActionStatus status;
                 do {
-                    status = SbPlatform.runWithScope(pendingDocs.get(i++), () -> actionFactory.create(CloseFileAction.class).checkAndPerform());
+                    status = JfxAppPlatform.runWithScope(pendingDocs.get(i++), () -> actionFactory.create(CloseFileAction.class).checkAndPerform());
                 } while ((status == ActionStatus.DONE) && (i < pendingDocs.size()));
                 exitConfirmed = (status == ActionStatus.DONE);
                 break;

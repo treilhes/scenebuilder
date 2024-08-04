@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -57,7 +57,6 @@ import com.gluonhq.jfxapps.ext.menu.action.file.SaveAsAction;
 import com.gluonhq.jfxapps.ext.menu.action.file.SaveOrSaveAsAction;
 import com.gluonhq.jfxapps.ext.menu.action.view.ToggleViewVisibilityAction;
 import com.gluonhq.jfxapps.ext.menu.i18n.I18NDefaultMenu;
-import com.gluonhq.jfxapps.ext.menu.main.MainMenuProvider;
 import com.gluonhq.jfxapps.ext.menu.viewmenu.ChangeDockTypeAction;
 import com.gluonhq.jfxapps.ext.menu.viewmenu.CloseViewAction;
 import com.gluonhq.jfxapps.ext.menu.viewmenu.MoveToDockAction;
@@ -95,7 +94,6 @@ public class DefaultMenuExtension implements OpenExtension {
                 NewAction.class,
                 LoadFileAction.class,
                 LoadUrlAction.class,
-                MainMenuProvider.class,
                 MoveToDockAction.class,
                 MoveToDockAction.MenuProvider.class,
                 OpenFilesAction.class,

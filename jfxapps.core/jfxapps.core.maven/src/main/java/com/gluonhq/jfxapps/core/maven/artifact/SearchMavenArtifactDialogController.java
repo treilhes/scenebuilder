@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -82,6 +82,17 @@ import javafx.util.Callback;
 public class SearchMavenArtifactDialogController extends AbstractFxmlWindowController
         implements SearchMavenArtifactDialog {
 
+
+    private static final String I18N_LOG_USER_MAVEN_FAILED = "log.user.maven.failed";
+    private final MavenClient mavenClient;
+    private final MessageLogger messageLogger;
+    private Service<ObservableSet<Artifact>> searchService;
+    private Service<ObservableList<UniqueArtifact>> versionsService;
+    private final Service<ResolvedArtifact> installService;
+    private Artifact artifact;
+    private final InstanceWindow owner;
+    private String lastLoadedKey = null;
+
     @FXML
     private TextField searchTextfield;
 
@@ -103,17 +114,9 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
     @FXML
     private Button installButton;
 
-    private final MavenClient mavenClient;
-    private final MessageLogger messageLogger;
-    private Service<ObservableSet<Artifact>> searchService;
-    private Service<ObservableList<UniqueArtifact>> versionsService;
-    private final Service<ResolvedArtifact> installService;
-    private Artifact artifact;
-    private final InstanceWindow owner;
-    private String lastLoadedKey = null;
-
  // @formatter:off
     protected SearchMavenArtifactDialogController(
+            I18N i18n,
             MavenClient mavenClient,
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
@@ -122,9 +125,8 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
             MavenRepositoriesPreferences repositoryPreferences,
             InstanceWindow owner) {
      // @formatter:on
-        super(sceneBuilderManager, iconSetting,
-                SearchMavenArtifactDialogController.class.getResource("SearchMavenArtifactDialog.fxml"),
-                I18N.getBundle(), owner);
+        super(i18n, sceneBuilderManager, iconSetting,
+                SearchMavenArtifactDialogController.class.getResource("SearchMavenArtifactDialog.fxml"),owner);
         this.mavenClient = mavenClient;
         this.owner = owner;
         this.messageLogger = messageLogger;
@@ -245,7 +247,7 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
                             || resolved.getDependencies().stream().anyMatch(d -> !d.hasPath());
 
                     if (invalidResult) {
-                        logInfoMessage("log.user.maven.failed", getArtifactCoordinates());
+                        logInfoMessage(I18N_LOG_USER_MAVEN_FAILED, getArtifactCoordinates());
                     } else {
                         List<File> files = new ArrayList<>();
                         files.add(resolved.getPath().toFile());
@@ -259,7 +261,7 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
                         this.onCloseRequest();
                     }
                 } else if (nv.equals(Worker.State.CANCELLED) || nv.equals(Worker.State.FAILED)) {
-                    logInfoMessage("log.user.maven.failed", getArtifactCoordinates());
+                    logInfoMessage(I18N_LOG_USER_MAVEN_FAILED, getArtifactCoordinates());
                 }
                 installButton.setDisable(false);
                 searchButton.setDisable(false);
@@ -274,9 +276,9 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
     @Override
     public void openWindow() {
         super.openWindow();
-        super.getStage().setTitle(I18N.getString("search.maven.dialog.title"));
+        super.getStage().setTitle(getI18n().getString("search.maven.dialog.title"));
         installButton.setDisable(true);
-        installButton.setTooltip(new Tooltip(I18N.getString("search.maven.dialog.install.tooltip")));
+        installButton.setTooltip(new Tooltip(getI18n().getString("search.maven.dialog.install.tooltip")));
 
         searchButton.setDisable(true);
         searchTextfield.textProperty().addListener((obs, ov, nv) -> searchButton.setDisable(nv.isEmpty()));
@@ -316,12 +318,12 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
 
         searchButton.textProperty()
                 .bind(Bindings.when(mavenClient.searchingProperty())
-                        .then(I18N.getString("search.maven.dialog.button.cancel"))
-                        .otherwise(I18N.getString("search.maven.dialog.button.search")));
+                        .then(getI18n().getString("search.maven.dialog.button.cancel"))
+                        .otherwise(getI18n().getString("search.maven.dialog.button.search")));
         searchButton.tooltipProperty()
                 .bind(Bindings.when(mavenClient.searchingProperty())
-                        .then(new Tooltip(I18N.getString("search.maven.dialog.button.cancel.tooltip")))
-                        .otherwise(new Tooltip(I18N.getString("search.maven.dialog.button.search.tooltip"))));
+                        .then(new Tooltip(getI18n().getString("search.maven.dialog.button.cancel.tooltip")))
+                        .otherwise(new Tooltip(getI18n().getString("search.maven.dialog.button.search.tooltip"))));
 
         progress.visibleProperty().bind(installService.runningProperty().or(versionsService.runningProperty())
                 .or(mavenClient.searchingProperty()));
@@ -389,7 +391,7 @@ public class SearchMavenArtifactDialogController extends AbstractFxmlWindowContr
     }
 
     private void logInfoMessage(String key, Object... args) {
-        messageLogger.logInfoMessage(key, I18N.getBundle(), args);
+        messageLogger.logInfoMessage(key, getI18n().getBundle(), args);
     }
 
     private String getArtifactCoordinates() {

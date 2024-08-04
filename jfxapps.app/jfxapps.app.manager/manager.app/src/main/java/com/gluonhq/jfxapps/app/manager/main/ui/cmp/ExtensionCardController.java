@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,13 +39,13 @@ import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPanelController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
 @Prototype
-public class ExtensionCardController extends AbstractFxmlPanelController implements ExtensionCard{
+public class ExtensionCardController extends AbstractFxmlController implements ExtensionCard{
 
     @FXML
     private Label descriptionLabel;
@@ -57,10 +57,11 @@ public class ExtensionCardController extends AbstractFxmlPanelController impleme
     private Label versionLabel;
 
     public ExtensionCardController(
+            I18N i18n,
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager
             ) {
-        super(scenebuilderManager, documentManager, ExtensionCardController.class.getResource("ExtensionCard.fxml"), I18N.getBundle());
+        super(i18n, scenebuilderManager, documentManager, ExtensionCardController.class.getResource("ExtensionCard.fxml"));
     }
 
     @Override

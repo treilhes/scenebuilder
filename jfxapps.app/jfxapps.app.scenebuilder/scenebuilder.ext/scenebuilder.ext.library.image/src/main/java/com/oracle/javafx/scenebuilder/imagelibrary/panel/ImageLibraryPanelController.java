@@ -235,7 +235,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
     }
 
     /*
-     * AbstractFxmlPanelController
+     * AbstractFxmlController
      */
 
     /**

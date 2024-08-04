@@ -33,13 +33,10 @@
  */
 package com.gluonhq.jfxapps.core.job.editor.atomic;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
@@ -54,6 +51,9 @@ import com.gluonhq.jfxapps.core.fxom.util.JavaLanguage;
 @Prototype
 public final class ModifyFxIdJob extends AbstractJob {
 
+    private static final String I18N_JOB_SET_FXID = "job.set.fxid";
+    private static final String I18N_JOB_REMOVE_FXID = "job.remove.fxid";
+    private final I18N i18n;
     private FXOMObject fxomObject;
     private String newValue;
     private String oldValue;
@@ -61,10 +61,12 @@ public final class ModifyFxIdJob extends AbstractJob {
 
     // @formatter:off
     protected ModifyFxIdJob(
+            I18N i18n,
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager) {
     // @formatter:on
         super(extensionFactory);
+        this.i18n = i18n;
         this.fxomDocument = documentManager.fxomDocument().get();
     }
 
@@ -78,9 +80,9 @@ public final class ModifyFxIdJob extends AbstractJob {
 
         if (newValue == null) {
             assert oldValue != null;
-            setDescription(I18N.getString("job.remove.fxid", oldValue));
+            setDescription(i18n.getString(I18N_JOB_REMOVE_FXID, oldValue));
         } else {
-            setDescription(I18N.getString("job.set.fxid", newValue));
+            setDescription(i18n.getString(I18N_JOB_SET_FXID, newValue));
         }
     }
     /*

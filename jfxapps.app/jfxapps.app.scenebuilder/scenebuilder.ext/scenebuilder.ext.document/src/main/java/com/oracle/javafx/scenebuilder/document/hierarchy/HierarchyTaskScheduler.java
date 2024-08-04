@@ -41,7 +41,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask.Accessory;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
@@ -101,7 +101,7 @@ public class HierarchyTaskScheduler {
             public void run() {
                 // JavaFX data should only be accessed on the JavaFX thread.
                 // => we must wrap the code into a Runnable object and call the SbPlatform.runLater
-                SbPlatform.runOnFxThread(() -> {
+                JfxAppPlatform.runOnFxThread(() -> {
 
                     for (Accessory accessory:owner.getAccessories()) {
                       //TODO may be deletable
@@ -163,7 +163,7 @@ public class HierarchyTaskScheduler {
         public void run() {
             // JavaFX data should only be accessed on the JavaFX thread.
             // => we must wrap the code into a Runnable object and call the SbPlatform.runLater
-            SbPlatform.runOnFxThread(() -> treeItem.setExpanded(true));
+            JfxAppPlatform.runOnFxThread(() -> treeItem.setExpanded(true));
         }
     }
 }

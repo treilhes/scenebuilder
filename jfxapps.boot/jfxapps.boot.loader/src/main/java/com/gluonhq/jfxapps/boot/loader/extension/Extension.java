@@ -39,6 +39,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.layer.Layer;
 
 /**
@@ -69,6 +70,30 @@ public sealed interface Extension permits OpenExtension, SealedExtension, RootEx
 
         com.gluonhq.jfxapps.spring.core.patch.PatchLink.addRead(module);
         com.gluonhq.jfxapps.hibernate.core.patch.PatchLink.addRead(module);
+    }
+
+    /**
+     * @param context
+     */
+    //FIXME this method isn't called yet
+    public default void initializeContext(JfxAppContext context) {
+        throw new UnsupportedOperationException("Never called yet");
+    }
+
+    /**
+     * @param context
+     */
+  //FIXME this method isn't called yet
+    public default void finalizeContext(JfxAppContext context) {
+        throw new UnsupportedOperationException("Never called yet");
+    }
+
+    /**
+     * @param layer
+     */
+  //FIXME this method isn't called yet
+    public default void finalizeLayer(Layer layer) {
+        throw new UnsupportedOperationException("Never called yet");
     }
 //    InputStream getLicense();
 //

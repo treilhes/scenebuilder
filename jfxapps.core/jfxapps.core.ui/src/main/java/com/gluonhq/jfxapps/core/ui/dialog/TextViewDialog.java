@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -65,9 +65,10 @@ public class TextViewDialog extends AbstractModalDialog {
      */
 
     protected TextViewDialog(
+            I18N i18n,
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting) {
-        super(sceneBuilderManager, iconSetting, TextViewDialog.class.getResource("TextViewDialog.fxml"), null, null);
+        super(i18n, sceneBuilderManager, iconSetting, TextViewDialog.class.getResource("TextViewDialog.fxml"), null);
     }
 
     public void setText(String text) {
@@ -87,8 +88,8 @@ public class TextViewDialog extends AbstractModalDialog {
         assert textArea != null;
         setOKButtonVisible(false);
         setActionButtonVisible(true);
-        setCancelButtonTitle(I18N.getString("label.close"));
-        setActionButtonTitle(I18N.getString("label.copy"));
+        setCancelButtonTitle(getI18n().getString("label.close"));
+        setActionButtonTitle(getI18n().getString("label.copy"));
     }
 
     @Override

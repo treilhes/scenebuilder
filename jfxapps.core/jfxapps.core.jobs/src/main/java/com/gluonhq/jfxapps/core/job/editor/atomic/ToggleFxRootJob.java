@@ -48,19 +48,25 @@ import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 @Prototype
 public final class ToggleFxRootJob extends AbstractJob {
 
+    private static final String I18N_JOB_TOGGLE_FX_ROOT = "job.toggle.fx.root";
+
     private final FXOMDocument fxomDocument;
+
+    private final I18N i18n;
 
     // @formatter:off
     protected ToggleFxRootJob(
+            I18N i18n,
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager) {
     // @formatter:on
         super(extensionFactory);
+        this.i18n = i18n;
         this.fxomDocument = documentManager.fxomDocument().get();
     }
 
     public void setJobParameters() {
-        setDescription(I18N.getString("job.toggle.fx.root"));
+        setDescription(i18n.getString(I18N_JOB_TOGGLE_FX_ROOT));
     }
 
     /*

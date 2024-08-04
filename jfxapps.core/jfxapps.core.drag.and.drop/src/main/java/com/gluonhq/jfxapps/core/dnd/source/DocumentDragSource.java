@@ -64,7 +64,7 @@ import javafx.scene.input.TransferMode;
 @ApplicationInstancePrototype
 public final class DocumentDragSource extends AbstractDragSource {
 
-    //private final SbFXOMObjectMask.Factory sbFXOMObjectMaskFactory;
+    private final I18N i18n;
     private final ClipboardEncoder clipboardEncoder;
 
     private Image image;
@@ -74,9 +74,11 @@ public final class DocumentDragSource extends AbstractDragSource {
     private double hitY;
 
     protected DocumentDragSource(
+            I18N i18n,
             InstanceWindow window,
             ClipboardEncoder clipboardEncoder) {
         super(window.getStage());
+        this.i18n = i18n;
         this.clipboardEncoder = clipboardEncoder;
     }
 
@@ -230,9 +232,9 @@ public final class DocumentDragSource extends AbstractDragSource {
             final FXOMObject draggedObject = draggedObjects.get(0);
             final Object sceneGraphObject = draggedObject.getSceneGraphObject().get();
             if (sceneGraphObject == null) {
-                result = I18N.getString("drop.job.move.single.unresolved");
+                result = i18n.getString("drop.job.move.single.unresolved");
             } else {
-                result = I18N.getString("drop.job.move.single.resolved",
+                result = i18n.getString("drop.job.move.single.resolved",
                         sceneGraphObject.getClass().getSimpleName());
             }
         } else {
@@ -249,11 +251,11 @@ public final class DocumentDragSource extends AbstractDragSource {
 
             if (homogeneous) {
                 final Class<?> singleClass = classes.iterator().next();
-                result = I18N.getString("drop.job.move.multiple.homogeneous",
+                result = i18n.getString("drop.job.move.multiple.homogeneous",
                         draggedObjects.size(),
                         singleClass.getSimpleName());
             } else {
-                result = I18N.getString("drop.job.move.multiple.heterogeneous",
+                result = i18n.getString("drop.job.move.multiple.heterogeneous",
                         draggedObjects.size());
             }
         }

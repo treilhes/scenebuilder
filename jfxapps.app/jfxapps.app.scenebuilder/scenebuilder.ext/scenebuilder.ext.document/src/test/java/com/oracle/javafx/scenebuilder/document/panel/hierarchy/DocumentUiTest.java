@@ -49,9 +49,9 @@ import org.springframework.context.ApplicationContext;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
@@ -202,7 +202,7 @@ class DocumentUiTest {
                             loader.getLocation(), loader.getController()), x); // NOI18N
         }
 
-        SbPlatform.runOnFxThread(() -> {
+        JfxAppPlatform.runOnFxThread(() -> {
             controller.getRoot().getStylesheets().add("file:///C:/SSDDrive/git/scenebuilder/scenebuilder.ext.sb/src/main/resources/com/oracle/javafx/scenebuilder/sb/css/ThemeDark.css");
             Scene scene = new Scene(controller.getRoot(), 300, 600);
             stage.setScene(scene);
@@ -244,7 +244,7 @@ class DocumentUiTest {
                             loader.getLocation(), loader.getController()), x); // NOI18N
         }
 
-        SbPlatform.runOnFxThread(() -> {
+        JfxAppPlatform.runOnFxThread(() -> {
             controller.getRoot().getStylesheets().add("file:///C:/SSDDrive/git/scenebuilder/scenebuilder.ext.sb/src/main/resources/com/oracle/javafx/scenebuilder/sb/css/ThemeDark.css");
             Scene scene = new Scene(controller.getRoot(), 300, 600);
             stage.setScene(scene);

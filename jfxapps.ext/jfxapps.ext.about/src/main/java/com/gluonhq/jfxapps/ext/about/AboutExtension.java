@@ -37,17 +37,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.loader.extension.ApplicationExtension;
 import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.ext.about.actions.ShowAboutAction;
 import com.gluonhq.jfxapps.ext.about.controller.AboutWindowController;
 import com.gluonhq.jfxapps.ext.about.i18n.I18NAbout;
+import com.gluonhq.jfxapps.ext.about.rest.AboutRestEndpoint;
 
 public class AboutExtension implements OpenExtension {
-    @Override
-    public UUID getId() {
-        return UUID.fromString("be3f6ad5-2591-485a-b2e8-8d714cbd6b2a");
-    }
+
+    private static final UUID ID = UUID.fromString("be3f6ad5-2591-485a-b2e8-8d714cbd6b2a");
 
     @Override
     public UUID getParentId() {
@@ -55,8 +53,13 @@ public class AboutExtension implements OpenExtension {
     }
 
     @Override
+    public UUID getId() {
+        return ID;
+    }
+
+    @Override
     public List<Class<?>> localContextClasses() {
-        return List.of();
+        return List.of(AboutRestEndpoint.class);
     }
 
     @Override

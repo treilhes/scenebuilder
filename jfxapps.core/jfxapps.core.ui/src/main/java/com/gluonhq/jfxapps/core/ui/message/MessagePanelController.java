@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,7 +37,7 @@ import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPanelController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger.MessageEntry;
 import com.gluonhq.jfxapps.core.ui.editor.messagelog.MessageLogEntry;
@@ -59,7 +59,7 @@ import javafx.scene.layout.VBox;
  *
  */
 @Prototype
-public class MessagePanelController extends AbstractFxmlPanelController {
+public class MessagePanelController extends AbstractFxmlController {
 
     private double panelWidth;
 
@@ -70,10 +70,11 @@ public class MessagePanelController extends AbstractFxmlPanelController {
     private final MessageLogger messageLogger;
 
     public MessagePanelController(
+            I18N i18n,
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
             MessageLogger messageLogger) {
-        super(scenebuilderManager, documentManager, MessagePanelController.class.getResource("MessagePanel.fxml"), I18N.getBundle());
+        super(i18n, scenebuilderManager, documentManager, MessagePanelController.class.getResource("MessagePanel.fxml"));
         this.messageLogger = messageLogger;
     }
 
@@ -90,7 +91,7 @@ public class MessagePanelController extends AbstractFxmlPanelController {
     }
 
     /*
-     * AbstractFxmlPanelController
+     * AbstractFxmlController
      */
     @Override
     public void controllerDidLoadFxml() {

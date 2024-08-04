@@ -44,15 +44,14 @@ import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPanelController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 
 @Prototype
-public class MainContentController extends AbstractFxmlPanelController implements MainContent{
+public class MainContentController extends AbstractFxmlController implements MainContent{
 
     @FXML
     private ListView<Application> applicationListView;
@@ -67,14 +66,17 @@ public class MainContentController extends AbstractFxmlPanelController implement
 
     private Model model;
 
+    // @formatter:off
     public MainContentController(
+            I18N i18n,
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
             ApplicationCard.Factory applicationCardFactory,
             ExtensionCard.Factory extensionCardFactory,
             Model model
             ) {
-        super(scenebuilderManager, documentManager, MainContentController.class.getResource("MainContent.fxml"), I18N.getBundle());
+     // @formatter:on
+        super(i18n, scenebuilderManager, documentManager, MainContentController.class.getResource("MainContent.fxml"));
 
         this.applicationCardFactory = applicationCardFactory;
         this.extensionCardFactory = extensionCardFactory;

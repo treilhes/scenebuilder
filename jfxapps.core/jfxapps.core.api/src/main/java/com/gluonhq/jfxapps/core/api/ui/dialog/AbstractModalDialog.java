@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,7 +35,6 @@ package com.gluonhq.jfxapps.core.api.ui.dialog;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
 
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -65,7 +64,6 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
 
     private final Window owner;
     private final URL contentFxmlURL;
-    private final ResourceBundle contentResources;
     private Parent contentRoot;
     private ButtonID clickedButtonID;
     private boolean showDefaultButton;
@@ -90,13 +88,13 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
      */
 
     public AbstractModalDialog(
+            I18N i18n,
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
-            URL contentFxmlURL, ResourceBundle contentResources, Window owner) {
-        super(sceneBuilderManager, iconSetting, getContainerFxmlURL(), I18N.getBundle());
+            URL contentFxmlURL, Window owner) {
+        super(i18n, sceneBuilderManager, iconSetting, getContainerFxmlURL());
         this.owner = owner;
         this.contentFxmlURL = contentFxmlURL;
-        this.contentResources = contentResources;
         assert contentFxmlURL != null;
     }
 
@@ -107,7 +105,7 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
 
             loader.setController(this);
             loader.setLocation(contentFxmlURL);
-            loader.setResources(contentResources);
+            loader.setResources(getI18n().getBundle());
             try {
                 contentRoot = (Parent)loader.load();
                 controllerDidLoadContentFxml();

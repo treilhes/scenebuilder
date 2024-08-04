@@ -58,8 +58,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public interface InternalRestClient {
 
-    public final static String SERVLET_PATH_PROP = "${spring.mvc.servlet.path:}";
     public final static String CONTEXT_PATH_PROP = "${server.servlet.context-path:}";
+    public final static String SERVLET_PATH_PROP = "${spring.mvc.servlet.path:}";
 
     public static final String DEFAULT_PATH = "boot";
 

@@ -39,13 +39,13 @@ import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPanelController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
 @Prototype
-public class ApplicationCardController extends AbstractFxmlPanelController implements ApplicationCard {
+public class ApplicationCardController extends AbstractFxmlController implements ApplicationCard {
 
     @FXML
     private Label descriptionLabel;
@@ -56,11 +56,14 @@ public class ApplicationCardController extends AbstractFxmlPanelController imple
     @FXML
     private Label versionLabel;
 
+    // @formatter:off
     public ApplicationCardController(
+            I18N i18n,
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager
             ) {
-        super(scenebuilderManager, documentManager, ApplicationCardController.class.getResource("ApplicationCard.fxml"), I18N.getBundle());
+     // @formatter:on
+        super(i18n, scenebuilderManager, documentManager, ApplicationCardController.class.getResource("ApplicationCard.fxml"));
     }
 
     @Override

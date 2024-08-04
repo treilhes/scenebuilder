@@ -61,6 +61,7 @@ open module scenebuilder.api {
 
     exports com.oracle.javafx.scenebuilder.api.job;
     exports com.oracle.javafx.scenebuilder.api.mask;
+    exports com.oracle.javafx.scenebuilder.api.menu;
     exports com.oracle.javafx.scenebuilder.api.script;
     exports com.oracle.javafx.scenebuilder.api.selection;
     exports com.oracle.javafx.scenebuilder.api.theme;

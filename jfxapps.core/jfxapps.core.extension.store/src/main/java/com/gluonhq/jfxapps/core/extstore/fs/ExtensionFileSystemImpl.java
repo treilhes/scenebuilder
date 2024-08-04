@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -52,18 +53,20 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 
 public class ExtensionFileSystemImpl implements ExtensionFileSystem {
-    
+
     private final static Logger logger = LoggerFactory.getLogger(ExtensionFileSystemImpl.class);
-    
+
     private final String TEMP_FILE_EXTENSION = ".tmp"; //NOCHECK
+
+    private final I18N i18n;
+    private final Dialog dialog;
     private final Path root;
 
-    private final Dialog dialog;
-
-    protected ExtensionFileSystemImpl(Path root, Dialog dialog) {
+    protected ExtensionFileSystemImpl(I18N i18n, Dialog dialog, Path root) {
         super();
-        this.root = root.toAbsolutePath();
+        this.i18n = i18n;
         this.dialog = dialog;
+        this.root = root.toAbsolutePath();
     }
 
     @Override
@@ -79,7 +82,7 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
     @Override
     public List<Path> list(String path) {
         Path target = root.resolve(path);
-        
+
         if (isSecurePath(target)) {
             try {
                 return Files.list(target).collect(Collectors.toList());
@@ -87,7 +90,7 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
                 logger.error("Unable to list the content of {}", target);
             }
         }
-        
+
         return Collections.emptyList();
     }
 
@@ -96,7 +99,7 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
         Path target = root.resolve(path);
         return get(target);
     }
-    
+
     @Override
     public Path get(Path target) {
         if (isSecurePath(target)) {
@@ -105,39 +108,39 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
             return null;
         }
     }
-    
+
     @Override
     public boolean copy(List<Path> files, String destination) throws IOException {
         Path target = get(destination);
-       
+
         if (target == null) {
             return false;
         }
-        
+
         return copy(files, target);
     }
-    
+
     @Override
     public boolean copy(List<Path> files, Path destination) throws IOException {
         if (destination == null || !isSecurePath(destination)) {
             return false;
         }
-        
+
         if (!enoughFreeSpaceOnDisk(files)) {
             return false;
         }
-        
+
         return copyFilesToDir(files, destination);
     }
 
     @Override
     public boolean delete(String destination) {
         Path target = get(destination);
-        
+
         if (target == null) {
             return false;
         }
-        
+
         try {
             return Files.deleteIfExists(target);
         } catch (IOException e) {
@@ -150,7 +153,7 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
     public boolean isCreated() {
         return Files.exists(root) && Files.isWritable(root);
     }
-    
+
     @Override
     public boolean create() {
         try {
@@ -158,14 +161,14 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
             return true;
         } catch (IOException ioe) {
             dialog.showErrorAndWait(
-                    I18N.getString("error.dir.create.title"),
-                    I18N.getString("error.dir.create.message", root.normalize().toString()),
-                    I18N.getString("error.write.details"),
+                    i18n.getString("error.dir.create.title"),
+                    i18n.getString("error.dir.create.message", root.normalize().toString()),
+                    i18n.getString("error.write.details"),
                     ioe);
             return false;
         }
     }
-    
+
     // Each copy is done via an intermediate temporary file that is renamed if
     // the copy goes well (for atomicity). If a copy fails we try to erase the
     // temporary file to stick to an as clean as possible disk content.
@@ -192,16 +195,16 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
                     Files.deleteIfExists(tempTargetPath);
                 }
             }
-        } 
+        }
 
         int errorCount = results.size();
         if (errorCount > 0) {
             dialog.showErrorAndWait(
-                    I18N.getString("error.copy.title"),
+                    i18n.getString("error.copy.title"),
                     errorCount == 1 ?
-                            I18N.getString("error.copy.message.single", exFile, destination):
-                            I18N.getString("error.copy.message.multiple", errorCount, destination),
-                    I18N.getString("error.write.details"),
+                            i18n.getString("error.copy.message.single", exFile, destination):
+                            i18n.getString("error.copy.message.multiple", errorCount, destination),
+                            i18n.getString("error.write.details"),
                     errorCount == 1 ? ex : null);
         }
         return results.isEmpty();
@@ -216,14 +219,14 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
                 } catch (IOException ioe) {
                     logger.error("Unable to create directory {}", path);
                     dialog.showErrorAndWait(
-                            I18N.getString("error.dir.create.title"),
-                            I18N.getString("error.dir.create.message", path.normalize().toString()),
-                            I18N.getString("error.write.details"),
+                            i18n.getString("error.dir.create.title"),
+                            i18n.getString("error.dir.create.message", path.normalize().toString()),
+                            i18n.getString("error.write.details"),
                             ioe);
                 }
             }
         }
-        
+
     }
 
     @Override
@@ -243,15 +246,15 @@ public class ExtensionFileSystemImpl implements ExtensionFileSystem {
             return true;
         }
     }
-    
+
     protected boolean enoughFreeSpaceOnDisk(List<Path> files) {
         try {
             return FileSystem.enoughFreeSpaceOnDisk(files, root);
         } catch (IOException ioe) {
             dialog.showErrorAndWait(
-                    I18N.getString("error.disk.space.title"),
-                    I18N.getString("error.disk.space.message"),
-                    I18N.getString("error.write.details"),
+                    i18n.getString("error.disk.space.title"),
+                    i18n.getString("error.disk.space.message"),
+                    i18n.getString("error.write.details"),
                     ioe);
         }
         return false;

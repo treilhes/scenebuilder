@@ -41,7 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
@@ -49,6 +48,7 @@ import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactor
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
@@ -313,7 +313,7 @@ public class DragController implements Drag {
         mouseTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                SbPlatform.runOnFxThreadWithActiveScope(() -> {
+                JfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
                     mouseTimer = null;
                     mouseDidStopMoving();
                 });

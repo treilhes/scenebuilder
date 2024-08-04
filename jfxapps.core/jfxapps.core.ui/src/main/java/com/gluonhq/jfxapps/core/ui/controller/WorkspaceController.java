@@ -37,11 +37,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.core.api.css.StylesheetProvider;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPanelController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -89,11 +89,21 @@ import javafx.util.Duration;
  *
  */
 @com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton
-public class WorkspaceController extends AbstractFxmlPanelController implements Workspace {
+public class WorkspaceController extends AbstractFxmlController implements Workspace {
+
+    private static final String I18N_CONTENT_LABEL_STATUS_CANNOT_DISPLAY = "content.label.status.cannot.display";
+
+    private static final String I18N_CONTENT_LABEL_STATUS_INVITATION = "content.label.status.invitation";
 
     private static Logger logger = LoggerFactory.getLogger(WorkspaceController.class);
 
     private static final double AUTORESIZE_SIZE = 500.0;
+
+    private final I18N i18n;
+
+
+
+
 
     private boolean tracingEvents; // For debugging purpose
 
@@ -127,11 +137,12 @@ public class WorkspaceController extends AbstractFxmlPanelController implements 
     private final ContextMenu contextMenu;
 
     public WorkspaceController(
+            I18N i18n,
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
             ContextMenu contextMenu) {
-        super(scenebuilderManager, documentManager, WorkspaceController.class.getResource("Workspace.fxml"),
-                I18N.getBundle());
+        super(i18n, scenebuilderManager, documentManager, WorkspaceController.class.getResource("Workspace.fxml"));
+        this.i18n = i18n;
         this.documentManager = documentManager;
         this.contextMenu = contextMenu;
     }
@@ -197,7 +208,7 @@ public class WorkspaceController extends AbstractFxmlPanelController implements 
         });
 
         documentManager.fxomDocument().subscribe(om -> {
-            SbPlatform.runOnFxThreadWithActiveScope(() -> {
+            JfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
                 setFxomDocument(om);
             });
         });
@@ -347,7 +358,7 @@ public class WorkspaceController extends AbstractFxmlPanelController implements 
             // visual artifacts. After the two steps are done, we turn the
             // visible by calling revealScalingGroup().
 
-            SbPlatform.runOnFxThreadWithActiveScope(() -> {
+            JfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
                 layoutContent(true /* applyCSS */);
                 adjustWorkspace();
                 revealScalingGroup();
@@ -372,7 +383,7 @@ public class WorkspaceController extends AbstractFxmlPanelController implements 
             statusMessageText = "FXOMDocument is null"; // NOCHECK
             statusStyleClass = "stage-prompt"; // NOCHECK
         } else if (fxomDocument.getFxomRoot() == null) {
-            statusMessageText = I18N.getString("content.label.status.invitation");
+            statusMessageText = i18n.getString(I18N_CONTENT_LABEL_STATUS_INVITATION);
             statusStyleClass = "stage-prompt"; // NOCHECK
         } else {
             final Object userSceneGraph = fxomDocument.getDisplayNodeOrSceneGraphRoot();
@@ -387,11 +398,11 @@ public class WorkspaceController extends AbstractFxmlPanelController implements 
                     canDisplayDocument = true;
                 } else {
                     contentGroup.getChildren().clear();
-                    statusMessageText = I18N.getString("content.label.status.cannot.display");
+                    statusMessageText = i18n.getString(I18N_CONTENT_LABEL_STATUS_CANNOT_DISPLAY);
                     statusStyleClass = "stage-prompt"; // NOCHECK
                 }
             } else {
-                statusMessageText = I18N.getString("content.label.status.cannot.display");
+                statusMessageText = i18n.getString(I18N_CONTENT_LABEL_STATUS_CANNOT_DISPLAY);
                 statusStyleClass = "stage-prompt"; // NOCHECK
             }
         }

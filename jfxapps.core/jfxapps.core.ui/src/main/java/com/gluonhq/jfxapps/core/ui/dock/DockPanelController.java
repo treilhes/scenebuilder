@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager.DockRequest;
@@ -228,7 +228,7 @@ public class DockPanelController implements Dock {
             view.parentDockProperty().set(null);
             viewDeleted(dockContext.getView());
 
-            SbPlatform.runOnFxThreadWithActiveScope(() -> {
+            JfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
                 updateDockView(isMinimized());
             });
         }
@@ -250,7 +250,7 @@ public class DockPanelController implements Dock {
         lastDockUuidPreference.writeToJavaPreferences();
         view.parentDockProperty().set(this);
 
-        SbPlatform.runOnFxThreadWithActiveScope(() -> {
+        JfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
             DockContext initialContext = new DockContext(view, viewAttachment, null, null, null);
             var dockContext = dockTypeProperty().get().computeView(initialContext);
             views.put(view, dockContext);

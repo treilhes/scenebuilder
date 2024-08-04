@@ -42,7 +42,7 @@ open module jfxapps.core.api {
 
     exports com.gluonhq.jfxapps.core.api.application;
     exports com.gluonhq.jfxapps.core.api.application.annotation;
-    exports com.gluonhq.jfxapps.core.api.application.lifecycle;
+    exports com.gluonhq.jfxapps.core.api.lifecycle;
 
     exports com.gluonhq.jfxapps.core.api.ui.controller.alert;
     exports com.gluonhq.jfxapps.core.api.clipboard;
@@ -53,7 +53,7 @@ open module jfxapps.core.api {
     exports com.gluonhq.jfxapps.core.api.content.mode;
     exports com.gluonhq.jfxapps.core.api.content.mode.annotation;
     exports com.gluonhq.jfxapps.core.api.css;
-    exports com.gluonhq.jfxapps.core.api.di;
+
     exports com.gluonhq.jfxapps.core.api.dnd;
     exports com.gluonhq.jfxapps.core.api.ui.controller.dock;
     exports com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation;
@@ -91,7 +91,7 @@ open module jfxapps.core.api {
 
     exports com.gluonhq.jfxapps.core.api.util;
 
-    exports com.gluonhq.jfxapps.core.api.application.javafx;
+    exports com.gluonhq.jfxapps.core.api.javafx;
 
     requires transitive jfxapps.javafx.starter;
 

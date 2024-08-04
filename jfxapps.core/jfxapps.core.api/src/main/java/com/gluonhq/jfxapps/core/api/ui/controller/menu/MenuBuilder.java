@@ -62,15 +62,20 @@ public class MenuBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(MenuBuilder.class);
 
+    private final I18N i18n;
     private final ActionFactory actionFactory;
     private final Optional<Accelerators> acceleratorsController;
     private final JfxAppContext context;
 
+    //@formatter:off
     public MenuBuilder(
+            I18N i18n,
             ActionFactory actionFactory,
             Optional<Accelerators> acceleratorsController,
             JfxAppContext context) {
+      //@formatter:on
         super();
+        this.i18n = i18n;
         this.actionFactory = actionFactory;
         this.acceleratorsController = acceleratorsController;
         this.context = context;
@@ -101,7 +106,7 @@ public class MenuBuilder {
         } else {
             outputText = text;
         }
-        return I18N.getStringOrDefault(outputText, outputText);
+        return i18n.getStringOrDefault(outputText, outputText);
     }
 
     public class MenuItemBuilder<T extends MenuItem> {
@@ -189,7 +194,7 @@ public class MenuBuilder {
 
             final boolean customTitle = title != null || titleFunction != null;
 
-            final String text = title == null ? "" : I18N.getStringOrDefault(title, title);
+            final String text = title == null ? "" : i18n.getStringOrDefault(title, title);
 
             item.setId(menuId);
 
@@ -262,7 +267,7 @@ public class MenuBuilder {
                 item = new Menu();
             }
 
-            final String text = title == null ? "" : I18N.getStringOrDefault(title, title);
+            final String text = title == null ? "" : i18n.getStringOrDefault(title, title);
 
             item.setId(menuId);
             item.setText(text);

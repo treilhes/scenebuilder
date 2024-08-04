@@ -58,7 +58,7 @@ import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.om.OMObject;
 import com.gluonhq.jfxapps.core.api.om.SceneGraphObject;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPanelController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.HudWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
@@ -112,7 +112,7 @@ import javafx.scene.shape.Rectangle;
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class ContentPanelController extends AbstractFxmlPanelController
+public class ContentPanelController extends AbstractFxmlController
         implements Content, FXOMDocument.SceneGraphHolder {
 
     private static Logger logger = LoggerFactory.getLogger(ContentPanelController.class);
@@ -774,7 +774,7 @@ public class ContentPanelController extends AbstractFxmlPanelController
     }
 
     /*
-     * AbstractFxmlPanelController
+     * AbstractFxmlController
      */
 
     /**

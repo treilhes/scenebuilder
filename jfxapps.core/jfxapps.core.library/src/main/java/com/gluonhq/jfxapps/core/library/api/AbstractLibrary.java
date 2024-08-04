@@ -58,13 +58,13 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
-import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithApplication;
-import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithDocument;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.library.Library;
 import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
 import com.gluonhq.jfxapps.core.api.library.LibraryItem;
 import com.gluonhq.jfxapps.core.api.library.Report;
+import com.gluonhq.jfxapps.core.api.lifecycle.InitWithApplication;
+import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
@@ -214,7 +214,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
         ExecutorService executor = Executors.newFixedThreadPool(4);
 
         // go back to fx thread for ui update
-        SbPlatform.runOnFxThread(() -> {
+        JfxAppPlatform.runOnFxThread(() -> {
 
             setExploring(true);
 
@@ -349,14 +349,14 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
         if (Platform.isFxApplicationThread())
             exploringProperty().set(value);
         else
-            SbPlatform.runOnFxThread(() -> setExploring(value));
+            JfxAppPlatform.runOnFxThread(() -> setExploring(value));
     }
 
     protected void setItems(Collection<I> items) {
         if (Platform.isFxApplicationThread()) {
             itemsProperty.setAll(items);
         } else {
-            SbPlatform.runOnFxThread(() -> {
+            JfxAppPlatform.runOnFxThread(() -> {
                 itemsProperty.setAll(items);
             });
         }
@@ -366,7 +366,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
         if (Platform.isFxApplicationThread()) {
             itemsProperty.addAll(items);
         } else {
-            SbPlatform.runOnFxThread(() -> itemsProperty.addAll(items));
+            JfxAppPlatform.runOnFxThread(() -> itemsProperty.addAll(items));
         }
     }
 
@@ -374,7 +374,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
         if (Platform.isFxApplicationThread()) {
             explorationCountProperty.add(1);
         } else {
-            SbPlatform.runOnFxThread(() -> explorationCountProperty.add(1));
+            JfxAppPlatform.runOnFxThread(() -> explorationCountProperty.add(1));
         }
     }
 
@@ -382,7 +382,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
         if (Platform.isFxApplicationThread()) {
             explorationDateProperty.set(date);
         } else {
-            SbPlatform.runOnFxThread(() -> explorationDateProperty.set(date));
+            JfxAppPlatform.runOnFxThread(() -> explorationDateProperty.set(date));
         }
     }
 
@@ -390,7 +390,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
         if (Platform.isFxApplicationThread()) {
             firstExplorationCompleted.set(true);
         } else {
-            SbPlatform.runOnFxThread(() -> firstExplorationCompleted.set(true));
+            JfxAppPlatform.runOnFxThread(() -> firstExplorationCompleted.set(true));
         }
     }
 

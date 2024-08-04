@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,6 +35,8 @@ package com.gluonhq.jfxapps.core.maven.artifact;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -62,13 +64,11 @@ import javafx.stage.Stage;
 @ExtendWith({ ApplicationExtension.class, MockitoExtension.class })
 class SearchMavenDialogControllerTest {
 
-    static {
-        I18N.initForTest();
-    }
-
     private MavenClientController mc = new MavenClientController(null, null, null, null, null);
 
     private SceneBuilderManager sbm = new SceneBuilderManager.SceneBuilderManagerImpl();
+
+    private I18N i18n = new I18N(List.of(), true);
 
     @Mock
     private IconSetting iconSetting;
@@ -99,7 +99,7 @@ class SearchMavenDialogControllerTest {
 
     @Test
     void should_load_the_hud_fxml() {
-        Parent ui = FxmlControllerLoader.controller(new SearchMavenArtifactDialogController(mc, sbm, iconSetting,
+        Parent ui = FxmlControllerLoader.controller(new SearchMavenArtifactDialogController(i18n, mc, sbm, iconSetting,
                 messageLogger, mavenSetting, repositoryPreferences, owner)).loadFxml();
         assertNotNull(ui);
     }
@@ -108,9 +108,8 @@ class SearchMavenDialogControllerTest {
     void show_ui(FxRobot robot) {
         Mockito.when(owner.getStage()).thenReturn(stage);
 
-        SearchMavenArtifactDialog dialog = FxmlControllerLoader.controller(new SearchMavenArtifactDialogController(mc,
-                sbm, iconSetting, messageLogger, mavenSetting, repositoryPreferences, owner))
-                .darkTheme(sbm).load();
+        SearchMavenArtifactDialog dialog = FxmlControllerLoader.controller(new SearchMavenArtifactDialogController(i18n,
+                mc, sbm, iconSetting, messageLogger, mavenSetting, repositoryPreferences, owner)).darkTheme(sbm).load();
 
         robot.interact(() -> {
             dialog.openWindow(null);

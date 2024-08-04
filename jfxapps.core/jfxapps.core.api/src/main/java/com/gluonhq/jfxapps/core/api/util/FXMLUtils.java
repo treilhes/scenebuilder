@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,52 +37,73 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 
 public class FXMLUtils {
+
+    private static final Logger log = LoggerFactory.getLogger(FXMLUtils.class);
 
 	private FXMLUtils() {}
 
 	public static <T> T load(Object controllerInstance, String fxml) {
-		return load(controllerInstance, controllerInstance.getClass(), fxml);
-	}
-
-	public static <T> T load(Object controllerInstance, Class<?> resourceLoadingClass, String fxml) {
-        final URL fxmlURL = resourceLoadingClass.getResource(fxml); //NOCHECK
-        final FXMLLoader loader = new FXMLLoader();
-
-        loader.setController(controllerInstance);
-        loader.setLocation(fxmlURL);
-        loader.setResources(I18N.getBundle());
-
-        // setting ClassLoader for OSGi environments
-        loader.setClassLoader(resourceLoadingClass.getClassLoader());
-
-        try {
-            return loader.load();
-        } catch (RuntimeException | IOException x) {
-            System.out.println("loader.getClassLoader()=" + resourceLoadingClass.getName()); //NOCHECK
-            System.out.println("loader.getController()=" + loader.getController()); //NOCHECK
-            System.out.println("loader.getLocation()=" + loader.getLocation()); //NOCHECK
-            throw new RuntimeException("Failed to load " + fxmlURL.getFile(), x); //NOCHECK
-        }
+        return load(null, controllerInstance, controllerInstance.getClass(), fxml);
     }
 
-	public static <T> T load(Object controllerInstance, URL fxmlUrl, ResourceBundle bundle) {
+    public static <T> T load(Object controllerInstance, Class<?> resourceLoadingClass, String fxml) {
+        final URL fxmlURL = resourceLoadingClass.getResource(fxml); //NOCHECK
+        return load(null, controllerInstance, resourceLoadingClass, fxmlURL);
+    }
+
+    public static <T> T load(Object controllerInstance, Class<?> resourceLoadingClass, URL fxmlUrl) {
+        return load(null, controllerInstance, resourceLoadingClass, fxmlUrl);
+    }
+	public static <T> T load(I18N i18n, Object controllerInstance, String fxml) {
+		return load(i18n, controllerInstance, controllerInstance.getClass(), fxml);
+	}
+
+    public static <T> T load(I18N i18n, Object controllerInstance, Class<?> resourceLoadingClass, String fxml) {
+        final URL fxmlURL = resourceLoadingClass.getResource(fxml); //NOCHECK
+        return load(i18n, controllerInstance, resourceLoadingClass, fxmlURL);
+    }
+
+
+    public static <T extends FxmlController> Parent load(T controller, URL fxmlURL, ResourceBundle resources) {
+        return load(controller, controller.getClass(), fxmlURL, resources);
+    }
+
+
+	public static <T> T load(I18N i18n, Object controllerInstance, Class<?> resourceLoadingClass, URL fxmlUrl) {
+	    return load(controllerInstance, resourceLoadingClass, fxmlUrl, i18n.getBundle());
+	}
+	public static <T> T load(Object controllerInstance, Class<?> resourceLoadingClass, URL fxmlUrl, ResourceBundle resources) {
+
+        ClassLoader classLoader = resourceLoadingClass != null ? resourceLoadingClass.getClassLoader()
+                : controllerInstance.getClass().getClassLoader();
+
         FXMLLoader loader = new FXMLLoader();
         loader.setController(controllerInstance);
         loader.setLocation(fxmlUrl);
-        loader.setResources(bundle);
-        loader.setClassLoader(controllerInstance.getClass().getClassLoader());
+
+        if (resources != null) {
+            loader.setResources(resources);
+        }
+
+        loader.setClassLoader(classLoader);
 
         try {
             return loader.load();
         } catch (RuntimeException | IOException x) {
-            System.out.println("loader.getClassLoader()=" + controllerInstance.getClass().getName()); //NOCHECK
-            System.out.println("loader.getController()=" + loader.getController()); //NOCHECK
-            System.out.println("loader.getLocation()=" + loader.getLocation()); //NOCHECK
+            String clsLoader = resourceLoadingClass != null ? resourceLoadingClass.getName() : controllerInstance.getClass().getName();
+            log.debug("loader.getClassLoader()=" + clsLoader); //NOCHECK
+            log.debug("loader.getController()=" + loader.getController()); //NOCHECK
+            log.debug("loader.getLocation()=" + loader.getLocation()); //NOCHECK
             throw new RuntimeException("Failed to load " + fxmlUrl.getFile(), x); //NOCHECK
         }
     }

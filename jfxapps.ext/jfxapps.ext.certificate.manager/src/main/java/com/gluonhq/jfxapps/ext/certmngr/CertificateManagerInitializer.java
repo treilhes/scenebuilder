@@ -35,7 +35,7 @@ package com.gluonhq.jfxapps.ext.certmngr;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithApplication;
+import com.gluonhq.jfxapps.core.api.lifecycle.InitWithApplication;
 
 @Singleton
 public class CertificateManagerInitializer implements InitWithApplication {

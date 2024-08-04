@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,7 +39,7 @@ import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPanelController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageBar;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger.MessageEntry;
@@ -62,7 +62,16 @@ import javafx.util.Duration;
  *
  */
 @ApplicationInstanceSingleton
-public class MessageBarController extends AbstractFxmlPanelController implements MessageBar{
+public class MessageBarController extends AbstractFxmlController implements MessageBar{
+
+    private final MessageLogger messageLogger;
+    private final MessagePopupController messagePopup;
+
+    private final ImageView fileDirtyImage;
+
+    private int previousTotalNumOfMessages = 0;
+    private Tooltip statusLabelTooltip = null;
+
 
     @FXML
     private HBox messageBox;
@@ -79,22 +88,14 @@ public class MessageBarController extends AbstractFxmlPanelController implements
     @FXML
     private HBox iconsHbox;
 
-    private final MessageLogger messageLogger;
-    private final MessagePopupController messagePopup;
-
-    private final ImageView fileDirtyImage;
-
-    private int previousTotalNumOfMessages = 0;
-    private Tooltip statusLabelTooltip = null;
-
-
     public MessageBarController(
+            I18N i18n,
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
             MessageLogger messageLogger,
             MessagePopupController messagePopupController
             ) {
-        super(scenebuilderManager, documentManager, MessageBarController.class.getResource("MessageBar.fxml"), I18N.getBundle());
+        super(i18n, scenebuilderManager, documentManager, MessageBarController.class.getResource("MessageBar.fxml"));
         this.messageLogger = messageLogger;
         this.messagePopup = messagePopupController;
 
@@ -104,6 +105,7 @@ public class MessageBarController extends AbstractFxmlPanelController implements
         fileDirtyImage = new ImageView(new Image(fileDirtyURL.toExternalForm()));
     }
 
+    @Override
     public StackPane getSelectionBarHost() {
         return selectionBarHost;
     }
@@ -123,7 +125,7 @@ public class MessageBarController extends AbstractFxmlPanelController implements
         }
     }
     /*
-     * AbstractFxmlPanelController
+     * AbstractFxmlController
      */
     @Override
     public void controllerDidLoadFxml() {

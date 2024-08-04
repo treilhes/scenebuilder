@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -63,6 +63,14 @@ import javafx.stage.Stage;
 @ApplicationInstanceSingleton
 public class ImportProgressDialogController extends AbstractModalDialog {
 
+    private static final String I18N_IMPORT_ERROR_DETAILS = "import.error.details";
+
+    private static final String I18N_IMPORT_ERROR_MESSAGE = "import.error.message";
+
+    private static final String I18N_IMPORT_ERROR_TITLE = "import.error.title";
+
+    private static final String I18N_IMPORT_WINDOW_TITLE = "import.window.title";
+
     private static final Logger logger = LoggerFactory.getLogger(ImportProgressDialogController.class);
 
     private int numOfImportedJar;
@@ -82,12 +90,15 @@ public class ImportProgressDialogController extends AbstractModalDialog {
 
     private List<Task<?>> currentTasks;
 
+    // @formatter:off
     protected ImportProgressDialogController(
+            I18N i18n,
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
             Dialog dialog
             ) {
-        super(sceneBuilderManager, iconSetting, ImportProgressDialogController.class.getResource("ImportProgressDialog.fxml"), I18N.getBundle(), null);
+     // @formatter:on
+        super(i18n, sceneBuilderManager, iconSetting, ImportProgressDialogController.class.getResource("ImportProgressDialog.fxml"), null);
         this.dialog = dialog;
     }
 
@@ -157,14 +168,14 @@ public class ImportProgressDialogController extends AbstractModalDialog {
     @Override
     protected void controllerDidCreateStage() {
         super.controllerDidCreateStage();
-        getStage().setTitle(I18N.getString("import.window.title"));
+        getStage().setTitle(getI18n().getString(I18N_IMPORT_WINDOW_TITLE));
     }
 
     private void showErrorDialog(Exception exception) {
         dialog.showErrorAndWait(
-                I18N.getString("import.error.title"),
-                I18N.getString("import.error.message"),
-                I18N.getString("import.error.details"),
+                getI18n().getString(I18N_IMPORT_ERROR_TITLE),
+                getI18n().getString(I18N_IMPORT_ERROR_MESSAGE),
+                getI18n().getString(I18N_IMPORT_ERROR_DETAILS),
                 exception);
     }
 

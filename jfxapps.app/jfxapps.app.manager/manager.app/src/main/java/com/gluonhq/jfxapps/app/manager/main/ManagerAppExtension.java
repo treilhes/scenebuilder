@@ -37,6 +37,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.app.manager.api.ManagerApiExtension;
+import com.gluonhq.jfxapps.app.manager.main.action.ShowAboutAction;
+import com.gluonhq.jfxapps.app.manager.main.action.ShowScenicViewAction;
 import com.gluonhq.jfxapps.app.manager.main.menu.MainMenuProvider;
 import com.gluonhq.jfxapps.app.manager.main.model.ModelController;
 import com.gluonhq.jfxapps.app.manager.main.ui.ManagerUiTemplate;
@@ -45,6 +47,8 @@ import com.gluonhq.jfxapps.app.manager.main.ui.cmp.ApplicationCardController;
 import com.gluonhq.jfxapps.app.manager.main.ui.cmp.ExtensionCardController;
 import com.gluonhq.jfxapps.app.manager.main.ui.cmp.MainContentController;
 import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.ext.about.api.AboutApi;
+import com.gluonhq.jfxapps.ext.scenicview.api.ScenicViewApi;
 
 public class ManagerAppExtension implements OpenExtension  {
 
@@ -70,7 +74,12 @@ public class ManagerAppExtension implements OpenExtension  {
                 ExtensionCardController.class,
                 MainContentController.class,
                 MainMenuProvider.class,
-                ModelController.class
+                ModelController.class,
+
+                ShowAboutAction.class,
+                ShowScenicViewAction.class,
+                AboutApi.class,
+                ScenicViewApi.class
                 );
     }
 

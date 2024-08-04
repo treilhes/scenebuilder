@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,6 +39,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups;
 import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
 import com.gluonhq.jfxapps.core.api.preferences.PreferenceEditorFactory;
@@ -61,6 +63,8 @@ public class ToolThemePreference extends ObjectPreference<Class<? extends ToolTh
     public static final String PREFERENCE_KEY = "TOOL_THEME"; // NOI18N
     public static final Class<? extends ToolTheme> PREFERENCE_DEFAULT_VALUE = DefaultToolThemesList.Default.class;
 
+    private final I18N i18n;
+
     private final List<Class<? extends ToolTheme>> toolThemeClasses;
 
     // TODO bad bad bad, but PropertyEditors need this instance and i don't want to
@@ -73,11 +77,15 @@ public class ToolThemePreference extends ObjectPreference<Class<? extends ToolTh
 
     private final PreferenceEditorFactory preferenceEditorFactory;
 
-    public ToolThemePreference(@Autowired PreferencesContext preferencesContext,
-            @Autowired PreferenceEditorFactory preferenceEditorFactory,
-            @Autowired List<ToolThemeProvider> toolThemeProviders) {
+    //@formatter:off
+    public ToolThemePreference(
+            I18N i18n,
+            PreferencesContext preferencesContext,
+            PreferenceEditorFactory preferenceEditorFactory,
+            List<ToolThemeProvider> toolThemeProviders) {
+      //@formatter:on
         super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-//		instance = this;
+        this.i18n = i18n;
         this.preferenceEditorFactory = preferenceEditorFactory;
         toolThemeClasses = new ArrayList<>();
         toolThemeProviders.forEach(tp -> toolThemeClasses.addAll(tp.toolThemes()));
@@ -109,7 +117,7 @@ public class ToolThemePreference extends ObjectPreference<Class<? extends ToolTh
     @Override
     public Parent getEditor() {
         return preferenceEditorFactory.newChoiceFieldEditor(this,
-                toolThemeClasses.toArray((Class<? extends ToolTheme>[]) new Class[0]), (c) -> ToolTheme.name(c));
+                toolThemeClasses.toArray((Class<? extends ToolTheme>[]) new Class[0]), (c) -> ToolTheme.name(i18n, c));
     }
 
     @Override

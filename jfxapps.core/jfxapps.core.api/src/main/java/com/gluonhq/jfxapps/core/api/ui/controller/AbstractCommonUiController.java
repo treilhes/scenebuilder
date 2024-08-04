@@ -37,7 +37,7 @@ import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.core.api.di.FxmlController;
+import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
@@ -61,7 +61,7 @@ public abstract class AbstractCommonUiController  {
     private final ChangeListener<? super Node> focusListener;
 
     /** The panel root. */
-    private Parent panelRoot;
+    private Parent root;
 
     /** The tool stylesheet config. */
     private ToolStylesheetProvider toolStylesheetConfig;
@@ -80,7 +80,7 @@ public abstract class AbstractCommonUiController  {
         this.documentManager = documentManager;
 
         this.focusListener = (obj, old, node) -> {
-            if (NodeUtils.isDescendantOf(panelRoot, node)) {
+            if (NodeUtils.isDescendantOf(root, node)) {
                 notifyFocused();
             }
         };
@@ -99,8 +99,8 @@ public abstract class AbstractCommonUiController  {
      * @return the root object of the panel (never null)
      */
     public Parent getRoot() {
-        assert panelRoot != null;
-        return panelRoot;
+        assert root != null;
+        return root;
     }
 
     /**
@@ -112,7 +112,7 @@ public abstract class AbstractCommonUiController  {
      */
     public void setRoot(Parent panelRoot) {
         assert panelRoot != null;
-        this.panelRoot = panelRoot;
+        this.root = panelRoot;
 
         if (sceneBuilderManager != null) {
             sceneBuilderManager.stylesheetConfig()
@@ -141,13 +141,13 @@ public abstract class AbstractCommonUiController  {
      */
     protected void toolStylesheetDidChange(ToolStylesheetProvider newToolStylesheetConfig) {
 
-        if (panelRoot == null) { // nothing to style so return
+        if (root == null) { // nothing to style so return
             return;
         }
 
         if (toolStylesheetConfig != null) { // if old conf then removeit
-            panelRoot.getStylesheets().remove(toolStylesheetConfig.getUserAgentStylesheet());
-            panelRoot.getStylesheets().removeAll(toolStylesheetConfig.getStylesheets());
+            root.getStylesheets().remove(toolStylesheetConfig.getUserAgentStylesheet());
+            root.getStylesheets().removeAll(toolStylesheetConfig.getStylesheets());
         }
 
         if (newToolStylesheetConfig != null) { // replace the active conf only if the new one is valid
@@ -157,12 +157,12 @@ public abstract class AbstractCommonUiController  {
         //apply the conf if the current one is valid
         if (toolStylesheetConfig != null) {
             if (toolStylesheetConfig.getUserAgentStylesheet() != null) {
-                panelRoot.getStylesheets().add(toolStylesheetConfig.getUserAgentStylesheet());
+                root.getStylesheets().add(toolStylesheetConfig.getUserAgentStylesheet());
             }
             if (toolStylesheetConfig.getStylesheets() != null) {
                 logger.info("Applying new tool theme using {} on {}",
                         toolStylesheetConfig.getStylesheets(), this.getClass().getName());
-                panelRoot.getStylesheets().addAll(toolStylesheetConfig.getStylesheets());
+                root.getStylesheets().addAll(toolStylesheetConfig.getStylesheets());
             }
         }
     }

@@ -39,6 +39,7 @@ import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.context.annotation.FxThread;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
@@ -219,6 +220,7 @@ public abstract class AbstractWindowController implements InstanceWindow {
      * Opens this window and place it in front.
      */
     @Override
+    @FxThread
     public void openWindow() {
         assert Platform.isFxApplicationThread();
         iconSetting.setWindowIcon(getStage());
@@ -307,6 +309,8 @@ public abstract class AbstractWindowController implements InstanceWindow {
                 root.getStylesheets().add(toolStylesheetConfig.getUserAgentStylesheet());
             }
             if (toolStylesheetConfig.getStylesheets() != null) {
+                logger.info("Applying new tool theme using {} on {}",
+                        toolStylesheetConfig.getStylesheets(), this.getClass().getName());
                 root.getStylesheets().addAll(toolStylesheetConfig.getStylesheets());
             }
         }

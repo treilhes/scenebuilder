@@ -55,13 +55,17 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 
 /**
- * This job set the property defined by the provided {@link ValuePropertyMetadata}<br/>
- * with the provided "value" on each object selected if the property is available for the object
+ * This job set the property defined by the provided
+ * {@link ValuePropertyMetadata}<br/>
+ * with the provided "value" on each object selected if the property is
+ * available for the object
  */
 @Prototype
 public final class ModifySelectionJob extends BatchDocumentJob {
 
+    private static final String I18N_LABEL_ACTION_EDIT_SET_N = "label.action.edit.set.n";
     private static Logger logger = LoggerFactory.getLogger(ModifySelectionJob.class);
+    private final I18N i18n;
 
     private final Selection selection;
     private final FxomJobsFactory fxomJobsFactory;
@@ -71,12 +75,14 @@ public final class ModifySelectionJob extends BatchDocumentJob {
 
     // @formatter:off
     protected ModifySelectionJob(
+            I18N i18n,
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             Selection selection,
             FxomJobsFactory fxomJobsFactory) {
      // @formatter:on
         super(extensionFactory, documentManager);
+        this.i18n = i18n;
         this.selection = selection;
         this.fxomJobsFactory = fxomJobsFactory;
     }
@@ -90,7 +96,6 @@ public final class ModifySelectionJob extends BatchDocumentJob {
     protected List<Job> makeSubJobs() {
         final List<Job> result = new ArrayList<>();
         final Set<FXOMInstance> candidates = new HashSet<>();
-
 
         if (selection.getGroup() != null) {
             for (FXOMObject fxomObject : selection.getGroup().getItems()) {
@@ -120,7 +125,6 @@ public final class ModifySelectionJob extends BatchDocumentJob {
 //        }
 //    }
 
-
     private void handleFxomInstance(FXOMObject fxomObject, Set<FXOMInstance> candidates) {
         if (fxomObject instanceof FXOMInstance) {
             candidates.add((FXOMInstance) fxomObject);
@@ -129,13 +133,12 @@ public final class ModifySelectionJob extends BatchDocumentJob {
     }
 
     private void handleFxomIntrinsic(FXOMObject fxomObject, Set<FXOMInstance> candidates) {
-        if(fxomObject instanceof FXOMIntrinsic) {
+        if (fxomObject instanceof FXOMIntrinsic) {
             FXOMIntrinsic intrinsic = (FXOMIntrinsic) fxomObject;
             FXOMInstance fxomInstance = intrinsic.createFxomInstanceFromIntrinsic();
             candidates.add(fxomInstance);
         }
     }
-
 
 //    private void handleGridSelectionGroup(AbstractSelectionGroup group, Set<FXOMInstance> candidates) {
 //        final GridSelectionGroup gsg = (GridSelectionGroup) group;
@@ -166,17 +169,15 @@ public final class ModifySelectionJob extends BatchDocumentJob {
         final int subJobCount = subJobs.size();
 
         switch (subJobCount) {
-            case 0:
-                result = "Unexecutable Set"; //NOCHECK
-                break;
-            case 1: // Single selection
-                result = subJobs.get(0).getDescription();
-                break;
-            default:
-                result = I18N.getString("label.action.edit.set.n",
-                        propertyMetadata.getName().toString(),
-                        subJobCount);
-                break;
+        case 0:
+            result = "Unexecutable Set"; // NOCHECK
+            break;
+        case 1: // Single selection
+            result = subJobs.get(0).getDescription();
+            break;
+        default:
+            result = i18n.getString(I18N_LABEL_ACTION_EDIT_SET_N, propertyMetadata.getName().toString(), subJobCount);
+            break;
         }
 
         return result;

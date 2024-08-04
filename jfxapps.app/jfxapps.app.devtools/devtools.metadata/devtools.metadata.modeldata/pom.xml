@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.gluonhq.jfxapps</groupId>
+        <artifactId>devtools.metadata</artifactId>
+        <version>${devtools.version}</version>
+    </parent>
+    <artifactId>devtools.metadata.modeldata</artifactId>
+
+    <properties>
+        <javafx.version>16</javafx.version>
+    </properties>
+
+    <dependencies>
+        <!-- The goal for this dependency is to force the build of
+        scenebuilder.metadata-maven-plugin -->
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps-metadata-maven-plugin</artifactId>
+            <version>${jfxapps.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps-metadata-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-class-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>metadataResource</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

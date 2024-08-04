@@ -55,13 +55,12 @@ import org.springframework.context.annotation.DependsOn;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
-import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
-import com.gluonhq.jfxapps.core.api.application.lifecycle.DisposeWithApplication;
-import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithApplication;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
+import com.gluonhq.jfxapps.core.api.lifecycle.DisposeWithApplication;
+import com.gluonhq.jfxapps.core.api.lifecycle.InitWithApplication;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
@@ -77,7 +76,7 @@ public class InstancesControllerImpl implements InstancesManager {
 
     private final static Logger logger = LoggerFactory.getLogger(InstancesControllerImpl.class);
 
-    //private static MainController singleton;
+    private final I18N i18n;
 
     private JfxAppContext context;
 
@@ -99,14 +98,17 @@ public class InstancesControllerImpl implements InstancesManager {
     private final Provider<Optional<List<InitWithApplication>>> initializations;
     private final Provider<Optional<List<DisposeWithApplication>>> finalizations;
 
+    //@formatter:off
     public InstancesControllerImpl(
+            I18N i18n,
             JfxAppContext context,
             //IconSetting windowIconSetting,
             //FileSystem fileSystem,
             Provider<Dialog> dialog,
             Provider<Optional<List<InitWithApplication>>> initializations,
             Provider<Optional<List<DisposeWithApplication>>> finalizations) {
-
+      //@formatter:on
+        this.i18n = i18n;
         this.context = context;
         //this.windowIconSetting = windowIconSetting;
         //this.fileSystem = fileSystem;
@@ -238,7 +240,7 @@ public class InstancesControllerImpl implements InstancesManager {
         }
 
         // execute ui related loading now
-        SbPlatform.runOnFxThread(() -> {
+        JfxAppPlatform.runOnFxThread(() -> {
 
 
             for (Entry<File, ApplicationInstance> entry:documents.entrySet()) {
@@ -265,9 +267,9 @@ public class InstancesControllerImpl implements InstancesManager {
                         final File fxmlFile = exceptions.keySet().iterator().next();
                         final Exception x = exceptions.get(fxmlFile);
                         dialog.get().showErrorAndWait(
-                                I18N.getString("alert.title.open"),
-                                I18N.getString("alert.open.failure1.message", displayName(fxmlFile.getPath())),
-                                I18N.getString("alert.open.failure1.details"),
+                                i18n.getString("alert.title.open"),
+                                i18n.getString("alert.open.failure1.message", displayName(fxmlFile.getPath())),
+                                i18n.getString("alert.open.failure1.details"),
                                 x);
                         break;
                     }
@@ -275,16 +277,16 @@ public class InstancesControllerImpl implements InstancesManager {
                         if (exceptions.size() == fxmlFiles.size()) {
                             // Open operation has failed for all the files
                             dialog.get().showErrorAndWait(
-                                    I18N.getString("alert.title.open"),
-                                    I18N.getString("alert.open.failureN.message"),
-                                    I18N.getString("alert.open.failureN.details")
+                                    i18n.getString("alert.title.open"),
+                                    i18n.getString("alert.open.failureN.message"),
+                                    i18n.getString("alert.open.failureN.details")
                                     );
                         } else {
                             // Open operation has failed for some files
                             dialog.get().showErrorAndWait(
-                                    I18N.getString("alert.title.open"),
-                                    I18N.getString("alert.open.failureMofN.message", exceptions.size(), fxmlFiles.size()),
-                                    I18N.getString("alert.open.failureMofN.details")
+                                    i18n.getString("alert.title.open"),
+                                    i18n.getString("alert.open.failureMofN.message", exceptions.size(), fxmlFiles.size()),
+                                    i18n.getString("alert.open.failureMofN.details")
                                     );
                         }
                         break;
@@ -633,10 +635,10 @@ public class InstancesControllerImpl implements InstancesManager {
     private void logTimestamp(ACTION type) {
         switch (type) {
         case START:
-            logger.info(I18N.getString("log.start"));
+            logger.info(i18n.getString("log.start"));
             break;
         case STOP:
-            logger.info(I18N.getString("log.stop"));
+            logger.info(i18n.getString("log.stop"));
             break;
         default:
             assert false;

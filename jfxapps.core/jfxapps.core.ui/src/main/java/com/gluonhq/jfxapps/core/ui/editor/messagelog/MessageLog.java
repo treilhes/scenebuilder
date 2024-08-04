@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -55,6 +55,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 @ApplicationInstanceSingleton
 public class MessageLog implements MessageLogger{
 
+    private final I18N i18n;
     private final List<MessageLogEntry> entries = new ArrayList<>();
     private final SimpleIntegerProperty revision = new SimpleIntegerProperty();
     private final SimpleIntegerProperty numOfWarningMessages = new SimpleIntegerProperty();
@@ -67,9 +68,9 @@ public class MessageLog implements MessageLogger{
      * Public
      */
 
-    public MessageLog(DocumentManager documentManager) {
+    public MessageLog(I18N i18n, DocumentManager documentManager) {
         super();
-
+        this.i18n = i18n;
         documentManager.fxomDocument().subscribe(fd -> clear());
     }
 
@@ -84,12 +85,12 @@ public class MessageLog implements MessageLogger{
 
     @Override
     public void logInfoMessage(String infoKey, Object... arguments) {
-        logInfoMessage(infoKey, I18N.getBundle(), arguments);
+        logInfoMessage(infoKey, i18n.getBundle(), arguments);
     }
 
     @Override
     public void logWarningMessage(String warningKey, Object... arguments) {
-        logWarningMessage(warningKey, I18N.getBundle(), arguments);
+        logWarningMessage(warningKey, i18n.getBundle(), arguments);
     }
 
     @Override

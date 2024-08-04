@@ -48,8 +48,8 @@ import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
 
@@ -111,7 +111,7 @@ public abstract class AbstractOpenFilesAction extends AbstractAction {
         //SceneBuilderLoadingProgress.get().end();
 
         // execute ui related loading now
-        SbPlatform.runOnFxThread(() -> {
+        JfxAppPlatform.runOnFxThread(() -> {
 
 
             for (Entry<File, ApplicationInstance> entry:documents.entrySet()) {

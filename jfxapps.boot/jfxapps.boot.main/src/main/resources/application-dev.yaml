@@ -1,6 +1,6 @@
 jfxapps:
   platform:
-    rootPath: ./target
+    rootPath: ./target/devapp
   registry:
     snapshotsAllowed: true
   repository:
@@ -31,6 +31,9 @@ jfxapps:
       - groupId: com.gluonhq.jfxapps
         artifactId: jfxapps.ext.about
         path: ../../jfxapps.ext/jfxapps.ext.about/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: jfxapps.ext.scenicview
+        path: ../../jfxapps.ext/jfxapps.ext.scenicview/target/classes
       - groupId: com.gluonhq.jfxapps
         artifactId: manager.api
         path: ../../jfxapps.app/jfxapps.app.manager/manager.api/target/classes

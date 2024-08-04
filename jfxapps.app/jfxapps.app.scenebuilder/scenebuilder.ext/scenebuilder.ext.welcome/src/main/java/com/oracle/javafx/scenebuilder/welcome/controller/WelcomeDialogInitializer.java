@@ -37,8 +37,8 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
-import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithApplication;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
+import com.gluonhq.jfxapps.core.api.lifecycle.InitWithApplication;
 
 @Component
 public class WelcomeDialogInitializer implements InitWithApplication {
@@ -62,7 +62,7 @@ public class WelcomeDialogInitializer implements InitWithApplication {
         // Unless we're on a Mac we're starting SB directly (fresh start)
         // so we're not opening any file and as such we should show the Welcome Dialog
         if (main.lookupUnusedInstance() != null) {
-            SbPlatform.runOnFxThread(() -> {
+            JfxAppPlatform.runOnFxThread(() -> {
                 wdwc.getStage().show();
             });
         }

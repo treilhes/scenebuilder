@@ -59,12 +59,23 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import javafx.scene.input.Clipboard;
 
 /**
- * This job try to paste the current clipboard content (if valid {@link FXOMObject})
- * into the main accessory of the selected object (only one item selected accepted)
- * or into the first accepting accesory of the selected object
+ * This job try to paste the current clipboard content (if valid
+ * {@link FXOMObject}) into the main accessory of the selected object (only one
+ * item selected accepted) or into the first accepting accesory of the selected
+ * object
  */
 @Prototype
 public final class PasteIntoJob extends BatchSelectionJob {
+
+    private static final String I18N_LABEL_ACTION_EDIT_PASTE_INTO_N = "label.action.edit.paste.into.n";
+
+    private static final String I18N_LABEL_ACTION_EDIT_PASTE_INTO_COLLECTION = "label.action.edit.paste.into.collection";
+
+    private static final String I18N_LABEL_ACTION_EDIT_PASTE_INTO_UNRESOLVED = "label.action.edit.paste.into.unresolved";
+
+    private static final String I18N_LABEL_ACTION_EDIT_PASTE_INTO_1 = "label.action.edit.paste.into.1";
+
+    private final I18N i18n;
 
     private final FXOMDocument fxomDocument;
     private final TargetSelection<?> targetSelection;
@@ -78,6 +89,7 @@ public final class PasteIntoJob extends BatchSelectionJob {
 
  // @formatter:off
     protected PasteIntoJob(
+            I18N i18n,
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             Selection selection,
@@ -88,6 +100,7 @@ public final class PasteIntoJob extends BatchSelectionJob {
             ClipboardDecoder clipboardDecoder) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);
+        this.i18n = i18n;
         this.fxomDocument = documentManager.fxomDocument().get();
         this.selectionJobsFactory = selectionJobsFactory;
         this.fxomObjectMaskFactory = fxomObjectMaskFactory;
@@ -110,7 +123,7 @@ public final class PasteIntoJob extends BatchSelectionJob {
             assert newObjects != null; // But possible empty
 
             if (newObjects.isEmpty()) {
-                //nothing to paste = nothing to do
+                // nothing to paste = nothing to do
                 return result;
             }
 
@@ -222,15 +235,15 @@ public final class PasteIntoJob extends BatchSelectionJob {
         if (newObject instanceof FXOMInstance) {
             final Object sceneGraphObject = newObject.getSceneGraphObject().get();
             if (sceneGraphObject != null) {
-                result = I18N.getString("label.action.edit.paste.into.1", sceneGraphObject.getClass().getSimpleName());
+                result = i18n.getString(I18N_LABEL_ACTION_EDIT_PASTE_INTO_1, sceneGraphObject.getClass().getSimpleName());
             } else {
-                result = I18N.getString("label.action.edit.paste.into.unresolved");
+                result = i18n.getString(I18N_LABEL_ACTION_EDIT_PASTE_INTO_UNRESOLVED);
             }
         } else if (newObject instanceof FXOMCollection) {
-            result = I18N.getString("label.action.edit.paste.into.collection");
+            result = i18n.getString(I18N_LABEL_ACTION_EDIT_PASTE_INTO_COLLECTION);
         } else {
             assert false;
-            result = I18N.getString("label.action.edit.paste.into.1", newObject.getClass().getSimpleName());
+            result = i18n.getString(I18N_LABEL_ACTION_EDIT_PASTE_INTO_1, newObject.getClass().getSimpleName());
         }
 
         return result;
@@ -238,7 +251,7 @@ public final class PasteIntoJob extends BatchSelectionJob {
 
     private String makeMultipleSelectionDescription() {
         final int objectCount = newObjects.size();
-        return I18N.getString("label.action.edit.paste.into.n", objectCount);
+        return i18n.getString(I18N_LABEL_ACTION_EDIT_PASTE_INTO_N, objectCount);
     }
 
 }

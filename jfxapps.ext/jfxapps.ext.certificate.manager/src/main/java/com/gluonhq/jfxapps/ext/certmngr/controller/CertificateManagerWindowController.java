@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -71,12 +71,12 @@ public class CertificateManagerWindowController extends AbstractFxmlWindowContro
     private final JfxAppContext context;
 
     public CertificateManagerWindowController(
+            I18N i18n,
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
             NetworkManager networManager,
             JfxAppContext context) {
-        super(sceneBuilderManager, iconSetting, CertificateManagerWindowController.class.getResource("CertificateManagerWindow.fxml"), I18N.getBundle(),
-                null); // NOI18N
+        super(i18n, sceneBuilderManager, iconSetting, CertificateManagerWindowController.class.getResource("CertificateManagerWindow.fxml"), null); // NOI18N
         this.networkManager = networManager;
         this.context = context;
     }

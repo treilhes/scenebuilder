@@ -56,16 +56,22 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 @Prototype
 public final class DeleteObjectSelectionJob extends BatchSelectionJob {
 
+    private static final String I18N_LABEL_ACTION_EDIT_DELETE_N = "label.action.edit.delete.n";
+
     private final SelectionJobsFactory selectionJobsFactory;
+
+    private final I18N i18n;
 
     // @formatter:off
     protected DeleteObjectSelectionJob(
+            I18N i18n,
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             Selection selection,
             SelectionJobsFactory selectionJobsFactory) {
      // @formatter:on
         super(extensionFactory, documentManager, selection);
+        this.i18n = i18n;
         this.selectionJobsFactory = selectionJobsFactory;
     }
 
@@ -114,7 +120,7 @@ public final class DeleteObjectSelectionJob extends BatchSelectionJob {
                 result = getSubJobs().get(0).getDescription();
                 break;
             default:
-                result = I18N.getString("label.action.edit.delete.n", subJobCount);
+                result = i18n.getString(I18N_LABEL_ACTION_EDIT_DELETE_N, subJobCount);
                 break;
         }
 

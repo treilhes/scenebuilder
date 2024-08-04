@@ -40,19 +40,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import org.springframework.context.annotation.Lazy;
-
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
 import com.gluonhq.jfxapps.core.api.dnd.AbstractDragSource;
-import com.gluonhq.jfxapps.core.api.dnd.DragSourceFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
@@ -75,6 +69,7 @@ import javafx.scene.input.TransferMode;
 @Prototype
 public final class ExternalDragSource extends AbstractDragSource {
 
+    private final I18N i18n;
     private Dragboard dragboard;
     private FXOMDocument targetDocument;
     private List<FXOMObject> draggedObjects; // Initialized lazily
@@ -93,10 +88,12 @@ public final class ExternalDragSource extends AbstractDragSource {
     private Optional<List<ClipboardDataFormat>> dataFormats;
 
     protected ExternalDragSource(
+            I18N i18n,
             DocumentManager documentManager,
             MainInstanceWindow ownerWindow,
             Optional<List<ClipboardDataFormat>> dataFormats) {
         super(ownerWindow.getScene().getWindow());
+        this.i18n = i18n;
         this.targetDocument = documentManager.fxomDocument().get();
         this.dataFormats = dataFormats;
         assert targetDocument != null;
@@ -281,10 +278,10 @@ public final class ExternalDragSource extends AbstractDragSource {
 
         if (inputFiles.size() == 1) {
             final Path inputPath = Paths.get(inputFiles.get(0).toURI());
-            result = I18N.getString("drop.job.insert.from.single.file",
+            result = i18n.getString("drop.job.insert.from.single.file",
                     inputPath.getFileName());
         } else {
-            result = I18N.getString("drop.job.insert.from.multiple.files",
+            result = i18n.getString("drop.job.insert.from.multiple.files",
                     inputFiles.size());
         }
 

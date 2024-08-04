@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -61,6 +61,10 @@ import javafx.stage.Modality;
 @Prototype
 public class RepositoryManagerController extends AbstractFxmlWindowController implements RepositoryManager {
 
+    private static final String I18N_LOG_USER_REPOSITORY_REMOVED = "log.user.repository.removed";
+
+    private static final String I18N_REPOSITORY_MANAGER_TITLE = "repository.manager.title";
+
     @FXML
     private ListView<RepositoryListItem> repositoryListView;
 
@@ -73,9 +77,9 @@ public class RepositoryManagerController extends AbstractFxmlWindowController im
     private final AddEditRepositoryDialogController repositoryDialogController;
     private final JfxAppContext context;
 
-
     // @formatter:off
     protected RepositoryManagerController(
+            I18N i18n,
             MavenClient mavenClient,
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
@@ -84,8 +88,8 @@ public class RepositoryManagerController extends AbstractFxmlWindowController im
             AddEditRepositoryDialogController repositoryDialogController,
             InstanceWindow owner) {
      // @formatter:on
-        super(sceneBuilderManager, iconSetting, RepositoryManagerController.class.getResource("RepositoryManager.fxml"),
-                I18N.getBundle(), owner);
+        super(i18n, sceneBuilderManager, iconSetting,
+                RepositoryManagerController.class.getResource("RepositoryManager.fxml"), owner);
         this.context = context;
         this.owner = owner;
         this.messageLogger = messageLogger;
@@ -118,7 +122,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController im
     @Override
     public void openWindow() {
         super.openWindow();
-        super.getStage().setTitle(I18N.getString("repository.manager.title"));
+        super.getStage().setTitle(getI18n().getString(I18N_REPOSITORY_MANAGER_TITLE));
         loadRepositoryList();
     }
 
@@ -128,7 +132,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController im
         }
         listItems.clear();
         repositoryListView.setItems(listItems);
-        repositoryListView.setCellFactory(param -> new RepositoryManagerListCell());
+        repositoryListView.setCellFactory(param -> new RepositoryManagerListCell(getI18n()));
 
         // custom repositories
 //        listItems.addAll(repositoryPreferences.getRepositories()
@@ -174,13 +178,13 @@ public class RepositoryManagerController extends AbstractFxmlWindowController im
     @Override
     public void delete(Repository repository) {
         // Remove repository
-        logInfoMessage("log.user.repository.removed", repository.getId());
+        logInfoMessage(I18N_LOG_USER_REPOSITORY_REMOVED, repository.getId());
         mavenClient.remove(repository);
         loadRepositoryList();
     }
 
     private void logInfoMessage(String key, Object... args) {
-        messageLogger.logInfoMessage(key, I18N.getBundle(), args);
+        messageLogger.logInfoMessage(key, getI18n().getBundle(), args);
     }
 
 }

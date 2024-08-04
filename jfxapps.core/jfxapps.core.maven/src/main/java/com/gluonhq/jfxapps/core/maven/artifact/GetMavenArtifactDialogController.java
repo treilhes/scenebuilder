@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -77,6 +77,10 @@ import javafx.util.Callback;
 @ApplicationInstanceSingleton
 public class GetMavenArtifactDialogController extends AbstractFxmlWindowController implements GetMavenArtifactDialog {
 
+    private static final String I18N_MAVEN_DIALOG_INSTALL_TOOLTIP = "maven.dialog.install.tooltip";
+
+    private static final String I18N_MAVEN_DIALOG_TITLE = "maven.dialog.title";
+
     @FXML
     private TextField groupIDTextfield;
 
@@ -112,6 +116,7 @@ public class GetMavenArtifactDialogController extends AbstractFxmlWindowControll
 
     // @formatter:off
     public GetMavenArtifactDialogController(
+            I18N i18n,
             MavenClient mavenClient,
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
@@ -120,9 +125,8 @@ public class GetMavenArtifactDialogController extends AbstractFxmlWindowControll
             MavenRepositoriesPreferences repositoryPreferences,
             InstanceWindow owner) {
      // @formatter:on
-        super(sceneBuilderManager, iconSetting,
-                GetMavenArtifactDialogController.class.getResource("GetMavenArtifactDialog.fxml"), I18N.getBundle(),
-                owner);
+        super(i18n, sceneBuilderManager, iconSetting,
+                GetMavenArtifactDialogController.class.getResource("GetMavenArtifactDialog.fxml"), owner);
         this.mavenClient = mavenClient;
         this.owner = owner;
         this.messageLogger = messageLogger;
@@ -246,10 +250,10 @@ public class GetMavenArtifactDialogController extends AbstractFxmlWindowControll
     @Override
     public void openWindow() {
         super.openWindow();
-        super.getStage().setTitle(I18N.getString("maven.dialog.title"));
+        super.getStage().setTitle(getI18n().getString(I18N_MAVEN_DIALOG_TITLE));
         installButton.disableProperty().bind(groupIDTextfield.textProperty().isEmpty().or(artifactIDTextfield
                 .textProperty().isEmpty().or(versionsCombo.getSelectionModel().selectedIndexProperty().lessThan(0))));
-        installButton.setTooltip(new Tooltip(I18N.getString("maven.dialog.install.tooltip")));
+        installButton.setTooltip(new Tooltip(getI18n().getString(I18N_MAVEN_DIALOG_INSTALL_TOOLTIP)));
 
         groupIDTextfield.focusedProperty().addListener(serviceListener);
         groupIDTextfield.setOnAction(e -> callVersionsService());
@@ -311,7 +315,7 @@ public class GetMavenArtifactDialogController extends AbstractFxmlWindowControll
     }
 
     private void logInfoMessage(String key, Object... args) {
-        messageLogger.logInfoMessage(key, I18N.getBundle(), args);
+        messageLogger.logInfoMessage(key, getI18n().getBundle(), args);
     }
 
     private String getArtifactCoordinates() {

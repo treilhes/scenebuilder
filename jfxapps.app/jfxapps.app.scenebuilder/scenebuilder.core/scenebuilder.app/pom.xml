@@ -19,7 +19,7 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.starter</artifactId>
+            <artifactId>scenebuilder.app.starter</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>

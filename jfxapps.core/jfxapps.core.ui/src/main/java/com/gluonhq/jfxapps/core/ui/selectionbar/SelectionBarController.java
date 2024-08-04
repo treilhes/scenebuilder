@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -50,7 +50,7 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPanelController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.SelectionBar;
 import com.gluonhq.jfxapps.core.api.ui.controller.selbar.SelectionBarContentFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.selbar.SelectionBarContentFactory.BarItem;
@@ -72,7 +72,7 @@ import javafx.scene.layout.StackPane;
  *
  */
 @ApplicationInstanceSingleton
-public class SelectionBarController extends AbstractFxmlPanelController implements SelectionBar {
+public class SelectionBarController extends AbstractFxmlController implements SelectionBar {
 
     private static final Logger logger = LoggerFactory.getLogger(SelectionBarController.class);
 
@@ -89,13 +89,14 @@ public class SelectionBarController extends AbstractFxmlPanelController implemen
     private final boolean enabled;
 
     public SelectionBarController(
+            I18N i18n,
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
             JobManager jobManager,
             Selection selection,
             SelectionGroupFactory defaultSelectionGroupFactory,
             Optional<SelectionBarContentFactory> barContentFactory) {
-        super(scenebuilderManager, documentManager, SelectionBarController.class.getResource("SelectionBar.fxml"), I18N.getBundle());
+        super(i18n, scenebuilderManager, documentManager, SelectionBarController.class.getResource("SelectionBar.fxml"));
         this.documentManager = documentManager;
         this.selection = selection;
         this.defaultSelectionGroupFactory = defaultSelectionGroupFactory;
@@ -141,7 +142,7 @@ public class SelectionBarController extends AbstractFxmlPanelController implemen
     }
 
     /*
-     * AbstractFxmlPanelController
+     * AbstractFxmlController
      */
     @Override
     public void controllerDidLoadFxml() {
@@ -160,7 +161,7 @@ public class SelectionBarController extends AbstractFxmlPanelController implemen
         pathBox.getChildren().clear();
 
         if (selection.isEmpty()) {
-            pathBox.getChildren().add(new Label(I18N.getString("selectionbar.no.selected")));
+            pathBox.getChildren().add(new Label(getI18n().getString("selectionbar.no.selected")));
         } else {
             final SelectionGroup osg = selection.getGroup();
             assert osg.getItems().isEmpty() == false;
@@ -219,7 +220,7 @@ public class SelectionBarController extends AbstractFxmlPanelController implemen
                     }
                 }
             } else {
-                pathBox.getChildren().add(new Label(I18N.getString("selectionbar.not.object")));
+                pathBox.getChildren().add(new Label(getI18n().getString("selectionbar.not.object")));
             }
         }
     }

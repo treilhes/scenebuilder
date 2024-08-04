@@ -92,6 +92,14 @@
                                             <version>${jfxapps.version}</version>
                                         </dependency>
                                     </extension>
+                                    <extension>
+                                        <uuid>680c9e7e-007a-4167-a27f-71331fb13fcd</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>jfxapps.ext.scenicview</artifactId>
+                                            <version>${jfxapps.version}</version>
+                                        </dependency>
+                                    </extension>
                                 </extensions>
                             </application>
                         </applications>

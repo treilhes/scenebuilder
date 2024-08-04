@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,7 +43,7 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
  * under user control.
  */
 public enum Size {
-    SIZE_335x600(335,600,"menu.title.size.phone"),
+    SIZE_335x600(335,600,"c"),
     SIZE_900x600(900,600,"menu.title.size.tablet"),
     SIZE_320x240(320,240,"menu.title.size.qvga"),
     SIZE_640x480(640,480,"menu.title.size.vga"),
@@ -69,11 +70,18 @@ public enum Size {
         return height;
     }
 
+    public String getI18nKey() {
+        return nameKey;
+    }
+
     @Override
     public String toString() {
         if (nameKey == null) {
             return "DEFAULT";
         }
-        return I18N.getString(nameKey);
+        //FIXME before the key was resolved but not anymore
+        // need to find where the toString method was used and use the i18n bean to resolve it
+        //return I18N.getString(nameKey);
+        return nameKey;
     }
 }

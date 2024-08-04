@@ -1,0 +1,97 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.gluonhq.jfxapps</groupId>
+    <artifactId>jfxapps.app.devtools</artifactId>
+    <version>${devtools.version}</version>
+  </parent>
+  <artifactId>devtools.metadata</artifactId>
+  <packaging>pom</packaging>
+
+    <modules>
+        <module>devtools.metadata.customization</module>
+        
+        <!--
+        Until javafx is able to shutdown properly and restart properly, 
+        we will not use the following modules directly
+        but we need to build those modules using a different process.
+        
+        Those modules are built at the end of the devtools.metadata.customization module.
+         -->
+        <!--<module>devtools.metadata.model</module>
+        <module>devtools.metadata.modeldata</module>-->
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>devtools.model</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.gluonhq.jfxapps</groupId>
+                    <artifactId>jfxapps-metadata-maven-plugin</artifactId>
+                    <version>${jfxapps.version}</version>
+                    <configuration>
+                        <jarFilterPatterns>
+                                <jarFilterPatterns>.*[/\\](devtools\.(.*?))[/\\].*</jarFilterPatterns>
+                        </jarFilterPatterns>
+                        <includePackages>
+                            <includePackage>com.gluonhq.jfxapps.app.devtools.model</includePackage>
+                        </includePackages>
+                        <failOnError>true</failOnError>
+                        <javafxVersion>${javafx.version}</javafxVersion>
+                        <resourceFolder>./src/main/resources</resourceFolder>
+
+
+                        <targetPackage>com.gluonhq.jfxapps.app.devtools.metadata.model</targetPackage>
+                        <extensionName>DevtoolsMetadataExtension</extensionName>
+                        <moduleName>devtools.metadata.model</moduleName>
+                        <uuid>7a694ade-5cad-4dce-99e1-24d5331615db</uuid>
+                        <failOnError>false</failOnError>
+                        <javafxVersion>${javafx.version}</javafxVersion>
+
+                        <moduleRequires>
+                            <moduleRequire>devtools.metadata.customization</moduleRequire>
+                            <moduleRequire>devtools.model</moduleRequire>
+                        </moduleRequires>
+
+                        <targetComponentSuperClass>com.gluonhq.jfxapps.app.devtools.metadata.custom.DevtoolsClassMetadata</targetComponentSuperClass>
+                        
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.gluonhq.jfxapps</groupId>
+                            <artifactId>devtools.model</artifactId>
+                            <version>${devtools.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>com.gluonhq.jfxapps</groupId>
+                            <artifactId>devtools.metadata.customization</artifactId>
+                            <version>${devtools.version}</version>
+                        </dependency>
+
+                        <dependency>
+                            <groupId>org.openjfx</groupId>
+                            <artifactId>javafx-fxml</artifactId>
+                            <version>${javafx.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.openjfx</groupId>
+                            <artifactId>javafx-web</artifactId>
+                            <version>${javafx.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.openjfx</groupId>
+                            <artifactId>javafx-swing</artifactId>
+                            <version>${javafx.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

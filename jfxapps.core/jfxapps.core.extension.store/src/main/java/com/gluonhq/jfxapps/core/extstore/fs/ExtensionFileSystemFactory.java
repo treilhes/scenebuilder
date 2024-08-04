@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 
 @ApplicationSingleton
@@ -51,14 +52,18 @@ public class ExtensionFileSystemFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(ExtensionFileSystemFactory.class);
 
+    private final I18N i18n;
+
     private final FileSystem fileSystem;
 
     private final Dialog dialog;
 
     public ExtensionFileSystemFactory(
+            I18N i18n,
             FileSystem fileSystem,
             Dialog dialog) {
         super();
+        this.i18n = i18n;
         this.fileSystem = fileSystem;
         this.dialog = dialog;
     }
@@ -81,7 +86,7 @@ public class ExtensionFileSystemFactory {
 
         File target = new File(fileSystem.getApplicationDataFolder(), folderName);
 
-        return new ExtensionFileSystemImpl(target.toPath(), dialog);
+        return new ExtensionFileSystemImpl(i18n, dialog, target.toPath());
     }
 
 

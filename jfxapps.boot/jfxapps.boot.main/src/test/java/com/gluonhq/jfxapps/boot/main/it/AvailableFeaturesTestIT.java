@@ -137,7 +137,7 @@ public class AvailableFeaturesTestIT {
         @Primary
         JfxAppsPlatform jfxAppsPlatform() {
             JfxAppsPlatform jfxAppsPlatform = Mockito.mock(JfxAppsPlatform.class);
-            when(jfxAppsPlatform.rootPath()).thenReturn(Paths.get("./target"));
+            when(jfxAppsPlatform.rootPath()).thenReturn(Paths.get("./target/it"));
             return jfxAppsPlatform;
         }
 

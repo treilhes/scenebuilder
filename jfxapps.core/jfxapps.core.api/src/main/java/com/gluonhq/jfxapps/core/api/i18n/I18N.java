@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,33 +34,32 @@
 package com.gluonhq.jfxapps.core.api.i18n;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.PreferedConstructor;
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
 
-@Singleton("i18n")
+@ApplicationSingleton("i18n")
 public class I18N {
 
-    public static void initForTest(String... bundleResources) {
-        if (instance != null) {
-            return;
-        }
-        List<BundleProvider> bundles = Arrays.stream(bundleResources)
-                .map(s -> I18N.toBundleProvider(s))
-                .collect(Collectors.toList());
-        new I18N(bundles, true);
-    }
+//    public static void initForTest(String... bundleResources) {
+//        if (instance != null) {
+//            return;
+//        }
+//        List<BundleProvider> bundles = Arrays.stream(bundleResources)
+//                .map(s -> I18N.toBundleProvider(s))
+//                .collect(Collectors.toList());
+//        new I18N(bundles, true);
+//    }
 
     private static BundleProvider toBundleProvider(String s) {
         return () -> ResourceBundle.getBundle(s);
     }
 
-    private static I18N instance;
+    //private static I18N instance;
 
     private CombinedResourceBundle combinedBundle;
 
@@ -68,11 +67,11 @@ public class I18N {
         List<ResourceBundle> bundles = bundleProviders.stream().map(BundleProvider::getBundle)
                 .collect(Collectors.toList());
         combinedBundle = new CombinedResourceBundle(bundles, allowUnresolvedKeys);
-        if (instance == null) {
-            instance = this;
-        } else {
-            throw new RuntimeException("Duplicate instance for class " + getClass().getName());
-        }
+//        if (instance == null) {
+//            instance = this;
+//        } else {
+//            throw new RuntimeException("Duplicate instance for class " + getClass().getName());
+//        }
     }
 
     @PreferedConstructor
@@ -84,24 +83,45 @@ public class I18N {
         return combinedBundle.getString(key);
     }
 
-    public static ResourceBundle getBundle() {
-        return instance.combinedBundle;
+    public ResourceBundle getBundle() {
+        return combinedBundle;
     }
 
-    public static String getString(String key) {
-        return instance.get(key);
+    public String getString(String key) {
+        return get(key);
     }
 
-    public static String getStringOrDefault(String key, String defaultValue) {
+    public String getStringOrDefault(String key, String defaultValue) {
         try {
-            return instance.get(key);
+            return get(key);
         } catch (MissingResourceException e) {
             return defaultValue;
         }
     }
 
-    public static String getString(String key, Object... arguments) {
+    public String getString(String key, Object... arguments) {
         final String pattern = getString(key);
         return MessageFormat.format(pattern, arguments);
     }
+
+//    public static ResourceBundle getBundle() {
+//        return instance.combinedBundle;
+//    }
+//
+//    public static String getString(String key) {
+//        return instance.get(key);
+//    }
+//
+//    public static String getStringOrDefault(String key, String defaultValue) {
+//        try {
+//            return instance.get(key);
+//        } catch (MissingResourceException e) {
+//            return defaultValue;
+//        }
+//    }
+//
+//    public static String getString(String key, Object... arguments) {
+//        final String pattern = getString(key);
+//        return MessageFormat.format(pattern, arguments);
+//    }
 }

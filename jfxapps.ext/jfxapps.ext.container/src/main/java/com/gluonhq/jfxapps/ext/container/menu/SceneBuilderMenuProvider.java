@@ -58,10 +58,13 @@ public class SceneBuilderMenuProvider implements MenuItemProvider {
     private final static String CLOSE_WINDOW_ID = "closeMenuItem";
     private final static String EXIT_ID = "exitMenuItem";
 
+    private final I18N i18n;
     private final SceneBuilderMenuController sceneBuilderMenuController;
 
     public SceneBuilderMenuProvider(
+            I18N i18n,
             @Lazy SceneBuilderMenuController sceneBuilderMenuController) {
+        this.i18n = i18n;
         this.sceneBuilderMenuController = sceneBuilderMenuController;
     }
 
@@ -100,7 +103,7 @@ public class SceneBuilderMenuProvider implements MenuItemProvider {
                 return menu;
             }
 
-            menu = new MenuItem(I18N.getString("menu.title.close"));
+            menu = new MenuItem(i18n.getString("menu.title.close"));
             menu.setId(CLOSE_WINDOW_ID);
             menu.setAccelerator(new KeyCodeCombination(KeyCode.W, KeyboardModifier.control()));
             menu.setOnAction((e) -> sceneBuilderMenuController.performCloseCurrentDocument());
@@ -132,7 +135,7 @@ public class SceneBuilderMenuProvider implements MenuItemProvider {
                 return menu;
             }
 
-            menu = new MenuItem(I18N.getString("menu.title.quit"));
+            menu = new MenuItem(i18n.getString("menu.title.quit"));
             menu.setId(EXIT_ID);
             menu.setOnAction((e) -> sceneBuilderMenuController.performCloseSceneBuilder());
 

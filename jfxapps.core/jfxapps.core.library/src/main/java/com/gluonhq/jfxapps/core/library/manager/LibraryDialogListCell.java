@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -50,10 +51,21 @@ import javafx.scene.layout.Priority;
  */
 public class LibraryDialogListCell extends ListCell<DialogListItem> {
 
+    private static final String I18N_LIBRARY_DIALOG_BUTTON_DELETE_TOOLTIP = "library.dialog.button.delete.tooltip";
+
+    private static final String I18N_LIBRARY_DIALOG_BUTTON_EDIT_TOOLTIP = "library.dialog.button.edit.tooltip";
+
+    private static final String EDIT_BUTTON_STYLE = "image-view-button";
+
+    private static final String EDIT_BUTTON_TEXT_EMPTY = "";
+
+    private final I18N i18n;
+
     private DialogListItem dialogListItem;
 
-    public LibraryDialogListCell() {
+    public LibraryDialogListCell(I18N i18n) {
         super();
+        this.i18n = i18n;
     }
 
     @Override
@@ -90,15 +102,21 @@ public class LibraryDialogListCell extends ListCell<DialogListItem> {
         HBox buttonContent = new HBox();
         buttonContent.setAlignment(Pos.CENTER_RIGHT);
         buttonContent.setSpacing(5);
-        Button editButton = new Button("", new ImageView(ImageUtils.getEditIconImage()));
-        editButton.getStyleClass().add("image-view-button");
-        editButton.setOnMouseClicked(event -> dialogListItem.getLibraryDialogController().processJarFXMLFolderEdit(dialogListItem));
-        editButton.setTooltip(new Tooltip(I18N.getString("library.dialog.button.edit.tooltip")));
-        Button deleteButton = new Button("", new ImageView(ImageUtils.getDeleteIconImage()));
-        deleteButton.setOnMouseClicked(event -> dialogListItem.getLibraryDialogController().processJarFXMLFolderDelete(dialogListItem));
-        deleteButton.getStyleClass().add("image-view-button");
-        deleteButton.setTooltip(new Tooltip(I18N.getString("library.dialog.button.delete.tooltip")));
+
+        Button editButton = new Button(EDIT_BUTTON_TEXT_EMPTY, new ImageView(ImageUtils.getEditIconImage()));
+        editButton.getStyleClass().add(EDIT_BUTTON_STYLE);
+        editButton.setOnMouseClicked(
+                event -> dialogListItem.getLibraryDialogController().processJarFXMLFolderEdit(dialogListItem));
+        editButton.setTooltip(new Tooltip(i18n.getString(I18N_LIBRARY_DIALOG_BUTTON_EDIT_TOOLTIP)));
+
+        Button deleteButton = new Button(EDIT_BUTTON_TEXT_EMPTY, new ImageView(ImageUtils.getDeleteIconImage()));
+        deleteButton.setOnMouseClicked(
+                event -> dialogListItem.getLibraryDialogController().processJarFXMLFolderDelete(dialogListItem));
+        deleteButton.getStyleClass().add(EDIT_BUTTON_STYLE);
+        deleteButton.setTooltip(new Tooltip(i18n.getString(I18N_LIBRARY_DIALOG_BUTTON_DELETE_TOOLTIP)));
+
         buttonContent.getChildren().addAll(editButton, deleteButton);
+
         return buttonContent;
     }
 }

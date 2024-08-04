@@ -39,33 +39,31 @@ import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.ext.about.controller.AboutWindowController;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
-@MenuItemAttachment(
-        id = ShowAboutAction.ABOUT_MENU_ID,
-        targetMenuId = ShowAboutAction.HELP_MENU_ID,
-        label = "menu.title.about",
-        positionRequest = PositionRequest.AsLastChild)
+//@MenuItemAttachment(
+//        id = ShowAboutAction.ABOUT_MENU_ID,
+//        targetMenuId = ShowAboutAction.HELP_MENU_ID,
+//        label = "menu.title.about",
+//        positionRequest = PositionRequest.AsLastChild)
 public class ShowAboutAction extends AbstractAction {
 
     protected final static String HELP_MENU_ID = "helpMenu"; //NOCHECK
     public final static String ABOUT_MENU_ID = "aboutMenu"; //NOCHECK
 
     private final AboutWindowController aboutWindowController;
-    private final IconSetting iconSetting;
 
     public ShowAboutAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
-            IconSetting iconSetting,
             @Lazy AboutWindowController aboutWindowController) {
-        super(extensionFactory);
+        super(i18n, extensionFactory);
         this.aboutWindowController = aboutWindowController;
-        this.iconSetting = iconSetting;
     }
 
     @Override
@@ -76,7 +74,6 @@ public class ShowAboutAction extends AbstractAction {
     @Override
     public ActionStatus doPerform() {
         aboutWindowController.openWindow();
-        //iconSetting.setWindowIcon(aboutWindowController.getStage());
         return ActionStatus.DONE;
     }
 }

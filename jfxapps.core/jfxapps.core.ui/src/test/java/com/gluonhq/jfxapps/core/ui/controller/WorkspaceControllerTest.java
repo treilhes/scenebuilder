@@ -35,6 +35,8 @@ package com.gluonhq.jfxapps.core.ui.controller;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -44,9 +46,6 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
-import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
@@ -54,7 +53,6 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.SceneGraphObject;
-import com.gluonhq.jfxapps.core.ui.controller.WorkspaceController;
 import com.gluonhq.jfxapps.test.FxmlControllerLoader;
 import com.gluonhq.jfxapps.test.JfxAppsExtension;
 import com.gluonhq.jfxapps.test.TestStages;
@@ -68,9 +66,7 @@ import javafx.stage.Stage;
 @ExtendWith({ApplicationExtension.class, MockitoExtension.class, JfxAppsExtension.class})
 class WorkspaceControllerTest {
 
-    static {
-        I18N.initForTest();
-    }
+    private I18N i18n = new I18N(List.of(), true);
 
     private SceneBuilderManager sbm = new SceneBuilderManager.SceneBuilderManagerImpl();
     private DocumentManager dm = new DocumentManager.DocumentManagerImpl();
@@ -104,7 +100,7 @@ class WorkspaceControllerTest {
 
     @Test
     void should_load_the_hud_fxml() {
-        Parent ui = FxmlControllerLoader.controller(new WorkspaceController(sbm, dm, contextMenu)).loadFxml();
+        Parent ui = FxmlControllerLoader.controller(new WorkspaceController(i18n, sbm, dm, contextMenu)).loadFxml();
         assertNotNull(ui);
     }
 
@@ -112,7 +108,7 @@ class WorkspaceControllerTest {
     void show_ui(FxRobot robot) {
         //JfxAppContext.applicationInstanceScope.setCurrentScope(scopedDocument);
 
-        WorkspaceController workspace = FxmlControllerLoader.controller(new WorkspaceController(sbm, dm, contextMenu))
+        WorkspaceController workspace = FxmlControllerLoader.controller(new WorkspaceController(i18n, sbm, dm, contextMenu))
                 .darkTheme(sbm)
                 .load();
 
@@ -137,7 +133,7 @@ class WorkspaceControllerTest {
 
         //JfxAppContext.applicationInstanceScope.setCurrentScope(scopedDocument);
 
-        WorkspaceController workspace = FxmlControllerLoader.controller(new WorkspaceController(sbm, dm, contextMenu)).load();
+        WorkspaceController workspace = FxmlControllerLoader.controller(new WorkspaceController(i18n, sbm, dm, contextMenu)).load();
 
         robot.interact(() -> {
             pane.getChildren().add(workspace.getRoot());

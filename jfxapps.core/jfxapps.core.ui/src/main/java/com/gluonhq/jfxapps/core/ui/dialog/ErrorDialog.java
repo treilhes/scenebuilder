@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -55,12 +55,15 @@ public class ErrorDialog extends AlertDialog {
 
     private String debugInfo;
 
+    //@formatter:off
     protected ErrorDialog(
+            I18N i18n,
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
             JfxAppContext context,
             Window owner) {
-        super(sceneBuilderManager, iconSetting, owner);
+      //@formatter:on
+        super(i18n, sceneBuilderManager, iconSetting, owner);
         this.context = context;
     }
 
@@ -70,8 +73,8 @@ public class ErrorDialog extends AlertDialog {
         setOKButtonVisible(false);
         setShowDefaultButton(true);
         setDefaultButtonID(AlertDialog.ButtonID.CANCEL);
-        setCancelButtonTitle(I18N.getString("label.close"));
-        setActionButtonTitle(I18N.getString("error.dialog.label.details"));
+        setCancelButtonTitle(getI18n().getString("label.close"));
+        setActionButtonTitle(getI18n().getString("error.dialog.label.details"));
         setActionButtonVisible(true);
         setActionRunnable(() -> showDetailsDialog());
         updateActionButtonVisibility(); // not visible by default

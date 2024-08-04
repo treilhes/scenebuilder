@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -45,11 +45,14 @@ public abstract class AbstractAction implements Action {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractAction.class);
 
+    private final I18N i18n;
     private final String nameI18nKey;
     private final String descriptionI18nKey;
     private final List<ActionExtension<?>> extensions = new ArrayList<>();
 
-    public AbstractAction(ActionExtensionFactory extensionFactory) {
+    public AbstractAction(I18N i18n, ActionExtensionFactory extensionFactory) {
+        this.i18n = i18n;
+
         ActionMeta actionMeta = this.getClass().getAnnotation(ActionMeta.class);
 
         if (actionMeta == null) {
@@ -68,12 +71,12 @@ public abstract class AbstractAction implements Action {
 
     @Override
     public String getName() {
-        return nameI18nKey == null ? null : I18N.getString(nameI18nKey);
+        return nameI18nKey == null ? null : i18n.getString(nameI18nKey);
     }
 
     @Override
     public String getDescription() {
-        return descriptionI18nKey == null ? null : I18N.getString(descriptionI18nKey);
+        return descriptionI18nKey == null ? null : i18n.getString(descriptionI18nKey);
     }
 
     @Override

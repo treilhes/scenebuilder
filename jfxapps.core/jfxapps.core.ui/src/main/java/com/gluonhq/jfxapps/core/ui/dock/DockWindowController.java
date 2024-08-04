@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -66,13 +66,14 @@ public class DockWindowController extends AbstractFxmlWindowController {
 
     // @formatter:off
     public DockWindowController(
+            I18N i18n,
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
             MainInstanceWindow documentWindow,
             DockPanelController dockPanelController,
             DockManager dockManager,
             DockNameHelper dockNameHelper) {
-        super(sceneBuilderManager, iconSetting, DockWindowController.class.getResource("DockWindow.fxml"), I18N.getBundle(), documentWindow);
+        super(i18n, sceneBuilderManager, iconSetting, DockWindowController.class.getResource("DockWindow.fxml"), documentWindow);
      // @formatter:on
 
         this.dockManager = dockManager;

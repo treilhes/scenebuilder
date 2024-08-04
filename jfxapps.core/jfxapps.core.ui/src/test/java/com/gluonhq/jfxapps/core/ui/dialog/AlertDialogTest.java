@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,6 +35,8 @@ package com.gluonhq.jfxapps.core.ui.dialog;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -59,9 +61,7 @@ import javafx.stage.Stage;
 @ExtendWith({ApplicationExtension.class, MockitoExtension.class})
 class AlertDialogTest {
 
-    static {
-        I18N.initForTest();
-    }
+    private I18N i18n = new I18N(List.of(), true);
 
     private SceneBuilderManager sbm = new SceneBuilderManager.SceneBuilderManagerImpl();
 
@@ -90,7 +90,7 @@ class AlertDialogTest {
 
     @Test
     void should_load_alert_fxml() {
-        Parent ui = FxmlControllerLoader.controller(new AlertDialog(sbm, is, stage)).loadFxml();
+        Parent ui = FxmlControllerLoader.controller(new AlertDialog(i18n, sbm, is, stage)).loadFxml();
         assertNotNull(ui);
     }
 
@@ -99,7 +99,7 @@ class AlertDialogTest {
         String message = "jfhgjkdh fgjkdhfgkh jfgkjdhf";
         String detailsLabel = "detailfgdfg df g   ggdfg";
 
-        AlertDialog dialog = new AlertDialog(sbm, is, stage);
+        AlertDialog dialog = new AlertDialog(i18n, sbm, is, stage);
 
         robot.interact(() -> {
             FxmlControllerLoader.controller(dialog).darkTheme(sbm).load();
@@ -111,7 +111,7 @@ class AlertDialogTest {
             dialog.setActionButtonVisible(false);
             dialog.setOKButtonDisable(true);
             dialog.setOKButtonVisible(false);
-            dialog.setCancelButtonTitle(I18N.getString("label.close"));
+            dialog.setCancelButtonTitle(i18n.getString("label.close"));
 
             dialog.openWindow();
         });

@@ -45,6 +45,8 @@ open module jfxapps.app.manager.main {
     requires manager.api;
     requires manager.model;
     requires jfxapps.core.starter;
+    requires jfxapps.ext.about.api;
+    requires jfxapps.ext.scenicview.api;
 
 
 //

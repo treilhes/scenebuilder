@@ -10,13 +10,13 @@
     <artifactId>jfxapps.app.scenebuilder</artifactId>
     <version>${scenebuilder.version}</version>
     <packaging>pom</packaging>
-
+<!--
     <modules>
         <module>scenebuilder.core</module>
         <module>scenebuilder.ext</module>
         <module>scenebuilder.gluon</module>
     </modules>
-
+-->
     <dependencyManagement>
         <dependencies>
             <!-- scenebuilder.core -->

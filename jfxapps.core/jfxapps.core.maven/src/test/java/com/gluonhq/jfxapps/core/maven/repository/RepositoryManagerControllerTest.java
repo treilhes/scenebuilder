@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -69,11 +69,9 @@ import javafx.stage.Stage;
 @ExtendWith({ ApplicationExtension.class, MockitoExtension.class })
 class RepositoryManagerControllerTest {
 
-    static {
-        I18N.initForTest();
-    }
-
     private SceneBuilderManager sbm = new SceneBuilderManager.SceneBuilderManagerImpl();
+
+    private I18N i18n = new I18N(List.of(), true);
 
     @Mock
     private MavenClient mc;
@@ -114,7 +112,7 @@ class RepositoryManagerControllerTest {
     @Test
     void should_load_the_hud_fxml() {
         Parent ui = FxmlControllerLoader.controller(
-                new RepositoryManagerController(mc, sbm, is, context, messageLogger, repositoryDialogController, owner))
+                new RepositoryManagerController(i18n, mc, sbm, is, context, messageLogger, repositoryDialogController, owner))
                 .loadFxml();
         assertNotNull(ui);
     }
@@ -129,7 +127,7 @@ class RepositoryManagerControllerTest {
                 ));
 
         RepositoryManager rdc = FxmlControllerLoader.controller(
-                new RepositoryManagerController(mc, sbm, is, context, messageLogger, repositoryDialogController, owner))
+                new RepositoryManagerController(i18n, mc, sbm, is, context, messageLogger, repositoryDialogController, owner))
                 .darkTheme(sbm).load();
 
         robot.interact(() -> {

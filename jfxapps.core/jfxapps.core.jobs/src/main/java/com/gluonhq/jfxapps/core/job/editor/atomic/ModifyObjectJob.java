@@ -33,13 +33,10 @@
  */
 package com.gluonhq.jfxapps.core.job.editor.atomic;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
@@ -50,11 +47,12 @@ import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 /**
  * This Job updates the FXOM document at execution time.
  * It updates the property defined by the provided {@link ValuePropertyMetadata} owned by {@link FXOMElement} with the the provided value
- * Use the dedicated {@link Factory} to create an instance
  */
 @Prototype
 public final class ModifyObjectJob extends AbstractJob {
 
+    private static final String I18N_LABEL_ACTION_EDIT_SET_1 = "label.action.edit.set.1";
+    private final I18N i18n;
     private final FXOMDocument fxomDocument;
 
     private FXOMElement fxomElement;
@@ -62,11 +60,15 @@ public final class ModifyObjectJob extends AbstractJob {
     private Object newValue;
     private Object oldValue;
 
+    //@formatter:off
     public ModifyObjectJob(
+            I18N i18n,
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager
             ) {
+      //@formatter:on
         super(extensionFactory);
+        this.i18n = i18n;
         this.fxomDocument = documentManager.fxomDocument().get();
     }
 
@@ -86,7 +88,7 @@ public final class ModifyObjectJob extends AbstractJob {
         this.newValue = newValue;
         this.oldValue = propertyMetadata.getValueObject(fxomElement);
 
-        setDescription(I18N.getString("label.action.edit.set.1", propertyMetadata.getName().toString(),
+        setDescription(i18n.getString(I18N_LABEL_ACTION_EDIT_SET_1, propertyMetadata.getName().toString(),
                         fxomElement.getSceneGraphObject().getObjectClass().getSimpleName()));
 
     }

@@ -35,7 +35,7 @@ package com.gluonhq.jfxapps.core.api.ui.controller.dock;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPanelController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -48,7 +48,7 @@ import javafx.scene.layout.StackPane;
  * AbstractViewFxmlPanelController is the abstract base class for all the
  * view controller which build their UI components from an FXML file.
  *
- * Subclasses should provide a {@link AbstractFxmlPanelController#controllerDidLoadFxml() }
+ * Subclasses should provide a {@link AbstractFxmlController#controllerDidLoadFxml() }
  * method in charge of finishing the initialization of the UI components
  * loaded from the FXML file.
  *

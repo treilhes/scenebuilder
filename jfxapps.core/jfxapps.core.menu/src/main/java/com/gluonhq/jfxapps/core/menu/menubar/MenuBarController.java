@@ -45,7 +45,6 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
@@ -80,28 +79,33 @@ import javafx.scene.layout.StackPane;
 @ApplicationInstanceSingleton
 //@Conditional(EditorPlatform.IS_MAC_CONDITION.class)
 public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBar {
+    private static final String I18N_MENU_TITLE_NO_WINDOW = "menu.title.no.window";
+
     private final static Logger logger = LoggerFactory.getLogger(MenuBarController.class);
 
     private static MenuBarController systemMenuBarController; // For Mac only
 
-    @FXML
-    private MenuBar menuBar;
-    @FXML
-    private Menu windowMenu;
 
-    Map<String, MenuItem> menuMap = null;
+    private final I18N i18n;
 
     private final SceneBuilderManager sceneBuilderManager;
     private final Optional<List<MenuProvider>> menuProviders;
     private final Optional<List<MenuItemProvider>> menuItemProviders;
 
     private final InstancesManager main;
+    Map<String, MenuItem> menuMap = null;
+    @FXML
+    private MenuBar menuBar;
+    @FXML
+    private Menu windowMenu;
 
     public MenuBarController(
+            I18N i18n,
             SceneBuilderManager sceneBuilderManager,
             Optional<List<MenuProvider>> menuProviders,
             Optional<List<MenuItemProvider>> menuItemProviders,
             InstancesManager main) {
+        this.i18n = i18n;
         this.sceneBuilderManager = sceneBuilderManager;
         this.menuProviders = menuProviders;
         this.menuItemProviders = menuItemProviders;
@@ -465,7 +469,7 @@ public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.contro
     public MenuBar getMenuBar() {
 
         if (menuBar == null) {
-            FXMLUtils.load(this, MenuBarController.class.getResource("MenuBar.fxml"), I18N.getBundle());
+            FXMLUtils.load(i18n, this, "MenuBar.fxml");
             controllerDidLoadFxml();
         }
 
@@ -551,7 +555,7 @@ public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.contro
             result.setSelected(dwc.getDocumentWindow().getStage().isFocused());
             result.setOnAction(new WindowMenuEventHandler(dwc, sceneBuilderManager));
         } else {
-            result.setText(I18N.getString("menu.title.no.window"));
+            result.setText(i18n.getString(I18N_MENU_TITLE_NO_WINDOW));
             result.setDisable(true);
             result.setSelected(false);
         }

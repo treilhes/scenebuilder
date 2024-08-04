@@ -40,18 +40,21 @@ import java.util.List;
 import java.util.Optional;
 
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.FxThread;
-import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
-import com.gluonhq.jfxapps.core.api.application.lifecycle.DisposeWithDocument;
-import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithDocument;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
+import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloaderDispatcher;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
+import com.gluonhq.jfxapps.core.api.lifecycle.DisposeWithDocument;
+import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
 import com.gluonhq.jfxapps.core.api.preferences.Preferences;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
@@ -66,11 +69,16 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Provider;
+import javafx.event.Event;
+import javafx.event.EventDispatchChain;
+import javafx.event.EventDispatcher;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.WindowEvent;
 
 /**
  *
@@ -78,6 +86,11 @@ import javafx.scene.input.KeyEvent;
 @ApplicationInstanceSingleton
 public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.api.application.ApplicationInstance {
 
+    private static final Logger logger = LoggerFactory.getLogger(ApplicationInstanceController.class);
+
+    private final I18N i18n;
+    private final JavafxThreadClassloaderDispatcher dispatcher;
+    private final JavafxThreadClassloader fxThreadClassloader;
     private final MainInstanceWindow documentWindow;
     private final FileSystem fileSystem;
 
@@ -109,11 +122,18 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
     private final DockViewController viewMenuController;
     private final List<WindowPreferenceTracker> trackers;
 
+
+
+
+
     /*
      * DocumentWindowController
      */
     // @formatter:off
     public ApplicationInstanceController(
+            I18N i18n,
+            JavafxThreadClassloaderDispatcher dispatcher,
+            JavafxThreadClassloader fxThreadClassloader,
             FileSystem fileSystem,
             //RecentItemsPreference recentItemsPreference,
             //WildcardImportsPreference wildcardImportsPreference,
@@ -146,6 +166,9 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
     ) {
      // @formatter:on
         super();
+        this.i18n = i18n;
+        this.dispatcher = dispatcher;
+        this.fxThreadClassloader = fxThreadClassloader;
         this.fileSystem = fileSystem;
         this.documentWindow = documentWindow;
         //this.workspace = workspace;
@@ -266,7 +289,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
 
         sceneBuilderManager.closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> close());
 
-        SbPlatform.runOnFxThreadWithActiveScope(() -> {
+        JfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
             initializeDocumentWindow();
         });
 
@@ -278,7 +301,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
                 preferenceManager.untrack();
                 documentPreferencesController.readFromJavaPreferences();
 
-                SbPlatform.runOnFxThreadWithActiveScope(() -> {
+                JfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
                     preferenceManager.apply();
                     preferenceManager.track();
                 });
@@ -390,6 +413,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
 
     public void initializeDocumentWindow() {
 
+        dispatcher.register(documentWindow.getStage(), fxThreadClassloader);
 
         documentWindow.getStage().focusedProperty().addListener((ob, o, n) -> {
             if (n) {
@@ -404,6 +428,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
 
         //editorController.setOwnerWindow(documentWindow.getStage());
 
+        logger.info("Opening window");
         documentWindow.openWindow();
     }
 
@@ -564,12 +589,12 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
 
     @Override
     public void logInfoMessage(String key) {
-        messageLogger.logInfoMessage(key, I18N.getBundle());
+        messageLogger.logInfoMessage(key, i18n.getBundle());
     }
 
     @Override
     public void logInfoMessage(String key, Object... args) {
-        messageLogger.logInfoMessage(key, I18N.getBundle(), args);
+        messageLogger.logInfoMessage(key, i18n.getBundle(), args);
     }
 
     @Override

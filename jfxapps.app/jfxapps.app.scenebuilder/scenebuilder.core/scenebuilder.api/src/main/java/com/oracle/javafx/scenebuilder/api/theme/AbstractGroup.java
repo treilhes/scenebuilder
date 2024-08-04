@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,13 +33,15 @@
  */
 package com.oracle.javafx.scenebuilder.api.theme;
 
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+
 public abstract class AbstractGroup implements ThemeGroup {
 
 	public String name;
 
-	public AbstractGroup() {
+	public AbstractGroup(I18N i18n) {
 		super();
-		this.name = ThemeGroup.name(this.getClass());
+		this.name = ThemeGroup.name(i18n, this.getClass());
 	}
 
 	@Override

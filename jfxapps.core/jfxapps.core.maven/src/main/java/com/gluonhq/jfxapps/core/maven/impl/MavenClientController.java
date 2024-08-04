@@ -50,7 +50,7 @@ import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
 import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
 import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoriesPreferences;
 import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoryPathPreference;
 
@@ -161,9 +161,9 @@ public class MavenClientController implements com.gluonhq.jfxapps.core.api.maven
 
     @Override
     public Set<Artifact> search(String query) {
-        SbPlatform.runOnFxThread(() -> searching.set(true));
+        JfxAppPlatform.runOnFxThread(() -> searching.set(true));
         Set<Artifact> result = client.search(query);
-        SbPlatform.runOnFxThread(() -> searching.set(false));
+        JfxAppPlatform.runOnFxThread(() -> searching.set(false));
         return result;
     }
 

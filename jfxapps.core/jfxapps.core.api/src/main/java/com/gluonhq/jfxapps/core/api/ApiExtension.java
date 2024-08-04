@@ -41,11 +41,14 @@ import com.gluonhq.jfxapps.boot.loader.extension.RootExtension;
 import com.gluonhq.jfxapps.boot.loader.extension.SealedExtension;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
-import com.gluonhq.jfxapps.core.api.application.javafx.internal.FxmlControllerBeanPostProcessor;
-import com.gluonhq.jfxapps.core.api.application.javafx.internal.JavafxThreadBootstrapper;
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
-import com.gluonhq.jfxapps.core.api.di.FxThreadAspect;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.FxThreadAspect;
+import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
+import com.gluonhq.jfxapps.core.api.javafx.internal.ContextClassLoaderEventDispatcher;
+import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
+import com.gluonhq.jfxapps.core.api.javafx.internal.JavafxThreadBootstrapper;
+import com.gluonhq.jfxapps.core.api.javafx.internal.JavafxThreadClassloaderDispatcherImpl;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
 import com.gluonhq.jfxapps.core.api.preferences.init.DocumentPreferencesNodeImpl;
@@ -79,18 +82,22 @@ public class ApiExtension implements RootExtension {
     @Override
     public List<Class<?>> localContextClasses() {
         return Arrays.asList(
+                ContextClassLoaderEventDispatcher.class,
                 FxThreadAspect.class,
 
                 FxmlControllerBeanPostProcessor.class,
                 JavafxThreadBootstrapper.class,
                 ActionExtensionFactory.class,
                 ActionFactory.class,
+                ContextClassLoaderEventDispatcher.class,
                 DiscardGesture.class,
                 DiscardGesture.Factory.class,
                 DockNameHelper.class,
                 DockManager.DockManagerImpl.class,
                 DocumentManager.DocumentManagerImpl.class,
                 I18N.class,
+                JavafxThreadClassloader.class,
+                JavafxThreadClassloaderDispatcherImpl.class,
                 JobExtensionFactory.class,
                 MavenSetting.class,
                 MenuBuilder.class,

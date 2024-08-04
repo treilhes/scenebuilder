@@ -52,7 +52,7 @@ import com.gluonhq.jfxapps.boot.loader.extension.ApplicationExtension;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.CommandHandler;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
-import com.gluonhq.jfxapps.core.api.application.javafx.JavafxThreadHolder;
+import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadHolder;
 
 @ApplicationSingleton
 public class CommandHandlerImpl implements CommandHandler, Application{

@@ -57,12 +57,21 @@ import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 /**
- * Duplicate all object in the current selection
- * See {@link InsertAsSubComponentJob}
- * See {@link RelocateNodeJob}
+ * Duplicate all object in the current selection See
+ * {@link InsertAsSubComponentJob} See {@link RelocateNodeJob}
  */
 @Prototype
 public final class DuplicateSelectionJob extends BatchSelectionJob {
+
+    private static final String I18N_LABEL_ACTION_EDIT_DUPLICATE_N = "label.action.edit.duplicate.n";
+
+    private static final String I18N_LABEL_ACTION_EDIT_DUPLICATE_COLLECTION = "label.action.edit.duplicate.collection";
+
+    private static final String I18N_LABEL_ACTION_EDIT_DUPLICATE_UNRESOLVED = "label.action.edit.duplicate.unresolved";
+
+    private static final String I18N_LABEL_ACTION_EDIT_DUPLICATE_1 = "label.action.edit.duplicate.1";
+
+    private final I18N i18n;
 
     private final SelectionJobsFactory selectionJobsFactory;
     private final FXOMObjectMask.Factory fxomObjectMaskFactory;
@@ -73,6 +82,7 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
 
     // @formatter:off
     protected DuplicateSelectionJob(
+            I18N i18n,
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             Selection selection,
@@ -82,6 +92,7 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
             ) {
      // @formatter:on
         super(extensionFactory, documentManager, selection);
+        this.i18n = i18n;
         this.fxomDocument = documentManager.fxomDocument().get();
         this.selectionJobsFactory = selectionJobsFactory;
         this.fxomObjectMaskFactory = fxomObjectMaskFactory;
@@ -121,18 +132,13 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
             }
             assert newFxomObjects.isEmpty() == false; // Because of (1)
 
-
-
             if (targetMask.isAcceptingAccessory(targetAccessory, newFxomObjects.keySet())) {
                 int index = 0;
                 for (Map.Entry<FXOMObject, FXOMObject> entry : newFxomObjects.entrySet()) {
                     final FXOMObject selectedFxomObject = entry.getKey();
                     final FXOMObject newFxomObject = entry.getValue();
-                    final Job insertSubJob = selectionJobsFactory.insertAsAccessory(
-                            newFxomObject,
-                            targetObject,
-                            targetAccessory,
-                            targetMask.getSubComponentCount(targetAccessory,true) + index++);
+                    final Job insertSubJob = selectionJobsFactory.insertAsAccessory(newFxomObject, targetObject,
+                            targetAccessory, targetMask.getSubComponentCount(targetAccessory, true) + index++);
 
                     result.add(insertSubJob);
                 }
@@ -160,7 +166,8 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
         if (newFxomObjects.isEmpty()) {
             return null;
         } else {
-            return objectSelectionGroupFactory.getGroup(newFxomObjects.values(), newFxomObjects.values().iterator().next(), null);
+            return objectSelectionGroupFactory.getGroup(newFxomObjects.values(),
+                    newFxomObjects.values().iterator().next(), null);
         }
     }
 
@@ -207,22 +214,22 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
         if (newObject instanceof FXOMInstance) {
             final Object sceneGraphObject = newObject.getSceneGraphObject().get();
             if (sceneGraphObject != null) {
-                result = I18N.getString("label.action.edit.duplicate.1", sceneGraphObject.getClass().getSimpleName());
+                result = i18n.getString(I18N_LABEL_ACTION_EDIT_DUPLICATE_1, sceneGraphObject.getClass().getSimpleName());
             } else {
-                result = I18N.getString("label.action.edit.duplicate.unresolved");
+                result = i18n.getString(I18N_LABEL_ACTION_EDIT_DUPLICATE_UNRESOLVED);
             }
         } else if (newObject instanceof FXOMCollection) {
-            result = I18N.getString("label.action.edit.duplicate.collection");
+            result = i18n.getString(I18N_LABEL_ACTION_EDIT_DUPLICATE_COLLECTION);
         } else {
             assert false;
-            result = I18N.getString("label.action.edit.duplicate.1", newObject.getClass().getSimpleName());
+            result = i18n.getString(I18N_LABEL_ACTION_EDIT_DUPLICATE_1, newObject.getClass().getSimpleName());
         }
 
         return result;
     }
 
     private String makeMultipleSelectionDescription() {
-        return I18N.getString("label.action.edit.duplicate.n", newFxomObjects.values().size());
+        return i18n.getString(I18N_LABEL_ACTION_EDIT_DUPLICATE_N, newFxomObjects.values().size());
     }
 
 }

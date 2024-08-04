@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,6 +35,8 @@ package com.gluonhq.jfxapps.app.manager.main.ui.cmp;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -58,9 +60,7 @@ import javafx.stage.Stage;
 @ExtendWith({ApplicationExtension.class, MockitoExtension.class})
 class ApplicationCardControllerTest {
 
-    static {
-        I18N.initForTest();
-    }
+    private I18N i18n = new I18N(List.of(), true);
 
     private SceneBuilderManager sbm = new SceneBuilderManager.SceneBuilderManagerImpl();
 
@@ -81,14 +81,14 @@ class ApplicationCardControllerTest {
 
     @Test
     void should_load_the_hud_fxml() {
-        Parent ui = FxmlControllerLoader.controller(new ApplicationCardController(sbm, dm)).loadFxml();
+        Parent ui = FxmlControllerLoader.controller(new ApplicationCardController(i18n, sbm, dm)).loadFxml();
         assertNotNull(ui);
     }
 
     @Test
     void should_create_3_rows_with_only_2_lines_with_values(FxRobot robot) {
         ApplicationCardController ctrl = FxmlControllerLoader
-                .controller(new ApplicationCardController(sbm, dm))
+                .controller(new ApplicationCardController(i18n, sbm, dm))
                 .darkTheme(sbm)
                 .load();
 

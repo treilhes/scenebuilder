@@ -243,7 +243,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     }
 
     /*
-     * AbstractFxmlPanelController
+     * AbstractFxmlController
      */
 
     /**

@@ -33,6 +33,8 @@
  */
 package com.gluonhq.jfxapps.boot.internal.context.config;
 
+import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
@@ -44,6 +46,7 @@ import java.util.stream.Stream;
 
 import javax.sql.DataSource;
 
+import org.aopalliance.aop.Advice;
 import org.hibernate.annotations.GenericGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,13 +84,21 @@ import org.springdoc.webmvc.ui.SwaggerUiHome;
 import org.springdoc.webmvc.ui.SwaggerWebMvcConfigurer;
 import org.springdoc.webmvc.ui.SwaggerWelcomeCommon;
 import org.springdoc.webmvc.ui.SwaggerWelcomeWebMvc;
+import org.springframework.aop.Advisor;
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
+import org.springframework.aop.framework.AdvisedSupportListener;
+import org.springframework.aop.framework.AdvisorChainFactory;
+import org.springframework.aop.framework.AopConfigException;
+import org.springframework.aop.framework.AopProxyFactory;
+import org.springframework.aop.framework.ProxyConfig;
+import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafProperties;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -103,6 +114,8 @@ import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.persistenceunit.MutablePersistenceUnitInfo;
 import org.springframework.orm.jpa.persistenceunit.PersistenceUnitPostProcessor;
+import org.springframework.scheduling.annotation.AsyncAnnotationBeanPostProcessor;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.MimeType;
@@ -159,6 +172,7 @@ import jakarta.servlet.ServletException;
 @EnableJpaRepositories
 @EnableTransactionManagement
 @EnableWebMvc
+//@EnableAsync
 @PropertySource(value = "classpath:/application.properties", ignoreResourceNotFound = true)
 public class DefaultExtensionContextConfig implements WebMvcConfigurer {
 
@@ -171,12 +185,11 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
     private final String externalContextPath;
 
     public DefaultExtensionContextConfig(JfxAppContext context,
-            @Value(InternalRestClient.SERVLET_PATH_PROP) String servletPath,
-            @Value(InternalRestClient.CONTEXT_PATH_PROP) String contextPath) {
+            @Value(InternalRestClient.CONTEXT_PATH_PROP) String contextPath,
+            @Value(InternalRestClient.SERVLET_PATH_PROP) String servletPath) {
         super();
         this.context = context;
-        this.basePath = ((StringUtils.hasText(contextPath) ? "/" + contextPath : "")
-                + (StringUtils.hasText(servletPath) ? "/" + servletPath : "")).replaceAll("/+", "/");
+        this.basePath = buildBasePath(contextPath, servletPath);
         this.internalContextPath = "/" + JfxAppsPlatform.EXTENSION_REST_PATH_PREFIX + "/" + context.getId();
         this.externalContextPath = basePath + this.internalContextPath;
     }
@@ -190,12 +203,12 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
     public final static List<Class<?>> classesToRegister = List.of(
             DefaultExtensionContextConfig.class,
             // default spring beans
-            org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.class,
-            org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.class,
-            org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor.class,
-            com.gluonhq.jfxapps.boot.context.bpp.OverridedBeanPostProcessor.class,
+            //org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.class,
+            //org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.class,
+            //org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor.class,
+            //com.gluonhq.jfxapps.boot.context.bpp.OverridedBeanPostProcessor.class,
             //org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator.class,
-            org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor.class,
+            //org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor.class,
 
             OverridedBeanPostProcessor.class,
             JfxAppsExtensionRestController.class,
@@ -214,6 +227,14 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
 
     }
 
+    @Bean
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    AsyncAnnotationBeanPostProcessor asyncAnnotationBeanPostProcessor() {
+        final var processor = new MyAsyncAnnotationBeanPostProcessor();
+        return processor;
+
+    }
+
     public static class MyAnnotationAwareAspectJAutoProxyCreator extends AnnotationAwareAspectJAutoProxyCreator {
 
         @Override
@@ -223,6 +244,280 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
             return super.createProxy(beanClass, beanName, specificInterceptors, targetSource);
         }
 
+    }
+
+    public static class MyAsyncAnnotationBeanPostProcessor extends AsyncAnnotationBeanPostProcessor {
+
+        @Override
+        protected ProxyFactory prepareProxyFactory(Object bean, String beanName) {
+            final var factory = super.prepareProxyFactory(bean, beanName);
+            final var wrappedFactory = new ProxyFactoryWrapper(factory, bean);
+            return wrappedFactory;
+        }
+
+        private class ProxyFactoryWrapper extends ProxyFactory {
+            private final ProxyFactory wrappedFactory;
+            private final Object bean;
+
+            public ProxyFactoryWrapper(ProxyFactory wrappedFactory, Object bean) {
+                super();
+                this.wrappedFactory = wrappedFactory;
+                this.bean = bean;
+            }
+
+            @Override
+            public void setProxyTargetClass(boolean proxyTargetClass) {
+                wrappedFactory.setProxyTargetClass(proxyTargetClass);
+            }
+
+            @Override
+            public void setAopProxyFactory(AopProxyFactory aopProxyFactory) {
+                wrappedFactory.setAopProxyFactory(aopProxyFactory);
+            }
+
+            @Override
+            public boolean isProxyTargetClass() {
+                return wrappedFactory.isProxyTargetClass();
+            }
+
+            @Override
+            public AopProxyFactory getAopProxyFactory() {
+                return wrappedFactory.getAopProxyFactory();
+            }
+
+            @Override
+            public void addListener(AdvisedSupportListener listener) {
+                wrappedFactory.addListener(listener);
+            }
+
+            @Override
+            public void setOptimize(boolean optimize) {
+                wrappedFactory.setOptimize(optimize);
+            }
+
+            @Override
+            public void removeListener(AdvisedSupportListener listener) {
+                wrappedFactory.removeListener(listener);
+            }
+
+            @Override
+            public boolean isOptimize() {
+                return wrappedFactory.isOptimize();
+            }
+
+            @Override
+            public Object getProxy() {
+                return wrappedFactory.getProxy();
+            }
+
+            @Override
+            public void setOpaque(boolean opaque) {
+                wrappedFactory.setOpaque(opaque);
+            }
+
+            @Override
+            public boolean isOpaque() {
+                return wrappedFactory.isOpaque();
+            }
+
+            @Override
+            public Object getProxy(@Nullable ClassLoader classLoader) {
+                return wrappedFactory.getProxy(bean.getClass().getClassLoader());
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                return wrappedFactory.equals(obj);
+            }
+
+            @Override
+            public void setExposeProxy(boolean exposeProxy) {
+                wrappedFactory.setExposeProxy(exposeProxy);
+            }
+
+            @Override
+            public Class<?> getProxyClass(@Nullable ClassLoader classLoader) {
+                return wrappedFactory.getProxyClass(classLoader);
+            }
+
+            @Override
+            public boolean isExposeProxy() {
+                return wrappedFactory.isExposeProxy();
+            }
+
+            @Override
+            public void setFrozen(boolean frozen) {
+                wrappedFactory.setFrozen(frozen);
+            }
+
+            @Override
+            public boolean isFrozen() {
+                return wrappedFactory.isFrozen();
+            }
+
+            @Override
+            public void copyFrom(ProxyConfig other) {
+                wrappedFactory.copyFrom(other);
+            }
+
+            @Override
+            public void setTarget(Object target) {
+                wrappedFactory.setTarget(target);
+            }
+
+            @Override
+            public void setTargetSource(@Nullable TargetSource targetSource) {
+                wrappedFactory.setTargetSource(targetSource);
+            }
+
+            @Override
+            public TargetSource getTargetSource() {
+                return wrappedFactory.getTargetSource();
+            }
+
+            @Override
+            public void setTargetClass(@Nullable Class<?> targetClass) {
+                wrappedFactory.setTargetClass(targetClass);
+            }
+
+            @Override
+            public Class<?> getTargetClass() {
+                return wrappedFactory.getTargetClass();
+            }
+
+            @Override
+            public void setPreFiltered(boolean preFiltered) {
+                wrappedFactory.setPreFiltered(preFiltered);
+            }
+
+            @Override
+            public boolean isPreFiltered() {
+                return wrappedFactory.isPreFiltered();
+            }
+
+            @Override
+            public void setAdvisorChainFactory(AdvisorChainFactory advisorChainFactory) {
+                wrappedFactory.setAdvisorChainFactory(advisorChainFactory);
+            }
+
+            @Override
+            public AdvisorChainFactory getAdvisorChainFactory() {
+                return wrappedFactory.getAdvisorChainFactory();
+            }
+
+            @Override
+            public void setInterfaces(Class<?>... interfaces) {
+                wrappedFactory.setInterfaces(interfaces);
+            }
+
+            @Override
+            public void addInterface(Class<?> intf) {
+                wrappedFactory.addInterface(intf);
+            }
+
+            @Override
+            public boolean removeInterface(Class<?> intf) {
+                return wrappedFactory.removeInterface(intf);
+            }
+
+            @Override
+            public Class<?>[] getProxiedInterfaces() {
+                return wrappedFactory.getProxiedInterfaces();
+            }
+
+            @Override
+            public boolean isInterfaceProxied(Class<?> intf) {
+                return wrappedFactory.isInterfaceProxied(intf);
+            }
+
+            @Override
+            public int getAdvisorCount() {
+                return wrappedFactory.getAdvisorCount();
+            }
+
+            @Override
+            public void addAdvisor(Advisor advisor) {
+                wrappedFactory.addAdvisor(advisor);
+            }
+
+            @Override
+            public void addAdvisor(int pos, Advisor advisor) throws AopConfigException {
+                wrappedFactory.addAdvisor(pos, advisor);
+            }
+
+            @Override
+            public boolean removeAdvisor(Advisor advisor) {
+                return wrappedFactory.removeAdvisor(advisor);
+            }
+
+            @Override
+            public void removeAdvisor(int index) throws AopConfigException {
+                wrappedFactory.removeAdvisor(index);
+            }
+
+            @Override
+            public int indexOf(Advisor advisor) {
+                return wrappedFactory.indexOf(advisor);
+            }
+
+            @Override
+            public boolean replaceAdvisor(Advisor a, Advisor b) throws AopConfigException {
+                return wrappedFactory.replaceAdvisor(a, b);
+            }
+
+            @Override
+            public void addAdvisors(Advisor... advisors) {
+                wrappedFactory.addAdvisors(advisors);
+            }
+
+            @Override
+            public void addAdvisors(Collection<Advisor> advisors) {
+                wrappedFactory.addAdvisors(advisors);
+            }
+
+            @Override
+            public void addAdvice(Advice advice) throws AopConfigException {
+                wrappedFactory.addAdvice(advice);
+            }
+
+            @Override
+            public void addAdvice(int pos, Advice advice) throws AopConfigException {
+                wrappedFactory.addAdvice(pos, advice);
+            }
+
+            @Override
+            public boolean removeAdvice(Advice advice) throws AopConfigException {
+                return wrappedFactory.removeAdvice(advice);
+            }
+
+            @Override
+            public int indexOf(Advice advice) {
+                return wrappedFactory.indexOf(advice);
+            }
+
+            @Override
+            public boolean adviceIncluded(@Nullable Advice advice) {
+                return wrappedFactory.adviceIncluded(advice);
+            }
+
+            @Override
+            public int countAdvicesOfType(@Nullable Class<?> adviceClass) {
+                return wrappedFactory.countAdvicesOfType(adviceClass);
+            }
+
+            @Override
+            public List<Object> getInterceptorsAndDynamicInterceptionAdvice(Method method,
+                    @Nullable Class<?> targetClass) {
+                return wrappedFactory.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
+            }
+
+            @Override
+            public String toProxyConfigString() {
+                return wrappedFactory.toProxyConfigString();
+            }
+
+
+        }
     }
 
     @Bean(name = "templateEngine")
@@ -586,10 +881,19 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
     }
 
     @Bean("org.springdoc.core.properties.SwaggerUiConfigParameters")
-    SwaggerUiConfigParameters swaggerUiConfigParameters(SwaggerUiConfigProperties swaggerUiConfigProperties) {
+    SwaggerUiConfigParameters swaggerUiConfigParameters(SwaggerUiConfigProperties swaggerUiConfigProperties,
+            ServerProperties serverProperties,
+            @Value(InternalRestClient.CONTEXT_PATH_PROP) String contextPath,
+            @Value(InternalRestClient.SERVLET_PATH_PROP) String servletPath) {
         var param = new SwaggerUiConfigParameters(swaggerUiConfigProperties);
-        param.setPath(
-                String.format("/%s/%s/swagger-ui.html", JfxAppsPlatform.EXTENSION_REST_PATH_PREFIX, context.getId()));
+
+        String path = String.format("/%s/%s/swagger-ui.html", JfxAppsPlatform.EXTENSION_REST_PATH_PREFIX, context.getId());
+        param.setPath(path);
+
+        String url = String.format("http://localhost:%s%s%s", serverProperties.getPort(),
+                buildBasePath(contextPath, servletPath), path);
+        logger.info("Documentation url : " + url);
+
         return param;
     }
 
@@ -640,4 +944,8 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
       return new OpenAPI().info(info);
     }
 
+    private String buildBasePath(String contextPath, String servletPath) {
+        return ((StringUtils.hasText(contextPath) ? "/" + contextPath : "")
+                + (StringUtils.hasText(servletPath) ? "/" + servletPath : "")).replaceAll("/+", "/");
+    }
 }

@@ -29,6 +29,7 @@ server:
       suffix: .log
       file-date-format: yyyy-MM-dd
       #pattern: "[ACCESS] %{org.apache.catalina.AccessLog.RemoteAddr}r %l %t %D %F %B %S vcap_request_id:%{X-Vcap-Request-Id}i"
+
 spring:
   main:
     allow-bean-definition-overriding: true

@@ -42,10 +42,12 @@ import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.About;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -57,10 +59,9 @@ import javafx.stage.Modality;
 @ApplicationSingleton
 public class AboutWindowController extends AbstractFxmlWindowController implements About {
 
-    @FXML
-    private GridPane vbox;
-    @FXML
-    private TextArea textArea;
+    private final String LOG_FILE_NAME;
+
+    private final SceneBuilderManager sceneBuilderManager;
 
     private String sbBuildInfo;
     private String sbBuildVersion;
@@ -70,14 +71,18 @@ public class AboutWindowController extends AbstractFxmlWindowController implemen
     // The resource bundle contains two keys: about.copyright and about.copyright.open
     private String sbAboutCopyrightKeyName;
     // File name must be in sync with what we use in logging.properties (Don't understand this comment, haven't found any logging.properties file
-    private final String LOG_FILE_NAME;
-    private final SceneBuilderManager sceneBuilderManager;
+
+    @FXML
+    private GridPane vbox;
+    @FXML
+    private TextArea textArea;
 
     public AboutWindowController(
+            I18N i18n,
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting
             ) {
-        super(sceneBuilderManager, iconSetting, AboutWindowController.class.getResource("About.fxml"), I18N.getBundle());
+        super(i18n, sceneBuilderManager, iconSetting, AboutWindowController.class.getResource("About.fxml"));
         this.sceneBuilderManager = sceneBuilderManager;
 
         try (InputStream in = getClass().getResourceAsStream("about.properties")) {
@@ -123,7 +128,7 @@ public class AboutWindowController extends AbstractFxmlWindowController implemen
         assert getRoot().getScene() != null;
         assert getRoot().getScene().getWindow() != null;
 
-        getStage().setTitle(I18N.getString("about.title"));
+        getStage().setTitle(getI18n().getString("about.title"));
         getStage().initModality(Modality.APPLICATION_MODAL);
     }
 
@@ -143,7 +148,7 @@ public class AboutWindowController extends AbstractFxmlWindowController implemen
                 .append(getJavaFXParagraph())
                 .append(getJavaParagraph())
                 .append(getOsParagraph())
-                .append(I18N.getString(sbAboutCopyrightKeyName));
+                .append(getI18n().getString(sbAboutCopyrightKeyName));
 
         return text.toString();
     }
@@ -169,7 +174,7 @@ public class AboutWindowController extends AbstractFxmlWindowController implemen
     }
 
     private StringBuilder getVersionParagraph() {
-        StringBuilder sb = new StringBuilder(I18N.getString("about.product.version"));
+        StringBuilder sb = new StringBuilder(getI18n().getString("about.product.version"));
         sb.append("\nJavaFX Scene Builder ").append(sbBuildVersion) //NOCHECK
                 .append("\n\n"); //NOCHECK
         return sb;
@@ -185,21 +190,21 @@ public class AboutWindowController extends AbstractFxmlWindowController implemen
     }
 
     private StringBuilder getBuildInfoParagraph() {
-        StringBuilder sb = new StringBuilder(I18N.getString("about.build.information"));
+        StringBuilder sb = new StringBuilder(getI18n().getString("about.build.information"));
         sb.append("\n").append(sbBuildInfo).append("\n") //NOCHECK
-                .append(I18N.getString("about.build.date", sbBuildDate)).append("\n")
-                .append(I18N.getString("about.build.javafx.version", sbBuildJavaFXVersion)).append("\n")
-                .append(I18N.getString("about.build.java.version", sbBuildJavaVersion))
+                .append(getI18n().getString("about.build.date", sbBuildDate)).append("\n")
+                .append(getI18n().getString("about.build.javafx.version", sbBuildJavaFXVersion)).append("\n")
+                .append(getI18n().getString("about.build.java.version", sbBuildJavaVersion))
                 .append("\n\n"); //NOCHECK
         return sb;
     }
 
     private StringBuilder getLoggingParagraph() {
-        StringBuilder sb = new StringBuilder(I18N.getString("about.logging.title"));
+        StringBuilder sb = new StringBuilder(getI18n().getString("about.logging.title"));
         sb.append("\n") //NOCHECK
-                .append(I18N.getString("about.logging.body.first", LOG_FILE_NAME))
+                .append(getI18n().getString("about.logging.body.first", LOG_FILE_NAME))
                 .append("\n") //NOCHECK
-                .append(I18N.getString("about.logging.body.second", getLogFilePath()))
+                .append(getI18n().getString("about.logging.body.second", getLogFilePath()))
                 .append("\n\n"); //NOCHECK
         return sb;
     }
@@ -218,7 +223,7 @@ public class AboutWindowController extends AbstractFxmlWindowController implemen
     }
 
     private StringBuilder getOsParagraph() {
-        StringBuilder sb = new StringBuilder(I18N.getString("about.operating.system"));
+        StringBuilder sb = new StringBuilder(getI18n().getString("about.operating.system"));
         sb.append("\n").append(System.getProperty("os.name")).append(", ") //NOCHECK
                 .append(System.getProperty("os.arch")).append(", ") //NOCHECK
                 .append(System.getProperty("os.version")).append("\n\n"); //NOCHECK

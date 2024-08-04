@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,21 +34,43 @@
 
 package com.gluonhq.jfxapps.ext.scenicview.controller;
 
+import org.scenicview.ScenicView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
+import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloaderDispatcher;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+
+import javafx.stage.Stage;
 
 /**
  * @treatAsPrivate
  */
 public class ScenicViewStarter implements Runnable {
-        private final JfxAppContext context;
 
-        public ScenicViewStarter(JfxAppContext context) {
-            this.context = context;
-        }
+    private static final Logger logger = LoggerFactory.getLogger(ScenicViewStarter.class);
 
-        @Override
-        public void run() {
-                org.scenicview.ScenicView.show(context.getBean(MainInstanceWindow.class).getScene());
-        }
+    private final JfxAppContext context;
+
+    public ScenicViewStarter(JfxAppContext context) {
+        this.context = context;
+    }
+
+    @Override
+    public void run() {
+
+        MainInstanceWindow mainInstanceWindow = context.getBean(MainInstanceWindow.class);
+        JavafxThreadClassloader classloader = context.getBean(JavafxThreadClassloader.class);
+        JavafxThreadClassloaderDispatcher dispatcher = context.getBean(JavafxThreadClassloaderDispatcher.class);
+
+        classloader.addClassLoader(ScenicView.class.getClassLoader());
+        dispatcher.registerWithNextWindow(classloader, w -> {
+            return w instanceof Stage s && s.getTitle() != null && s.getTitle().contains("Scenic View");
+        });
+
+        ScenicView.show(mainInstanceWindow.getScene());
+
+    }
 }

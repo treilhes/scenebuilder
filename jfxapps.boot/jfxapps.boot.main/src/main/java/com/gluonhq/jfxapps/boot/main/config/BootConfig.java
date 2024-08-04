@@ -33,10 +33,13 @@
  */
 package com.gluonhq.jfxapps.boot.main.config;
 
+import java.util.concurrent.Executor;
+
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.gluonhq.jfxapps.boot.context.config.ContextConfig;
@@ -84,5 +87,18 @@ public class BootConfig {
           .license(mitLicense);
 
       return new OpenAPI().info(info);//.servers(List.of(devServer, prodServer));
+    }
+
+    @Bean(name = "asyncExecutor")
+    Executor asyncExecutor()  {
+
+      ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+      executor.setCorePoolSize(3);
+      executor.setMaxPoolSize(3);
+      executor.setQueueCapacity(100);
+      executor.setThreadNamePrefix("JfxApps-AsynchThread-");
+      executor.initialize();
+      return executor;
+
     }
 }

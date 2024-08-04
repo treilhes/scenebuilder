@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.core.ui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.preferences.type.DoublePreference;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 
@@ -158,7 +158,7 @@ public class InnerDockManager {
             trackPreference(divider);
             dock.setMinimized(false);
 
-            SbPlatform.runOnFxThread(() -> {
+            JfxAppPlatform.runOnFxThread(() -> {
                 logger.debug("Delayed setting divider position to {} of divider {}", position, divider);
                 divider.setPosition(position);
             });

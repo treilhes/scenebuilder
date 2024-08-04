@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,6 +35,8 @@ package com.gluonhq.jfxapps.core.maven.artifact;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -50,7 +52,6 @@ import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
-import com.gluonhq.jfxapps.core.maven.artifact.GetMavenArtifactDialogController;
 import com.gluonhq.jfxapps.core.maven.impl.MavenClientController;
 import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoriesPreferences;
 import com.gluonhq.jfxapps.test.FxmlControllerLoader;
@@ -61,13 +62,11 @@ import javafx.stage.Stage;
 @ExtendWith({ ApplicationExtension.class, MockitoExtension.class })
 class GetMavenArtifactDialogControllerTest {
 
-    static {
-        I18N.initForTest();
-    }
-
     private MavenClientController mc = new MavenClientController(null, null, null, null, null);
 
     private SceneBuilderManager sbm = new SceneBuilderManager.SceneBuilderManagerImpl();
+
+    private I18N i18n = new I18N(List.of(), true);
 
     @Mock
     private IconSetting iconSetting;
@@ -98,7 +97,7 @@ class GetMavenArtifactDialogControllerTest {
 
     @Test
     void should_load_the_hud_fxml() {
-        Parent ui = FxmlControllerLoader.controller(new GetMavenArtifactDialogController(mc, sbm, iconSetting,
+        Parent ui = FxmlControllerLoader.controller(new GetMavenArtifactDialogController(i18n, mc, sbm, iconSetting,
                 messageLogger, mavenSetting, repositoryPreferences, owner)).loadFxml();
         assertNotNull(ui);
     }
@@ -108,7 +107,7 @@ class GetMavenArtifactDialogControllerTest {
         Mockito.when(owner.getStage()).thenReturn(stage);
 
         GetMavenArtifactDialogController dialog = FxmlControllerLoader
-                .controller(new GetMavenArtifactDialogController(mc, sbm, iconSetting, messageLogger, mavenSetting,
+                .controller(new GetMavenArtifactDialogController(i18n, mc, sbm, iconSetting, messageLogger, mavenSetting,
                         repositoryPreferences, owner))
                 .darkTheme(sbm).load();
 

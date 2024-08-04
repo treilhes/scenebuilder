@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,23 +34,16 @@
 package com.gluonhq.jfxapps.ext.scenicview.actions;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.ext.scenicview.controller.ScenicViewStarter;
-import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
-@Prototype
+@ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
-@MenuItemAttachment(
-        id = ShowScenicViewAction.SCENICVIEW_MENU_ID,
-        targetMenuId = DefaultMenu.HELP_MENU_ID,
-        label = "menu.title.scenicview",
-        positionRequest = PositionRequest.AsLastChild)
 public class ShowScenicViewAction extends AbstractAction {
 
     public final static String SCENICVIEW_MENU_ID = "scenicMenu"; //NOCHECK
@@ -58,9 +51,10 @@ public class ShowScenicViewAction extends AbstractAction {
     private final JfxAppContext context;
 
     public ShowScenicViewAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             JfxAppContext context) {
-        super(extensionFactory);
+        super(i18n, extensionFactory);
         this.context = context;
     }
 
@@ -75,9 +69,10 @@ public class ShowScenicViewAction extends AbstractAction {
         // Show ScenicView Tool when the JVM is started with option -Dscenic.
         // NetBeans: set it on [VM Options] line in [Run] category of project's Properties.
         //if (System.getProperty("scenic") != null) //NOCHECK
-        {
-            SbPlatform.runOnFxThread(new ScenicViewStarter(context));
-        }
+//        {
+            JfxAppPlatform.runOnFxThread(new ScenicViewStarter(context));
+//        }
+        //new ScenicViewStarter(context).run();
         return ActionStatus.DONE;
     }
 }

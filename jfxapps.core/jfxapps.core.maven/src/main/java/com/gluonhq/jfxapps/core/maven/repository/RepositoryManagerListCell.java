@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -50,10 +50,21 @@ import javafx.scene.layout.Priority;
  */
 public class RepositoryManagerListCell extends ListCell<RepositoryListItem> {
 
+    private static final String I18N_REPOSITORY_MANAGER_BUTTON_DELETE_TOOLTIP = "repository.manager.button.delete.tooltip";
+
+    private static final String I18N_REPOSITORY_MANAGER_BUTTON_EDIT_TOOLTIP = "repository.manager.button.edit.tooltip";
+
+    private static final String STYLE_IMAGE_VIEW_BUTTON = "image-view-button";
+
+    private static final String EDIT_BUTTON_TEXT_EMPTY = "";
+
+    private final I18N i18n;
+
     private RepositoryListItem listItem;
 
-    public RepositoryManagerListCell() {
+    public RepositoryManagerListCell(I18N i18n) {
         super();
+        this.i18n = i18n;
     }
 
     @Override
@@ -87,14 +98,14 @@ public class RepositoryManagerListCell extends ListCell<RepositoryListItem> {
         buttonContent.setAlignment(Pos.CENTER_RIGHT);
         buttonContent.setSpacing(5);
 
-        Button editButton = new Button("", new ImageView(ImageUtils.getEditIconImage()));
-        editButton.getStyleClass().add("image-view-button");
+        Button editButton = new Button(EDIT_BUTTON_TEXT_EMPTY, new ImageView(ImageUtils.getEditIconImage()));
+        editButton.getStyleClass().add(STYLE_IMAGE_VIEW_BUTTON);
         editButton.setOnMouseClicked(event -> listItem.getRepositoryManager().edit(listItem.getRepository()));
-        editButton.setTooltip(new Tooltip(I18N.getString("repository.manager.button.edit.tooltip")));
-        Button deleteButton = new Button("", new ImageView(ImageUtils.getDeleteIconImage()));
+        editButton.setTooltip(new Tooltip(i18n.getString(I18N_REPOSITORY_MANAGER_BUTTON_EDIT_TOOLTIP)));
+        Button deleteButton = new Button(EDIT_BUTTON_TEXT_EMPTY, new ImageView(ImageUtils.getDeleteIconImage()));
         deleteButton.setOnMouseClicked(event -> listItem.getRepositoryManager().delete(listItem.getRepository()));
-        deleteButton.getStyleClass().add("image-view-button");
-        deleteButton.setTooltip(new Tooltip(I18N.getString("repository.manager.button.delete.tooltip")));
+        deleteButton.getStyleClass().add(STYLE_IMAGE_VIEW_BUTTON);
+        deleteButton.setTooltip(new Tooltip(i18n.getString(I18N_REPOSITORY_MANAGER_BUTTON_DELETE_TOOLTIP)));
         buttonContent.getChildren().addAll(editButton, deleteButton);
 
         return buttonContent;

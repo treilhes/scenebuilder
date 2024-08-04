@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,7 +40,8 @@ import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.application.lifecycle.InitWithDocument;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 
@@ -52,8 +53,8 @@ public class ApplyToolCssAction extends AbstractAction implements InitWithDocume
 
     private final SceneBuilderManager sceneBuilderManager;
 
-    public ApplyToolCssAction(ActionExtensionFactory extensionFactory, SceneBuilderManager sceneBuilderManager) {
-        super(extensionFactory);
+    public ApplyToolCssAction(I18N i18n, ActionExtensionFactory extensionFactory, SceneBuilderManager sceneBuilderManager) {
+        super(i18n, extensionFactory);
         this.sceneBuilderManager = sceneBuilderManager;
     }
 

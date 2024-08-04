@@ -53,7 +53,7 @@ import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask.Accessory;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPanelController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
@@ -82,7 +82,7 @@ import javafx.scene.control.TreeView;
 @Component
 @Scope(value = SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 @Lazy
-public class HierarchyTreeViewController extends AbstractFxmlPanelController implements HierarchyPanel {
+public class HierarchyTreeViewController extends AbstractFxmlController implements HierarchyPanel {
 
     private static final Logger logger = LoggerFactory.getLogger(HierarchyTreeViewController.class);
 

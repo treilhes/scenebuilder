@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,6 +35,8 @@ package com.gluonhq.jfxapps.core.ui.dialog;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -56,9 +58,7 @@ import javafx.stage.Stage;
 @ExtendWith({ApplicationExtension.class, MockitoExtension.class})
 class TextViewDialogTest {
 
-    static {
-        I18N.initForTest();
-    }
+    private I18N i18n = new I18N(List.of(), true);
 
     private SceneBuilderManager sbm = new SceneBuilderManager.SceneBuilderManagerImpl();
 
@@ -83,7 +83,7 @@ class TextViewDialogTest {
 
     @Test
     void should_load_the_hud_fxml() {
-        Parent ui = FxmlControllerLoader.controller(new TextViewDialog(sbm, is)).loadFxml();
+        Parent ui = FxmlControllerLoader.controller(new TextViewDialog(i18n, sbm, is)).loadFxml();
         assertNotNull(ui);
     }
 
@@ -91,7 +91,7 @@ class TextViewDialogTest {
     void test(FxRobot robot) {
 
         robot.interact(() -> {
-            TextViewDialog dialog = FxmlControllerLoader.controller(new TextViewDialog(sbm, is)).load();
+            TextViewDialog dialog = FxmlControllerLoader.controller(new TextViewDialog(i18n, sbm, is)).load();
             //stage.show();
             dialog.openWindow();
         });

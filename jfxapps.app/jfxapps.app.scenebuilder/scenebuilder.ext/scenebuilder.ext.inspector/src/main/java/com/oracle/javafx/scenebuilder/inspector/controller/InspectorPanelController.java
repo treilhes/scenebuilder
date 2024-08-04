@@ -483,7 +483,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     }
 
     /*
-     * AbstractFxmlPanelController
+     * AbstractFxmlController
      */
     @Override
     public void controllerDidLoadFxml() {

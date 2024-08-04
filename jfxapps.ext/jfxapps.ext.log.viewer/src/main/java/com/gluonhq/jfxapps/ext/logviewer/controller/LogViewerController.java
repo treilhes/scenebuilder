@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,8 +39,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.di.SbPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
@@ -72,10 +72,11 @@ public class LogViewerController extends AbstractFxmlViewController {
     ListView<String> logs;
 
     public LogViewerController(
+            I18N i18n,
             SceneBuilderManager scenebuilderManager,
             DocumentManager documentManager,
             ViewMenuController viewMenuController) {
-        super(scenebuilderManager, documentManager, viewMenuController, LogViewerController.class.getResource("LogViewerWindow.fxml"), I18N.getBundle());
+        super(i18n, scenebuilderManager, documentManager, viewMenuController, LogViewerController.class.getResource("LogViewerWindow.fxml"));
 
     }
 
@@ -118,7 +119,7 @@ public class LogViewerController extends AbstractFxmlViewController {
         int numNewLines = newLines.size();
         int toDelete = numLines + numNewLines - MAX_LINES;
 
-        SbPlatform.runOnFxThread(() -> {
+        JfxAppPlatform.runOnFxThread(() -> {
             if (toDelete > 0) {
                 logs.getItems().remove(0, toDelete);
             }

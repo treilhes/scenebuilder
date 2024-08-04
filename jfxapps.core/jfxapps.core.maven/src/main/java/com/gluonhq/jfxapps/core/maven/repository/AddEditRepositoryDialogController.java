@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -70,6 +70,21 @@ import javafx.stage.Modality;
 @Prototype
 public class AddEditRepositoryDialogController extends AbstractFxmlWindowController {
 
+    private static final String I18N_REPOSITORY_DIALOG_UPDATE_TOOLTIP = "repository.dialog.update.tooltip";
+    private static final String I18N_REPOSITORY_DIALOG_UPDATE = "repository.dialog.update";
+    private static final String I18N_REPOSITORY_DIALOG_TITLE_UPDATE = "repository.dialog.title.update";
+    private static final String I18N_REPOSITORY_DIALOG_ADD_TOOLTIP = "repository.dialog.add.tooltip";
+    private static final String I18N_REPOSITORY_DIALOG_ADD = "repository.dialog.add";
+    private static final String I18N_REPOSITORY_DIALOG_TITLE_ADD = "repository.dialog.title.add";
+    private static final String I18N_REPOSITORY_DIALOG_RESULT = "repository.dialog.result";
+    private static final String STYLE_LABEL_ERROR = "label-error";
+    private final InstanceWindow owner;
+    private final MessageLogger messageLogger;
+    private final MavenClient mavenClient;
+    private Repository oldRepository;
+    private final Service<String> testService;
+    private final Optional<List<RepositoryTypeProvider>> repositoryTypes;
+
     @FXML
     private AnchorPane MavenDialog;
 
@@ -114,28 +129,21 @@ public class AddEditRepositoryDialogController extends AbstractFxmlWindowControl
 
     @FXML
     private Label resultLabel;
-//
-    private final InstanceWindow owner;
-    private final MessageLogger messageLogger;
-    private final MavenClient mavenClient;
-    private Repository oldRepository;
-    private final Service<String> testService;
-    private final Optional<List<RepositoryTypeProvider>> repositoryTypes;
 
  // @formatter:off
     protected AddEditRepositoryDialogController(
+            I18N i18n,
             MavenClient mavenClient,
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
-    		MessageLogger messageLogger,
-    		MavenSetting mavenSetting,
-    		MavenRepositoriesPreferences repositoryPreferences,
-    		Optional<List<RepositoryTypeProvider>> repositoryTypes,
-    		InstanceWindow owner) {
+            MessageLogger messageLogger,
+            MavenSetting mavenSetting,
+            MavenRepositoriesPreferences repositoryPreferences,
+            Optional<List<RepositoryTypeProvider>> repositoryTypes,
+            InstanceWindow owner) {
      // @formatter:on
-        super(sceneBuilderManager, iconSetting,
-                AddEditRepositoryDialogController.class.getResource("AddEditRepositoryDialog.fxml"), I18N.getBundle(),
-                owner);
+        super(i18n, sceneBuilderManager, iconSetting,
+                AddEditRepositoryDialogController.class.getResource("AddEditRepositoryDialog.fxml"), owner);
         this.owner = owner;
         this.mavenClient = mavenClient;
         this.messageLogger = messageLogger;
@@ -162,13 +170,13 @@ public class AddEditRepositoryDialogController extends AbstractFxmlWindowControl
             if (nv.equals(Worker.State.SUCCEEDED)) {
                 String result = testService.getValue();
                 if (result.isEmpty()) {
-                    if (resultLabel.getStyleClass().contains("label-error")) {
-                        resultLabel.getStyleClass().remove("label-error");
+                    if (resultLabel.getStyleClass().contains(STYLE_LABEL_ERROR)) {
+                        resultLabel.getStyleClass().remove(STYLE_LABEL_ERROR);
                     }
-                    result = I18N.getString("repository.dialog.result");
+                    result = getI18n().getString(I18N_REPOSITORY_DIALOG_RESULT);
                 } else {
-                    if (!resultLabel.getStyleClass().contains("label-error")) {
-                        resultLabel.getStyleClass().add("label-error");
+                    if (!resultLabel.getStyleClass().contains(STYLE_LABEL_ERROR)) {
+                        resultLabel.getStyleClass().add(STYLE_LABEL_ERROR);
                     }
                 }
                 resultLabel.setText(result);
@@ -257,15 +265,15 @@ public class AddEditRepositoryDialogController extends AbstractFxmlWindowControl
     }
 
     private void logInfoMessage(String key, Object... args) {
-        messageLogger.logInfoMessage(key, I18N.getBundle(), args);
+        messageLogger.logInfoMessage(key, getI18n().getBundle(), args);
     }
 
     public void setRepository(Repository repository) {
         oldRepository = repository;
         if (repository == null) {
-            super.getStage().setTitle(I18N.getString("repository.dialog.title.add"));
-            addButton.setText(I18N.getString("repository.dialog.add"));
-            addButton.setTooltip(new Tooltip(I18N.getString("repository.dialog.add.tooltip")));
+            super.getStage().setTitle(getI18n().getString(I18N_REPOSITORY_DIALOG_TITLE_ADD));
+            addButton.setText(getI18n().getString(I18N_REPOSITORY_DIALOG_ADD));
+            addButton.setTooltip(new Tooltip(getI18n().getString(I18N_REPOSITORY_DIALOG_ADD_TOOLTIP)));
 
             addButton.disableProperty().bind(nameIDTextfield.textProperty().isEmpty().or(typeCombo.getSelectionModel()
                     .selectedItemProperty().isNull().or(urlTextfield.textProperty().isEmpty())));
@@ -294,8 +302,8 @@ public class AddEditRepositoryDialogController extends AbstractFxmlWindowControl
                                 .and(urlTextfield.textProperty().isEqualTo(repository.getUrl()).and(userTextfield
                                         .textProperty().isEqualTo(repository.getUser())
                                         .and(passwordTextfield.textProperty().isEqualTo(repository.getPassword()))))));
-        super.getStage().setTitle(I18N.getString("repository.dialog.title.update"));
-        addButton.setText(I18N.getString("repository.dialog.update"));
-        addButton.setTooltip(new Tooltip(I18N.getString("repository.dialog.update.tooltip")));
+        super.getStage().setTitle(getI18n().getString(I18N_REPOSITORY_DIALOG_TITLE_UPDATE));
+        addButton.setText(getI18n().getString(I18N_REPOSITORY_DIALOG_UPDATE));
+        addButton.setTooltip(new Tooltip(getI18n().getString(I18N_REPOSITORY_DIALOG_UPDATE_TOOLTIP)));
     }
 }

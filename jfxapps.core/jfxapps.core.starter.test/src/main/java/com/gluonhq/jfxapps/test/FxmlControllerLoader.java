@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.test;
 
-import com.gluonhq.jfxapps.core.api.di.FxmlController;
+import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 

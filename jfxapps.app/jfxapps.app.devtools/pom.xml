@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.gluonhq.jfxapps</groupId>
+    <artifactId>jfxapps.app</artifactId>
+    <version>${jfxapps.version}</version>
+  </parent>
+  <artifactId>jfxapps.app.devtools</artifactId>
+  <version>${devtools.version}</version>
+  <packaging>pom</packaging>
+  <modules>
+      <module>devtools.api</module>
+      <module>devtools.app</module>
+      <module>devtools.model</module>
+      <module>devtools.metadata</module>
+  </modules>
+  
+  <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>devtools.api</artifactId>
+                <version>${devtools.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>devtools.metadata.customization</artifactId>
+                <version>${devtools.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>devtools.metadata.model</artifactId>
+                <version>${devtools.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>devtools.metadata.modeldata</artifactId>
+                <version>${devtools.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>devtools.model</artifactId>
+                <version>${devtools.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
