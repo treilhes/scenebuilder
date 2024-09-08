@@ -12,7 +12,7 @@
       <module>jfxapps.app.registry.optional</module>
       <module>jfxapps.app.fxmlrunner</module>
       <module>jfxapps.app.manager</module>
-      <!--<module>jfxapps.app.scenebuilder</module>-->
+      <module>jfxapps.app.scenebuilder</module>
       <module>jfxapps.app.devtools</module>
   </modules>
   

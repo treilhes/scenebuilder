@@ -34,9 +34,7 @@ package com.oracle.javafx.scenebuilder.cssanalyser.i18n;
 
 import java.util.ResourceBundle;
 
-import org.springframework.stereotype.Component;
-
-import com.oracle.javafx.scenebuilder.api.i18n.BundleProvider;
+import org.graalvm.compiler.lir.CompositeValue.Component;
 
 @Component
 public class I18NCssAnalyser implements BundleProvider {

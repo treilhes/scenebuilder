@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -48,6 +48,7 @@ import com.gluonhq.jfxapps.core.api.error.ErrorCollector;
 import com.gluonhq.jfxapps.core.api.error.ErrorReport;
 import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 /**
@@ -57,7 +58,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 @ApplicationInstanceSingleton
 public class ErrorReportImpl implements ErrorReport {
 
-    private final Map<FXOMObject, List<ErrorReportEntry>> documentErrors = new HashMap<>();
+    private final Map<FXOMNode, List<ErrorReportEntry>> documentErrors = new HashMap<>();
     private final DocumentManager documentManager;
 
     private boolean dirty = true;

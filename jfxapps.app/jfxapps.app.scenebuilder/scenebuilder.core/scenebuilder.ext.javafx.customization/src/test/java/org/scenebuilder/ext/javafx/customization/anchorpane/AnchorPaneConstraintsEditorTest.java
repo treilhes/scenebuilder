@@ -36,6 +36,7 @@ package org.scenebuilder.ext.javafx.customization.anchorpane;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -60,9 +61,7 @@ import javafx.scene.control.ToggleButton;
 @ExtendWith({ApplicationExtension.class, MockitoExtension.class})
 public class AnchorPaneConstraintsEditorTest {
 
-    static {
-        I18N.initForTest();
-    }
+    private I18N i18n = new I18N(List.of(), true);
 
     static DoublePropertyMetadata someAnchorProp(String name) {
         return new NullableCoordinateDoublePropertyMetadata.Builder<Void>()
@@ -86,7 +85,7 @@ public class AnchorPaneConstraintsEditorTest {
     @BeforeEach
     public void setup() {
         Supplier<ConstraintEditor> supplier = () -> {
-            ConstraintEditor ct = new ConstraintEditor(null, null, null);
+            ConstraintEditor ct = new ConstraintEditor(i18n, null, null, null);
             ct.initialize(new TextField(), new ToggleButton(), (ob, o, n) -> {});
             return ct;
         };
@@ -97,14 +96,14 @@ public class AnchorPaneConstraintsEditorTest {
 
     @Test
     public void shouldCreateAnEmptyInstance() {
-        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(constraintEditorFactory);
+        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(i18n, constraintEditorFactory);
 
         assertNotNull(o);
     }
 
     @Test
     public void shouldCreateAnEmptyMenu() {
-        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(constraintEditorFactory);
+        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(i18n, constraintEditorFactory);
 
         assertNotNull(o.getMenu());
     }
@@ -114,7 +113,7 @@ public class AnchorPaneConstraintsEditorTest {
         SelectionState selectionState = Mockito.mock(SelectionState.class);
         Mockito.when(selectionState.getSelectedInstances()).thenReturn(new HashSet<>());
 
-        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(constraintEditorFactory);
+        AnchorPaneConstraintsEditor o = new AnchorPaneConstraintsEditor(i18n, constraintEditorFactory);
 
         o.reset(someAnchorGroupProp(), selectionState);
     }

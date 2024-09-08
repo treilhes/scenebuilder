@@ -33,8 +33,6 @@
  */
 package com.oracle.javafx.scenebuilder.core.ui;
 
-import java.util.UUID;
-
 import org.scenebuilder.fxml.api.Content;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
@@ -54,6 +52,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.SelectionBar;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.util.FXOMDocumentUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.api.ui.Docks;
 import com.oracle.javafx.scenebuilder.core.ui.InnerDockManager.DividerPosition;
 import com.oracle.javafx.scenebuilder.core.ui.preferences.document.BottomDividerVPosPreference;
 import com.oracle.javafx.scenebuilder.core.ui.preferences.document.LeftDividerHPosPreference;
@@ -87,14 +86,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private enum InsertPosition {
         First, Last
     }
-
-    public static final String LEFT_DOCK_ID = "42094e12-3aa8-44e4-bc4c-7633d6bc5b05";
-    public static final String RIGHT_DOCK_ID = "18cce02f-3a67-4b96-b5b4-53d7e0145a64";
-    public static final String BOTTOM_DOCK_ID = "e8a0168d-f074-47e7-b107-aa7302a27cf8";
-    public static final UUID LEFT_DOCK_UUID = UUID.fromString(LEFT_DOCK_ID);
-    public static final UUID RIGHT_DOCK_UUID = UUID.fromString(RIGHT_DOCK_ID);
-    public static final UUID BOTTOM_DOCK_UUID = UUID.fromString(BOTTOM_DOCK_ID);
-
 
     private final Provider<LeftDividerHPosPreference> leftDividerHPos;
     private final Provider<RightDividerHPosPreference> rightDividerHPos;
@@ -148,6 +139,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
     // @formatter:off
     public DocumentWindowController(
+            I18N i18n,
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
             DocumentManager documentManager,
@@ -168,7 +160,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             SelectionBar selectionBar,
             Workspace workspace
             ) {
-        super(sceneBuilderManager, iconSetting, DocumentWindowController.class.getResource("DocumentWindow.fxml"), I18N.getBundle(), false);
+        super(i18n, sceneBuilderManager, iconSetting, DocumentWindowController.class.getResource("DocumentWindow.fxml"), false);
         // @formatter:on
         this.documentManager = documentManager;
 
@@ -176,13 +168,13 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.rightDockController = rightDockController;
         this.bottomDockController = bottomDockController;
 
-        this.leftDockController.setId(LEFT_DOCK_UUID);
-        this.rightDockController.setId(RIGHT_DOCK_UUID);
-        this.bottomDockController.setId(BOTTOM_DOCK_UUID);
+        this.leftDockController.setId(Docks.LEFT_DOCK_UUID);
+        this.rightDockController.setId(Docks.RIGHT_DOCK_UUID);
+        this.bottomDockController.setId(Docks.BOTTOM_DOCK_UUID);
 
-        this.leftDockController.setName(I18N.getString("dock.name.left"));
-        this.rightDockController.setName(I18N.getString("dock.name.right"));
-        this.bottomDockController.setName(I18N.getString("dock.name.bottom"));
+        this.leftDockController.setName(getI18n().getString("dock.name.left"));
+        this.rightDockController.setName(getI18n().getString("dock.name.right"));
+        this.bottomDockController.setName(getI18n().getString("dock.name.bottom"));
 
         this.bottomDockController.setMinimizedOrientation(Orientation.HORIZONTAL);
 
@@ -429,7 +421,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     public void updateStageTitle() {
         if (contentPanelHost != null) {
             final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
-            getStage().setTitle(FXOMDocumentUtils.makeTitle(fxomDocument));
+            getStage().setTitle(FXOMDocumentUtils.makeTitle(getI18n(), fxomDocument));
         } // else controllerDidLoadFxml() will invoke me again
 
     }

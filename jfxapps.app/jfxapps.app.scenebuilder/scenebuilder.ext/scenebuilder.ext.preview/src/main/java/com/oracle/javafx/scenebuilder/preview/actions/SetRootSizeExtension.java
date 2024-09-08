@@ -33,12 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.preview.actions;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.graalvm.compiler.lir.CompositeValue.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.action.AbstractActionExtension;
-import com.oracle.javafx.scenebuilder.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.SetRootSizeAction;
 
 @Component

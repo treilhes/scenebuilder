@@ -36,10 +36,6 @@ import com.gluonhq.jfxapps.ext.menu.DefaultMenuExtension;
 
 open module jfxapps.core.ext.menu {
     exports com.gluonhq.jfxapps.ext.menu;
-    exports com.gluonhq.jfxapps.ext.menu.action;
-    exports com.gluonhq.jfxapps.ext.menu.action.edit;
-    exports com.gluonhq.jfxapps.ext.menu.action.file;
-    exports com.gluonhq.jfxapps.ext.menu.action.view;
     exports com.gluonhq.jfxapps.ext.menu.i18n;
 
     requires transitive jfxapps.core.api;

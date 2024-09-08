@@ -15,22 +15,12 @@
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>scenebuilder.api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.filesystem</artifactId>
-        </dependency>
-        <!--<dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.launcher</artifactId>
-        </dependency>-->
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.ext.menu</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>scenebuilder.ext.templates</artifactId>
+            <artifactId>scenebuilder.app.starter</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>

@@ -1,5 +1,4 @@
 import com.oracle.javafx.scenebuilder.exporter.ExporterExtension;
-import com.oracle.javafx.scenebuilder.extension.Extension;
 
 open module scenebuilder.ext.exporter {
     exports com.oracle.javafx.scenebuilder.exporter.i18n;

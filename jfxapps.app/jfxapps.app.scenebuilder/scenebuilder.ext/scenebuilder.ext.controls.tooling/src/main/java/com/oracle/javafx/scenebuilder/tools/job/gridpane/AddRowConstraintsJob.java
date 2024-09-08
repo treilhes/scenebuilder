@@ -44,7 +44,6 @@ import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
@@ -57,7 +56,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.job.editor.atomic.AddPropertyJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.AddPropertyValueJob;
-import com.gluonhq.jfxapps.core.metadata.javafx.hidden.RowConstraintsMetadata;
+import com.oracle.javafx.scenebuilder.metadata.javafx.javafx.scene.layout.RowConstraintsMetadata;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.GridPaneJobUtils.Position;
 import com.oracle.javafx.scenebuilder.tools.mask.GridPaneHierarchyMask;
 

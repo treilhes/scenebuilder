@@ -35,18 +35,17 @@ package com.oracle.javafx.scenebuilder.controllibrary.panel;
 
 import java.net.URL;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.graalvm.compiler.lir.CompositeValue.Component;
 
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.library.LibraryItem;
-import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata.Qualifier;
 import com.oracle.javafx.scenebuilder.controllibrary.action.InsertControlAction;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemImpl;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
 
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;

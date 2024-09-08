@@ -42,12 +42,10 @@ import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.SbContext;
-import com.oracle.javafx.scenebuilder.api.ui.menu.DefaultMenu;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuAttachment;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuBuilder;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuProvider;
-import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuProvider;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 import javafx.scene.control.Menu;
 

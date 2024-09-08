@@ -51,7 +51,10 @@ public abstract class AbstractFactory<T> {
         this.sbContext = sbContext;
     }
 
-    protected <U extends T> T create(Class<U> tClass, Consumer<U> setup) {
+    public <U extends T> T create(Class<U> tClass) {
+        return create(tClass, null);
+    }
+    public <U extends T> T create(Class<U> tClass, Consumer<U> setup) {
 
         logger.debug("Creation of {}", tClass.getName());
 

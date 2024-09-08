@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,11 +31,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import java.net.spi.URLStreamHandlerProvider;
-
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.ext.container.ScenebuilderContainerExtension;
-import com.gluonhq.jfxapps.ext.container.spi.InMemoryFileURLStreamHandlerProvider;
 
 open module jfxapps.ext.sb {
     exports com.gluonhq.jfxapps.ext.container;
@@ -49,5 +46,5 @@ open module jfxapps.ext.sb {
     requires spring.beans;
 
     provides Extension with ScenebuilderContainerExtension;
-    provides URLStreamHandlerProvider with InMemoryFileURLStreamHandlerProvider;
+
 }

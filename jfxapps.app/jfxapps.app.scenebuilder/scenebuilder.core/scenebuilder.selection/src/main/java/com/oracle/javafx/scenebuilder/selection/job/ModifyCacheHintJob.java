@@ -67,6 +67,7 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
     private static final PropertyName cachePN = new PropertyName("cache"); //NOCHECK
     private static final PropertyName cacheHintPN = new PropertyName("cacheHint"); //NOCHECK
 
+    private final I18N i18n;
     private final Selection selection;
     private final FxomJobsFactory fxomJobsFactory;
     private final SbMetadata metadata;
@@ -77,7 +78,9 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
     protected ValuePropertyMetadata propertyMetadata;
     protected Object newValue;
 
+
     protected ModifyCacheHintJob(
+            I18N i18n,
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             Selection selection,
@@ -85,7 +88,7 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
             FxomJobsFactory fxomJobsFactory) {
         super(extensionFactory, documentManager);
         assert cacheHintPN.equals(propertyMetadata.getName());
-
+        this.i18n = i18n;
         this.selection = selection;
         this.metadata = metadata;
         this.fxomJobsFactory = fxomJobsFactory;
@@ -147,7 +150,7 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
                 result = getSubJobs().get(0).getDescription();
                 break;
             default:
-                result = I18N.getString("label.action.edit.set.n",
+                result = i18n.getString("label.action.edit.set.n",
                         propertyMetadata.getName().toString(),
                         subJobCount);
                 break;

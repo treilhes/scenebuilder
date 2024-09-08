@@ -37,7 +37,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import com.gluonhq.jfxapps.core.controls.DoubleField;
-import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
+import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPickerController;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.Utils;
 

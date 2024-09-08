@@ -34,12 +34,18 @@
 package com.oracle.javafx.scenebuilder.core.ui.action;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
+import com.gluonhq.jfxapps.core.api.ui.DockActionFactory;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.Docks;
 
 @Prototype
 @ActionMeta(nameKey = "action.name.toggle.dock", descriptionKey = "action.description.toggle.dock")
@@ -49,19 +55,36 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttach
         label = "#this.getTitle()",
         positionRequest = PositionRequest.AsNextSibling)
 @Accelerator(accelerator = "CTRL+R")
-public class ToggleMinimizeRightDockAction extends AbstractToggleMinimizeDockAction {
+public class ToggleMinimizeRightDockAction extends AbstractAction {
 
     public final static String MENU_ID = "toggleMinimizeRightMenu";
 
+    private final Dock targetDock;
+    private final Action action;
+
     public ToggleMinimizeRightDockAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
-            ApplicationInstanceWindow documentWindow) {
-        super(extensionFactory, documentWindow.getRightDock());
+            DockViewController dockViewController,
+            DockActionFactory dockActionFactory) {
+        super(i18n, extensionFactory);
+        this.targetDock = dockViewController.getDock(Docks.RIGHT_DOCK_UUID);
+        this.action = dockActionFactory.toggleMinimized(this.targetDock);
+    }
+
+    @Override
+    public boolean canPerform() {
+        return action.canPerform();
+    }
+
+    @Override
+    public ActionStatus doPerform() {
+        return action.perform();
     }
 
     public String getTitle() {
         final String title;
-        if (getTargetDock().isMinimized()) {
+        if (targetDock.isMinimized()) {
             title = "menu.title.maximize.dock.right";
         } else {
             title = "menu.title.minimize.dock.right";

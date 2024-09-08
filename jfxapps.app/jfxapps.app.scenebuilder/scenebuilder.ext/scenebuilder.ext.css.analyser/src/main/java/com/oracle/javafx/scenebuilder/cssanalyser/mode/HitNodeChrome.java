@@ -39,7 +39,6 @@ import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.util.javafx.RegionRectangle;
-import com.oracle.javafx.scenebuilder.api.content.decoration.AbstractDecoration;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;

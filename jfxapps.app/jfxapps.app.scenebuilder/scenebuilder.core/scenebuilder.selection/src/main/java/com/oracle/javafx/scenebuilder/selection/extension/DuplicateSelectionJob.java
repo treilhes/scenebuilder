@@ -67,6 +67,7 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
 
     private final static double offset = 10;
 
+    private final I18N i18n;
     private final SbJobsFactory sbJobsFactory;
     private final SelectionJobsFactory selectionJobsFactory;
     private final FXOMObjectMask.Factory fxomObjectMaskFactory;
@@ -77,6 +78,7 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
 
     // @formatter:off
     protected DuplicateSelectionJob(
+            I18N i18n,
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             Selection selection,
@@ -87,6 +89,7 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
             ) {
      // @formatter:on
         super(extensionFactory, documentManager, selection);
+        this.i18n = i18n;
         this.fxomDocument = documentManager.fxomDocument().get();
         this.selectionJobsFactory = selectionJobsFactory;
         this.sbJobsFactory = sbJobsFactory;
@@ -227,22 +230,22 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
         if (newObject instanceof FXOMInstance) {
             final Object sceneGraphObject = newObject.getSceneGraphObject().get();
             if (sceneGraphObject != null) {
-                result = I18N.getString("label.action.edit.duplicate.1", sceneGraphObject.getClass().getSimpleName());
+                result = i18n.getString("label.action.edit.duplicate.1", sceneGraphObject.getClass().getSimpleName());
             } else {
-                result = I18N.getString("label.action.edit.duplicate.unresolved");
+                result = i18n.getString("label.action.edit.duplicate.unresolved");
             }
         } else if (newObject instanceof FXOMCollection) {
-            result = I18N.getString("label.action.edit.duplicate.collection");
+            result = i18n.getString("label.action.edit.duplicate.collection");
         } else {
             assert false;
-            result = I18N.getString("label.action.edit.duplicate.1", newObject.getClass().getSimpleName());
+            result = i18n.getString("label.action.edit.duplicate.1", newObject.getClass().getSimpleName());
         }
 
         return result;
     }
 
     private String makeMultipleSelectionDescription() {
-        return I18N.getString("label.action.edit.duplicate.n", newFxomObjects.values().size());
+        return i18n.getString("label.action.edit.duplicate.n", newFxomObjects.values().size());
     }
 
 }

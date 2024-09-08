@@ -34,7 +34,7 @@ package com.oracle.javafx.scenebuilder.template.i18n;
 
 import java.util.ResourceBundle;
 
-import org.springframework.stereotype.Component;
+import org.graalvm.compiler.lir.CompositeValue.Component;
 
 import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
 

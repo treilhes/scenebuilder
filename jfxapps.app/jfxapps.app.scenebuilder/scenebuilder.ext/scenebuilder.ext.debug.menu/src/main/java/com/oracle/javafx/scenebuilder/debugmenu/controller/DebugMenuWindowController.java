@@ -61,27 +61,28 @@ public class DebugMenuWindowController extends AbstractFxmlWindowController {
     @FXML
     TextArea textArea;
 
+    private final DocumentManager documentManager;
+
     private FXOMDocument fxomDocument;
     private String documentName;
     private boolean dirty = false;
-    private final DocumentManager documentManager;
+
 
     public DebugMenuWindowController(
+            I18N i18n,
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
             InstanceWindow document,
             DocumentManager documentManager
             ) {
-        super(sceneBuilderManager, iconSetting, DebugMenuWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle(),
-                document); // NOI18N
-
+        super(i18n, sceneBuilderManager, iconSetting, DebugMenuWindowController.class.getResource("SourceWindow.fxml"), document); // NOI18N
         this.documentManager = documentManager;
     }
 
     private void setFxomDocument(FXOMDocument fxomDocument) {
         assert fxomDocument != null;
         this.fxomDocument = fxomDocument;
-        this.documentName = FXOMDocumentUtils.makeTitle(fxomDocument);
+        this.documentName = FXOMDocumentUtils.makeTitle(getI18n(), fxomDocument);
         update();
     }
     @FXML
@@ -128,7 +129,7 @@ public class DebugMenuWindowController extends AbstractFxmlWindowController {
     }
 
     private void updateTitle() {
-        final String title = I18N.getString("sourceview.window.title", documentName);
+        final String title = getI18n().getString("sourceview.window.title", documentName);
         getStage().setTitle(title);
     }
 

@@ -37,15 +37,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 
-@Prototype
+@ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report")
 public class ApplyI18nContentAction extends AbstractAction implements InitWithDocument {
 
@@ -53,8 +54,13 @@ public class ApplyI18nContentAction extends AbstractAction implements InitWithDo
 
     private final DocumentManager documentManager;
 
-    public ApplyI18nContentAction(ActionExtensionFactory extensionFactory, DocumentManager documentManager) {
-        super(extensionFactory);
+    //@formatter:off
+    public ApplyI18nContentAction(
+            I18N i18n,
+            ActionExtensionFactory extensionFactory,
+            DocumentManager documentManager) {
+      //@formatter:on
+        super(i18n, extensionFactory);
         this.documentManager = documentManager;
     }
 

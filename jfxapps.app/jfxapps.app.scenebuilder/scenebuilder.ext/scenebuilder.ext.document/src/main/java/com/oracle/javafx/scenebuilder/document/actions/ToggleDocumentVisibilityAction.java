@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,21 +33,17 @@
  */
 package com.oracle.javafx.scenebuilder.document.actions;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.ext.menu.action.AbstractToggleViewVisibilityAction;
 import com.oracle.javafx.scenebuilder.document.api.DocumentPanel;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
 @MenuItemAttachment(
         id = ToggleDocumentVisibilityAction.MENU_ID,
@@ -67,12 +63,14 @@ public class ToggleDocumentVisibilityAction extends AbstractToggleViewVisibility
     public final static String TOGGLE_LIBRARY_MENU_ID = "toggleControlLibraryVisibilityMenuItem"; //NOCHECK
 
     public final static String MENU_ID = "toggleDocumentVisibilityMenuItem"; //NOCHECK
-
+  //@formatter:off
     public ToggleDocumentVisibilityAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             DockViewController dockViewController,
             DocumentPanel documentPanel) {
-        super(extensionFactory, dockViewController);
+      //@formatter:on
+        super(i18n, extensionFactory, dockViewController);
         setView(documentPanel);
     }
 

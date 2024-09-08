@@ -33,13 +33,12 @@
  */
 package com.oracle.javafx.scenebuilder.imagelibrary.controller;
 
+import org.graalvm.compiler.lir.CompositeValue.Component;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
@@ -49,8 +48,6 @@ import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.library.LibraryItem;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.selection.job.InsertAsSubComponentJob;
-import com.gluonhq.jfxapps.core.selection.job.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.imagelibrary.drag.source.ImageLibraryDragSource;
 import com.oracle.javafx.scenebuilder.imagelibrary.panel.LibraryListCell;
 import com.oracle.javafx.scenebuilder.imagelibrary.panel.LibraryListItem;

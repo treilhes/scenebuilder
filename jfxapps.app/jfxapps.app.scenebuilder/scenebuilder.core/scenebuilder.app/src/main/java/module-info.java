@@ -31,11 +31,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import org.scenebuilder.fxml.core.FxmlCoreExtensionExtension;
+import org.scenebuilder.fxml.core.ScenebuilderAppExtension;
 
 import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 
-open module scenebuilder.fxml.core {
+open module scenebuilder.core.app {
     exports org.scenebuilder.fxml.core;
     exports org.scenebuilder.fxml.core.i18n;
     exports com.oracle.javafx.scenebuilder.core.doc;
@@ -48,6 +48,7 @@ open module scenebuilder.fxml.core {
 
     requires jakarta.inject;
     requires jfxapps.core.controls;
+    requires jfxapps.ext.preference.editor.api;
 
-    provides Extension with FxmlCoreExtensionExtension;
+    provides Extension with ScenebuilderAppExtension;
 }

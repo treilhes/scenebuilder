@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,31 +34,24 @@
 
 package com.oracle.javafx.scenebuilder.cssanalyser.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.scenebuilder.fxml.api.Inspector;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.api.Inspector;
-import com.oracle.javafx.scenebuilder.api.application.ApplicationInstanceWindow;
-import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 
 /**
  * Implements the interface with the css panel.
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 public class CssPanelDelegate extends CssPanelController.Delegate {
 
     private final Inspector inspectorController;
     private final ApplicationInstanceWindow documentWindowController;
 
     public CssPanelDelegate(
-    		@Autowired Inspector inspectorController, 
-    		@Lazy @Autowired ApplicationInstanceWindow documentWindowController) {
+    		Inspector inspectorController,
+    		@Lazy ApplicationInstanceWindow documentWindowController) {
         this.inspectorController = inspectorController;
         this.documentWindowController = documentWindowController;
     }
@@ -74,7 +68,7 @@ public class CssPanelDelegate extends CssPanelController.Delegate {
 //        if (!documentWindowController.isRightPanelVisible()) {
 //            documentWindowController.performControlAction(Document.DocumentControlAction.TOGGLE_RIGHT_PANEL);
 //        }
-        
+
         // Need to delay the focus to the editor, so that the section is actually expanded first.
         SbPlatform.runOnFxThread(() -> SbPlatform.runOnFxThread(() -> inspectorController.setFocusToEditor(propMeta)));
     }

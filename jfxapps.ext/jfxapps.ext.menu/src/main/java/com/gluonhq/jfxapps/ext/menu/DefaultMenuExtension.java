@@ -38,29 +38,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.gluonhq.jfxapps.ext.menu.action.LoadBlankAction;
-import com.gluonhq.jfxapps.ext.menu.action.LoadFileAction;
-import com.gluonhq.jfxapps.ext.menu.action.LoadUrlAction;
-import com.gluonhq.jfxapps.ext.menu.action.OpenFilesAction;
-import com.gluonhq.jfxapps.ext.menu.action.SaveAction;
-import com.gluonhq.jfxapps.ext.menu.action.edit.RedoAction;
-import com.gluonhq.jfxapps.ext.menu.action.edit.UndoAction;
-import com.gluonhq.jfxapps.ext.menu.action.file.ClearRecentItemsAction;
-import com.gluonhq.jfxapps.ext.menu.action.file.CloseFileAction;
-import com.gluonhq.jfxapps.ext.menu.action.file.NewAction;
-import com.gluonhq.jfxapps.ext.menu.action.file.OpenAction;
-import com.gluonhq.jfxapps.ext.menu.action.file.OpenRecentProvider;
-import com.gluonhq.jfxapps.ext.menu.action.file.QuitScenebuilderAction;
-import com.gluonhq.jfxapps.ext.menu.action.file.ReloadFileAction;
-import com.gluonhq.jfxapps.ext.menu.action.file.RevertAction;
-import com.gluonhq.jfxapps.ext.menu.action.file.SaveAsAction;
-import com.gluonhq.jfxapps.ext.menu.action.file.SaveOrSaveAsAction;
-import com.gluonhq.jfxapps.ext.menu.action.view.ToggleViewVisibilityAction;
 import com.gluonhq.jfxapps.ext.menu.i18n.I18NDefaultMenu;
-import com.gluonhq.jfxapps.ext.menu.viewmenu.ChangeDockTypeAction;
-import com.gluonhq.jfxapps.ext.menu.viewmenu.CloseViewAction;
-import com.gluonhq.jfxapps.ext.menu.viewmenu.MoveToDockAction;
-import com.gluonhq.jfxapps.ext.menu.viewmenu.UndockViewAction;
 
 public class DefaultMenuExtension implements OpenExtension {
     @Override
@@ -82,34 +60,7 @@ public class DefaultMenuExtension implements OpenExtension {
     public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
-                ChangeDockTypeAction.class,
-                ChangeDockTypeAction.MenuProvider.class,
-                ClearRecentItemsAction.class,
-
-                CloseFileAction.class,
-
-                CloseViewAction.class,
-                I18NDefaultMenu.class,
-                LoadBlankAction.class,
-                NewAction.class,
-                LoadFileAction.class,
-                LoadUrlAction.class,
-                MoveToDockAction.class,
-                MoveToDockAction.MenuProvider.class,
-                OpenFilesAction.class,
-                QuitScenebuilderAction.class,
-                RedoAction.class,
-                ReloadFileAction.class,
-                RevertAction.class,
-                SaveAction.class,
-                SaveAsAction.class,
-                SaveOrSaveAsAction.class,
-                ToggleViewVisibilityAction.class,
-                ToggleViewVisibilityAction.ViewMenuProvider.class,
-                OpenAction.class,
-                OpenRecentProvider.class,
-                UndoAction.class,
-                UndockViewAction.class
+                I18NDefaultMenu.class
             );
      // @formatter:on
     }

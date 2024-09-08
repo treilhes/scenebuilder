@@ -33,14 +33,16 @@
  */
 package com.gluonhq.jfxapps.core.ui.controller;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
@@ -57,9 +59,9 @@ import com.gluonhq.jfxapps.test.FxmlControllerLoader;
 import com.gluonhq.jfxapps.test.JfxAppsExtension;
 import com.gluonhq.jfxapps.test.TestStages;
 
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -120,32 +122,35 @@ class WorkspaceControllerTest {
     }
 
     @Test
-    void should_scale_the_content(FxRobot robot) {
-        sceneGraphObject = new SceneGraphObject(new Label("sceneGraphObject"));
+    void should_scale_the_content(FxRobot robot) throws IOException {
+        final var fxomDocument = new FXOMDocument("""
+                <?import javafx.scene.control.Label?>
+                <Label xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" text="sceneGraphObjectXX"/>
+                """);
 
-        Mockito.when(omDocument.sceneGraphRevisionProperty()).thenReturn(new SimpleIntegerProperty());
-        Mockito.when(omDocument.cssRevisionProperty()).thenReturn(new SimpleIntegerProperty());
-        Mockito.when(omDocument.getSceneGraphRoot()).thenReturn(new Label("content"));
-        Mockito.when(omDocument.getFxomRoot()).thenReturn(omObject);
-        Mockito.when(omObject.getSceneGraphObject()).thenReturn(sceneGraphObject);
+        dm.fxomDocument().set(fxomDocument);
 
-        Mockito.when(omDocument.getDisplayNodeOrSceneGraphRoot()).thenReturn(new Label("content2"));
+        WorkspaceController workspace = FxmlControllerLoader
+                .controller(new WorkspaceController(i18n, sbm, dm, contextMenu))
+                .
+                .load();
 
-        //JfxAppContext.applicationInstanceScope.setCurrentScope(scopedDocument);
-
-        WorkspaceController workspace = FxmlControllerLoader.controller(new WorkspaceController(i18n, sbm, dm, contextMenu)).load();
+        Node sceneGraph = fxomDocument.getFxomRoot().getSceneGraphObject().getAs(Node.class);
 
         robot.interact(() -> {
             pane.getChildren().add(workspace.getRoot());
         });
 
-        dm.fxomDocument().set(omDocument);
+        var before = sceneGraph.localToScreen(sceneGraph.getLayoutBounds());
 
         robot.interact(() -> {
             workspace.setScaling(2.0d);
         });
 
-        System.out.println();
+        var after = sceneGraph.localToScreen(sceneGraph.getLayoutBounds());
+
+        assertEquals(before.getWidth()*2, after.getWidth(), 0.1);
+        assertEquals(before.getHeight()*2, after.getHeight(), 0.1);
     }
 
 }

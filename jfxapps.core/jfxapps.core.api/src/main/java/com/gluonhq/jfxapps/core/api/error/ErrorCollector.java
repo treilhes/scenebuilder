@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 public interface ErrorCollector {
@@ -52,9 +53,9 @@ public interface ErrorCollector {
     }
 
     public static class ErrorCollectorResult {
-        private final Map<FXOMObject, List<ErrorReportEntry>> documentErrors = new HashMap<>();
+        private final Map<FXOMNode, List<ErrorReportEntry>> documentErrors = new HashMap<>();
 
-        public ErrorCollectorResult(Map<FXOMObject, List<ErrorReportEntry>> documentErrors) {
+        public ErrorCollectorResult(Map<FXOMNode, List<ErrorReportEntry>> documentErrors) {
             super();
             this.documentErrors.putAll(documentErrors);
         }
@@ -63,7 +64,7 @@ public interface ErrorCollector {
             super();
         }
 
-        public void add(FXOMObject obj, ErrorReportEntry errorEntry) {
+        public void add(FXOMNode obj, ErrorReportEntry errorEntry) {
             documentErrors.compute(obj, (k, v) -> {
                 if (v == null) {
                     v = new ArrayList<>();
@@ -73,7 +74,7 @@ public interface ErrorCollector {
             });
         }
 
-        public Map<FXOMObject, List<ErrorReportEntry>> getDocumentErrors() {
+        public Map<FXOMNode, List<ErrorReportEntry>> getDocumentErrors() {
             return documentErrors;
         }
 

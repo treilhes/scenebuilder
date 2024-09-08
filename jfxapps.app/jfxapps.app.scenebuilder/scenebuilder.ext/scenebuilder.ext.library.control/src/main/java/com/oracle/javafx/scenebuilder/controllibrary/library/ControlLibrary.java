@@ -44,29 +44,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.graalvm.compiler.lir.CompositeValue.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.application.lifecycle.DisposeWithApplication;
 import com.gluonhq.jfxapps.core.api.library.LibraryFilter;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.UILogger;
 import com.gluonhq.jfxapps.core.extstore.fs.ExtensionFileSystemFactory;
 import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
 import com.gluonhq.jfxapps.core.library.api.AbstractLibrary;
+import com.gluonhq.jfxapps.core.library.api.AbstractLibrary.Exploration;
 import com.gluonhq.jfxapps.core.library.api.Explorer;
 import com.gluonhq.jfxapps.core.library.api.LibraryDialogFactory;
 import com.gluonhq.jfxapps.core.library.api.LibraryStoreFactory;
 import com.gluonhq.jfxapps.core.library.api.Transform;
 import com.gluonhq.jfxapps.core.library.maven.MavenArtifact;
 import com.gluonhq.jfxapps.core.library.util.LibraryUtil;
-import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata.Qualifier;
 import com.oracle.javafx.scenebuilder.controllibrary.ControlLibraryExtension;
 import com.oracle.javafx.scenebuilder.controllibrary.importer.ImportWindowController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.BuiltinLibrary;
@@ -74,6 +66,7 @@ import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItem
 import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlFileExplorer;
 import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlFolderExplorer;
 import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlMavenArtifactExplorer;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
 
 /**
  *

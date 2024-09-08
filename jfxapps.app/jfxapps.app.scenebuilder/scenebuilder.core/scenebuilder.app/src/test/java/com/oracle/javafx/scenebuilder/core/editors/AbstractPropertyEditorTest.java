@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,6 +35,8 @@ package com.oracle.javafx.scenebuilder.core.editors;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.scenebuilder.fxml.api.Documentation;
@@ -57,9 +59,7 @@ import javafx.scene.Node;
 @ExtendWith(ApplicationExtension.class)
 public class AbstractPropertyEditorTest {
 
-    static {
-        I18N.initForTest();
-    }
+    private I18N i18n = new I18N(List.of(), true);
 
     @Test
     public void shouldCreateAnEmptyInstance() {
@@ -87,19 +87,19 @@ public class AbstractPropertyEditorTest {
 
 
     static IntegerPropertyMetadata someIntProp() {
-        return new IntegerPropertyMetadata.Builder()
+        return new IntegerPropertyMetadata.Builder<Void>()
                 .name(new PropertyName("int")) //NOCHECK
                 .readWrite(true)
                 .defaultValue(123).build();
     }
     static StringPropertyMetadata someStringProp() {
-        return new MultilineI18nStringPropertyMetadata.Builder()
+        return new MultilineI18nStringPropertyMetadata.Builder<Void>()
                 .name(new PropertyName("string")) //NOCHECK
                 .readWrite(true)
                 .defaultValue("123").build();
     }
     static PropertyGroupMetadata someGroupProp() {
-        return new PropertyGroupMetadata.Builder()
+        return new PropertyGroupMetadata.Builder<Void>()
                 .name(new PropertyName("group")) //NOCHECK
                 .readWrite(true)
                 .property("someInt", someIntProp())
@@ -113,7 +113,7 @@ public class AbstractPropertyEditorTest {
         public AbstractPropertyEditorImpl(Dialog dialog,
                 Documentation documentation,
                 FileSystem fileSystem) {
-            super(dialog, documentation, fileSystem);
+            super(i18n, dialog, documentation, fileSystem);
         }
 
         @Override

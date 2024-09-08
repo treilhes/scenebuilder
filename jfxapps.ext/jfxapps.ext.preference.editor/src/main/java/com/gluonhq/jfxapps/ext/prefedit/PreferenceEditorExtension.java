@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -43,9 +43,12 @@ import com.gluonhq.jfxapps.ext.prefedit.controller.PreferencesWindowController;
 import com.gluonhq.jfxapps.ext.prefedit.i18n.I18NPreferenceEditor;
 
 public class PreferenceEditorExtension implements OpenExtension {
+
+    public static final UUID ID = UUID.fromString("75f8ee7c-f2b6-45ed-934a-8e190d4931f2");
+
     @Override
     public UUID getId() {
-        return UUID.fromString("75f8ee7c-f2b6-45ed-934a-8e190d4931f2");
+        return ID;
     }
 
 

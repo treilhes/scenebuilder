@@ -34,12 +34,23 @@ jfxapps:
       - groupId: com.gluonhq.jfxapps
         artifactId: jfxapps.ext.scenicview
         path: ../../jfxapps.ext/jfxapps.ext.scenicview/target/classes
+
       - groupId: com.gluonhq.jfxapps
         artifactId: manager.api
         path: ../../jfxapps.app/jfxapps.app.manager/manager.api/target/classes
       - groupId: com.gluonhq.jfxapps
         artifactId: manager.app
         path: ../../jfxapps.app/jfxapps.app.manager/manager.app/target/classes
+        
+      - groupId: com.gluonhq.jfxapps
+        artifactId: devtools.api
+        path: ../../jfxapps.app/jfxapps.app.devtools/devtools.api/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: devtools.app
+        path: ../../jfxapps.app/jfxapps.app.devtools/devtools.app/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: devtools.i18n
+        path: ../../jfxapps.app/jfxapps.app.devtools/devtools.i18n/target/classes
 
 server:
   port: 8080

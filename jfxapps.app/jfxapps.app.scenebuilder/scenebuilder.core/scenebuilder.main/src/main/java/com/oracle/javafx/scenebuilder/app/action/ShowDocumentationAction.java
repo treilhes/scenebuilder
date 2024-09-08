@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -66,10 +66,11 @@ public class ShowDocumentationAction extends AbstractAction {
     private final FileSystem fileSystem;
 
     public ShowDocumentationAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             FileSystem fileSystem,
             Dialog dialog) {
-        super(extensionFactory);
+        super(i18n, extensionFactory);
         this.dialog = dialog;
         this.fileSystem = fileSystem;
     }
@@ -84,8 +85,8 @@ public class ShowDocumentationAction extends AbstractAction {
         try {
             fileSystem.open(EditorPlatform.DOCUMENTATION_URL);
         } catch (IOException ioe) {
-            dialog.showErrorAndWait("", I18N.getString("alert.help.failure.message", EditorPlatform.DOCUMENTATION_URL),
-                    I18N.getString("alert.messagebox.failure.details"), ioe);
+            dialog.showErrorAndWait("", getI18n().getString("alert.help.failure.message", EditorPlatform.DOCUMENTATION_URL),
+                    getI18n().getString("alert.messagebox.failure.details"), ioe);
             return ActionStatus.FAILED;
         }
 

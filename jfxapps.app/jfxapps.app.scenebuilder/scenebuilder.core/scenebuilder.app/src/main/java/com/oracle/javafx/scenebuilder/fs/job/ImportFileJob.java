@@ -38,21 +38,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
@@ -68,28 +67,30 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 @Prototype
 public final class ImportFileJob extends BatchSelectionJob {
 
-    private File file;
-    private FXOMObject newObject, targetObject;
     private final FXOMDocument fxomDocument;
-    private final SetDocumentRootJob.Factory setDocumentRootJobFactory;
-    private final InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory;
+    private final I18N i18n;
+    private final SelectionJobsFactory selectionJobsFactory;
     private final FXOMObjectMask.Factory designMaskFactory;
     private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
 
+    private File file;
+    private FXOMObject newObject, targetObject;
+
     // @formatter:off
     protected ImportFileJob(
+            I18N i18n,
             JobExtensionFactory extensionFactory,
-            DocumentManager<FXOMDocument> documentManager,
+            FxomJobsFactory fxomJobsFactory,
+            SelectionJobsFactory selectionJobsFactory,
+            DocumentManager documentManager,
             Selection selection,
-            SetDocumentRootJob.Factory setDocumentRootJobFactory,
-            InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory,
             FXOMObjectMask.Factory designMaskFactory,
             ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);
+        this.i18n = i18n;
         this.fxomDocument = documentManager.fxomDocument().get();
-        this.setDocumentRootJobFactory = setDocumentRootJobFactory;
-        this.insertAsSubComponentJobFactory = insertAsSubComponentJobFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
         this.designMaskFactory = designMaskFactory;
         this.objectSelectionGroupFactory = objectSelectionGroupFactory;
     }
@@ -104,8 +105,8 @@ public final class ImportFileJob extends BatchSelectionJob {
     }
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
-        final List<AbstractJob> result = new ArrayList<>();
+    protected List<Job> makeSubJobs() {
+        final List<Job> result = new ArrayList<>();
 
         final FXOMDocument targetDocument = fxomDocument;
 
@@ -121,7 +122,7 @@ public final class ImportFileJob extends BatchSelectionJob {
                 final FXOMObject rootObject = targetDocument.getFxomRoot();
 
                 if (rootObject == null) {
-                    result.add(setDocumentRootJobFactory.getJob(newObject));
+                    result.add(selectionJobsFactory.setDocumentRoot(newObject));
                 } else {
                     final Selection selection = getSelection();
                     if (selection.isEmpty() || selection.isSelected(rootObject)) {
@@ -133,9 +134,9 @@ public final class ImportFileJob extends BatchSelectionJob {
                         targetObject = selection.getAncestor();
                     }
                     // Build InsertAsSubComponent jobs
-                    final HierarchyMask targetMask = designMaskFactory.getMask(targetObject);
+                    final var targetMask = designMaskFactory.getMask(targetObject);
                     if (targetMask.isAcceptingSubComponent(newObject)) {
-                        result.add(insertAsSubComponentJobFactory.getJob(newObject, targetObject,
+                        result.add(selectionJobsFactory.insertAsSubComponent(newObject, targetObject,
                                 targetMask.getSubComponentCount(true)));
                     }
                 }
@@ -148,21 +149,19 @@ public final class ImportFileJob extends BatchSelectionJob {
 
     @Override
     protected String makeDescription() {
-        return I18N.getString("import.from.file", file.getName());
+        return i18n.getString("import.from.file", file.getName());
     }
 
     @Override
-    protected AbstractSelectionGroup getNewSelectionGroup() {
+    protected SelectionGroup getNewSelectionGroup() {
         final List<FXOMObject> fxomObjects = new ArrayList<>();
         fxomObjects.add(newObject);
         return objectSelectionGroupFactory.getGroup(fxomObjects, newObject, null);
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
+    @ApplicationInstanceSingleton
     public static class Factory extends JobFactory<ImportFileJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

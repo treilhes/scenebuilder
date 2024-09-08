@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,7 +44,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
@@ -61,99 +61,95 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.ToggleGroup;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 public class ThemeMenuProvider implements MenuItemProvider {
 
-	//private final static String FIRST_SEPARATOR_ID = "firstSeparator";
+    // private final static String FIRST_SEPARATOR_ID = "firstSeparator";
     private final static String FIRST_SEPARATOR_ID = "previewMenu";
 
-	private final List<ThemeProvider> themeProviders;
+    private final I18N i18n;
+    private final List<ThemeProvider> themeProviders;
+    private final ThemeDocumentPreference themePreference;
+    private final ActionFactory actionFactory;
 
-	private final ThemeDocumentPreference themePreference;
+    public ThemeMenuProvider(
+            I18N i18n,
+            ActionFactory actionFactory,
+            @Lazy ThemeDocumentPreference themePreference,
+            @Lazy List<ThemeProvider> themeProviders
 
-	private final ActionFactory actionFactory;
+    ) {
+        this.i18n = i18n;
+        this.actionFactory = actionFactory;
+        this.themeProviders = themeProviders;
+        this.themePreference = themePreference;
+    }
 
-	public ThemeMenuProvider(
-			@Autowired ActionFactory actionFactory,
-			@Autowired @Lazy ThemeDocumentPreference themePreference,
-			@Autowired @Lazy List<ThemeProvider> themeProviders
+    @Override
+    public List<MenuItemAttachment> menuItems() {
+        return Arrays.asList(new ThemeAttachment());
+    }
 
-			) {
-		this.actionFactory = actionFactory;
-		this.themeProviders = themeProviders;
-		this.themePreference = themePreference;
-	}
+    public class ThemeAttachment implements MenuItemAttachment {
 
-	@Override
-	public List<MenuItemAttachment> menuItems() {
-		return Arrays.asList(new ThemeAttachment());
-	}
+        private final List<Class<? extends Theme>> themeClasses;
 
-	public class ThemeAttachment implements MenuItemAttachment {
+        private Menu theme = null;
 
-		private final List<Class<? extends Theme>> themeClasses;
+        public ThemeAttachment() {
+            themeClasses = new ArrayList<>();
+            themeProviders.forEach(tp -> themeClasses.addAll(tp.themes()));
+        }
 
-	    private Menu theme = null;
+        @Override
+        public String getTargetId() {
+            return FIRST_SEPARATOR_ID;
+        }
 
-		public ThemeAttachment() {
-			themeClasses = new ArrayList<>();
-			themeProviders.forEach(tp -> themeClasses.addAll(tp.themes()));
-		}
+        @Override
+        public PositionRequest getPositionRequest() {
+            return PositionRequest.AsLastChild;
+        }
 
-		@Override
-		public String getTargetId() {
-			return FIRST_SEPARATOR_ID;
-		}
+        @SuppressWarnings("unchecked")
+        @Override
+        public MenuItem getMenuItem() {
 
-		@Override
-		public PositionRequest getPositionRequest() {
-			return PositionRequest.AsLastChild;
-		}
+            if (theme != null) {
+                return theme;
+            }
 
-		@SuppressWarnings("unchecked")
-		@Override
-		public MenuItem getMenuItem() {
+            theme = new Menu(i18n.getString("menu.title.theme"));
+            theme.setId("themeMenu");
+            Map<String, List<Class<? extends Theme>>> groups = themeClasses.stream()
+                    .collect(Collectors.groupingBy(t -> Theme.group(t).getName()));
 
-			if (theme != null) {
-				return theme;
-			}
+            ToggleGroup tg = new ToggleGroup();
 
-			theme = new Menu(I18N.getString("menu.title.theme"));
-			theme.setId("themeMenu");
-			Map<String, List<Class<? extends Theme>>> groups = themeClasses.stream()
-					.collect(Collectors.groupingBy(t -> Theme.group(t).getName()));
+            groups.keySet().stream().sorted().forEach(k -> {
 
-			ToggleGroup tg = new ToggleGroup();
+                if (!theme.getItems().isEmpty()) {
+                    SeparatorMenuItem sep = new SeparatorMenuItem();
+                    sep.setId(k);
+                    theme.getItems().add(sep);
+                }
 
-			groups.keySet().stream().sorted().forEach(k -> {
+                groups.get(k).stream().sorted((t1, t2) -> Theme.name(t1).compareTo(Theme.name(t2))).forEach(t -> {
+                    RadioMenuItem mi = new RadioMenuItem(Theme.name(t));
+                    mi.setToggleGroup(tg);
+                    mi.setSelected(themePreference.getValue() == t);
+                    mi.setUserData(t);
+                    mi.setOnAction((e) -> themePreference.setValue((Class<? extends Theme>) mi.getUserData()));
+                    theme.getItems().add(mi);
+                });
+            });
 
-				if (!theme.getItems().isEmpty()) {
-					SeparatorMenuItem sep = new SeparatorMenuItem();
-					sep.setId(k);
-					theme.getItems().add(sep);
-				}
-
-				groups.get(k).stream()
-					.sorted((t1,t2) -> Theme.name(t1).compareTo(Theme.name(t2)))
-					.forEach(t -> {
-						RadioMenuItem mi = new RadioMenuItem(Theme.name(t));
-						mi.setToggleGroup(tg);
-						mi.setSelected(themePreference.getValue() == t);
-						mi.setUserData(t);
-						mi.setOnAction((e) -> themePreference.setValue((Class<? extends Theme>) mi.getUserData()));
-						theme.getItems().add(mi);
-					});
-			});
-
-			themePreference.getObservableValue().addListener((ob, o, n) -> {
-				theme.getItems().stream()
-					.filter(mi -> RadioMenuItem.class.isAssignableFrom(mi.getClass()))
-					.forEach(mi -> ((RadioMenuItem)mi).setSelected(themePreference.getValue() == mi.getUserData()));
-				actionFactory.create(ApplyCssContentAction.class).checkAndPerform();
-			});
-			return theme;
-		}
-	}
+            themePreference.getObservableValue().addListener((ob, o, n) -> {
+                theme.getItems().stream().filter(mi -> RadioMenuItem.class.isAssignableFrom(mi.getClass())).forEach(
+                        mi -> ((RadioMenuItem) mi).setSelected(themePreference.getValue() == mi.getUserData()));
+                actionFactory.create(ApplyCssContentAction.class).checkAndPerform();
+            });
+            return theme;
+        }
+    }
 }

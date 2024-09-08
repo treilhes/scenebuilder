@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,14 +33,11 @@
  */
 package com.oracle.javafx.scenebuilder.document.actions;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
@@ -48,9 +45,7 @@ import com.oracle.javafx.scenebuilder.document.api.Hierarchy;
 import com.oracle.javafx.scenebuilder.document.preferences.document.ShowExpertByDefaultPreference;
 import com.oracle.javafx.scenebuilder.document.view.DocumentPanelController;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstancePrototype
 @ActionMeta(
         nameKey = "action.name.show.fx.id",
         descriptionKey = "action.description.show.fx.id")
@@ -67,11 +62,14 @@ public class ToggleExpertViewAction extends AbstractAction {
 
     private final ShowExpertByDefaultPreference showExpertByDefaultPreference;
 
+  //@formatter:off
     public ToggleExpertViewAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             Hierarchy hierarchy,
             ShowExpertByDefaultPreference showExpertByDefaultPreference) {
-        super(extensionFactory);
+      //@formatter:on
+        super(i18n, extensionFactory);
         this.showExpertByDefaultPreference = showExpertByDefaultPreference;
 
         showExpertByDefaultPreference.getObservableValue().addListener((ob, o, n) -> hierarchy.updatePanel());

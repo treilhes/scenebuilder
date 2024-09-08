@@ -33,17 +33,22 @@
  */
 package com.oracle.javafx.scenebuilder.core.ui.action;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
+import com.gluonhq.jfxapps.core.api.ui.DockActionFactory;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.Docks;
 
-@Prototype
+@ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.toggle.dock", descriptionKey = "action.description.toggle.dock")
-
 @MenuItemAttachment(
         id = ToggleMinimizeBottomDockAction.MENU_ID,
         targetMenuId = ToggleMinimizeRightDockAction.MENU_ID,
@@ -51,19 +56,36 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttach
         positionRequest = PositionRequest.AsNextSibling,
         separatorAfter = true)
 @Accelerator(accelerator = "CTRL+B")
-public class ToggleMinimizeBottomDockAction extends AbstractToggleMinimizeDockAction {
+public class ToggleMinimizeBottomDockAction extends AbstractAction {
 
     public final static String MENU_ID = "toggleMinimizeBottomMenu";
 
+    private final Dock targetDock;
+    private final Action action;
+
     public ToggleMinimizeBottomDockAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
-            ApplicationInstanceWindow documentWindow) {
-        super(extensionFactory, documentWindow.getBottomDock());
+            DockViewController dockViewController,
+            DockActionFactory dockActionFactory) {
+        super(i18n, extensionFactory);
+        this.targetDock = dockViewController.getDock(Docks.BOTTOM_DOCK_UUID);
+        this.action = dockActionFactory.toggleMinimized(this.targetDock);
+    }
+
+    @Override
+    public boolean canPerform() {
+        return action.canPerform();
+    }
+
+    @Override
+    public ActionStatus doPerform() {
+        return action.perform();
     }
 
     public String getTitle() {
         final String title;
-        if (getTargetDock().isMinimized()) {
+        if (targetDock.isMinimized()) {
             title = "menu.title.maximize.dock.bottom";
         } else {
             title = "menu.title.minimize.dock.bottom";

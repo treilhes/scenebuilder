@@ -41,7 +41,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.dnd.AbstractDropTarget;
 import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.dnd.DropTargetFactory;
@@ -57,9 +56,7 @@ import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ReIndexObjectJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.RemoveObjectJob;
 import com.gluonhq.jfxapps.core.metadata.property.value.EnumerationPropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.util.InspectorPath;
-import com.oracle.javafx.scenebuilder.fxml.selection.job.InsertAsAccessoryJob;
-import com.oracle.javafx.scenebuilder.fxml.selection.job.InsertAsSubComponentJob;
+import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;

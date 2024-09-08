@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,20 +36,16 @@ package com.oracle.javafx.scenebuilder.cssanalyser.actions;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuBuilder;
-import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.ui.menu.ViewMenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.ui.menu.ViewMenuItemProvider;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenuItemProvider;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
 
 import javafx.scene.control.Menu;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class CssViewAsMenuProvider implements ViewMenuItemProvider {
 
     public final static String MENU_ID = "cssViewAsMenu";

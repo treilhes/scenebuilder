@@ -19,5 +19,6 @@
     <module>jfxapps.ext.scenicview.api</module>
     <module>jfxapps.ext.update.manager</module>
     <module>jfxapps.ext.container</module>
+    <module>jfxapps.ext.preference.editor.api</module>
   </modules>
 </project>

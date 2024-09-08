@@ -45,7 +45,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -60,10 +59,6 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyFxControllerJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ToggleFxRootJob;
-import com.gluonhq.jfxapps.core.selection.SelectionStateImpl;
-import com.oracle.javafx.scenebuilder.core.editors.ControllerClassEditor;
-import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
-import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory.PropertyEditorFactorySession;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;

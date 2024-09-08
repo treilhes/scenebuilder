@@ -38,14 +38,9 @@ import java.io.FileOutputStream;
 
 import javax.imageio.ImageIO;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.graalvm.compiler.lir.CompositeValue.Component;
 
-import com.oracle.javafx.scenebuilder.core.context.SbContext;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;

@@ -32,7 +32,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import com.oracle.javafx.scenebuilder.editor.script.ScriptEditorExtension;
-import com.oracle.javafx.scenebuilder.extension.Extension;
 
 open module scenebuilder.ext.editor.script {
     exports com.oracle.javafx.scenebuilder.editor.script;

@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.imagelibrary.library.builtin;
 
-import org.springframework.stereotype.Component;
+import org.graalvm.compiler.lir.CompositeValue.Component;
 
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibraryFilter;
 

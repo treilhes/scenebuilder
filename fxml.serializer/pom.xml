@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>scenebuilder.metadata.javafx15</artifactId>
+            <artifactId>scenebuilder.metadata.javafx.22</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>

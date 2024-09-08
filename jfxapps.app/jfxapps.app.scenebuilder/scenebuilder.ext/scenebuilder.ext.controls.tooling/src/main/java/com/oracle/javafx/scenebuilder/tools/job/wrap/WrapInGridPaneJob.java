@@ -46,7 +46,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
@@ -67,10 +66,10 @@ import com.gluonhq.jfxapps.core.job.editor.atomic.RemovePropertyJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.RemovePropertyValueJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ToggleFxRootJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.gluonhq.jfxapps.core.metadata.javafx.hidden.ColumnConstraintsMetadata;
-import com.gluonhq.jfxapps.core.metadata.javafx.hidden.RowConstraintsMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.fxml.selection.job.SetDocumentRootJob;
+import com.gluonhq.jfxapps.core.selection.job.SetDocumentRootJob;
+import com.oracle.javafx.scenebuilder.metadata.javafx.javafx.scene.layout.ColumnConstraintsMetadata;
+import com.oracle.javafx.scenebuilder.metadata.javafx.javafx.scene.layout.RowConstraintsMetadata;
 import com.oracle.javafx.scenebuilder.tools.job.wrap.FXOMObjectCourseComparator.BidimensionalComparator;
 import com.oracle.javafx.scenebuilder.tools.job.wrap.FXOMObjectCourseComparator.GridCourse;
 

@@ -42,8 +42,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 @Lazy

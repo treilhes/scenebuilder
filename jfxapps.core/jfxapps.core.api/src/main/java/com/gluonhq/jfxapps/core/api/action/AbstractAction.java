@@ -117,6 +117,10 @@ public abstract class AbstractAction implements Action {
         return status;
     }
 
+    protected I18N getI18n() {
+        return i18n;
+    }
+
     @Override
     public abstract boolean canPerform();
 

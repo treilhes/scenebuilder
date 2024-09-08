@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -135,6 +135,8 @@ public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMes
     @Override
     public void messageBoxDidGetMessage(MessageBoxMessage message) {
         try {
+            UUID targetApplication = message.getTargetApplication();
+            List<File> files = message.getFiles().stream().map(File::new).toList();
             bootHandler.boot(targetApplication, files, new String[0]);
         } catch (Exception e) {
             logger.error("Unable to execute the message {} the application", message, e);

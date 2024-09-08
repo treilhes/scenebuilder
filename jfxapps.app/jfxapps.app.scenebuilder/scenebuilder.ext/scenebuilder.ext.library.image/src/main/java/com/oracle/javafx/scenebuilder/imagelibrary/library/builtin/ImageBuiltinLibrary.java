@@ -36,13 +36,13 @@ package com.oracle.javafx.scenebuilder.imagelibrary.library.builtin;
 import java.net.URL;
 import java.util.List;
 
+import org.graalvm.compiler.lir.CompositeValue.Component;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
-import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata.Qualifier;
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

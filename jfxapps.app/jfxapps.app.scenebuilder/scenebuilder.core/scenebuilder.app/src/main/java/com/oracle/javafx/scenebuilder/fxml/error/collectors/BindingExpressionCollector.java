@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,28 +33,25 @@
  */
 package com.oracle.javafx.scenebuilder.fxml.error.collectors;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.error.AbstractErrorCollector;
 import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
-import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.collector.PropertyCollector;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
+import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 import com.oracle.javafx.scenebuilder.fxml.error.FxmlErrorReportEntryImpl;
 import com.oracle.javafx.scenebuilder.fxml.error.Type;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class BindingExpressionCollector extends AbstractErrorCollector {
 
-    private final FXOMObjectMask.Factory designHierarchyMaskFactory;
-    private final FxmlDocumentManager documentManager;
+    private final SbFXOMObjectMask.Factory designHierarchyMaskFactory;
+    private final DocumentManager documentManager;
 
-    public BindingExpressionCollector(FxmlDocumentManager documentManager,
-            FXOMObjectMask.Factory designHierarchyMaskFactory) {
+    public BindingExpressionCollector(DocumentManager documentManager,
+            SbFXOMObjectMask.Factory designHierarchyMaskFactory) {
         super();
         this.documentManager = documentManager;
         this.designHierarchyMaskFactory = designHierarchyMaskFactory;

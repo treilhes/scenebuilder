@@ -35,20 +35,15 @@ package com.oracle.javafx.scenebuilder.tools.driver.borderpane;
 
 import java.util.List;
 
-import org.scenebuilder.fxml.api.Content;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.HierarchyMask.Accessory;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
+import com.gluonhq.jfxapps.core.api.mask.Accessory;
 import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.core.dnd.droptarget.AccessoryDropTarget;
+import com.gluonhq.jfxapps.core.dnd.target.AccessoryDropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
 import com.oracle.javafx.scenebuilder.tools.mask.BorderPaneHierarchyMask;
 

@@ -33,12 +33,14 @@
  */
 package com.oracle.javafx.scenebuilder.cssanalyser.controller;
 
+import java.awt.dnd.DragSource;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.FileSystem;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,34 +51,30 @@ import java.util.Set;
 
 import org.scenebuilder.fxml.api.Documentation;
 import org.scenebuilder.fxml.api.SbEditor;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.core.api.clipboard.ClipboardHandler;
+import com.gluonhq.jfxapps.core.api.css.CssInternal;
+import com.gluonhq.jfxapps.core.api.dnd.Drag;
+import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.util.javafx.NodeUtils;
-import com.oracle.javafx.scenebuilder.api.clipboard.ClipboardHandler;
-import com.oracle.javafx.scenebuilder.api.css.CssInternal;
-import com.oracle.javafx.scenebuilder.api.dnd.Drag;
-import com.oracle.javafx.scenebuilder.api.dnd.DragSource;
-import com.oracle.javafx.scenebuilder.api.editor.selection.DefaultSelectionGroupFactory;
-import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.subjects.SceneBuilderManager;
-import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
-import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
-import com.oracle.javafx.scenebuilder.api.ui.dock.Dock;
-import com.oracle.javafx.scenebuilder.api.ui.dock.ViewSearch;
-import com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment;
+import com.oracle.javafx.scenebuilder.api.ui.Docks;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath.Item;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath.Path;
@@ -87,6 +85,7 @@ import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.Pro
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssValuePresenterFactory.CssValuePresenter;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.NodeCssState.CssProperty;
 import com.oracle.javafx.scenebuilder.cssanalyser.preferences.global.CssTableColumnsOrderingReversedPreference;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.property.ObjectProperty;
@@ -144,10 +143,8 @@ import javafx.util.Duration;
  * Controller for the CSS Panel.
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
-@ViewAttachment(name = CssPanelController.VIEW_NAME, id = CssPanelController.VIEW_ID, prefDockId = Dock.BOTTOM_DOCK_ID, openOnStart = false,
+@ApplicationInstanceSingleton
+@ViewAttachment(name = CssPanelController.VIEW_NAME, id = CssPanelController.VIEW_ID, prefDockId = Docks.BOTTOM_DOCK_ID, openOnStart = false,
         icon = "ViewIconCss.png", iconX2 = "ViewIconCss@2x.png")
 public class CssPanelController extends AbstractFxmlViewController implements ClipboardHandler {
 
@@ -211,8 +208,6 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     private String searchPattern;
     private static Image lookups = null;
 
-    private static final String NO_MATCHING_RULES = I18N.getString("csspanel.no.matching.rule");
-
     public enum View {
 
         TABLE, RULES, TEXT;
@@ -226,13 +221,13 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
 
     private final CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference;
 
-    private final FxmlDocumentManager documentManager;
+    private final DocumentManager documentManager;
     private final FileSystem fileSystem;
 
     private final Drag drag;
 
     private final ViewSearch viewSearch;
-    private final IMetadata metadata;
+    private final SbMetadata metadata;
 
     /**
      * Should be implemented by the application.
@@ -251,9 +246,10 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
      */
     // @formatter:off
     public CssPanelController(
+            I18N i18n,
             SceneBuilderManager scenebuilderManager,
-            FxmlDocumentManager documentManager,
-            IMetadata metadata,
+            DocumentManager documentManager,
+            SbMetadata metadata,
             Selection selection,
             SbEditor editor,
             Delegate delegate,
@@ -263,8 +259,8 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
             ViewSearch viewSearch,
             ViewMenuController viewMenuController) {
      // @formatter:on
-        super(scenebuilderManager, documentManager, viewMenuController,
-                CssPanelController.class.getResource("CssPanel.fxml"), I18N.getBundle());
+        super(i18n, scenebuilderManager, documentManager, viewMenuController,
+                CssPanelController.class.getResource("CssPanel.fxml"));
         this.editor = editor;
         this.selection = selection;
         this.documentManager = documentManager;
@@ -749,7 +745,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
 
         clearContent();
         if (isMultipleSelection()) {
-            viewMessage(I18N.getString("csspanel.multiselection"));
+            viewMessage(getI18n().getString("csspanel.multiselection"));
             return;
         }
 
@@ -976,12 +972,12 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
             htmlStyler.cssRuleEnd();
         }
         if (ruleRoot.getChildren().isEmpty()) {
-            rulesBox.getChildren().add(new Label(NO_MATCHING_RULES));
+            rulesBox.getChildren().add(new Label(getI18n().getString("csspanel.no.matching.rule")));
         } else {
             rulesBox.getChildren().add(rulesTree);
         }
         if (htmlStyler.isEmpty()) {
-            htmlStyler.addMessage(NO_MATCHING_RULES);
+            htmlStyler.addMessage(getI18n().getString("csspanel.no.matching.rule"));
         }
         textPane.getEngine().loadContent(htmlStyler.getHtmlString());
     }
@@ -1085,7 +1081,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         private VBox valueBox;
         private MenuButton navigationMenuButton;
         private FadeTransition fadeTransition;
-        private final MenuItem revealInInspectorMenuItem = new MenuItem(I18N.getString("csspanel.reveal.inspector"));
+        private final MenuItem revealInInspectorMenuItem = new MenuItem(getI18n().getString("csspanel.reveal.inspector"));
         private final MenuItem revealInFileBrowserMenuItem = new MenuItem();
         private MenuItem openStylesheetMenuItem = new MenuItem();
 
@@ -1287,8 +1283,8 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
                         navigationMenuButton.getItems().add(openStylesheetMenuItem);
                         navigationMenuButton.getItems().add(revealInFileBrowserMenuItem);
                         revealInFileBrowserMenuItem.setText(JfxAppsPlatform.IS_MAC
-                                ? MessageFormat.format(I18N.getString("csspanel.reveal.finder"), nav)
-                                : MessageFormat.format(I18N.getString("csspanel.reveal.explorer"), nav));
+                                ? MessageFormat.format(getI18n().getString("csspanel.reveal.finder"), nav)
+                                : MessageFormat.format(getI18n().getString("csspanel.reveal.explorer"), nav));
                         revealInFileBrowserMenuItem
                                 .setOnAction(event -> navigate(item, getPropertyState(item), style, origin));
                         openStylesheetMenuItem.setOnAction(event -> open(item, getPropertyState(item), style, origin));
@@ -1510,10 +1506,10 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         protected String getNavigation(CssProperty item, CssStyle style) {
             PropertyState ps = getPropertyState(item);
             if (ps == null || ps instanceof CssPropertyState) {
-                return I18N.getString("csspanel.fxtheme.defaults.navigation") + " ("
+                return getI18n().getString("csspanel.fxtheme.defaults.navigation") + " ("
                         + CssInternal.getThemeDisplayName(style.getStyle()) + ")";// NOI18N
             } else {
-                return I18N.getString("csspanel.api.defaults.navigation");
+                return getI18n().getString("csspanel.api.defaults.navigation");
             }
         }
     }
@@ -1759,7 +1755,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         return sp;
     }
 
-    private static TreeItem<Node> attachSource(PropertyState css, CssStyle cssStyle, TreeItem<Node> parent,
+    private TreeItem<Node> attachSource(PropertyState css, CssStyle cssStyle, TreeItem<Node> parent,
             boolean applied) {
         String source = getSource(cssStyle);
         TreeItem<Node> srcItem = null;
@@ -1791,11 +1787,11 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         return srcItem;
     }
 
-    private static void attachStyle(PropertyState css, CssStyle style, TreeItem<Node> parent, boolean applied) {
+    private void attachStyle(PropertyState css, CssStyle style, TreeItem<Node> parent, boolean applied) {
         attachStyle(css, style, parent, applied, null);
     }
 
-    private static void attachStyle(PropertyState css, CssStyle style, TreeItem<Node> parent, boolean applied,
+    private void attachStyle(PropertyState css, CssStyle style, TreeItem<Node> parent, boolean applied,
             ArrayList<String> cssPropertyList) {
         TreeItem<Node> sourceItem = attachSource(css, style, parent, applied);
         if (cssPropertyList != null) {
@@ -1822,7 +1818,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
      * @param parent     parent.
      * @treatAsPrivate
      */
-    public static void attachLookupStyles(Object component, CssPropertyState css, CssStyle lookupRoot,
+    public void attachLookupStyles(Object component, CssPropertyState css, CssStyle lookupRoot,
             TreeItem<Node> parent) {
         // Some lookup that comes from the SB itself, skip them.
         // This is expected, these lookups are superceeded by the
@@ -1833,7 +1829,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         attachStyle(css, lookupRoot, parent, true, cssPropertyList);
     }
 
-    private static void attachStyles(CssPropertyState css, TreeItem<Node> parent) {
+    private void attachStyles(CssPropertyState css, TreeItem<Node> parent) {
         if (css.getStyle() != null) {
             attachStyle(css, css.getStyle(), parent, true);
         }
@@ -1906,7 +1902,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         CopyHandler.copy(rulesTree);
     }
 
-    private static class CopyHandler {
+    private class CopyHandler {
 
         private static String getContent(TreeView<Node> tv) {
             StringBuilder builder = new StringBuilder();
@@ -1927,9 +1923,9 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
             Clipboard.getSystemClipboard().setContent(content);
         }
 
-        private static void attachContextMenu(final TreeView<Node> tv) {
+        private void attachContextMenu(final TreeView<Node> tv) {
             ContextMenu ctxMenu = new ContextMenu();
-            final MenuItem cssContentAction = new MenuItem(I18N.getString("csspanel.copy"));
+            final MenuItem cssContentAction = new MenuItem(getI18n().getString("csspanel.copy"));
             ctxMenu.setOnShowing(arg0 -> {
             });
             tv.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -1975,7 +1971,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         return ti;
     }
 
-    private static String getSource(CssStyle style) {
+    private String getSource(CssStyle style) {
         URL url = style.getUrl();
         String source = null;
         if (url != null) {
@@ -1984,7 +1980,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         return source;
     }
 
-    private static String getSource(Rule rule) {
+    private String getSource(Rule rule) {
         URL url = null;
         StyleOrigin origin = null;
         // Workaround!
@@ -1999,15 +1995,15 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         return getSource(url, origin);
     }
 
-    private static String getSource(URL url, StyleOrigin origin) {
+    private String getSource(URL url, StyleOrigin origin) {
         String source = null;
         if (url != null) {
             if (origin == StyleOrigin.USER_AGENT) {
-                source = I18N.getString("csspanel.fxtheme.origin");
+                source = getI18n().getString("csspanel.fxtheme.origin");
             } else {
                 if (origin == StyleOrigin.USER) {
-                    source = I18N.getString("csspanel.api.origin") + " " // NOI18N
-                            + I18N.getString("csspanel.node.property");
+                    source = getI18n().getString("csspanel.api.origin") + " " // NOI18N
+                            + getI18n().getString("csspanel.node.property");
                 } else {
                     if (origin == StyleOrigin.AUTHOR) {
                         source = url.toExternalForm();
@@ -2018,7 +2014,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         return source;
     }
 
-    private static String getSourceInfo(CssProperty item, CssStyle style, StyleOrigin origin) {
+    private String getSourceInfo(CssProperty item, CssStyle style, StyleOrigin origin) {
         if (origin == StyleOrigin.USER_AGENT) {
             if (style != null) {
                 return style.getSelector();
@@ -2037,7 +2033,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         }
         if (origin == StyleOrigin.INLINE) {
             boolean inherited = item.isInlineInherited();
-            return "style" + (inherited ? " (" + I18N.getString("csspanel.inherited") + ")" : "");// NOI18N
+            return "style" + (inherited ? " (" + getI18n().getString("csspanel.inherited") + ")" : "");// NOI18N
         }
 
         return null;

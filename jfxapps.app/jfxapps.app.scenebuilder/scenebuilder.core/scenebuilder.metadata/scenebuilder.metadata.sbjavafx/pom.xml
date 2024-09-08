@@ -12,15 +12,38 @@
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>scenebuilder.metadata.javafx11</artifactId>
+            <artifactId>scenebuilder.metadata.customization</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.starter</artifactId>
+            <artifactId>scenebuilder.metadata.javafx.fx</artifactId>
+        </dependency>
+        <dependency>
+                <!-- Only here to force building scenebuilder.metadata.javafx prior this project-->
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.metadata.javafx</artifactId>
+                <type>pom</type>
+                <scope>provided</scope>
+                <!-- Strange, if the version is not forced here, it won't find sub dependencies' -->
+                <version>${scenebuilder.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>scenebuilder.metadata.javafx.22</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.javafx.starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.starter</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>

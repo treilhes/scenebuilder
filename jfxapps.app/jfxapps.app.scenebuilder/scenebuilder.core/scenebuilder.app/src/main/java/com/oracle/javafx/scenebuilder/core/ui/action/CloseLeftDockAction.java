@@ -34,21 +34,40 @@
 package com.oracle.javafx.scenebuilder.core.ui.action;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.DockActionFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
+import com.oracle.javafx.scenebuilder.api.ui.Docks;
 
 @Prototype
 @ActionMeta(nameKey = "action.name.toggle.dock", descriptionKey = "action.description.toggle.dock")
 
 @Accelerator(accelerator = "CTRL+SHIFT+L")
-public class CloseLeftDockAction extends AbstractCloseDockAction {
+public class CloseLeftDockAction extends AbstractAction {
+
+    private final Action action;
 
     public CloseLeftDockAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
-            DockViewController dockViewController) {
-        super(extensionFactory, dockViewController, dockViewController.getDock(Dock.LEFT_DOCK_UUID));
+            DockViewController dockViewController,
+            DockActionFactory dockActionFactory) {
+        super(i18n, extensionFactory);
+        this.action = dockActionFactory.close(dockViewController.getDock(Docks.LEFT_DOCK_UUID));
+    }
+
+    @Override
+    public boolean canPerform() {
+        return action.canPerform();
+    }
+
+    @Override
+    public ActionStatus doPerform() {
+        return action.perform();
     }
 }

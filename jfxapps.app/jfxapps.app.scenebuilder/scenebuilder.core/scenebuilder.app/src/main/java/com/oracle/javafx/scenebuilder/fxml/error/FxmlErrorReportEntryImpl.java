@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,11 +36,11 @@ package com.oracle.javafx.scenebuilder.fxml.error;
 import java.net.URL;
 
 import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
-import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
+import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 
 /**
  *
@@ -48,7 +48,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
  */
 public class FxmlErrorReportEntryImpl implements ErrorReportEntry {
 
-    private final FXOMObjectMask.Factory designHierarchyMaskFactory;
+    private final SbFXOMObjectMask.Factory designHierarchyMaskFactory;
 
     private final FXOMNode fxomNode;
     private final Type type;
@@ -56,7 +56,7 @@ public class FxmlErrorReportEntryImpl implements ErrorReportEntry {
     private final CSSParsingReportImpl cssParsingReport; // relevant for INVALID_CSS_CONTENT
 
     public FxmlErrorReportEntryImpl(FXOMNode fxomNode, Type type, CSSParsingReportImpl cssParsingReport,
-            FXOMObjectMask.Factory designHierarchyMaskFactory) {
+            SbFXOMObjectMask.Factory designHierarchyMaskFactory) {
         assert fxomNode != null;
         assert (type == Type.INVALID_CSS_CONTENT) == (cssParsingReport != null);
 
@@ -67,7 +67,7 @@ public class FxmlErrorReportEntryImpl implements ErrorReportEntry {
     }
 
     public FxmlErrorReportEntryImpl(FXOMNode fxomNode, Type type,
-            FXOMObjectMask.Factory designHierarchyMaskFactory) {
+            SbFXOMObjectMask.Factory designHierarchyMaskFactory) {
         this(fxomNode, type, null, designHierarchyMaskFactory);
     }
 
@@ -109,7 +109,7 @@ public class FxmlErrorReportEntryImpl implements ErrorReportEntry {
             result.append(fxomIntrinsic.getSource());
         } else if (fxomNode instanceof FXOMObject) {
             final FXOMObject fxomObject = (FXOMObject) fxomNode;
-            final FXOMObjectMask mask = designHierarchyMaskFactory.getMask(fxomObject);
+            final var mask = designHierarchyMaskFactory.getMask(fxomObject);
             // TODO check if an accessory, maybe the main one must be passed here
             result.append(mask.getClassNameInfo(null));
         }

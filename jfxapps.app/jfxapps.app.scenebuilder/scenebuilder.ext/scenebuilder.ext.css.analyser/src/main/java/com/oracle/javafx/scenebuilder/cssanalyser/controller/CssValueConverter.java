@@ -41,7 +41,7 @@ import java.util.Map;
 
 import com.gluonhq.jfxapps.core.metadata.util.ColorEncoder;
 import com.gluonhq.jfxapps.util.MathUtils;
-import com.oracle.javafx.scenebuilder.core.util.EditorUtils;
+import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
 
 import javafx.css.Declaration;
 import javafx.css.ParsedValue;

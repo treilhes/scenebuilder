@@ -32,12 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.helpfeatures.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import org.graalvm.compiler.lir.CompositeValue.Component;
 
 /**
  *

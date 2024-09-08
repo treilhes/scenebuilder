@@ -1,5 +1,4 @@
 import com.oracle.javafx.scenebuilder.dummy.DummyExtension;
-import com.oracle.javafx.scenebuilder.extension.Extension;
 
 open module scenebuilder.ext.dummy {
     exports com.oracle.javafx.scenebuilder.dummy;

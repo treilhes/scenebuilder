@@ -64,6 +64,7 @@ import javafx.scene.input.Clipboard;
 @Prototype
 public class PasteIntoJob extends BatchSelectionJob {
 
+    private final I18N i18n;
     private final FXOMDocument fxomDocument;
     private final SbTargetSelection sbTargetSelection;
     private final SelectionJobsFactory selectionJobsFactory;
@@ -78,6 +79,7 @@ public class PasteIntoJob extends BatchSelectionJob {
 
  // @formatter:off
     protected PasteIntoJob(
+            I18N i18n,
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             Selection selection,
@@ -90,6 +92,7 @@ public class PasteIntoJob extends BatchSelectionJob {
             SbJobsFactory sbJobsFactory) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);
+        this.i18n = i18n;
         this.fxomDocument = documentManager.fxomDocument().get();
         this.jobManager = jobManager;
         this.sbTargetSelection = sbTargetSelection;
@@ -243,15 +246,15 @@ public class PasteIntoJob extends BatchSelectionJob {
         if (newObject instanceof FXOMInstance) {
             final Object sceneGraphObject = newObject.getSceneGraphObject().get();
             if (sceneGraphObject != null) {
-                result = I18N.getString("label.action.edit.paste.into.1", sceneGraphObject.getClass().getSimpleName());
+                result = i18n.getString("label.action.edit.paste.into.1", sceneGraphObject.getClass().getSimpleName());
             } else {
-                result = I18N.getString("label.action.edit.paste.into.unresolved");
+                result = i18n.getString("label.action.edit.paste.into.unresolved");
             }
         } else if (newObject instanceof FXOMCollection) {
-            result = I18N.getString("label.action.edit.paste.into.collection");
+            result = i18n.getString("label.action.edit.paste.into.collection");
         } else {
             assert false;
-            result = I18N.getString("label.action.edit.paste.into.1", newObject.getClass().getSimpleName());
+            result = i18n.getString("label.action.edit.paste.into.1", newObject.getClass().getSimpleName());
         }
 
         return result;
@@ -259,7 +262,7 @@ public class PasteIntoJob extends BatchSelectionJob {
 
     private String makeMultipleSelectionDescription() {
         final int objectCount = newObjects.size();
-        return I18N.getString("label.action.edit.paste.into.n", objectCount);
+        return i18n.getString("label.action.edit.paste.into.n", objectCount);
     }
 
     private int countPasteJobs() {

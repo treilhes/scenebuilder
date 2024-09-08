@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,15 +39,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.gluonhq.jfxapps.core.api.css.CssInternal;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.CssPropertyState.CssStyle;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.NodeCssState.CssProperty;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.sun.javafx.scene.NodeHelper;
 
 import javafx.css.CssMetaData;
@@ -121,7 +121,7 @@ public class CssContentMaker {
     }
 
     @SuppressWarnings("rawtypes")
-    public static <N extends Node> PropertyState modelValue(IMetadata metadata, N node, CssMetaData<?, ?> cssMeta, FXOMObject fxomObject) {
+    public static <N extends Node> PropertyState modelValue(SbMetadata metadata, N node, CssMetaData<?, ?> cssMeta, FXOMObject fxomObject) {
         PropertyState val = null;
 
         if (fxomObject == null) {
@@ -229,7 +229,7 @@ public class CssContentMaker {
         return style.contains(prop.getCssProperty());
     }
 
-    public static NodeCssState getCssState(IMetadata metadata, Object selectedObject) {
+    public static NodeCssState getCssState(SbMetadata metadata, Object selectedObject) {
         Node node = CssUtils.getSelectedNode(selectedObject);
         if (node == null) {
             return null;

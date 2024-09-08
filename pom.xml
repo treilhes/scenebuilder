@@ -19,7 +19,7 @@
         <module>jfxapps.app</module>
         <module>jfxapps.boot</module>
         <module>jfxapps.core</module>
-        <!--<module>jfxapps.ext</module>-->
+        <module>jfxapps.ext</module>
         <module>jfxapps.metadata</module>
         <module>jfxapps.registry</module>
 
@@ -273,6 +273,11 @@
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.ext.preference.editor</artifactId>
+                <version>${jfxapps.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.ext.preference.editor.api</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
             <dependency>

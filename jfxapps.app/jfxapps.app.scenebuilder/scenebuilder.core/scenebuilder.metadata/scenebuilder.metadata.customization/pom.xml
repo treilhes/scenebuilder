@@ -13,6 +13,7 @@
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.starter</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
@@ -29,57 +30,5 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-invoker-plugin</artifactId>
-                <executions>
-                    <!-- This execution is used to run javafxdata first
-                    as pomIncludes does not allow to order builds -->
-                    <execution>
-                        <id>forked-install</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <projectsDirectory>${basedir}/..</projectsDirectory>
-                            <pomIncludes>
-                                <pomInclude>scenebuilder.metadata.javafxdata/pom.xml</pomInclude>
-                            </pomIncludes>
-                            <streamLogs>true</streamLogs>
-                            <goals>
-                                <goal>clean</goal>
-                                <goal>install</goal>
-                            </goals>
-                            <mavenOpts>--add-opens java.base/java.lang=ALL-UNNAMED</mavenOpts>
-                        </configuration>
-                    </execution>
-                    <!-- This execution is used to run javafx after javafxdata
-                    as pomIncludes does not allow to order builds -->
-                    <execution>
-                        <id>forked-install2</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <projectsDirectory>${basedir}/..</projectsDirectory>
-                            <pomIncludes>
-                                <pomInclude>scenebuilder.metadata.javafx11/pom.xml</pomInclude>
-                                <pomInclude>scenebuilder.metadata.javafx15/pom.xml</pomInclude>
-                                <pomInclude>scenebuilder.metadata.javafx22/pom.xml</pomInclude>
-                            </pomIncludes>
-                            <streamLogs>true</streamLogs>
-                            <goals>
-                                <goal>clean</goal>
-                                <goal>install</goal>
-                            </goals>
-                            <mavenOpts>--add-opens java.base/java.lang=ALL-UNNAMED</mavenOpts>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+    
 </project>

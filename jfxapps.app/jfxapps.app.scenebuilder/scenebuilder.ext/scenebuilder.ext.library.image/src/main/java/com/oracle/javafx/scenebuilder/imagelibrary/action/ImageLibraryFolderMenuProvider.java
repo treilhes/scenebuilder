@@ -36,10 +36,9 @@ package com.oracle.javafx.scenebuilder.imagelibrary.action;
 import java.util.Arrays;
 import java.util.List;
 
+import org.graalvm.compiler.lir.CompositeValue.Component;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenuItemAttachment;

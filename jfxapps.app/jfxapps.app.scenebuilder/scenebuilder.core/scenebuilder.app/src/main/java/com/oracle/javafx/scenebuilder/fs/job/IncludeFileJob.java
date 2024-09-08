@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,17 +39,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
+import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
@@ -67,30 +67,33 @@ import com.gluonhq.jfxapps.util.URLUtils;
  * Link the provided fxml {@link File} using an fx:include<br/>
  * We insert the new object under the common parent of the selected objects or under root if nothing is selected
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public final class IncludeFileJob extends BatchSelectionJob {
+
+    private final I18N i18n;
+    private final FXOMDocument fxomDocument;
+    private final SelectionJobsFactory selectionJobsFactory;
+    private final FXOMObjectMask.Factory designMaskFactory;
+    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
 
     private File file;
     private FXOMObject targetObject;
     private FXOMIntrinsic newInclude;
-    private final FXOMDocument fxomDocument;
-    private final InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory;
-    private final FXOMObjectMask.Factory designMaskFactory;
-    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
 
  // @formatter:off
     protected IncludeFileJob(
+            I18N i18n,
             JobExtensionFactory extensionFactory,
-            DocumentManager<FXOMDocument> documentManager,
+            DocumentManager documentManager,
             Selection selection,
-            InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory,
+            SelectionJobsFactory selectionJobsFactory,
             FXOMObjectMask.Factory designMaskFactory,
             ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);
+        this.i18n = i18n;
         this.fxomDocument = documentManager.fxomDocument().get();
-        this.insertAsSubComponentJobFactory = insertAsSubComponentJobFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
         this.designMaskFactory = designMaskFactory;
         this.objectSelectionGroupFactory = objectSelectionGroupFactory;
     }
@@ -105,8 +108,8 @@ public final class IncludeFileJob extends BatchSelectionJob {
     }
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
-        final List<AbstractJob> result = new ArrayList<>();
+    protected List<Job> makeSubJobs() {
+        final List<Job> result = new ArrayList<>();
 
         try {
             final FXOMDocument targetDocument = fxomDocument;
@@ -138,7 +141,7 @@ public final class IncludeFileJob extends BatchSelectionJob {
                         // Build InsertAsSubComponent jobs
                         final HierarchyMask targetMask = designMaskFactory.getMask(targetObject);
                         if (targetMask.isAcceptingSubComponent(newInclude)) {
-                            result.add(insertAsSubComponentJobFactory.getJob(newInclude,targetObject,targetMask.getSubComponentCount(true)));
+                            result.add(selectionJobsFactory.insertAsSubComponent(newInclude,targetObject,targetMask.getSubComponentCount(true)));
                         }
                     }
                 }
@@ -152,21 +155,19 @@ public final class IncludeFileJob extends BatchSelectionJob {
 
     @Override
     protected String makeDescription() {
-        return I18N.getString("include.file", file.getName());
+        return i18n.getString("include.file", file.getName());
     }
 
     @Override
-    protected AbstractSelectionGroup getNewSelectionGroup() {
+    protected SelectionGroup getNewSelectionGroup() {
         final List<FXOMObject> fxomObjects = new ArrayList<>();
         fxomObjects.add(newInclude);
         return objectSelectionGroupFactory.getGroup(fxomObjects, newInclude, null);
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
+    @ApplicationInstanceSingleton
     public static class Factory extends JobFactory<IncludeFileJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

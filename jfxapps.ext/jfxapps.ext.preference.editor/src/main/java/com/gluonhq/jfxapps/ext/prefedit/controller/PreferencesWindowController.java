@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,10 +41,10 @@ import java.util.stream.Collectors;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
 import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
 import com.gluonhq.jfxapps.core.api.preferences.UserPreference;
-import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
 import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
@@ -88,13 +88,14 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
     private List<UserPreference<?>> documentPreferences;
 
     public PreferencesWindowController(
+            I18N i18n,
             SceneBuilderManager sceneBuilderManager,
             IconSetting iconSetting,
             MainInstanceWindow documentWindowController,
             List<ManagedGlobalPreference> globalPreferences,
             List<ManagedDocumentPreference> documentPreferences) {
-        super(sceneBuilderManager, iconSetting, PreferencesWindowController.class.getResource("Preferences.fxml"),
-                I18N.getBundle(), documentWindowController);
+        super(i18n, sceneBuilderManager, iconSetting, PreferencesWindowController.class.getResource("Preferences.fxml"),
+                documentWindowController);
         this.ownerWindow = documentWindowController;
 
         this.globalPreferences = globalPreferences.stream()
@@ -112,7 +113,7 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
         populatePreferenceGrid(documentGrid, documentPreferences, documentResetButton);
     }
 
-    private static void populatePreferenceGrid(GridPane target, List<UserPreference<?>> preferences,
+    private void populatePreferenceGrid(GridPane target, List<UserPreference<?>> preferences,
             Button resetButton) {
         Map<PreferenceGroup, List<UserPreference<?>>> preferencesMap = preferences.stream()
                 .collect(Collectors.groupingBy(UserPreference::getGroup));
@@ -128,7 +129,7 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
             preferenceList.stream().forEach(p -> {
                 if (p.getLabelI18NKey() != null) {
                     int rowIndex = target.getRowCount();
-                    Label label = new Label(I18N.getString(p.getLabelI18NKey()));
+                    Label label = new Label(getI18n().getString(p.getLabelI18NKey()));
                     Parent editor = p.getEditor();
                     target.addRow(rowIndex, label);
                     target.addRow(rowIndex, editor);
@@ -154,7 +155,7 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
         assert getRoot().getScene() != null;
         assert getRoot().getScene().getWindow() != null;
 
-        getStage().setTitle(I18N.getString("prefs.title"));
+        getStage().setTitle(getI18n().getString("prefs.title"));
         getStage().initModality(Modality.APPLICATION_MODAL);
         getStage().initOwner(ownerWindow.getStage());
         getStage().setResizable(false);

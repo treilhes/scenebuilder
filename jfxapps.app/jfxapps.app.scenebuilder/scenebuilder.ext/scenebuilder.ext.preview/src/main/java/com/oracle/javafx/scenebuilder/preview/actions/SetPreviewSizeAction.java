@@ -33,19 +33,15 @@
  */
 package com.oracle.javafx.scenebuilder.preview.actions;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import org.graalvm.compiler.lir.CompositeValue.Component;
+import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.api.Size;
-import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
-import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
+
+import javafx.css.Size;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)

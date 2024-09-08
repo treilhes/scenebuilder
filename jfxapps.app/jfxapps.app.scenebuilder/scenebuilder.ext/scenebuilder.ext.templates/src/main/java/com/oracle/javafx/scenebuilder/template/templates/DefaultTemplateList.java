@@ -34,8 +34,7 @@ package com.oracle.javafx.scenebuilder.template.templates;
 
 import java.util.ArrayList;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.graalvm.compiler.lir.CompositeValue.Component;
 
 import com.gluonhq.jfxapps.core.api.Size;
 import com.gluonhq.jfxapps.core.api.template.AbstractTemplate;

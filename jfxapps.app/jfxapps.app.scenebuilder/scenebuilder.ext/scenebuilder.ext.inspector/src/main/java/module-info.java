@@ -1,4 +1,3 @@
-import com.gluonhq.jfxapps.core.extension.Extension;
 import com.oracle.javafx.scenebuilder.inspector.InspectorExtension;
 
 open module scenebuilder.ext.inspector {

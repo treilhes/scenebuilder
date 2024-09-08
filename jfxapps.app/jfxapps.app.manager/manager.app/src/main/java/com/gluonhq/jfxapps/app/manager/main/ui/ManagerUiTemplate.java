@@ -33,8 +33,7 @@
  */
 package com.gluonhq.jfxapps.app.manager.main.ui;
 
-import java.util.UUID;
-
+import com.gluonhq.jfxapps.app.manager.api.ui.Docks;
 import com.gluonhq.jfxapps.app.manager.api.ui.MainContent;
 import com.gluonhq.jfxapps.app.manager.preferences.document.BottomDividerVPosPreference;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
@@ -49,9 +48,6 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBar;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 
 import jakarta.inject.Provider;
-import javafx.event.Event;
-import javafx.event.EventDispatchChain;
-import javafx.event.EventDispatcher;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.SplitPane;
@@ -61,9 +57,6 @@ import javafx.scene.layout.VBox;
 
 @ApplicationInstanceSingleton
 public class ManagerUiTemplate extends AbstractFxmlWindowController implements MainInstanceWindow {
-
-    public static final String BOTTOM_DOCK_ID = "e8a0168d-f074-47e7-b107-aa7302a27cf8";
-    public static final UUID BOTTOM_DOCK_UUID = UUID.fromString(BOTTOM_DOCK_ID);
 
     @FXML
     private SplitPane mainSplitPane;
@@ -93,7 +86,7 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements M
         // @formatter:on
 
         this.bottomDockController = bottomDockController;
-        this.bottomDockController.setId(BOTTOM_DOCK_UUID);
+        this.bottomDockController.setId(Docks.BOTTOM_DOCK_UUID);
         this.bottomDockController.setMinimizedOrientation(Orientation.HORIZONTAL);
         this.bottomDockController.setMinimized(true);
         this.bottomDockController.notifyDockCreated();

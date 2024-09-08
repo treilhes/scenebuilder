@@ -31,7 +31,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.oracle.javafx.scenebuilder.extension.Extension;
 import com.oracle.javafx.scenebuilder.sourceview.SourceViewExtension;
 
 open module scenebuilder.ext.source.view {

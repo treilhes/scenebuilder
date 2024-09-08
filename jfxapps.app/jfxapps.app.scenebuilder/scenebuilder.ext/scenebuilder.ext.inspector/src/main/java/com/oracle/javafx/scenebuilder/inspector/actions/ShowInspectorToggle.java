@@ -33,10 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.inspector.actions;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import org.graalvm.compiler.lir.CompositeValue.Component;
 
 import javafx.scene.control.ToggleGroup;
 

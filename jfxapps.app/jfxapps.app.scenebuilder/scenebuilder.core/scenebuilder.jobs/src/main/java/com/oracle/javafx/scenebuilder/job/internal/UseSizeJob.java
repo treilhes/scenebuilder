@@ -66,19 +66,21 @@ import javafx.scene.web.WebView;
 @Prototype
 public final class UseSizeJob extends AbstractJob {
 
+    private final I18N i18n;
+    private final FXOMDocument fxomDocument;
+    private final SbMetadata metadata;
+    private final FxomJobsFactory fxomJobsFactory;
+    private final SbFXOMObjectMask.Factory sbDesignHierarchyMask;
+
     private final List<Job> subJobs = new ArrayList<>();
     private String description; // final but initialized lazily
     private double width;
     private double height;
     private FXOMObject fxomObject;
 
-    private final FXOMDocument fxomDocument;
-    private final SbMetadata metadata;
-    private final FxomJobsFactory fxomJobsFactory;
-    private final SbFXOMObjectMask.Factory sbDesignHierarchyMask;
-
     // @formatter:off
     protected UseSizeJob(
+            I18N i18n,
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             SbMetadata metadata,
@@ -86,6 +88,7 @@ public final class UseSizeJob extends AbstractJob {
             FxomJobsFactory fxomJobsFactory) {
      // @formatter:on
         super(extensionFactory);
+        this.i18n = i18n;
         this.fxomDocument = documentManager.fxomDocument().get();
         this.metadata = metadata;
         this.fxomJobsFactory = fxomJobsFactory;
@@ -121,7 +124,7 @@ public final class UseSizeJob extends AbstractJob {
         buildSubJobs();
 
         if (getDescription() == null) {
-            setDescription(I18N.getString("job.set.size", StringUtils.getStringFromDouble(width),
+            setDescription(i18n.getString("job.set.size", StringUtils.getStringFromDouble(width),
                     StringUtils.getStringFromDouble(height)));
         }
 
@@ -165,7 +168,7 @@ public final class UseSizeJob extends AbstractJob {
     @Override
     public String getDescription() {
         if (description == null) {
-            description = I18N.getString("job.set.size", StringUtils.getStringFromDouble(width),
+            description = i18n.getString("job.set.size", StringUtils.getStringFromDouble(width),
                     StringUtils.getStringFromDouble(height));
         }
         return description;

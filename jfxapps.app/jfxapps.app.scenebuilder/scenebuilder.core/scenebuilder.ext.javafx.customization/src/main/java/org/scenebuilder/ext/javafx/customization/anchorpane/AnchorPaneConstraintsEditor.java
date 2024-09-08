@@ -46,6 +46,7 @@ import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMElement;
@@ -104,9 +105,10 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
     private ChangeListener<Object> constraintListener;
 
     public AnchorPaneConstraintsEditor(
+            I18N i18n,
             AnchorPaneConstraintsEditor.ConstraintEditor.Factory constraintEditorFactory
             ) {
-        super("Anchor constraints xxx");
+        super(i18n, "Anchor constraints xxx");
         root = FXMLUtils.load(this, "AnchorPaneConstraintsEditor.fxml");
         initialize(constraintEditorFactory);
     }
@@ -219,10 +221,14 @@ public class AnchorPaneConstraintsEditor extends AbstractPropertiesEditor {
 
         private boolean updateFromTextField = false;
 
-        protected ConstraintEditor(Dialog dialog,
+        //@formatter:off
+        protected ConstraintEditor(
+                I18N i18n,
+                Dialog dialog,
                 Documentation documentation,
                 FileSystem fileSystem) {
-            super(dialog, documentation, fileSystem);
+          //@formatter:on
+            super(i18n, dialog, documentation, fileSystem);
         }
 
         protected void initialize(TextField textField, ToggleButton toggleButton, ChangeListener<Object> listener) {

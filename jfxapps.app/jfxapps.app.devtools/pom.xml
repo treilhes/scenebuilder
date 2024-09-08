@@ -13,6 +13,7 @@
       <module>devtools.app</module>
       <module>devtools.model</module>
       <module>devtools.metadata</module>
+      <module>devtools.i18n</module>
   </modules>
   
   <dependencyManagement>

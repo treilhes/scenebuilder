@@ -34,8 +34,6 @@ package com.oracle.javafx.scenebuilder.exporter.format;
 
 import java.io.File;
 
-import com.oracle.javafx.scenebuilder.api.editor.selection.Selection;
-
 import javafx.scene.Node;
 
 public interface ExportFormat {

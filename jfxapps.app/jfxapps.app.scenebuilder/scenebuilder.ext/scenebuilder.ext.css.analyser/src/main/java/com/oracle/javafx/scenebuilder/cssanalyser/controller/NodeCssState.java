@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -45,10 +45,10 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.gluonhq.jfxapps.core.api.css.CssInternal;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.oracle.javafx.scenebuilder.api.css.CssInternal;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.CssPropertyState;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.sun.javafx.scene.NodeHelper;
 
 import javafx.beans.property.ObjectProperty;
@@ -75,7 +75,6 @@ public class NodeCssState {
         ORDERED_ORIGIN.add(StyleOrigin.USER);// Bean API Call
         ORDERED_ORIGIN.add(StyleOrigin.AUTHOR);// CSS files
         ORDERED_ORIGIN.add(StyleOrigin.INLINE);// Style property
-
     }
 
     @SuppressWarnings("rawtypes")
@@ -88,12 +87,12 @@ public class NodeCssState {
     private Map<MatchingRule, List<MatchingDeclaration>> matchingRules;
     private List<MatchingRule> sortedMatchingRules = new ArrayList<>();
     private Collection<CssProperty> props;
-    private final IMetadata metadata;
+    private final SbMetadata metadata;
 
     // private TestCssNode tsn;
 
     @SuppressWarnings("rawtypes")
-    protected NodeCssState(IMetadata metadata, Map<StyleableProperty, List<Style>> map, Node node, FXOMObject fxomObject) {
+    protected NodeCssState(SbMetadata metadata, Map<StyleableProperty, List<Style>> map, Node node, FXOMObject fxomObject) {
         this.metadata = metadata;
         this.map = map;
         this.node = node;
@@ -129,11 +128,11 @@ public class NodeCssState {
         private final ObjectProperty<CssContentMaker.PropertyState> fxmlModel = new SimpleObjectProperty<>();
         private CssContentMaker.PropertyState currentState;
 
-        CssProperty(IMetadata metadata, NodeCssState nodeCssState, CssMetaData cssMeta, Node target, FXOMObject fxomObject) {
+        CssProperty(SbMetadata metadata, NodeCssState nodeCssState, CssMetaData cssMeta, Node target, FXOMObject fxomObject) {
             this(metadata, nodeCssState, null, cssMeta, target, fxomObject);
         }
 
-        CssProperty(IMetadata metadata, NodeCssState nodeCssState, CssProperty mainProperty, CssMetaData cssMeta, Node target,
+        CssProperty(SbMetadata metadata, NodeCssState nodeCssState, CssProperty mainProperty, CssMetaData cssMeta, Node target,
                 FXOMObject fxomObject) {
             this.mainProperty = mainProperty;
             this.cssMeta = cssMeta;

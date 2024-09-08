@@ -12,11 +12,17 @@
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>scenebuilder.app.starter</artifactId>
+            <artifactId>scenebuilder.api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>scenebuilder.metadata.javafx15</artifactId>
+            <artifactId>scenebuilder.app.starter</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>scenebuilder.metadata.javafx.22</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>

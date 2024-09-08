@@ -35,38 +35,26 @@ package com.gluonhq.jfxapps.ext.prefedit.actions;
 
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.ext.prefedit.controller.PreferencesWindowController;
 
-@Prototype
+@ApplicationInstancePrototype
 @ActionMeta(
         nameKey = "action.name.show.preferences",
         descriptionKey = "action.description.show.preferences")
-
-@MenuItemAttachment(
-        id = ShowPreferencesAction.MENU_ID,
-        targetMenuId = ShowPreferencesAction.QUIT_MENU_REF_ID,
-        label = "menu.title.preferences",
-        positionRequest = PositionRequest.AsPreviousSibling)
-@Accelerator(accelerator = "CTRL+,")
 public class ShowPreferencesAction extends AbstractAction {
-
-    public final static String QUIT_MENU_REF_ID = "fb462a53-9877-4f85-a37f-8aa07f6a3ec1";
-
-    public final static String MENU_ID = "showPreferencesMenuItem";
 
     private final PreferencesWindowController preferencesWindowController;
 
     public ShowPreferencesAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             @Lazy PreferencesWindowController preferencesWindowController) {
-        super(extensionFactory);
+        super(i18n, extensionFactory);
         this.preferencesWindowController = preferencesWindowController;
     }
 

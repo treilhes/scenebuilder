@@ -1,4 +1,3 @@
-import com.oracle.javafx.scenebuilder.extension.Extension;
 import com.oracle.javafx.scenebuilder.preview.PreviewExtension;
 
 open module scenebuilder.ext.preview {

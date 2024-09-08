@@ -35,28 +35,30 @@ package com.oracle.javafx.scenebuilder.fxml.error.collectors;
 
 import java.util.Optional;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.error.AbstractErrorCollector;
 import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
-import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
+import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMInclude;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
+import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 import com.oracle.javafx.scenebuilder.fxml.error.FxmlErrorReportEntryImpl;
 import com.oracle.javafx.scenebuilder.fxml.error.Type;
 
 @ApplicationInstanceSingleton
 public class UnresolvedObjectsCollector extends AbstractErrorCollector {
 
-    private final FXOMObjectMask.Factory designHierarchyMaskFactory;
-    private final FxmlDocumentManager documentManager;
+    private final SbFXOMObjectMask.Factory designHierarchyMaskFactory;
+    private final DocumentManager documentManager;
 
-    public UnresolvedObjectsCollector(FxmlDocumentManager documentManager,
-            FXOMObjectMask.Factory designHierarchyMaskFactory) {
+    // @formatter:off
+    public UnresolvedObjectsCollector(
+            DocumentManager documentManager,
+            SbFXOMObjectMask.Factory designHierarchyMaskFactory) {
+        // @formatter:on
         super();
         this.documentManager = documentManager;
         this.designHierarchyMaskFactory = designHierarchyMaskFactory;
@@ -76,12 +78,12 @@ public class UnresolvedObjectsCollector extends AbstractErrorCollector {
             final Object sceneGraphObject;
             if (fxomObject instanceof FXOMIntrinsic) {
                 final FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) fxomObject;
-                sceneGraphObject = fxomIntrinsic.getSourceSceneGraphObject();
+                sceneGraphObject = fxomIntrinsic.getSceneGraphObject().get();
                 if (!(fxomObject instanceof FXOMInclude)) {
                     String reference = fxomIntrinsic.getSource();
 
                     Optional<FXOMObject> referee = fxomIntrinsic.getFxomDocument()
-                            .collect(FxIdCollector.findFirstById(reference));
+                            .collect(FxCollector.fxIdFindFirst(reference));
 
                     if (referee.isEmpty()) {
                         final ErrorReportEntry newEntry = new FxmlErrorReportEntryImpl(fxomObject,

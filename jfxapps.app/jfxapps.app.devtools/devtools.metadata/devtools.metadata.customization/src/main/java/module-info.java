@@ -1,6 +1,6 @@
 module devtools.metadata.customization {
 
-    exports com.gluonhq.jfxapps.app.devops.metadata.custom;
+    exports com.gluonhq.jfxapps.app.devtools.metadata.custom;
 
     requires jfxapps.core.starter;
     requires transitive jfxapps.core.metadata;

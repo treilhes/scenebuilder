@@ -50,6 +50,37 @@
                                     </extension>
                                 </extensions>
                             </application>
+                            <application>
+                                <uuid>1b8bb5f3-efb3-41a6-b6f0-12c9d96fc6a2</uuid>
+                                <dependency>
+                                    <groupId>com.gluonhq.jfxapps</groupId>
+                                    <artifactId>devtools.api</artifactId>
+                                    <version>${devtools.version}</version>
+                                </dependency>
+                                <description>
+                                    <icon>fxmlRunner64x64.png</icon>
+                                    <title>FXML Runner</title>
+                                    <text>App that run fxml files</text>
+                                </description>
+                                <extensions>
+                                    <extension>
+                                        <uuid>deabfbdf-0889-4723-9417-77450b962742</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>devtools.app</artifactId>
+                                            <version>${devtools.version}</version>
+                                        </dependency>
+                                    </extension>
+                                    <extension>
+                                        <uuid>733baa71-86ee-42db-b2d5-3f8111138de4</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>devtools.i18n</artifactId>
+                                            <version>${devtools.version}</version>
+                                        </dependency>
+                                    </extension>
+                                </extensions>
+                            </application>
                         </applications>
                     </registry>
                 </configuration>

@@ -41,6 +41,7 @@ open module scenebuilder.ext.javafx.customization {
 
 //    requires transitive jfxapps.core.api;
     requires transitive scenebuilder.app.starter;
+    requires scenebuilder.api;
     //requires scenebuilder.metadata.javafx;
 
     provides Extension with JavafxCustomizationExtension;

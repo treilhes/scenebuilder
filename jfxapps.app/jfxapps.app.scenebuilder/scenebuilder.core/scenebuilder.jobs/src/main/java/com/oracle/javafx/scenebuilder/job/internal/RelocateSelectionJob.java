@@ -63,20 +63,21 @@ public final class RelocateSelectionJob extends BatchDocumentJob {
 
     private static final long MERGE_PERIOD = 1000; //  milliseconds
 
+    private final I18N i18n;
     private final SbJobsFactory sbJobsFactory;
     private final Map<FXOMObject, Point2D> locationMap = new HashMap<>();
     private long time = System.currentTimeMillis();
 
-
-
     // @formatter:off
     protected RelocateSelectionJob(
+            I18N i18n,
             JobExtensionFactory extensionFactory,
             DocumentManager documentManager,
             Selection selection,
             SbJobsFactory sbJobsFactory) {
     // @formatter:on
         super(extensionFactory, documentManager);
+        this.i18n = i18n;
         this.sbJobsFactory = sbJobsFactory;
     }
 
@@ -169,9 +170,9 @@ public final class RelocateSelectionJob extends BatchDocumentJob {
             final FXOMObject movedObject = movedObjects.iterator().next();
             final Object sceneGraphObject = movedObject.getSceneGraphObject().get();
             if (sceneGraphObject == null) {
-                result = I18N.getString("drop.job.move.single.unresolved");
+                result = i18n.getString("drop.job.move.single.unresolved");
             } else {
-                result = I18N.getString("drop.job.move.single.resolved",
+                result = i18n.getString("drop.job.move.single.resolved",
                         sceneGraphObject.getClass().getSimpleName());
             }
         } else {
@@ -188,11 +189,11 @@ public final class RelocateSelectionJob extends BatchDocumentJob {
 
             if (homogeneous) {
                 final Class<?> singleClass = classes.iterator().next();
-                result = I18N.getString("drop.job.move.multiple.homogeneous",
+                result = i18n.getString("drop.job.move.multiple.homogeneous",
                         movedObjects.size(),
                         singleClass.getSimpleName());
             } else {
-                result = I18N.getString("drop.job.move.multiple.heterogeneous",
+                result = i18n.getString("drop.job.move.multiple.heterogeneous",
                         movedObjects.size());
             }
         }

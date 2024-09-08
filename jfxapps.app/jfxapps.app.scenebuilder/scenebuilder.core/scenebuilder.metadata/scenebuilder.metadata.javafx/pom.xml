@@ -1,0 +1,106 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.gluonhq.jfxapps</groupId>
+    <artifactId>scenebuilder.metadata</artifactId>
+    <version>${scenebuilder.version}</version>
+  </parent>
+  <artifactId>scenebuilder.metadata.javafx</artifactId>
+  <packaging>pom</packaging>
+  
+  <dependencies>
+      <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>scenebuilder.metadata.customization</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.gluonhq.jfxapps</groupId>
+                    <artifactId>jfxapps.javafx.starter</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>scenebuilder.metadata.javafx.fx</artifactId>
+            <scope>provided</scope>
+        </dependency>
+  </dependencies>
+  <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-invoker-plugin</artifactId>
+                <inherited>false</inherited> <!-- Prevent inheritance of this plugin -->
+                <executions>
+                    <!-- This execution is used to run javafxdata first
+                    as pomIncludes does not allow to order builds -->
+                    <execution>
+                        <id>forked-install</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <projectsDirectory>${basedir}</projectsDirectory>
+                            <pomIncludes>
+                                <pomInclude>scenebuilder.metadata.javafx.data/pom.xml</pomInclude>
+                            </pomIncludes>
+                            <streamLogs>true</streamLogs>
+                            <goals>
+                                <goal>clean</goal>
+                                <goal>install</goal>
+                            </goals>
+                            <mavenOpts>--add-opens java.base/java.lang=ALL-UNNAMED</mavenOpts>
+                        </configuration>
+                    </execution>
+                    <!-- This execution is used to run javafx after javafxdata
+                    as pomIncludes does not allow to order builds -->
+                    <execution>
+                        <id>forked-install2</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <projectsDirectory>${basedir}</projectsDirectory>
+                            <pomIncludes>
+                                <pomInclude>scenebuilder.metadata.javafx.11/pom.xml</pomInclude>
+                                <!--<pomInclude>scenebuilder.metadata.javafx.15/pom.xml</pomInclude>-->
+                                <pomInclude>scenebuilder.metadata.javafx.22/pom.xml</pomInclude>
+                            </pomIncludes>
+                            <streamLogs>true</streamLogs>
+                            <goals>
+                                <goal>clean</goal>
+                                <goal>install</goal>
+                            </goals>
+                            <mavenOpts>--add-opens java.base/java.lang=ALL-UNNAMED</mavenOpts>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.gluonhq.jfxapps</groupId>
+                        <artifactId>scenebuilder.metadata.customization</artifactId>
+                        <version>${scenebuilder.version}</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>com.gluonhq.jfxapps</groupId>
+                                <artifactId>scenebuilder.starter</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                 </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>

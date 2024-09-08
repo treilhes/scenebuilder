@@ -1,5 +1,7 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
  * This file is available and licensed under the following license:
@@ -35,22 +37,20 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 import org.junit.Test;
 
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.sourcegen.i18n.I18NSourceGen;
 
 /**
  * Unit test for {@link SkeletonBuffer#toString()}.
  */
 public class SkeletonBufferTest {
 
-    static {
-        I18N.initForTest(new I18NSourceGen());
-    }
-    
+    private I18N i18n = new I18N(List.of(), true);
+
     @Test
     public void testControllerWithoutPackageName() throws IOException {
         // given

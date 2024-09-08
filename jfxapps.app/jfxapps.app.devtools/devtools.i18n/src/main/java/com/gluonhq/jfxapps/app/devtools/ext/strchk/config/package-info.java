@@ -1,0 +1,1 @@
+package com.gluonhq.jfxapps.app.devtools.ext.strchk.config;

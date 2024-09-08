@@ -33,6 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.menu.action;
 
+import static org.assertj.core.api.Assertions.entry;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -44,13 +46,9 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.oracle.javafx.scenebuilder.api.action.AbstractAction;
-import com.oracle.javafx.scenebuilder.api.action.ActionExtensionFactory;
-import com.oracle.javafx.scenebuilder.api.application.InstancesManager;
-import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
-import com.oracle.javafx.scenebuilder.api.editors.ApplicationInstance;
-import com.oracle.javafx.scenebuilder.api.i18n.I18N;
-import com.oracle.javafx.scenebuilder.api.ui.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.application.InstancesManager;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.fs.preference.global.RecentItemsPreference;
 
 public abstract class AbstractOpenFilesAction extends AbstractAction {
