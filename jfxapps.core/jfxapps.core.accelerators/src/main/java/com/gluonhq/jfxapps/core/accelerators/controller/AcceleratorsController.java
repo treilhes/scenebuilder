@@ -51,7 +51,7 @@ import com.gluonhq.jfxapps.core.api.preferences.Preference;
 import com.gluonhq.jfxapps.core.api.shortcut.Accelerator;
 import com.gluonhq.jfxapps.core.api.shortcut.AcceleratorProvider;
 import com.gluonhq.jfxapps.core.api.shortcut.Accelerators;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractCommonUiController;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
@@ -86,14 +86,14 @@ public class AcceleratorsController implements Accelerators {
     private final FocusedAcceleratorsMapPreference.Factory focusedAcceleratorsMapPreferenceFactory;
     private final Optional<List<AcceleratorProvider>> acceleratorProviders;
 
-    private DocumentManager documentManager;
+    private ApplicationInstanceEvents documentManager;
     private MainInstanceWindow documentWindow;
 
     private Map<Action, List<KeyCombination>> defaultGlobalAccelerators = new HashMap<>();
     private Map<Class<? extends AbstractCommonUiController>, Map<Action, List<KeyCombination>>> defaultFocusedAccelerators = new HashMap<>();
 
     public AcceleratorsController(
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             MainInstanceWindow documentWindow,
             AcceleratorsMapPreference acceleratorsMapPreference,
             FocusedAcceleratorsMapPreference.Factory focusedAcceleratorsMapPreferenceFactory,

@@ -38,7 +38,7 @@ import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
@@ -62,7 +62,7 @@ public final class RemovePropertyJob extends AbstractJob {
 
     protected RemovePropertyJob(
             JobExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             FxomJobsFactory fxomJobsFactory) {
         super(extensionFactory);
         this.fxomJobsFactory = fxomJobsFactory;

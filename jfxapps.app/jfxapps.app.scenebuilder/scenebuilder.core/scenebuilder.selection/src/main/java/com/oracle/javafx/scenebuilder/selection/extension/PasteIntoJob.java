@@ -48,7 +48,7 @@ import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMCollection;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -81,7 +81,7 @@ public class PasteIntoJob extends BatchSelectionJob {
     protected PasteIntoJob(
             I18N i18n,
             JobExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection,
             SbTargetSelection sbTargetSelection,
             SelectionJobsFactory selectionJobsFactory,

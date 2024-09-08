@@ -13,6 +13,7 @@
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>spring.core.patch</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -41,8 +42,7 @@
                 <configuration>
                     <compilerArgs>
                         <arg>--patch-module</arg>
-                        <arg>
-                            spring.core=${com.gluonhq.jfxapps:spring.core.patch:jar}</arg>
+                        <arg>spring.core=${com.gluonhq.jfxapps:spring.core.patch:jar}</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>

@@ -48,7 +48,7 @@ import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.JobPipeline;
 import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
@@ -78,7 +78,7 @@ public class JobManagerImpl implements JobManager {
 
     private static final int UNDO_STACK_MAX_SIZE = 50;
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final JobPipelineFactory jobPipelineFactory;
     private final FxomJobsFactory fxomJobsFactory;
 
@@ -94,7 +94,7 @@ public class JobManagerImpl implements JobManager {
 
 
     public JobManagerImpl(
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             JobPipelineFactory jobPipelineFactory,
             FxomJobsFactory fxomJobsFactory,
             BatchJob.Factory batchJobFactory) {

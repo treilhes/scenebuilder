@@ -50,7 +50,7 @@ import com.gluonhq.jfxapps.core.api.maven.GetMavenArtifactDialog;
 import com.gluonhq.jfxapps.core.api.maven.RepositoryManager;
 import com.gluonhq.jfxapps.core.api.maven.SearchMavenArtifactDialog;
 import com.gluonhq.jfxapps.core.api.settings.MavenSetting;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
@@ -98,7 +98,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
 
     private AbstractLibrary<?, ?> library;
 
-    private final SceneBuilderManager sceneBuilderManager;
+    private final ApplicationEvents sceneBuilderManager;
 
     private final IconSetting iconSetting;
 
@@ -131,7 +131,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
 
     public LibraryDialogController(
             I18N i18n,
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             JfxAppContext context,
             MessageLogger messageLogger,

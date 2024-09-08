@@ -42,7 +42,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER_RIGHT" prefHeight="-1.0" prefWidth="-1.0" styleClass="theme-presets" stylesheets="@../controller/css/MessagePanel.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER_RIGHT" prefHeight="-1.0" prefWidth="-1.0" styleClass="theme-presets" stylesheets="@MessagePanel.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <VBox styleClass="message-panel">
       <children>

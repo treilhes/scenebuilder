@@ -46,7 +46,7 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
@@ -82,7 +82,7 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
     protected ModifyCacheHintJob(
             I18N i18n,
             JobExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection,
             SbMetadata metadata,
             FxomJobsFactory fxomJobsFactory) {

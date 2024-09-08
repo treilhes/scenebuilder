@@ -41,7 +41,7 @@ import java.util.function.Consumer;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -56,9 +56,9 @@ public class FileDataFormat implements ClipboardDataFormat {
     // FXML Format
     static final DataFormat FILE_DATA_FORMAT = DataFormat.FILES;
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
-    public FileDataFormat(DocumentManager documentManager) {
+    public FileDataFormat(ApplicationInstanceEvents documentManager) {
         super();
         this.documentManager = documentManager;
     }

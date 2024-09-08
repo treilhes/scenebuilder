@@ -39,7 +39,7 @@ import java.util.function.Consumer;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMArchive;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -54,9 +54,9 @@ public class FXOMArchiveDataFormat implements ClipboardDataFormat {
     // Internal SB2 data format
     static final DataFormat SB_DATA_FORMAT = new DataFormat("com.oracle.javafx.scenebuilder2/internal"); // NOCHECK
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
-    public FXOMArchiveDataFormat(DocumentManager documentManager) {
+    public FXOMArchiveDataFormat(ApplicationInstanceEvents documentManager) {
         super();
         this.documentManager = documentManager;
     }

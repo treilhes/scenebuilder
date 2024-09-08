@@ -48,7 +48,7 @@ import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.settings.MavenSetting;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
@@ -64,7 +64,7 @@ class GetMavenArtifactDialogControllerTest {
 
     private MavenClientController mc = new MavenClientController(null, null, null, null, null);
 
-    private SceneBuilderManager sbm = new SceneBuilderManager.SceneBuilderManagerImpl();
+    private ApplicationEvents sbm = new ApplicationEvents.ApplicationEventsImpl();
 
     private I18N i18n = new I18N(List.of(), true);
 

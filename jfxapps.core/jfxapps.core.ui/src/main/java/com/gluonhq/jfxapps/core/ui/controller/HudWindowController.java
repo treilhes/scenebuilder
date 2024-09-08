@@ -37,8 +37,8 @@ import java.util.List;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.CardinalPoint;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPopupController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.HudWindow;
 import com.gluonhq.jfxapps.util.javafx.LineEquation;
@@ -79,8 +79,8 @@ public class HudWindowController extends AbstractFxmlPopupController implements 
      * Instantiates a new hud window controller.
      */
     public HudWindowController(
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager
             ) {
         super(scenebuilderManager, documentManager, HudWindowController.class.getResource("HudWindow.fxml"));
     }

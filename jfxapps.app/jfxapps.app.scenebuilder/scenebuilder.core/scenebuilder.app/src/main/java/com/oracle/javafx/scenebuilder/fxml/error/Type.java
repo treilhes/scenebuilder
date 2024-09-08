@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,7 +34,6 @@
 package com.oracle.javafx.scenebuilder.fxml.error;
 
 import com.gluonhq.jfxapps.core.api.error.ErrorType;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
 
 public enum Type implements ErrorType {
     UNRESOLVED_CLASS("sb.error.unresolved.class"),
@@ -51,7 +50,7 @@ public enum Type implements ErrorType {
     }
 
     @Override
-    public String getMessage() {
-        return I18N.getString(message, message);
+    public String getI18nKey() {
+        return message; //I18N.getString(message, message);
     }
 }

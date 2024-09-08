@@ -38,7 +38,7 @@ import java.util.List;
 
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 /**
@@ -51,7 +51,7 @@ public abstract class InlineDocumentJob extends CompositeJob {
 
     private final FXOMDocument fxomDocument;
 
-    protected InlineDocumentJob(JobExtensionFactory extensionFactory, DocumentManager documentManager) {
+    protected InlineDocumentJob(JobExtensionFactory extensionFactory, ApplicationInstanceEvents documentManager) {
         super(extensionFactory);
         this.fxomDocument = documentManager.fxomDocument().get();
     }

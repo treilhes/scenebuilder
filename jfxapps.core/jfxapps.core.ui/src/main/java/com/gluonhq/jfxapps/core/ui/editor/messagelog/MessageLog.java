@@ -43,7 +43,7 @@ import java.util.ResourceBundle;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 
 import javafx.beans.property.IntegerProperty;
@@ -68,7 +68,7 @@ public class MessageLog implements MessageLogger{
      * Public
      */
 
-    public MessageLog(I18N i18n, DocumentManager documentManager) {
+    public MessageLog(I18N i18n, ApplicationInstanceEvents documentManager) {
         super();
         this.i18n = i18n;
         documentManager.fxomDocument().subscribe(fd -> clear());

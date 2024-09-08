@@ -34,8 +34,8 @@
 package com.gluonhq.jfxapps.ext.container.menu.controller;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 
 /**
  *
@@ -43,12 +43,12 @@ import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 @ApplicationInstanceSingleton
 public class SceneBuilderMenuController {
 
-    private final DocumentManager documentManager;
-    private final SceneBuilderManager sceneBuilderManager;
+    private final ApplicationInstanceEvents documentManager;
+    private final ApplicationEvents sceneBuilderManager;
 
     public SceneBuilderMenuController(
-            SceneBuilderManager sceneBuilderManager,
-            DocumentManager documentManager) {
+            ApplicationEvents sceneBuilderManager,
+            ApplicationInstanceEvents documentManager) {
     	this.sceneBuilderManager = sceneBuilderManager;
     	this.documentManager = documentManager;
     }

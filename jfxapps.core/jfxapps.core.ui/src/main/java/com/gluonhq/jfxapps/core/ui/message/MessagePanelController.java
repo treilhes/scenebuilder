@@ -35,8 +35,8 @@ package com.gluonhq.jfxapps.core.ui.message;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger.MessageEntry;
@@ -71,8 +71,8 @@ public class MessagePanelController extends AbstractFxmlController {
 
     public MessagePanelController(
             I18N i18n,
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager,
             MessageLogger messageLogger) {
         super(i18n, scenebuilderManager, documentManager, MessagePanelController.class.getResource("MessagePanel.fxml"));
         this.messageLogger = messageLogger;

@@ -35,7 +35,7 @@ package com.gluonhq.jfxapps.core.ui.dialog;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
@@ -47,12 +47,12 @@ public class DialogController implements Dialog {
 
     private final I18N i18n;
     private final JfxAppContext context;
-    private final SceneBuilderManager sceneBuilderManager;
+    private final ApplicationEvents sceneBuilderManager;
     private final IconSetting iconSetting;
 
     public DialogController(
             I18N i18n,
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             JfxAppContext context) {
         this.i18n = i18n;

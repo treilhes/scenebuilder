@@ -50,7 +50,6 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.core.fxom.ext.LoaderCapabilitiesManager;
 import com.gluonhq.jfxapps.core.fxom.glue.GlueCursor;
 import com.gluonhq.jfxapps.core.fxom.glue.GlueDocument;
-import com.gluonhq.jfxapps.core.fxom.util.FXMLLoaderInstrument;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.sun.javafx.fxml.FXMLLoaderHelper;
 
@@ -156,17 +155,21 @@ class FXOMLoader implements LoadListener {
         document.setDisplayNode(null);
         document.setDisplayStylesheets(Collections.emptyList());
 
-        if (sceneGraphRoot instanceof Scene) {
-            Scene scene = (Scene) sceneGraphRoot;
-            document.setDisplayNode(scene.getRoot());
-            document.setDisplayStylesheets(scene.getStylesheets());
-            scene.setRoot(new Pane()); // ensure displayNode is only part of one scene
-        } else if (sceneGraphRoot instanceof Window) {
-            Window window = (Window) sceneGraphRoot;
-            if (window.getScene() != null) {
-                document.setDisplayNode(window.getScene().getRoot());
-                document.setDisplayStylesheets(window.getScene().getStylesheets());
-                window.getScene().setRoot(new Pane()); // ensure displayNode is only part of one scene
+        switch (sceneGraphRoot) {
+            case Scene scene-> {
+                document.setDisplayNode(scene.getRoot());
+                document.setDisplayStylesheets(scene.getStylesheets());
+                scene.setRoot(new Pane()); // ensure displayNode is only part of one scene
+            }
+            case Window window -> {
+                if (window.getScene() != null) {
+                    document.setDisplayNode(window.getScene().getRoot());
+                    document.setDisplayStylesheets(window.getScene().getStylesheets());
+                    window.getScene().setRoot(new Pane()); // ensure displayNode is only part of one scene
+                }
+            }
+            default -> {
+                // Nothing to do
             }
         }
     }

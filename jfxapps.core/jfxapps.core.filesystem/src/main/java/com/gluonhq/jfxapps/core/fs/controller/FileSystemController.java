@@ -60,8 +60,8 @@ import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.CombinedResourceBundle;
 import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.fs.preference.document.PathPreference;
 import com.gluonhq.jfxapps.core.fs.preference.global.InitialDirectoryPreference;
@@ -91,15 +91,15 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     private final FileWatcher fileWatcher = new FileWatcher(2000 /* ms */, this,
             FileSystemController.class.getSimpleName());
 
-    private final SceneBuilderManager sceneBuilderManager;
-    private final DocumentManager documentManager;
+    private final ApplicationEvents sceneBuilderManager;
+    private final ApplicationInstanceEvents documentManager;
 
     private FileTime loadFileTime;
 
     // @formatter:off
     public FileSystemController(
-            SceneBuilderManager sceneBuilderManager,
-            DocumentManager documentManager,
+            ApplicationEvents sceneBuilderManager,
+            ApplicationInstanceEvents documentManager,
             RecentItemsPreference recentItemsPreference,
             Provider<PathPreference> pathPreference,
             InitialDirectoryPreference initialDirectoryPreference,

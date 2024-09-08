@@ -42,16 +42,19 @@ import java.net.URLStreamHandler;
 import java.net.spi.URLStreamHandlerProvider;
 import java.nio.charset.Charset;
 
+import com.gluonhq.jfxapps.boot.platform.InMemoryFileRegistry;
+
 /**
  * Cheap replacement for datauri (only available in Java17)
  * Url of the form : inmemoryfile:sessionid/some/path/to/file will be looked into
  * {@link InMemoryFileRegistry}
  * @author ptreilhes
- *
+ * @derecated use {@link URLUtils#toDataURI()} instead
  */
+@Deprecated
 public class InMemoryFileURLStreamHandlerProvider extends URLStreamHandlerProvider {
 
-    public static final String PROTOCOL_NAME = "inmemoryfile";
+    public static final String PROTOCOL_NAME = "ram";
 
     @Override public URLStreamHandler createURLStreamHandler(String protocol) {
         if (PROTOCOL_NAME.equals(protocol)) {

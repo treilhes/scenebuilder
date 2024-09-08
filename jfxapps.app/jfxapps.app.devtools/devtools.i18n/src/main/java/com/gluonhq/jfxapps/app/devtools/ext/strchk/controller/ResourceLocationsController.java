@@ -48,8 +48,8 @@ import com.gluonhq.jfxapps.app.devtools.ext.strchk.loader.ProjectLoader;
 import com.gluonhq.jfxapps.app.devtools.ext.strchk.model.Project;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 
 import javafx.collections.FXCollections;
@@ -131,8 +131,8 @@ public class ResourceLocationsController extends AbstractFxmlController {
 
     protected ResourceLocationsController(
             I18N i18n,
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager) {
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager) {
         super(i18n, scenebuilderManager, documentManager, ResourceLocationsController.class.getResource("ResourceLocations.fxml"));
     }
 

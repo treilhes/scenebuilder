@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.content.decoration;
 
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -54,7 +54,7 @@ import javafx.scene.transform.Transform;
 public abstract class AbstractDecoration<T> implements Decoration<T> {
 
     private final Workspace workspace;
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final Class<T> sceneGraphClass;
     private final Group rootNode = new Group();
     private FXOMObject fxomObject;
@@ -63,7 +63,7 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
 
     public AbstractDecoration(
             Workspace workspace,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Class<T> sceneGraphClass) {
         assert workspace != null;
         assert sceneGraphClass != null;

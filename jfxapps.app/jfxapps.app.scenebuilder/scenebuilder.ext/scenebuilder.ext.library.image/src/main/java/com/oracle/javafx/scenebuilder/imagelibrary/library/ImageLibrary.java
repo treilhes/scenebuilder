@@ -53,7 +53,7 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Scope;
 
 import com.gluonhq.jfxapps.core.api.library.LibraryFilter;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.UILogger;
 import com.gluonhq.jfxapps.core.extstore.fs.ExtensionFileSystemFactory;
 import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
@@ -134,7 +134,7 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
 
     private final List<String> loadedFonts = new ArrayList<>();
 
-    private final SceneBuilderManager sceneBuilderManager;
+    private final ApplicationEvents sceneBuilderManager;
 
     /*
      * Public
@@ -148,7 +148,7 @@ public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> 
             @Autowired LibraryStoreFactory libraryStoreFactory,
             @Autowired ClassLoaderController classLoaderController,
             @Autowired UILogger logger,
-            @Autowired SceneBuilderManager sceneBuilderManager,
+            @Autowired ApplicationEvents sceneBuilderManager,
             @Autowired ImageFileExplorer controlFileExplorer,
             @Autowired ImageFolderExplorer controlFolderExplorer,
             @Autowired ImageMavenArtifactExplorer controlMavenArtifactExplorer,

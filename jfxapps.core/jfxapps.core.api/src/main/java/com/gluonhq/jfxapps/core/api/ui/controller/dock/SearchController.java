@@ -38,8 +38,8 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 
 import javafx.beans.property.StringProperty;
@@ -68,8 +68,8 @@ public class SearchController extends AbstractFxmlController implements ViewSear
 
     public SearchController(
             I18N i18n,
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager) {
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager) {
         super(i18n, scenebuilderManager, documentManager, SearchController.class.getResource("Search.fxml"));
     }
 

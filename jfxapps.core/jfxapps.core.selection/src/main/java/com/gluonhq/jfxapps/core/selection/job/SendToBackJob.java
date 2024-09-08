@@ -43,7 +43,7 @@ import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.InlineDocumentJob;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 
@@ -60,7 +60,7 @@ public final class SendToBackJob extends InlineDocumentJob {
     // @formatter:off
     protected SendToBackJob(
             JobExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection,
             FxomJobsFactory fxomJobsFactory) {
     // @formatter:on

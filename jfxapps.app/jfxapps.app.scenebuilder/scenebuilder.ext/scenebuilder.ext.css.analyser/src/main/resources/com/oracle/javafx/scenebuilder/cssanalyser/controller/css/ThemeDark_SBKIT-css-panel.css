@@ -1,0 +1,274 @@
+/*
+ * Copyright (c) 2017 Gluon and/or its affiliates.
+ * Copyright (c) 2014, Oracle and/or its affiliates.
+ * All rights reserved. Use is subject to license terms.
+ *
+ * This file is available and licensed under the following license:
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  - Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *  - Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the distribution.
+ *  - Neither the name of Oracle Corporation nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*******************************************************************************
+ *                                                                             *
+ * CSS Panel                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+
+.theme-presets.css-panel-background {
+    -fx-background-color: -sb-sharp-edge-lo, -sb-content-background;
+    -fx-background-insets: 0, 1 0 0 0;
+}
+
+/*******************************************************************************
+ * CSS Panel - TableView                                                      *
+ ******************************************************************************/
+
+.theme-presets.SBKIT-css-panel .table-view .placeholder {
+    -fx-background-color: -sb-content-background;
+}
+.theme-presets.SBKIT-css-panel .table-view .placeholder .label {
+    -fx-text-fill: -sb-content-text-dimmed;
+}
+.theme-presets.SBKIT-css-panel .table-view .hyperlink {
+    -fx-font-size: 0.875em;
+    -fx-padding: 0 0 0 4;
+    -fx-border-width: 0px;
+    -fx-text-fill: -sb-content-text;
+}
+.theme-presets.SBKIT-css-panel .table-view .label {
+    -fx-font-size: 0.875em;
+    -fx-padding: 0 0 0 4;
+    -fx-text-fill: -sb-content-text;
+}
+.theme-presets.SBKIT-css-panel .table-view {
+    -fx-background-color: -sb-content-background;
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+}
+.theme-presets.SBKIT-css-panel .table-row-cell, .table-row-cell:selected {
+    -fx-background-color: -sb-sharp-edge-lo, -sb-content-background;
+    -fx-background-insets: 0, 0 0 1 0;
+}
+.theme-presets.SBKIT-css-panel .table-cell {
+    -fx-background-color: -sb-sharp-edge-lo, -sb-content-background;
+    -fx-background-insets: 0, 0 1 1 0;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+}
+.theme-presets.SBKIT-css-panel .table-cell:last-visible {
+    -fx-background-insets: 0, 0 0 1 0;
+}
+.theme-presets.SBKIT-css-panel .table-view .column-header {
+    -fx-background-color: derive(-sb-sharp-edge-lo, -20%), -sb-sharp-edge-hi, -sb-flat;
+    -fx-background-insets: -1 0 0 0, 0 1 1 0, 1 1 1 0;
+}
+.theme-presets.SBKIT-css-panel .table-view .column-header .label {
+    -fx-text-fill: -sb-header-text;
+    -fx-font-weight: normal;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 0 0 5;
+}
+.theme-presets.SBKIT-css-panel .table-view .filler {
+    -fx-background-color: derive(-sb-sharp-edge-lo, -20%), -sb-sharp-edge-hi, -sb-flat;
+    -fx-background-insets: -1 0 0 0, 0 1 1 0, 1 1 1 0;
+}
+
+.theme-presets.SBKIT-css-panel .notAppliedStyleLine .line {
+    -fx-border-width: 0;
+    -fx-background-color:black;
+}
+
+.theme-presets.SBKIT-css-panel .winner-background {
+    -fx-background-color: -sb-css-winner-color;
+    -fx-background-insets: 0 1 1 0;
+}
+
+.theme-presets.SBKIT-css-panel .note-label .text {
+    -fx-font-size: 0.750em;
+    -fx-fill: -sb-content-text-dimmed;
+}
+
+.theme-presets.SBKIT-css-panel .css-panel-message .text {
+    /* Used for 'Multiple Selection' message */
+    -fx-fill: -sb-content-text-dimmed;
+    -fx-font-size: 0.875em;
+}
+
+/*******************************************************************************
+ * CSS Panel - Picking Mode Toggle Buttons                                     *
+ ******************************************************************************/
+
+.theme-presets.SBKIT-css-panel .cursor-shape {
+    -fx-shape: "M9.084,7.833c-1.709,0.25-3.242,0.734-3.242,0.734l2.783,4.892l-1.708,1L3.904,9.454C2.713,
+    9.967,1.208,11.5,1.208,11.5L1,1 L9.084,7.833z";
+    -fx-background-color: derive(-sb-header-detail, -15%);
+    -fx-min-width: 8;
+    -fx-max-width: 8;
+    -fx-min-height: 13;
+    -fx-max-height: 13;
+}
+
+.theme-presets.SBKIT-css-panel .css-cursor-shape {
+    -fx-shape: "M9.083,7.833C4.833,8.25,1,11,1,11V1L9.083,7.833z M8,14H6v-3h2v-1H5v5h3V14z M12,
+    12h-2v-1h2v-1H9v3h2v1H9v1h3V12z M16,12 h-2v-1h2v-1h-3v3h2v1h-2v1h3V12z";
+    -fx-background-color: derive(-sb-header-detail, -15%);
+    -fx-min-width: 15;
+    -fx-max-width: 15;
+    -fx-min-height: 15;
+    -fx-max-height: 15;
+}
+
+.theme-presets.SBKIT-css-panel .toggle-button {
+    -fx-background-color: -sb-sharp-edge-lo, -sb-sharp-edge-hi, -sb-flat;
+    -fx-background-insets: 0, 0 0 1 0, 1 0 1 0;
+    -fx-background-radius: 0;
+    -fx-min-width: 25;
+    -fx-min-height: 25;
+}
+.theme-presets.SBKIT-css-panel .toggle-button:selected {
+    -fx-background-color:
+        derive(-sb-sharp-edge-lo, -25%),
+        derive(-sb-sharp-edge-lo, -10%),
+        linear-gradient(to bottom, derive(-sb-flat, -20% ) 0%, derive(-sb-flat, -12% ) 20%);
+    -fx-background-insets: -1 0 0 0, 0, 0 1 1 1;
+}
+.theme-presets.SBKIT-css-panel .toggle-button:focused {
+    -fx-background-color:
+        -fx-focus-color,
+        linear-gradient(to bottom, derive(-sb-flat, -20% ) 0%, derive(-sb-flat, -12% ) 20%);
+    -fx-background-insets: -1 0 0 0, 0 1 1 1;
+}
+.theme-presets.SBKIT-css-panel .css-toggle-left {
+    -fx-background-insets: 0, 0 0 1 1, 1 0 1 1;
+}
+
+/*******************************************************************************
+ * CSS Panel - Stylelable Path                                                 *
+ ******************************************************************************/
+
+.theme-presets.SBKIT-css-panel .styleable-path {
+    -fx-background-color: -sb-sharp-edge-lo, -sb-sharp-edge-hi, -sb-flat;
+    -fx-background-insets: -1 0 0 0, 0 0 1 0, 1 0 1 0;
+}
+.theme-presets.SBKIT-css-panel .styleable-path > .label {
+    -fx-font-size: 0.875em;
+    -fx-text-fill: -sb-header-text;
+    -fx-padding: 0 12 0 8;
+}
+.theme-presets.SBKIT-css-panel .styleable-path .hyperlink {
+    -fx-font-size: 0.875em;
+    -fx-text-fill: -sb-header-text;
+    -fx-padding: 0 0 0 0;
+    -fx-border-width: 0;
+}
+.theme-presets.SBKIT-css-panel .styleable-path .button {
+    -fx-background-color: -sb-sharp-edge-lo, derive(-sb-sharp-edge-hi, 10%);
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 100;
+    -fx-min-width: 16;
+    -fx-max-width: 16;
+    -fx-min-height: 16;
+    -fx-max-height: 16;
+}
+.theme-presets.SBKIT-css-panel .styleable-path .button:hover {
+    -fx-background-color: derive(-sb-sharp-edge-lo, -10%), derive(-sb-sharp-edge-hi, 40%);
+}
+.theme-presets.SBKIT-css-panel .styleable-path-button-shape {
+    -fx-shape: "M 0 -3.5 v 7 l 4 -3.5 z";
+    -fx-background-color: -sb-header-detail;
+    -fx-min-width: 5;
+    -fx-max-width: 5;
+    -fx-min-height: 6;
+    -fx-max-height: 6;
+}
+.theme-presets.SBKIT-css-panel .styleable-path-optional-label .text {
+    -fx-fill: -sb-header-text-dimmed;
+}
+
+/*******************************************************************************
+ * CSS Panel - Lookup Button                                                   *
+ ******************************************************************************/
+
+.theme-presets.SBKIT-css-panel .lookup-button {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+.theme-presets.SBKIT-css-panel .lookup-button .label {
+    -fx-padding: 0;
+}
+.theme-presets.SBKIT-css-panel .lookup-button .arrow-button {
+    -fx-padding: 0 3 2 2;
+}
+.theme-presets.SBKIT-css-panel .lookup-button .arrow-button > .arrow {
+    -fx-padding: 0 0.231em 0.154em 0.154em;
+    -fx-background-color: derive(-sb-header-detail, -20%);
+    -fx-effect: null;
+}
+.theme-presets.SBKIT-css-panel .lookup-button:hover .arrow-button {
+    -fx-background-color: black, white;
+    -fx-background-insets: 0 0 3 0, 1 1 4 0;
+    -fx-background-radius: 0, 0;
+}
+.theme-presets.SBKIT-css-panel .lookup-button .custom-menu-item .tree-view {
+    -fx-background-color: derive(-sb-sharp-edge-lo, -20%);
+    -fx-background-insets: 0;
+}
+.theme-presets.SBKIT-css-panel .lookup-button .custom-menu-item .tree-view .tree-cell {
+    -fx-background-color: -sb-content-background;
+}
+.theme-presets.SBKIT-css-panel .lookup-button .custom-menu-item .tree-view .tree-cell .tree-disclosure-node .arrow {
+    -fx-background-color: -sb-content-detail;
+}
+
+/*******************************************************************************
+ * CSS Panel - Cog Button                                                      *
+ ******************************************************************************/
+
+.theme-presets.SBKIT-css-panel .css-panel-cog-menubutton {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-graphic-text-gap: 0;
+    -fx-min-width: 16;
+    -fx-max-width: 16;
+    -fx-min-height: 12;
+    -fx-max-height: 12;
+}
+.theme-presets.SBKIT-css-panel .css-panel-cog-menubutton:hover {
+    -fx-background-color: derive(-sb-sharp-edge-lo, 20%), -sb-css-winner-color;
+    -fx-background-insets: 0, 1;
+}
+.theme-presets.SBKIT-css-panel .css-panel-cog-menubutton:focused {
+    -fx-background-color: -fx-focus-color, -fx-background;
+}
+.theme-presets.SBKIT-css-panel .css-panel-cog-menubutton > .arrow-button {
+    visibility: hidden;
+    -fx-padding: 0;
+}
+.theme-presets.SBKIT-css-panel .css-panel-cog-menubutton > .arrow {
+    -fx-shape: null;
+    -fx-padding: 0;
+}

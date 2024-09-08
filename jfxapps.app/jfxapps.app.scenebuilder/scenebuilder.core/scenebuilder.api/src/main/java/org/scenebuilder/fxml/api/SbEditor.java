@@ -35,11 +35,11 @@ package org.scenebuilder.fxml.api;
 
 import java.io.File;
 
-import com.gluonhq.jfxapps.core.api.application.Editor;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.FxomDisplay;
 
 import javafx.beans.value.ObservableValue;
 
-public interface SbEditor extends Editor {
+public interface SbEditor extends FxomDisplay {
 
 	public File getIncludedFile();
 

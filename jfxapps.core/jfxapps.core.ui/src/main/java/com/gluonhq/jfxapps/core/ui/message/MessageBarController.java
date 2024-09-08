@@ -35,10 +35,13 @@ package com.gluonhq.jfxapps.core.ui.message;
 
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageBar;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
@@ -48,6 +51,7 @@ import com.gluonhq.jfxapps.core.ui.editor.messagelog.MessageLogEntry;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -63,6 +67,8 @@ import javafx.util.Duration;
  */
 @ApplicationInstanceSingleton
 public class MessageBarController extends AbstractFxmlController implements MessageBar{
+
+    private static final Logger logger = LoggerFactory.getLogger(MessageBarController.class);
 
     private final MessageLogger messageLogger;
     private final MessagePopupController messagePopup;
@@ -90,8 +96,8 @@ public class MessageBarController extends AbstractFxmlController implements Mess
 
     public MessageBarController(
             I18N i18n,
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager,
             MessageLogger messageLogger,
             MessagePopupController messagePopupController
             ) {
@@ -103,11 +109,6 @@ public class MessageBarController extends AbstractFxmlController implements Mess
         final URL fileDirtyURL = MessageBarController.class.getResource("file-dirty.png");
         assert fileDirtyURL != null;
         fileDirtyImage = new ImageView(new Image(fileDirtyURL.toExternalForm()));
-    }
-
-    @Override
-    public StackPane getSelectionBarHost() {
-        return selectionBarHost;
     }
 
     /*
@@ -183,8 +184,8 @@ public class MessageBarController extends AbstractFxmlController implements Mess
         if (entry != null && logSize > previousTotalNumOfMessages) {
             // We mask the host
             HBox.setHgrow(messagePart, Priority.ALWAYS);
-            getSelectionBarHost().setVisible(false);
-            getSelectionBarHost().setManaged(false);
+            selectionBarHost.setVisible(false);
+            selectionBarHost.setManaged(false);
             messageLabel.setManaged(true);
 
             // Styling message area according severity
@@ -221,8 +222,8 @@ public class MessageBarController extends AbstractFxmlController implements Mess
                     messageButton.setManaged(false);
                 }
                 resetStyle();
-                getSelectionBarHost().setManaged(true);
-                getSelectionBarHost().setVisible(true);
+                selectionBarHost.setManaged(true);
+                selectionBarHost.setVisible(true);
                 messagePart.setOpacity(1.0);
                 HBox.setHgrow(messagePart, Priority.NEVER);
             });
@@ -266,5 +267,14 @@ public class MessageBarController extends AbstractFxmlController implements Mess
             default:
                 break;
         }
+    }
+
+    @Override
+    public void setSelectionBar(Parent root) {
+        if (root == null) {
+            logger.warn("SelectionBar can't be set to null");
+            return;
+        }
+        selectionBarHost.getChildren().add(root);
     }
 }

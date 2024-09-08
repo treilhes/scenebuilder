@@ -55,8 +55,8 @@ import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.dnd.source.DocumentDragSource;
@@ -99,10 +99,10 @@ class DocumentUiTest {
     }
 
     @Spy
-    SceneBuilderManager scenebuilderManager = new SceneBuilderManager.SceneBuilderManagerImpl();
+    ApplicationEvents scenebuilderManager = new ApplicationEvents.SceneBuilderManagerImpl();
 
     @Spy
-    FxmlDocumentManager documentManager = new DocumentManager.DocumentManagerImpl();
+    FxmlDocumentManager documentManager = new ApplicationInstanceEvents.DocumentManagerImpl();
 
     @Mock
     UpdateReferencesJob.Factory updateReferencesJobFactory;

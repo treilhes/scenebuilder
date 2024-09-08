@@ -38,7 +38,7 @@ import java.util.List;
 
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 /**
@@ -55,7 +55,7 @@ public abstract class BatchDocumentJob extends CompositeJob {
     // @formatter:off
     public BatchDocumentJob(
             JobExtensionFactory extensionFactory,
-            DocumentManager documentManager) {
+            ApplicationInstanceEvents documentManager) {
      // @formatter:on
         super(extensionFactory);
         fxomDocument = documentManager.fxomDocument().get();

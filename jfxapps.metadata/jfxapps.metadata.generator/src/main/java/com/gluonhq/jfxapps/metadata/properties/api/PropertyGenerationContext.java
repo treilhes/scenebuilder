@@ -49,6 +49,13 @@ public class PropertyGenerationContext {
 
     private boolean failOnError = true;
 
+    private final ClassLoader loader;
+
+    public PropertyGenerationContext(ClassLoader loader) {
+        super();
+        this.loader = loader;
+    }
+
     public Map<Constructor<?>, Class<?>[]> getAltConstructors() {
         return altConstructors;
     }
@@ -71,7 +78,7 @@ public class PropertyGenerationContext {
 
     public void setComponentCustomizationClass(String componentCustomizationClass) throws ClassNotFoundException {
         this.componentCustomizationClass = componentCustomizationClass == null ? Optional.empty()
-                : Optional.of(Thread.currentThread().getContextClassLoader().loadClass(componentCustomizationClass));
+                : Optional.of(loader.loadClass(componentCustomizationClass));
     }
 
     public Optional<Class<?>> getComponentPropertyCustomizationClass() {
@@ -81,7 +88,7 @@ public class PropertyGenerationContext {
     public void setComponentPropertyCustomizationClass(String componentPropertyCustomizationClass)
             throws ClassNotFoundException {
         this.componentPropertyCustomizationClass = componentPropertyCustomizationClass == null ? Optional.empty()
-                : Optional.of(Thread.currentThread().getContextClassLoader().loadClass(componentPropertyCustomizationClass));
+                : Optional.of(loader.loadClass(componentPropertyCustomizationClass));
     }
 
     public Optional<Class<?>> getValuePropertyCustomizationClass() {
@@ -91,7 +98,7 @@ public class PropertyGenerationContext {
     public void setValuePropertyCustomizationClass(String valuePropertyCustomizationClass)
             throws ClassNotFoundException {
         this.valuePropertyCustomizationClass = valuePropertyCustomizationClass == null ? Optional.empty()
-                : Optional.of(Thread.currentThread().getContextClassLoader().loadClass(valuePropertyCustomizationClass));
+                : Optional.of(loader.loadClass(valuePropertyCustomizationClass));
     }
 
     public boolean isFailOnError() {

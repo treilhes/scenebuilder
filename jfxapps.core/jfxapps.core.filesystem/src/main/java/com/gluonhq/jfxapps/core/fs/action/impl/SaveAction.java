@@ -47,7 +47,7 @@ import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
@@ -67,7 +67,7 @@ public class SaveAction extends AbstractAction {
     private final MainInstanceWindow documentWindow;
     private final MessageLogger messageLogger;
     private final InstancesManager editor;
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final FileSystem fileSystem;
 
     // @formatter:off
@@ -75,7 +75,7 @@ public class SaveAction extends AbstractAction {
             I18N i18n,
             ActionExtensionFactory extensionFactory,
             ApplicationInstance document,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             MainInstanceWindow documentWindow,
             InstancesManager editor,
             InlineEdit inlineEdit,

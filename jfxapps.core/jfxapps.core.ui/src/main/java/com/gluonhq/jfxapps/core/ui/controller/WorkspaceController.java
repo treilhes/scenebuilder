@@ -39,8 +39,8 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.core.api.css.StylesheetProvider;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
@@ -99,12 +99,6 @@ public class WorkspaceController extends AbstractFxmlController implements Works
 
     private static final double AUTORESIZE_SIZE = 500.0;
 
-    private final I18N i18n;
-
-
-
-
-
     private boolean tracingEvents; // For debugging purpose
 
     @FXML
@@ -133,16 +127,15 @@ public class WorkspaceController extends AbstractFxmlController implements Works
 
     private FXOMDocument fxomDocument;
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final ContextMenu contextMenu;
 
     public WorkspaceController(
             I18N i18n,
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager,
             ContextMenu contextMenu) {
         super(i18n, scenebuilderManager, documentManager, WorkspaceController.class.getResource("Workspace.fxml"));
-        this.i18n = i18n;
         this.documentManager = documentManager;
         this.contextMenu = contextMenu;
     }
@@ -233,10 +226,12 @@ public class WorkspaceController extends AbstractFxmlController implements Works
         }
     }
 
+    @Override
     public boolean isAutoResize3DContent() {
         return autoResize3DContent;
     }
 
+    @Override
     public void setAutoResize3DContent(boolean autoResize3DContent) {
 
         this.autoResize3DContent = autoResize3DContent;
@@ -383,7 +378,7 @@ public class WorkspaceController extends AbstractFxmlController implements Works
             statusMessageText = "FXOMDocument is null"; // NOCHECK
             statusStyleClass = "stage-prompt"; // NOCHECK
         } else if (fxomDocument.getFxomRoot() == null) {
-            statusMessageText = i18n.getString(I18N_CONTENT_LABEL_STATUS_INVITATION);
+            statusMessageText = getI18n().getString(I18N_CONTENT_LABEL_STATUS_INVITATION);
             statusStyleClass = "stage-prompt"; // NOCHECK
         } else {
             final Object userSceneGraph = fxomDocument.getDisplayNodeOrSceneGraphRoot();
@@ -398,11 +393,11 @@ public class WorkspaceController extends AbstractFxmlController implements Works
                     canDisplayDocument = true;
                 } else {
                     contentGroup.getChildren().clear();
-                    statusMessageText = i18n.getString(I18N_CONTENT_LABEL_STATUS_CANNOT_DISPLAY);
+                    statusMessageText = getI18n().getString(I18N_CONTENT_LABEL_STATUS_CANNOT_DISPLAY);
                     statusStyleClass = "stage-prompt"; // NOCHECK
                 }
             } else {
-                statusMessageText = i18n.getString(I18N_CONTENT_LABEL_STATUS_CANNOT_DISPLAY);
+                statusMessageText = getI18n().getString(I18N_CONTENT_LABEL_STATUS_CANNOT_DISPLAY);
                 statusStyleClass = "stage-prompt"; // NOCHECK
             }
         }

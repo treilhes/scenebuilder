@@ -98,7 +98,7 @@ class PropertyGeneratorImplTest {
     @BeforeEach
     public void setup() {
         try {
-            context = new PropertyGenerationContext();
+            context = new PropertyGenerationContext(PropertyGeneratorImplTest.class.getClassLoader());
             context.setOutputResourceFolder(tmpDir);
             context.setComponentCustomizationClass(ComponentCusto.class.getName());
             context.setComponentPropertyCustomizationClass(ComponentPropertyCusto.class.getName());

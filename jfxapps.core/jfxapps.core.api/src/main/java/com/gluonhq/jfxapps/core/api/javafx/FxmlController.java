@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -48,7 +49,7 @@ import javafx.scene.Parent;
  * @author ptreilhes
  *
  */
-public interface FxmlController {
+public interface FxmlController extends UiController {
 	/**
 	 * Must return a valid URL to an Fxml file. The instance implementing this interface will be used as a javafx controller
 	 * for this fxml file. Which means any fields or methods annotated with @FXML will be binded using this fxml
@@ -63,16 +64,6 @@ public interface FxmlController {
 	 * @return
 	 */
 	ResourceBundle getResources();
-
-
-	/**
-	 * This method is automatically called by {@link com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor#postProcessAfterInitialization(Object, String)}
-	 * after a successful call to {@link javafx.fxml.FXMLLoader#load()} using {@link #getFxmlURL()} and {@link #getResources()} as parameters. The return value of {@link javafx.fxml.FXMLLoader#load()}
-	 * will be used as parameter for this function
-	 * @param root the {@link javafx.scene.Parent} root of the provided fxml file
-	 */
-	void setRoot(Parent root);
-
 
 	/**
      * This method is automatically called by {@link com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor#postProcessAfterInitialization(Object, String)}

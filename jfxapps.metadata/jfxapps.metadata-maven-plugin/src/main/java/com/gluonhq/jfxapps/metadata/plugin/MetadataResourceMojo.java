@@ -112,8 +112,8 @@ public class MetadataResourceMojo extends JfxAppsAbstractMojo {
             PluginDescriptor pluginDescriptor = (PluginDescriptor) getPluginContext().get("pluginDescriptor");
             List<File> cp = pluginDescriptor.getArtifacts().stream().map(a -> a.getFile()).collect(Collectors.toList());
 
-            final SearchContext searchContext = createSearchContext();
-            final PropertyGenerationContext propertyContext = createPropertyGenerationContext();
+            final SearchContext searchContext = createSearchContext(getProjectClassloader());
+            final PropertyGenerationContext propertyContext = createPropertyGenerationContext(getProjectClassloader());
 
             DescriptorCollector descriptorCollector = new DescriptorCollector();
             MatchingJarCollector jarCollector = new MatchingJarCollector(searchContext.getJarFilterPatterns());

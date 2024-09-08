@@ -48,13 +48,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.job.manager.JobManagerImpl.JobPipelineFactory;
 
 @ExtendWith(MockitoExtension.class)
 class JobManagerImplTestIT {
 
-    private DocumentManager documentManager = new DocumentManager.DocumentManagerImpl();
+    private ApplicationInstanceEvents documentManager = new ApplicationInstanceEvents.ApplicationInstanceEventsImpl();
 
     @Mock
     private JobPipelineFactory jobPipelineFactory;

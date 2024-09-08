@@ -17,7 +17,7 @@
     </modules>
 
 	<properties>
-        <jfxapps.version>17.0.0-SNAPSHOT</jfxapps.version>
+        <jfxapps.version>1.0.0-SNAPSHOT</jfxapps.version>
         <!-- compiler -->
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <maven.compiler.release>21</maven.compiler.release>

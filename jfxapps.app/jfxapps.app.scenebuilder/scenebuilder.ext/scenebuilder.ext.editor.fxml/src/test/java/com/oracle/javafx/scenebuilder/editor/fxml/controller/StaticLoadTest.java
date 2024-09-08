@@ -52,11 +52,12 @@ import com.gluonhq.jfxapps.core.api.error.ErrorReport;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.ui.controller.EditorController;
 
 /**
  * Unit test for {@link com.gluonhq.jfxapps.core.fxom.util.Deprecation#setStaticLoad(javafx.fxml.FXMLLoader, boolean) }
@@ -74,9 +75,9 @@ public class StaticLoadTest {
     private boolean thrown;
 
     @Spy
-    private DocumentManager docManager = new DocumentManager.DocumentManagerImpl();
+    private ApplicationInstanceEvents docManager = new ApplicationInstanceEvents.DocumentManagerImpl();
     @Spy
-    private SceneBuilderManager sceneBuilderManager = new SceneBuilderManager.SceneBuilderManagerImpl();
+    private ApplicationEvents sceneBuilderManager = new ApplicationEvents.SceneBuilderManagerImpl();
     @Mock
     JobManager jobManager;
     @Mock

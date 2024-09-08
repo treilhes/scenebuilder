@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,23 +39,21 @@ import java.util.List;
 import java.util.Set;
 
 import org.scenebuilder.fxml.api.Content;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.core.api.HierarchyMask;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.om.SceneGraphObject;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.HudWindow;
@@ -63,8 +61,8 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.SceneGraphObject;
 import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
-import com.gluonhq.jfxapps.core.selection.SelectionStateImpl;
 import com.gluonhq.jfxapps.util.javafx.BoundsUnion;
 import com.gluonhq.jfxapps.util.javafx.BoundsUtils;
 import com.gluonhq.jfxapps.util.javafx.Picker;
@@ -97,9 +95,7 @@ import javafx.scene.paint.Paint;
  * Kit.
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 public class ContentPanelController extends AbstractFxmlController
         implements Content, FXOMDocument.SceneGraphHolder {
 
@@ -130,7 +126,7 @@ public class ContentPanelController extends AbstractFxmlController
     private final ModeManager modeManager;
     private final Drag drag;
     private final Selection selection;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final MessageLogger messageLogger;
     private final ContextMenu contextMenu;
     private final FXOMObjectMask.Factory maskFactory;
@@ -154,8 +150,9 @@ public class ContentPanelController extends AbstractFxmlController
      */
     // @formatter:off
     public ContentPanelController(
-            SceneBuilderManager scenebuilderManager,
-            FxmlDocumentManager documentManager,
+            I18N i18n,
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager,
             Driver driver,
             FXOMObjectMask.Factory maskFactory,
             AlignmentGuidesColorPreference alignmentGuidesColorPreference,
@@ -169,8 +166,7 @@ public class ContentPanelController extends AbstractFxmlController
             MessageLogger messageLogger,
             ContextMenu contextMenu) {
      // @formatter:on
-        super(scenebuilderManager, documentManager, ContentPanelController.class.getResource("ContentPanel.fxml"),
-                I18N.getBundle());
+        super(i18n, scenebuilderManager, documentManager, ContentPanelController.class.getResource("ContentPanel.fxml"));
         this.driver = driver;
         this.modeManager = modeManager;
         this.maskFactory = maskFactory;

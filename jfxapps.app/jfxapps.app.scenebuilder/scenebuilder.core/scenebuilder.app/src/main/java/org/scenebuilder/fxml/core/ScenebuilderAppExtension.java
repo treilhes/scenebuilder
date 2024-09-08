@@ -46,6 +46,7 @@ import com.oracle.javafx.scenebuilder.core.editors.ControllerClassEditor;
 import com.oracle.javafx.scenebuilder.core.editors.CoreEditors;
 import com.oracle.javafx.scenebuilder.core.editors.FxIdEditor;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
+import com.oracle.javafx.scenebuilder.core.ui.DocumentWindowController;
 import com.oracle.javafx.scenebuilder.core.ui.action.CloseBottomDockAction;
 import com.oracle.javafx.scenebuilder.core.ui.action.CloseLeftDockAction;
 import com.oracle.javafx.scenebuilder.core.ui.action.CloseRightDockAction;
@@ -76,6 +77,7 @@ public class ScenebuilderAppExtension implements OpenExtension {
     public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
+                DocumentWindowController.class,
                 BottomDividerVPosPreference.class,
                 LeftDividerHPosPreference.class,
                 RightDividerHPosPreference.class,

@@ -38,8 +38,8 @@ import org.scenebuilder.fxml.api.Content;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
@@ -126,7 +126,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private InnerDockManager leftDockManager;
     private InnerDockManager rightDockManager;
     private InnerDockManager bottomDockManager;
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     private final MenuBar menuBar;
     private final Content content;
@@ -140,9 +140,9 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     // @formatter:off
     public DocumentWindowController(
             I18N i18n,
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
 
 
             Provider<LeftDividerHPosPreference> leftDividerHPos,
@@ -235,11 +235,11 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         assert mainSplitPane != null;
         assert leftRightSplitPane != null;
 
+        messageBar.setSelectionBar(selectionBar.getRoot());
 
         setMenuBar(menuBar);
         setContentPane(content.getRoot());
         setMessageBar(messageBar.getRoot());
-        messageBar.getSelectionBarHost().getChildren().add(selectionBar.getRoot());
         setContentPane(workspace.getRoot());
 
         // Add a border to the Windows app, because of the specific window decoration on
@@ -434,14 +434,28 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private void setMenuBar(MenuBar menuBar) {
         assert getRoot() instanceof VBox;
         final VBox rootVBox = (VBox) getRoot();
+
+        if (menuBar == null || menuBar.getMenuBar() == null) {
+            logger.warn("MenuBar {} content is null", menuBar);
+            return;
+        }
+
         rootVBox.getChildren().add(0, menuBar.getMenuBar());
     }
 
     private void setContentPane(Parent root) {
+        if (root == null) {
+            logger.warn("ContentPane can't be set to null");
+            return;
+        }
         contentPanelHost.getChildren().add(root);
     }
 
     private void setMessageBar(Parent root) {
+        if (root == null) {
+            logger.warn("MessageBar can't be set to null");
+            return;
+        }
         messageBarHost.getChildren().add(root);
     }
 

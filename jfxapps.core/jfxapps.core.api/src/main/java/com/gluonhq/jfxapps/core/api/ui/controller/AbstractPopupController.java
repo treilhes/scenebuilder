@@ -33,8 +33,8 @@
  */
 package com.gluonhq.jfxapps.core.api.ui.controller;
 
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -63,8 +63,8 @@ public abstract class AbstractPopupController extends AbstractCommonUiController
     private Window anchorWindow;
 
     public AbstractPopupController(
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager) {
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager) {
         super(scenebuilderManager, documentManager);
     }
 

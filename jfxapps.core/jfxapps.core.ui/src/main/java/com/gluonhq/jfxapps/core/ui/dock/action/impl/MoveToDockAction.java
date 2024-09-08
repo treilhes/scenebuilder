@@ -40,7 +40,7 @@ import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 
@@ -50,7 +50,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
         descriptionKey = "action.description.save")
 public class MoveToDockAction extends AbstractAction {
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     private UUID targetDockId;
     private final DockViewController dockViewController;
@@ -58,7 +58,7 @@ public class MoveToDockAction extends AbstractAction {
     public MoveToDockAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             DockViewController dockViewController) {
         super(i18n, extensionFactory);
         this.documentManager = documentManager;

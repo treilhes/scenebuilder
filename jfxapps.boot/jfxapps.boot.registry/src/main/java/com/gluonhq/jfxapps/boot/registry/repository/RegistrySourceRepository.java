@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,14 +33,13 @@
  */
 package com.gluonhq.jfxapps.boot.registry.repository;
 
-import java.util.UUID;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.gluonhq.jfxapps.boot.registry.model.RegistrySource;
+import com.gluonhq.jfxapps.boot.registry.model.RegistrySource.RegistrySourceId;
 
 @Repository
-public interface RegistrySourceRepository extends JpaRepository<RegistrySource, UUID> {
+public interface RegistrySourceRepository extends JpaRepository<RegistrySource, RegistrySourceId> {
 
 }

@@ -36,20 +36,36 @@ package com.oracle.javafx.scenebuilder.metadata.custom.addon;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
 import com.oracle.javafx.scenebuilder.metadata.javafx.PropertyNames;
 import com.oracle.javafx.scenebuilder.metadata.javafx.javafx.scene.NodeMetadata;
 import com.oracle.javafx.scenebuilder.metadata.javafx.javafx.scene.layout.AnchorPaneMetadata;
 
+import javafx.scene.Node;
+import javafx.scene.layout.AnchorPane;
+
+//FIXME Update the scope when javafx runtime will be available
 @Component
 public class NodeMetadataAddin {
 
-    public final PropertyName AnchorPane_anchorsGroupName = new PropertyName("anchorsGroup",
-            javafx.scene.layout.AnchorPane.class); // NOCHECK
+    public final PropertyName AnchorPane_anchorsGroupName = new PropertyName("anchorsGroup", // NOCHECK
+            javafx.scene.layout.AnchorPane.class);
 
-    public NodeMetadataAddin(AnchorPaneMetadata anchorPaneMetadata, NodeMetadata nodeMetadata) {
+    public final PropertyName AnchorPane_topAnchorPropertyMetadata = new PropertyName("topAnchor", // NOCHECK
+            javafx.scene.layout.AnchorPane.class);
+    public final PropertyName AnchorPane_rightAnchorPropertyMetadata = new PropertyName("rightAnchor", // NOCHECK
+            javafx.scene.layout.AnchorPane.class);
+    public final PropertyName AnchorPane_bottomAnchorPropertyMetadata = new PropertyName("bottomAnchor", // NOCHECK
+            javafx.scene.layout.AnchorPane.class);
+    public final PropertyName AnchorPane_leftAnchorPropertyMetadata = new PropertyName("leftAnchor", // NOCHECK
+            javafx.scene.layout.AnchorPane.class);
+
+    public NodeMetadataAddin(AnchorPaneMetadata anchorPaneMetadata, NodeMetadata nodeMetadata, SbMetadata sbMetadata) {
         super();
+        var nodeMetadata2 = sbMetadata.queryComponentMetadata(Node.class);
+        var anchorPaneMetadata2 = sbMetadata.queryComponentMetadata(AnchorPane.class);
 
         final AnchorPropertyGroupMetadata AnchorPane_AnchorPropertyGroupMetadata = new AnchorPropertyGroupMetadata.Builder()
                 .name(AnchorPane_anchorsGroupName)
@@ -59,6 +75,17 @@ public class NodeMetadataAddin {
                 .leftAnchorProperty(anchorPaneMetadata.AnchorPane_leftAnchorPropertyMetadata)
                 .customization(ValuePropertyMetadataCustomization.builder()
                         .inspectorPath(new InspectorPath("Layout", "AnchorPane COnst", 0))
+                        .build())
+                .build();
+
+        final AnchorPropertyGroupMetadata AnchorPane_AnchorPropertyGroupMetadata2 = new AnchorPropertyGroupMetadata.Builder()
+                .name(AnchorPane_anchorsGroupName)
+                .topAnchorProperty(anchorPaneMetadata2.getValueProperty(AnchorPane_topAnchorPropertyMetadata))
+                .rightAnchorProperty(anchorPaneMetadata2.getValueProperty(AnchorPane_rightAnchorPropertyMetadata))
+                .bottomAnchorProperty(anchorPaneMetadata2.getValueProperty(AnchorPane_bottomAnchorPropertyMetadata))
+                .leftAnchorProperty(anchorPaneMetadata2.getValueProperty(AnchorPane_leftAnchorPropertyMetadata))
+                .customization(ValuePropertyMetadataCustomization.builder()
+                        .inspectorPath(new InspectorPath("Layout", "AnchorPane Const", 0))
                         .build())
                 .build();
 

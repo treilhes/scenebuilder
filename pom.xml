@@ -26,7 +26,7 @@
     </modules>
 
     <properties>
-        <jfxapps.version>17.0.0-SNAPSHOT</jfxapps.version>
+        <jfxapps.version>1.0.0-SNAPSHOT</jfxapps.version>
 
         <!-- compiler -->
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
@@ -39,7 +39,7 @@
         <maven-surefire-plugin.version>${maven-failsafe-plugin.version}</maven-surefire-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spring.boot.version>3.2.4</spring.boot.version>
+        <spring.boot.version>3.3.3</spring.boot.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <rxjavafx.version>3.0.2</rxjavafx.version>
 
@@ -424,8 +424,11 @@
                 -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
-                <version>1.1.0</version>
-                <configuration></configuration>
+                <version>1.6.0</version>
+                 <configuration>
+                    <flattenMode>bom</flattenMode> <!-- Resolve properties like ${jfxapps.version} -->
+                    <!--<updatePomFile>true</updatePomFile>   Ensures the POM file is updated -->
+                </configuration>
                 <executions>
                     <!-- enable flattening -->
                     <execution>
@@ -598,7 +601,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-invoker-plugin</artifactId>
-                    <version>3.2.2</version>
+                    <version>3.8.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
@@ -607,6 +610,22 @@
                     <configuration>
                         <lifecycleMappingMetadata>
                             <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-dependency-plugin</artifactId>
+                                        <versionRange>[1.0.0,)</versionRange>
+                                        <goals>
+                                            <goal>properties</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <execute>
+                                            <runOnConfiguration>true</runOnConfiguration>
+                                        </execute>
+                                    </action>
+                                </pluginExecution>
+                                
                                 <pluginExecution>
                                     <pluginExecutionFilter>
                                         <groupId>org.codehaus.mojo</groupId>
@@ -652,9 +671,8 @@
                                 <pluginExecution>
                                     <pluginExecutionFilter>
                                         <groupId>com.gluonhq.jfxapps</groupId>
-                                        <artifactId>
-                                            jfxapps-metadata-maven-plugin</artifactId>
-                                        <versionRange>[1.0.0,)</versionRange>
+                                        <artifactId>jfxapps-metadata-maven-plugin</artifactId>
+                                        <versionRange>[0.0.0,)</versionRange>
                                         <goals>
                                             <goal>metadataSource</goal>
                                             <goal>metadataResource</goal>
@@ -667,9 +685,8 @@
                                 <pluginExecution>
                                     <pluginExecutionFilter>
                                         <groupId>com.gluonhq.jfxapps</groupId>
-                                        <artifactId>
-                                            jfxapps-registry-maven-plugin</artifactId>
-                                        <versionRange>[1.0.0,)</versionRange>
+                                        <artifactId>jfxapps-registry-maven-plugin</artifactId>
+                                        <versionRange>[0.0.0,)</versionRange>
                                         <goals>
                                             <goal>jfxappsRegistry</goal>
                                         </goals>

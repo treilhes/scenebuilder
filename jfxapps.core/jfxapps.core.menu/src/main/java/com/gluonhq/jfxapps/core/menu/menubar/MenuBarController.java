@@ -52,7 +52,7 @@ import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.Attachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
@@ -88,7 +88,7 @@ public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.contro
 
     private final I18N i18n;
 
-    private final SceneBuilderManager sceneBuilderManager;
+    private final ApplicationEvents sceneBuilderManager;
     private final Optional<List<MenuProvider>> menuProviders;
     private final Optional<List<MenuItemProvider>> menuItemProviders;
 
@@ -101,7 +101,7 @@ public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.contro
 
     public MenuBarController(
             I18N i18n,
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             Optional<List<MenuProvider>> menuProviders,
             Optional<List<MenuItemProvider>> menuItemProviders,
             InstancesManager main) {
@@ -566,9 +566,9 @@ public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.contro
     private static class WindowMenuEventHandler implements EventHandler<ActionEvent> {
 
         private final ApplicationInstance dwc;
-        private final SceneBuilderManager sceneBuilderManager;
+        private final ApplicationEvents sceneBuilderManager;
 
-        public WindowMenuEventHandler(ApplicationInstance dwc, SceneBuilderManager sceneBuilderManager) {
+        public WindowMenuEventHandler(ApplicationInstance dwc, ApplicationEvents sceneBuilderManager) {
             this.dwc = dwc;
             this.sceneBuilderManager = sceneBuilderManager;
         }

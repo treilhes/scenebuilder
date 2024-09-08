@@ -52,7 +52,7 @@ import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -82,7 +82,7 @@ public final class ImportFileJob extends BatchSelectionJob {
             JobExtensionFactory extensionFactory,
             FxomJobsFactory fxomJobsFactory,
             SelectionJobsFactory selectionJobsFactory,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection,
             FXOMObjectMask.Factory designMaskFactory,
             ObjectSelectionGroup.Factory objectSelectionGroupFactory) {

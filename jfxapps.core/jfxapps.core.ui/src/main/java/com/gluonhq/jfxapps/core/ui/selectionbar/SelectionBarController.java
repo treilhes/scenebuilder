@@ -48,8 +48,8 @@ import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.SelectionBar;
 import com.gluonhq.jfxapps.core.api.ui.controller.selbar.SelectionBarContentFactory;
@@ -76,7 +76,7 @@ public class SelectionBarController extends AbstractFxmlController implements Se
 
     private static final Logger logger = LoggerFactory.getLogger(SelectionBarController.class);
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final Selection selection;
     private final Optional<SelectionBarContentFactory> barContentFactory;
     private final SelectionGroupFactory defaultSelectionGroupFactory;
@@ -90,8 +90,8 @@ public class SelectionBarController extends AbstractFxmlController implements Se
 
     public SelectionBarController(
             I18N i18n,
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager,
             JobManager jobManager,
             Selection selection,
             SelectionGroupFactory defaultSelectionGroupFactory,

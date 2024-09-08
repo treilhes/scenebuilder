@@ -35,17 +35,6 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.registry.model</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/info.picocli/picocli -->
-        <dependency>
-            <groupId>info.picocli</groupId>
-            <artifactId>picocli</artifactId>
-            <version>4.7.1</version>
-        </dependency>
 
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
@@ -56,6 +45,15 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.starter.test</artifactId>
             <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>spring.core.patch</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>org.hibernate.orm.core.patch</artifactId>
         </dependency>
     </dependencies>
 
@@ -75,15 +73,25 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <compilerArgs>
+                        <arg>--patch-module</arg>
+                        <arg>spring.core=${com.gluonhq.jfxapps:spring.core.patch:jar}</arg>
+                        <arg>--patch-module</arg>
+                        <arg>org.hibernate.orm.core=${com.gluonhq.jfxapps:org.hibernate.orm.core.patch:jar}</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <useModulePath>true</useModulePath>
                     <argLine>
                         --illegal-access=permit
-                        --patch-module
-                        spring.core=${com.gluonhq.jfxapps:spring.core.patch:jar}
-                        --patch-module
-                        org.hibernate.orm.core=${com.gluonhq.jfxapps:org.hibernate.orm.core.patch:jar}
+                        --patch-module spring.core=${com.gluonhq.jfxapps:spring.core.patch:jar}
+                        --patch-module org.hibernate.orm.core=${com.gluonhq.jfxapps:org.hibernate.orm.core.patch:jar}
                     </argLine>
                 </configuration>
             </plugin>
@@ -97,10 +105,8 @@
                             <classesDirectory>${project.build.outputDirectory}</classesDirectory>
                             <argLine>
                                 --illegal-access=permit
-                                --patch-module
-                                spring.core=${com.gluonhq.jfxapps:spring.core.patch:jar}
-                                --patch-module
-                                org.hibernate.orm.core=${com.gluonhq.jfxapps:org.hibernate.orm.core.patch:jar}
+                                --patch-module spring.core=${com.gluonhq.jfxapps:spring.core.patch:jar}
+                                --patch-module org.hibernate.orm.core=${com.gluonhq.jfxapps:org.hibernate.orm.core.patch:jar}
                             </argLine>
                         </configuration>
                         <goals>
@@ -111,8 +117,13 @@
                 </executions>
             </plugin>
             <plugin>
+                <!-- 
+                    In eclipse, this plugin crash with the embedded maven installation
+                    because maven.home must be set to a directory and not to a jar file. 
+                    Please create an external maven installation and use it in eclipse
+                 -->
                 <artifactId>maven-invoker-plugin</artifactId>
-                <version>3.6.1</version>
+                
                 <configuration>
                     <projectsDirectory>${basedir}/src/test/resources-its</projectsDirectory>
                     <pomIncludes>

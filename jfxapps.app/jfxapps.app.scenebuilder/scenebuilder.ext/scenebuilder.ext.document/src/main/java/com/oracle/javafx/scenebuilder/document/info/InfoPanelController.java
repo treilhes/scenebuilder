@@ -51,7 +51,7 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -101,7 +101,7 @@ public class InfoPanelController extends AbstractFxmlController {
     private final ModifyFxControllerJob.Factory modifyFxControllerJobFactory;
 
     public InfoPanelController(
-            SceneBuilderManager scenebuilderManager,
+            ApplicationEvents scenebuilderManager,
             FxmlDocumentManager documentManager,
     		SbEditor editor,
     		Selection selection,

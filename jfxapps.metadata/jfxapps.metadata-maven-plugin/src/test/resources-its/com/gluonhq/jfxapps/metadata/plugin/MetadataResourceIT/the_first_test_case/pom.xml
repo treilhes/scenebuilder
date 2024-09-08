@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>metadataresourceit</groupId>
     <artifactId>metadataresourceit</artifactId>
-    <version>17.0.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <properties>
         <javafx.version>16</javafx.version>
@@ -14,7 +14,7 @@
             <plugin>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps-metadata-maven-plugin</artifactId>
-                <version>17.0.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <id>generate-class-resources</id>

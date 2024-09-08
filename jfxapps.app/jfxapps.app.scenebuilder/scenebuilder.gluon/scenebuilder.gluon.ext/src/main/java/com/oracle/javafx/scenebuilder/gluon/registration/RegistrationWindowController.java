@@ -47,7 +47,7 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.gluon.controller.TrackingController;
@@ -89,7 +89,7 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
     private final RegistrationOptInPreference registrationOptInPreference;
 
     public RegistrationWindowController(
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             ApplicationInstanceWindow window,
             TrackingController tracking,

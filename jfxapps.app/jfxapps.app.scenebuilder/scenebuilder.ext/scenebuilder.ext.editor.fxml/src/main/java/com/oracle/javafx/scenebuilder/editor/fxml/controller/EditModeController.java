@@ -58,7 +58,7 @@ import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
@@ -156,7 +156,7 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     private final ModifyObjectJob.Factory modifyObjectJobFactory;
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     // @formatter:off
     public EditModeController(
@@ -170,7 +170,7 @@ public class EditModeController extends AbstractModeController implements Gestur
             @Lazy Content contentPanelController,
             JobManager jobManager,
             SbFXOMObjectMask.Factory maskFactory,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             SelectWithMarqueeGesture.Factory selectWithMarqueeGestureFactory,
             SelectAndMoveGesture.Factory selectAndMoveGestureFactory,
             ZoomGesture.Factory zoomGestureFactory,

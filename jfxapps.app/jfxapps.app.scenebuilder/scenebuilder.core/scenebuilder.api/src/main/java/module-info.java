@@ -70,8 +70,9 @@ open module scenebuilder.api {
 
     requires transitive jfxapps.core.api;
     requires transitive jfxapps.core.fxom;
-    requires transitive scenebuilder.metadata.sbjavafx;
+    //requires transitive scenebuilder.metadata.sbjavafx;
     requires transitive jfxapps.core.starter;
+    requires transitive scenebuilder.metadata.customization;
 
     provides Extension with SbApiExtension;
 }

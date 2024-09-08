@@ -38,7 +38,7 @@ import java.net.URL;
 
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
@@ -89,7 +89,7 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
 
     public AbstractModalDialog(
             I18N i18n,
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             URL contentFxmlURL, Window owner) {
         super(i18n, sceneBuilderManager, iconSetting, getContainerFxmlURL());

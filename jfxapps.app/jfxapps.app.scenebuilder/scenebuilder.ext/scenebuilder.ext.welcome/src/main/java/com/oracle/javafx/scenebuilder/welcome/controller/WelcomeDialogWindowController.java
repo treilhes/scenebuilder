@@ -45,7 +45,7 @@ import com.gluonhq.jfxapps.core.api.WelcomeDialog;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.template.Template;
 import com.gluonhq.jfxapps.core.api.template.TemplateGroup;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
@@ -87,7 +87,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     private final ActionFactory actionFactory;
 
     private WelcomeDialogWindowController(
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
     		@Autowired InstancesManager sceneBuilderApp,
     		@Autowired ActionFactory actionFactory,

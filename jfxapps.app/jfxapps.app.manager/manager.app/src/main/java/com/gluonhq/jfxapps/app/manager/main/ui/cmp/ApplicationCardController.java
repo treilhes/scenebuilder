@@ -37,8 +37,8 @@ import com.gluonhq.jfxapps.app.manager.api.ui.ApplicationCard;
 import com.gluonhq.jfxapps.app.manager.model.Application;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 
 import javafx.fxml.FXML;
@@ -59,8 +59,8 @@ public class ApplicationCardController extends AbstractFxmlController implements
     // @formatter:off
     public ApplicationCardController(
             I18N i18n,
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager
             ) {
      // @formatter:on
         super(i18n, scenebuilderManager, documentManager, ApplicationCardController.class.getResource("ApplicationCard.fxml"));

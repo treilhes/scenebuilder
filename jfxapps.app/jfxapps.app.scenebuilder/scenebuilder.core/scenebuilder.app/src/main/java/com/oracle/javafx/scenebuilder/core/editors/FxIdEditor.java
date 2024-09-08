@@ -45,7 +45,7 @@ import com.gluonhq.jfxapps.core.api.Glossary;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -69,7 +69,7 @@ public class FxIdEditor extends AutoSuggestEditor {
     //private Editor editorController;
     private final MessageLogger messageLog;
     private final Glossary glossary;
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
 //    public FxIdEditor(List<String> suggestedFxIds, Editor editorController) {
 //        super(PROPERTY_NAME, DEFAULT_VALUE, suggestedFxIds); //NOCHECK
@@ -82,7 +82,7 @@ public class FxIdEditor extends AutoSuggestEditor {
             Documentation documentation,
             FileSystem fileSystem,
             Glossary glossary,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             MessageLogger messageLogger) {
         super(i18n, dialog, documentation, fileSystem);
         this.messageLog = messageLogger;

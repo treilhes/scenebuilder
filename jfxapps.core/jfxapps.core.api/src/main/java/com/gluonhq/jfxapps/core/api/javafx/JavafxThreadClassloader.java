@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.javafx;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,4 +79,17 @@ public class JavafxThreadClassloader extends ClassLoader {
         }
         throw new ClassNotFoundException("Class " + name + " not found in any class loader");
     }
+
+    @Override
+    protected URL findResource(String name) {
+        for (ClassLoader classLoader : classLoaders) {
+            URL resource = classLoader.getResource(name);
+            if (resource != null) {
+                return resource;
+            }
+        }
+        return null;
+    }
+
+
 }

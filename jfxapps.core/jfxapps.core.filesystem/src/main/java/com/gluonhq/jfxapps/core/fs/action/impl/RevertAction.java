@@ -40,7 +40,7 @@ import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
@@ -54,7 +54,7 @@ public class RevertAction extends AbstractAction {
     public final static String MENU_ID = "revertMenu";
 
     private final ApplicationInstance document;
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final Dialog dialog;
     private final MainInstanceWindow documentWindow;
     private final ActionFactory actionFactory;
@@ -63,7 +63,7 @@ public class RevertAction extends AbstractAction {
             I18N i18n,
             ActionExtensionFactory extensionFactory,
             ApplicationInstance document,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             MainInstanceWindow documentWindow,
             Dialog dialog,
             ActionFactory actionFactory) {

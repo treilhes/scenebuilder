@@ -10,7 +10,7 @@
     <artifactId>jfxapps.javafx.starter</artifactId>
 
     <properties>
-        <javafx.version>21.0.1</javafx.version>
+        <javafx.version>21.0.4</javafx.version>
     </properties>
 
     <dependencies>

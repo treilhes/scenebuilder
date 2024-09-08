@@ -7,7 +7,7 @@
         <artifactId>devtools.metadata</artifactId>
         <version>${devtools.version}</version>
     </parent>
-    <artifactId>devtools.metadata.modeldata</artifactId>
+    <artifactId>devtools.metadata.model.data</artifactId>
 
     <properties>
         <javafx.version>16</javafx.version>

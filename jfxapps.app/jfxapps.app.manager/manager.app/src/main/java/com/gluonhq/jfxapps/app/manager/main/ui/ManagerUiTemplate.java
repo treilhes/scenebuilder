@@ -38,7 +38,7 @@ import com.gluonhq.jfxapps.app.manager.api.ui.MainContent;
 import com.gluonhq.jfxapps.app.manager.preferences.document.BottomDividerVPosPreference;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.WindowPreferenceTracker;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
@@ -75,7 +75,7 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements M
     // @formatter:off
     public ManagerUiTemplate(
             I18N i18n,
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             Provider<BottomDividerVPosPreference> bottomDividerVPos,
             Dock bottomDockController,

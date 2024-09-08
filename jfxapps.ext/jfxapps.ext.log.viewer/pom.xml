@@ -10,6 +10,7 @@
         <version>${jfxapps.version}</version>
     </parent>
 
+
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
@@ -21,6 +22,10 @@
             <artifactId>jfxapps.core.starter</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.starter.test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-
 </project>

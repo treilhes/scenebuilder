@@ -44,7 +44,9 @@ import org.springframework.core.PriorityOrdered;
 
 import com.gluonhq.jfxapps.boot.context.annotation.DeportedSingleton;
 import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
+import com.gluonhq.jfxapps.core.api.javafx.LoadInFxThread;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
@@ -90,15 +92,24 @@ public class FxmlControllerBeanPostProcessor implements PriorityOrdered, BeanPos
             loader.setResources(controller.getResources());
             loader.setClassLoader(bean.getClass().getClassLoader());
 
-            try {
-                controller.setRoot((Parent) loader.load());
-                controller.controllerDidLoadFxml();
-            } catch (RuntimeException | IOException x) {
-                logger.error("Failed to load {} with {}", loader.getLocation(), loader.getController(), x); // NOI18N
-                throw new RuntimeException(
-                        String.format("Failed to load %s with %s",
-                                loader.getLocation(), loader.getController()), x); // NOI18N
+            Runnable load = () -> {
+                try {
+                    controller.setRoot((Parent) loader.load());
+                    controller.controllerDidLoadFxml();
+                } catch (RuntimeException | IOException x) {
+                    logger.error("Failed to load {} with {}", loader.getLocation(), loader.getController(), x); // NOI18N
+                    throw new RuntimeException(
+                            String.format("Failed to load %s with %s",
+                                    loader.getLocation(), loader.getController()), x); // NOI18N
+                }
+            };
+
+            if (bean.getClass().getAnnotation(LoadInFxThread.class) != null) {
+                Platform.runLater(load);
+            } else {
+                load.run();
             }
+
         }
 
         return bean;

@@ -42,7 +42,7 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.util.StringUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -82,7 +82,7 @@ public final class UseSizeJob extends AbstractJob {
     protected UseSizeJob(
             I18N i18n,
             JobExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             SbMetadata metadata,
             SbFXOMObjectMask.Factory sbDesignHierarchyMask,
             FxomJobsFactory fxomJobsFactory) {

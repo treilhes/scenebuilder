@@ -34,7 +34,7 @@
 package com.oracle.javafx.scenebuilder.api.control.resizer;
 
 import com.gluonhq.jfxapps.core.api.content.decoration.AbstractDecoration;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.Shadow;
@@ -50,7 +50,7 @@ public abstract class AbstractShadow<T extends Node> extends AbstractDecoration<
 
     public AbstractShadow(
             Workspace workspace,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Class<T> sceneGraphClass) {
         super(workspace, documentManager, sceneGraphClass);
     }

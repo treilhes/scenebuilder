@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
 import com.gluonhq.jfxapps.core.api.mask.Accessory;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.dnd.target.AccessoryDropTarget;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
@@ -83,7 +83,7 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
 
     public BorderPaneTring(
             Workspace workspace,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             BorderPaneHierarchyMask.Factory borderPaneHierarchyMaskFactory) {
         super(workspace, documentManager, BorderPane.class);
         this.borderPaneHierarchyMaskFactory = borderPaneHierarchyMaskFactory;

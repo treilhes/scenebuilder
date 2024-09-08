@@ -39,7 +39,7 @@ import java.util.Map;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
 
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.library.util.LibraryUtil;
 import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
@@ -63,7 +63,7 @@ public class BuiltinLibrary {
      */
 
     protected BuiltinLibrary(
-            @Autowired SceneBuilderManager sceneBuilderManager,
+            @Autowired ApplicationEvents sceneBuilderManager,
             @Autowired List<ComponentClassMetadata<?>> componentClassMetadatas
     ) {
         for (ComponentClassMetadata<?> ccm : componentClassMetadatas) {

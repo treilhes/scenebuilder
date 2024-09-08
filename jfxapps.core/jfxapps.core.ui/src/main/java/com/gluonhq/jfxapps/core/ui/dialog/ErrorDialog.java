@@ -39,7 +39,7 @@ import java.io.StringWriter;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 
 import javafx.stage.Window;
@@ -58,7 +58,7 @@ public class ErrorDialog extends AlertDialog {
     //@formatter:off
     protected ErrorDialog(
             I18N i18n,
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             JfxAppContext context,
             Window owner) {

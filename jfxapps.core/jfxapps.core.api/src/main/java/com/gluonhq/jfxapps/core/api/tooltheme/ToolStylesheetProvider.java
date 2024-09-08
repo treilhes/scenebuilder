@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,9 +33,51 @@
  */
 package com.gluonhq.jfxapps.core.api.tooltheme;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface ToolStylesheetProvider {
+
     String getUserAgentStylesheet();
+
     List<String> getStylesheets();
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private String userAgentStylesheet;
+        private List<String> stylesheets = new ArrayList<>();
+
+        public Builder userAgentStylesheet(String userAgentStylesheet) {
+            this.userAgentStylesheet = userAgentStylesheet;
+            return this;
+        }
+
+        public Builder stylesheets(List<String> stylesheets) {
+            this.stylesheets = stylesheets;
+            return this;
+        }
+
+        public Builder stylesheet(String stylesheet) {
+            this.stylesheets.add(stylesheet);
+            return this;
+        }
+        public ToolStylesheetProvider build() {
+            return new ToolStylesheetProvider() {
+
+                @Override
+                public String getUserAgentStylesheet() {
+                    return userAgentStylesheet;
+                }
+
+                @Override
+                public List<String> getStylesheets() {
+                    return stylesheets;
+                }
+            };
+        }
+    }
 }

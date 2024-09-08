@@ -70,20 +70,18 @@ public class ToggleCssAnalyserVisibilityAction extends AbstractAction {
 
     private final DockViewController dockViewController;
 
-    private ApplicationInstanceWindow w;
+
 
     // @formatter:off
     public ToggleCssAnalyserVisibilityAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
             DockViewController dockViewController,
-            CssPanelController documentPanel,
-            ApplicationInstanceWindow w) {
+            CssPanelController documentPanel) {
      // @formatter:on
         super(i18n, extensionFactory);
         this.cssPanelController = documentPanel;
         this.dockViewController = dockViewController;
-        this.w = w;
     }
 
     @Override

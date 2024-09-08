@@ -34,8 +34,8 @@
 package com.gluonhq.jfxapps.core.ui.message;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractPopupController;
 
 import javafx.geometry.Bounds;
@@ -51,8 +51,8 @@ public class MessagePopupController extends AbstractPopupController {
     private final MessagePanelController messagePanelController;
 
     public MessagePopupController(
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager,
             MessagePanelController messagePanelController) {
         super(scenebuilderManager, documentManager);
         this.messagePanelController = messagePanelController;

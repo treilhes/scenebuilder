@@ -36,6 +36,7 @@
             <plugin>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps-metadata-maven-plugin</artifactId>
+                <inherited>false</inherited> <!-- Prevent inheritance of this plugin, or face ann infinite loop -->
                 <executions>
                     <execution>
                         <id>generate-class-sources</id>
@@ -55,7 +56,7 @@
                     
                     <dependency>
                         <groupId>com.gluonhq.jfxapps</groupId>
-                        <artifactId>devtools.metadata.modeldata</artifactId>
+                        <artifactId>devtools.metadata.model.data</artifactId>
                         <version>${devtools.version}</version>
                     </dependency>
                     <dependency>

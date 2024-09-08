@@ -47,9 +47,8 @@ import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
-import com.gluonhq.jfxapps.core.ui.dialog.ErrorDialog;
 import com.gluonhq.jfxapps.test.FxmlControllerLoader;
 
 import javafx.scene.Parent;
@@ -60,7 +59,7 @@ class ErrorDialogTest {
 
     private I18N i18n = new I18N(List.of(), true);
 
-    private SceneBuilderManager sbm = new SceneBuilderManager.SceneBuilderManagerImpl();
+    private ApplicationEvents sbm = new ApplicationEvents.ApplicationEventsImpl();
 
     @Mock
     private IconSetting is;

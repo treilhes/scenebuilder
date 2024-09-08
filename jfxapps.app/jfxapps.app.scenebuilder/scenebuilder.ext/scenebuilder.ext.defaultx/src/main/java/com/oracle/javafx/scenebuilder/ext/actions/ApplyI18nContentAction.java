@@ -44,7 +44,7 @@ import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report")
@@ -52,13 +52,13 @@ public class ApplyI18nContentAction extends AbstractAction implements InitWithDo
 
     private ApplyI18nContentConfig config;
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     //@formatter:off
     public ApplyI18nContentAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            DocumentManager documentManager) {
+            ApplicationInstanceEvents documentManager) {
       //@formatter:on
         super(i18n, extensionFactory);
         this.documentManager = documentManager;

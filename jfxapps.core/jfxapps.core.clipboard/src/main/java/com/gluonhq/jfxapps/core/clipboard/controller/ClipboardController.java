@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,8 +34,14 @@
 package com.gluonhq.jfxapps.core.clipboard.controller;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.clipboard.ClipboardEncoder;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardHandler;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
+import com.gluonhq.jfxapps.core.api.job.JobManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 
@@ -44,40 +50,52 @@ import javafx.scene.control.TextInputControl;
 import javafx.scene.input.Clipboard;
 
 @ApplicationInstanceSingleton
-public abstract class ClipboardController implements com.gluonhq.jfxapps.core.api.clipboard.Clipboard {
+public class ClipboardController implements com.gluonhq.jfxapps.core.api.clipboard.Clipboard {
 
     private final MainInstanceWindow documentWindow;
     private final InlineEdit inlineEdit;
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
+    private final Selection selection;
+    private final SelectionJobsFactory selectionJobsFactory;
+    private final JobManager jobManager;
+    private final ClipboardEncoder clipboardEncoder;
 
+    //@formatter:off
     public ClipboardController(
             MainInstanceWindow documentWindow,
             InlineEdit inlineEdit,
-            DocumentManager documentManager) {
+            ApplicationInstanceEvents documentManager,
+            Selection selection,
+            SelectionJobsFactory selectionJobsFactory,
+            JobManager jobManager,
+            ClipboardEncoder clipboardEncoder) {
+      //@formatter:on
         super();
         this.documentWindow = documentWindow;
         this.inlineEdit = inlineEdit;
         this.documentManager = documentManager;
+        this.selection = selection;
+        this.selectionJobsFactory = selectionJobsFactory;
+        this.jobManager = jobManager;
+        this.clipboardEncoder = clipboardEncoder;
     }
 
     @Override
     public boolean canPerformCopy() {
-        boolean result;
         final Node focusOwner = documentWindow.getScene().getFocusOwner();
         final Object focusComponent = documentManager.focused().get();
         if (inlineEdit.isPopupEditing(focusOwner)) {
             return false;
         } else if (inlineEdit.isTextInputControlEditing(focusOwner)) {
             final TextInputControl tic = inlineEdit.getTextInputControl(focusOwner);
-            result = tic.getSelectedText() != null && !tic.getSelectedText().isEmpty();
+            return tic.getSelectedText() != null && !tic.getSelectedText().isEmpty();
         //} else if (isCssRulesEditing(focusOwner) || isCssTextEditing(focusOwner)) {
         } else if (focusComponent != null && focusComponent instanceof ClipboardHandler) {
             ClipboardHandler cphandler = (ClipboardHandler)focusComponent;
-            result = cphandler.canPerformCopy();
+            return cphandler.canPerformCopy();
         } else {
-            result = editorCanPerformCopy();
+            return selection.getGroup() instanceof ObjectSelectionGroup;
         }
-        return result;
     }
 
 
@@ -97,31 +115,30 @@ public abstract class ClipboardController implements com.gluonhq.jfxapps.core.ap
             ClipboardHandler cphandler = (ClipboardHandler)focusComponent;
             cphandler.performCopy();
         } else {
-            editorPerformCopy();
+            assert selection.getGroup() instanceof ObjectSelectionGroup; // Because of (1)
+            final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
+
+            assert clipboardEncoder.isEncodable(osg.getSortedItems());
+            var encoded = clipboardEncoder.makeEncoding(osg.getSortedItems());
+            Clipboard.getSystemClipboard().setContent(encoded);
         }
     }
 
-    public abstract boolean editorCanPerformCopy();
-
-    public abstract void editorPerformCopy();
-
     @Override
     public boolean canPerformCut() {
-        boolean result;
         final Node focusOwner = documentWindow.getScene().getFocusOwner();
         final Object focusComponent = documentManager.focused().get();
         if (inlineEdit.isPopupEditing(focusOwner)) {
             return false;
         } else if (inlineEdit.isTextInputControlEditing(focusOwner)) {
             final TextInputControl tic = inlineEdit.getTextInputControl(focusOwner);
-            result = tic.getSelectedText() != null && !tic.getSelectedText().isEmpty();
+            return tic.getSelectedText() != null && !tic.getSelectedText().isEmpty();
         } else if (focusComponent != null && focusComponent instanceof ClipboardHandler) {
             ClipboardHandler cphandler = (ClipboardHandler)focusComponent;
-            result = cphandler.canPerformCut();
+            return cphandler.canPerformCut();
         } else {
-            result = editorCanPerformCut();
+            return selectionJobsFactory.cutSelection().isExecutable();
         }
-        return result;
     }
 
     @Override
@@ -135,30 +152,25 @@ public abstract class ClipboardController implements com.gluonhq.jfxapps.core.ap
             ClipboardHandler cphandler = (ClipboardHandler)focusComponent;
             cphandler.performCut();
         } else {
-            editorPerformCut();
+            final Job job = selectionJobsFactory.cutSelection();
+            jobManager.push(job);
         }
     }
 
-    public abstract boolean editorCanPerformCut();
-
-    public abstract void editorPerformCut();
-
     @Override
     public boolean canPerformPaste() {
-        boolean result;
         final Node focusOwner = documentWindow.getScene().getFocusOwner();
         final Object focusComponent = documentManager.focused().get();
         // If there is FXML in the clipboard, we paste the FXML whatever the focus owner
         // is
         if (focusComponent != null && focusComponent instanceof ClipboardHandler) {
             ClipboardHandler cphandler = (ClipboardHandler)focusComponent;
-            result = cphandler.canPerformPaste();
+            return cphandler.canPerformPaste();
         } else if (inlineEdit.isTextInputControlEditing(focusOwner)) {
-            result = Clipboard.getSystemClipboard().hasString();
+            return Clipboard.getSystemClipboard().hasString();
         } else {
-            result = editorCanPerformPaste();
+            return selectionJobsFactory.pasteInto().isExecutable();
         }
-        return result;
     }
 
     @Override
@@ -174,13 +186,22 @@ public abstract class ClipboardController implements com.gluonhq.jfxapps.core.ap
             final TextInputControl tic = inlineEdit.getTextInputControl(focusOwner);
             tic.paste();
         } else {
-            editorPerformPaste();
+            final Job job = selectionJobsFactory.pasteInto();
+            jobManager.push(job);
         }
     }
 
-    public abstract boolean editorCanPerformPaste();
+    //FIXME Need to differenciate paste and pasteInto
+    // pasteInto is used when the user wants to paste into the current selection
+    // paste is used when the user wants to paste as the next sibling of the current selection
+    @Override
+    public boolean canPerformPasteInto() {
+        return canPerformPaste();
+    }
 
-    public abstract void editorPerformPaste();
-
+    @Override
+    public void performPasteInto() {
+        performPaste();
+    }
 
 }

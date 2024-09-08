@@ -72,7 +72,7 @@ public class SbPlatformTest {
     @BeforeEach
     void setupContext() {
         Class<?>[] classes = { FakeApplication.class, FakeDocument.class, DocumentScopedObject.class };
-        this.context = JfxAppContext.fromScratch(classes);
+        context = JfxAppContext.fromScratch(classes);
         context.getBean(FakeApplication.class);
     }
 

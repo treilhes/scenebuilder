@@ -44,16 +44,14 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import com.gluonhq.jfxapps.app.manager.main.ui.cmp.ApplicationCardController;
 import com.gluonhq.jfxapps.app.manager.model.Application;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.test.FxmlControllerLoader;
 import com.gluonhq.jfxapps.test.TestStages;
 
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -62,9 +60,9 @@ class ApplicationCardControllerTest {
 
     private I18N i18n = new I18N(List.of(), true);
 
-    private SceneBuilderManager sbm = new SceneBuilderManager.SceneBuilderManagerImpl();
+    private ApplicationEvents sbm = new ApplicationEvents.ApplicationEventsImpl();
 
-    private DocumentManager dm = new DocumentManager.DocumentManagerImpl();
+    private ApplicationInstanceEvents dm = new ApplicationInstanceEvents.ApplicationInstanceEventsImpl();
 
     private Pane pane;
 

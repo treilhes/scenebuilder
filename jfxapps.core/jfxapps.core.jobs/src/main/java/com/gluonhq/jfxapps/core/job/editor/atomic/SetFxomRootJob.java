@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.core.job.editor.atomic;
 import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
@@ -52,7 +52,7 @@ public final class SetFxomRootJob extends AbstractJob {
 
     private final FXOMDocument fxomDocument;
 
-    protected SetFxomRootJob(JobExtensionFactory extensionFactory, DocumentManager documentManager) {
+    protected SetFxomRootJob(JobExtensionFactory extensionFactory, ApplicationInstanceEvents documentManager) {
         super(extensionFactory);
         this.fxomDocument = documentManager.fxomDocument().get();
         assert fxomDocument != null;

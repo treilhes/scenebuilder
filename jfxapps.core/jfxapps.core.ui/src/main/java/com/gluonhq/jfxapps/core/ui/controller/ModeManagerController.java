@@ -48,7 +48,7 @@ import com.gluonhq.jfxapps.core.api.content.mode.Mode;
 import com.gluonhq.jfxapps.core.api.content.mode.ModeDescriptor;
 import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
 import com.gluonhq.jfxapps.core.api.content.mode.ModeProvider;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 @ApplicationInstanceSingleton
@@ -68,7 +68,7 @@ public class ModeManagerController implements ModeManager {
 
     public ModeManagerController(
             JfxAppContext context,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             List<ModeProvider> modeProviders
             ) {
         super();

@@ -41,8 +41,8 @@ import java.util.stream.Collectors;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
@@ -73,8 +73,8 @@ public class LogViewerController extends AbstractFxmlViewController {
 
     public LogViewerController(
             I18N i18n,
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager,
             ViewMenuController viewMenuController) {
         super(i18n, scenebuilderManager, documentManager, viewMenuController, LogViewerController.class.getResource("LogViewerWindow.fxml"));
 

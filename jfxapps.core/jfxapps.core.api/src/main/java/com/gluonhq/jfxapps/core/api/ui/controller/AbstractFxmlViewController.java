@@ -39,8 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewContent;
@@ -80,7 +80,7 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlController 
 
     private StringProperty nameProperty;
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     private ObjectProperty<Dock> parentDock = new SimpleObjectProperty<>();
     //private BooleanProperty minimizedProperty = new SimpleBooleanProperty();
@@ -97,8 +97,8 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlController 
      */
     public AbstractFxmlViewController(
             I18N i18n,
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager,
             ViewMenuController viewMenuController,
             URL fxmlURL) {
         super(i18n, scenebuilderManager, documentManager, fxmlURL); // NOCHECK

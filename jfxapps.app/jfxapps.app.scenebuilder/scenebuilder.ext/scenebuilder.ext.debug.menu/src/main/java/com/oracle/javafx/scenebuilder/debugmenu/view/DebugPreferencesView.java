@@ -41,8 +41,8 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
 import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
 import com.gluonhq.jfxapps.core.api.preferences.Preference;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
@@ -81,8 +81,8 @@ public class DebugPreferencesView extends AbstractFxmlViewController {
     // @formatter:off
     public DebugPreferencesView(
             I18N i18n,
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager,
             ViewMenuController viewMenuController,
             List<ManagedGlobalPreference> globalPreferences,
             List<ManagedDocumentPreference> documentPreferences) {

@@ -40,8 +40,8 @@ import org.springframework.lang.NonNull;
 
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 
 /**
  * AbstractFxmlController is the abstract base class for all the
@@ -68,8 +68,8 @@ public abstract class AbstractFxmlController extends AbstractPanelController imp
     // @formatter:off
     protected AbstractFxmlController(
             I18N i18n,
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager,
             URL fxmlURL) {
      // @formatter:on
         super(scenebuilderManager, documentManager);

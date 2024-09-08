@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -56,6 +56,7 @@ import org.graalvm.compiler.lir.CompositeValue.Component;
 import org.scenebuilder.fxml.api.Inspector;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.css.CssInternal;
 import com.gluonhq.jfxapps.core.api.css.CssPropAuthorInfo;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
@@ -65,7 +66,7 @@ import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
@@ -130,14 +131,13 @@ import javafx.scene.layout.VBox;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 @ViewAttachment(name = InspectorPanelController.VIEW_NAME, id = InspectorPanelController.VIEW_ID, prefDockId = Dock.RIGHT_DOCK_ID, openOnStart = true, selectOnStart = true,
     icon = "ViewIconInspector.png", iconX2 = "ViewIconInspector@2x.png")
 public class InspectorPanelController extends AbstractFxmlViewController implements Inspector {
 
     public final static String VIEW_ID = "68a8c5dd-0b5f-4551-95d1-5b5bdf89ee4b";
+
     public final static String VIEW_NAME = "inspector";
 
     @FXML
@@ -239,7 +239,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
      */
  // @formatter:off
     public InspectorPanelController(
-            SceneBuilderManager scenebuilderManager,
+            ApplicationEvents scenebuilderManager,
             FxmlDocumentManager documentManager,
             Selection selection,
             InlineEdit inlineEdit,

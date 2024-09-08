@@ -1,0 +1,128 @@
+/*
+ * Copyright (c) 2017 Gluon and/or its affiliates.
+ * Copyright (c) 2014, Oracle and/or its affiliates.
+ * All rights reserved. Use is subject to license terms.
+ *
+ * This file is available and licensed under the following license:
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  - Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *  - Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the distribution.
+ *  - Neither the name of Oracle Corporation nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*******************************************************************************
+ *                                                                             *
+ * UI Panels                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+
+/*******************************************************************************
+ *                                                                             *
+ * Library panel                                                               *
+ *                                                                             *
+ ******************************************************************************/
+
+.theme-presets.SBKIT-library-panel .list-view {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+.theme-presets.SBKIT-library-panel .list-view .list-cell .text {
+    -fx-fill: -sb-content-text;
+}
+.theme-presets.SBKIT-library-panel .list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-cell-size: 1.8em;
+    -fx-background-insets: 2 0 -2 0;
+    -fx-padding: 2 0 0 4;
+}
+.theme-presets.SBKIT-library-panel .list-view .list-cell:filled:hover {
+    -fx-background-color: null; /* no hover effect on list view */
+}
+.theme-presets.SBKIT-library-panel .list-view:focused .list-cell:filled:selected {
+    -fx-background-color: -sb-selected-bar-color;
+}
+.theme-presets.SBKIT-library-panel .list-view .list-cell:filled:selected {
+    /* When the ListView is not focused there is no need to highlight
+    the selected item */
+    -fx-background-color: null;
+}
+.theme-presets.SBKIT-library-panel .list-view .scroll-bar {
+    /* Cursor may dynamically change when working in library / hierarchy.
+       Set back the cursor to its default. */
+    -fx-cursor: default;
+}
+
+/* ListCell graphic is an HBox */
+.theme-presets.SBKIT-library-panel .list-cell-graphic {
+    -fx-alignment: center-left;
+    -fx-padding: 0 2 0 2;
+    -fx-spacing: 4;
+}
+
+.theme-presets.SBKIT-library-panel .library-no-results-label {
+    -fx-text-fill: -sb-content-text-dimmed;
+    -fx-font-size: 0.875em;
+    -fx-padding: 6 0 0 10;
+}
+
+.theme-presets.SBKIT-library-panel .library-section-label {
+    -fx-text-fill: derive(-sb-content-text, 10%);
+    -fx-font-size: 0.875em;
+    -fx-background-color:
+        derive(-sb-sharp-edge-lo, 65%),
+        linear-gradient(to right, derive(-sb-content-background, 40%) 0%, -sb-content-background 70%);
+    -fx-background-insets: -4 -2 -4 -12, -3 -2 -3 -12;
+}
+
+.theme-presets.SBKIT-library-panel .library-classname-label {
+    -fx-text-fill: -sb-content-text;
+}
+
+.theme-presets.SBKIT-library-panel .library-qualifier-label {
+    -fx-text-fill: -sb-content-text-dimmed;
+}
+
+/*******************************************************************************
+ * Library Panel - Jar import dialog                                           *
+ ******************************************************************************/
+
+.theme-presets .jar-import-preview-label {
+    -fx-text-fill: -sb-content-text-dimmed;
+    -fx-font-size : 0.875em;
+}
+
+.theme-presets .jar-import-preview {
+    -fx-background-color: azure;
+}
+
+.theme-presets .jar-import-num-of-items-label {
+    -fx-font-size : 0.875em;
+    -fx-text-fill: black;
+}
+
+.theme-presets .jar-import-class-name-label {
+    //-fx-text-fill: -sb-content-text-dimmed;
+    -fx-text-fill: black;
+    -fx-font-size : 0.875em;
+}

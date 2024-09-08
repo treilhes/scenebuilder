@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.context.annotation;
+package com.gluonhq.jfxapps.core.api.javafx;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

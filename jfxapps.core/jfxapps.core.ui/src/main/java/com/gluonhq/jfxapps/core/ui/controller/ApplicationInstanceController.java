@@ -45,11 +45,11 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.context.annotation.FxThread;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.FxThread;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloaderDispatcher;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
@@ -57,8 +57,8 @@ import com.gluonhq.jfxapps.core.api.lifecycle.DisposeWithDocument;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
 import com.gluonhq.jfxapps.core.api.preferences.Preferences;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.WindowPreferenceTracker;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
@@ -106,12 +106,12 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
     private EventHandler<KeyEvent> mainKeyEventFilter;
 
     //private final Provider<PathPreference> pathPreference;
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final Provider<Optional<List<InitWithDocument>>> initializations;
     private final Provider<Optional<List<DisposeWithDocument>>> finalizations;
 
     private final InstancesManager main;
-    private final SceneBuilderManager sceneBuilderManager;
+    private final ApplicationEvents sceneBuilderManager;
 
     //private final SelectionBarController selectionBarController;
     private FXOMDocument fxomDocument;
@@ -147,7 +147,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
             //MenuBarController menuBarController,
 //            Provider<MessageBarController> messageBarController,
 //            SelectionBarController selectionBarController,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             //@Autowired DocumentPanelController documentPanelController,
             //@Autowired InspectorPanelController inspectorPanelController,
             //@Autowired LibraryPanel libraryPanelController,
@@ -155,7 +155,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
             DockManager dockManager,
             DockViewController viewMenuController,
             InstancesManager main,
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             List<WindowPreferenceTracker> trackers,
             //Provider<PathPreference> pathPreference,
             //Provider<LastDockUuidPreference> lastDockUuidPreference,

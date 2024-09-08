@@ -39,7 +39,7 @@ import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 
 /**
  * This Job updates the FXOM document AND the selection at execution time.
@@ -55,7 +55,7 @@ public abstract class InlineSelectionJob extends InlineDocumentJob {
     // @formatter:off
     protected InlineSelectionJob(
             JobExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection) {
      // @formatter:on
         super(extensionFactory, documentManager);

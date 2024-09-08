@@ -41,7 +41,7 @@ import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -50,7 +50,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 public class ReloadFileAction extends AbstractAction {
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final Dialog dialog;
     private final MainInstanceWindow documentWindow;
     private final FileSystem fileSystem;
@@ -59,7 +59,7 @@ public class ReloadFileAction extends AbstractAction {
             I18N i18n,
             ActionExtensionFactory extensionFactory,
             FileSystem fileSystem,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             MainInstanceWindow documentWindow,
             Dialog dialog) {
         super(i18n, extensionFactory);

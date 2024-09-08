@@ -38,8 +38,8 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractPopupController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 
@@ -80,16 +80,16 @@ public class InlineEditController implements InlineEdit{
     //private final EditorController editorController;
     private InlineEditPopupController popupController;
 
-    private final SceneBuilderManager scenebuilderManager;
-    private final DocumentManager documentManager;
+    private final ApplicationEvents scenebuilderManager;
+    private final ApplicationInstanceEvents documentManager;
 
     private static final String NID_INLINE_EDITOR = "inlineEditor";
 
 
 
     public InlineEditController(
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager) {
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager) {
         this.scenebuilderManager = scenebuilderManager;
         this.documentManager = documentManager;
     }
@@ -332,8 +332,8 @@ public class InlineEditController implements InlineEdit{
         private final String initialValue;
 
         public InlineEditPopupController(
-                SceneBuilderManager scenebuilderManager,
-                DocumentManager documentManager,
+                ApplicationEvents scenebuilderManager,
+                ApplicationInstanceEvents documentManager,
                 final TextInputControl editor,
                 final Callback<String, Boolean> requestCommit) {
             super(scenebuilderManager, documentManager);

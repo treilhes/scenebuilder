@@ -33,13 +33,13 @@
  */
 package com.oracle.javafx.scenebuilder.cssanalyser.mode;
 
-import org.scenebuilder.fxml.api.Content;
-
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
 import com.gluonhq.jfxapps.core.api.content.mode.AbstractModeController;
 import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
@@ -60,15 +60,15 @@ import javafx.scene.input.MouseEvent;
 public class PickModeController extends AbstractModeController {
 
     private final Driver driver;
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final Selection selection;
     //private HitNodeChrome hitNodeChrome;
 
     public PickModeController(
-            @Autowired Driver driver,
-            @Autowired DocumentManager documentManager,
-            @Autowired Selection selection,
-    		@Autowired @Lazy Content contentPanelController) {
+            Driver driver,
+            ApplicationInstanceEvents documentManager,
+            Selection selection,
+    		@Lazy Workspace contentPanelController) {
         super(contentPanelController);
         this.driver = driver;
         this.documentManager = documentManager;
@@ -102,18 +102,18 @@ public class PickModeController extends AbstractModeController {
 
     @Override
     public void willResignActive(AbstractModeController nextModeController) {
-        content.getGlassLayer().setCursor(Cursor.DEFAULT);
+        getContent().getGlassLayer().setCursor(Cursor.DEFAULT);
         stopListeningToInputEvents();
         clearLayers();
     }
 
     @Override
     public void didBecomeActive(AbstractModeController previousModeController) {
-        assert content.getGlassLayer() != null;
+        assert getContent().getGlassLayer() != null;
         getLayers().forEach(l -> l.enable());
         getLayer(HitNodeChrome.class).update();
         startListeningToInputEvents();
-        content.getGlassLayer().setCursor(ImageUtils.getCSSCursor());
+        getContent().getGlassLayer().setCursor(ImageUtils.getCSSCursor());
     }
 
     @Override
@@ -146,14 +146,14 @@ public class PickModeController extends AbstractModeController {
 
 
     private void startListeningToInputEvents() {
-        final Node glassLayer = content.getGlassLayer();
+        final Node glassLayer = getContent().getGlassLayer();
         assert glassLayer.getOnMousePressed() == null;
 
         glassLayer.setOnMousePressed(mousePressedOnGlassLayerListener);
     }
 
     private void stopListeningToInputEvents() {
-        final Node glassLayer = content.getGlassLayer();
+        final Node glassLayer = getContent().getGlassLayer();
         glassLayer.setOnMousePressed(null);
     }
 
@@ -224,8 +224,8 @@ public class PickModeController extends AbstractModeController {
             } else {
                 assert closestNodeObject.getSceneGraphObject().isInstanceOf(Node.class);
                 final Node closestNode = closestNodeObject.getSceneGraphObject().getAs(Node.class);
-                if (closestNode.getScene() == content.getRoot().getScene()) {
-                    result = new HitNodeChrome(content, documentManager, hitNode);
+                if (closestNode.getScene() == getContent().getRoot().getScene()) {
+                    result = new HitNodeChrome(getContent(), documentManager, hitNode);
                     result.setFxomObject(hitItem);
                     result.initialize();
                 } else {

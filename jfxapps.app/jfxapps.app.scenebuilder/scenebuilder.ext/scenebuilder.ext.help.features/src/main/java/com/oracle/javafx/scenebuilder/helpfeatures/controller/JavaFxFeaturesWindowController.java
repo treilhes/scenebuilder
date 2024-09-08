@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.helpfeatures.controller;
 import org.graalvm.compiler.lir.CompositeValue.Component;
 
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -60,7 +60,7 @@ public class JavaFxFeaturesWindowController extends AbstractFxmlWindowController
     private FXOMDocument fxomDocument;
 
     public JavaFxFeaturesWindowController(
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             ApplicationInstanceWindow document) {
         super(sceneBuilderManager, iconSetting, JavaFxFeaturesWindowController.class.getResource("JavaFxFeaturesWindow.fxml"), I18N.getBundle(),

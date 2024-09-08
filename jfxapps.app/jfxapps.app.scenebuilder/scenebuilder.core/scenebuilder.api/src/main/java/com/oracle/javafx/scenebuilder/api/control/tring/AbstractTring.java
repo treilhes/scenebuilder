@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.api.control.tring;
 
 import com.gluonhq.jfxapps.core.api.content.decoration.AbstractDecoration;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.oracle.javafx.scenebuilder.api.control.Tring;
 
@@ -52,7 +52,7 @@ public abstract class AbstractTring<T> extends AbstractDecoration<T> implements 
 
     public AbstractTring(
             Workspace workspace,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Class<T> sceneGraphClass) {
         super(workspace, documentManager, sceneGraphClass);
     }

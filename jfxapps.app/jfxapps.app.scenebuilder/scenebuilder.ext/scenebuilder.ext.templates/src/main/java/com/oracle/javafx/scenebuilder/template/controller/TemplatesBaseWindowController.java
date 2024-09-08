@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 
 import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.template.Template;
 import com.gluonhq.jfxapps.core.api.template.TemplateGroup;
 import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
@@ -75,7 +75,7 @@ public abstract class TemplatesBaseWindowController extends AbstractFxmlWindowCo
     @FXML
     private VBox templateContainer;
 
-    public TemplatesBaseWindowController(SceneBuilderManager sceneBuilderManager, IconSetting iconSetting, URL fxmlURL,
+    public TemplatesBaseWindowController(ApplicationEvents sceneBuilderManager, IconSetting iconSetting, URL fxmlURL,
             ResourceBundle resources, InstanceWindow owner, List<TemplateGroup> templateGroups,
             List<Template> templates) {
         super(sceneBuilderManager, iconSetting, fxmlURL, resources, owner);

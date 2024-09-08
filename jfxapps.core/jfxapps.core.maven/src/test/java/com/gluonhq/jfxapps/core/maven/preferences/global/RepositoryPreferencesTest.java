@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -47,7 +47,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
 import com.gluonhq.jfxapps.boot.maven.client.type.Nexus;
 import com.gluonhq.jfxapps.core.api.preferences.RootPreferencesNode;
-import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoriesPreferences;
 
 class RepositoryPreferencesTest extends AbstractPreferencesTest {
 

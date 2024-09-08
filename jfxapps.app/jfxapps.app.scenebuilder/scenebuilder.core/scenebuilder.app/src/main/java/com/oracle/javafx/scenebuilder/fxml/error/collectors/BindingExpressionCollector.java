@@ -36,7 +36,8 @@ package com.oracle.javafx.scenebuilder.fxml.error.collectors;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.error.AbstractErrorCollector;
 import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.collector.PropertyCollector;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
@@ -47,12 +48,16 @@ import com.oracle.javafx.scenebuilder.fxml.error.Type;
 @ApplicationInstanceSingleton
 public class BindingExpressionCollector extends AbstractErrorCollector {
 
+    private final I18N i18n;
     private final SbFXOMObjectMask.Factory designHierarchyMaskFactory;
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
-    public BindingExpressionCollector(DocumentManager documentManager,
+    public BindingExpressionCollector(
+            I18N i18n,
+            ApplicationInstanceEvents documentManager,
             SbFXOMObjectMask.Factory designHierarchyMaskFactory) {
         super();
+        this.i18n = i18n;
         this.documentManager = documentManager;
         this.designHierarchyMaskFactory = designHierarchyMaskFactory;
     }
@@ -65,7 +70,7 @@ public class BindingExpressionCollector extends AbstractErrorCollector {
         for (FXOMPropertyT p : documentManager.fxomDocument().get().getFxomRoot().collect(PropertyCollector.allSimpleProperties())) {
             final PrefixedValue pv = new PrefixedValue(p.getValue());
             if (pv.isBindingExpression()) {
-                final ErrorReportEntry newEntry = new FxmlErrorReportEntryImpl(p, Type.UNSUPPORTED_EXPRESSION,
+                final ErrorReportEntry newEntry = new FxmlErrorReportEntryImpl(i18n, p, Type.UNSUPPORTED_EXPRESSION,
                         designHierarchyMaskFactory);
                 result.add(p, newEntry);
             }

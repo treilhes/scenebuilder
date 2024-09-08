@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.core.ui.action;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
@@ -47,7 +47,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.ui.Docks;
 
-@Prototype
+@ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.toggle.dock", descriptionKey = "action.description.toggle.dock")
 @MenuItemAttachment(
         id = ToggleMinimizeLeftDockAction.MENU_ID,

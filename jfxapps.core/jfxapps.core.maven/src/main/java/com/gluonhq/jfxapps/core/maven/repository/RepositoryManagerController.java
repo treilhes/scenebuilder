@@ -41,7 +41,7 @@ import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.maven.MavenClient;
 import com.gluonhq.jfxapps.core.api.maven.RepositoryManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
@@ -81,7 +81,7 @@ public class RepositoryManagerController extends AbstractFxmlWindowController im
     protected RepositoryManagerController(
             I18N i18n,
             MavenClient mavenClient,
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             JfxAppContext context,
             MessageLogger messageLogger,

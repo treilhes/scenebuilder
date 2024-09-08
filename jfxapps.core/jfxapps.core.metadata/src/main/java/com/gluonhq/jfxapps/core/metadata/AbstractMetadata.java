@@ -61,8 +61,8 @@ public abstract class AbstractMetadata<
     CPM extends ComponentPropertyMetadata, VPM extends ValuePropertyMetadata,
     C extends ComponentClassMetadata> {
 
-    private final Map<Class<?>, C> componentClassMap = new HashMap<>();
-    private final Map<Class<?>, C> customComponentClassMap = new WeakHashMap<>();
+    protected final Map<Class<?>, C> componentClassMap = new HashMap<>();
+    protected final Map<Class<?>, C> customComponentClassMap = new WeakHashMap<>();
 
     public interface MetadataIntrospector<C> {
         C introspect(Class<?> componentClass);

@@ -39,7 +39,7 @@ import java.util.List;
 import org.graalvm.compiler.lir.CompositeValue.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
@@ -61,7 +61,7 @@ public class ImageBuiltinLibrary {
      */
 
     protected ImageBuiltinLibrary(
-            @Autowired SceneBuilderManager sceneBuilderManager,
+            @Autowired ApplicationEvents sceneBuilderManager,
             @Autowired List<ComponentClassMetadata<?>> componentClassMetadatas
     ) {
 //        for (ComponentClassMetadata<?> ccm : componentClassMetadatas) {

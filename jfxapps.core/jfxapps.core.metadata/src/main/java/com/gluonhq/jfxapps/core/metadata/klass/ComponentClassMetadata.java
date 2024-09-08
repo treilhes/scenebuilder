@@ -35,8 +35,10 @@ package com.gluonhq.jfxapps.core.metadata.klass;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -77,13 +79,13 @@ public class ComponentClassMetadata<T, CC,
     private final Set<PropertyName> shadowedProperties = new HashSet<>();
 
     /** The component properties values subset. */
-    private final Set<ValuePropertyMetadata<VPC>> values = new HashSet<>();
+    private final Map<PropertyName, VPM> values = new HashMap<>();
 
     /** The group properties values subset. */
     private final Set<PropertyGroupMetadata<VPC>> groups = new HashSet<>();
 
     /** The component properties component subset. */
-    private final Set<ComponentPropertyMetadata<CPC, P>> subComponents = new HashSet<>();
+    private final Map<PropertyName, CPM> subComponents = new HashMap<>();
 
     /** The inherited parent metadata. */
     private final P parentMetadata;
@@ -114,20 +116,22 @@ public class ComponentClassMetadata<T, CC,
                     if (e.getElementAdded().isGroup()) {
                         groups.add((PropertyGroupMetadata<VPC>)e.getElementAdded());
                     } else {
-                        values.add((ValuePropertyMetadata<VPC>)e.getElementAdded());
+                        var added = (VPM)e.getElementAdded();
+                        values.put(added.getName(), added);
                     }
                 } else if (ComponentPropertyMetadata.class.isAssignableFrom(e.getElementAdded().getClass())) {
-                    subComponents.add((ComponentPropertyMetadata<CPC, P>)e.getElementAdded());
+                    var added = (CPM)e.getElementAdded();
+                    subComponents.put(added.getName(), added);
                 }
             } else if (e.wasRemoved() && e.getElementRemoved() != null) {
                 if (ValuePropertyMetadata.class.isAssignableFrom(e.getElementRemoved().getClass())) {
                     if (e.getElementRemoved().isGroup()) {
                         groups.remove(e.getElementRemoved());
                     } else {
-                        values.remove(e.getElementRemoved());
+                        values.remove(e.getElementRemoved().getName());
                     }
                 } else if (ComponentPropertyMetadata.class.isAssignableFrom(e.getElementRemoved().getClass())) {
-                    subComponents.remove(e.getElementRemoved());
+                    subComponents.remove(e.getElementRemoved().getName());
                 }
             }
 
@@ -158,7 +162,17 @@ public class ComponentClassMetadata<T, CC,
      * @return the values subset properties
      */
     public Set<ValuePropertyMetadata<VPC>> getValueProperties() {
-        return Collections.unmodifiableSet(values);
+        return Collections.unmodifiableSet(values.values().stream()
+                .map(i -> i)
+                .filter(c -> !shadowedProperties.contains(c.getName()))
+                .collect(Collectors.toSet()));
+    }
+
+    public VPM getValueProperty(PropertyName propertyName) {
+        if (!shadowedProperties.contains(propertyName)) {
+            return values.get(propertyName);
+        }
+        return null;
     }
 
     /**
@@ -167,10 +181,17 @@ public class ComponentClassMetadata<T, CC,
      * @return the components subset properties
      */
     public Set<CPM> getSubComponentProperties() {
-        return Collections.unmodifiableSet(subComponents.stream()
-                .map(i -> (CPM)i)
+        return Collections.unmodifiableSet(subComponents.values().stream()
+                .map(i -> i)
                 .filter(c -> !shadowedProperties.contains(c.getName()))
                 .collect(Collectors.toSet()));
+    }
+
+    public CPM getSubComponentProperty(PropertyName propertyName) {
+        if (!shadowedProperties.contains(propertyName)) {
+            return subComponents.get(propertyName);
+        }
+        return null;
     }
 
     public Set<CPM> getAllSubComponentProperties() {

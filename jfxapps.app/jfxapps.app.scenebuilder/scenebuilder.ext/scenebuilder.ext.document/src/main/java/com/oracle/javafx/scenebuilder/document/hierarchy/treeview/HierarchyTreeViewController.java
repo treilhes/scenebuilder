@@ -51,7 +51,7 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask.Accessory;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
@@ -92,7 +92,7 @@ public class HierarchyTreeViewController extends AbstractFxmlController implemen
 	private final HierarchyCellAssignment cellAssignments;
 
     public HierarchyTreeViewController(
-            SceneBuilderManager scenebuilderManager,
+            ApplicationEvents scenebuilderManager,
             FxmlDocumentManager documentManager,
             HierarchyCellAssignment cellAssignments,
             HierarchyTreeCell.Factory hierarchyTreeCellFactory,

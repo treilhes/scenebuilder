@@ -44,7 +44,7 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
@@ -89,7 +89,7 @@ public class SkeletonViewController extends AbstractFxmlViewController {
     private final FxmlDocumentManager documentManager;
 
     public SkeletonViewController(
-            SceneBuilderManager scenebuilderManager,
+            ApplicationEvents scenebuilderManager,
             FxmlDocumentManager documentManager,
             @Autowired ApplicationInstanceWindow document,
             ViewMenuController viewMenuController) {

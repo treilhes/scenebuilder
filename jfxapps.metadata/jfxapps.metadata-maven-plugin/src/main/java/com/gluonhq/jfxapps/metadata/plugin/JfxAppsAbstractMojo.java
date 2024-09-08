@@ -35,14 +35,22 @@ package com.gluonhq.jfxapps.metadata.plugin;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.descriptor.PluginDescriptor;
+import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 import com.gluonhq.jfxapps.metadata.finder.api.SearchContext;
 import com.gluonhq.jfxapps.metadata.plugin.params.ConstructorOverride;
@@ -99,13 +107,41 @@ public abstract class JfxAppsAbstractMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     MavenProject project;
 
-    protected SearchContext createSearchContext() throws MojoExecutionException {
+    protected ClassLoader getProjectClassloader() throws MojoExecutionException {
+        try {
+            // Get the classpath elements
+            Set<Artifact> artifacts = project.getArtifacts();
+
+            File buildDirectory = new File(project.getBuild().getOutputDirectory() );
+
+            // Convert to URLs for class loading
+            List<URL> list = artifacts.stream()
+                  .map(artifact -> {
+                      try {
+                          return artifact.getFile().toURI().toURL();
+                      } catch (Exception e) {
+                          throw new RuntimeException(e);
+                      }
+                  }).collect(Collectors.toList());
+
+            // add the build directory to the classpath for the classloader
+            list.add( buildDirectory.toURI().toURL() );
+
+            URL[] urls =list.toArray(URL[]::new);
+
+            // Create a class loader with the project dependencies
+            return new URLClassLoader(urls, getClass().getClassLoader());
+        } catch (Exception e) {
+            throw new MojoExecutionException("Failed to load project dependencies", e);
+        }
+    }
+    protected SearchContext createSearchContext(ClassLoader loader) throws MojoExecutionException {
 
         SearchContext searchContext = new SearchContext();
 
         for (String s : rootClasses) {
             try {
-                Class<?> cls = Class.forName(s);
+                Class<?> cls = loader.loadClass(s);
                 searchContext.addRootClass(cls);
             } catch (Exception e) {
                 throw new MojoExecutionException("Unable to load root class : " + s, e);
@@ -114,7 +150,7 @@ public abstract class JfxAppsAbstractMojo extends AbstractMojo {
 
         for (String s : excludeClasses) {
             try {
-                Class<?> cls = Class.forName(s);
+                Class<?> cls = loader.loadClass(s);
                 searchContext.addExcludeClass(cls);
             } catch (Exception e) {
                 throw new MojoExecutionException("Unable to load excluded class : " + s, e);
@@ -141,16 +177,16 @@ public abstract class JfxAppsAbstractMojo extends AbstractMojo {
         return searchContext;
     }
 
-    protected PropertyGenerationContext createPropertyGenerationContext() throws MojoExecutionException {
+    protected PropertyGenerationContext createPropertyGenerationContext(ClassLoader loader) throws MojoExecutionException {
 
-        PropertyGenerationContext propertyContext = new PropertyGenerationContext();
+        PropertyGenerationContext propertyContext = new PropertyGenerationContext(loader);
         try {
             if (constructorOverrides != null) {
                 for (ConstructorOverride cto : constructorOverrides) {
                     Class<?> cls = Class.forName(cto.getCls());
                     Class<?>[] originalParameters = cto.getParameterOverrides().stream().map(p -> {
                         try {
-                            return Class.forName(p.getCls());
+                            return loader.loadClass(p.getCls());
                         } catch (ClassNotFoundException e) {
                             throw new RuntimeException(e);
                         }
@@ -158,7 +194,7 @@ public abstract class JfxAppsAbstractMojo extends AbstractMojo {
 
                     Class<?>[] newParameters = cto.getParameterOverrides().stream().map(p -> {
                         try {
-                            return Class.forName(p.getOverridedBy());
+                            return loader.loadClass(p.getOverridedBy());
                         } catch (ClassNotFoundException e) {
                             throw new RuntimeException(e);
                         }

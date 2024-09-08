@@ -84,6 +84,7 @@ module jfxapps.boot.starter {
     requires transitive spring.tx;
     requires transitive spring.web;
     requires transitive spring.webmvc;
+    requires transitive spring.jcl;
 
     requires transitive thymeleaf;
     requires transitive thymeleaf.spring6;

@@ -61,8 +61,8 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.lifecycle.DisposeWithApplication;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithApplication;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 
 import jakarta.inject.Provider;
@@ -464,8 +464,8 @@ public class InstancesControllerImpl implements InstancesManager {
         JfxAppContext.applicationInstanceScope.unbindScope();
 
         final ApplicationInstance result = context.getBean(ApplicationInstance.class);
-        final SceneBuilderManager sceneBuilderManager = context.getBean(SceneBuilderManager.class);
-        final DocumentManager documentManager = context.getBean(DocumentManager.class);
+        final ApplicationEvents sceneBuilderManager = context.getBean(ApplicationEvents.class);
+        final ApplicationInstanceEvents documentManager = context.getBean(ApplicationInstanceEvents.class);
 
         sceneBuilderManager.documentScoped().onNext(result);
         documentManager.dependenciesLoaded().set(true);

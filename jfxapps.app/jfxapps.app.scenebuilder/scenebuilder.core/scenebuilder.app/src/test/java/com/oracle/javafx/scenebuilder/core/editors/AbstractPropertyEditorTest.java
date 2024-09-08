@@ -39,6 +39,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Spy;
 import org.scenebuilder.fxml.api.Documentation;
 import org.testfx.framework.junit5.ApplicationExtension;
 
@@ -59,6 +60,7 @@ import javafx.scene.Node;
 @ExtendWith(ApplicationExtension.class)
 public class AbstractPropertyEditorTest {
 
+    @Spy
     private I18N i18n = new I18N(List.of(), true);
 
     @Test

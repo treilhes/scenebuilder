@@ -55,7 +55,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.dialog.AbstractModalDialog;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
@@ -216,7 +216,7 @@ public class ImageImportWindowController extends AbstractModalDialog {
 //    }
 
     protected ImageImportWindowController(
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             Dialog dialog) {
         super(sceneBuilderManager, iconSetting, ImageImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), null);

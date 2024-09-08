@@ -43,7 +43,7 @@ import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.css.StylesheetProvider;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report")
@@ -51,13 +51,13 @@ public class ApplyCssContentAction extends AbstractAction implements InitWithDoc
 
     private ApplyCssContentConfig config;
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
   //@formatter:off
     public ApplyCssContentAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            DocumentManager documentManager) {
+            ApplicationInstanceEvents documentManager) {
       //@formatter:on
         super(i18n, extensionFactory);
         this.documentManager = documentManager;

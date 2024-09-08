@@ -39,6 +39,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Spy;
 import org.scenebuilder.fxml.api.Documentation;
 import org.testfx.framework.junit5.ApplicationExtension;
 
@@ -56,6 +57,7 @@ import com.gluonhq.jfxapps.core.metadata.property.value.StringPropertyMetadata.M
 @ExtendWith(ApplicationExtension.class)
 public class AutoSuggestEditorTest {
 
+    @Spy
     private I18N i18n = new I18N(List.of(), true);
 
     @Test

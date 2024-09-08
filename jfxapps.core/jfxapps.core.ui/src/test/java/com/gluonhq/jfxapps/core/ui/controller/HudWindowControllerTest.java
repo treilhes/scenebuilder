@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,55 +36,48 @@ package com.gluonhq.jfxapps.core.ui.controller;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxAssert;
 import org.testfx.api.FxRobot;
-import org.testfx.framework.junit5.ApplicationExtension;
-import org.testfx.framework.junit5.Start;
 import org.testfx.matcher.control.LabeledMatchers;
 
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
-import com.gluonhq.jfxapps.core.ui.controller.HudWindowController;
-import com.gluonhq.jfxapps.test.FxmlControllerLoader;
+import com.gluonhq.jfxapps.test.JfxAppsTest;
+import com.gluonhq.jfxapps.test.StageBuilder;
 import com.gluonhq.jfxapps.test.TestStages;
 
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
 
-@ExtendWith({ApplicationExtension.class, MockitoExtension.class})
+@JfxAppsTest
+@ContextConfiguration(classes = { HudWindowController.class })
 class HudWindowControllerTest {
 
-    private SceneBuilderManager sbm = new SceneBuilderManager.SceneBuilderManagerImpl();
-
-    private DocumentManager dm = new DocumentManager.DocumentManagerImpl();
-
-    private Button btn;
-
-    /**
-     * Will be called with {@code @Before} semantics, i. e. before each test method.
-     *
-     * @param stage - Will be injected by the test runner.
-     */
-    @Start
-    private void start(Stage stage) {
-        btn = TestStages.centeredButton(stage, 800, 600);
-        stage.show();
+    @Test
+    void should_load_the_hud_fxml(StageBuilder stageBuilder) {
+        var controller = stageBuilder.controller(HudWindowController.class).show();
+        assertNotNull(controller.getRoot());
     }
 
     @Test
-    void should_load_the_hud_fxml() {
-        Parent ui = FxmlControllerLoader.controller(new HudWindowController(sbm, dm)).loadFxml();
-        assertNotNull(ui);
-    }
+    void should_create_3_rows_with_only_2_lines_with_values(StageBuilder stageBuilder, FxRobot robot) {
+        AtomicReference<Button> b = new AtomicReference<>();
 
-    @Test
-    void should_create_3_rows_with_only_2_lines_with_values(FxRobot robot) {
-        HudWindowController hud = FxmlControllerLoader.controller(new HudWindowController(sbm, dm)).load();
+        HudWindowController hud = stageBuilder.controller(HudWindowController.class)
+                .size(800, 600)
+                .css("""
+                    #gridPane {
+                        -fx-border-color: red;
+                        -fx-background-color: green;
+                    }
+                    """)
+                .setup((s, w, h, c) -> {
+                    b.set(TestStages.centeredButton(s, w, h));
+                    s.show();
+                    return b.get();
+                })
+                .show();
 
         final String name1 = "SomeName";
         final String value1 = "DLKJDK";
@@ -100,7 +93,7 @@ class HudWindowControllerTest {
             hud.setNameAtRowIndex(name2, 2);
             hud.setValueAtRowIndex(value2, 2);
 
-            hud.openWindow(btn);
+            hud.openWindow(b.get());
         });
 
         String idName1 = String.format(HudWindowController.NAME_LABEL_ID_FORMAT, 0);

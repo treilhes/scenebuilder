@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
 import org.graalvm.compiler.lir.CompositeValue.Component;
 
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.dialog.AbstractModalDialog;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
@@ -202,7 +202,7 @@ public class ImportWindowController extends AbstractModalDialog {
 //    }
 
     protected ImportWindowController(
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             Dialog dialog) {
         super(sceneBuilderManager, iconSetting, ImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), null);

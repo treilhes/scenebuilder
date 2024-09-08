@@ -51,7 +51,7 @@ public class FxThreadAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(FxThreadAspect.class);
 
-    @Around("@annotation(com.gluonhq.jfxapps.boot.context.annotation.FxThread)")
+    @Around("@annotation(com.gluonhq.jfxapps.core.api.javafx.FxThread)")
     public Object fxThreadAround(ProceedingJoinPoint joinPoint) throws Throwable {
 
         logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");

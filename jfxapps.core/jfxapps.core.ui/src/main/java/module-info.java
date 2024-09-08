@@ -51,6 +51,7 @@ open module jfxapps.core.ui {
     requires jakarta.annotation;
     requires spring.context;
     requires spring.beans;
+    requires jfxapps.boot.platform;
     //requires jfxapps.core.selection;
 
     provides Extension with BaseUiExtension;

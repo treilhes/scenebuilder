@@ -39,7 +39,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-invoker-plugin</artifactId>
-                <version>3.2.2</version>
+                <inherited>false</inherited> <!-- Prevent inheritance of this plugin, or face ann infinite loop -->
                 <executions>
                     <execution>
                         <id>forked-install</id>
@@ -50,7 +50,7 @@
                         <configuration>
                             <projectsDirectory>${basedir}/..</projectsDirectory>
                             <pomIncludes>
-                                <pomInclude>devtools.metadata.modeldata/pom.xml</pomInclude>
+                                <pomInclude>devtools.metadata.model.data/pom.xml</pomInclude>
                             </pomIncludes>
                             <streamLogs>true</streamLogs>
                             <goals>

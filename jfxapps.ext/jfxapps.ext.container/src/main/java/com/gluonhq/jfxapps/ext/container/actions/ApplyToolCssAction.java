@@ -42,7 +42,7 @@ import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 
 @Prototype
@@ -51,9 +51,9 @@ public class ApplyToolCssAction extends AbstractAction implements InitWithDocume
 
     private ApplyToolCssConfig config;
 
-    private final SceneBuilderManager sceneBuilderManager;
+    private final ApplicationEvents sceneBuilderManager;
 
-    public ApplyToolCssAction(I18N i18n, ActionExtensionFactory extensionFactory, SceneBuilderManager sceneBuilderManager) {
+    public ApplyToolCssAction(I18N i18n, ActionExtensionFactory extensionFactory, ApplicationEvents sceneBuilderManager) {
         super(i18n, extensionFactory);
         this.sceneBuilderManager = sceneBuilderManager;
     }

@@ -53,12 +53,11 @@ import com.gluonhq.jfxapps.boot.maven.client.type.Nexus;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.maven.MavenClient;
 import com.gluonhq.jfxapps.core.api.settings.MavenSetting;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoriesPreferences;
-import com.gluonhq.jfxapps.core.maven.repository.AddEditRepositoryDialogController;
 import com.gluonhq.jfxapps.test.FxmlControllerLoader;
 
 import javafx.scene.Parent;
@@ -70,7 +69,7 @@ class AddEditRepositoryDialogControllerTest {
     @Mock
     private MavenClient mc;
 
-    private SceneBuilderManager sbm = new SceneBuilderManager.SceneBuilderManagerImpl();
+    private ApplicationEvents sbm = new ApplicationEvents.ApplicationEventsImpl();
 
     private I18N i18n = new I18N(List.of(), true);
 

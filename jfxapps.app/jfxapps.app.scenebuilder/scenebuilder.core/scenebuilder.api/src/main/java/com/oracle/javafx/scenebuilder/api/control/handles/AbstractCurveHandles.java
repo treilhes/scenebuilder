@@ -34,7 +34,7 @@
 package com.oracle.javafx.scenebuilder.api.control.handles;
 
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
@@ -51,7 +51,7 @@ public abstract class AbstractCurveHandles<T extends Node> extends AbstractHandl
 
     public AbstractCurveHandles(
             Workspace workspace,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             DiscardGesture.Factory discardGestureFactory, Class<T> sceneGraphClass) {
         super(workspace, documentManager, discardGestureFactory, sceneGraphClass);
     }

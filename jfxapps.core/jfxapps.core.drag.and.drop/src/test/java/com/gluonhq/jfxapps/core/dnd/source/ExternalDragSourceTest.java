@@ -40,14 +40,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 
 import javafx.stage.Stage;
 
 @ExtendWith(ApplicationExtension.class)
 class ExternalDragSourceTest {
 
-    DocumentManager documentManager = new DocumentManager.DocumentManagerImpl();
+    ApplicationInstanceEvents documentManager = new ApplicationInstanceEvents.ApplicationInstanceEventsImpl();
 
     @Start
     private void start(Stage stage) {

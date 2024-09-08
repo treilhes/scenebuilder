@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,8 +38,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.javafx.UiController;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 import com.gluonhq.jfxapps.util.javafx.NodeUtils;
 
@@ -47,16 +48,16 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 
-public abstract class AbstractCommonUiController  {
+public abstract class AbstractCommonUiController implements UiController {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(AbstractCommonUiController.class);
 
     /** The scene builder manager. */
-    private final SceneBuilderManager sceneBuilderManager;
+    private final ApplicationEvents sceneBuilderManager;
 
     /** The document manager. */
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     private final ChangeListener<? super Node> focusListener;
 
@@ -74,8 +75,8 @@ public abstract class AbstractCommonUiController  {
      * @param api the api object
      */
     protected AbstractCommonUiController(
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager) {
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager) {
         this.sceneBuilderManager = scenebuilderManager;
         this.documentManager = documentManager;
 
@@ -98,6 +99,7 @@ public abstract class AbstractCommonUiController  {
      *
      * @return the root object of the panel (never null)
      */
+    @Override
     public Parent getRoot() {
         assert root != null;
         return root;
@@ -110,6 +112,7 @@ public abstract class AbstractCommonUiController  {
      *
      * @param panelRoot the root panel (non null).
      */
+    @Override
     public void setRoot(Parent panelRoot) {
         assert panelRoot != null;
         this.root = panelRoot;
@@ -135,7 +138,7 @@ public abstract class AbstractCommonUiController  {
 
     /**
      * Replaces old Stylesheet config by the tool style sheet assigned to this
-     * controller. This methods is event binded to {@link DocumentManager#stylesheetConfig()} using an RxJava2 subscription.
+     * controller. This methods is event binded to {@link ApplicationInstanceEvents#stylesheetConfig()} using an RxJava2 subscription.
      *
      * @param newToolStylesheetConfig null or the new style sheet configuration to apply
      */

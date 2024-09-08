@@ -19,7 +19,7 @@
         Those modules are built at the end of the devtools.metadata.customization module.
          -->
         <!--<module>devtools.metadata.model</module>
-        <module>devtools.metadata.modeldata</module>-->
+        <module>devtools.metadata.model.data</module>-->
     </modules>
 
     <dependencies>

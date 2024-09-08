@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 import org.graalvm.compiler.lir.CompositeValue.Component;
 
 import com.gluonhq.jfxapps.core.api.library.LibraryFilter;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.UILogger;
 import com.gluonhq.jfxapps.core.extstore.fs.ExtensionFileSystemFactory;
 import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
@@ -132,7 +132,7 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
             @Autowired LibraryStoreFactory libraryStoreFactory,
             @Autowired ClassLoaderController classLoaderController,
             @Autowired UILogger logger,
-            @Autowired SceneBuilderManager sceneBuilderManager,
+            @Autowired ApplicationEvents sceneBuilderManager,
             @Autowired ControlFileExplorer controlFileExplorer,
             @Autowired ControlFolderExplorer controlFolderExplorer,
             @Autowired ControlMavenArtifactExplorer controlMavenArtifactExplorer,

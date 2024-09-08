@@ -1,5 +1,5 @@
 module scenebuilder.metadata.javafx.fx {
-    exports com.oracle.javafx.scenebuilder.metadata.custom.fx;
+    exports com.oracle.javafx.scenebuilder.metadata.javafx.fx;
 
     requires javafx.base;
     requires javafx.controls;

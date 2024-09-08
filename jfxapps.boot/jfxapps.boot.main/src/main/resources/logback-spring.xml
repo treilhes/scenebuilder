@@ -8,7 +8,7 @@
 
     <springProfile name="dev">
         <logger name="com.gluonhqjfxapps" level="ERROR"/>
-        
+        <logger name="com.gluonhq.jfxapps.boot" level="DEBUG"/>
         <logger name="com.gluonhq.jfxapps.core.api" level="DEBUG"/>
         <logger name="com.gluonhq.jfxapps.core.ui" level="DEBUG"/>
         <logger name="com.gluonhq.jfxapps.ext.scenicview" level="DEBUG"/>

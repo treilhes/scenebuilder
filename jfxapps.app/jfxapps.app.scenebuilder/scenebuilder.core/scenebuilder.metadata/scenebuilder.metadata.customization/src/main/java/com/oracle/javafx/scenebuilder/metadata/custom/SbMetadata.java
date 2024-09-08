@@ -83,6 +83,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
+//FIXME must define the scope for this component
 public class SbMetadata extends AbstractMetadata<
     ComponentClassMetadataCustomization,
     ComponentPropertyMetadata<ComponentPropertyMetadataCustomization, SbComponentClassMetadata<?>>,
@@ -103,9 +104,7 @@ public class SbMetadata extends AbstractMetadata<
      */
     private final Set<PropertyName> parentRelatedProperties = new HashSet<>();
 
-    protected SbMetadata(
-            List<SbComponentClassMetadata<?>> componentClassMetadatas,
-            SbMetadataIntrospector metadataIntrospector) {
+    protected SbMetadata(List<SbComponentClassMetadata<?>> componentClassMetadatas) {
         super(componentClassMetadatas);
         setMetadataIntrospector(new SbMetadataIntrospector());
         // Populates parentRelatedProperties

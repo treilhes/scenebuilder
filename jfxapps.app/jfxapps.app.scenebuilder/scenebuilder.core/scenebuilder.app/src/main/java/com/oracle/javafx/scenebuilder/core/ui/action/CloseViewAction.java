@@ -40,7 +40,7 @@ import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.DockActionFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
@@ -68,7 +68,7 @@ public class CloseViewAction extends AbstractAction {
     public CloseViewAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             DockActionFactory dockActionFactory) {
         super(i18n, extensionFactory);
         this.closeView = dockActionFactory.close(documentManager.focusedView().get());

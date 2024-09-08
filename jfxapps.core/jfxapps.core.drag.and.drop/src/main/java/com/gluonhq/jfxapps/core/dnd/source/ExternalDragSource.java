@@ -48,7 +48,7 @@ import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
 import com.gluonhq.jfxapps.core.api.dnd.AbstractDragSource;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -89,7 +89,7 @@ public final class ExternalDragSource extends AbstractDragSource {
 
     protected ExternalDragSource(
             I18N i18n,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             MainInstanceWindow ownerWindow,
             Optional<List<ClipboardDataFormat>> dataFormats) {
         super(ownerWindow.getScene().getWindow());

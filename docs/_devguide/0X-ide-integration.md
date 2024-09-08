@@ -8,7 +8,19 @@ toc: true
 
 ## IDE Integrations
 
+### Maven
 
+#### javafx.platform
+
+To be able to build properly the javafx.platform variable must be set to `win`|`mac`|`linux`<br/>
+
+The prefered way to do this is to add the following into the maven `settings.xml` file<br/>
+
+```xml
+<properties>
+    <javafx.platform>win</javafx.platform>
+</properties>
+```
 
 ### Eclipse
 

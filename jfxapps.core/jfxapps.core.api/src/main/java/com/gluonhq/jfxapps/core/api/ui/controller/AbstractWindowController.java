@@ -39,9 +39,9 @@ import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.annotation.FxThread;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.javafx.FxThread;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
@@ -89,7 +89,7 @@ public abstract class AbstractWindowController implements InstanceWindow {
     private CloseHandler closeHandler;
     private FocusHandler focusHandler;
 
-    private final SceneBuilderManager sceneBuilderManager;
+    private final ApplicationEvents sceneBuilderManager;
     private final IconSetting iconSetting;
 
     /**
@@ -98,7 +98,7 @@ public abstract class AbstractWindowController implements InstanceWindow {
      * @param api the scene builder api
      * @param owner the owner
      */
-    public AbstractWindowController(SceneBuilderManager sceneBuilderManager, IconSetting iconSetting, InstanceWindow owner) {
+    public AbstractWindowController(ApplicationEvents sceneBuilderManager, IconSetting iconSetting, InstanceWindow owner) {
         this(sceneBuilderManager, iconSetting, owner, true);
     }
 
@@ -109,7 +109,7 @@ public abstract class AbstractWindowController implements InstanceWindow {
      * @param owner the owner
      * @param sizeToScene the size to scene
      */
-    public AbstractWindowController(SceneBuilderManager sceneBuilderManager, IconSetting iconSetting, InstanceWindow owner, boolean sizeToScene) {
+    public AbstractWindowController(ApplicationEvents sceneBuilderManager, IconSetting iconSetting, InstanceWindow owner, boolean sizeToScene) {
         this.sceneBuilderManager = sceneBuilderManager;
         this.iconSetting = iconSetting;
         this.owner = owner;
@@ -284,7 +284,7 @@ public abstract class AbstractWindowController implements InstanceWindow {
 
     /**
      * Replaces old Stylesheet config by the tool style sheet assigned to this
-     * controller. This methods is event binded to {@link DocumentManager#stylesheetConfig()} using an RxJava2 subscription.
+     * controller. This methods is event binded to {@link ApplicationInstanceEvents#stylesheetConfig()} using an RxJava2 subscription.
      *
      * @param newToolStylesheetConfig null or the new style sheet configuration to apply
      */

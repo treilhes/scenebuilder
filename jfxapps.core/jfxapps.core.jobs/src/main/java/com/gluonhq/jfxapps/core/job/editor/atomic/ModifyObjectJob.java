@@ -39,7 +39,7 @@ import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
@@ -64,7 +64,7 @@ public final class ModifyObjectJob extends AbstractJob {
     public ModifyObjectJob(
             I18N i18n,
             JobExtensionFactory extensionFactory,
-            DocumentManager documentManager
+            ApplicationInstanceEvents documentManager
             ) {
       //@formatter:on
         super(extensionFactory);

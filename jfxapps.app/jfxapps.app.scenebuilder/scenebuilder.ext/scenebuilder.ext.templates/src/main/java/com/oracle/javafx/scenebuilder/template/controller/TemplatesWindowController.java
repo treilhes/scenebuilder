@@ -39,7 +39,7 @@ import java.util.List;
 import org.graalvm.compiler.lir.CompositeValue.Component;
 
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.template.Template;
 import com.gluonhq.jfxapps.core.api.template.TemplateGroup;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
@@ -51,7 +51,7 @@ import javafx.stage.Modality;
 @Lazy
 public class TemplatesWindowController extends TemplatesBaseWindowController {
     public TemplatesWindowController(
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             @Autowired ApplicationInstanceWindow document,
             @Autowired List<TemplateGroup> templateGroups,

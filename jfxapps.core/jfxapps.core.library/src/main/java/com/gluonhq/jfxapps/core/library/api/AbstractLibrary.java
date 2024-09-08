@@ -65,7 +65,7 @@ import com.gluonhq.jfxapps.core.api.library.LibraryItem;
 import com.gluonhq.jfxapps.core.api.library.Report;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithApplication;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
 import com.gluonhq.jfxapps.core.library.manager.ImportProgressDialogController;
@@ -110,7 +110,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
 
     private final NavigableMap<LocalDateTime, Exploration<R>> explorations = new TreeMap<>();
 
-    private final SceneBuilderManager sceneBuilderManager;
+    private final ApplicationEvents sceneBuilderManager;
 
     private final ClassLoaderController classLoaderController;
 
@@ -122,7 +122,7 @@ public abstract class AbstractLibrary<R extends Report, I extends LibraryItem>
      * Public
      */
 
-    public AbstractLibrary(JfxAppContext context, SceneBuilderManager sceneBuilderManager,
+    public AbstractLibrary(JfxAppContext context, ApplicationEvents sceneBuilderManager,
             ClassLoaderController classLoaderController, LibraryStore store,
             LibraryStoreConfiguration dialogConfiguration) {
         this.context = context;

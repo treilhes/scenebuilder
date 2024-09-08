@@ -31,14 +31,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.api.application;
+package com.gluonhq.jfxapps.core.api.ui.controller.misc;
 
 import java.io.IOException;
 import java.net.URL;
 
 import javafx.beans.value.ObservableValue;
 
-public interface Editor {
+public interface FxomDisplay {
 
 
 	/**

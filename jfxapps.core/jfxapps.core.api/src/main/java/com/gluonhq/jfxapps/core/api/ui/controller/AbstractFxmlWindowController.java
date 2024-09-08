@@ -38,7 +38,7 @@ import java.util.ResourceBundle;
 
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 
@@ -54,7 +54,7 @@ public abstract class AbstractFxmlWindowController extends AbstractWindowControl
 
     public AbstractFxmlWindowController(
             I18N i18n,
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             URL fxmlURL) {
         this(i18n, sceneBuilderManager, iconSetting, fxmlURL, null);
@@ -62,7 +62,7 @@ public abstract class AbstractFxmlWindowController extends AbstractWindowControl
 
     public AbstractFxmlWindowController(
             I18N i18n,
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             URL fxmlURL,
             boolean sizeToScene) {
@@ -71,7 +71,7 @@ public abstract class AbstractFxmlWindowController extends AbstractWindowControl
 
     public AbstractFxmlWindowController(
             I18N i18n,
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             URL fxmlURL,
             InstanceWindow owner) {
@@ -83,7 +83,7 @@ public abstract class AbstractFxmlWindowController extends AbstractWindowControl
 
     public AbstractFxmlWindowController(
             I18N i18n,
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             URL fxmlURL,
             InstanceWindow owner,

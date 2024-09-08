@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.dialog.AbstractModalDialog;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
@@ -93,7 +93,7 @@ public class ImportProgressDialogController extends AbstractModalDialog {
     // @formatter:off
     protected ImportProgressDialogController(
             I18N i18n,
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             Dialog dialog
             ) {

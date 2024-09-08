@@ -37,8 +37,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 
 /**
  *
@@ -50,15 +50,15 @@ public abstract class AbstractFxmlPopupController extends AbstractPopupControlle
     private final ResourceBundle resources;
 
     public AbstractFxmlPopupController(
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager,
             URL fxmlURL) {
         this(scenebuilderManager, documentManager, fxmlURL, null);
     };
 
     public AbstractFxmlPopupController(
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager,
             URL fxmlURL,
             ResourceBundle resources) {
         super(scenebuilderManager, documentManager);

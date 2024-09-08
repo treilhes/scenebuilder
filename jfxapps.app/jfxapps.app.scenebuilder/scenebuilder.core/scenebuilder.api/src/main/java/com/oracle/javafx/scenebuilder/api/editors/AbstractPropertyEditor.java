@@ -823,4 +823,8 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
         resetvalueMenuItem.setDisable(true);
     }
 
+   protected I18N getI18n() {
+        return i18n;
+    }
+
 }

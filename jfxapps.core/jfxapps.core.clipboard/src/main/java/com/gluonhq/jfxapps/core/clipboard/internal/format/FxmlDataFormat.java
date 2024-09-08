@@ -42,7 +42,7 @@ import java.util.function.Consumer;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -57,10 +57,10 @@ public class FxmlDataFormat implements ClipboardDataFormat {
     // FXML Format
     static final DataFormat FXML_DATA_FORMAT = new DataFormat("com.oracle.javafx/fxml"); // NOCHECK
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     public FxmlDataFormat(
-            DocumentManager documentManager) {
+            ApplicationInstanceEvents documentManager) {
         super();
         this.documentManager = documentManager;
     }

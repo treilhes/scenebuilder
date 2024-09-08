@@ -45,7 +45,7 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.maven.MavenClient;
 import com.gluonhq.jfxapps.core.api.maven.RepositoryTypeProvider;
 import com.gluonhq.jfxapps.core.api.settings.MavenSetting;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
@@ -134,7 +134,7 @@ public class AddEditRepositoryDialogController extends AbstractFxmlWindowControl
     protected AddEditRepositoryDialogController(
             I18N i18n,
             MavenClient mavenClient,
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             MessageLogger messageLogger,
             MavenSetting mavenSetting,

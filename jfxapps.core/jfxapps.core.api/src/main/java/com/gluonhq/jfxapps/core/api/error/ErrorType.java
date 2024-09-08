@@ -34,5 +34,5 @@
 package com.gluonhq.jfxapps.core.api.error;
 
 public interface ErrorType {
-    String getMessage();
+    String getI18nKey();
 }

@@ -53,7 +53,7 @@ import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPath;
@@ -76,7 +76,7 @@ public class DragController implements Drag {
     private final SelectionJobsFactory selectionJobFactory;
     private final BatchJob.Factory batchJobFactory;
     private final Selection selection;
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     private final ObjectProperty<DragSource> dragSourceProperty = new SimpleObjectProperty<>(null);
     private final ObjectProperty<DropTarget> dropTargetProperty = new SimpleObjectProperty<>(null);
@@ -94,7 +94,7 @@ public class DragController implements Drag {
     public DragController(
             Selection selection,
             JobManager jobManager,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             DefaultSelectionGroupFactory defaultSelectionGroupFactory,
             SelectionJobsFactory selectionJobFactory,
             BatchJob.Factory batchJobFactory) {

@@ -40,7 +40,7 @@ import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.fs.FileSystemActionFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
@@ -52,7 +52,7 @@ import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
         descriptionKey = "action.description.save")
 public class CloseFileAction extends AbstractAction {
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final InlineEdit inlineEdit;
     private final Dialog dialog;
     private final MainInstanceWindow documentWindow;
@@ -64,7 +64,7 @@ public class CloseFileAction extends AbstractAction {
     public CloseFileAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             ApplicationInstance document,
             MainInstanceWindow documentWindow,
             InlineEdit inlineEdit,

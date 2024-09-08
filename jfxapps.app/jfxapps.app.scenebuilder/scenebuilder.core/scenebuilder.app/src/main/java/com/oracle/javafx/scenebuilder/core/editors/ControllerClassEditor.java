@@ -43,7 +43,7 @@ import com.gluonhq.jfxapps.core.api.Glossary;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.util.JavaLanguage;
@@ -63,7 +63,7 @@ public class ControllerClassEditor extends AutoSuggestEditor {
     private static final String PROPERTY_NAME = "Controller class"; //NOCHECK
     private static final String DEFAULT_VALUE = null;
     private final Glossary glossary;
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     public ControllerClassEditor(
             I18N i18n,
@@ -71,7 +71,7 @@ public class ControllerClassEditor extends AutoSuggestEditor {
             Documentation documentation,
             FileSystem fileSystem,
             Glossary glossary,
-            DocumentManager documentManager) {
+            ApplicationInstanceEvents documentManager) {
         super(i18n, dialog, documentation, fileSystem);
         this.glossary = glossary;
         this.documentManager = documentManager;

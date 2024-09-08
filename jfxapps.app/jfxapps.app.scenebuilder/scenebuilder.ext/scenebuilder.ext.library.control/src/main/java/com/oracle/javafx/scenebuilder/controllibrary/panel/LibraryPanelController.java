@@ -60,7 +60,7 @@ import com.gluonhq.jfxapps.core.api.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.library.LibraryItem;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
@@ -166,7 +166,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
     // UserLibrary bean instead of libraryProperty
  // @formatter:off
     public LibraryPanelController(
-            SceneBuilderManager scenebuilderManager,
+            ApplicationEvents scenebuilderManager,
             FxmlDocumentManager documentManager,
             SbEditor editor,
             Dialog dialog,

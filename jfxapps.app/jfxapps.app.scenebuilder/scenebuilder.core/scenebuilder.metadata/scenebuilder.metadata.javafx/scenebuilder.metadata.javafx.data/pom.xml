@@ -24,6 +24,11 @@
             <version>${jfxapps.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>scenebuilder.metadata.javafx.customization</artifactId>
+            <version>${scenebuilder.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

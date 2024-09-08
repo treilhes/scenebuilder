@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,6 +32,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package com.gluonhq.jfxapps.test;
+
+import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
 
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Pos;
@@ -76,6 +78,15 @@ public class TestStages {
         return btn;
     }
 
+    public static Pane center(Stage stage, int stageWidth, int stageHeight, FxmlController controller) {
+        StackPane pane = new StackPane();
+        Node node = controller.getRoot();
+        pane.getChildren().add(node);
+        StackPane.setAlignment(node, Pos.CENTER);
+        stage.setScene(new Scene(pane, stageWidth, stageHeight, Color.BEIGE));
+        return pane;
+    }
+
     public static Pane paneWithEnlargedContentToFit(Stage stage, int stageWidth, int stageHeight) {
         AnchorPane pane = new AnchorPane();
         pane.getChildren().addListener((ListChangeListener<Node>) c -> {
@@ -91,6 +102,26 @@ public class TestStages {
             }
         });
         stage.setScene(new Scene(pane, stageWidth, stageHeight, Color.BEIGE));
+        return pane;
+    }
+
+    public static Pane fill(Stage stage, int stageWidth, int stageHeight, FxmlController controller) {
+        AnchorPane pane = new AnchorPane();
+        pane.getChildren().addListener((ListChangeListener<Node>) c -> {
+            while(c.next()) {
+                if (c.wasAdded()) {
+                    c.getAddedSubList().forEach(a -> {
+                        AnchorPane.setTopAnchor(a, 0d);
+                        AnchorPane.setRightAnchor(a, 0d);
+                        AnchorPane.setBottomAnchor(a, 0d);
+                        AnchorPane.setLeftAnchor(a, 0d);
+                    });
+                }
+            }
+        });
+        stage.setScene(new Scene(pane, stageWidth, stageHeight, Color.BEIGE));
+        pane.getChildren().add(controller.getRoot());
+        stage.show();
         return pane;
     }
 

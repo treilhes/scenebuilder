@@ -44,6 +44,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.scenebuilder.ext.javafx.customization.anchorpane.AnchorPaneConstraintsEditor.ConstraintEditor;
 import org.testfx.framework.junit5.ApplicationExtension;
@@ -61,6 +62,7 @@ import javafx.scene.control.ToggleButton;
 @ExtendWith({ApplicationExtension.class, MockitoExtension.class})
 public class AnchorPaneConstraintsEditorTest {
 
+    @Spy
     private I18N i18n = new I18N(List.of(), true);
 
     static DoublePropertyMetadata someAnchorProp(String name) {
@@ -91,7 +93,7 @@ public class AnchorPaneConstraintsEditorTest {
         };
 
         Mockito.when(constraintEditorFactory.getEditor(Mockito.any(), Mockito.any(), Mockito.any()))
-            .thenReturn(supplier.get());
+                .thenAnswer(i -> supplier.get());
     }
 
     @Test

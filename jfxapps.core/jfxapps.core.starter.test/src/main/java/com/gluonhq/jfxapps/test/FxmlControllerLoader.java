@@ -34,7 +34,7 @@
 package com.gluonhq.jfxapps.test;
 
 import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 
 import javafx.scene.Parent;
@@ -60,7 +60,7 @@ public class FxmlControllerLoader {
 
     public static class Builder<T extends FxmlController> {
         private T controller;
-        private SceneBuilderManager sbm;
+        private ApplicationEvents sbm;
         private boolean darkTheme = false;
         private boolean defaulTheme = false;
 
@@ -69,14 +69,14 @@ public class FxmlControllerLoader {
             this.controller = controller;
         }
 
-        public Builder<T> darkTheme(SceneBuilderManager sbm) {
+        public Builder<T> darkTheme(ApplicationEvents sbm) {
             this.sbm = sbm;
             darkTheme = true;
             defaulTheme = false;
             return this;
         }
 
-        public Builder<T> defaultTheme(SceneBuilderManager sbm) {
+        public Builder<T> defaultTheme(ApplicationEvents sbm) {
             this.sbm = sbm;
             darkTheme = false;
             defaulTheme = true;

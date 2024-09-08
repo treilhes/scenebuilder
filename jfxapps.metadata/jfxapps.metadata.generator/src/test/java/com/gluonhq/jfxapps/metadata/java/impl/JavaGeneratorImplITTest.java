@@ -74,7 +74,7 @@ class JavaGeneratorImplITTest {
                 );
         var providedClassList = Set.<Descriptor>of();
 
-        PropertyGenerationContext propertyContext = new PropertyGenerationContext();
+        PropertyGenerationContext propertyContext = new PropertyGenerationContext(JavaGeneratorImplITTest.class.getClassLoader());
         propertyContext.setComponentCustomizationClass(ComponentCusto.class.getName());
         propertyContext.setValuePropertyCustomizationClass(ValuePropertyCusto.class.getName());
         propertyContext.setComponentPropertyCustomizationClass(ComponentPropertyCusto.class.getName());

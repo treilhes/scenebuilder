@@ -52,7 +52,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMCloner;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
@@ -63,7 +63,7 @@ import javafx.stage.Stage;
 @ExtendWith({ ApplicationExtension.class, MockitoExtension.class })
 class ExpandIntrinsicReferenceJobTest {
 
-    DocumentManager documentManager = new DocumentManager.DocumentManagerImpl();
+    ApplicationInstanceEvents documentManager = new ApplicationInstanceEvents.ApplicationInstanceEventsImpl();
 
     @TempDir
     File tmpDir;

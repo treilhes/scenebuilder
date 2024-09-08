@@ -42,7 +42,7 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>manager.metadata.modeldata</artifactId>
+                <artifactId>manager.metadata.model.data</artifactId>
                 <version>${manager.version}</version>
             </dependency>
             <dependency>

@@ -38,7 +38,7 @@ import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockType;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
@@ -49,14 +49,14 @@ import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
         descriptionKey = "action.description.save")
 public class ChangeDockTypeAction extends AbstractAction {
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     private DockType<?> dockType;
 
     public ChangeDockTypeAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            DocumentManager documentManager) {
+            ApplicationInstanceEvents documentManager) {
         super(i18n, extensionFactory);
         this.documentManager = documentManager;
     }

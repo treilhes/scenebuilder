@@ -42,7 +42,7 @@ import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.InlineDocumentJob;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
@@ -63,7 +63,7 @@ public final class CombineIntrinsicReferenceJob extends InlineDocumentJob {
 
     protected CombineIntrinsicReferenceJob(
             JobExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             FxomJobsFactory fxomJobsFactory) {
         super(extensionFactory, documentManager);
         this.fxomDocument = documentManager.fxomDocument().get();

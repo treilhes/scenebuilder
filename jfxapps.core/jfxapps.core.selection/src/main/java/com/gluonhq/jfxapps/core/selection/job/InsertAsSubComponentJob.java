@@ -49,7 +49,7 @@ import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMCollection;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -79,7 +79,7 @@ public final class InsertAsSubComponentJob extends BatchSelectionJob {
     // @formatter:off
     protected InsertAsSubComponentJob(
             JobExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection,
             FXOMObjectMask.Factory designMaskFactory,
             FxomJobsFactory fxomJobsFactory,

@@ -32,7 +32,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.gluonhq.jfxapps.ext.container.spi;
+package com.gluonhq.jfxapps.boot.platform;
 
 import java.io.FileNotFoundException;
 import java.net.URL;
@@ -43,6 +43,7 @@ import java.util.Map;
  * This class represents an in-memory file registry. It is used to store file
  * content associated with a session ID and a file path.
  */
+@Deprecated
 public class InMemoryFileRegistry {
 
     // The registry is a map where the key is a session ID and the value is another

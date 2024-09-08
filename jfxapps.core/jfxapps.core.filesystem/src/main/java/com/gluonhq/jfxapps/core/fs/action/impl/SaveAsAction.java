@@ -49,7 +49,7 @@ import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
@@ -66,7 +66,7 @@ public class SaveAsAction extends AbstractAction {
 
     public final static String MENU_ID = "saveAsMenu";
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final InlineEdit inlineEdit;
     private final Dialog dialog;
     private final MainInstanceWindow documentWindow;
@@ -78,7 +78,7 @@ public class SaveAsAction extends AbstractAction {
     public SaveAsAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             MainInstanceWindow documentWindow,
             InlineEdit inlineEdit,
             Dialog dialog,

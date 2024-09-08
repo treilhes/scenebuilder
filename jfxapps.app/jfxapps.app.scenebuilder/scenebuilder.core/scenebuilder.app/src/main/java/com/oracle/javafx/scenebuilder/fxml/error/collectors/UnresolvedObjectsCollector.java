@@ -38,7 +38,8 @@ import java.util.Optional;
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.error.AbstractErrorCollector;
 import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInclude;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
@@ -51,15 +52,18 @@ import com.oracle.javafx.scenebuilder.fxml.error.Type;
 @ApplicationInstanceSingleton
 public class UnresolvedObjectsCollector extends AbstractErrorCollector {
 
+    private final I18N i18n;
     private final SbFXOMObjectMask.Factory designHierarchyMaskFactory;
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     // @formatter:off
     public UnresolvedObjectsCollector(
-            DocumentManager documentManager,
+            I18N i18n,
+            ApplicationInstanceEvents documentManager,
             SbFXOMObjectMask.Factory designHierarchyMaskFactory) {
         // @formatter:on
         super();
+        this.i18n = i18n;
         this.documentManager = documentManager;
         this.designHierarchyMaskFactory = designHierarchyMaskFactory;
     }
@@ -86,7 +90,7 @@ public class UnresolvedObjectsCollector extends AbstractErrorCollector {
                             .collect(FxCollector.fxIdFindFirst(reference));
 
                     if (referee.isEmpty()) {
-                        final ErrorReportEntry newEntry = new FxmlErrorReportEntryImpl(fxomObject,
+                        final ErrorReportEntry newEntry = new FxmlErrorReportEntryImpl(i18n, fxomObject,
                                 Type.UNRESOLVED_REFERENCE, designHierarchyMaskFactory);
                         result.add(fxomObject, newEntry);
                     }
@@ -97,7 +101,7 @@ public class UnresolvedObjectsCollector extends AbstractErrorCollector {
                 sceneGraphObject = fxomObject.getSceneGraphObject().get();
             }
             if (!fxomObject.isVirtual() && sceneGraphObject == null) {
-                final ErrorReportEntry newEntry = new FxmlErrorReportEntryImpl(fxomObject, Type.UNRESOLVED_CLASS,
+                final ErrorReportEntry newEntry = new FxmlErrorReportEntryImpl(i18n, fxomObject, Type.UNRESOLVED_CLASS,
                         designHierarchyMaskFactory);
                 result.add(fxomObject, newEntry);
             }

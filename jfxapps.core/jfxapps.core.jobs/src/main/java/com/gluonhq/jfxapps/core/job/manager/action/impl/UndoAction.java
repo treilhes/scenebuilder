@@ -39,7 +39,7 @@ import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 
 @ApplicationInstancePrototype
 @ActionMeta(
@@ -50,13 +50,13 @@ public class UndoAction extends AbstractAction {
     public final static String MENU_ID = "undoMenuItem"; //NOCHECK
 
     private final JobManager jobManager;
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     public UndoAction(
         I18N i18n,
         ActionExtensionFactory extensionFactory,
         JobManager jobManager,
-        DocumentManager documentManager) {
+        ApplicationInstanceEvents documentManager) {
         super(i18n, extensionFactory);
         this.jobManager = jobManager;
         this.documentManager = documentManager;

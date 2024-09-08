@@ -45,7 +45,7 @@ import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups.Preferen
 import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
 import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
 import com.gluonhq.jfxapps.core.api.preferences.UserPreference;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
@@ -89,7 +89,7 @@ public class PreferencesWindowController extends AbstractFxmlWindowController {
 
     public PreferencesWindowController(
             I18N i18n,
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             MainInstanceWindow documentWindowController,
             List<ManagedGlobalPreference> globalPreferences,

@@ -54,10 +54,10 @@ import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
 import com.gluonhq.jfxapps.core.api.preferences.init.DocumentPreferencesNodeImpl;
 import com.gluonhq.jfxapps.core.api.preferences.init.RootPreferencesNodeImpl;
 import com.gluonhq.jfxapps.core.api.settings.MavenSetting;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
 import com.gluonhq.jfxapps.core.api.subjects.NetworkManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockNameHelper;
@@ -82,6 +82,8 @@ public class ApiExtension implements RootExtension {
     @Override
     public List<Class<?>> localContextClasses() {
         return Arrays.asList(
+                ApplicationEvents.ApplicationEventsImpl.class,
+                ApplicationInstanceEvents.ApplicationInstanceEventsImpl.class,
                 ContextClassLoaderEventDispatcher.class,
                 FxThreadAspect.class,
 
@@ -94,7 +96,8 @@ public class ApiExtension implements RootExtension {
                 DiscardGesture.Factory.class,
                 DockNameHelper.class,
                 DockManager.DockManagerImpl.class,
-                DocumentManager.DocumentManagerImpl.class,
+
+
                 I18N.class,
                 JavafxThreadClassloader.class,
                 JavafxThreadClassloaderDispatcherImpl.class,
@@ -103,7 +106,7 @@ public class ApiExtension implements RootExtension {
                 MenuBuilder.class,
                 NetworkManager.NetworkManagerImpl.class,
                 PreferencesContext.class,
-                SceneBuilderManager.SceneBuilderManagerImpl.class,
+
                 SearchController.class,
                 //Selection.class,
                 ViewController.class,

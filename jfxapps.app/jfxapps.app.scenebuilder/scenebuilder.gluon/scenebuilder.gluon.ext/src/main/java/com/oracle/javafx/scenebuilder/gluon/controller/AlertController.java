@@ -40,7 +40,7 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
@@ -51,12 +51,12 @@ import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 public class AlertController implements InitWithDocument {
 
     private final ApplicationInstanceWindow document;
-    private final DocumentManager<FXOMDocument> documentManager;
+    private final ApplicationInstanceEvents<FXOMDocument> documentManager;
     private final ThemeDocumentPreference themePreference;
     
     public AlertController(
             @Autowired @Lazy ApplicationInstanceWindow document,
-            @Autowired DocumentManager<FXOMDocument> documentManager,
+            @Autowired ApplicationInstanceEvents<FXOMDocument> documentManager,
             @Autowired ThemeDocumentPreference themePreference
             ) {
         super();

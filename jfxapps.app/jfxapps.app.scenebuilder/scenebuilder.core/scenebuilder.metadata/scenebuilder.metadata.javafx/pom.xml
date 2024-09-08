@@ -40,7 +40,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-invoker-plugin</artifactId>
-                <inherited>false</inherited> <!-- Prevent inheritance of this plugin -->
+                <inherited>false</inherited> <!-- Prevent inheritance of this plugin, or face ann infinite loop -->
                 <executions>
                     <!-- This execution is used to run javafxdata first
                     as pomIncludes does not allow to order builds -->
@@ -53,6 +53,7 @@
                         <configuration>
                             <projectsDirectory>${basedir}</projectsDirectory>
                             <pomIncludes>
+                                <pomInclude>scenebuilder.metadata.javafx.customization/pom.xml</pomInclude>
                                 <pomInclude>scenebuilder.metadata.javafx.data/pom.xml</pomInclude>
                             </pomIncludes>
                             <streamLogs>true</streamLogs>

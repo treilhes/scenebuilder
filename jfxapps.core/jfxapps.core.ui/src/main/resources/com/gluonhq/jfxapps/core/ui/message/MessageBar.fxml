@@ -40,12 +40,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane minHeight="30.0" prefHeight="-1.0" prefWidth="458.0" stylesheets="@../controller/css/MessageBar.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane minHeight="30.0" prefHeight="-1.0" prefWidth="458.0" stylesheets="@MessageBar.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <children>
-    <HBox fx:id="messageBox" alignment="CENTER" spacing="5.0" styleClass="message-bar">
+    <HBox fx:id="messageBox" alignment="CENTER" spacing="5.0" styleClass="message-bar,message-warning">
       <children>
         <StackPane fx:id="selectionBarHost" prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
-        <HBox fx:id="messagePart" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+        <HBox fx:id="messagePart">
           <children>
             <Label fx:id="messageLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mouseTransparent="true" style="&#10;" text="Message" HBox.hgrow="ALWAYS" />
             <HBox fx:id="iconsHbox" alignment="CENTER_RIGHT" fillHeight="true" minWidth="-Infinity" prefHeight="-1.0" prefWidth="-1.0" spacing="0.0" HBox.hgrow="NEVER">

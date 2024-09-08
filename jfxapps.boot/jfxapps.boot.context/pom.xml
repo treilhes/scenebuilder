@@ -6,6 +6,7 @@
         <version>${jfxapps.version}</version>
     </parent>
     <artifactId>jfxapps.boot.context</artifactId>
+    
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>

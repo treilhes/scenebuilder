@@ -21,7 +21,7 @@
         Those modules are built at the end of the manager.metadata.customization module.
          -->
         <!--<module>manager.metadata.model</module>
-        <module>manager.metadata.modeldata</module>-->
+        <module>manager.metadata.model.data</module>-->
     </modules>
 
     <dependencies>

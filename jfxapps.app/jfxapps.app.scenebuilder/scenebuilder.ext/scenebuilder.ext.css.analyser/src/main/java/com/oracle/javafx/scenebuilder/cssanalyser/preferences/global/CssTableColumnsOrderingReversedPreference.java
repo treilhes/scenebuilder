@@ -50,11 +50,10 @@ import com.gluonhq.jfxapps.core.api.preferences.type.BooleanPreference;
 import javafx.scene.Parent;
 
 @ApplicationSingleton
-public class CssTableColumnsOrderingReversedPreference extends BooleanPreference implements ManagedGlobalPreference, UserPreference<Boolean> {
-	/***************************************************************************
-     *                                                                         *
-     * Support Classes                                                         *
-     *                                                                         *
+public class CssTableColumnsOrderingReversedPreference extends BooleanPreference
+        implements ManagedGlobalPreference, UserPreference<Boolean> {
+    /***************************************************************************
+     * * Support Classes * *
      **************************************************************************/
 
     public enum CSSAnalyzerColumnsOrder {
@@ -63,65 +62,64 @@ public class CssTableColumnsOrderingReversedPreference extends BooleanPreference
 
             @Override
             public String toString() {
-                return I18N.getString("prefs.cssanalyzer.columns.defaults.first");
+                //return I18N.getString("prefs.cssanalyzer.columns.defaults.first");
+                return "prefs.cssanalyzer.columns.defaults.first";
             }
         },
         DEFAULTS_LAST {
 
             @Override
             public String toString() {
-                return I18N.getString("prefs.cssanalyzer.columns.defaults.last");
+                //return I18N.getString("prefs.cssanalyzer.columns.defaults.last");
+                return "prefs.cssanalyzer.columns.defaults.last";
             }
         }
     }
 
     /***************************************************************************
-     *                                                                         *
-     * Static fields                                                           *
-     *                                                                         *
+     * * Static fields * *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "CSS_TABLE_COLUMNS_ORDERING_REVERSED"; //NOCHECK
+    public static final String PREFERENCE_KEY = "CSS_TABLE_COLUMNS_ORDERING_REVERSED"; // NOCHECK
     public static final boolean PREFERENCE_DEFAULT_VALUE = false;
 
     private final PreferenceEditorFactory preferenceEditorFactory;
 
-	public CssTableColumnsOrderingReversedPreference(
-			@Autowired PreferencesContext preferencesContext,
-			@Autowired PreferenceEditorFactory preferenceEditorFactory) {
-		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-		this.preferenceEditorFactory = preferenceEditorFactory;
-	}
+    public CssTableColumnsOrderingReversedPreference(@Autowired PreferencesContext preferencesContext,
+            @Autowired PreferenceEditorFactory preferenceEditorFactory) {
+        super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
+        this.preferenceEditorFactory = preferenceEditorFactory;
+    }
 
-	@Override
-	public PreferenceGroup getGroup() {
-		return DefaultPreferenceGroups.GLOBAL_GROUP_C;
-	}
+    @Override
+    public PreferenceGroup getGroup() {
+        return DefaultPreferenceGroups.GLOBAL_GROUP_C;
+    }
 
-	@Override
-	public String getOrderKey() {
-		return getGroup() + "_D";
-	}
+    @Override
+    public String getOrderKey() {
+        return getGroup() + "_D";
+    }
 
-	@Override
-	public String getLabelI18NKey() {
-		return "prefs.cssanalyzer.columns.order";
-	}
+    @Override
+    public String getLabelI18NKey() {
+        return "prefs.cssanalyzer.columns.order";
+    }
 
-	@Override
-	public Parent getEditor() {
-		Function<Boolean, CSSAnalyzerColumnsOrder> adapter =
-				b -> b ? CSSAnalyzerColumnsOrder.DEFAULTS_LAST : CSSAnalyzerColumnsOrder.DEFAULTS_FIRST;
+    @Override
+    public Parent getEditor() {
+        Function<Boolean, CSSAnalyzerColumnsOrder> adapter = b -> b ? CSSAnalyzerColumnsOrder.DEFAULTS_LAST
+                : CSSAnalyzerColumnsOrder.DEFAULTS_FIRST;
 
-		Function<CSSAnalyzerColumnsOrder, Boolean> reverseAdapter =
-				e -> {
-					switch (e) {
-					case DEFAULTS_FIRST:
-						return false;
-					default:
-						return true;
-					}
-				};
-		return preferenceEditorFactory.newChoiceFieldEditor(this, CSSAnalyzerColumnsOrder.values(), adapter, reverseAdapter);
-	}
+        Function<CSSAnalyzerColumnsOrder, Boolean> reverseAdapter = e -> {
+            switch (e) {
+            case DEFAULTS_FIRST:
+                return false;
+            default:
+                return true;
+            }
+        };
+        return preferenceEditorFactory.newChoiceFieldEditor(this, CSSAnalyzerColumnsOrder.values(), adapter,
+                reverseAdapter);
+    }
 
 }

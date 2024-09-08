@@ -49,7 +49,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import com.gluonhq.jfxapps.core.api.Glossary;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
@@ -57,7 +57,8 @@ import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 @ExtendWith({ApplicationExtension.class, MockitoExtension.class})
 public class FxIdEditorTest {
 
-    private I18N i18n = new I18N(List.of(), true);
+    @Spy
+    I18N i18n = new I18N(List.of(), true);
 
     @Mock
     private Dialog dialog;
@@ -69,7 +70,7 @@ public class FxIdEditorTest {
     private Glossary glossary;
 
     @Spy
-    private DocumentManager documentManager = new DocumentManager.DocumentManagerImpl();
+    private ApplicationInstanceEvents documentManager = new ApplicationInstanceEvents.ApplicationInstanceEventsImpl();
 
     @Mock
     private MessageLogger messageLogger;

@@ -44,7 +44,8 @@ import com.gluonhq.jfxapps.core.api.error.AbstractErrorCollector;
 import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem.WatchingCallback;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.fxom.FXOMAssetIndex;
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;
@@ -56,18 +57,21 @@ import com.oracle.javafx.scenebuilder.fxml.error.Type;
 @ApplicationInstanceSingleton
 public class AssetsErrorCollector extends AbstractErrorCollector implements WatchingCallback {
 
+    private final I18N i18n;
     private final SbFXOMObjectMask.Factory designHierarchyMaskFactory;
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final Map<Path, CSSParsingReportImpl> cssParsingReports = new HashMap<>();
     private final FileSystem fileSystem;
     private final MainInstanceWindow documentWindow;
 
     public AssetsErrorCollector(
+            I18N i18n,
             FileSystem fileSystem,
             MainInstanceWindow documentWindow,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             SbFXOMObjectMask.Factory designHierarchyMaskFactory) {
         super();
+        this.i18n = i18n;
         this.fileSystem = fileSystem;
         this.documentWindow = documentWindow;
         this.documentManager = documentManager;
@@ -83,7 +87,7 @@ public class AssetsErrorCollector extends AbstractErrorCollector implements Watc
         for (Map.Entry<Path, FXOMNode> e : assetIndex.getFileAssets().entrySet()) {
             final Path assetPath = e.getKey();
             if (assetPath.toFile().canRead() == false) {
-                final ErrorReportEntry newEntry = new FxmlErrorReportEntryImpl(e.getValue(), Type.UNRESOLVED_LOCATION, designHierarchyMaskFactory);
+                final ErrorReportEntry newEntry = new FxmlErrorReportEntryImpl(i18n, e.getValue(), Type.UNRESOLVED_LOCATION, designHierarchyMaskFactory);
                 result.add(e.getValue(), newEntry);
             } else {
                 final String assetPathName = assetPath.toString();
@@ -95,7 +99,7 @@ public class AssetsErrorCollector extends AbstractErrorCollector implements Watc
 
                     assert r != null;
                     if (r.isEmpty() == false) {
-                        final ErrorReportEntry newEntry = new FxmlErrorReportEntryImpl(e.getValue(),
+                        final ErrorReportEntry newEntry = new FxmlErrorReportEntryImpl(i18n, e.getValue(),
                                 Type.INVALID_CSS_CONTENT, r, designHierarchyMaskFactory);
                         result.add(e.getValue(), newEntry);
                     }

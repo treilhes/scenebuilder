@@ -13,6 +13,7 @@
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>org.hibernate.orm.core.patch</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate.orm</groupId>

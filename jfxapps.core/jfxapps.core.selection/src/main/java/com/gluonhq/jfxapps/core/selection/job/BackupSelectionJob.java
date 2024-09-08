@@ -39,7 +39,7 @@ import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 
 /**
  * This job create a backup of the current selection by cloning the content of {@link Selection#getGroup()}
@@ -52,11 +52,11 @@ public final class BackupSelectionJob extends AbstractJob {
 
     private final Selection selection;
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     protected BackupSelectionJob(
             JobExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection
             ) {
         super(extensionFactory);

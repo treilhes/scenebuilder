@@ -44,7 +44,7 @@ import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.api.menu.DebugMenu;
@@ -74,7 +74,7 @@ public class DebugMenuController implements DebugMenu {
     		@Autowired Content content,
     		@Autowired FileSystem fileSystem,
     		@Autowired Dialog dialog,
-    		@Autowired SceneBuilderManager sceneBuilderManager
+    		@Autowired ApplicationEvents sceneBuilderManager
     		//@Autowired @Lazy DebugMenuWindowController  debugMenuWindow
     		) {
 

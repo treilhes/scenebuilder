@@ -80,7 +80,8 @@ public class FXMLUtils {
 
 
 	public static <T> T load(I18N i18n, Object controllerInstance, Class<?> resourceLoadingClass, URL fxmlUrl) {
-	    return load(controllerInstance, resourceLoadingClass, fxmlUrl, i18n.getBundle());
+	    var bundle = i18n != null ? i18n.getBundle() : null;
+	    return load(controllerInstance, resourceLoadingClass, fxmlUrl, bundle);
 	}
 	public static <T> T load(Object controllerInstance, Class<?> resourceLoadingClass, URL fxmlUrl, ResourceBundle resources) {
 

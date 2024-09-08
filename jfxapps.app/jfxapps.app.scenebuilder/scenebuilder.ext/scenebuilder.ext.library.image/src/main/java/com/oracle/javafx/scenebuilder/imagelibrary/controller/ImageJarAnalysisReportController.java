@@ -45,7 +45,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
@@ -82,7 +82,7 @@ public class ImageJarAnalysisReportController extends AbstractFxmlWindowControll
     private boolean dirty = false;
 
     public ImageJarAnalysisReportController(
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             ImageLibrary library,
             ApplicationInstanceWindow document) {

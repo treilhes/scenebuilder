@@ -39,7 +39,7 @@ import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 @ApplicationInstancePrototype
@@ -48,13 +48,13 @@ public class SaveOrSaveAsAction extends AbstractAction {
 
     public final static String MENU_ID = "saveMenu";
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final ActionFactory actionFactory;
 
     public SaveOrSaveAsAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             ActionFactory actionFactory) {
         super(i18n, extensionFactory);
         this.documentManager = documentManager;

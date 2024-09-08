@@ -37,7 +37,6 @@ import java.nio.file.Path;
 import java.util.Map;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.context.annotation.Primary;
 import com.gluonhq.jfxapps.core.api.css.StylesheetProvider;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
@@ -55,7 +54,7 @@ import javafx.beans.value.ChangeListener;
  *
  */
 // TODO this interface must be split in 2: document events / fxml specific events
-public interface DocumentManager {
+public interface ApplicationInstanceEvents {
 
     /**
      * The current "dirty" state has changed.
@@ -130,10 +129,9 @@ public interface DocumentManager {
     SubjectItem<Map<Path, String>> filesystemUpdate();
 
     @ApplicationInstanceSingleton
-    @Primary
-    public class DocumentManagerImpl implements DocumentManager {
+    public class ApplicationInstanceEventsImpl implements ApplicationInstanceEvents {
 
-        private DocumentSubjects subjects;
+        private ApplicationInstanceSubjects subjects;
 
         private final SubjectItem<Boolean> dirty;
         private final SubjectItem<Boolean> saved;
@@ -155,8 +153,8 @@ public interface DocumentManager {
         private ChangeListener<? super Number> cssRevisionChangeListener =
                 (ob, o, n) -> cssRevisionDidChange().set(n.intValue());
 
-        public DocumentManagerImpl() {
-            subjects = new DocumentSubjects();
+        public ApplicationInstanceEventsImpl() {
+            subjects = new ApplicationInstanceSubjects();
 
             dirty = new SubjectItem<Boolean>(subjects.getDirty()).set(false);
             saved = new SubjectItem<Boolean>(subjects.getSaved()).set(false);
@@ -258,7 +256,7 @@ public interface DocumentManager {
 
     }
 
-    public class DocumentSubjects extends SubjectManager {
+    public class ApplicationInstanceSubjects extends SubjectManager {
 
         private ReplaySubject<Boolean> dirty;
         private ReplaySubject<Boolean> saved;
@@ -277,23 +275,23 @@ public interface DocumentManager {
         private ReplaySubject<AbstractFxmlViewController> focusedView;
         private Subject<Map<Path, String>> filesystemUpdate;
 
-        public DocumentSubjects() {
-            dirty = wrap(DocumentSubjects.class, "dirty", ReplaySubject.create(1)); // NOI18N
-            saved = wrap(DocumentSubjects.class, "saved", ReplaySubject.create(1)); // NOI18N
-            closed = wrap(DocumentSubjects.class, "closed", ReplaySubject.create(1)); // NOI18N
-            dependenciesLoaded = wrap(DocumentSubjects.class, "dependenciesLoaded", ReplaySubject.create(1)); // NOI18N
-            stylesheetConfig = wrap(DocumentSubjects.class, "stylesheetConfig", ReplaySubject.create(1)); // NOI18N
-            i18nResourceConfig = wrap(DocumentSubjects.class, "i18nResourceConfig", ReplaySubject.create(1)); // NOI18N
-            fxomDocument = wrap(DocumentSubjects.class, "fxomDocument", ReplaySubject.create(1)); // NOI18N
-            selectionDidChange = wrap(DocumentSubjects.class, "selectionDidChange", ReplaySubject.create(1)); // NOI18N
-            classLoaderDidChange = wrap(DocumentSubjects.class, "classLoaderDidChange", ReplaySubject.create(1)); // NOI18N
+        public ApplicationInstanceSubjects() {
+            dirty = wrap(ApplicationInstanceSubjects.class, "dirty", ReplaySubject.create(1)); // NOI18N
+            saved = wrap(ApplicationInstanceSubjects.class, "saved", ReplaySubject.create(1)); // NOI18N
+            closed = wrap(ApplicationInstanceSubjects.class, "closed", ReplaySubject.create(1)); // NOI18N
+            dependenciesLoaded = wrap(ApplicationInstanceSubjects.class, "dependenciesLoaded", ReplaySubject.create(1)); // NOI18N
+            stylesheetConfig = wrap(ApplicationInstanceSubjects.class, "stylesheetConfig", ReplaySubject.create(1)); // NOI18N
+            i18nResourceConfig = wrap(ApplicationInstanceSubjects.class, "i18nResourceConfig", ReplaySubject.create(1)); // NOI18N
+            fxomDocument = wrap(ApplicationInstanceSubjects.class, "fxomDocument", ReplaySubject.create(1)); // NOI18N
+            selectionDidChange = wrap(ApplicationInstanceSubjects.class, "selectionDidChange", ReplaySubject.create(1)); // NOI18N
+            classLoaderDidChange = wrap(ApplicationInstanceSubjects.class, "classLoaderDidChange", ReplaySubject.create(1)); // NOI18N
 
-            sceneGraphRevisionDidChange = wrap(DocumentSubjects.class, "sceneGraphRevisionDidChange", // NOI18N
+            sceneGraphRevisionDidChange = wrap(ApplicationInstanceSubjects.class, "sceneGraphRevisionDidChange", // NOI18N
                     PublishSubject.create());
-            cssRevisionDidChange = wrap(DocumentSubjects.class, "cssRevisionDidChange", PublishSubject.create()); // NOI18N
-            focused = wrap(DocumentSubjects.class, "focused", ReplaySubject.create(1)); // NOI18N
-            focusedView = wrap(DocumentSubjects.class, "focusedView", ReplaySubject.create(1)); // NOI18N
-            filesystemUpdate = wrap(DocumentSubjects.class, "filesystemUpdate", PublishSubject.create()); // NOI18N
+            cssRevisionDidChange = wrap(ApplicationInstanceSubjects.class, "cssRevisionDidChange", PublishSubject.create()); // NOI18N
+            focused = wrap(ApplicationInstanceSubjects.class, "focused", ReplaySubject.create(1)); // NOI18N
+            focusedView = wrap(ApplicationInstanceSubjects.class, "focusedView", ReplaySubject.create(1)); // NOI18N
+            filesystemUpdate = wrap(ApplicationInstanceSubjects.class, "filesystemUpdate", PublishSubject.create()); // NOI18N
         }
 
         public ReplaySubject<Boolean> getDirty() {

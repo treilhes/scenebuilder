@@ -47,7 +47,7 @@ import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.error.ErrorCollector;
 import com.gluonhq.jfxapps.core.api.error.ErrorReport;
 import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
@@ -59,14 +59,14 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 public class ErrorReportImpl implements ErrorReport {
 
     private final Map<FXOMNode, List<ErrorReportEntry>> documentErrors = new HashMap<>();
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     private boolean dirty = true;
 
     private final Optional<List<ErrorCollector>> errorCollectors;
 
     public ErrorReportImpl(
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Optional<List<ErrorCollector>> errorCollectors) {
         super();
         this.documentManager = documentManager;

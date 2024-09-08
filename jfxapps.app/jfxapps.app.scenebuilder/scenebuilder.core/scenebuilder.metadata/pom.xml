@@ -136,11 +136,6 @@
                     <dependencies>
                         <dependency>
                             <groupId>com.gluonhq.jfxapps</groupId>
-                            <artifactId>scenebuilder.metadata.javafxdata</artifactId>
-                            <version>${scenebuilder.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>com.gluonhq.jfxapps</groupId>
                             <artifactId>scenebuilder.metadata.customization</artifactId>
                             <version>${scenebuilder.version}</version>
                             <exclusions>

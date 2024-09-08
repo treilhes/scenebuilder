@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.subjects;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 
@@ -41,7 +41,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.ReplaySubject;
 import io.reactivex.rxjava3.subjects.Subject;
 
-public interface SceneBuilderManager {
+public interface ApplicationEvents {
 
     SubjectItem<Boolean> debugMode();
 
@@ -57,16 +57,16 @@ public interface SceneBuilderManager {
 
     SubjectItem<ClassLoader> classloader();
 
-    @Singleton
-    public class SceneBuilderManagerImpl implements SceneBuilderManager {
+    @ApplicationSingleton
+    public class ApplicationEventsImpl implements ApplicationEvents {
 
-        private final SceneBuilderSubjects subjects;
+        private final ApplicationSubjects subjects;
         private final SubjectItem<Boolean> debugMode;
         private final SubjectItem<ClassLoader> classloader;
 
 
-        public SceneBuilderManagerImpl() {
-            subjects = new SceneBuilderSubjects();
+        public ApplicationEventsImpl() {
+            subjects = new ApplicationSubjects();
             debugMode = new SubjectItem<Boolean>(subjects.getDebugMode()).set(false);
             classloader = new SubjectItem<ClassLoader>(subjects.getClassloader()).set(this.getClass().getClassLoader());
         }
@@ -107,7 +107,7 @@ public interface SceneBuilderManager {
         }
     }
 
-    public class SceneBuilderSubjects extends SubjectManager {
+    public class ApplicationSubjects extends SubjectManager {
 
         private ReplaySubject<ToolStylesheetProvider> stylesheetConfig;
         private PublishSubject<Boolean> closed;
@@ -117,14 +117,14 @@ public interface SceneBuilderManager {
         private ReplaySubject<Boolean> debugMode;
         private ReplaySubject<ClassLoader> classloader;
 
-        public SceneBuilderSubjects() {
-            closed = wrap(SceneBuilderSubjects.class, "closed", PublishSubject.create()); // NOI18N
-            debugMode = wrap(SceneBuilderSubjects.class, "debugMode", ReplaySubject.create(1)); // NOI18N
-            stylesheetConfig = wrap(SceneBuilderSubjects.class, "stylesheetConfig", ReplaySubject.create(1)); // NOI18N
-            documentOpened = wrap(SceneBuilderSubjects.class, "documentOpened", PublishSubject.create()); // NOI18N
-            documentClosed = wrap(SceneBuilderSubjects.class, "documentClosed", PublishSubject.create()); // NOI18N
-            documentScoped = wrap(SceneBuilderSubjects.class, "documentScoped", ReplaySubject.create(1)); // NOI18N
-            classloader = wrap(SceneBuilderSubjects.class, "classloader", ReplaySubject.create(1)); // NOI18N
+        public ApplicationSubjects() {
+            closed = wrap(ApplicationSubjects.class, "closed", PublishSubject.create()); // NOI18N
+            debugMode = wrap(ApplicationSubjects.class, "debugMode", ReplaySubject.create(1)); // NOI18N
+            stylesheetConfig = wrap(ApplicationSubjects.class, "stylesheetConfig", ReplaySubject.create(1)); // NOI18N
+            documentOpened = wrap(ApplicationSubjects.class, "documentOpened", PublishSubject.create()); // NOI18N
+            documentClosed = wrap(ApplicationSubjects.class, "documentClosed", PublishSubject.create()); // NOI18N
+            documentScoped = wrap(ApplicationSubjects.class, "documentScoped", ReplaySubject.create(1)); // NOI18N
+            classloader = wrap(ApplicationSubjects.class, "classloader", ReplaySubject.create(1)); // NOI18N
         }
 
         public ReplaySubject<ToolStylesheetProvider> getStylesheetConfig() {

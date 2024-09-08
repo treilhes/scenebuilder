@@ -34,7 +34,7 @@
 package com.gluonhq.jfxapps.core.ui.controller;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.context.annotation.FxThread;
+import com.gluonhq.jfxapps.core.api.javafx.FxThread;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.WindowPreferenceTracker;
 import com.gluonhq.jfxapps.core.ui.preferences.document.MaximizedPreference;

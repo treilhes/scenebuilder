@@ -38,8 +38,8 @@ import java.util.Map;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
@@ -61,7 +61,7 @@ public class DebugMenuWindowController extends AbstractFxmlWindowController {
     @FXML
     TextArea textArea;
 
-    private final DocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     private FXOMDocument fxomDocument;
     private String documentName;
@@ -70,10 +70,10 @@ public class DebugMenuWindowController extends AbstractFxmlWindowController {
 
     public DebugMenuWindowController(
             I18N i18n,
-            SceneBuilderManager sceneBuilderManager,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             InstanceWindow document,
-            DocumentManager documentManager
+            ApplicationInstanceEvents documentManager
             ) {
         super(i18n, sceneBuilderManager, iconSetting, DebugMenuWindowController.class.getResource("SourceWindow.fxml"), document); // NOI18N
         this.documentManager = documentManager;

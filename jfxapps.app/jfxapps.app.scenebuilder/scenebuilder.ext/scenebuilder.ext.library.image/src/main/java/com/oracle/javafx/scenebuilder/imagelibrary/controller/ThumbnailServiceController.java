@@ -44,7 +44,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
 import com.gluonhq.jfxapps.core.api.library.LibraryItem;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
 
@@ -65,12 +65,12 @@ public class ThumbnailServiceController implements DisposeWithApplication {
 
     private final static Logger logger = LoggerFactory.getLogger(ThumbnailServiceController.class);
     
-    private final SceneBuilderManager sceneBuilderManager;
+    private final ApplicationEvents sceneBuilderManager;
     private final ImageLibrary imageLibrary;
     private final ExecutorService thumbnailExecutor;
 
     public ThumbnailServiceController(
-            @Autowired SceneBuilderManager sceneBuilderManager,
+            @Autowired ApplicationEvents sceneBuilderManager,
             @Autowired ImageLibrary imageLibrary
             ) {
 

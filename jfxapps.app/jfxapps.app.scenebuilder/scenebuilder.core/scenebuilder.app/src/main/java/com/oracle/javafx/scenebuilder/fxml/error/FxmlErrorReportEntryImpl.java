@@ -36,6 +36,7 @@ package com.oracle.javafx.scenebuilder.fxml.error;
 import java.net.URL;
 
 import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -50,25 +51,27 @@ public class FxmlErrorReportEntryImpl implements ErrorReportEntry {
 
     private final SbFXOMObjectMask.Factory designHierarchyMaskFactory;
 
+    private final I18N i18n;
     private final FXOMNode fxomNode;
     private final Type type;
     private URL linkedResourceUrl;
     private final CSSParsingReportImpl cssParsingReport; // relevant for INVALID_CSS_CONTENT
 
-    public FxmlErrorReportEntryImpl(FXOMNode fxomNode, Type type, CSSParsingReportImpl cssParsingReport,
+    public FxmlErrorReportEntryImpl(I18N i18n, FXOMNode fxomNode, Type type, CSSParsingReportImpl cssParsingReport,
             SbFXOMObjectMask.Factory designHierarchyMaskFactory) {
         assert fxomNode != null;
         assert (type == Type.INVALID_CSS_CONTENT) == (cssParsingReport != null);
 
+        this.i18n = i18n;
         this.fxomNode = fxomNode;
         this.type = type;
         this.cssParsingReport = cssParsingReport;
         this.designHierarchyMaskFactory = designHierarchyMaskFactory;
     }
 
-    public FxmlErrorReportEntryImpl(FXOMNode fxomNode, Type type,
+    public FxmlErrorReportEntryImpl(I18N i18n, FXOMNode fxomNode, Type type,
             SbFXOMObjectMask.Factory designHierarchyMaskFactory) {
-        this(fxomNode, type, null, designHierarchyMaskFactory);
+        this(i18n, fxomNode, type, null, designHierarchyMaskFactory);
     }
 
     @Override
@@ -97,7 +100,7 @@ public class FxmlErrorReportEntryImpl implements ErrorReportEntry {
             assert cssParsingReport != null;
             result.append(cssParsingReport.asString(5, "\n", "...")); // NOCHECK
         } else {
-            result.append(getType().getMessage());
+            result.append(i18n.get(getType().getI18nKey()));
         }
 
         result.append(" "); // NOCHECK
@@ -129,7 +132,7 @@ public class FxmlErrorReportEntryImpl implements ErrorReportEntry {
         result.append("(fxomNode="); // NOCHECK
         result.append(fxomNode.getClass().getSimpleName());
         result.append(",type="); // NOCHECK
-        result.append(type.getMessage());
+        result.append(type.getI18nKey());
         switch (type) {
         case UNRESOLVED_CLASS:
             break;

@@ -34,8 +34,8 @@
 package com.gluonhq.jfxapps.core.api.ui.controller;
 
 import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
-import com.gluonhq.jfxapps.core.api.subjects.SceneBuilderManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 
 import javafx.scene.Parent;
 
@@ -71,8 +71,8 @@ public abstract class AbstractPanelController extends AbstractCommonUiController
      * @param api the api object
      */
     protected AbstractPanelController(
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager) {
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager) {
         super(scenebuilderManager, documentManager);
     }
 

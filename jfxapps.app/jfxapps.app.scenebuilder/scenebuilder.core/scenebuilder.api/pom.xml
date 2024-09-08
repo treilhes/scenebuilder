@@ -22,16 +22,32 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.core.metadata</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!--<dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>scenebuilder.metadata.sbjavafx</artifactId>
+        </dependency>-->
+        
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>scenebuilder.app.starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.gluonhq.jfxapps</groupId>
+                    <artifactId>jfxapps.core.api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.gluonhq.jfxapps</groupId>
+                    <artifactId>jfxapps.core.starter</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.metadata</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -43,6 +59,12 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.starter.test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.gluonhq.jfxapps</groupId>
+                    <artifactId>jfxapps.core.api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

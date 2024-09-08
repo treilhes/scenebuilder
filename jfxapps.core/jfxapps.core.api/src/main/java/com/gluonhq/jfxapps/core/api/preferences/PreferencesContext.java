@@ -45,7 +45,7 @@ import java.util.prefs.Preferences;
 
 import com.gluonhq.jfxapps.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 @Singleton
@@ -80,7 +80,7 @@ public class PreferencesContext {
     }
 
     public String getCurrentFilePath() {
-        final DocumentManager documentManager = activeDocumentManager();
+        final ApplicationInstanceEvents documentManager = activeDocumentManager();
         final FXOMDocument document =  documentManager.fxomDocument().get();
         final URL fxmlLocation = document == null ? null : document.getLocation();
 
@@ -142,8 +142,8 @@ public class PreferencesContext {
         };
     }
 
-    public DocumentManager activeDocumentManager() {
-        return context.getBean(DocumentManager.class);
+    public ApplicationInstanceEvents activeDocumentManager() {
+        return context.getBean(ApplicationInstanceEvents.class);
     }
 
     public RootPreferencesNode getRootNode() {

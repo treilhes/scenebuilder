@@ -38,6 +38,10 @@ import org.scenebuilder.fxml.api.Inspector;
 
 import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
+import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
+import com.gluonhq.jfxapps.core.api.subjects.DockManager;
+import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 
 /**
@@ -47,30 +51,30 @@ import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 public class CssPanelDelegate extends CssPanelController.Delegate {
 
     private final Inspector inspectorController;
-    private final ApplicationInstanceWindow documentWindowController;
+    private final ViewManager viewManager;
 
     public CssPanelDelegate(
     		Inspector inspectorController,
-    		@Lazy ApplicationInstanceWindow documentWindowController) {
+    		ViewManager viewManager) {
         this.inspectorController = inspectorController;
-        this.documentWindowController = documentWindowController;
+        this.viewManager = viewManager;
     }
 
     @Override
     public void revealInspectorEditor(ValuePropertyMetadata propMeta) {
-        if (inspectorController == null || documentWindowController == null
+        if (inspectorController == null || viewManager == null
                 || propMeta == null) {
             return;
         }
 
         // Show the inspector if it is hidden
         //TODO uncomment and handle with the new view framework when ready
-//        if (!documentWindowController.isRightPanelVisible()) {
+//        if (!viewManager..isRightPanelVisible()) {
 //            documentWindowController.performControlAction(Document.DocumentControlAction.TOGGLE_RIGHT_PANEL);
 //        }
 
         // Need to delay the focus to the editor, so that the section is actually expanded first.
-        SbPlatform.runOnFxThread(() -> SbPlatform.runOnFxThread(() -> inspectorController.setFocusToEditor(propMeta)));
+        JfxAppPlatform.runOnFxThread(() -> JfxAppPlatform.runOnFxThread(() -> inspectorController.setFocusToEditor(propMeta)));
     }
 
 }

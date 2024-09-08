@@ -45,7 +45,7 @@ import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.InlineSelectionJob;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
@@ -65,7 +65,7 @@ public final class CutSelectionJob extends InlineSelectionJob {
     // @formatter:off
     protected CutSelectionJob(
             JobExtensionFactory extensionFactory,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection,
             SelectionJobsFactory selectionJobsFactory,
             ClipboardEncoder clipboardEncoder) {

@@ -47,6 +47,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import org.apache.commons.logging.Log;
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeanUtils;
@@ -83,10 +84,11 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
     private final UUID id;
     private final Set<Class<?>> registeredClasses = new HashSet<>();
     private final Set<Class<?>> deportedClasses = new HashSet<>();
-
     public JfxAppContextImpl(UUID id) {
         this(id, null);
     }
+
+    private Log x;
 
     public JfxAppContextImpl(UUID contextId, ClassLoader loader) {
         super(new SbBeanFactoryImpl());
@@ -174,7 +176,7 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
 
     @Override
     public boolean isExpression(String spelExpression) {
-        return spelExpression != null ? spelExpression.startsWith("#") : false;
+        return spelExpression != null && spelExpression.startsWith("#");
     }
 
     @Override

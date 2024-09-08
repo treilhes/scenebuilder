@@ -37,7 +37,7 @@ package com.oracle.javafx.scenebuilder.api.control.outline;
 import java.util.List;
 
 import com.gluonhq.jfxapps.core.api.content.decoration.AbstractDecoration;
-import com.gluonhq.jfxapps.core.api.subjects.DocumentManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 
 import javafx.geometry.Bounds;
@@ -64,7 +64,7 @@ public abstract class AbstractOutline<T> extends AbstractDecoration<T> implement
 
     public AbstractOutline(
             Workspace workspace,
-            DocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Class<T> sceneGraphClass) {
         super(workspace, documentManager, sceneGraphClass);
 

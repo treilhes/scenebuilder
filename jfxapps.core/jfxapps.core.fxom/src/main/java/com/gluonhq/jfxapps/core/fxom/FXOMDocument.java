@@ -322,6 +322,9 @@ public class FXOMDocument {
 
     /**
      * Sets the Node that should be displayed in the editor instead of the scene graph root.
+     * When dealing with a FXML file that contains an undisplayable component (Scene or Window),
+     * this method is called to set the display node
+     * used in place of the scene graph root.
      */
 
     public void setDisplayNode(Node displayNode) {
@@ -330,8 +333,10 @@ public class FXOMDocument {
 
     /**
      * Returns the display node if one is set, otherwise returns the scene graph root.
+     * When dealing with a FXML file that contains an undisplayable component (Scene or Window),
+     * this method must be called to get the display node
+     * used in place of the scene graph root.
      */
-
     public Object getDisplayNodeOrSceneGraphRoot() {
         return displayNode != null ? displayNode : sceneGraphRoot;
     }
