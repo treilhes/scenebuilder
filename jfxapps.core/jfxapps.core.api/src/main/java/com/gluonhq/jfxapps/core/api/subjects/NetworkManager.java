@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.core.api.subjects;
 import java.net.Proxy;
 import java.security.cert.X509Certificate;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.ReplaySubject;

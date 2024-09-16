@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,17 +39,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
-import com.gluonhq.jfxapps.boot.maven.client.api.Classifier;
-import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryClient;
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryClient.Scope;
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryManager;
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
-import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
-import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
-import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.api.maven.Artifact;
+import com.gluonhq.jfxapps.boot.api.maven.Classifier;
+import com.gluonhq.jfxapps.boot.api.maven.Repository;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryManager;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryType;
+import com.gluonhq.jfxapps.boot.api.maven.ResolvedArtifact;
+import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient.Scope;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoriesPreferences;
 import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoryPathPreference;
@@ -68,12 +68,14 @@ public class MavenClientController implements com.gluonhq.jfxapps.core.api.maven
     private final MavenRepositoryPathPreference repositoryPathPreference;
     private final BooleanProperty searching = new SimpleBooleanProperty();
     private JfxAppsPlatform platform;
+    private JfxAppPlatform jfxAppPlatform;
 
     // @formatter:off
     public MavenClientController(
             RepositoryClient client,
             RepositoryManager repositoryManager,
             JfxAppsPlatform platform,
+            JfxAppPlatform jfxAppPlatform,
             MavenRepositoriesPreferences repositoryPreferences,
             MavenRepositoryPathPreference repositoryPathPreference
             ) {
@@ -82,6 +84,7 @@ public class MavenClientController implements com.gluonhq.jfxapps.core.api.maven
         this.client = client;
         this.repositoryManager = repositoryManager;
         this.platform = platform;
+        this.jfxAppPlatform = jfxAppPlatform;
         this.repositoryPreferences = repositoryPreferences;
         this.repositoryPathPreference = repositoryPathPreference;
     }
@@ -161,9 +164,9 @@ public class MavenClientController implements com.gluonhq.jfxapps.core.api.maven
 
     @Override
     public Set<Artifact> search(String query) {
-        JfxAppPlatform.runOnFxThread(() -> searching.set(true));
+        jfxAppPlatform.runOnFxThread(() -> searching.set(true));
         Set<Artifact> result = client.search(query);
-        JfxAppPlatform.runOnFxThread(() -> searching.set(false));
+        jfxAppPlatform.runOnFxThread(() -> searching.set(false));
         return result;
     }
 

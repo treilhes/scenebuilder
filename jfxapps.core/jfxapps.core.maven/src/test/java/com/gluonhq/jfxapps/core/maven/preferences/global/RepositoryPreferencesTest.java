@@ -44,7 +44,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
+import com.gluonhq.jfxapps.boot.api.maven.Repository;
 import com.gluonhq.jfxapps.boot.maven.client.type.Nexus;
 import com.gluonhq.jfxapps.core.api.preferences.RootPreferencesNode;
 

@@ -12,6 +12,10 @@
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.boot.api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.starter</artifactId>
         </dependency>
         <dependency>

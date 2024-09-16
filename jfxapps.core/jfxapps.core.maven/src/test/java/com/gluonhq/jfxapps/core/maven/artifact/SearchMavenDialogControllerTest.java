@@ -63,7 +63,7 @@ import javafx.stage.Stage;
 @ExtendWith({ ApplicationExtension.class, MockitoExtension.class })
 class SearchMavenDialogControllerTest {
 
-    private MavenClientController mc = new MavenClientController(null, null, null, null, null);
+    private MavenClientController mc = new MavenClientController(null, null, null, null, null, null);
 
     private ApplicationEvents sbm = new ApplicationEvents.ApplicationEventsImpl();
 

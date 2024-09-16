@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.core.api.maven;
 import java.io.File;
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
+import com.gluonhq.jfxapps.boot.api.maven.ResolvedArtifact;
 
 @FunctionalInterface
 public interface ArtefactHandler {

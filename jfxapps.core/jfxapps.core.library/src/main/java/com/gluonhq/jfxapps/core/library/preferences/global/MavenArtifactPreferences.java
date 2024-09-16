@@ -39,8 +39,8 @@ import java.util.prefs.Preferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
 import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
 import com.gluonhq.jfxapps.core.api.preferences.DefaultProvider;
 import com.gluonhq.jfxapps.core.api.preferences.KeyProvider;

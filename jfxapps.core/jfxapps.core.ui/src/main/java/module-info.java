@@ -31,11 +31,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.ui.BaseUiExtension;
 
 open module jfxapps.core.ui {
-    exports com.gluonhq.jfxapps.core.ui.preferences.document;
+
     exports com.gluonhq.jfxapps.core.ui.editor.messagelog;
     exports com.gluonhq.jfxapps.core.ui.controller;
     exports com.gluonhq.jfxapps.core.ui.dialog;
@@ -45,6 +45,9 @@ open module jfxapps.core.ui {
 
     exports com.gluonhq.jfxapps.core.ui.dock;
     exports com.gluonhq.jfxapps.core.ui.dock.preferences.document;
+
+    exports com.gluonhq.jfxapps.core.ui.preferences.document;
+    exports com.gluonhq.jfxapps.core.ui.preferences.global;
 
     requires transitive jfxapps.core.api;
     requires jakarta.inject;

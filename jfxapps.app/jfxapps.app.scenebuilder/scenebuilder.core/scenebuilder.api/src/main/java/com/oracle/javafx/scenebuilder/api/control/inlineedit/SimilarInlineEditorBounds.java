@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.control.inlineedit;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.scene.Node;

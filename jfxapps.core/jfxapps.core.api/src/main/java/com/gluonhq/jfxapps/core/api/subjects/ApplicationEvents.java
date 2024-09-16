@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.subjects;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 

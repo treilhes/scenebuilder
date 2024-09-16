@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.app.devtools.api;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.loader.extension.ApplicationExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.ApplicationExtension;
 
 public class DevtoolsApiExtension implements ApplicationExtension  {
 

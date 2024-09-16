@@ -64,6 +64,14 @@
                                 </description>
                                 <extensions>
                                     <extension>
+                                        <uuid>86de1209-5c5e-41a5-941b-1484fadccdd6</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>scenebuilder.ui</artifactId>
+                                            <version>${scenebuilder.version}</version>
+                                        </dependency>
+                                    </extension>
+                                    <extension>
                                         <uuid>26cd6a45-7750-4b3e-bbd2-018187df0c49</uuid>
                                         <dependency>
                                             <groupId>com.gluonhq.jfxapps</groupId>

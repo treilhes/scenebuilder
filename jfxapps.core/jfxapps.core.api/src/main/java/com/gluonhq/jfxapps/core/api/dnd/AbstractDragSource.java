@@ -86,9 +86,12 @@ public abstract class AbstractDragSource implements DragSource{
     @Override
     public abstract double getHitY();
 
+    @Override
     public abstract ClipboardContent makeClipboardContent();
 
+    @Override
     public abstract Image makeDragView();
+
     @Override
     public abstract Node makeShadow();
     @Override

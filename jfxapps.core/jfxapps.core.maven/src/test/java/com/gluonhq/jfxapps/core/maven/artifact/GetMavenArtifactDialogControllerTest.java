@@ -62,7 +62,7 @@ import javafx.stage.Stage;
 @ExtendWith({ ApplicationExtension.class, MockitoExtension.class })
 class GetMavenArtifactDialogControllerTest {
 
-    private MavenClientController mc = new MavenClientController(null, null, null, null, null);
+    private MavenClientController mc = new MavenClientController(null, null, null, null, null, null);
 
     private ApplicationEvents sbm = new ApplicationEvents.ApplicationEventsImpl();
 

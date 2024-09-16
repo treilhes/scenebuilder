@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.core.fs;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
 import com.gluonhq.jfxapps.core.fs.controller.FileSystemController;
 import com.gluonhq.jfxapps.core.fs.preference.document.PathPreference;

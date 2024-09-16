@@ -35,7 +35,7 @@ package com.gluonhq.jfxapps.core.api.application;
 
 import org.springframework.context.ApplicationListener;
 
-import com.gluonhq.jfxapps.boot.loader.OpenCommandEvent;
+import com.gluonhq.jfxapps.boot.api.loader.OpenCommandEvent;
 
 public interface CommandHandler extends ApplicationListener<OpenCommandEvent> {
 

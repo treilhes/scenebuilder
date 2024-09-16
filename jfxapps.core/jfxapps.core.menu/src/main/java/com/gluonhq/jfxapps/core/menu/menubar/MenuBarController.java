@@ -46,9 +46,9 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -87,7 +87,7 @@ public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.contro
 
 
     private final I18N i18n;
-
+    private final JfxAppContext context;
     private final ApplicationEvents sceneBuilderManager;
     private final Optional<List<MenuProvider>> menuProviders;
     private final Optional<List<MenuItemProvider>> menuItemProviders;
@@ -101,11 +101,13 @@ public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.contro
 
     public MenuBarController(
             I18N i18n,
+            JfxAppContext context,
             ApplicationEvents sceneBuilderManager,
             Optional<List<MenuProvider>> menuProviders,
             Optional<List<MenuItemProvider>> menuItemProviders,
             InstancesManager main) {
         this.i18n = i18n;
+        this.context = context;
         this.sceneBuilderManager = sceneBuilderManager;
         this.menuProviders = menuProviders;
         this.menuItemProviders = menuItemProviders;
@@ -553,7 +555,7 @@ public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.contro
             result.setText(dwc.getDocumentWindow().getStage().getTitle());
             result.setDisable(false);
             result.setSelected(dwc.getDocumentWindow().getStage().isFocused());
-            result.setOnAction(new WindowMenuEventHandler(dwc, sceneBuilderManager));
+            result.setOnAction(new WindowMenuEventHandler(context, dwc, sceneBuilderManager));
         } else {
             result.setText(i18n.getString(I18N_MENU_TITLE_NO_WINDOW));
             result.setDisable(true);
@@ -567,15 +569,20 @@ public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.contro
 
         private final ApplicationInstance dwc;
         private final ApplicationEvents sceneBuilderManager;
+        private final JfxAppContext context;
 
-        public WindowMenuEventHandler(ApplicationInstance dwc, ApplicationEvents sceneBuilderManager) {
+        public WindowMenuEventHandler(
+                JfxAppContext context,
+                ApplicationInstance dwc,
+                ApplicationEvents sceneBuilderManager) {
             this.dwc = dwc;
+            this.context = context;
             this.sceneBuilderManager = sceneBuilderManager;
         }
 
         @Override
         public void handle(ActionEvent t) {
-            JfxAppContext.applicationInstanceScope.setCurrentScope(dwc); // TODO realy necessary ?, check if onFocus is not sufficient
+            context.getApplicationInstanceExecutor().setCurrentScope(dwc);// TODO realy necessary ?, check if onFocus is not sufficient
             sceneBuilderManager.documentScoped().onNext(dwc);
             dwc.getDocumentWindow().getStage().toFront();
         }

@@ -37,7 +37,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.loader.extension.ApplicationExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.ApplicationExtension;
 
 public interface EditorDescriptor {
     ApplicationExtension getExtension();

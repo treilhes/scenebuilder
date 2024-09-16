@@ -35,7 +35,7 @@ package com.gluonhq.jfxapps.core.preferences.controller;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.preferences.DocumentPreferencesNode;
 import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
 

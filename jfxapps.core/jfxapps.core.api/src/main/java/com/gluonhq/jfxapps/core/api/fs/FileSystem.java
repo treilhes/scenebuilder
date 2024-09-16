@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 
 import javafx.collections.ObservableList;
@@ -87,9 +87,9 @@ public interface FileSystem {
 
     FileTime getLoadFileTime();
 
-    File getMessageBoxFolder();
+    //File getMessageBoxFolder();
 
-    File getApplicationDataFolder();
+    //File getApplicationDataFolder();
 
     /**
      * Returns the last directory selected from the file chooser.

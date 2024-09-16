@@ -36,9 +36,9 @@ package com.gluonhq.jfxapps.core.ui.dock;
 import java.util.Arrays;
 import java.util.Collection;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockContext;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockType;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;

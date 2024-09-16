@@ -38,7 +38,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 
 @Controller
 @RequestMapping("/mvc")

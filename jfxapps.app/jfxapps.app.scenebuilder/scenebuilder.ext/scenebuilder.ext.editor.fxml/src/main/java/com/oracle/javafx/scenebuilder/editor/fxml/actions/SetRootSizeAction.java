@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,44 +36,45 @@ package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.Size;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
-@Lazy
+@ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.set.root.size", descriptionKey = "action.description.set.root.size")
 public class SetRootSizeAction extends AbstractAction {
 
-    private final UsePredefinedSizeJob.Factory usePredefinedSizeJobFactory;
+    private final SbJobsFactory sbJobsFactory;
     private final JobManager jobManager;
 
     private Size size;
 
+    // @formatter:off
     public SetRootSizeAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             JobManager jobManager,
-            UsePredefinedSizeJob.Factory usePredefinedSizeJobFactory) {
-        super(extensionFactory);
+            SbJobsFactory sbJobsFactory) {
+        // @formatter:on
+        super(i18n, extensionFactory);
         this.jobManager = jobManager;
-        this.usePredefinedSizeJobFactory = usePredefinedSizeJobFactory;
+        this.sbJobsFactory = sbJobsFactory;
     }
 
     public Size getSize() {
@@ -90,20 +91,18 @@ public class SetRootSizeAction extends AbstractAction {
             return false;
         }
 
-        final AbstractJob job = usePredefinedSizeJobFactory.getJob(size);
+        final Job job = sbJobsFactory.usePredefinedSize(size);
         return job.isExecutable();
     }
 
     @Override
     public ActionStatus doPerform() {
-        final AbstractJob job = usePredefinedSizeJobFactory.getJob(size);
+        final Job job = sbJobsFactory.usePredefinedSize(size);
         jobManager.push(job);
         return ActionStatus.DONE;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-    @Lazy
+    @ApplicationInstanceSingleton
     public static class MenuProvider implements MenuItemProvider {
 
         private final static String TARGET_MENU_ID = DefaultMenu.MODIFY_MENU_ID;

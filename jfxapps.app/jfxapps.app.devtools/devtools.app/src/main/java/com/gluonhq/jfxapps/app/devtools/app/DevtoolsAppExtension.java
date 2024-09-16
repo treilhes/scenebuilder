@@ -43,7 +43,7 @@ import com.gluonhq.jfxapps.app.devtools.app.menu.MainMenuProvider;
 import com.gluonhq.jfxapps.app.devtools.app.ui.DevtoolsUiTemplate;
 import com.gluonhq.jfxapps.app.devtools.app.ui.MainContentController;
 import com.gluonhq.jfxapps.app.devtools.app.ui.WindowIconSettings;
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.ext.about.api.AboutApi;
 import com.gluonhq.jfxapps.ext.scenicview.api.ScenicViewApi;
 

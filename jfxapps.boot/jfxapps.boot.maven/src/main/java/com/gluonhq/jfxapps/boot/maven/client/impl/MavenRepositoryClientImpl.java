@@ -47,18 +47,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
-import com.gluonhq.jfxapps.boot.maven.client.api.Classifier;
-import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryClient;
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryManager;
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
-import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
-import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
+import com.gluonhq.jfxapps.boot.api.maven.Artifact;
+import com.gluonhq.jfxapps.boot.api.maven.Classifier;
+import com.gluonhq.jfxapps.boot.api.maven.Repository;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryManager;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryType;
+import com.gluonhq.jfxapps.boot.api.maven.ResolvedArtifact;
+import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.boot.maven.client.config.RepositoryConfig;
 import com.gluonhq.jfxapps.boot.maven.client.type.Maven;
 import com.gluonhq.jfxapps.boot.maven.client.type.Nexus;
-import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 
 @Component
 public class MavenRepositoryClientImpl implements RepositoryClient {

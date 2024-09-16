@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,7 +38,7 @@ import java.security.Security;
 
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.NetworkManager;
 import com.gluonhq.jfxapps.ext.certmngr.tls.ReloadableTrustManagerProvider;
 
@@ -48,16 +48,16 @@ public class CertificateManagerController {
     protected final static String KEYSTORE_PASSWORD = "scenebuilder";
     protected final static String KEYSTORE_FILENAME = "truststore.jks";
     protected final static long USER_TIMEOUT = 30;// seconds
-    private final FileSystem fileSystem;
+    private final JfxAppsPlatform platform;
 
-    public CertificateManagerController(FileSystem fileSystem, NetworkManager networkManager) {
-        this.fileSystem = fileSystem;
+    public CertificateManagerController(JfxAppsPlatform platform, NetworkManager networkManager) {
+        this.platform = platform;
         Security.insertProviderAt(new ReloadableTrustManagerProvider(networkManager, keystoreFile(),
                 KEYSTORE_PASSWORD.toCharArray(), USER_TIMEOUT), 1);
     }
 
     private File keystoreFile() {
-        return new File(fileSystem.getApplicationDataFolder(), KEYSTORE_FILENAME);
+        return new File(platform.getApplicationDataFolder(), KEYSTORE_FILENAME);
     }
 
 }

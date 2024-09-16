@@ -32,7 +32,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 
 open module devtools.api {
     exports com.gluonhq.jfxapps.app.devtools.api;

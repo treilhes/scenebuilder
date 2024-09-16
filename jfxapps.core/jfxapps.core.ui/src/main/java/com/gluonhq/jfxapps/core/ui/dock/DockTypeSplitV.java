@@ -33,9 +33,9 @@
  */
 package com.gluonhq.jfxapps.core.ui.dock;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 
 import javafx.geometry.Orientation;
 

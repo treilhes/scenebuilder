@@ -35,7 +35,7 @@ package com.gluonhq.jfxapps.ext.certmngr.controller;
 
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 /**
  *

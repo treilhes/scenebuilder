@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.library.api;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.library.manager.LibraryDialog;
 
 public class LibraryDialogFactory {

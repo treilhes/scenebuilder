@@ -38,7 +38,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.preferences.controller.DocumentPreferencesController;
 import com.gluonhq.jfxapps.core.preferences.controller.PreferencesController;
 import com.gluonhq.jfxapps.core.preferences.edit.PreferenceEditorFactoryImpl;

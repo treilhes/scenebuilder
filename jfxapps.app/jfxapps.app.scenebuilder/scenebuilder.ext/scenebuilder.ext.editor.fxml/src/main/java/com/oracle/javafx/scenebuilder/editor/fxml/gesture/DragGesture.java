@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,30 +36,31 @@ package com.oracle.javafx.scenebuilder.editor.fxml.gesture;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.scenebuilder.fxml.api.Content;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.core.api.HierarchyMask;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.api.content.mode.Layer;
 import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
+import com.gluonhq.jfxapps.core.api.dnd.DefaultDragSourceFactory;
+import com.gluonhq.jfxapps.core.api.dnd.DefaultDropTargetFactory;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.dnd.source.ExternalDragSource;
-import com.gluonhq.jfxapps.core.dnd.target.RootDropTarget;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.util.MathUtils;
 import com.gluonhq.jfxapps.util.javafx.BoundsUtils;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
+import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 import com.oracle.javafx.scenebuilder.editor.fxml.guides.MovingGuideController;
 
 import javafx.event.EventType;
@@ -76,8 +77,7 @@ import javafx.scene.input.KeyEvent;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class DragGesture extends AbstractGesture {
 
     private static final Logger logger = LoggerFactory.getLogger(DragGesture.class);
@@ -92,7 +92,7 @@ public class DragGesture extends AbstractGesture {
     private boolean willReceiveDragDone;
     private boolean shouldInvokeEnd;
     private FXOMObject hitParent;
-    private HierarchyMask hitParentMask;
+    private SbFXOMObjectMask hitParentMask;
     private MovingGuideController movingGuideController;
     private boolean guidesDisabled;
     private Node shadow;
@@ -102,28 +102,33 @@ public class DragGesture extends AbstractGesture {
     @SuppressWarnings("rawtypes")
     private Layer<Rudder> rudderLayer;
 
-    private final FXOMObjectMask.Factory maskFactory;
-    private final ExternalDragSource.Factory externalDragSourceFactory;
-    private final RootDropTarget.Factory rootDropTargetFactory;
+    private final Workspace workspace;
+    private final Content content;
+    private final SbFXOMObjectMask.Factory maskFactory;
+    private final DefaultDragSourceFactory defaultDragSourceFactory;
+    private final DefaultDropTargetFactory defaultDropTargetFactory;
 
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     protected DragGesture(
-            Content contentPanelController,
+            Workspace workspace,
+            Content content,
             Drag dragController,
             ModeManager modeManager,
             Driver driver,
-            FxmlDocumentManager documentManager,
-            FXOMObjectMask.Factory maskFactory,
-            ExternalDragSource.Factory externalDragSourceFactory,
-            RootDropTarget.Factory rootDropTargetFactory) {
-        super(contentPanelController);
+            ApplicationInstanceEvents documentManager,
+            SbFXOMObjectMask.Factory maskFactory,
+            DefaultDragSourceFactory defaultDragSourceFactory,
+            DefaultDropTargetFactory defaultDropTargetFactory) {
+        super();
+        this.workspace = workspace;
+        this.content = content;
         this.dragController = dragController;
         this.driver = driver;
         this.documentManager = documentManager;
         this.maskFactory = maskFactory;
-        this.externalDragSourceFactory = externalDragSourceFactory;
-        this.rootDropTargetFactory = rootDropTargetFactory;
+        this.defaultDragSourceFactory = defaultDragSourceFactory;
+        this.defaultDropTargetFactory = defaultDropTargetFactory;
 
         if (modeManager.hasModeEnabled()) {
             rudderLayer = modeManager.getEnabledMode().getLayer(Rudder.class);
@@ -141,7 +146,7 @@ public class DragGesture extends AbstractGesture {
         assert e instanceof DragEvent;
         assert e.getEventType() == DragEvent.DRAG_ENTERED;
 
-        final Node glassLayer = contentPanelController.getGlassLayer();
+        final Node glassLayer = workspace.getGlassLayer();
         assert glassLayer.getOnDragEntered()== null;
         assert glassLayer.getOnDragOver()== null;
         assert glassLayer.getOnDragExited()== null;
@@ -200,7 +205,7 @@ public class DragGesture extends AbstractGesture {
 
     private void dragEnteredGlassLayer() {
         if (dragController.getDragSource() == null) { // Drag started externally
-            final ExternalDragSource dragSource = externalDragSourceFactory.getDragSource(lastDragEvent.getDragboard());
+            final DragSource dragSource = defaultDragSourceFactory.external(lastDragEvent.getDragboard());
             assert dragSource.isAcceptable();
             dragController.begin(dragSource);
             shouldInvokeEnd = true;
@@ -237,7 +242,7 @@ public class DragGesture extends AbstractGesture {
         // Let's set what is below the mouse
         final double hitX = lastDragEvent.getSceneX();
         final double hitY = lastDragEvent.getSceneY();
-        FXOMObject hitObject = contentPanelController.pick(hitX, hitY, pickExcludes);
+        FXOMObject hitObject = content.pick(hitX, hitY, pickExcludes);
         if (hitObject == null) {
             final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
             hitObject = fxomDocument.getFxomRoot();
@@ -252,7 +257,7 @@ public class DragGesture extends AbstractGesture {
     }
 
     private void dragOverEmptyDocument() {
-        dragController.setDropTarget(rootDropTargetFactory.getDropTarget());
+        dragController.setDropTarget(defaultDropTargetFactory.root());
         lastDragEvent.acceptTransferModes(dragController.getAcceptedTransferModes());
         updateShadow(lastDragEvent.getSceneX(), lastDragEvent.getSceneY());
     }
@@ -297,7 +302,8 @@ public class DragGesture extends AbstractGesture {
             } else {
                 assert hitParentMask != null;
                 if (hitParentMask.getMainAccessory() != null
-                        && hitParentMask.getMainAccessory().isFreeChildPositioning() && dragSource.isNodeOnly()) {
+                        && hitParentMask.getMainAccessory().isFreeChildPositioning()
+                        && dragSource.isSingleType(Node.class)) {
                     populateMovingGuideController();
                 } else {
                     movingGuideController.clearSampleBounds();
@@ -323,9 +329,11 @@ public class DragGesture extends AbstractGesture {
 
         if (!MathUtils.equals(guidedX , hitX) || !MathUtils.equals(guidedY, hitY)) {
             assert dropTarget != null;
-            assert dropTarget instanceof ContainerXYDropTarget;
+            //assert dropTarget instanceof ContainerXYDropTarget;
+            assert dropTarget.getClass().getSimpleName().equals("ContainerXYDropTarget");
             dropTarget = driver.makeDropTarget(hitParent, guidedX, guidedY); // create with new guided coord
-            assert dropTarget instanceof ContainerXYDropTarget;
+            //assert dropTarget instanceof ContainerXYDropTarget;
+            assert dropTarget.getClass().getSimpleName().equals("ContainerXYDropTarget");
         }
 
         dragController.setDropTarget(dropTarget);
@@ -347,7 +355,7 @@ public class DragGesture extends AbstractGesture {
     private void dragDroppedOnGlassLayer() {
         lastDragEvent.setDropCompleted(true);
         dragController.commit();
-        contentPanelController.getGlassLayer().requestFocus();
+        workspace.getGlassLayer().requestFocus();
     }
 
     private void dragDoneOnGlassLayer() {
@@ -378,7 +386,7 @@ public class DragGesture extends AbstractGesture {
 
 
     private void performTermination() {
-        final Node glassLayer = contentPanelController.getGlassLayer();
+        final Node glassLayer = workspace.getGlassLayer();
         glassLayer.setOnDragEntered(null);
         glassLayer.setOnDragOver(null);
         glassLayer.setOnDragExited(null);
@@ -432,10 +440,10 @@ public class DragGesture extends AbstractGesture {
      */
 
     private void setupMovingGuideController() {
-        final Bounds scope = contentPanelController.getWorkspacePane().getLayoutBounds();
-        final Bounds scopeInScene = contentPanelController.getWorkspacePane().localToScene(scope, true /* rootScene */);
+        final Bounds scope = workspace.getWorkspacePane().getLayoutBounds();
+        final Bounds scopeInScene = workspace.getWorkspacePane().localToScene(scope, true /* rootScene */);
         this.movingGuideController = new MovingGuideController(
-                contentPanelController.getGuidesColor(), scopeInScene);
+                content.getGuidesColor(), scopeInScene);
 
         final Group guideGroup = movingGuideController.getGuideGroup();
         assert guideGroup.isMouseTransparent();
@@ -484,10 +492,9 @@ public class DragGesture extends AbstractGesture {
         movingGuideController = null;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationSingleton
     public static class Factory extends GestureFactory<DragGesture> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
         public DragGesture getGesture() {

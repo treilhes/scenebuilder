@@ -38,57 +38,28 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.scenebuilder.fxml.api.Content;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
-import com.gluonhq.jfxapps.core.api.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroupFactory;
-import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.HudWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.SceneGraphObject;
 import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
-import com.gluonhq.jfxapps.util.javafx.BoundsUnion;
-import com.gluonhq.jfxapps.util.javafx.BoundsUtils;
 import com.gluonhq.jfxapps.util.javafx.Picker;
-import com.gluonhq.jfxapps.util.javafx.ScrollPaneBooster;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
-import com.oracle.javafx.scenebuilder.editor.fxml.preferences.global.AlignmentGuidesColorPreference;
-import com.oracle.javafx.scenebuilder.editor.fxml.preferences.global.BackgroundImagePreference;
 
+import io.reactivex.rxjava3.subjects.PublishSubject;
+import io.reactivex.rxjava3.subjects.Subject;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.SubScene;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TitledPane;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import javafx.scene.Parent;
 
 /**
  * This class creates and controls the <b>Content Panel</b> of Scene Builder
@@ -96,7 +67,7 @@ import javafx.scene.paint.Paint;
  *
  */
 @ApplicationInstanceSingleton
-public class ContentPanelController extends AbstractFxmlController
+public class ContentPanelController //extends AbstractFxmlController
         implements Content, FXOMDocument.SceneGraphHolder {
 
     private static Logger logger = LoggerFactory.getLogger(ContentPanelController.class);
@@ -120,25 +91,21 @@ public class ContentPanelController extends AbstractFxmlController
     @FXML
     private Group outlineLayer;
 
-    private final AlignmentGuidesColorPreference alignmentGuidesColorPreference;
-    private final BackgroundImagePreference backgroundImagePreference;
     private final Driver driver;
-    private final ModeManager modeManager;
-    private final Drag drag;
-    private final Selection selection;
+    //private final ModeManager modeManager;
+    //private final Drag drag;
+    //private final Selection selection;
     private final ApplicationInstanceEvents documentManager;
     private final MessageLogger messageLogger;
-    private final ContextMenu contextMenu;
-    private final FXOMObjectMask.Factory maskFactory;
-    private final Workspace workspaceController;
-    private final HudWindow hudWindowController;
+    //private final FXOMObjectMask.Factory maskFactory;
+    //private final Workspace workspaceController;
 
     private final Picker picker = new Picker();
-    private boolean guidesVisible = true;
-    private Paint guidesColor = Color.RED;
-    private FXOMDocument oldDocument;
 
+    private FXOMDocument fxomDocument;
+    private RuntimeException layoutException;
 
+    private Subject<Boolean> contentChanged = PublishSubject.create();
     /*
      * Public
      */
@@ -154,40 +121,37 @@ public class ContentPanelController extends AbstractFxmlController
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
             Driver driver,
-            FXOMObjectMask.Factory maskFactory,
-            AlignmentGuidesColorPreference alignmentGuidesColorPreference,
-            BackgroundImagePreference backgroundImagePreference,
-            @Lazy HudWindow hudWindowController,
-            @Lazy ModeManager modeManager,
-            Drag drag,
-            Workspace workspaceController,
-            JobManager jobManager,
-            Selection selection,
-            MessageLogger messageLogger,
-            ContextMenu contextMenu) {
-     // @formatter:on
-        super(i18n, scenebuilderManager, documentManager, ContentPanelController.class.getResource("ContentPanel.fxml"));
+            //FXOMObjectMask.Factory maskFactory,
+
+
+            //@Lazy ModeManager modeManager,
+            //Drag drag,
+            //Workspace workspaceController,
+            //JobManager jobManager,
+            //Selection selection,
+            MessageLogger messageLogger
+            ) {
+        // @formatter:on
+        //super(i18n, scenebuilderManager, documentManager, ContentPanelController.class.getResource("ContentPanel.fxml"));
         this.driver = driver;
-        this.modeManager = modeManager;
-        this.maskFactory = maskFactory;
-        this.drag = drag;
-        this.selection = selection;
-        this.workspaceController = workspaceController;
+        //this.modeManager = modeManager;
+        //this.maskFactory = maskFactory;
+        //this.drag = drag;
+        //this.selection = selection;
+        //this.workspaceController = workspaceController;
         this.documentManager = documentManager;
-        this.hudWindowController = hudWindowController;
         this.messageLogger = messageLogger;
-        this.contextMenu = contextMenu;
+        //this.contextMenu = contextMenu;
 //        this.editModeController = editModeController;
 //        this.pickModeController = pickModeController;
 //        this.workspaceController = workspaceController;
 
-        this.alignmentGuidesColorPreference = alignmentGuidesColorPreference;
-        this.backgroundImagePreference = backgroundImagePreference;
+        //this.alignmentGuidesColorPreference = alignmentGuidesColorPreference;
+
 //        this.parentRingColorPreference = parentRingColorPreference;
 
         documentManager.fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
-        documentManager.selectionDidChange().subscribe(s -> editorSelectionDidChange());
-        jobManager.revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
+
 
 
     }
@@ -195,181 +159,144 @@ public class ContentPanelController extends AbstractFxmlController
     @FXML
     public void initialize() {
 
-        drag.dragSourceProperty().addListener((ov, t, t1) -> dragSourceDidChange());
+//        drag.dragSourceProperty().addListener((ov, t, t1) -> dragSourceDidChange());
+//
+//        drag.dropTargetProperty().addListener((ov, t, t1) -> dropTargetDidChange());
 
-        drag.dropTargetProperty().addListener((ov, t, t1) -> dropTargetDidChange());
+        //setGuidesColor(alignmentGuidesColorPreference.getValue());
 
-        setGuidesColor(alignmentGuidesColorPreference.getValue());
-        setWorkspaceBackground(backgroundImagePreference.getBackgroundImageImage());
         // setPringColor(parentRingColorPreference.getValue());
 
-        alignmentGuidesColorPreference.getObservableValue().addListener((ob, o, n) -> setGuidesColor(n));
-        backgroundImagePreference.getObservableValue()
-                .addListener((ob, o, n) -> setWorkspaceBackground(BackgroundImagePreference.getImage(n)));
+        //alignmentGuidesColorPreference.getObservableValue().addListener((ob, o, n) -> setGuidesColor(n));
+
         // parentRingColorPreference.getObservableValue().addListener((ob,o,n) ->
         // setPringColor(n));
+
+        controllerDidLoadFxml();
     }
 
-    /**
-     * Returns true if this content panel displays outlines.
-     *
-     * @return true if this content panel displays outlines.
-     */
-    @Override
-    public boolean isOutlinesVisible() {
-        return (contentGroup != null) && (contentGroup.isVisible() == false);
-    }
+    public void controllerDidLoadFxml() {
 
-    /**
-     * Enables or disables outline display in this content panel.
-     *
-     * @param outlinesVisible true if outlines should be visible.
-     */
-    public void setOutlinesVisible(boolean outlinesVisible) {
-        if (outlinesVisible != isOutlinesVisible()) {
-            if (outlinesVisible) {
-                beginShowingOutlines();
-            } else {
-                endShowingOutlines();
-            }
-        }
-    }
+        // Sanity checks
 
-    /**
-     * Returns true if this content panel displays alignment guides.
-     *
-     * @return true if this content panel displays alignment guides.
-     */
-    @Override
-    public boolean isGuidesVisible() {
-        return guidesVisible;
-    }
+        assert outlineLayer != null;
+        assert outlineLayer.isMouseTransparent();
+        assert outlineLayer.isFocusTraversable() == false;
+//        assert pringLayer != null;
+//        assert pringLayer.isMouseTransparent() == false;
+//        assert pringLayer.isFocusTraversable() == false;
+//        assert handleLayer != null;
+//        assert handleLayer.isMouseTransparent() == false;
+//        assert handleLayer.isFocusTraversable() == false;
+//        assert rudderLayer != null;
+//        assert rudderLayer.isMouseTransparent() == true;
+//        assert rudderLayer.isFocusTraversable() == false;
 
-    /**
-     * Enables or disables alignment guide display in this content panel.
-     *
-     * @param guidesVisible true if alignment guides should be visible.
-     */
-    public void setGuidesVisible(boolean guidesVisible) {
-        this.guidesVisible = guidesVisible;
-    }
-
-//    /**
-//     * Returns the color used by this content panel to draw parent rings.
-//     *
-//     * @return the color used by this content panel to draw parent rings.
-//     */
-//    @Override
-//    public Paint getPringColor() {
-//        return pringColor;
-//    }
+        outlineLayer.setManaged(false);
+//        pringLayer.setManaged(false);
+//        handleLayer.setManaged(false);
+//        rudderLayer.setManaged(false);
 //
-//    /**
-//     * Sets the color used by this content panel to draw parent rings.
-//     *
-//     * @param pringColor the color used by this content panel to draw parent rings.
-//     */
-//    public void setPringColor(Paint pringColor) {
-//        this.pringColor = pringColor;
-//    }
+//        // Setup our workspace controller
+//        workspaceController.panelControllerDidLoadFxml(scrollPane, scalingGroup, contentSubScene, contentGroup,
+//                backgroundPane, extensionRect);
+//        themeDidChange(); // To setup initial value of WorkspaceController.themeStyleSheet
+
+//        resetViewport();
+//        setupEventTracingFilter();
+//
+//        // Setup the context menu
+//        scrollPane.setContextMenu(contextMenu.getContextMenu());
+
+        // Setup default workspace background
+        // setWorkspaceBackground(ImageUtils.getImage(getDefaultWorkspaceBackgroundURL()));
+    }
 
     /**
-     * Returns the color used by this content panel to draw alignment guides.
+     * @treatAsPrivate Returns true if this content panel is able to display the
+     *                 content ie <br/>
+     *                 1) fxomDocument != null<br/>
+     *                 2) (fxomDocument.getFxomRoot() == null) or
+     *                 fxomDocument.getFxomRoot().isNode()<br/>
      *
-     * @return the color used by this content panel to draw alignment guides.
+     * @return true if this content panel is able to display the content
      */
     @Override
-    public Paint getGuidesColor() {
-        return guidesColor;
-    }
+    public boolean isDisplayable() {
+        final boolean result;
 
-    /**
-     * Sets the color used by this content panel to draw alignment guides.
-     *
-     * @param guidesColor the color used by this content panel to draw alignment
-     *                    guides.
-     */
-    public void setGuidesColor(Paint guidesColor) {
-        this.guidesColor = guidesColor;
-    }
-
-    /**
-     * Return the scaling factor used by this content panel.
-     *
-     * @return the scaling factor used by this content panel.
-     */
-    @Override
-    public double getScaling() {
-        return workspaceController.getScaling();
-    }
-
-    /**
-     * Sets the scaling factor to be used by this content panel.
-     *
-     * @param scaling the scaling factor to be used by this content panel.
-     */
-    @Override
-    public void setScaling(double scaling) {
-        this.workspaceController.setScaling(scaling);
-    }
-
-    /**
-     * Returns true if this content panel automatically resize 3D content.
-     *
-     * @return true if this content panel automatically resize 3D content.
-     */
-    public boolean isAutoResize3DContent() {
-        return workspaceController.isAutoResize3DContent();
-    }
-
-    /**
-     * Enables or disables autoresizing of 3D content.
-     *
-     * @param autoResize3DContent true if this content panel should autoresize 3D
-     *                            content.
-     */
-    public void setAutoResize3DContent(boolean autoResize3DContent) {
-        workspaceController.setAutoResize3DContent(autoResize3DContent);
-    }
-
-    /**
-     * Returns null or the image used for tiling the background of this content
-     * panel.
-     *
-     * @return null or the image used for tiling the background of this content
-     *         panel.
-     */
-    public Image getWorkspaceBackground() {
-        final Image result;
-
-        final Background bg = workspacePane.getBackground();
-        if (bg == null) {
-            result = null;
+        if (fxomDocument == null) {
+            result = false;
+        } else if (fxomDocument.getFxomRoot() == null) {
+            result = true;
         } else {
-            assert bg.getImages().size() == 1;
-            result = bg.getImages().get(0).getImage();
+            result = fxomDocument.getDisplayNodeOrSceneGraphRoot() instanceof Node
+                    && layoutException == null;
         }
 
         return result;
     }
 
-    /**
-     * Sets the image used for tiling the background of this content panel.
-     *
-     * @param image null or the image for tiling the background of this content
-     *              panel.
-     */
-    public void setWorkspaceBackground(Image image) {
-        final Background bg;
-        if (image == null) {
-            bg = null;
-        } else {
-            final BackgroundImage bgi = new javafx.scene.layout.BackgroundImage(image, BackgroundRepeat.REPEAT,
-                    BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
-            bg = new Background(bgi);
-        }
-        workspacePane.setBackground(bg);
-    }
+
+//    /**
+//     * Return the scaling factor used by this content panel.
+//     *
+//     * @return the scaling factor used by this content panel.
+//     */
+//    @Override
+//    public double getScaling() {
+//        return workspaceController.getScaling();
+//    }
+
+//    /**
+//     * Sets the scaling factor to be used by this content panel.
+//     *
+//     * @param scaling the scaling factor to be used by this content panel.
+//     */
+//    @Override
+//    public void setScaling(double scaling) {
+//        this.workspaceController.setScaling(scaling);
+//    }
+
+//    /**
+//     * Returns true if this content panel automatically resize 3D content.
+//     *
+//     * @return true if this content panel automatically resize 3D content.
+//     */
+//    public boolean isAutoResize3DContent() {
+//        return workspaceController.isAutoResize3DContent();
+//    }
+//
+//    /**
+//     * Enables or disables autoresizing of 3D content.
+//     *
+//     * @param autoResize3DContent true if this content panel should autoresize 3D
+//     *                            content.
+//     */
+//    public void setAutoResize3DContent(boolean autoResize3DContent) {
+//        workspaceController.setAutoResize3DContent(autoResize3DContent);
+//    }
+//
+//    /**
+//     * Returns null or the image used for tiling the background of this content
+//     * panel.
+//     *
+//     * @return null or the image used for tiling the background of this content
+//     *         panel.
+//     */
+//    public Image getWorkspaceBackground() {
+//        final Image result;
+//
+//        final Background bg = workspacePane.getBackground();
+//        if (bg == null) {
+//            result = null;
+//        } else {
+//            assert bg.getImages().size() == 1;
+//            result = bg.getImages().get(0).getImage();
+//        }
+//
+//        return result;
+//    }
 
     /**
      * Returns URL of the default workspace background.
@@ -381,67 +308,6 @@ public class ContentPanelController extends AbstractFxmlController
 //        return ImageUtils.getUIURL("Background-Neutral-Uniform.png");
 //    }
 
-    /**
-     * Scrolls this content panel so that the selected objects are visible.
-     */
-    @Override
-    // TODO Need to use CoordinateHelper here ?
-    public void scrollToSelection() {
-        // Walk through the selected objects and computes the enclosing bounds.
-        final BoundsUnion union = new BoundsUnion();
-
-        if (selection.getGroup() instanceof DSelectionGroupFactory) {
-            final DSelectionGroupFactory osg = (DSelectionGroupFactory) selection.getGroup();
-            for (FXOMObject i : osg.getItems()) {
-                final HierarchyMask mask = maskFactory.getMask(i);
-                final FXOMObject nodeFxomObject = mask.getClosestFxNode();
-                if (nodeFxomObject != null) {
-                    final Node node = nodeFxomObject.getSceneGraphObject().getAs(Node.class);
-                    assert node.getLayoutBounds() != null;
-                    final Bounds nodeBounds = node.localToScene(node.getLayoutBounds(), true /* rootScene */);
-                    assert nodeBounds != null;
-                    union.add(nodeBounds);
-                }
-            }
-        }
-
-        if (union.getResult() != null) {
-            final Node content = scrollPane.getContent();
-            final Bounds sceneEnclosing = BoundsUtils.to2DBounds(union.getResult());
-            assert sceneEnclosing.getMinZ() == 0.0; // Side effect of SubScene
-            assert sceneEnclosing.getMaxZ() == 0.0;
-            // TODO do i need to use CoordinateHelper here?
-            final Bounds localEnclosing = content.sceneToLocal(sceneEnclosing, true /* rootScene */);
-            assert localEnclosing != null;
-            final ScrollPaneBooster spb = new ScrollPaneBooster(scrollPane);
-            spb.scrollTo(localEnclosing);
-        }
-    }
-
-    @Override
-    public void reveal(FXOMObject targetFxomObject) {
-        FXOMObject fxomObject = targetFxomObject;
-        // TODO special case if to move to metadata
-        while (fxomObject != null) {
-            final Object sceneGraphObject = fxomObject.getSceneGraphObject().getObjectClass();
-
-            if (sceneGraphObject instanceof Tab) {
-                final Tab tab = (Tab) sceneGraphObject;
-                final TabPane tabPane = tab.getTabPane();
-                assert tabPane != null;
-                tabPane.getSelectionModel().select(tab);
-            } else if (sceneGraphObject instanceof TitledPane) {
-                final TitledPane titledPane = (TitledPane) sceneGraphObject;
-                if (titledPane.getParent() instanceof Accordion) {
-                    final Accordion accordion = (Accordion) titledPane.getParent();
-                    accordion.setExpandedPane(titledPane);
-                }
-            }
-
-            HierarchyMask mask = maskFactory.getMask(fxomObject);
-            fxomObject = mask.getParentFXOMObject();
-        }
-    }
 
     /**
      * Returns the topmost FXOMObject at (sceneX, sceneY) in this content panel.
@@ -468,8 +334,7 @@ public class ContentPanelController extends AbstractFxmlController
     public FXOMObject pick(double sceneX, double sceneY, Set<FXOMObject> excludes) {
         final FXOMObject result;
 
-        if (isContentDisplayable()) {
-            final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        if (isDisplayable()) {
             result = pick(fxomDocument, sceneX, sceneY, excludes);
         } else {
             result = null;
@@ -515,7 +380,7 @@ public class ContentPanelController extends AbstractFxmlController
 
         final FXOMObject result;
 
-        assert isContentDisplayable();
+        assert isDisplayable();
         assert startObject != null;
         assert startObject.getSceneGraphObject().isInstanceOf(Node.class);
         assert excludes != null;
@@ -583,45 +448,49 @@ public class ContentPanelController extends AbstractFxmlController
         return result;
     }
 
-    public boolean isTracingEvents() {
-        return tracingEvents;
-    }
-
-    public void layoutContent(boolean applyCSS) {
-        workspaceController.layoutContent(applyCSS);
-    }
-
     @Override
-    public void beginInteraction() {
-        workspaceController.beginInteraction();
-    }
+    public void layoutContent() {
+        final Exception currentLayoutException = getLayoutException();
 
-    @Override
-    public void endInteraction() {
-        workspaceController.endInteraction();
-    }
+        var sceneGraphObject = fxomDocument.getFxomRoot().getSceneGraphObject();
+        if (sceneGraphObject.isParent()) {
+            var node = sceneGraphObject.getAs(Parent.class);
 
-    /*
-     * Public which are *private*...
-     */
+            try {
+                node.layout();
+                layoutException = null;
+            } catch (RuntimeException x) {
+                logger.error("Layout failure", x);
+                layoutException = x;
 
-    /**
-     * @treatAsPrivate Returns the background object of this content panel.
-     * @return the background object of this content panel.
-     */
-    @Override
-    public Pane getWorkspacePane() {
-        return workspacePane;
+                if (layoutException != currentLayoutException) {
+                    messageLogger.logWarningMessage("log.warning.layout.failed", layoutException.getMessage());
+                }
+            }
+        }
     }
-
-    /**
-     * @treatAsPrivate Returns the glass layer container.
-     * @return the glass layer container.
-     */
-    @Override
-    public Pane getGlassLayer() {
-        return glassLayer;
-    }
+//
+//    /*
+//     * Public which are *private*...
+//     */
+//
+//    /**
+//     * @treatAsPrivate Returns the background object of this content panel.
+//     * @return the background object of this content panel.
+//     */
+//    @Override
+//    public Pane getWorkspacePane() {
+//        return workspacePane;
+//    }
+//
+//    /**
+//     * @treatAsPrivate Returns the glass layer container.
+//     * @return the glass layer container.
+//     */
+//    @Override
+//    public Pane getGlassLayer() {
+//        return glassLayer;
+//    }
 
     /**
      * @treatAsPrivate Returns the outline layer container.
@@ -659,23 +528,14 @@ public class ContentPanelController extends AbstractFxmlController
 //        return rudderLayer;
 //    }
 
-    /**
-     * @treatAsPrivate Returns the sub scene holding the user scene graph.
-     * @return the sub scene holding the user scene graph.
-     */
-    @Override
-    public SubScene getContentSubScene() {
-        return contentSubScene;
-    }
-
-    /**
-     * @treatAsPrivate Returns the hud window controller.
-     * @return the hud window controller.
-     */
-    @Override
-    public HudWindowController getHudWindowController() {
-        return hudWindowController;
-    }
+//    /**
+//     * @treatAsPrivate Returns the sub scene holding the user scene graph.
+//     * @return the sub scene holding the user scene graph.
+//     */
+//    @Override
+//    public SubScene getContentSubScene() {
+//        return contentSubScene;
+//    }
 
     // TODO this method seems used for testing, need to find an alternative
 //    /**
@@ -708,101 +568,25 @@ public class ContentPanelController extends AbstractFxmlController
      * @treatAsPrivate fxom document has changed
      * @param fxomDocument the new fxom document
      */
-    protected void fxomDocumentDidChange(FXOMDocument fxomDocument) {
-
-        // Setup the mode controller
-        if (!this.modeManager.hasModeEnabled()) {
-            documentManager.selectionDidChange().set(new SelectionStateImpl(selection));
-            this.modeManager.enableMode(EditModeController.ID);
-        }
-
-        if (oldDocument != null) {
-            assert oldDocument.getSceneGraphHolder() == this;
-            oldDocument.endHoldingSceneGraph();
-        }
+    protected void fxomDocumentDidChange(FXOMDocument newFxomDocument) {
 
         if (fxomDocument != null) {
-            assert fxomDocument.getSceneGraphHolder() == null;
-            fxomDocument.beginHoldingSceneGraph(this);
+            assert fxomDocument.getSceneGraphHolder() == this;
+            fxomDocument.endHoldingSceneGraph();
         }
 
-        final Exception currentLayoutException = workspaceController.getLayoutException();
-        workspaceController.setFxomDocument(fxomDocument);
-
-        final Exception newLayoutException = workspaceController.getLayoutException();
-        if ((newLayoutException != null) && (newLayoutException != currentLayoutException)) {
-            messageLogger.logWarningMessage("log.warning.layout.failed", newLayoutException.getMessage());
+        if (newFxomDocument != null) {
+            assert newFxomDocument.getSceneGraphHolder() == null;
+            newFxomDocument.beginHoldingSceneGraph(this);
         }
 
-        if (fxomDocument != null) {
-            fxomDocument.refreshSceneGraph();
+        if (newFxomDocument != null) {
+            newFxomDocument.refreshSceneGraph();
         }
 
-        modeManager.fxomDocumentDidChange(oldDocument);
+        fxomDocument = newFxomDocument;
 
-        resetViewport();
-    }
-
-    /**
-     * @treatAsPrivate job manager revision has changed
-     */
-    protected void jobManagerRevisionDidChange() {
-        modeManager.enableMode(EditModeController.ID);
-    }
-
-    /**
-     * @treatAsPrivate selection has changed
-     */
-    protected void editorSelectionDidChange() {
-        modeManager.editorSelectionDidChange();
-    }
-
-    /*
-     * AbstractFxmlController
-     */
-
-    /**
-     * @treatAsPrivate controller did load fxml
-     */
-    @Override
-    public void controllerDidLoadFxml() {
-
-        // Sanity checks
-
-        assert outlineLayer != null;
-        assert outlineLayer.isMouseTransparent();
-        assert outlineLayer.isFocusTraversable() == false;
-//        assert pringLayer != null;
-//        assert pringLayer.isMouseTransparent() == false;
-//        assert pringLayer.isFocusTraversable() == false;
-//        assert handleLayer != null;
-//        assert handleLayer.isMouseTransparent() == false;
-//        assert handleLayer.isFocusTraversable() == false;
-//        assert rudderLayer != null;
-//        assert rudderLayer.isMouseTransparent() == true;
-//        assert rudderLayer.isFocusTraversable() == false;
-
-        outlineLayer.setManaged(false);
-//        pringLayer.setManaged(false);
-//        handleLayer.setManaged(false);
-//        rudderLayer.setManaged(false);
-
-        // Remove fake content used to help design
-        backgroundPane.setText(""); // NOCHECK
-
-        // Setup our workspace controller
-        workspaceController.panelControllerDidLoadFxml(scrollPane, scalingGroup, contentSubScene, contentGroup,
-                backgroundPane, extensionRect);
-//        themeDidChange(); // To setup initial value of WorkspaceController.themeStyleSheet
-
-        resetViewport();
-        setupEventTracingFilter();
-
-        // Setup the context menu
-        scrollPane.setContextMenu(contextMenu.getContextMenu());
-
-        // Setup default workspace background
-        // setWorkspaceBackground(ImageUtils.getImage(getDefaultWorkspaceBackgroundURL()));
+        contentChanged.onNext(true);
     }
 
     /*
@@ -822,45 +606,31 @@ public class ContentPanelController extends AbstractFxmlController
      */
     @Override
     public void fxomDocumentDidRefreshSceneGraph(FXOMDocument fxomDocument) {
-        // Scene graph has been reconstructed so:
-        // - new scene graph must replace the old one below contentHook
-        // - mode controller must be informed so that it can updates handles
-        workspaceController.sceneGraphDidChange();
-        modeManager.fxomDocumentDidRefreshSceneGraph();
+        contentChanged.onNext(true);
     }
 
+//    @Override
+//    public ModeManager getModeManager() {
+//        return modeManager;
+//    }
 
-
-    private void dragSourceDidChange() {
-        modeManager.enableMode(EditModeController.ID);
-    }
-
-    private void dropTargetDidChange() {
-        modeManager.dropTargetDidChange();
-    }
-
-    /*
-     * Private (outline layer)
-     */
-
-    private void beginShowingOutlines() {
-        assert workspaceController.isContentVisible();
-
-        workspaceController.hideContent();
-        modeManager.enableMode(EditModeController.class);
-        modeManager.getEnabledMode().getLayer(EditModeController.OUTLINE_LAYER).update();
-    }
-
-    private void endShowingOutlines() {
-        assert workspaceController.isContentVisible() == false;
-        modeManager.enableMode(EditModeController.class);
-        modeManager.getEnabledMode().getLayer(EditModeController.OUTLINE_LAYER).disable();
-        workspaceController.showContent();
+    @Override
+    public Subject<Boolean> contentChanged() {
+        return contentChanged;
     }
 
     @Override
-    public ModeManager getModeManager() {
-        return modeManager;
+    public Object getRoot() {
+        return isDisplayable() ? fxomDocument.getDisplayNodeOrSceneGraphRoot() : null;
     }
 
+    @Override
+    public boolean hasContent() {
+        return documentManager.fxomDocument().get() != null;
+    }
+
+    @Override
+    public RuntimeException getLayoutException() {
+        return layoutException;
+    }
 }

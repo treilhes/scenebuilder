@@ -4,9 +4,10 @@ module jfxapps.core.starter {
 
     requires transitive jfxapps.boot.starter;
 
-    requires transitive jfxapps.boot.loader;
-    requires transitive jfxapps.boot.context;
-    requires transitive jfxapps.boot.platform;
+    requires transitive jfxapps.boot.api;
+    //requires transitive jfxapps.boot.loader;
+    //requires transitive jfxapps.boot.context;
+    //requires transitive jfxapps.boot.platform;
 
     requires transitive org.slf4j;
     requires transitive io.reactivex.rxjava3;

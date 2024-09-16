@@ -22,5 +22,6 @@
         <module>scenebuilder.app.starter</module>
         <module>scenebuilder.app.starter.test</module>
         <module>scenebuilder.metadata</module>
+        <module>scenebuilder.ui</module>
     </modules>
 </project>

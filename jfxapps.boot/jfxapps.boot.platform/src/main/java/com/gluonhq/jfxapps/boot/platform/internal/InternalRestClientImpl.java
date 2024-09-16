@@ -58,9 +58,9 @@ import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gluonhq.jfxapps.boot.platform.InternalRestClient;
-import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
-import com.gluonhq.jfxapps.boot.platform.ResponseBuilder;
+import com.gluonhq.jfxapps.boot.api.platform.InternalRestClient;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.boot.api.platform.ResponseBuilder;
 
 @Component
 public class InternalRestClientImpl implements InternalRestClient {

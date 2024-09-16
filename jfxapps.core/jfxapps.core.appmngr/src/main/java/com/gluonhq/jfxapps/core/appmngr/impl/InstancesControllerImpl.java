@@ -52,17 +52,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.DependsOn;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.lifecycle.DisposeWithApplication;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithApplication;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 
 import jakarta.inject.Provider;
@@ -78,7 +78,11 @@ public class InstancesControllerImpl implements InstancesManager {
 
     private final I18N i18n;
 
-    private JfxAppContext context;
+    private final JfxAppContext context;
+    private final JfxAppPlatform jfxAppPlatform;
+    private final Provider<Dialog> dialog;
+    private final Provider<Optional<List<InitWithApplication>>> initializations;
+    private final Provider<Optional<List<DisposeWithApplication>>> finalizations;
 
     //private IconSetting windowIconSetting;
 
@@ -94,14 +98,12 @@ public class InstancesControllerImpl implements InstancesManager {
 
     //private final FileSystem fileSystem;
 
-    private final Provider<Dialog> dialog;
-    private final Provider<Optional<List<InitWithApplication>>> initializations;
-    private final Provider<Optional<List<DisposeWithApplication>>> finalizations;
 
     //@formatter:off
     public InstancesControllerImpl(
             I18N i18n,
             JfxAppContext context,
+            JfxAppPlatform jfxAppPlatform,
             //IconSetting windowIconSetting,
             //FileSystem fileSystem,
             Provider<Dialog> dialog,
@@ -110,6 +112,7 @@ public class InstancesControllerImpl implements InstancesManager {
       //@formatter:on
         this.i18n = i18n;
         this.context = context;
+        this.jfxAppPlatform = jfxAppPlatform;
         //this.windowIconSetting = windowIconSetting;
         //this.fileSystem = fileSystem;
         this.dialog = dialog;
@@ -240,7 +243,7 @@ public class InstancesControllerImpl implements InstancesManager {
         }
 
         // execute ui related loading now
-        JfxAppPlatform.runOnFxThread(() -> {
+        jfxAppPlatform.runOnFxThread(() -> {
 
 
             for (Entry<File, ApplicationInstance> entry:documents.entrySet()) {
@@ -461,7 +464,7 @@ public class InstancesControllerImpl implements InstancesManager {
      */
     @Override
     public ApplicationInstance newInstance() {
-        JfxAppContext.applicationInstanceScope.unbindScope();
+        context.getApplicationInstanceExecutor().unbindScope();
 
         final ApplicationInstance result = context.getBean(ApplicationInstance.class);
         final ApplicationEvents sceneBuilderManager = context.getBean(ApplicationEvents.class);
@@ -519,7 +522,7 @@ public class InstancesControllerImpl implements InstancesManager {
 //            }
 //        }
         try {
-            return (ApplicationInstance) JfxAppContext.applicationInstanceScope.getCurrentScope().getScopedObject();
+            return (ApplicationInstance) context.getApplicationInstanceExecutor().getCurrentScopedObject();
         } catch (Exception e) {
             return null;
         }

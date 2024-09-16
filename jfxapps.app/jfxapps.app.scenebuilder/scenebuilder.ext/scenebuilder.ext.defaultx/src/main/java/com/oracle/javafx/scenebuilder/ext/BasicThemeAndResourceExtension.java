@@ -39,7 +39,7 @@ import java.util.UUID;
 
 import org.scenebuilder.fxml.api.SbApiExtension;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentThemeExtension;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentUserStylesheetsExtension;

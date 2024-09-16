@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.selection.extension;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.Size;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;

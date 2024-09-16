@@ -41,8 +41,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 import com.gluonhq.jfxapps.test.StageBuilder;
 import com.gluonhq.jfxapps.test.StageType;
@@ -53,6 +53,12 @@ class LogViewerControllerTest {
 
     @TestConfiguration
     static class Config {
+
+        @Bean
+        JfxAppPlatform jfxAppPlatform() {
+            return Mockito.mock(JfxAppPlatform.class);
+        }
+
         @Bean
         ViewMenuController viewMenuController() {
             return Mockito.mock(ViewMenuController.class);

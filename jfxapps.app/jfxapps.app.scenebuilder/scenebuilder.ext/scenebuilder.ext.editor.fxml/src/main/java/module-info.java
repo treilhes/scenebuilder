@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,22 +31,24 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.editor.fxml.FxmlEditorExtension;
 
 open module scenebuilder.ext.editor.fxml {
-    exports com.oracle.javafx.scenebuilder.editor.fxml.preferences.global;
     exports com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key;
     exports com.oracle.javafx.scenebuilder.editor.fxml.actions;
-    exports com.oracle.javafx.scenebuilder.editor.fxml.guides;
+
     exports com.oracle.javafx.scenebuilder.editor.fxml;
     exports com.oracle.javafx.scenebuilder.editor.fxml.gesture;
     exports com.oracle.javafx.scenebuilder.editor.fxml.controller;
     exports com.oracle.javafx.scenebuilder.editor.fxml.i18n;
     exports com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse;
 
-    requires scenebuilder.starter;
+    requires transitive jfxapps.core.api;
     requires transitive scenebuilder.api;
-    requires scenebuilder.core.drag.and.drop;
+    requires transitive scenebuilder.app.starter;
+
+    //requires scenebuilder.core.drag.and.drop;
 //    requires io.reactivex.rxjava2;
 //    requires java.logging;
 //    requires java.prefs;
@@ -54,15 +56,15 @@ open module scenebuilder.ext.editor.fxml {
 //    requires javafx.controls;
 //    requires javafx.fxml;
 //    requires javafx.graphics;
-    requires scenebuilder.core.jobs;
-    requires scenebuilder.core.selection;
+    //requires scenebuilder.core.jobs;
+    //requires scenebuilder.core.selection;
 
     //requires scenebuilder.ext.controls.tooling;
     //requires org.slf4j;
     //requires scenebuilder.ext.sb;
 
-    requires scenebuilder.core.extension.api;
-    requires scenebuilder.ext.menu;
+    //requires scenebuilder.core.extension.api;
+    //requires scenebuilder.ext.menu;
 //    requires spring.beans;
 //    requires spring.context;
 //    requires spring.core;

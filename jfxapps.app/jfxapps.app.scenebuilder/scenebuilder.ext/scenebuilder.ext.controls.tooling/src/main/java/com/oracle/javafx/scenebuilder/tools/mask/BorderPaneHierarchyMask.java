@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.tools.mask;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
 import com.gluonhq.jfxapps.core.api.mask.Accessory;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;

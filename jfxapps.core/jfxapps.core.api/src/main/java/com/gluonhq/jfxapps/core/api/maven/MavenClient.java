@@ -37,11 +37,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
-import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
-import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
-import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
+import com.gluonhq.jfxapps.boot.api.maven.Artifact;
+import com.gluonhq.jfxapps.boot.api.maven.Repository;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryType;
+import com.gluonhq.jfxapps.boot.api.maven.ResolvedArtifact;
+import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
 
 import javafx.beans.property.BooleanProperty;
 

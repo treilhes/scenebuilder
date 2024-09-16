@@ -35,7 +35,7 @@ package com.gluonhq.jfxapps.core.api.settings;
 
 import java.io.File;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 
 @Singleton
 public class MavenSetting extends AbstractSetting {

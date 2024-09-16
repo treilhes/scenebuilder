@@ -37,11 +37,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.dnd.controller.DragController;
+import com.gluonhq.jfxapps.core.dnd.source.DefaultDragSourceFactoryImpl;
 import com.gluonhq.jfxapps.core.dnd.source.DocumentDragSource;
 import com.gluonhq.jfxapps.core.dnd.source.ExternalDragSource;
 import com.gluonhq.jfxapps.core.dnd.target.AccessoryDropTarget;
+import com.gluonhq.jfxapps.core.dnd.target.DefaultDropTargetFactoryImpl;
 import com.gluonhq.jfxapps.core.dnd.target.RootDropTarget;
 
 public class DragAndDropExtension implements OpenExtension {

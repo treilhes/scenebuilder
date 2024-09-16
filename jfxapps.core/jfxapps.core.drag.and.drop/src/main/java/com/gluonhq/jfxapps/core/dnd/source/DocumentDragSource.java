@@ -38,7 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardEncoder;
 import com.gluonhq.jfxapps.core.api.dnd.AbstractDragSource;
 import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;

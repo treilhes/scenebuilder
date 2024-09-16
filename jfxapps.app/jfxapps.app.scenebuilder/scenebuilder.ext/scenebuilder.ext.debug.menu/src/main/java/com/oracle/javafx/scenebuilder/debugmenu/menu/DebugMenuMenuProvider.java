@@ -39,7 +39,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;

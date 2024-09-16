@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 
 
 open module jfxapps.boot.loader {
@@ -42,6 +42,7 @@ open module jfxapps.boot.loader {
     exports com.gluonhq.jfxapps.boot.loader.extension;
     exports com.gluonhq.jfxapps.boot.loader.model;
 
+    requires jfxapps.boot.api;
     requires transitive jfxapps.boot.context;
     requires transitive jfxapps.boot.layer;
     requires jfxapps.boot.maven;
@@ -50,8 +51,6 @@ open module jfxapps.boot.loader {
 
     requires jfxapps.boot.starter;
 
-    requires jfxapps.spring.core.patch.link;
-    requires jfxapps.hibernate.core.patch.link;
     requires java.compiler;
 
     uses Extension;

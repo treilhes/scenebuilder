@@ -51,10 +51,10 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.lang.Nullable;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.OverrideBean;
-import com.gluonhq.jfxapps.boot.context.annotation.OverridedBeanAware;
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.OverrideBean;
+import com.gluonhq.jfxapps.boot.api.context.annotation.OverridedBeanAware;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 
 /**
  * BeanPostProcessor implementation that handles the OverrideBean annotation.

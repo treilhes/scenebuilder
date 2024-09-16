@@ -72,7 +72,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.layer.Layer;
+import com.gluonhq.jfxapps.boot.api.layer.Layer;
 
 // TODO: Auto-generated Javadoc
 /**

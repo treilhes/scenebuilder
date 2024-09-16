@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,15 +37,17 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 public interface ModeManager {
 
+    void enableDefaultMode();
+
     void enableMode(Object modeId);
 
-    void fxomDocumentDidChange(FXOMDocument oldDocument);
+    //void fxomDocumentDidChange(FXOMDocument oldDocument);
 
-    void editorSelectionDidChange();
+    //void editorSelectionDidChange();
 
-    void dropTargetDidChange();
+    //void dropTargetDidChange();
 
-    void fxomDocumentDidRefreshSceneGraph();
+    //void fxomDocumentDidRefreshSceneGraph();
 
     /**
      * Returns true if one mode is enabled.
@@ -56,5 +58,9 @@ public interface ModeManager {
     boolean isModeEnabled(Object modeId);
 
     Mode getEnabledMode();
+
+    void didRefreshSceneGraph();
+
+
 
 }

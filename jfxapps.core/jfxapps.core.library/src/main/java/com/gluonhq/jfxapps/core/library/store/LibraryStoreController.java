@@ -63,7 +63,7 @@ import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
+import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
 import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
 import com.gluonhq.jfxapps.core.extstore.fs.ExtensionFileSystem;
 import com.gluonhq.jfxapps.core.library.api.LibraryStore;

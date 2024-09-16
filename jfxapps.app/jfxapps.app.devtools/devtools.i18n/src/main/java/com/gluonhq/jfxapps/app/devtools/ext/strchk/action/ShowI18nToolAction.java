@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.app.devtools.ext.strchk.action;
 import com.gluonhq.jfxapps.app.devtools.api.menu.DefaultMenu;
 import com.gluonhq.jfxapps.app.devtools.api.ui.MainContent;
 import com.gluonhq.jfxapps.app.devtools.ext.strchk.controller.ResourceLocationsController;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;

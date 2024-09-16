@@ -44,12 +44,24 @@ import org.springframework.stereotype.Component;
 
 import javafx.application.Platform;
 
+/**
+ * deprecated or need an update, jfxAppPlatform is loaded once and not on each call
+ *
+ */
 @Aspect
 @Component
 @EnableAspectJAutoProxy
+@Deprecated
 public class FxThreadAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(FxThreadAspect.class);
+
+    private final JfxAppPlatform jfxAppPlatform;
+
+    public FxThreadAspect(JfxAppPlatform jfxAppPlatform) {
+        super();
+        this.jfxAppPlatform = jfxAppPlatform;
+    }
 
     @Around("@annotation(com.gluonhq.jfxapps.core.api.javafx.FxThread)")
     public Object fxThreadAround(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -64,7 +76,7 @@ public class FxThreadAspect {
             return joinPoint.proceed();
         }
 
-        return JfxAppPlatform.callOnFxThreadWithActiveScope(() -> {
+        return jfxAppPlatform.callOnFxThreadWithActiveScope(() -> {
             try {
                 return joinPoint.proceed();
             } catch (Throwable e) {

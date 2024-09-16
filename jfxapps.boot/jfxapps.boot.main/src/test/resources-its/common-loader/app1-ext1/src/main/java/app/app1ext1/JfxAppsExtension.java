@@ -41,7 +41,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import com.gluonhq.jfxapps.boot.loader.extension.SealedExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
 
 import _test.TestConfig;
 import app.app1ext1.aspect.JfxAppsAspect;

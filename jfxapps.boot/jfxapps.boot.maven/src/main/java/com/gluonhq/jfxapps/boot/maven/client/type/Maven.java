@@ -50,9 +50,9 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
-import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
+import com.gluonhq.jfxapps.boot.api.maven.Artifact;
+import com.gluonhq.jfxapps.boot.api.maven.Repository;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryType;
 
 public class Maven implements RepositoryType {
 

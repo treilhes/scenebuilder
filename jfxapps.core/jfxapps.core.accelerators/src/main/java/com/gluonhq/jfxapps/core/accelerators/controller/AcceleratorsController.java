@@ -42,8 +42,8 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.accelerators.preferences.global.AcceleratorsMapPreference;
 import com.gluonhq.jfxapps.core.accelerators.preferences.global.FocusedAcceleratorsMapPreference;
 import com.gluonhq.jfxapps.core.api.action.Action;

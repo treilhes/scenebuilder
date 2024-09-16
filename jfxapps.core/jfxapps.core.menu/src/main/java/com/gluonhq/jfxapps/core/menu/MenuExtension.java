@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.menu.i18n.I18NMenu;
 import com.gluonhq.jfxapps.core.menu.items.AnnotatedActionContextMenuItemProvider;
 import com.gluonhq.jfxapps.core.menu.items.AnnotatedActionMenuItemProvider;

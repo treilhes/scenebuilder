@@ -33,7 +33,7 @@
  */
 import org.scenebuilder.fxml.api.SbApiExtension;
 
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 
 open module scenebuilder.api {
     exports org.scenebuilder.fxml.api;

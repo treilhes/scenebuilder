@@ -37,10 +37,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.ui.controller.ApplicationInstanceController;
 import com.gluonhq.jfxapps.core.ui.controller.ApplicationWindowTracker;
 import com.gluonhq.jfxapps.core.ui.controller.ModeManagerController;
+import com.gluonhq.jfxapps.core.ui.controller.WorkspaceController;
 import com.gluonhq.jfxapps.core.ui.dialog.AlertDialog;
 import com.gluonhq.jfxapps.core.ui.dialog.DialogController;
 import com.gluonhq.jfxapps.core.ui.dialog.ErrorDialog;
@@ -69,6 +70,7 @@ import com.gluonhq.jfxapps.core.ui.preferences.document.StageHeightPreference;
 import com.gluonhq.jfxapps.core.ui.preferences.document.StageWidthPreference;
 import com.gluonhq.jfxapps.core.ui.preferences.document.XPosPreference;
 import com.gluonhq.jfxapps.core.ui.preferences.document.YPosPreference;
+import com.gluonhq.jfxapps.core.ui.preferences.global.BackgroundImagePreference;
 import com.gluonhq.jfxapps.core.ui.selectionbar.SelectionBarController;
 
 public class BaseUiExtension implements OpenExtension {
@@ -127,7 +129,9 @@ public class BaseUiExtension implements OpenExtension {
                 LastDockDockTypePreference.class,
                 LastDockUuidPreference.class,
                 LastViewVisibilityPreference.class,
-                ApplicationWindowTracker.class
+                ApplicationWindowTracker.class,
+                WorkspaceController.class,
+                BackgroundImagePreference.class
             );
      // @formatter:on
     }

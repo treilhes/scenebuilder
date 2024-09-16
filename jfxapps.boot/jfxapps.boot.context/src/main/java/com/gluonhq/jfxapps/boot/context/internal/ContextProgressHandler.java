@@ -13,7 +13,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
+import com.gluonhq.jfxapps.boot.api.context.MultipleProgressListener;
 
 public class ContextProgressHandler implements DestructionAwareBeanPostProcessor,
         ApplicationListener<ContextRefreshedEvent>, BeanFactoryPostProcessor {

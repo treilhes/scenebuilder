@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.boot.platform.internal;
 import java.io.File;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 
 public class DefaultFolders {
 

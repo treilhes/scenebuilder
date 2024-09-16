@@ -45,12 +45,12 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 
-import com.gluonhq.jfxapps.boot.context.ContextManager;
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.Lazy;
-import com.gluonhq.jfxapps.boot.context.annotation.PreferedConstructor;
-import com.gluonhq.jfxapps.boot.context.annotation.Primary;
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.ContextManager;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
+import com.gluonhq.jfxapps.boot.api.context.annotation.PreferedConstructor;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Primary;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 import com.gluonhq.jfxapps.boot.context.impl.ContextManagerImpl;
 
 import jakarta.annotation.PostConstruct;
@@ -69,7 +69,7 @@ class SbContextFrameworkTest {
     void test_injection_feature_optional() {
         ContextManager mng = new ContextManagerImpl(bootContext);
         Set<Class<?>> classes = Set.of(OptionalFeature.class);
-        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, Set.of(), null, null);
+        JfxAppContext ctx = mng.create(null, null, classes, Set.of(), null, null);
         assertNotNull(ctx.getBean(OptionalFeature.class));
     }
 
@@ -77,7 +77,7 @@ class SbContextFrameworkTest {
     void test_injection_feature_generic() {
         ContextManager mng = new ContextManagerImpl(bootContext);
         Set<Class<?>> classes = Set.of(Component1.class, Component2.class, Component3.class, GenericFeature.class);
-        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, Set.of(), null, null);
+        JfxAppContext ctx = mng.create(null, null, classes, Set.of(), null, null);
         assertNotNull(ctx.getBean(GenericFeature.class));
     }
 
@@ -85,7 +85,7 @@ class SbContextFrameworkTest {
     void test_injection_feature_list() {
         ContextManager mng = new ContextManagerImpl(bootContext);
         Set<Class<?>> classes = Set.of(Component1.class, Component2.class, Component3.class, ListFeature.class);
-        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, Set.of(),null, null);
+        JfxAppContext ctx = mng.create(null, null, classes, Set.of(),null, null);
         assertNotNull(ctx.getBean(ListFeature.class));
     }
 
@@ -93,7 +93,7 @@ class SbContextFrameworkTest {
     void test_injection_feature_lazy_injection() {
         ContextManager mng = new ContextManagerImpl(bootContext);
         Set<Class<?>> classes = Set.of(Component1.class, Component2.class, Component3.class, LazyInjectionFeature.class);
-        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, Set.of(),null, null);
+        JfxAppContext ctx = mng.create(null, null, classes, Set.of(),null, null);
         assertNotNull(ctx.getBean(LazyInjectionFeature.class));
     }
 
@@ -101,7 +101,7 @@ class SbContextFrameworkTest {
     void test_injection_feature_multiple_constructor() {
         ContextManager mng = new ContextManagerImpl(bootContext);
         Set<Class<?>> classes = Set.of(Component1.class, MultiConstructorFeature.class);
-        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, Set.of(),null, null);
+        JfxAppContext ctx = mng.create(null, null, classes, Set.of(),null, null);
         assertNotNull(ctx.getBean(MultiConstructorFeature.class));
     }
 
@@ -109,7 +109,7 @@ class SbContextFrameworkTest {
     void test_injection_feature_primary() {
         ContextManager mng = new ContextManagerImpl(bootContext);
         Set<Class<?>> classes = Set.of(PrimaryComponent.class, SecondaryComponent.class, PrimaryInjectionFeature.class);
-        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, Set.of(), null, null);
+        JfxAppContext ctx = mng.create(null, null, classes, Set.of(), null, null);
         assertNotNull(ctx.getBean(PrimaryInjectionFeature.class));
     }
 
@@ -117,7 +117,7 @@ class SbContextFrameworkTest {
     void test_injection_feature_lazy_initialization() {
         ContextManager mng = new ContextManagerImpl(bootContext);
         Set<Class<?>> classes = Set.of(LazyInitComponent.class, LazyInitFeature.class);
-        JfxAppContext ctx = mng.create(null, UUID.randomUUID(), classes, Set.of(), null, null);
+        JfxAppContext ctx = mng.create(null, null, classes, Set.of(), null, null);
         LazyInitFeature lif = ctx.getBean(LazyInitFeature.class);
 
         assertEquals(0, LazyInitComponent.instanciated);

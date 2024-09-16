@@ -39,7 +39,7 @@ import java.util.UUID;
 
 import org.scenebuilder.fxml.api.i18n.I18NFxmlApi;
 
-import com.gluonhq.jfxapps.boot.loader.extension.ApplicationExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.ApplicationExtension;
 import com.gluonhq.jfxapps.core.api.application.annotation.EditorDescriptor;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.oracle.javafx.scenebuilder.api.control.driver.DriverExtensionRegistry;

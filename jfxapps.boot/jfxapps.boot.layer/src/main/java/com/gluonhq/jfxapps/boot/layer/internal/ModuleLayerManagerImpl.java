@@ -55,9 +55,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.layer.InvalidLayerException;
-import com.gluonhq.jfxapps.boot.layer.Layer;
-import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
+import com.gluonhq.jfxapps.boot.api.layer.InvalidLayerException;
+import com.gluonhq.jfxapps.boot.api.layer.Layer;
+import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
 
 // TODO: Auto-generated Javadoc
 /**

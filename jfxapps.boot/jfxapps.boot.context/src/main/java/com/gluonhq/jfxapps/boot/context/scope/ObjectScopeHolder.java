@@ -45,10 +45,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import com.gluonhq.jfxapps.boot.context.Application;
-import com.gluonhq.jfxapps.boot.context.ApplicationInstance;
+import com.gluonhq.jfxapps.boot.api.context.Application;
+import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
+import com.gluonhq.jfxapps.boot.api.context.ScopedExecutor;
 
-public abstract class ObjectScopeHolder<P, O, D> {
+public abstract class ObjectScopeHolder<P, O, D> implements ScopedExecutor<O> {
 
     private static final Logger logger = LoggerFactory.getLogger(ObjectScopeHolder.class);
 
@@ -93,6 +94,7 @@ public abstract class ObjectScopeHolder<P, O, D> {
      *
      * @param scopedApplication the new current scope
      */
+    @Override
     public void setCurrentScope(O scopedObject) {
 
         if (scopedObject != null && !scopeObjectToContext.containsKey(scopedObject)) {
@@ -162,6 +164,7 @@ public abstract class ObjectScopeHolder<P, O, D> {
         return getActiveScope()!= null;
     }
 
+    @Override
     public void unbindScope() {
         if (currentScope != null) {
             for (var dependent:dependentScopeHolders) {
@@ -189,6 +192,7 @@ public abstract class ObjectScopeHolder<P, O, D> {
      *
      * @param application the application
      */
+    @Override
     public void removeScope(O scopedObject) {
 
         if (scopedObject == null || !scopeObjectToContext.containsKey(scopedObject)) {
@@ -220,6 +224,7 @@ public abstract class ObjectScopeHolder<P, O, D> {
 
     }
 
+    @Override
     public void executeRunnable(Runnable runnable, UUID scopeId) {
         executeRunnable(runnable, getScope(scopeId));
     }
@@ -247,6 +252,7 @@ public abstract class ObjectScopeHolder<P, O, D> {
         }
     }
 
+    @Override
     public <T> T executeSupplier(Supplier<T> runnable, UUID scopeId) {
         return executeSupplier(runnable, getScope(scopeId));
     }
@@ -317,6 +323,25 @@ public abstract class ObjectScopeHolder<P, O, D> {
 
     static String toId(ScopeContext<?,?,?,?> scope) {
         return scope == null ? null : scope.getId().toString();
+    }
+
+    @Override
+    public UUID getActiveScopeId() {
+        if (hasActiveScope()) {
+            return getActiveScope().getId();
+        }
+        return null;
+    }
+
+    @Override
+    public UUID getScopeId(O object) {
+        var scope = getScope(object);
+        return scope == null ? null : scope.getId();
+    }
+
+    @Override
+    public O getCurrentScopedObject() {
+        return getCurrentScope().getScopedObject();
     }
 
 }

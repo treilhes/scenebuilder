@@ -37,18 +37,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.loader.extension.RootExtension;
-import com.gluonhq.jfxapps.boot.loader.extension.SealedExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.RootExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroupFactoryRegistry;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.javafx.FxThreadAspect;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.internal.ContextClassLoaderEventDispatcher;
 import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
 import com.gluonhq.jfxapps.core.api.javafx.internal.JavafxThreadBootstrapper;
 import com.gluonhq.jfxapps.core.api.javafx.internal.JavafxThreadClassloaderDispatcherImpl;
+import com.gluonhq.jfxapps.core.api.javafx.internal.JfxAppPlatformImpl;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
 import com.gluonhq.jfxapps.core.api.preferences.init.DocumentPreferencesNodeImpl;
@@ -85,8 +88,6 @@ public class ApiExtension implements RootExtension {
                 ApplicationEvents.ApplicationEventsImpl.class,
                 ApplicationInstanceEvents.ApplicationInstanceEventsImpl.class,
                 ContextClassLoaderEventDispatcher.class,
-                FxThreadAspect.class,
-
                 FxmlControllerBeanPostProcessor.class,
                 JavafxThreadBootstrapper.class,
                 ActionExtensionFactory.class,
@@ -101,6 +102,7 @@ public class ApiExtension implements RootExtension {
                 I18N.class,
                 JavafxThreadClassloader.class,
                 JavafxThreadClassloaderDispatcherImpl.class,
+                JfxAppPlatformImpl.class,
                 JobExtensionFactory.class,
                 MavenSetting.class,
                 MenuBuilder.class,
@@ -113,7 +115,11 @@ public class ApiExtension implements RootExtension {
                 ViewManager.ViewManagerImpl.class,
                 ViewMenuController.class,
                 DocumentPreferencesNodeImpl.class,
-                RootPreferencesNodeImpl.class
+                RootPreferencesNodeImpl.class,
+
+                DefaultSelectionGroupFactory.class,
+                SelectionGroupFactoryRegistry.class,
+                ObjectSelectionGroup.Factory.class
         );
     }
 

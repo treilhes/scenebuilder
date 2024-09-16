@@ -41,7 +41,7 @@ import java.util.Comparator;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 
 
-public interface ApplicationInstance extends com.gluonhq.jfxapps.boot.context.ApplicationInstance {
+public interface ApplicationInstance extends com.gluonhq.jfxapps.boot.api.context.ApplicationInstance {
     //API validated
     boolean isInited();
     boolean isUnused();

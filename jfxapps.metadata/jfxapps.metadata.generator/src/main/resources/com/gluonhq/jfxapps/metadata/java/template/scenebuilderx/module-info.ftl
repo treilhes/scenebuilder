@@ -1,4 +1,4 @@
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import ${context.targetPackage}.${context.extensionClassSimpleName};
 
 open module ${context.moduleName} {
@@ -7,7 +7,7 @@ open module ${context.moduleName} {
     exports ${subPackage};
     </#list>
 
-    requires jfxapps.boot.loader;
+    requires jfxapps.boot.api;
     requires jfxapps.boot.starter;
     requires transitive jfxapps.core.metadata;
     requires transitive jfxapps.core.fxom;

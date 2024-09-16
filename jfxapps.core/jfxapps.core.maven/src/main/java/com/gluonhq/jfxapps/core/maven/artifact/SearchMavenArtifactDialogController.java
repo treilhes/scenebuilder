@@ -40,10 +40,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.maven.client.api.Artifact;
-import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
-import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.api.maven.Artifact;
+import com.gluonhq.jfxapps.boot.api.maven.ResolvedArtifact;
+import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.maven.ArtefactHandler;
 import com.gluonhq.jfxapps.core.api.maven.MavenClient;

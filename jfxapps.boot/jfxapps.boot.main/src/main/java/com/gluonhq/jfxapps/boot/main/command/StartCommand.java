@@ -47,12 +47,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 
-import com.gluonhq.jfxapps.boot.loader.OpenCommandEvent;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.boot.main.config.BootConfig;
 import com.gluonhq.jfxapps.boot.main.config.BootHandler;
 import com.gluonhq.jfxapps.boot.main.util.MessageBox;
 import com.gluonhq.jfxapps.boot.main.util.MessageBoxMessage;
-import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.boot.platform.internal.DefaultFolders;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -102,14 +102,16 @@ public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMes
     private static synchronized boolean lockMessageBox(MessageBox.Delegate<MessageBoxMessage> delegate, UUID targetApp, List<File> files) throws IOException {
         assert messageBox == null;
 
+        var messageBoxFolder = DefaultFolders.getMessageBoxFolder();
+
         try {
-            Files.createDirectories(JfxAppsPlatform.getMessageBoxFolder().toPath());
+            Files.createDirectories(messageBoxFolder.toPath());
         } catch (FileAlreadyExistsException x) {
             // Fine
         }
 
         final boolean result;
-        messageBox = new MessageBox<>(JfxAppsPlatform.getMessageBoxFolder(), MessageBoxMessage.class, 1000 /* ms */);
+        messageBox = new MessageBox<>(messageBoxFolder, MessageBoxMessage.class, 1000 /* ms */);
 
         // Fix End
         if (messageBox.grab(delegate)) {

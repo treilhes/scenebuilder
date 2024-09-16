@@ -40,22 +40,13 @@ import java.util.UUID;
 import org.scenebuilder.fxml.api.SbApiExtension;
 import org.scenebuilder.fxml.core.i18n.I18NFxmlCoreExtension;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.core.doc.DocumentationImpl;
+import com.oracle.javafx.scenebuilder.core.doc.ShowDocumentationAction;
 import com.oracle.javafx.scenebuilder.core.editors.ControllerClassEditor;
 import com.oracle.javafx.scenebuilder.core.editors.CoreEditors;
 import com.oracle.javafx.scenebuilder.core.editors.FxIdEditor;
 import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
-import com.oracle.javafx.scenebuilder.core.ui.DocumentWindowController;
-import com.oracle.javafx.scenebuilder.core.ui.action.CloseBottomDockAction;
-import com.oracle.javafx.scenebuilder.core.ui.action.CloseLeftDockAction;
-import com.oracle.javafx.scenebuilder.core.ui.action.CloseRightDockAction;
-import com.oracle.javafx.scenebuilder.core.ui.action.ToggleMinimizeBottomDockAction;
-import com.oracle.javafx.scenebuilder.core.ui.action.ToggleMinimizeLeftDockAction;
-import com.oracle.javafx.scenebuilder.core.ui.action.ToggleMinimizeRightDockAction;
-import com.oracle.javafx.scenebuilder.core.ui.preferences.document.BottomDividerVPosPreference;
-import com.oracle.javafx.scenebuilder.core.ui.preferences.document.LeftDividerHPosPreference;
-import com.oracle.javafx.scenebuilder.core.ui.preferences.document.RightDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.fs.job.ImportFileJob;
 import com.oracle.javafx.scenebuilder.fs.job.IncludeFileJob;
 
@@ -77,16 +68,6 @@ public class ScenebuilderAppExtension implements OpenExtension {
     public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
-                DocumentWindowController.class,
-                BottomDividerVPosPreference.class,
-                LeftDividerHPosPreference.class,
-                RightDividerHPosPreference.class,
-                CloseBottomDockAction.class,
-                CloseLeftDockAction.class,
-                CloseRightDockAction.class,
-                ToggleMinimizeBottomDockAction.class,
-                ToggleMinimizeLeftDockAction.class,
-                ToggleMinimizeRightDockAction.class,
 
                 ImportFileJob.class,
                 ImportFileJob.Factory.class,
@@ -98,6 +79,7 @@ public class ScenebuilderAppExtension implements OpenExtension {
                 CoreEditors.class,
 
                 DocumentationImpl.class,
+                ShowDocumentationAction.class,
 
                 FxIdEditor.class,
 

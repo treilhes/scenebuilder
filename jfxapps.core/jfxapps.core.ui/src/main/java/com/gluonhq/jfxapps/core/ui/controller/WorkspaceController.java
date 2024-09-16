@@ -36,16 +36,27 @@ package com.gluonhq.jfxapps.core.ui.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
 import com.gluonhq.jfxapps.core.api.css.StylesheetProvider;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.SceneGraphObject;
+import com.gluonhq.jfxapps.core.ui.preferences.global.BackgroundImagePreference;
+import com.gluonhq.jfxapps.util.javafx.BoundsUnion;
+import com.gluonhq.jfxapps.util.javafx.BoundsUtils;
+import com.gluonhq.jfxapps.util.javafx.ScrollPaneBooster;
 
 import javafx.animation.FadeTransition;
 import javafx.application.ConditionalFeature;
@@ -64,8 +75,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
@@ -88,7 +103,7 @@ import javafx.util.Duration;
 /**
  *
  */
-@com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton
+@ApplicationInstanceSingleton
 public class WorkspaceController extends AbstractFxmlController implements Workspace {
 
     private static final String I18N_CONTENT_LABEL_STATUS_CANNOT_DISPLAY = "content.label.status.cannot.display";
@@ -122,22 +137,54 @@ public class WorkspaceController extends AbstractFxmlController implements Works
 
     private DoubleProperty scaling;
 
-    private RuntimeException layoutException;
+
     private StylesheetProvider stylesheetConfig = null;
 
-    private FXOMDocument fxomDocument;
+    //private FXOMDocument fxomDocument;
 
     private final ApplicationInstanceEvents documentManager;
     private final ContextMenu contextMenu;
+    private final BackgroundImagePreference backgroundImagePreference;
+    private final Selection selection;
+    private final FXOMObjectMask.Factory maskFactory;
+    private final Content content;
+    private final ModeManager modeManager;
+
+    private boolean guidesVisible = true;
+    private Paint guidesColor = Color.RED;
+
+    private final JfxAppPlatform jfxAppPlatform;
 
     public WorkspaceController(
             I18N i18n,
+            JfxAppPlatform jfxAppPlatform,
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
-            ContextMenu contextMenu) {
+            BackgroundImagePreference backgroundImagePreference,
+            ContextMenu contextMenu,
+            FXOMObjectMask.Factory maskFactory,
+            Selection selection,
+            Content content,
+            ModeManager modeManager) {
         super(i18n, scenebuilderManager, documentManager, WorkspaceController.class.getResource("Workspace.fxml"));
+        this.jfxAppPlatform = jfxAppPlatform;
         this.documentManager = documentManager;
         this.contextMenu = contextMenu;
+        this.backgroundImagePreference = backgroundImagePreference;
+        this.maskFactory = maskFactory;
+        this.selection = selection;
+        this.content = content;
+        this.modeManager = modeManager;
+    }
+
+    @FXML
+    public void initialize() {
+        setBackground(backgroundImagePreference.getBackgroundImageImage());
+
+        backgroundImagePreference.getObservableValue()
+            .addListener((ob, o, n) -> setBackground(BackgroundImagePreference.getImage(n)));
+
+        content.contentChanged().subscribe(this::contentDidChange);
     }
 
     @Override
@@ -199,12 +246,12 @@ public class WorkspaceController extends AbstractFxmlController implements Works
             stylesheetConfig = s;
             applyStylesheetConfig();
         });
-
-        documentManager.fxomDocument().subscribe(om -> {
-            JfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
-                setFxomDocument(om);
-            });
-        });
+//
+//        documentManager.fxomDocument().subscribe(om -> {
+//            JfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
+//                setFxomDocument(om);
+//            });
+//        });
 
         if (logger.isDebugEnabled()) {
             tracingEvents = false;
@@ -212,12 +259,34 @@ public class WorkspaceController extends AbstractFxmlController implements Works
         }
     }
 
-    private void setFxomDocument(FXOMDocument fxomDocument) {
-        if (this.fxomDocument != fxomDocument) {
-            this.fxomDocument = fxomDocument;
-            sceneGraphDidChange();
+    private void contentDidChange(boolean contentDidChange) {
+        if (!contentDidChange) {
+            return;
         }
+
+//        // Setup the mode controller
+//        // TODO
+//        if (!this.modeManager.hasModeEnabled()) {
+//            documentManager.selectionDidChange().set(new SelectionStateImpl(selection));
+//            this.modeManager.enableDefaultMode();
+//        }
+
+        // Scene graph has been reconstructed so:
+        // - new scene graph must replace the old one below contentHook
+        // - mode controller must be informed so that it can updates handles
+        sceneGraphDidChange();
+        modeManager.didRefreshSceneGraph();
+
+        resetViewport();
+
+
     }
+//    private void setFxomDocument(FXOMDocument fxomDocument) {
+//        if (this.fxomDocument != fxomDocument) {
+//            this.fxomDocument = fxomDocument;
+//            sceneGraphDidChange();
+//        }
+//    }
 
     public void sceneGraphDidChange() {
         if (this.scrollPane != null) {
@@ -268,22 +337,12 @@ public class WorkspaceController extends AbstractFxmlController implements Works
     @Override
     public void layoutContent(boolean applyCSS) {
         if (scrollPane != null) {
-            try {
-                if (applyCSS) {
-                    contentGroupApplyCss();
-                }
-                scrollPane.layout();
-                layoutException = null;
-            } catch (RuntimeException x) {
-                logger.error("Layout failure", x);
-                layoutException = x;
+            if (applyCSS) {
+                contentGroupApplyCss();
             }
+            content.layoutContent();
+            scrollPane.layout();
         }
-    }
-
-    @Override
-    public RuntimeException getLayoutException() {
-        return layoutException;
     }
 
     @Override
@@ -353,7 +412,7 @@ public class WorkspaceController extends AbstractFxmlController implements Works
             // visual artifacts. After the two steps are done, we turn the
             // visible by calling revealScalingGroup().
 
-            JfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
+            jfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
                 layoutContent(true /* applyCSS */);
                 adjustWorkspace();
                 revealScalingGroup();
@@ -374,20 +433,20 @@ public class WorkspaceController extends AbstractFxmlController implements Works
         contentGroup.getChildren().clear();
 
         boolean canDisplayDocument = false;
-        if (fxomDocument == null) {
+        if (!content.hasContent()) {
             statusMessageText = "FXOMDocument is null"; // NOCHECK
             statusStyleClass = "stage-prompt"; // NOCHECK
-        } else if (fxomDocument.getFxomRoot() == null) {
+        } else if (!content.isDisplayable()) {
             statusMessageText = getI18n().getString(I18N_CONTENT_LABEL_STATUS_INVITATION);
             statusStyleClass = "stage-prompt"; // NOCHECK
         } else {
-            final Object userSceneGraph = fxomDocument.getDisplayNodeOrSceneGraphRoot();
+            final Object userSceneGraph = content.getRoot();
             if (userSceneGraph instanceof Node) {
                 final Node rootNode = (Node) userSceneGraph;
                 assert rootNode.getParent() == null;
                 contentGroup.getChildren().add(rootNode);
                 layoutContent(true /* applyCSS */);
-                if (layoutException == null) {
+                if (content.getLayoutException() == null) {
                     statusMessageText = ""; // NOCHECK
                     statusStyleClass = "stage-prompt-default"; // NOCHECK
                     canDisplayDocument = true;
@@ -408,6 +467,8 @@ public class WorkspaceController extends AbstractFxmlController implements Works
 
         // Display background fill of the Window/Scene
         if (canDisplayDocument) {
+            FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+
             assert fxomDocument != null;
             assert fxomDocument.getFxomRoot() != null;
 
@@ -442,14 +503,14 @@ public class WorkspaceController extends AbstractFxmlController implements Works
 
     private void updateScalingGroup() {
         if (scalingGroup != null) {
+
             final double actualScaling;
-            if (fxomDocument == null) {
-                actualScaling = 1.0;
-            } else if (fxomDocument.getSceneGraphRoot() == null) {
-                actualScaling = 1.0;
-            } else {
+            if (content.isDisplayable()) {
                 actualScaling = scalingProperty().get();
+            } else {
+                actualScaling = 1.0;
             }
+
             scalingGroup.setScaleX(actualScaling);
             scalingGroup.setScaleY(actualScaling);
 
@@ -466,13 +527,9 @@ public class WorkspaceController extends AbstractFxmlController implements Works
     private void adjustWorkspace() {
         final Bounds backgroundBounds, extensionBounds;
 
-        final Object userSceneGraph;
-        if (fxomDocument == null) {
-            userSceneGraph = null;
-        } else {
-            userSceneGraph = fxomDocument.getDisplayNodeOrSceneGraphRoot();
-        }
-        if ((userSceneGraph instanceof Node) && (layoutException == null)) {
+        final Object userSceneGraph = content.getRoot();
+
+        if ((userSceneGraph instanceof Node) && (content.getLayoutException() == null)) {
             final Node rootNode = (Node) userSceneGraph;
 
             final Bounds rootBounds = rootNode.getLayoutBounds();
@@ -622,6 +679,7 @@ public class WorkspaceController extends AbstractFxmlController implements Works
             contentGroup.getStylesheets().setAll(stylesheetConfig.getStylesheets());
         }
 
+        FXOMDocument fxomDocument = documentManager.fxomDocument().get();
         if (fxomDocument != null) {
             contentGroup.getStylesheets().addAll(fxomDocument.getDisplayStylesheets());
         }
@@ -728,30 +786,180 @@ public class WorkspaceController extends AbstractFxmlController implements Works
     }
 
     /**
-     * @treatAsPrivate Returns true if this content panel is able to display the
-     *                 content ie <br/>
-     *                 1) fxomDocument != null<br/>
-     *                 2) (fxomDocument.getFxomRoot() == null) or
-     *                 fxomDocument.getFxomRoot().isNode()<br/>
-     *                 3) workspaceController.getLayoutException() == null<br/>
      *
-     * @return true if this content panel is able to display the content
      */
-
     @Override
     public boolean isContentDisplayable() {
-        final boolean result;
+        return content.isDisplayable();
+    }
 
-        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
-        if (fxomDocument == null) {
-            result = false;
-        } else if (fxomDocument.getFxomRoot() == null) {
-            result = true;
-        } else {
-            result = fxomDocument.getDisplayNodeOrSceneGraphRoot() instanceof Node
-                    && getLayoutException() == null;
+    /**
+     * Scrolls this content panel so that the selected objects are visible.
+     */
+    @Override
+    // TODO Need to use CoordinateHelper here ?
+    public void scrollToSelection() {
+        // Walk through the selected objects and computes the enclosing bounds.
+        final BoundsUnion union = new BoundsUnion();
+
+        if (selection.getGroup() instanceof ObjectSelectionGroup osg) {
+            for (FXOMObject i : osg.getItems()) {
+                final var mask = maskFactory.getMask(i);
+                final var nodeFxomObject = mask.getClosestFxNode();
+                if (nodeFxomObject != null) {
+                    final Node node = nodeFxomObject.getSceneGraphObject().getAs(Node.class);
+                    assert node.getLayoutBounds() != null;
+                    final Bounds nodeBounds = node.localToScene(node.getLayoutBounds(), true /* rootScene */);
+                    assert nodeBounds != null;
+                    union.add(nodeBounds);
+                }
+            }
         }
 
-        return result;
+        if (union.getResult() != null) {
+            final Node content = scrollPane.getContent();
+            final Bounds sceneEnclosing = BoundsUtils.to2DBounds(union.getResult());
+            assert sceneEnclosing.getMinZ() == 0.0; // Side effect of SubScene
+            assert sceneEnclosing.getMaxZ() == 0.0;
+            // TODO do i need to use CoordinateHelper here?
+            final Bounds localEnclosing = content.sceneToLocal(sceneEnclosing, true /* rootScene */);
+            assert localEnclosing != null;
+            final ScrollPaneBooster spb = new ScrollPaneBooster(scrollPane);
+            spb.scrollTo(localEnclosing);
+        }
     }
+
+    @Override
+    public void reveal(FXOMObject targetFxomObject) {
+        FXOMObject fxomObject = targetFxomObject;
+        // TODO special case if to move to metadata
+        while (fxomObject != null) {
+            final Object sceneGraphObject = fxomObject.getSceneGraphObject().getObjectClass();
+
+            if (sceneGraphObject instanceof Tab) {
+                final Tab tab = (Tab) sceneGraphObject;
+                final TabPane tabPane = tab.getTabPane();
+                assert tabPane != null;
+                tabPane.getSelectionModel().select(tab);
+            } else if (sceneGraphObject instanceof TitledPane) {
+                final TitledPane titledPane = (TitledPane) sceneGraphObject;
+                if (titledPane.getParent() instanceof Accordion) {
+                    final Accordion accordion = (Accordion) titledPane.getParent();
+                    accordion.setExpandedPane(titledPane);
+                }
+            }
+
+            var mask = maskFactory.getMask(fxomObject);
+            fxomObject = mask.getParentFXOMObject();
+        }
+    }
+
+    @Override
+    public Node getWorkspacePane() {
+        return workspacePane;
+    }
+
+//    /**
+//     * Returns true if this content panel displays outlines.
+//     *
+//     * @return true if this content panel displays outlines.
+//     */
+//    @Override
+//    public boolean isOutlinesVisible() {
+//        return (contentGroup != null) && (contentGroup.isVisible() == false);
+//    }
+//
+//    /**
+//     * Enables or disables outline display in this content panel.
+//     *
+//     * @param outlinesVisible true if outlines should be visible.
+//     */
+//    public void setOutlinesVisible(boolean outlinesVisible) {
+//        if (outlinesVisible != isOutlinesVisible()) {
+//            if (outlinesVisible) {
+//                beginShowingOutlines();
+//            } else {
+//                endShowingOutlines();
+//            }
+//        }
+//    }
+//
+//    /**
+//     * Returns true if this content panel displays alignment guides.
+//     *
+//     * @return true if this content panel displays alignment guides.
+//     */
+//    @Override
+//    public boolean isGuidesVisible() {
+//        return guidesVisible;
+//    }
+//
+//    /**
+//     * Enables or disables alignment guide display in this content panel.
+//     *
+//     * @param guidesVisible true if alignment guides should be visible.
+//     */
+//    public void setGuidesVisible(boolean guidesVisible) {
+//        this.guidesVisible = guidesVisible;
+//    }
+
+//    /**
+//     * Returns the color used by this content panel to draw parent rings.
+//     *
+//     * @return the color used by this content panel to draw parent rings.
+//     */
+//    @Override
+//    public Paint getPringColor() {
+//        return pringColor;
+//    }
+//
+//    /**
+//     * Sets the color used by this content panel to draw parent rings.
+//     *
+//     * @param pringColor the color used by this content panel to draw parent rings.
+//     */
+//    public void setPringColor(Paint pringColor) {
+//        this.pringColor = pringColor;
+//    }
+
+//    /**
+//     * Returns the color used by this content panel to draw alignment guides.
+//     *
+//     * @return the color used by this content panel to draw alignment guides.
+//     */
+//    @Override
+//    public Paint getGuidesColor() {
+//        return guidesColor;
+//    }
+//
+//    /**
+//     * Sets the color used by this content panel to draw alignment guides.
+//     *
+//     * @param guidesColor the color used by this content panel to draw alignment
+//     *                    guides.
+//     */
+//    public void setGuidesColor(Paint guidesColor) {
+//        this.guidesColor = guidesColor;
+//    }
+//
+//
+//    /*
+//     * Private (outline layer)
+//     */
+//
+//    private void beginShowingOutlines() {
+//        assert isContentVisible();
+//
+//        hideContent();
+//        modeManager.enableMode(EditModeController.class);
+//        modeManager.getEnabledMode().getLayer(EditModeController.OUTLINE_LAYER).update();
+//    }
+//
+//    private void endShowingOutlines() {
+//        assert isContentVisible() == false;
+//        modeManager.enableMode(EditModeController.class);
+//        modeManager.getEnabledMode().getLayer(EditModeController.OUTLINE_LAYER).disable();
+//        showContent();
+//    }
+
 }

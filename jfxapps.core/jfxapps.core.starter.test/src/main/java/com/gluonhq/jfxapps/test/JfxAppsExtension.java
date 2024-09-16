@@ -49,18 +49,18 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextLoader;
 import org.springframework.test.context.MergedContextConfiguration;
-import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.AbstractContextLoader;
 import org.springframework.test.context.support.DefaultTestContextBootstrapper;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import com.gluonhq.jfxapps.boot.context.Application;
-import com.gluonhq.jfxapps.boot.context.ApplicationInstance;
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.api.context.Application;
+import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.context.impl.JfxAppContextImpl;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
@@ -147,7 +147,7 @@ System.out.println();
 
         @Override
         public ApplicationContext loadContext(MergedContextConfiguration mergedConfig) throws Exception {
-            JfxAppContext.applicationScope.clear();
+            JfxAppContextImpl.applicationScope.clear();
 
             var classes = new ArrayList<Class<?>>(List.of(mergedConfig.getClasses()));
             classes.addAll(List.of(
@@ -161,7 +161,7 @@ System.out.println();
                     StageBuilder.class));
 
 
-            var ctx = JfxAppContext.fromScratch(classes.toArray(new Class<?>[0]));
+            var ctx = JfxAppContextImpl.fromScratch(classes.toArray(new Class<?>[0]));
 
             // set the current scopes
             ctx.getBean(AppBean.class);

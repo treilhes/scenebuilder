@@ -70,14 +70,25 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
-import com.gluonhq.jfxapps.boot.context.annotation.LocalContextOnly;
+import com.gluonhq.jfxapps.boot.api.context.Application;
+import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.MultipleProgressListener;
+import com.gluonhq.jfxapps.boot.api.context.ScopedExecutor;
+import com.gluonhq.jfxapps.boot.api.context.annotation.LocalContextOnly;
 import com.gluonhq.jfxapps.boot.context.internal.ContextProgressHandler;
 import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
+import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScopeHolder;
 import com.gluonhq.jfxapps.boot.context.scope.ApplicationScope;
+import com.gluonhq.jfxapps.boot.context.scope.ApplicationScopeHolder;
 
 public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationContext implements JfxAppContext {
+
+    /** The scope holder */
+    public static final ApplicationScopeHolder applicationScope = new ApplicationScopeHolder();
+
+    /** The scope holder */
+    public static final ApplicationInstanceScopeHolder applicationInstanceScope = new ApplicationInstanceScopeHolder(applicationScope);
 
     // private final AnnotationConfigServletWebApplicationContext context;
     private final SbBeanFactoryImpl beanFactory;
@@ -89,6 +100,14 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
     }
 
     private Log x;
+
+    public static JfxAppContext fromScratch(Class<?>... array) {
+        JfxAppContextImpl ctx = new JfxAppContextImpl(UUID.randomUUID());
+        ctx.register(array);
+        ctx.refresh();
+        ctx.start();
+        return ctx;
+    }
 
     public JfxAppContextImpl(UUID contextId, ClassLoader loader) {
         super(new SbBeanFactoryImpl());
@@ -156,6 +175,29 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
             throw new NoUniqueBeanDefinitionException(cls, result.size(), "No unique bean found");
         }
     }
+
+//    @Override
+//    public <T> T getLayerBean(Class<?> layerClass, Class<T> cls) {
+//
+//        var moduleLayer = layerClass.getModule().getLayer();
+//        var contextManager = getBean(ContextManager.class);
+//        var layerContext = contextManager.get(moduleLayer.);
+//        if (getParent() == null) {
+//            return getBean(cls);
+//        }
+//
+//        Map<String, T> globalMap = getBeansOfType(cls);
+//        Map<String, T> parentMap = getParent().getBeansOfType(cls);
+//
+//        Set<T> result = new HashSet<>(globalMap.values());
+//        result.removeAll(parentMap.values());
+//
+//        if (result.size() == 1) {
+//            return result.iterator().next();
+//        } else {
+//            throw new NoUniqueBeanDefinitionException(cls, result.size(), "No unique bean found");
+//        }
+//    }
 
     @Override
     public String[] getBeanNamesForType(Class<?> cls, Class<?> genericClass) {
@@ -256,8 +298,8 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
         public SbBeanFactoryImpl() {
             super();
 
-            this.applicationScope = new ApplicationScope(this, JfxAppContext.applicationScope);
-            this.applicationInstanceScope = new ApplicationInstanceScope(this, JfxAppContext.applicationInstanceScope);
+            this.applicationScope = new ApplicationScope(this, JfxAppContextImpl.applicationScope);
+            this.applicationInstanceScope = new ApplicationInstanceScope(this, JfxAppContextImpl.applicationInstanceScope);
 
             registerScope(ApplicationScope.SCOPE_NAME, this.applicationScope);
             registerScope(ApplicationInstanceScope.SCOPE_NAME, this.applicationInstanceScope);
@@ -270,11 +312,11 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
             var applicationHolders = applicationScope.getAllContext().stream()
                     .filter(c -> c.getScopeHolder() == applicationScope).toList();
 
-            applicationHolders.forEach(h -> JfxAppContext.applicationScope.removeScope(h.getScopedObject()));
+            applicationHolders.forEach(h -> JfxAppContextImpl.applicationScope.removeScope(h.getScopedObject()));
 
             var applicationInstanceHolders = applicationInstanceScope.getAllContext().stream()
                     .filter(c -> c.getScopeHolder() == applicationInstanceScope).toList();
-            applicationInstanceHolders.forEach(h -> JfxAppContext.applicationInstanceScope.removeScope(h.getScopedObject()));
+            applicationInstanceHolders.forEach(h -> JfxAppContextImpl.applicationInstanceScope.removeScope(h.getScopedObject()));
         }
 
         @Override
@@ -409,6 +451,16 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
 
     public void deport(Class<?>... deportedClasses) {
         this.deportedClasses.addAll(Arrays.asList(deportedClasses));
+    }
+
+    @Override
+    public ScopedExecutor<Application> getApplicationExecutor() {
+        return JfxAppContextImpl.applicationScope;
+    }
+
+    @Override
+    public ScopedExecutor<ApplicationInstance> getApplicationInstanceExecutor() {
+        return JfxAppContextImpl.applicationInstanceScope;
     }
 
 }

@@ -40,7 +40,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryClient;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
 import com.gluonhq.jfxapps.boot.maven.client.config.RepositoryConfig;
 
 /**

@@ -44,11 +44,11 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.Application;
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.boot.loader.OpenCommandEvent;
-import com.gluonhq.jfxapps.boot.loader.extension.ApplicationExtension;
+import com.gluonhq.jfxapps.boot.api.context.Application;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.api.loader.OpenCommandEvent;
+import com.gluonhq.jfxapps.boot.api.loader.extension.ApplicationExtension;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.CommandHandler;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;

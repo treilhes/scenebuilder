@@ -36,13 +36,15 @@ package com.gluonhq.jfxapps.core.api.editor.selection;
 import java.util.Collection;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.scene.Node;
 
+@ApplicationInstanceSingleton
 public final class DefaultSelectionGroupFactory extends AbstractFactory<SelectionGroup> {
 
     private final SelectionGroupFactoryRegistry selectionGroupFactoryRegistry;

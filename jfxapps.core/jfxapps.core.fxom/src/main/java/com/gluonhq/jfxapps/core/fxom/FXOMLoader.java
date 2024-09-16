@@ -155,6 +155,10 @@ class FXOMLoader implements LoadListener {
         document.setDisplayNode(null);
         document.setDisplayStylesheets(Collections.emptyList());
 
+        if (sceneGraphRoot == null) {
+            return;
+        }
+
         switch (sceneGraphRoot) {
             case Scene scene-> {
                 document.setDisplayNode(scene.getRoot());

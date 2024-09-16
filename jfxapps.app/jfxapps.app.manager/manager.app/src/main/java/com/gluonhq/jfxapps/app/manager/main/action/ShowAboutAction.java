@@ -34,7 +34,7 @@
 package com.gluonhq.jfxapps.app.manager.main.action;
 
 import com.gluonhq.jfxapps.app.manager.api.menu.DefaultMenu;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;

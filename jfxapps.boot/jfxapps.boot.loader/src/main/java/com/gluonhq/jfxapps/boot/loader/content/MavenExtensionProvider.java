@@ -48,9 +48,9 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryClient;
-import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
-import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
+import com.gluonhq.jfxapps.boot.api.maven.ResolvedArtifact;
+import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
 
 public class MavenExtensionProvider implements ExtensionContentProvider {
 

@@ -34,8 +34,8 @@
 package com.gluonhq.jfxapps.app.manager.api.ui;
 
 import com.gluonhq.jfxapps.app.manager.model.Extension;
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 
 import javafx.scene.Parent;
 

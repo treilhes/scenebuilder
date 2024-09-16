@@ -31,13 +31,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.dnd.DragAndDropExtension;
 
 open module jfxapps.core.drag.and.drop{
     exports com.gluonhq.jfxapps.core.dnd;
     exports com.gluonhq.jfxapps.core.dnd.controller;
     exports com.gluonhq.jfxapps.core.dnd.source;
+    exports com.gluonhq.jfxapps.core.dnd.target;
 
     requires transitive jfxapps.core.api;
 

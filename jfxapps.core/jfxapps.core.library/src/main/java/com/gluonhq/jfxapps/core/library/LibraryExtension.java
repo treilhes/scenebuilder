@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.library.api.LibraryDialogFactory;
 import com.gluonhq.jfxapps.core.library.api.LibraryStoreFactory;
 import com.gluonhq.jfxapps.core.library.manager.ImportProgressDialogController;

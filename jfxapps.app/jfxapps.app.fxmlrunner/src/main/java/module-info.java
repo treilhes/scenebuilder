@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,18 +32,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.oracle.javafx.app.fxmlrunner.RunnerExtension;
 
-module scenebuilder.app.fxmlrunner {
+open module scenebuilder.app.fxmlrunner {
 
-    opens com.oracle.javafx.app.fxmlrunner to scenebuilder.boot.context, javafx.graphics;
-    //exports com.oracle.javafx.runner to javafx.graphics;
+    requires jfxapps.boot.api;
+    requires jfxapps.boot.context;
+    requires jfxapps.boot.loader;
+
 
     requires jakarta.annotation;
     requires org.slf4j;
-    requires jfxapps.boot.context;
-    requires jfxapps.boot.loader;
     requires javafx.graphics;
     requires javafx.fxml;
     requires java.scripting;

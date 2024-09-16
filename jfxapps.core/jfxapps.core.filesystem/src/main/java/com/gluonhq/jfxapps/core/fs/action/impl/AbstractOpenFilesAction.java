@@ -61,15 +61,19 @@ public abstract class AbstractOpenFilesAction extends AbstractAction {
     private final RecentItemsPreference recentItemsPreference;
     private final InstancesManager main;
 
+    private final JfxAppPlatform jfxAppPlatform;
+
     // @formatter:off
     public AbstractOpenFilesAction(
             I18N i18n,
+            JfxAppPlatform jfxAppPlatform,
             ActionExtensionFactory extensionFactory,
             Dialog dialog,
             InstancesManager main,
             RecentItemsPreference recentItemsPreference) {
      // @formatter:on
         super(i18n, extensionFactory);
+        this.jfxAppPlatform = jfxAppPlatform;
         this.dialog = dialog;
         this.main = main;
         this.recentItemsPreference = recentItemsPreference;
@@ -112,7 +116,7 @@ public abstract class AbstractOpenFilesAction extends AbstractAction {
         //SceneBuilderLoadingProgress.get().end();
 
         // execute ui related loading now
-        JfxAppPlatform.runOnFxThread(() -> {
+        jfxAppPlatform.runOnFxThread(() -> {
 
 
             for (Entry<File, ApplicationInstance> entry:documents.entrySet()) {

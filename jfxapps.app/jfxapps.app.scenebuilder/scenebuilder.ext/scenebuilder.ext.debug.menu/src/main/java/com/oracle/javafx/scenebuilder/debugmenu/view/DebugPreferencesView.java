@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.debugmenu.view;
 import java.util.List;
 import java.util.stream.Stream;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
 import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;

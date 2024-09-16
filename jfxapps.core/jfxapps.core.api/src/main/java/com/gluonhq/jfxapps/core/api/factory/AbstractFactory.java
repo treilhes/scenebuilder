@@ -38,7 +38,7 @@ import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 
 public abstract class AbstractFactory<T> {
 

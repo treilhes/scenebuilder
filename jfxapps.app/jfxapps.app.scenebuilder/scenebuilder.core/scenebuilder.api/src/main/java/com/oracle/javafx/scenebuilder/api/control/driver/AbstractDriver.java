@@ -32,9 +32,8 @@
  */
 package com.oracle.javafx.scenebuilder.api.control.driver;
 
-import org.scenebuilder.fxml.api.Content;
-
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
 import com.oracle.javafx.scenebuilder.api.control.Driver;

@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.fs.preference.global;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups;
 import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
 import com.gluonhq.jfxapps.core.api.preferences.Preference;

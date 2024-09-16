@@ -38,7 +38,7 @@ import java.util.UUID;
 
 import com.gluonhq.jfxapps.app.manager.api.ui.ApplicationCard;
 import com.gluonhq.jfxapps.app.manager.api.ui.ExtensionCard;
-import com.gluonhq.jfxapps.boot.loader.extension.ApplicationExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.ApplicationExtension;
 import com.gluonhq.jfxapps.core.api.application.annotation.EditorDescriptor;
 
 @EditorDescriptor(

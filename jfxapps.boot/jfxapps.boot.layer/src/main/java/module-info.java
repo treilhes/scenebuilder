@@ -36,6 +36,7 @@ open module jfxapps.boot.layer {
     exports com.gluonhq.jfxapps.boot.layer;
     exports com.gluonhq.jfxapps.boot.layer.config;
 
+    requires jfxapps.boot.api;
     requires jfxapps.boot.starter;
 
     requires jfxapps.spring.core.patch.link;

@@ -42,7 +42,7 @@ import org.scenebuilder.ext.javafx.customization.anchorpane.AnchorPaneEditorProv
 import org.scenebuilder.ext.javafx.customization.i18n.I18NJavafxCustomization;
 import org.scenebuilder.fxml.api.SbApiExtension;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.metadata.custom.addon.NodeMetadataAddin;
 
 public class JavafxCustomizationExtension implements OpenExtension {

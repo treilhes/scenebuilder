@@ -40,8 +40,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
@@ -92,7 +92,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     // libraryPanelController.copyFilesToUserLibraryDir(files)
     private final FileSystem fileSystem;
     private final JfxAppContext context;
-
+    private final JfxAppPlatform jfxAppPlatform;
     private final ListChangeListener<? super LibraryArtifact> artifactListener = c -> loadLibraryList();
     private final ListChangeListener<? super Path> fileOrFolderListener = c -> loadLibraryList();
 
@@ -129,11 +129,15 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
     @FXML
     private Hyperlink classesLink;
 
+
+
     public LibraryDialogController(
             I18N i18n,
+            JfxAppContext context,
+            JfxAppPlatform jfxAppPlatform,
             ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
-            JfxAppContext context,
+
             MessageLogger messageLogger,
             MavenSetting mavenSetting,
             MavenArtifactsPreferences mavenPreferences,
@@ -146,6 +150,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
         super(i18n, sceneBuilderManager, iconSetting, LibraryDialogController.class.getResource("LibraryDialog.fxml"),document); // NOI18N
         this.owner = document.getStage();
         this.context = context;
+        this.jfxAppPlatform = jfxAppPlatform;
         this.sceneBuilderManager = sceneBuilderManager;
         this.iconSetting = iconSetting;
         this.messageLogger = messageLogger;
@@ -245,7 +250,7 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
         Stream<DialogListItem> filesStream = library.getStore().getFilesOrFolders().stream()
             .map(f -> new LibraryDialogListItem(this, f));
 
-        JfxAppPlatform.runOnFxThread(() -> {
+        jfxAppPlatform.runOnFxThread(() -> {
             libraryListView.getItems().setAll(Stream.concat(artifactStream, filesStream)
                     .sorted(new DialogListItemComparator())
                     .collect(Collectors.toList()));

@@ -39,6 +39,8 @@ import java.util.Set;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.TransferMode;
 
 public interface DragSource {
@@ -103,4 +105,8 @@ public interface DragSource {
     boolean isAcceptable();
 
     TransferMode getTransferMode();
+
+    ClipboardContent makeClipboardContent();
+
+    Image makeDragView();
 }

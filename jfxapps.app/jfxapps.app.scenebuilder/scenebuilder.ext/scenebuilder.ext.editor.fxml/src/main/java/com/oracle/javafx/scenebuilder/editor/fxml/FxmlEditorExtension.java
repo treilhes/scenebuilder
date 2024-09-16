@@ -39,7 +39,7 @@ import java.util.UUID;
 
 import org.scenebuilder.fxml.api.SbApiExtension;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.BringForwardAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.BringToFrontAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.FocusContentAction;
@@ -61,8 +61,6 @@ import com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse.DebugMouseGestur
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse.SelectAndMoveGesture;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse.SelectWithMarqueeGesture;
 import com.oracle.javafx.scenebuilder.editor.fxml.i18n.I18NContentEditor;
-import com.oracle.javafx.scenebuilder.editor.fxml.preferences.global.AlignmentGuidesColorPreference;
-import com.oracle.javafx.scenebuilder.editor.fxml.preferences.global.BackgroundImagePreference;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key.MoveWithKeyGesture;
 
 public class FxmlEditorExtension implements OpenExtension {
@@ -88,8 +86,6 @@ public class FxmlEditorExtension implements OpenExtension {
     public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
-                AlignmentGuidesColorPreference.class,
-                BackgroundImagePreference.class,
                 BringForwardAction.class,
                 BringToFrontAction.class,
                 ContentModeProvider.class,
@@ -101,7 +97,6 @@ public class FxmlEditorExtension implements OpenExtension {
                 DragGesture.Factory.class,
                 EditModeController.class,
                 FocusContentAction.class,
-                HudWindowController.class,
                 I18NContentEditor.class,
                 MoveWithKeyGesture.class,
                 MoveWithKeyGesture.Factory.class,
@@ -116,7 +111,6 @@ public class FxmlEditorExtension implements OpenExtension {
                 ToggleGuidesVisibilityAction.class,
                 ToggleOutlinesVisibilityAction.class,
                 ToggleSampleDataAction.class,
-                WorkspaceController.class,
                 ZoomGesture.class,
                 ZoomGesture.Factory.class,
                 ZoomAction.class,

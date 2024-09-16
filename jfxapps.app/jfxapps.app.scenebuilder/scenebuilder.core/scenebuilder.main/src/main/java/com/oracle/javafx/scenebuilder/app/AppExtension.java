@@ -39,10 +39,8 @@ import java.util.UUID;
 
 import org.scenebuilder.fxml.api.SbApiExtension;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.oracle.javafx.scenebuilder.app.action.ShowDocumentationAction;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.app.i18n.I18NApp;
-import com.oracle.javafx.scenebuilder.app.settings.WindowIconSetting;
 
 public class AppExtension implements OpenExtension {
 
@@ -67,9 +65,7 @@ public class AppExtension implements OpenExtension {
     public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
-                I18NApp.class,
-                ShowDocumentationAction.class,
-                WindowIconSetting.class
+                I18NApp.class
             );
      // @formatter:on
     }

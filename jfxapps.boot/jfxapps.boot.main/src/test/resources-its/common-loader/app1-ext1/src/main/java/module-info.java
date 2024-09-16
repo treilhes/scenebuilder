@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 
 import app.app1ext1.JfxAppsExtension;
 
@@ -41,7 +41,7 @@ open module it.app.app1ext1 {
     exports app.app1ext1.api;
 
     requires jfxapps.boot.starter;
-    requires jfxapps.boot.loader;
+    requires jfxapps.boot.api;
 
 
     requires it.app.root;

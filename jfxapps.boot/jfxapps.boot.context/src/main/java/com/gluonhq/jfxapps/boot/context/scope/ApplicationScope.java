@@ -33,13 +33,14 @@
  */
 package com.gluonhq.jfxapps.boot.context.scope;
 
-import com.gluonhq.jfxapps.boot.context.Application;
-import com.gluonhq.jfxapps.boot.context.ApplicationInstance;
+import com.gluonhq.jfxapps.boot.api.context.Application;
+import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.context.impl.JfxAppContextImpl.SbBeanFactoryImpl;
 
 public class ApplicationScope extends ObjectScope<Object, Application, ApplicationInstance> {
 
-    public final static String SCOPE_NAME = "jfxApplication";
+    public final static String SCOPE_NAME = ApplicationSingleton.SCOPE_NAME;
 
     public ApplicationScope(SbBeanFactoryImpl sbBeanFactoryImpl,
             ObjectScopeHolder<Object, Application, ApplicationInstance> scopeHolder) {

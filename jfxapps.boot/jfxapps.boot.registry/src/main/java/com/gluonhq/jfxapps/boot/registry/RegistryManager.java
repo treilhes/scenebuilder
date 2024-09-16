@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
+import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
 import com.gluonhq.jfxapps.registry.model.Application;
 import com.gluonhq.jfxapps.registry.model.Extension;
 import com.gluonhq.jfxapps.registry.model.Registry;

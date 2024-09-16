@@ -47,27 +47,72 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
+import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
+import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.ui.preferences.global.BackgroundImagePreference;
+import com.gluonhq.jfxapps.core.ui.preferences.global.BackgroundImagePreference.BackgroundImage;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 import com.gluonhq.jfxapps.test.StageBuilder;
 import com.gluonhq.jfxapps.test.StageType;
 import com.gluonhq.jfxapps.util.URLUtils;
 
+import io.reactivex.rxjava3.subjects.PublishSubject;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 
 @JfxAppsTest
-@ContextConfiguration(classes = { WorkspaceControllerTest.Config.class, WorkspaceController.class })
+@ContextConfiguration(classes = { WorkspaceControllerTest.Config.class, WorkspaceController.class, FXOMObjectMask.Factory.class })
 class WorkspaceControllerTest {
+
+    private static final String WORKSPACE_CSS = """
+        #scrollPane {
+            -fx-border-color: red;
+        }
+        #workspacePane {
+            -fx-background-color: green;
+        }
+        """;
 
     @TestConfiguration
     static class Config {
+
+        @Bean
+        JfxAppPlatform jfxAppPlatform() {
+            return Mockito.mock(JfxAppPlatform.class);
+        }
+
         @Bean
         ContextMenu contextMenu() {
             return Mockito.mock(ContextMenu.class);
+        }
+
+        @Bean
+        BackgroundImagePreference backgroundImagePreference() {
+            return Mockito.mock(BackgroundImagePreference.class);
+        }
+
+        @Bean
+        Selection selection() {
+            return Mockito.mock(Selection.class);
+        }
+
+        @Bean
+        Content content() {
+            return Mockito.mock(Content.class);
+        }
+
+        @Bean
+        ModeManager nodeManager() {
+            return Mockito.mock(ModeManager.class);
         }
     }
 
@@ -80,9 +125,19 @@ class WorkspaceControllerTest {
     @Autowired
     private ContextMenu contextMenu;
 
+    @Autowired
+    private Content content;
+
+    @Autowired
+    private BackgroundImagePreference backgroundImagePreference;
+
     @Test
     @DirtiesContext
     void should_load_the_fxml(StageBuilder builder) {
+        Mockito.when(backgroundImagePreference.getObservableValue())
+                .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
+        Mockito.when(content.contentChanged()).thenReturn(PublishSubject.create());
+
         var controller = builder.controller(WorkspaceController.class).show();
         assertNotNull(controller.getRoot());
     }
@@ -91,17 +146,14 @@ class WorkspaceControllerTest {
     @DirtiesContext
     void show_ui(StageBuilder builder, FxRobot robot) {
 
+        Mockito.when(backgroundImagePreference.getObservableValue())
+            .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
+        Mockito.when(content.contentChanged()).thenReturn(PublishSubject.create());
+
         builder.controller(WorkspaceController.class)
                 .size(800, 600)
                 .setup(StageType.Fill)
-                .css("""
-                    #scrollPane {
-                        -fx-border-color: red;
-                    }
-                    #workspacePane {
-                        -fx-background-color: green;
-                    }
-                    """)
+                .css(WORKSPACE_CSS)
                 .show();
 
         System.out.println();
@@ -117,48 +169,67 @@ class WorkspaceControllerTest {
                     """).toString())
                 .build());
 
-        System.out.println();
+    }
+
+    @Test
+    @DirtiesContext
+    void should_show_document_null_label(StageBuilder builder, FxRobot robot) throws IOException {
+
+        var contentChanged = PublishSubject.<Boolean>create();
+
+        Mockito.when(backgroundImagePreference.getObservableValue())
+            .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
+        Mockito.when(content.contentChanged()).thenReturn(contentChanged);
+
+        WorkspaceController workspace = builder.controller(WorkspaceController.class)
+            .size(800, 600)
+            .setup(StageType.Fill)
+            .css(WORKSPACE_CSS)
+            .show();
+
+        robot.interact(() -> {
+            Mockito.when(content.hasContent()).thenReturn(false);
+            contentChanged.onNext(true);
+        });
+
+        assertEquals("FXOMDocument is null", ((Label)robot.lookup("#backgroundPane").query()).getText());
+    }
+
+    @Test
+    @DirtiesContext
+    void should_show_undisplayable_document_label(StageBuilder builder, FxRobot robot) throws IOException {
+
+        var contentChanged = PublishSubject.<Boolean>create();
+
+        Mockito.when(backgroundImagePreference.getObservableValue())
+            .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
+        Mockito.when(content.contentChanged()).thenReturn(contentChanged);
+
+        WorkspaceController workspace = builder.controller(WorkspaceController.class)
+            .size(800, 600)
+            .setup(StageType.Fill)
+            .css(WORKSPACE_CSS)
+            .show();
+
+        robot.interact(() -> {
+            Mockito.when(content.hasContent()).thenReturn(true);
+            Mockito.when(content.isDisplayable()).thenReturn(false);
+            contentChanged.onNext(true);
+        });
+
+        assertEquals("content.label.status.invitation", ((Label)robot.lookup("#backgroundPane").query()).getText());
     }
 
     @Test
     @DirtiesContext
     void should_scale_the_content(StageBuilder builder, FxRobot robot) throws IOException {
-        WorkspaceController workspace = builder.controller(WorkspaceController.class)
-            .size(800, 600)
-            .setup(StageType.Fill)
-            .document("""
-                <?import javafx.scene.control.Label?>
-                <Label xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
-                    text="sceneGraphObjectXX"/>
-                """)
-            .css("""
-                #scrollPane {
-                    -fx-border-color: red;
-                }
-                #workspacePane {
-                    -fx-background-color: green;
-                }
-                """)
-            .show();
 
-        FXOMDocument fxomDocument = instanceEvents.fxomDocument().get();
-        Node sceneGraph = fxomDocument.getFxomRoot().getSceneGraphObject().getAs(Node.class);
+        var contentChanged = PublishSubject.<Boolean>create();
 
-        var before = sceneGraph.localToScreen(sceneGraph.getLayoutBounds());
+        Mockito.when(backgroundImagePreference.getObservableValue())
+            .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
+        Mockito.when(content.contentChanged()).thenReturn(contentChanged);
 
-        robot.interact(() -> {
-            workspace.setScaling(2.0d);
-        });
-
-        var after = sceneGraph.localToScreen(sceneGraph.getLayoutBounds());
-
-        assertEquals(before.getWidth()*2, after.getWidth(), 0.1);
-        assertEquals(before.getHeight()*2, after.getHeight(), 0.1);
-    }
-
-    @Test
-    @DirtiesContext
-    void should_show_windowt(StageBuilder builder, FxRobot robot) throws IOException {
         WorkspaceController workspace = builder.controller(WorkspaceController.class)
             .size(800, 600)
             .setup(StageType.Fill)
@@ -175,60 +246,18 @@ class WorkspaceControllerTest {
                     </scene>
                 </Stage>
                 """)
-            .css("""
-                #scrollPane {
-                    -fx-border-color: red;
-                }
-                #workspacePane {
-                    -fx-background-color: green;
-                }
-                """)
+            .css(WORKSPACE_CSS)
             .show();
 
         FXOMDocument fxomDocument = instanceEvents.fxomDocument().get();
-        Node sceneGraph = (Node)fxomDocument.getDisplayNodeOrSceneGraphRoot();
-
-        var before = sceneGraph.localToScreen(sceneGraph.getLayoutBounds());
 
         robot.interact(() -> {
-            workspace.setScaling(2.0d);
+            Mockito.when(content.hasContent()).thenReturn(true);
+            Mockito.when(content.isDisplayable()).thenReturn(true);
+            Mockito.when(content.getRoot()).thenReturn(fxomDocument.getDisplayNodeOrSceneGraphRoot());
+            contentChanged.onNext(true);
         });
 
-        var after = sceneGraph.localToScreen(sceneGraph.getLayoutBounds());
-
-        assertEquals(before.getWidth()*2, after.getWidth(), 0.1);
-        assertEquals(before.getHeight()*2, after.getHeight(), 0.1);
-    }
-
-    @Test
-    @DirtiesContext
-    void should_show_scene(StageBuilder builder, FxRobot robot) throws IOException {
-        WorkspaceController workspace = builder.controller(WorkspaceController.class)
-            .size(800, 600)
-            .setup(StageType.Fill)
-            .document("""
-                <?import javafx.scene.Scene?>
-                <?import javafx.scene.control.Button?>
-                <?import javafx.scene.layout.AnchorPane?>
-
-                <Scene xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-                    <AnchorPane prefHeight="200" prefWidth="200">
-                      <children>
-                         <Button mnemonicParsing="false" text="Button" />
-                      </children></AnchorPane>
-                </Scene>
-                """)
-            .css("""
-                #scrollPane {
-                    -fx-border-color: red;
-                }
-                #workspacePane {
-                    -fx-background-color: green;
-                }
-                """)
-            .show();
-
-        FXOMDocument fxomDocument = instanceEvents.fxomDocument().get();
         Node sceneGraph = (Node)fxomDocument.getDisplayNodeOrSceneGraphRoot();
 
         var before = sceneGraph.localToScreen(sceneGraph.getLayoutBounds());

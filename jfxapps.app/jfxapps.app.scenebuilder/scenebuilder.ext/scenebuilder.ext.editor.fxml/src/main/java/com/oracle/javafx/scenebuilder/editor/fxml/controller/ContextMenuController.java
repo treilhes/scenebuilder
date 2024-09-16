@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -45,11 +45,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
@@ -69,9 +66,7 @@ import javafx.scene.control.SeparatorMenuItem;
 /**
  * Controller used to handle contextual menu in hierarchy and content view.
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 public class ContextMenuController implements com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu {
 
     private static final Logger logger = LoggerFactory.getLogger(ContextMenuController.class);
@@ -328,7 +323,7 @@ public class ContextMenuController implements com.gluonhq.jfxapps.core.api.ui.co
         getContextMenu().getItems().clear();
 
         if (selection.isEmpty() == false) {
-            final AbstractSelectionGroup asg = selection.getGroup();
+            final SelectionGroup asg = selection.getGroup();
             buildMenu(asg, contextMenu);
         }
     }

@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.draganddrop;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
 import com.gluonhq.jfxapps.core.api.dnd.DropTargetFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;

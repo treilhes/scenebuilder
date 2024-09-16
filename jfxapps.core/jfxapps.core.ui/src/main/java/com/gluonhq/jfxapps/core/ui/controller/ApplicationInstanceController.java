@@ -43,9 +43,8 @@ import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -56,9 +55,9 @@ import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.lifecycle.DisposeWithDocument;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
 import com.gluonhq.jfxapps.core.api.preferences.Preferences;
-import com.gluonhq.jfxapps.core.api.subjects.DockManager;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.WindowPreferenceTracker;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
@@ -69,18 +68,28 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Provider;
-import javafx.event.Event;
-import javafx.event.EventDispatchChain;
-import javafx.event.EventDispatcher;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.stage.WindowEvent;
 
 /**
+ * The ApplicationInstanceController class is responsible for managing the lifecycle of an application instance.
+ * It handles the initialization and disposal of the application instance, manages the document window, and
+ * interacts with various services such as the file system, internationalization (I18N), and the JavaFX thread classloader.
+ *
+ * This class is annotated with @ApplicationInstanceSingleton, indicating that only one instance of this class
+ * should exist per application instance.
+ *
+ * The class uses the PostConstruct annotation to specify a method that should be run after the instance has been
+ * constructed and dependency injection has been performed.
+ *
+ * It implements the com.gluonhq.jfxapps.core.api.application.ApplicationInstance interface, which defines the
+ * contract for an application instance in the system.
+ *
+ * The class also manages various preferences related to the application instance and handles key events within the
+ * application.
  *
  */
 @ApplicationInstanceSingleton
@@ -89,6 +98,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
     private static final Logger logger = LoggerFactory.getLogger(ApplicationInstanceController.class);
 
     private final I18N i18n;
+    private final JfxAppPlatform jfxAppPlatform;
     private final JavafxThreadClassloaderDispatcher dispatcher;
     private final JavafxThreadClassloader fxThreadClassloader;
     private final MainInstanceWindow documentWindow;
@@ -132,6 +142,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
     // @formatter:off
     public ApplicationInstanceController(
             I18N i18n,
+            JfxAppPlatform jfxAppPlatform,
             JavafxThreadClassloaderDispatcher dispatcher,
             JavafxThreadClassloader fxThreadClassloader,
             FileSystem fileSystem,
@@ -167,6 +178,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
      // @formatter:on
         super();
         this.i18n = i18n;
+        this.jfxAppPlatform = jfxAppPlatform;
         this.dispatcher = dispatcher;
         this.fxThreadClassloader = fxThreadClassloader;
         this.fileSystem = fileSystem;
@@ -289,7 +301,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
 
         sceneBuilderManager.closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> close());
 
-        JfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
+        jfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
             initializeDocumentWindow();
         });
 
@@ -301,7 +313,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
                 preferenceManager.untrack();
                 documentPreferencesController.readFromJavaPreferences();
 
-                JfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
+                jfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
                     preferenceManager.apply();
                     preferenceManager.track();
                 });
@@ -456,12 +468,12 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
         // Closes if confirmed
         main.notifyInstanceClosed(this);
 
-        JfxAppContext.applicationInstanceScope.removeScope(this);
+        jfxAppPlatform.removeScope(this);
     }
 
     @Override
     public void onFocus() {
-        JfxAppContext.applicationInstanceScope.setCurrentScope(this);
+        jfxAppPlatform.setCurrentScope(this);
         sceneBuilderManager.documentScoped().onNext(this);
     }
 

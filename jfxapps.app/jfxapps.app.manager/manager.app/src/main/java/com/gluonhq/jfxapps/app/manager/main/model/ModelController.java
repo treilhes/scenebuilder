@@ -35,7 +35,7 @@ package com.gluonhq.jfxapps.app.manager.main.model;
 
 import com.gluonhq.jfxapps.app.manager.api.ui.Model;
 import com.gluonhq.jfxapps.app.manager.model.AppModel;
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 
 @Singleton
 public class ModelController implements Model {

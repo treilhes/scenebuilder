@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.maven.repository;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
+import com.gluonhq.jfxapps.boot.api.maven.Repository;
 import com.gluonhq.jfxapps.core.api.maven.RepositoryManager;
 
 public class RepositoryListItem {

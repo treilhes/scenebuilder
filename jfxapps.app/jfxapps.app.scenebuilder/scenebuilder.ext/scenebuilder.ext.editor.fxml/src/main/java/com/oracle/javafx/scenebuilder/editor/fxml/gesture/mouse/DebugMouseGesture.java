@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,14 +33,15 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse;
 
-import org.scenebuilder.fxml.api.Content;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 
 import javafx.scene.input.KeyEvent;
 
@@ -47,16 +49,15 @@ import javafx.scene.input.KeyEvent;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class DebugMouseGesture extends AbstractMouseGesture {
 
     private final static Logger logger = LoggerFactory.getLogger(DebugMouseGesture.class);
 
     private String title;
 
-    protected DebugMouseGesture(Content contentPanelController) {
-        super(contentPanelController);
+    protected DebugMouseGesture(Workspace workspace) {
+        super(workspace);
 
     }
 
@@ -113,10 +114,9 @@ public class DebugMouseGesture extends AbstractMouseGesture {
         return getClass().getSimpleName() + "[" + title + "]";
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public static class Factory extends GestureFactory<DebugMouseGesture> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
         public DebugMouseGesture getGesture(String title) {

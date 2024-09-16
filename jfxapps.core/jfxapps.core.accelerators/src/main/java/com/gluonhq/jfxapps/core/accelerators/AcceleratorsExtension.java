@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.accelerators.controller.AcceleratorsController;
 import com.gluonhq.jfxapps.core.accelerators.i18n.I18NAccelerators;
 import com.gluonhq.jfxapps.core.accelerators.preferences.global.AcceleratorsMapPreference;

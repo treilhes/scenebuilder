@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractActionExtension;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;

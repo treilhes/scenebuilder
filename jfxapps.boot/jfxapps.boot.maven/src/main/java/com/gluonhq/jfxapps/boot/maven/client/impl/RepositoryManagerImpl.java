@@ -38,8 +38,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryManager;
+import com.gluonhq.jfxapps.boot.api.maven.Repository;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryManager;
 import com.gluonhq.jfxapps.boot.maven.client.preset.MavenPresets;
 import com.gluonhq.jfxapps.boot.maven.client.repository.RepositoryRepository;
 

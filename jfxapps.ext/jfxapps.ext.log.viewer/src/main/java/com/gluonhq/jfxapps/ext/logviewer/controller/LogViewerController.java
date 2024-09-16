@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
@@ -66,18 +66,23 @@ public class LogViewerController extends AbstractFxmlViewController {
     public final static String VIEW_ID = "f0769ce0-08cd-463f-bf6f-c65c96f6c6d0";
     public final static String VIEW_NAME = "view.name.log.viewer";
     public final static int MAX_LINES = 10000;
+
+    private final JfxAppPlatform jfxAppPlatform;
+
     private LogReader logReader = new LogReader();
 
     @FXML
     ListView<String> logs;
 
+
     public LogViewerController(
             I18N i18n,
+            JfxAppPlatform jfxAppPlatform,
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
             ViewMenuController viewMenuController) {
         super(i18n, scenebuilderManager, documentManager, viewMenuController, LogViewerController.class.getResource("LogViewerWindow.fxml"));
-
+        this.jfxAppPlatform = jfxAppPlatform;
     }
 
     @FXML
@@ -119,7 +124,7 @@ public class LogViewerController extends AbstractFxmlViewController {
         int numNewLines = newLines.size();
         int toDelete = numLines + numNewLines - MAX_LINES;
 
-        JfxAppPlatform.runOnFxThread(() -> {
+        jfxAppPlatform.runOnFxThread(() -> {
             if (toDelete > 0) {
                 logs.getItems().remove(0, toDelete);
             }

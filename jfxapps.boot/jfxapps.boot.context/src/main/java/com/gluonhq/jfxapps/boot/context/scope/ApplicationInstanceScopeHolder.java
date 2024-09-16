@@ -33,8 +33,8 @@
  */
 package com.gluonhq.jfxapps.boot.context.scope;
 
-import com.gluonhq.jfxapps.boot.context.Application;
-import com.gluonhq.jfxapps.boot.context.ApplicationInstance;
+import com.gluonhq.jfxapps.boot.api.context.Application;
+import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
 
 public class ApplicationInstanceScopeHolder extends ObjectScopeHolder<Application, ApplicationInstance, Object> {
 

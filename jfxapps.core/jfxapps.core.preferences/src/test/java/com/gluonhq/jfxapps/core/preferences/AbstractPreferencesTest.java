@@ -45,7 +45,7 @@ import org.mockito.Mockito;
 
 import javafx.beans.property.SimpleIntegerProperty;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.preferences.DocumentPreferencesNode;
 import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
 import com.gluonhq.jfxapps.core.api.preferences.RootPreferencesNode;

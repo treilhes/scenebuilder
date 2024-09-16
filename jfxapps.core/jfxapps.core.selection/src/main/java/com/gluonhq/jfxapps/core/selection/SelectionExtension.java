@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.selection.i18n.I18NSelection;
 import com.gluonhq.jfxapps.core.selection.job.BackupSelectionJob;
 
@@ -54,8 +54,7 @@ public class SelectionExtension implements OpenExtension {
 
     @Override
     public List<Class<?>> localContextClasses() {
-        // TODO Auto-generated method stub
-        return null;
+        return List.of();
     }
 
     @Override
@@ -65,6 +64,7 @@ public class SelectionExtension implements OpenExtension {
                 BackupSelectionJob.class,
                 SelectionJobsFactoryImpl.class,
                 SelectionImpl.class,
+                TargetSelectionImpl.class,
                 I18NSelection.class
             );
      // @formatter:on

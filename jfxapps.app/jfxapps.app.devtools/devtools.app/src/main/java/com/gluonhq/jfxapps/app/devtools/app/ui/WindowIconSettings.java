@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.app.devtools.app.ui;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 
 import javafx.scene.control.Alert;

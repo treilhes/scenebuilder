@@ -45,18 +45,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.MDC;
 
-import com.gluonhq.jfxapps.boot.context.Application;
-import com.gluonhq.jfxapps.boot.context.ApplicationInstance;
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.api.context.Application;
+import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.context.impl.JfxAppContextImpl;
 
 class ApplicationInstanceScopeTestIT {
 
     @BeforeEach
     public void init() {
-        JfxAppContext.applicationScope.clear();
+        JfxAppContextImpl.applicationScope.clear();
     }
 
     @Test
@@ -68,7 +68,7 @@ class ApplicationInstanceScopeTestIT {
 
         // no AppBean created > no ApplicationInstance > no ApplicationInstanceScope
 
-        assertNull(JfxAppContext.applicationInstanceScope.getCurrentScope());
+        assertNull(JfxAppContextImpl.applicationInstanceScope.getCurrentScope());
         assertThrows(NullScopeException.class, () -> context.getBean(AppInstanceBean.class));
 
     }
@@ -83,20 +83,20 @@ class ApplicationInstanceScopeTestIT {
         context.getBean(AppBean.class); // create the Application scope
 
         // no active scope
-        assertNull(JfxAppContext.applicationInstanceScope.getActiveScope());
-        assertNull(JfxAppContext.applicationInstanceScope.getCurrentScope());
+        assertNull(JfxAppContextImpl.applicationInstanceScope.getActiveScope());
+        assertNull(JfxAppContextImpl.applicationInstanceScope.getCurrentScope());
 
         // a new scope bean must be created and a new associated scope
         var scope1Bean = context.getBean(AppInstanceBean.class);
 
         // check scope bean is the new active scope
-        assertEquals(scope1Bean, JfxAppContext.applicationInstanceScope.getCurrentScope().getScopedObject());
+        assertEquals(scope1Bean, JfxAppContextImpl.applicationInstanceScope.getCurrentScope().getScopedObject());
 
-        var scope1 = JfxAppContext.applicationInstanceScope.getCurrentScope();
+        var scope1 = JfxAppContextImpl.applicationInstanceScope.getCurrentScope();
 
         assertNotNull(scope1);
 
-        assertEquals(scope1, JfxAppContext.applicationInstanceScope.getScope(scope1Bean));
+        assertEquals(scope1, JfxAppContextImpl.applicationInstanceScope.getScope(scope1Bean));
 
         assertEquals(scope1.getId().toString(),
                 context.getBeanFactory().getRegisteredScope(ApplicationInstanceScope.SCOPE_NAME).getConversationId());
@@ -105,22 +105,22 @@ class ApplicationInstanceScopeTestIT {
         assertEquals(scope1Bean, context.getBean(AppInstanceBean.class));
 
         // no active scope
-        JfxAppContext.applicationInstanceScope.unbindScope();
+        JfxAppContextImpl.applicationInstanceScope.unbindScope();
 
         // a new scope bean must be created and a new associated scope
         var scope2Bean = context.getBean(AppInstanceBean.class);
 
-        var scope2 = JfxAppContext.applicationInstanceScope.getCurrentScope();
+        var scope2 = JfxAppContextImpl.applicationInstanceScope.getCurrentScope();
 
         assertNotNull(scope2);
 
-        assertEquals(scope2, JfxAppContext.applicationInstanceScope.getScope(scope2Bean));
+        assertEquals(scope2, JfxAppContextImpl.applicationInstanceScope.getScope(scope2Bean));
 
         assertEquals(scope2.getId().toString(),
                 context.getBeanFactory().getRegisteredScope(ApplicationInstanceScope.SCOPE_NAME).getConversationId());
 
         // check appInstance2Bean is the new active scope
-        assertEquals(scope2, JfxAppContext.applicationInstanceScope.getCurrentScope());
+        assertEquals(scope2, JfxAppContextImpl.applicationInstanceScope.getCurrentScope());
         // check requesting by type returns the currently scoped application
         assertEquals(scope2Bean, context.getBean(AppInstanceBean.class));
 
@@ -141,7 +141,7 @@ class ApplicationInstanceScopeTestIT {
         var pBean = context.getBean(SomeBean.class);
 
         // no active scope
-        JfxAppContext.applicationInstanceScope.unbindScope();
+        JfxAppContextImpl.applicationInstanceScope.unbindScope();
 
         // a new scope bean must be created and a new associated scope
         var scope2Bean = context.getBean(AppInstanceBean.class);
@@ -151,15 +151,15 @@ class ApplicationInstanceScopeTestIT {
         assertNotEquals(pBean, pBean2);
 
         // ensure we have only 2 scopes
-        assertEquals(2, JfxAppContext.applicationInstanceScope.getAvailableScopes().size());
+        assertEquals(2, JfxAppContextImpl.applicationInstanceScope.getAvailableScopes().size());
 
-        JfxAppContext.applicationInstanceScope.setCurrentScope(scope1Bean);
+        JfxAppContextImpl.applicationInstanceScope.setCurrentScope(scope1Bean);
         var pBeanLatest = context.getBean(SomeBean.class);
 
         // ensure we get the right instance of bean in current scope
         assertEquals(pBean, pBeanLatest);
 
-        JfxAppContext.applicationInstanceScope.setCurrentScope(scope2Bean);
+        JfxAppContextImpl.applicationInstanceScope.setCurrentScope(scope2Bean);
         pBeanLatest = context.getBean(SomeBean.class);
 
         // ensure we get the right instance of pBean in scope2Bean scope
@@ -181,7 +181,7 @@ class ApplicationInstanceScopeTestIT {
         var cBean = context.getBean(ChildBean.class);
         var compBean = context.getBean(CompositeBean.class);
 
-        JfxAppContext.applicationInstanceScope.unbindScope();
+        JfxAppContextImpl.applicationInstanceScope.unbindScope();
 
         var scope2Bean = context.getBean(AppInstanceBean.class);
         var pBean2 = context.getBean(ParentBean.class);
@@ -194,7 +194,7 @@ class ApplicationInstanceScopeTestIT {
         assertNotEquals(pBean, compBean2.getParentBean());
         assertNotEquals(cBean, compBean2.getChildBean());
 
-        JfxAppContext.applicationInstanceScope.setCurrentScope(scope1Bean);
+        JfxAppContextImpl.applicationInstanceScope.setCurrentScope(scope1Bean);
         var pBeanLatest = context.getBean(ParentBean.class);
         var cBeanLatest = context.getBean(ChildBean.class);
         var compBeanLatest = context.getBean(CompositeBean.class);
@@ -205,7 +205,7 @@ class ApplicationInstanceScopeTestIT {
         assertEquals(pBean, compBeanLatest.getParentBean());
         assertEquals(cBean, compBeanLatest.getChildBean());
 
-        JfxAppContext.applicationInstanceScope.setCurrentScope(scope2Bean);
+        JfxAppContextImpl.applicationInstanceScope.setCurrentScope(scope2Bean);
         pBeanLatest = context.getBean(ParentBean.class);
         cBeanLatest = context.getBean(ChildBean.class);
         compBeanLatest = context.getBean(CompositeBean.class);
@@ -226,59 +226,59 @@ class ApplicationInstanceScopeTestIT {
         context.getBean(AppBean.class); // create the Application scope
 
         // no active scope
-        assertNull(JfxAppContext.applicationInstanceScope.getActiveScope());
+        assertNull(JfxAppContextImpl.applicationInstanceScope.getActiveScope());
         // a new appbean must be created and a new associated scope
         var scope1Bean = context.getBean(AppInstanceBean.class);
         // no active scope
-        JfxAppContext.applicationInstanceScope.unbindScope();
+        JfxAppContextImpl.applicationInstanceScope.unbindScope();
         // a new appbean must be created and a new associated scope
         var scope2Bean = context.getBean(AppInstanceBean.class);
 
-        var scope1 = JfxAppContext.applicationInstanceScope.getScope(scope1Bean);
-        var scope2 = JfxAppContext.applicationInstanceScope.getScope(scope2Bean);
+        var scope1 = JfxAppContextImpl.applicationInstanceScope.getScope(scope1Bean);
+        var scope2 = JfxAppContextImpl.applicationInstanceScope.getScope(scope2Bean);
 
         MDC.get("x");
 
         // executed with scope: scope1
-        JfxAppContext.applicationInstanceScope.executeRunnable(() -> {
-            assertEquals(scope1, JfxAppContext.applicationInstanceScope.getActiveScope());
+        JfxAppContextImpl.applicationInstanceScope.executeRunnable(() -> {
+            assertEquals(scope1, JfxAppContextImpl.applicationInstanceScope.getActiveScope());
             assertEquals(scope1Bean, context.getBean(AppInstanceBean.class));
-            assertEquals(scope2, JfxAppContext.applicationInstanceScope.getCurrentScope());
+            assertEquals(scope2, JfxAppContextImpl.applicationInstanceScope.getCurrentScope());
         }, scope1);
 
         // executed with scope: scope1
-        JfxAppContext.applicationInstanceScope.executeSupplier(() -> {
-            assertEquals(scope1, JfxAppContext.applicationInstanceScope.getActiveScope());
+        JfxAppContextImpl.applicationInstanceScope.executeSupplier(() -> {
+            assertEquals(scope1, JfxAppContextImpl.applicationInstanceScope.getActiveScope());
             assertEquals(scope1Bean, context.getBean(AppInstanceBean.class));
-            assertEquals(scope2, JfxAppContext.applicationInstanceScope.getCurrentScope());
+            assertEquals(scope2, JfxAppContextImpl.applicationInstanceScope.getCurrentScope());
             return null;
         }, scope1);
 
         // check scope did not change
-        assertEquals(scope2, JfxAppContext.applicationInstanceScope.getActiveScope());
-        assertEquals(scope2, JfxAppContext.applicationInstanceScope.getCurrentScope());
+        assertEquals(scope2, JfxAppContextImpl.applicationInstanceScope.getActiveScope());
+        assertEquals(scope2, JfxAppContextImpl.applicationInstanceScope.getCurrentScope());
 
         // change the scope
-        JfxAppContext.applicationInstanceScope.setCurrentScope(scope1Bean);
+        JfxAppContextImpl.applicationInstanceScope.setCurrentScope(scope1Bean);
 
         // executed with scope: scope2
-        JfxAppContext.applicationInstanceScope.executeRunnable(() -> {
-            assertEquals(scope2, JfxAppContext.applicationInstanceScope.getActiveScope());
+        JfxAppContextImpl.applicationInstanceScope.executeRunnable(() -> {
+            assertEquals(scope2, JfxAppContextImpl.applicationInstanceScope.getActiveScope());
             assertEquals(scope2Bean, context.getBean(AppInstanceBean.class));
-            assertEquals(scope1, JfxAppContext.applicationInstanceScope.getCurrentScope());
+            assertEquals(scope1, JfxAppContextImpl.applicationInstanceScope.getCurrentScope());
         }, scope2);
 
         // executed with scope: scope2
-        JfxAppContext.applicationInstanceScope.executeSupplier(() -> {
-            assertEquals(scope2, JfxAppContext.applicationInstanceScope.getActiveScope());
+        JfxAppContextImpl.applicationInstanceScope.executeSupplier(() -> {
+            assertEquals(scope2, JfxAppContextImpl.applicationInstanceScope.getActiveScope());
             assertEquals(scope2Bean, context.getBean(AppInstanceBean.class));
-            assertEquals(scope1, JfxAppContext.applicationInstanceScope.getCurrentScope());
+            assertEquals(scope1, JfxAppContextImpl.applicationInstanceScope.getCurrentScope());
             return null;
         }, scope2);
 
         // check scope did not change
-        assertEquals(scope1, JfxAppContext.applicationInstanceScope.getActiveScope());
-        assertEquals(scope1, JfxAppContext.applicationInstanceScope.getCurrentScope());
+        assertEquals(scope1, JfxAppContextImpl.applicationInstanceScope.getActiveScope());
+        assertEquals(scope1, JfxAppContextImpl.applicationInstanceScope.getCurrentScope());
     }
 
     @ApplicationSingleton

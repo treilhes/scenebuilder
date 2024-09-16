@@ -44,20 +44,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.layer.Layer;
-import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
-import com.gluonhq.jfxapps.boot.loader.ApplicationManager;
-import com.gluonhq.jfxapps.boot.loader.BootException;
-import com.gluonhq.jfxapps.boot.loader.ExtensionReport;
-import com.gluonhq.jfxapps.boot.loader.OpenCommandEvent;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.MultipleProgressListener;
+import com.gluonhq.jfxapps.boot.api.layer.Layer;
+import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
+import com.gluonhq.jfxapps.boot.api.loader.ApplicationManager;
+import com.gluonhq.jfxapps.boot.api.loader.BootException;
+import com.gluonhq.jfxapps.boot.api.loader.ExtensionReport;
+import com.gluonhq.jfxapps.boot.api.loader.OpenCommandEvent;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.loader.ProgressListener;
 import com.gluonhq.jfxapps.boot.loader.StateProvider;
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
 import com.gluonhq.jfxapps.boot.loader.internal.layer.LayerBootstraper;
-import com.gluonhq.jfxapps.boot.loader.internal.repository.ApplicationRepository;
 import com.gluonhq.jfxapps.boot.loader.model.AbstractExtension;
 import com.gluonhq.jfxapps.boot.loader.model.Application;
 import com.gluonhq.jfxapps.boot.loader.model.JfxApps;
@@ -116,11 +115,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
     }
 
     /**
-     * Gets the application state.
-     *
-     * @return the application state
+     * Get the current state of the application
+     * @return clone of the current state
      */
-    @Override
     public JfxApps getState() {
         return appContainer == null ? null : appContainer.clone();
     }

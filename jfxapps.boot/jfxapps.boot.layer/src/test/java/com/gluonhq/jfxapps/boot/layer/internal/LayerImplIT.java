@@ -58,9 +58,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Spy;
 
+import com.gluonhq.jfxapps.boot.api.layer.Layer;
+import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.layer.Constants;
-import com.gluonhq.jfxapps.boot.layer.Layer;
-import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
 
 
 /**

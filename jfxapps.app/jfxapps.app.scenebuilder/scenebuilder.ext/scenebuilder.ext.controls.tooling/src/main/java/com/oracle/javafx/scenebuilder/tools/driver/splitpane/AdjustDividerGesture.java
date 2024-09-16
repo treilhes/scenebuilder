@@ -36,24 +36,23 @@ package com.oracle.javafx.scenebuilder.tools.driver.splitpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.Content;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.CardinalPoint;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.api.content.mode.Layer;
 import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.HudWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 import javafx.scene.Node;
 import javafx.scene.control.SplitPane;
@@ -63,12 +62,10 @@ import javafx.scene.input.KeyEvent;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class AdjustDividerGesture extends AbstractMouseGesture {
 
-    private static final PropertyName dividerPositionsName
-        = new PropertyName("dividerPositions"); //NOCHECK
+    private static final PropertyName dividerPositionsName = new PropertyName("dividerPositions"); // NOCHECK
 
     private FXOMInstance splitPaneInstance;
     private int dividerIndex;
@@ -76,23 +73,28 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
     private final SplitPaneDesignInfoX di = new SplitPaneDesignInfoX();
     private double[] originalDividerPositions;
 
-	private final JobManager jobManager;
-	private final IMetadata metadata;
-    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+    private final JobManager jobManager;
+    private final SbMetadata metadata;
+    private final HudWindow hudWindow;
+    private final FxomJobsFactory fxomJobsFactory;
 
-	@SuppressWarnings("rawtypes")
+    @SuppressWarnings("rawtypes")
     private Layer<Handles> handleLayer;
 
+    //@formatter:off
     protected AdjustDividerGesture(
-    		Content content,
-    		IMetadata metadata,
-    		JobManager jobManager,
-    		ModeManager modeManager,
-            ModifyObjectJob.Factory modifyObjectJobFactory) {
-        super(content);
+            Workspace workspace,
+            SbMetadata metadata,
+            JobManager jobManager,
+            ModeManager modeManager,
+            HudWindow hudWindow,
+            FxomJobsFactory fxomJobsFactory) {
+        //@formatter:on
+        super(workspace);
         this.metadata = metadata;
         this.jobManager = jobManager;
-        this.modifyObjectJobFactory = modifyObjectJobFactory;
+        this.hudWindow = hudWindow;
+        this.fxomJobsFactory = fxomJobsFactory;
 
         if (modeManager.hasModeEnabled()) {
             handleLayer = modeManager.getEnabledMode().getLayer(Handles.class);
@@ -134,7 +136,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
         splitPane.setDividerPositions(newDividerPositions);
         splitPane.layout();
         updateHudWindow();
-        contentPanelController.getHudWindowController().updatePopupLocation();
+        hudWindow.updatePopupLocation();
     }
 
     @Override
@@ -158,9 +160,8 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
         userDidCancel();
 
         // Step #3
-        final ValuePropertyMetadata dividerPositionsMeta
-                = metadata.queryValueProperty(splitPaneInstance, dividerPositionsName);
-        final AbstractJob j = modifyObjectJobFactory.getJob(splitPaneInstance,dividerPositionsMeta,newDividerPositions);
+        final var dividerPositionsMeta = metadata.queryValueProperty(splitPaneInstance, dividerPositionsName);
+        final Job j = fxomJobsFactory.modifyObject(splitPaneInstance,dividerPositionsMeta,newDividerPositions);
         if (j.isExecutable()) {
             jobManager.push(j);
         } // else divider has been release to its original position
@@ -178,7 +179,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
     @Override
     protected void userDidCancel() {
         getSplitPane().setDividerPositions(originalDividerPositions);
-        contentPanelController.getHudWindowController().closeWindow();
+        hudWindow.closeWindow();
         handleLayer.enable();
         getSplitPane().layout();
     }
@@ -194,11 +195,8 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
     }
 
     private void setupAndOpenHudWindow() {
-        final HudWindow hudWindowController
-                = contentPanelController.getHudWindowController();
-
-        hudWindowController.setRowCount(1);
-        hudWindowController.setNameAtRowIndex("dividerPosition", 0); //NOCHECK
+        hudWindow.setRowCount(1);
+        hudWindow.setNameAtRowIndex("dividerPosition", 0); //NOCHECK
         updateHudWindow();
 
         final CardinalPoint cp;
@@ -211,23 +209,19 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
                 cp = CardinalPoint.E;
                 break;
         }
-        hudWindowController.setRelativePosition(cp);
-        hudWindowController.openWindow(splitPaneInstance.getClosestMainGraphNode().getSceneGraphObject().getAs(Node.class));
+        hudWindow.setRelativePosition(cp);
+        hudWindow.openWindow(splitPaneInstance.getClosestMainGraphNode().getSceneGraphObject().getAs(Node.class));
     }
 
     private void updateHudWindow() {
-        final HudWindow hudWindowController
-                = contentPanelController.getHudWindowController();
-
         double dividerPosition = getSplitPane().getDividerPositions()[dividerIndex];
         String str = String.format("%.2f %%", dividerPosition * 100); //NOCHECK
-        hudWindowController.setValueAtRowIndex(str, 0);
+        hudWindow.setValueAtRowIndex(str, 0);
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationSingleton
     public static class Factory extends GestureFactory<AdjustDividerGesture> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
         public AdjustDividerGesture getGesture(FXOMInstance splitPaneInstance, int dividerIndex) {

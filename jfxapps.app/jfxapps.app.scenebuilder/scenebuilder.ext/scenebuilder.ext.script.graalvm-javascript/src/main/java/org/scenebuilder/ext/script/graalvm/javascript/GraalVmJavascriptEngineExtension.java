@@ -40,7 +40,7 @@ import java.util.UUID;
 import org.scenebuilder.ext.script.graalvm.javascript.i18n.I18NExtensionCamelCasedName;
 import org.scenebuilder.fxml.api.SbApiExtension;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 
 public class GraalVmJavascriptEngineExtension implements OpenExtension {
 

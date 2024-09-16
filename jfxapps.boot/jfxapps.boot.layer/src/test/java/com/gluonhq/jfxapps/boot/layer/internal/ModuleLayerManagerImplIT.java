@@ -49,10 +49,10 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Spy;
 
+import com.gluonhq.jfxapps.boot.api.layer.InvalidLayerException;
+import com.gluonhq.jfxapps.boot.api.layer.Layer;
+import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.layer.Constants;
-import com.gluonhq.jfxapps.boot.layer.InvalidLayerException;
-import com.gluonhq.jfxapps.boot.layer.Layer;
-import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
 
 /**
  * The Class ModuleLayerManagerIT.

@@ -46,7 +46,7 @@ import com.gluonhq.jfxapps.app.manager.main.ui.WindowIconSettings;
 import com.gluonhq.jfxapps.app.manager.main.ui.cmp.ApplicationCardController;
 import com.gluonhq.jfxapps.app.manager.main.ui.cmp.ExtensionCardController;
 import com.gluonhq.jfxapps.app.manager.main.ui.cmp.MainContentController;
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.ext.about.api.AboutApi;
 import com.gluonhq.jfxapps.ext.scenicview.api.ScenicViewApi;
 

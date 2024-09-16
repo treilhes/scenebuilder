@@ -122,6 +122,11 @@
                 <artifactId>scenebuilder.selection</artifactId>
                 <version>${scenebuilder.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ui</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
 
             <!-- scenebuilder.ext -->
             <dependency>

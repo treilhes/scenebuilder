@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.dnd;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
 
 public class DragSourceFactory<T extends DragSource> extends AbstractFactory<T> {

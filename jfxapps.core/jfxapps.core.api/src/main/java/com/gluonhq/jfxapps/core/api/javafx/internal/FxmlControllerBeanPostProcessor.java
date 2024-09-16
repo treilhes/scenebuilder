@@ -42,7 +42,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.Ordered;
 import org.springframework.core.PriorityOrdered;
 
-import com.gluonhq.jfxapps.boot.context.annotation.DeportedSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.DeportedSingleton;
 import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
 import com.gluonhq.jfxapps.core.api.javafx.LoadInFxThread;
 

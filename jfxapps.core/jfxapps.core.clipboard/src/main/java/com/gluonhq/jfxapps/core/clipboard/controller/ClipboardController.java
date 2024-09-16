@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.clipboard.controller;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardEncoder;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardHandler;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;

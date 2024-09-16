@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,20 +38,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.scenebuilder.fxml.api.Content;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.core.api.HierarchyMask;
-import com.gluonhq.jfxapps.core.api.HierarchyMask.Accessory;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.api.content.mode.Layer;
 import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
@@ -68,8 +67,7 @@ import javafx.scene.shape.Rectangle;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class SelectWithMarqueeGesture extends AbstractMouseGesture {
 
     private FXOMObject hitObject;
@@ -82,16 +80,16 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
     private ModeManager modeManager;
     private final FXOMObjectMask.Factory maskFactory;
     private final Selection selection;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     protected SelectWithMarqueeGesture(
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Driver driver,
             Selection selection,
             FXOMObjectMask.Factory maskFactory,
-            @Lazy Content contentPanelController,
+            @Lazy Workspace workspace,
             @Lazy EditModeController editMode) {
-        super(contentPanelController);
+        super(workspace);
         this.documentManager = documentManager;
         this.driver = driver;
         this.selection = selection;
@@ -255,14 +253,14 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
                 candidates.add(fxomDocument.getFxomRoot());
             }
         } else {
-            final HierarchyMask m = maskFactory.getMask(scopeObject);
+            final var m = maskFactory.getMask(scopeObject);
 
-            List<Accessory> allAccessories = new ArrayList<>(m.getAccessories());
+            var allAccessories = new ArrayList<>(m.getAccessories());
             if (m.getMainAccessory() != null && !allAccessories.contains(m.getMainAccessory())) {
                 allAccessories.add(0, m.getMainAccessory());
             }
 
-            for (Accessory accessory : allAccessories) {
+            for (var accessory : allAccessories) {
                 if (m.isAcceptingAccessory(accessory)) {
                     final List<FXOMObject> fxomObjects = m.getAccessories(accessory, false);
                     fxomObjects.stream()
@@ -273,10 +271,9 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
         }
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public static class Factory extends GestureFactory<SelectWithMarqueeGesture> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
         public SelectWithMarqueeGesture getGesture() { //FXOMObject hitObject, FXOMObject scopeObject) {

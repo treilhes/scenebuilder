@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.core.ui.dock.preferences.document;
 import java.util.HashMap;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
 import com.gluonhq.jfxapps.core.api.preferences.MapPreferences;
 import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;

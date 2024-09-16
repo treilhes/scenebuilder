@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,23 +33,27 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 
-import org.scenebuilder.fxml.api.Content;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewMenuProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
 @MenuItemAttachment(
         id = FocusContentAction.MENU_ID,
-        targetMenuId = ToggleMinimizeLeftDockAction.MENU_ID,
+        //targetMenuId = ToggleMinimizeLeftDockAction.MENU_ID,
+        targetMenuId = ViewMenuProvider.MENU_ID,
         label = "menu.title.content",
         positionRequest = PositionRequest.AsNextSibling,
         separatorBefore = true)
@@ -59,13 +63,16 @@ public class FocusContentAction extends AbstractAction {
 
     public final static String MENU_ID = "gotoContentMenuItem"; //NOCHECK
 
-    private final Content contentPanelController;
+    private final Workspace workspace;
 
+    // @formatter:off
     public FocusContentAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
-            Content contentPanelController) {
-        super(extensionFactory);
-        this.contentPanelController = contentPanelController;
+            Workspace workspace) {
+     // @formatter:on
+        super(i18n, extensionFactory);
+        this.workspace = workspace;
     }
 
     @Override
@@ -75,7 +82,7 @@ public class FocusContentAction extends AbstractAction {
 
     @Override
     public ActionStatus doPerform() {
-        contentPanelController.getGlassLayer().requestFocus();
+        workspace.getGlassLayer().requestFocus();
         return ActionStatus.DONE;
     }
 }

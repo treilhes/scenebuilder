@@ -52,17 +52,17 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.gluonhq.jfxapps.boot.context.ContextManager;
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
-import com.gluonhq.jfxapps.boot.layer.Layer;
+import com.gluonhq.jfxapps.boot.api.context.ContextManager;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.layer.Layer;
+import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
 import com.gluonhq.jfxapps.boot.layer.LayerNotFoundException;
-import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.gluonhq.jfxapps.boot.loader.extension.SealedExtension;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper.ServiceLoader;
 
@@ -182,7 +182,7 @@ class ContextBootstraperTest {
 
         ctxBoot.create(null, parentExtensionModel, null, null, loader);
 
-        verify(contextManager).create(any(), any(), any(), contextClassesCaptor.capture(), any(), any(), any());
+        verify(contextManager).create(any(), any(), contextClassesCaptor.capture(), any(), any(), any());
 
         assertThat(contextClassesCaptor.getValue()).contains(LocalParentComponent.class,
                 parentExtensionLoaded.getClass());
@@ -225,7 +225,7 @@ class ContextBootstraperTest {
 
         ctxBoot.create(ctx, childExtensionModel, null, null, loader);
 
-        verify(contextManager).create(any(), any(), any(), contextClassesCaptor.capture(), any(), any(), any());
+        verify(contextManager).create(any(), any(), contextClassesCaptor.capture(), any(), any(), any());
 
         assertThat(contextClassesCaptor.getValue()).contains(LocalChildComponent.class,
                 childExtensionLoaded.getClass());
@@ -264,7 +264,7 @@ class ContextBootstraperTest {
 
         ctxBoot.create(ctx, childExtensionModel, null, null, loader);
 
-        verify(contextManager).create(any(), any(), any(), contextClassesCaptor.capture(), any(), any(), any());
+        verify(contextManager).create(any(), any(), contextClassesCaptor.capture(), any(), any(), any());
 
         assertThat(contextClassesCaptor.getValue()).contains(LocalChildComponent.class,
                 childExtensionLoaded.getClass());
@@ -303,7 +303,7 @@ class ContextBootstraperTest {
 
         ctxBoot.create(ctx, childExtensionModel, null, null, loader);
 
-        verify(contextManager).create(any(), any(), any(), contextClassesCaptor.capture(), any(), any(), any());
+        verify(contextManager).create(any(), any(), contextClassesCaptor.capture(), any(), any(), any());
 
         assertThat(contextClassesCaptor.getValue()).contains(LocalChildComponent.class,
                 WindowParentComponent.class, EditorSingletonParentComponent.class,
@@ -365,7 +365,7 @@ class ContextBootstraperTest {
 
         ctxBoot.create(null, parentExtensionModel, null, null, loader);
 
-        verify(contextManager).create(any(), any(), any(), contextClassesCaptor.capture(), any(), any(), any());
+        verify(contextManager).create(any(), any(), contextClassesCaptor.capture(), any(), any(), any());
 
         assertThat(contextClassesCaptor.getValue()).contains(LocalParentComponent.class,
                 ExportedChildComponent.class);

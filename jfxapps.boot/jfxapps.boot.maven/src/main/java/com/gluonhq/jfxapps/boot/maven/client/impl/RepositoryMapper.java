@@ -41,14 +41,14 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
+import com.gluonhq.jfxapps.boot.api.maven.ResolvedArtifact;
 import com.gluonhq.jfxapps.boot.maven.client.config.RepositoryConfig.Redirect;
 import com.gluonhq.jfxapps.boot.maven.client.model.Repository;
 
 @Mapper(componentModel = "spring")
 public interface RepositoryMapper {
-    List<com.gluonhq.jfxapps.boot.maven.client.api.Repository> map(List<Repository> repositories);
-    List<Repository> mapApi(List<com.gluonhq.jfxapps.boot.maven.client.api.Repository> presetRepositories);
+    List<com.gluonhq.jfxapps.boot.api.maven.Repository> map(List<Repository> repositories);
+    List<Repository> mapApi(List<com.gluonhq.jfxapps.boot.api.maven.Repository> presetRepositories);
 
     @Mapping(target = "id", source = "id")
     @Mapping(target = "type", source = "type")
@@ -56,10 +56,10 @@ public interface RepositoryMapper {
     @Mapping(target = "user", source = "login")
     @Mapping(target = "password", source = "password")
     @Mapping(target = "contentType", source = "contentType")
-    com.gluonhq.jfxapps.boot.maven.client.api.Repository map(Repository repository);
+    com.gluonhq.jfxapps.boot.api.maven.Repository map(Repository repository);
 
     @Mapping(target = "login", source = "user")
-    Repository map(com.gluonhq.jfxapps.boot.maven.client.api.Repository repository);
+    Repository map(com.gluonhq.jfxapps.boot.api.maven.Repository repository);
 
     @Mapping(target = "artifact.artifact.groupId", source = "groupId")
     @Mapping(target = "artifact.artifact.artifactId", source = "artifactId")

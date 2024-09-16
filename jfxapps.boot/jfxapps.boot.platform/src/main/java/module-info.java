@@ -39,7 +39,9 @@ open module jfxapps.boot.platform {
 
     exports com.gluonhq.jfxapps.boot.platform;
     exports com.gluonhq.jfxapps.boot.platform.config;
-    exports com.gluonhq.jfxapps.boot.platform.internal to spring.beans;
+    exports com.gluonhq.jfxapps.boot.platform.internal to spring.beans, jfxapps.boot.main;
+
+    requires jfxapps.boot.api;
 
     requires spring.boot;
     requires spring.context;

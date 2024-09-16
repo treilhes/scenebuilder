@@ -41,9 +41,9 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.dnd.AbstractDropTarget;
 import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.dnd.DropTargetFactory;
@@ -93,7 +93,7 @@ public final class AccessoryDropTarget extends AbstractDropTarget {
         this.fxomJobsFactory = fxomJobsFactory;
     }
 
-    public void setDropTargetParameters(FXOMElement targetContainer, Accessory accessory, FXOMObject beforeChild) {
+    protected void setDropTargetParameters(FXOMElement targetContainer, Accessory accessory, FXOMObject beforeChild) {
         assert targetContainer != null;
         this.targetContainer = targetContainer;
         this.accessory = accessory;

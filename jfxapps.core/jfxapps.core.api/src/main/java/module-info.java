@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.api.ApiExtension;
 
 open module jfxapps.core.api {
@@ -95,9 +95,11 @@ open module jfxapps.core.api {
 
     requires transitive jfxapps.javafx.starter;
 
-    requires transitive jfxapps.boot.loader;
-    requires transitive jfxapps.boot.platform;
-    requires transitive jfxapps.boot.maven;
+    requires transitive jfxapps.boot.api;
+
+//    requires transitive jfxapps.boot.loader;
+//    requires transitive jfxapps.boot.platform;
+//    requires transitive jfxapps.boot.maven;
     requires transitive jfxapps.boot.starter;
 
     requires transitive jfxapps.core.utils;

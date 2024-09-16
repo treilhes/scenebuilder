@@ -82,6 +82,22 @@
                                             <version>${project.version}</version>
                                         </dependency>
                                     </extension>
+                                    <extension>
+                                        <uuid>07a8af43-755e-4a51-a598-66ac13e3f7a5</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>jfxapps.core.jobs</artifactId>
+                                            <version>${project.version}</version>
+                                        </dependency>
+                                    </extension>
+                                    <extension>
+                                        <uuid>a112d6e9-4079-4733-96d1-d29b3fef675d</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>jfxapps.core.selection</artifactId>
+                                            <version>${project.version}</version>
+                                        </dependency>
+                                    </extension>
                                     
                                     <!-- temp -->
                                     <extension>

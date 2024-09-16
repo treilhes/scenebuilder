@@ -33,9 +33,12 @@
  */
 package com.gluonhq.jfxapps.core.api.ui.controller.misc;
 
+import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
 import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.beans.property.DoubleProperty;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.layout.Pane;
@@ -74,7 +77,7 @@ public interface Workspace {
 
     void showContent();
 
-    Throwable getLayoutException();
+    //Throwable getLayoutException();
 
     void layoutContent(boolean applyCSS);
 
@@ -92,5 +95,14 @@ public interface Workspace {
 
     void setAutoResize3DContent(boolean autoResize3DContent);
 
-    //void setDisplayController(FxmlController content);
+    /**
+     * Scrolls this content panel so that the selected objects are visible.
+     */
+    void scrollToSelection();
+
+    void reveal(FXOMObject targetFxomObject);
+
+    Node getWorkspacePane();
+
+    //ModeManager getModeManager();
 }

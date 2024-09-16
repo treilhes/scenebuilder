@@ -56,7 +56,7 @@ import org.graalvm.compiler.lir.CompositeValue.Component;
 import org.scenebuilder.fxml.api.Inspector;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.css.CssInternal;
 import com.gluonhq.jfxapps.core.api.css.CssPropAuthorInfo;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;

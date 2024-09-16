@@ -35,7 +35,7 @@ package com.gluonhq.jfxapps.core.api.maven;
 
 import java.util.Set;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryType;
 
 public interface RepositoryTypeProvider {
     Set<Class<? extends RepositoryType>> repositoryTypes();

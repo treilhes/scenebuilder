@@ -54,8 +54,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.CombinedResourceBundle;
 import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
@@ -96,8 +96,11 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
     private FileTime loadFileTime;
 
+    private final JfxAppPlatform jfxAppPlatform;
+
     // @formatter:off
     public FileSystemController(
+            JfxAppPlatform jfxAppPlatform,
             ApplicationEvents sceneBuilderManager,
             ApplicationInstanceEvents documentManager,
             RecentItemsPreference recentItemsPreference,
@@ -105,6 +108,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
             InitialDirectoryPreference initialDirectoryPreference,
             WildcardImportsPreference wildcardImportsPreference) {
      // @formatter:on
+        this.jfxAppPlatform = jfxAppPlatform;
         this.documentManager = documentManager;
         this.sceneBuilderManager = sceneBuilderManager;
         this.initialDirectoryPreference = initialDirectoryPreference;
@@ -227,7 +231,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
         logger.info("File Event : file created ({})", target.toFile().getName());
         if (watchCallbacks.containsKey(target)) {
             logger.info("File Event sent : file created ({})", target.toFile().getName());
-            JfxAppPlatform.runOnFxThreadWithActiveScope(() -> watchCallbacks.get(target).forEach(c -> c.created(target)));
+            jfxAppPlatform.runOnFxThreadWithActiveScope(() -> watchCallbacks.get(target).forEach(c -> c.created(target)));
         }
     }
 
@@ -238,7 +242,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
         logger.info("File Event : file deleted ({})", target.toFile().getName());
         if (watchCallbacks.containsKey(target)) {
             logger.info("File Event sent : file deleted ({})", target.toFile().getName());
-            JfxAppPlatform.runOnFxThreadWithActiveScope(() -> watchCallbacks.get(target).forEach(c -> c.deleted(target)));
+            jfxAppPlatform.runOnFxThreadWithActiveScope(() -> watchCallbacks.get(target).forEach(c -> c.deleted(target)));
         }
     }
 
@@ -249,19 +253,19 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
         logger.info("File Event : file modified ({})", target.toFile().getName());
         if (watchCallbacks.containsKey(target)) {
             logger.info("File Event sent : file modified ({})", target.toFile().getName());
-            JfxAppPlatform.runOnFxThreadWithActiveScope(() -> watchCallbacks.get(target).forEach(c -> c.modified(target)));
+            jfxAppPlatform.runOnFxThreadWithActiveScope(() -> watchCallbacks.get(target).forEach(c -> c.modified(target)));
         }
     }
 
-    @Override
-    public File getMessageBoxFolder() {
-        return JfxAppsPlatform.getMessageBoxFolder();
-    }
-
-    @Override
-    public File getApplicationDataFolder() {
-        return JfxAppsPlatform.getApplicationDataFolder();
-    }
+//    @Override
+//    public File getMessageBoxFolder() {
+//        return JfxAppsPlatform.getMessageBoxFolder();
+//    }
+//
+//    @Override
+//    public File getApplicationDataFolder() {
+//        return JfxAppsPlatform.getApplicationDataFolder();
+//    }
 
 
     // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

@@ -4,11 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
 import com.gluonhq.jfxapps.boot.loader.StateProvider;
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.loader.internal.repository.ApplicationRepository;
 import com.gluonhq.jfxapps.boot.loader.model.JfxApps;
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryClient;
 import com.gluonhq.jfxapps.boot.registry.RegistryManager;
 import com.gluonhq.jfxapps.registry.model.Registry;
 

@@ -72,11 +72,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.gluonhq.jfxapps.boot.context.ContextManager;
-import com.gluonhq.jfxapps.boot.context.annotation.Primary;
-import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
-import com.gluonhq.jfxapps.boot.loader.ApplicationManager;
-import com.gluonhq.jfxapps.boot.loader.BootException;
+import com.gluonhq.jfxapps.boot.api.context.ContextManager;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Primary;
+import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
+import com.gluonhq.jfxapps.boot.api.loader.ApplicationManager;
+import com.gluonhq.jfxapps.boot.api.loader.BootException;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
+import com.gluonhq.jfxapps.boot.api.platform.InternalRestClient;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.boot.api.platform.InternalRestClient.JsonBodyHandler;
 import com.gluonhq.jfxapps.boot.loader.StateProvider;
 import com.gluonhq.jfxapps.boot.loader.content.FileExtensionProvider;
 import com.gluonhq.jfxapps.boot.loader.model.Application;
@@ -85,10 +89,6 @@ import com.gluonhq.jfxapps.boot.loader.model.Extension;
 import com.gluonhq.jfxapps.boot.loader.model.JfxApps;
 import com.gluonhq.jfxapps.boot.loader.model.JfxAppsExtension;
 import com.gluonhq.jfxapps.boot.main.config.BootConfig;
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryClient;
-import com.gluonhq.jfxapps.boot.platform.InternalRestClient;
-import com.gluonhq.jfxapps.boot.platform.InternalRestClient.JsonBodyHandler;
-import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.boot.registry.RegistryManager;
 
 /**
@@ -119,7 +119,7 @@ public class AvailableFeaturesTestIT {
 
     private static final String RES_IT = "./src/test/resources-its/common-loader";
 
-    private static final UUID ROOT_ID = com.gluonhq.jfxapps.boot.loader.extension.Extension.ROOT_ID;
+    private static final UUID ROOT_ID = com.gluonhq.jfxapps.boot.api.loader.extension.Extension.ROOT_ID;
     private static final UUID ROOT_EXT1_ID = UUID.fromString("00000000-0000-0000-0000-000000000001");
     private static final UUID ROOT_EXT1_EXT1_ID = UUID.fromString("00000000-0000-0000-0000-000000000011");
     private static final UUID APP1_ID = UUID.fromString("00000000-0000-0000-0001-000000000000");

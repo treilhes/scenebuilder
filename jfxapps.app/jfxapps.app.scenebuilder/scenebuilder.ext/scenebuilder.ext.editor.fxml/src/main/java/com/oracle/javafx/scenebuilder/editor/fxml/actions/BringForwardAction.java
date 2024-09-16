@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,34 +33,31 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.selection.job.BringForwardJob;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(
         nameKey = "action.name.save",
         descriptionKey = "action.description.save")
-
 @MenuItemAttachment(
         id = BringForwardAction.MENU_ID,
         targetMenuId = SendToBackAction.MENU_ID,
         label = BringForwardAction.TITLE,
         positionRequest = PositionRequest.AsNextSibling)
 @ContextMenuItemAttachment(
-        selectionGroup = DSelectionGroupFactory.class,
+        selectionGroup = ObjectSelectionGroup.class,
         id = BringForwardAction.MENU_ID,
         targetMenuId = SendToBackAction.MENU_ID,
         label = BringForwardAction.TITLE,
@@ -71,27 +68,30 @@ public class BringForwardAction extends AbstractAction {
     public final static String MENU_ID = "bringForwardMenuItem"; //NOCHECK
     public final static String TITLE = "menu.title.forward";
 
-    private final BringForwardJob.Factory bringForwardJobFactory;
+    private final SelectionJobsFactory selectionJobsFactory;
     private final JobManager jobManager;
 
+    // @formatter:off
     public BringForwardAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             JobManager jobManager,
-            BringForwardJob.Factory bringForwardJobFactory) {
-        super(extensionFactory);
+            SelectionJobsFactory selectionJobsFactory) {
+     // @formatter:on
+        super(i18n, extensionFactory);
         this.jobManager = jobManager;
-        this.bringForwardJobFactory = bringForwardJobFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
     }
 
     @Override
     public boolean canPerform() {
-        final AbstractJob job = bringForwardJobFactory.getJob();
+        final Job job = selectionJobsFactory.bringForward();
         return job.isExecutable();
     }
 
     @Override
     public ActionStatus doPerform() {
-        final AbstractJob job = bringForwardJobFactory.getJob();
+        final Job job = selectionJobsFactory.bringForward();
         jobManager.push(job);
         return ActionStatus.DONE;
     }

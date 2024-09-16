@@ -33,6 +33,28 @@
  */
 package com.gluonhq.jfxapps.core.api.dnd;
 
+import com.gluonhq.jfxapps.core.api.mask.Accessory;
+import com.gluonhq.jfxapps.core.fxom.FXOMElement;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+
 public interface DefaultDropTargetFactory {
+
+    DropTarget accessory(FXOMElement targetContainer, Accessory accessory, FXOMObject beforeChild);
+
+    DropTarget accessory(FXOMElement targetContainer, Accessory accessory);
+
+    DropTarget accessory(FXOMElement targetContainer, FXOMObject beforeChild);
+
+    /**
+     * Instantiates a new accessory drop target.
+     * The target accessory will be discovered at runtime
+     * It will be the first accessory accepting the object in the following order:
+     * mainAccessory > accessories iteration
+     * @param targetContainer the target container
+     * @return the drop target
+     */
+    DropTarget accessory(FXOMElement targetContainer);
+
+    DropTarget root();
 
 }

@@ -35,7 +35,7 @@ package com.gluonhq.jfxapps.core.api.subjects;
 
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachment;
 

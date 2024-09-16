@@ -40,9 +40,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gluonhq.jfxapps.boot.context.ContextManager;
-import com.gluonhq.jfxapps.boot.loader.ApplicationManager;
-import com.gluonhq.jfxapps.boot.platform.InternalRestClient;
+import com.gluonhq.jfxapps.boot.api.context.ContextManager;
+import com.gluonhq.jfxapps.boot.api.loader.ApplicationManager;
+import com.gluonhq.jfxapps.boot.api.platform.InternalRestClient;
 
 @RestController
 @RequestMapping(path = "/" + InternalRestClient.DEFAULT_PATH, produces = MediaType.APPLICATION_JSON_VALUE)

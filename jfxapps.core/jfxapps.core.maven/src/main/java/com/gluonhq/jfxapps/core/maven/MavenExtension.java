@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.maven.artifact.GetMavenArtifactDialogController;
 import com.gluonhq.jfxapps.core.maven.artifact.SearchMavenArtifactDialogController;
 import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoriesPreferences;

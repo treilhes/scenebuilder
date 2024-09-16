@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
@@ -65,13 +65,17 @@ public class QuitScenebuilderAction extends AbstractAction {
     private final Dialog dialog;
     private final ActionFactory actionFactory;
 
+    private final JfxAppPlatform jfxAppPlatform;
+
     public QuitScenebuilderAction(
             I18N i18n,
+            JfxAppPlatform jfxAppPlatform,
             ActionExtensionFactory extensionFactory,
             ActionFactory actionFactory,
             InstancesManager main,
             Dialog dialog) {
         super(i18n, extensionFactory);
+        this.jfxAppPlatform = jfxAppPlatform;
         this.main = main;
         this.dialog = dialog;
         this.actionFactory = actionFactory;
@@ -104,7 +108,7 @@ public class QuitScenebuilderAction extends AbstractAction {
 
         case 1: {
             final ApplicationInstance dwc0 = pendingDocs.get(0);
-            ActionStatus result = JfxAppPlatform.runWithScope(dwc0, () -> actionFactory.create(CloseFileAction.class).checkAndPerform());
+            ActionStatus result = jfxAppPlatform.runWithScope(dwc0, () -> actionFactory.create(CloseFileAction.class).checkAndPerform());
             exitConfirmed = result == ActionStatus.DONE;
             break;
         }
@@ -125,7 +129,7 @@ public class QuitScenebuilderAction extends AbstractAction {
                 int i = 0;
                 ActionStatus status;
                 do {
-                    status = JfxAppPlatform.runWithScope(pendingDocs.get(i++), () -> actionFactory.create(CloseFileAction.class).checkAndPerform());
+                    status = jfxAppPlatform.runWithScope(pendingDocs.get(i++), () -> actionFactory.create(CloseFileAction.class).checkAndPerform());
                 } while ((status == ActionStatus.DONE) && (i < pendingDocs.size()));
                 exitConfirmed = (status == ActionStatus.DONE);
                 break;

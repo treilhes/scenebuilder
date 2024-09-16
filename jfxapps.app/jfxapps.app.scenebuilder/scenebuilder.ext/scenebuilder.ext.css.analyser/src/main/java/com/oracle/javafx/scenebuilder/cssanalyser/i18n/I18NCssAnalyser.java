@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.cssanalyser.i18n;
 
 import java.util.ResourceBundle;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
 
 @ApplicationSingleton

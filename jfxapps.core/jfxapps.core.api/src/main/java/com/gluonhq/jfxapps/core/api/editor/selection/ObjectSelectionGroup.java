@@ -42,11 +42,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.context.annotation.Lazy;
-
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMCollection;
@@ -563,8 +561,7 @@ public class ObjectSelectionGroup implements SelectionGroup {
     /**
      * The Class Factory.
      */
-    @Singleton
-    @Lazy
+    @ApplicationSingleton
     public static class Factory extends SelectionGroupFactory<ObjectSelectionGroup> {
 
         /**

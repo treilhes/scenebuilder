@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.core.library.preferences.global;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.UniqueArtifact;
+import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
 import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
 import com.gluonhq.jfxapps.core.api.preferences.ListPreferences;
 import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;

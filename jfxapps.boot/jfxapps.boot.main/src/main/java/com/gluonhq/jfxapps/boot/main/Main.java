@@ -36,8 +36,8 @@ package com.gluonhq.jfxapps.boot.main;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.boot.main.command.StartCommand;
-import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 
 import picocli.CommandLine;
 

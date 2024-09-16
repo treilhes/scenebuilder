@@ -46,7 +46,7 @@ import com.gluonhq.jfxapps.app.devtools.ext.strchk.config.CommonConfig;
 import com.gluonhq.jfxapps.app.devtools.ext.strchk.config.Config;
 import com.gluonhq.jfxapps.app.devtools.ext.strchk.loader.ProjectLoader;
 import com.gluonhq.jfxapps.app.devtools.ext.strchk.model.Project;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;

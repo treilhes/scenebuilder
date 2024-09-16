@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.core.library.manager;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.ResolvedArtifact;
+import com.gluonhq.jfxapps.boot.api.maven.ResolvedArtifact;
 import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
 
 @Mapper(componentModel = "spring")

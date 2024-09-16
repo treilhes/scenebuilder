@@ -40,7 +40,7 @@ import com.gluonhq.jfxapps.app.manager.api.ui.Model;
 import com.gluonhq.jfxapps.app.manager.model.AppModel;
 import com.gluonhq.jfxapps.app.manager.model.Application;
 import com.gluonhq.jfxapps.app.manager.model.Extension;
-import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;

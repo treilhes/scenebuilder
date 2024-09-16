@@ -33,7 +33,7 @@
  */
 package app.root.test;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 
 import app.root.api.JfxAppsAspectTarget;
 

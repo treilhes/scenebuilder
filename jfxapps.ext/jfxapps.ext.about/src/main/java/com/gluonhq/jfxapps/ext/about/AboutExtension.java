@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.ext.about.actions.ShowAboutAction;
 import com.gluonhq.jfxapps.ext.about.controller.AboutWindowController;
 import com.gluonhq.jfxapps.ext.about.i18n.I18NAbout;

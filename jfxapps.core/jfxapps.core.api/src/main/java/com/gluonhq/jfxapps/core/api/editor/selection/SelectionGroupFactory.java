@@ -35,7 +35,7 @@ package com.gluonhq.jfxapps.core.api.editor.selection;
 
 import java.util.Collection;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 

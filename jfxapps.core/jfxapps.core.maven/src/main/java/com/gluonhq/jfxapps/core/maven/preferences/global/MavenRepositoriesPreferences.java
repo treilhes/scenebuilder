@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
+import com.gluonhq.jfxapps.boot.api.maven.Repository;
 import com.gluonhq.jfxapps.core.api.preferences.ListPreferences;
 import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
 

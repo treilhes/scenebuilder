@@ -33,43 +33,39 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.controller;
 
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.scenebuilder.fxml.api.Content;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.Gesture;
-import com.gluonhq.jfxapps.core.api.HierarchyMask;
-import com.gluonhq.jfxapps.core.api.HierarchyMask.Accessory;
 import com.gluonhq.jfxapps.core.api.content.mode.AbstractModeController;
 import com.gluonhq.jfxapps.core.api.content.mode.Layer;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.api.util.StringUtils;
-import com.gluonhq.jfxapps.core.dnd.target.RootDropTarget;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.control.Driver;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
@@ -104,9 +100,7 @@ import javafx.util.Callback;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 public class EditModeController extends AbstractModeController implements Gesture.Observer {
 
     private final static Logger logger = LoggerFactory.getLogger(EditModeController.class);
@@ -132,6 +126,8 @@ public class EditModeController extends AbstractModeController implements Gestur
     private Gesture glassGesture;
     private FXOMInstance inlineEditedObject;
 
+    private final Content content;
+
     private final JobManager jobManager;
 
     private final SbFXOMObjectMask.Factory maskFactory;
@@ -154,12 +150,13 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     private final InlineEdit inlineEdit;
 
-    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
 
     private final ApplicationInstanceEvents documentManager;
 
     // @formatter:off
     public EditModeController(
+            Workspace workspace,
             Selection selection,
             DragGesture.Factory dragGestureFactory,
             Driver driver,
@@ -167,7 +164,7 @@ public class EditModeController extends AbstractModeController implements Gestur
             ContextMenu contextMenu,
             MessageLogger messageLogger,
             InlineEdit inlineEdit,
-            @Lazy Content contentPanelController,
+            @Lazy Content content,
             JobManager jobManager,
             SbFXOMObjectMask.Factory maskFactory,
             ApplicationInstanceEvents documentManager,
@@ -175,10 +172,11 @@ public class EditModeController extends AbstractModeController implements Gestur
             SelectAndMoveGesture.Factory selectAndMoveGestureFactory,
             ZoomGesture.Factory zoomGestureFactory,
             MoveWithKeyGesture.Factory moveWithKeyGestureFactory,
-            ModifyObjectJob.Factory modifyObjectJobFactory
+            FxomJobsFactory fxomJobsFactory
             ) {
      // @formatter:on
-        super(contentPanelController);
+        super(workspace);
+        this.content = content;
         this.selection = selection;
         this.contextMenu = contextMenu;
         this.messageLogger = messageLogger;
@@ -193,7 +191,7 @@ public class EditModeController extends AbstractModeController implements Gestur
         this.selectAndMoveGestureFactory = selectAndMoveGestureFactory;
         this.zoomGestureFactory = zoomGestureFactory;
         this.moveWithKeyGestureFactory = moveWithKeyGestureFactory;
-        this.modifyObjectJobFactory = modifyObjectJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
 
         newLayer(OUTLINE_LAYER, true, selection,
                 // object selection
@@ -238,7 +236,7 @@ public class EditModeController extends AbstractModeController implements Gestur
                 fxomObject -> driver.makeHandles(fxomObject));
 
         newLayer(TRING_LAYER, true, selection,
-                s -> drag.isDropAccepted() && !(drag.getDropTarget() instanceof RootDropTarget)
+                s -> drag.isDropAccepted() && drag.getDropTarget().getTargetObject() != null
                         ? new HashSet<>(Arrays.asList(drag.getDropTarget().getTargetObject()))
                         : null,
                 fxomObject -> {
@@ -265,7 +263,7 @@ public class EditModeController extends AbstractModeController implements Gestur
         assert activeGesture == gesture;
         activeGesture = null;
         startListeningToInputEvents();
-        content.endInteraction();
+        getWorkspace().endInteraction();
 
         // Object below the mouse may have changed : current glass gesture
         // must be searched again.
@@ -284,7 +282,7 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     @Override
     public void didBecomeActive(AbstractModeController previousModeController) {
-        assert content.getGlassLayer() != null;
+        assert getWorkspace().getGlassLayer() != null;
 
         if (this.selectWithMarqueeGesture == null) {
             this.selectWithMarqueeGesture = selectWithMarqueeGestureFactory.getGesture();
@@ -333,19 +331,19 @@ public class EditModeController extends AbstractModeController implements Gestur
     private void makeSelectionVisible() {
 
         // Scrolls the content panel so that selected objects are visible.
-        content.scrollToSelection();
+        getWorkspace().scrollToSelection();
 
         // Walks trough the ancestor nodes of the first selected object and
         // makes sure that TabPane and Accordion are setup for displaying
         // this selected object.
         Layer<Handles> layer = getLayer(Handles.class);
         if (layer.getActiveItems().isEmpty() == false) {
-            content.reveal(layer.getActiveItems().get(0).getFxomObject());
+            getWorkspace().reveal(layer.getActiveItems().get(0).getFxomObject());
         }
     }
 
     private void startListeningToInputEvents() {
-        final Node glassLayer = content.getGlassLayer();
+        final Node glassLayer = getWorkspace().getGlassLayer();
         assert glassLayer.getOnMouseEntered() == null;
         assert glassLayer.getOnMouseExited() == null;
         assert glassLayer.getOnMouseMoved() == null;
@@ -373,7 +371,7 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     private void stopListeningToInputEvents() {
 
-        final Node glassLayer = content.getGlassLayer();
+        final Node glassLayer = getWorkspace().getGlassLayer();
         glassLayer.setOnMouseEntered(null);
         glassLayer.setOnMouseExited(null);
         glassLayer.setOnMouseMoved(null);
@@ -409,8 +407,7 @@ public class EditModeController extends AbstractModeController implements Gestur
         final FXOMObject selectionAncestor = selection.getAncestor();
 
         // The code below handles selction of detached graph objects
-        if (!selection.isEmpty() && selection.getGroup() instanceof DSelectionGroupFactory) {
-            DSelectionGroupFactory selGroup = (DSelectionGroupFactory) selection.getGroup();
+        if (!selection.isEmpty() && selection.getGroup() instanceof ObjectSelectionGroup selGroup) {
 
             if (selGroup.getItems().size() == 1 && selGroup.getHitItem().isViewable()
                     && selGroup.getHitItem().isDescendantOf(hitObject)
@@ -461,7 +458,7 @@ public class EditModeController extends AbstractModeController implements Gestur
     private void mousePressedOnGlassLayer(MouseEvent e) {
 
         // Make sure that glass layer has keyboard focus
-        content.getGlassLayer().requestFocus();
+        getWorkspace().getGlassLayer().requestFocus();
 
         /*
          * At that point, is expected that a "mouse entered" or "mouse moved" event was
@@ -521,7 +518,7 @@ public class EditModeController extends AbstractModeController implements Gestur
         if (glassGesture == selectAndMoveGesture) {
             assert selectAndMoveGesture.getHitObject() instanceof FXOMInstance;
             final FXOMInstance hitObject = (FXOMInstance) selectAndMoveGesture.getHitObject();
-            final HierarchyMask m = maskFactory.getMask(hitObject);
+            final var m = maskFactory.getMask(hitObject);
             // Do not allow inline editing of the I18N value
             if (m.isResourceKey(m.getPropertyNameForDescription()) == false) {
                 handleInlineEditing((FXOMInstance) selectAndMoveGesture.getHitObject());
@@ -542,7 +539,7 @@ public class EditModeController extends AbstractModeController implements Gestur
             inlineEditedObject = hitObject;
 
 
-            final HierarchyMask m = maskFactory.getMask(inlineEditedObject);
+            final var m = maskFactory.getMask(inlineEditedObject);
             final String text = m.getDescription();
             final InlineEdit.Type type;
             if (inlineEditingBounds instanceof TextArea || StringUtils.containsLineFeed(text)) {
@@ -553,7 +550,7 @@ public class EditModeController extends AbstractModeController implements Gestur
             final TextInputControl inlineEditor = inlineEdit.createTextInputControl(type, inlineEditingBounds, text);
 
             // CSS
-            final ObservableList<String> styleSheets = getContent().getRoot().getStylesheets();
+            final ObservableList<String> styleSheets = getWorkspace().getRoot().getStylesheets();
             inlineEditor.getStylesheets().addAll(styleSheets);
             inlineEditor.getStyleClass().add("theme-presets"); // NOCHECK
             inlineEditor.getStyleClass().add(InlineEdit.INLINE_EDITOR_CLASS);
@@ -576,12 +573,12 @@ public class EditModeController extends AbstractModeController implements Gestur
         // as "standard" characters (i.e. to backslash them)
         final String newPlainValue = new PrefixedValue(PrefixedValue.Type.PLAIN_STRING, newValue).toString();
 
-        final HierarchyMask m = maskFactory.getMask(inlineEditedObject);
+        final var m = maskFactory.getMask(inlineEditedObject);
         final PropertyName propertyName = m.getPropertyNameForDescription();
         assert propertyName != null;
         final ValuePropertyMetadata vpm = m.getPropertyMetadata(propertyName);
 
-        final AbstractJob job = modifyObjectJobFactory.getJob(inlineEditedObject, vpm, newPlainValue);
+        final Job job = fxomJobsFactory.modifyObject(inlineEditedObject, vpm, newPlainValue);
 
         if (job.isExecutable()) {
             jobManager.push(job);
@@ -615,8 +612,7 @@ public class EditModeController extends AbstractModeController implements Gestur
             break;
         }
         case ENTER: {
-            if (selection.getGroup() instanceof DSelectionGroupFactory) {
-                final DSelectionGroupFactory osg = (DSelectionGroupFactory) selection.getGroup();
+            if (selection.getGroup() instanceof ObjectSelectionGroup osg) {
                 if (osg.getItems().size() == 1) {
                     final var mask = maskFactory.getMask(osg.getSortedItems().get(0));
                     final var nodeFxomObject = mask.getClosestFxNode();
@@ -699,13 +695,13 @@ public class EditModeController extends AbstractModeController implements Gestur
          * cleanly. If not, we do not activate the gesture.
          */
 
-        if (content.isContentDisplayable() && inlineEdit.canGetFxmlText()) {
+        if (content.isDisplayable() && inlineEdit.canGetFxmlText()) {
 
-            content.beginInteraction();
+            getWorkspace().beginInteraction();
 
             stopListeningToInputEvents();
             activeGesture = gesture;
-            gesture.startApplication(e, this);
+            gesture.start(e, this);
 
             // Note that some gestures may terminates immediately.
             // So activeGesture may have switch back to null.
@@ -726,27 +722,27 @@ public class EditModeController extends AbstractModeController implements Gestur
         while (candidates.isEmpty() == false) {
             final FXOMObject candidate = candidates.get(0);
             candidates.remove(0);
-            if (candidate.isNode()) {
+            if (candidate.getSceneGraphObject().isNode()) {
                 final Node sgo = candidate.getSceneGraphObject().getAs(Node.class);
                 // if (sgo.getScene() == getRoot().getScene()) {
                 if (sgo.getScene() == ((Node) fxomDocument.getSceneGraphRoot()).getScene()) {
                     result.add(candidate);
                 }
             }
-            final HierarchyMask m = maskFactory.getMask(candidate);
+            final var m = maskFactory.getMask(candidate);
 
-            List<Accessory> allAccessories = new ArrayList<>(m.getAccessories());
+            var allAccessories = new ArrayList<>(m.getAccessories());
             if (m.getMainAccessory() != null && !allAccessories.contains(m.getMainAccessory())) {
                 allAccessories.add(0, m.getMainAccessory());
             }
 
-            for (Accessory a : allAccessories) {
+            for (var a : allAccessories) {
                 final List<FXOMObject> accessoryObjects = m.getAccessories(a, false);
                 if (accessoryObjects != null) {
-                    accessoryObjects.stream().filter(accessoryObject -> accessoryObject != null && accessoryObject.isNode())
-                    .forEach(accessoryObject -> {
-                        candidates.add(accessoryObject);
-                    });
+                    accessoryObjects.stream().filter(accessoryObject -> accessoryObject != null
+                            && accessoryObject.getSceneGraphObject().isNode()).forEach(accessoryObject -> {
+                                candidates.add(accessoryObject);
+                            });
                 }
 
             }

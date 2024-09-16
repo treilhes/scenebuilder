@@ -42,8 +42,8 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.annotation.OverrideBean;
-import com.gluonhq.jfxapps.boot.context.annotation.OverridedBeanAware;
+import com.gluonhq.jfxapps.boot.api.context.annotation.OverrideBean;
+import com.gluonhq.jfxapps.boot.api.context.annotation.OverridedBeanAware;
 import com.gluonhq.jfxapps.boot.context.impl.JfxAppContextImpl;
 
 class OverridedBeanPostProcessorTest {

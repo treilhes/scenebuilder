@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.library.api;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 import com.gluonhq.jfxapps.core.extstore.fs.ExtensionFileSystem;
 import com.gluonhq.jfxapps.core.library.preferences.global.MavenArtifactsPreferencesFactory;
 import com.gluonhq.jfxapps.core.library.store.LibraryStoreController;

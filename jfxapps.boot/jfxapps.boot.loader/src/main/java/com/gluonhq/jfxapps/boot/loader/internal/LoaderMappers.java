@@ -38,6 +38,7 @@ import java.util.Objects;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
 import com.gluonhq.jfxapps.boot.loader.content.MavenExtensionProvider;
 import com.gluonhq.jfxapps.boot.loader.internal.model.Extension;
 import com.gluonhq.jfxapps.boot.loader.internal.model.State;
@@ -46,7 +47,6 @@ import com.gluonhq.jfxapps.boot.loader.model.ApplicationExtension;
 import com.gluonhq.jfxapps.boot.loader.model.JfxApps;
 import com.gluonhq.jfxapps.boot.loader.model.JfxAppsExtension;
 import com.gluonhq.jfxapps.boot.loader.model.LoadState;
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryClient;
 import com.gluonhq.jfxapps.registry.model.Dependency;
 
 @Mapper(componentModel = "spring")

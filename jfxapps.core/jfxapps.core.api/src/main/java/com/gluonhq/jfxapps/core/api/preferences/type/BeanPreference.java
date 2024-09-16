@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.preferences.type;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.preferences.Preference;
 import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
 

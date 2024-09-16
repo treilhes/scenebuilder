@@ -40,7 +40,7 @@ import java.util.TimerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
@@ -71,6 +71,7 @@ public class DragController implements Drag {
 
     private static final Logger logger = LoggerFactory.getLogger(DragController.class);
 
+    private final JfxAppPlatform jfxAppPlatform;
     private final JobManager jobManager;
     private final DefaultSelectionGroupFactory defaultSelectionGroupFactory;
     private final SelectionJobsFactory selectionJobFactory;
@@ -90,8 +91,11 @@ public class DragController implements Drag {
 
 
 
+
+
     // @formatter:off
     public DragController(
+            JfxAppPlatform jfxAppPlatform,
             Selection selection,
             JobManager jobManager,
             ApplicationInstanceEvents documentManager,
@@ -99,6 +103,7 @@ public class DragController implements Drag {
             SelectionJobsFactory selectionJobFactory,
             BatchJob.Factory batchJobFactory) {
      // @formatter:on
+        this.jfxAppPlatform = jfxAppPlatform;
         this.selection = selection;
         this.jobManager = jobManager;
         this.documentManager = documentManager;
@@ -313,7 +318,7 @@ public class DragController implements Drag {
         mouseTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                JfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
+                jfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
                     mouseTimer = null;
                     mouseDidStopMoving();
                 });

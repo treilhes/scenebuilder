@@ -46,46 +46,58 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.ContextManager;
-import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.ContextManager;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.MultipleProgressListener;
+import com.gluonhq.jfxapps.boot.api.layer.Layer;
 
 @Component
 public class ContextManagerImpl implements ContextManager {
 
     private static final Logger logger = LoggerFactory.getLogger(ContextManagerImpl.class);
 
-    private final Map<UUID, JfxAppContextImpl> contexts;
+    private final Map<UUID, JfxAppContextImpl> uuidToContexts;
+    private final Map<ModuleLayer, JfxAppContextImpl> layerToContexts;
 
     private final ApplicationContext bootContext;
 
     public ContextManagerImpl(ApplicationContext bootContext) {
         super();
         this.bootContext = bootContext;
-        this.contexts = new HashMap<>();
+        this.uuidToContexts = new HashMap<>();
+        this.layerToContexts = new HashMap<>();
     }
 
     @Override
     public JfxAppContext get(UUID contextId) {
-        return contexts.get(contextId);
+        return uuidToContexts.get(contextId);
     }
 
     @Override
     public boolean exists(UUID contextId) {
-        return contexts.containsKey(contextId);
+        return uuidToContexts.containsKey(contextId);
     }
 
     @Override
-    public JfxAppContext create(UUID parentContextId, UUID contextId, Set<Class<?>> classes,Set<Class<?>> deportedClasses, List<Object> singletonInstances, MultipleProgressListener progressListener) {
-        return create(parentContextId, contextId, null, classes, deportedClasses, singletonInstances, progressListener);
-    }
+    public JfxAppContext create(UUID parentContextId, Layer layer, Set<Class<?>> classes,Set<Class<?>> deportedClasses, List<Object> singletonInstances, MultipleProgressListener progressListener) {
 
-    @Override
-    public JfxAppContext create(UUID parentContextId, UUID contextId, ClassLoader loader, Set<Class<?>> classes,Set<Class<?>> deportedClasses, List<Object> singletonInstances, MultipleProgressListener progressListener) {
+        JfxAppContextImpl parent = uuidToContexts.get(parentContextId);
 
-        JfxAppContextImpl parent = contexts.get(parentContextId);
+        final UUID uuid;
+        final ClassLoader loader;
+        final ModuleLayer moduleLayer;
 
-        JfxAppContextImpl context = new JfxAppContextImpl(contextId, loader);
+        if (layer != null) {
+            uuid = layer.getId();
+            loader = layer.getLoader();
+            moduleLayer = layer.getModuleLayer();
+        } else {
+            uuid = UUID.randomUUID();
+            loader = null;
+            moduleLayer = null;
+        }
+
+        JfxAppContextImpl context = new JfxAppContextImpl(uuid, loader);
 
         if (parent != null) {
             context.setParent(parent);
@@ -93,7 +105,7 @@ public class ContextManagerImpl implements ContextManager {
             context.setParent(bootContext);
         }
 
-        logger.info("Loading context {} with parent {} using {} classes", contextId, parentContextId, classes.size());
+        logger.info("Loading context {} with parent {} using {} classes", uuid, parentContextId, classes.size());
 
         if (logger.isDebugEnabled()) {
             classes.stream().sorted(Comparator.comparing(Class::getName)).forEach(c -> logger.debug("Loaded {}", c));
@@ -121,20 +133,30 @@ public class ContextManagerImpl implements ContextManager {
             Arrays.stream(context.getBeanDefinitionNames()).sorted().forEach(c -> logger.debug("Bean {}", c));
         }
 
-        contexts.put(contextId, context);
+        uuidToContexts.put(uuid, context);
+
+        if (moduleLayer != null) {
+            layerToContexts.put(moduleLayer, context);
+        }
 
         return context;
     }
 
     @Override
     public void clear() {
-        contexts.values().forEach(JfxAppContextImpl::close);
-        contexts.clear();
+        uuidToContexts.values().forEach(JfxAppContextImpl::close);
+        uuidToContexts.clear();
+        layerToContexts.clear();
     }
 
     @Override
     public void close(UUID id) {
-        JfxAppContextImpl ctx = contexts.remove(id);
+        JfxAppContextImpl ctx = uuidToContexts.remove(id);
+
+        var layer = layerToContexts.entrySet().stream().filter(c -> c.getValue().getUuid().equals(id)).findFirst();
+        if (layer.isPresent()) {
+            layerToContexts.remove(layer.get().getKey());
+        }
 
         if (ctx != null) {
             ctx.close();

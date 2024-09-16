@@ -33,7 +33,7 @@
  */
 import org.scenebuilder.ext.javafx.customization.JavafxCustomizationExtension;
 
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 
 open module scenebuilder.ext.javafx.customization {
     exports org.scenebuilder.ext.javafx.customization;

@@ -2,6 +2,7 @@ open module jfxapps.boot.main {
 
     exports com.gluonhq.jfxapps.boot.main;
 
+    requires jfxapps.boot.api;
     requires jfxapps.boot.loader;
     requires jfxapps.boot.platform;
     requires jfxapps.boot.registry;

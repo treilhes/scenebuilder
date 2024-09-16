@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.action.editor;
 
-import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyCombination.Modifier;

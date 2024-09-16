@@ -36,8 +36,8 @@ package com.gluonhq.jfxapps.boot.maven.client.preset;
 import java.util.Arrays;
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
-import com.gluonhq.jfxapps.boot.maven.client.api.Repository.Content;
+import com.gluonhq.jfxapps.boot.api.maven.Repository;
+import com.gluonhq.jfxapps.boot.api.maven.Repository.Content;
 import com.gluonhq.jfxapps.boot.maven.client.type.Maven;
 import com.gluonhq.jfxapps.boot.maven.client.type.Nexus;
 

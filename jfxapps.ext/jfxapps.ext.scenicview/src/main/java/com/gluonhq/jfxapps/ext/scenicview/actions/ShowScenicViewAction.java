@@ -33,8 +33,8 @@
  */
 package com.gluonhq.jfxapps.ext.scenicview.actions;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
@@ -50,12 +50,16 @@ public class ShowScenicViewAction extends AbstractAction {
 
     private final JfxAppContext context;
 
+    private final JfxAppPlatform jfxAppPlatform;
+
     public ShowScenicViewAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            JfxAppContext context) {
+            JfxAppContext context,
+            JfxAppPlatform jfxAppPlatform) {
         super(i18n, extensionFactory);
         this.context = context;
+        this.jfxAppPlatform = jfxAppPlatform;
     }
 
     @Override
@@ -70,7 +74,7 @@ public class ShowScenicViewAction extends AbstractAction {
         // NetBeans: set it on [VM Options] line in [Run] category of project's Properties.
         //if (System.getProperty("scenic") != null) //NOCHECK
 //        {
-            JfxAppPlatform.runOnFxThread(new ScenicViewStarter(context));
+        jfxAppPlatform.runOnFxThread(new ScenicViewStarter(context));
 //        }
         //new ScenicViewStarter(context).run();
         return ActionStatus.DONE;

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,25 +33,32 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse;
 
-import org.scenebuilder.fxml.api.Content;
+import java.net.URL;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.editor.EditorPlatform;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseDragGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
+import com.gluonhq.jfxapps.core.api.dnd.DefaultDragSourceFactory;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.dnd.DragSource;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
-import com.gluonhq.jfxapps.core.dnd.source.DocumentDragSource;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
@@ -60,23 +67,28 @@ import javafx.scene.input.TransferMode;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class SelectAndMoveGesture extends AbstractMouseDragGesture {
 
+    private final Workspace workspace;
     private final Drag drag;
-    private final DocumentDragSource.Factory documentDragSourceFactory;
+    private final DefaultDragSourceFactory defaultDragSourceFactory;
     private final Selection selection;
+    private final SbFXOMObjectMask.Factory objectMaskFactory;
 
     protected SelectAndMoveGesture(
+            Workspace workspace,
             @Autowired @Lazy Content contentPanelController,
             @Autowired Drag drag,
             Selection selection,
-            DocumentDragSource.Factory documentDragSourceFactory) {
-        super(contentPanelController);
+            DefaultDragSourceFactory defaultDragSourceFactory,
+            SbFXOMObjectMask.Factory objectMaskFactory) {
+        super();
+        this.workspace = workspace;
         this.drag = drag;
         this.selection = selection;
-        this.documentDragSourceFactory = documentDragSourceFactory;
+        this.defaultDragSourceFactory = defaultDragSourceFactory;
+        this.objectMaskFactory = objectMaskFactory;
     }
 
     private FXOMObject hitObject;
@@ -183,19 +195,28 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
 
         if (selectedHitObject != null) {
 
-            assert selection.getGroup() instanceof DSelectionGroupFactory;
+            assert selection.getGroup() instanceof ObjectSelectionGroup;
 
-            final DSelectionGroupFactory
-                    osg = (DSelectionGroupFactory) selection.getGroup();
+            final ObjectSelectionGroup
+                    osg = (ObjectSelectionGroup) selection.getGroup();
 
             if (osg.hasSingleParent()) {
 
                 final Point2D hitPoint = computeHitPoint(selectedHitObject);
-                final DocumentDragSource dragSource = documentDragSourceFactory.getDragSource(osg.getSortedItems(),
+
+                final var mask = objectMaskFactory.getMask(hitObject);
+                final URL resource = mask.getClassNameIconURL();
+
+                Image image = null;
+                if (resource != null) {
+                    image = new Image(resource.toExternalForm());
+                }
+
+                final DragSource dragSource = defaultDragSourceFactory.document(image, osg.getSortedItems(),
                         selectedHitObject, hitPoint.getX(), hitPoint.getY());
 
                 if (dragSource.isAcceptable()) {
-                    final Node glassLayer = contentPanelController.getGlassLayer();
+                    final Node glassLayer = workspace.getGlassLayer();
                     final Dragboard db = glassLayer.startDragAndDrop(TransferMode.COPY_OR_MOVE);
                     db.setContent(dragSource.makeClipboardContent());
                     db.setDragView(dragSource.makeDragView());
@@ -270,10 +291,9 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
 //        assert false;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public static class Factory extends GestureFactory<SelectAndMoveGesture> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
         public SelectAndMoveGesture getGesture() {

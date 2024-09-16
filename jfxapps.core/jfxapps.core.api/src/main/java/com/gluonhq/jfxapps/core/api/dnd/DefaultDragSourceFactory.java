@@ -33,6 +33,19 @@
  */
 package com.gluonhq.jfxapps.core.api.dnd;
 
+import java.util.List;
+
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+
+import javafx.scene.image.Image;
+import javafx.scene.input.Dragboard;
+
 public interface DefaultDragSourceFactory {
+
+    DragSource document(Image image, List<FXOMObject> draggedObjects, FXOMObject hitObject, double hitX, double hitY);
+
+    DragSource document(Image image, List<FXOMObject> draggedObjects, FXOMObject hitObject);
+
+    DragSource external(Dragboard clipboardContent);
 
 }

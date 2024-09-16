@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.ui.controller.dock;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 

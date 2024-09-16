@@ -79,13 +79,13 @@ public class ComponentClassMetadata<T, CC,
     private final Set<PropertyName> shadowedProperties = new HashSet<>();
 
     /** The component properties values subset. */
-    private final Map<PropertyName, VPM> values = new HashMap<>();
+    private final Map<PropertyName, ValuePropertyMetadata<VPC>> values = new HashMap<>();
 
     /** The group properties values subset. */
     private final Set<PropertyGroupMetadata<VPC>> groups = new HashSet<>();
 
     /** The component properties component subset. */
-    private final Map<PropertyName, CPM> subComponents = new HashMap<>();
+    private final Map<PropertyName, ComponentPropertyMetadata<CPC, P>> subComponents = new HashMap<>();
 
     /** The inherited parent metadata. */
     private final P parentMetadata;
@@ -116,11 +116,11 @@ public class ComponentClassMetadata<T, CC,
                     if (e.getElementAdded().isGroup()) {
                         groups.add((PropertyGroupMetadata<VPC>)e.getElementAdded());
                     } else {
-                        var added = (VPM)e.getElementAdded();
+                        var added = (ValuePropertyMetadata<VPC>)e.getElementAdded();
                         values.put(added.getName(), added);
                     }
                 } else if (ComponentPropertyMetadata.class.isAssignableFrom(e.getElementAdded().getClass())) {
-                    var added = (CPM)e.getElementAdded();
+                    var added = (ComponentPropertyMetadata<CPC, P>)e.getElementAdded();
                     subComponents.put(added.getName(), added);
                 }
             } else if (e.wasRemoved() && e.getElementRemoved() != null) {
@@ -168,7 +168,7 @@ public class ComponentClassMetadata<T, CC,
                 .collect(Collectors.toSet()));
     }
 
-    public VPM getValueProperty(PropertyName propertyName) {
+    public ValuePropertyMetadata<VPC> getValueProperty(PropertyName propertyName) {
         if (!shadowedProperties.contains(propertyName)) {
             return values.get(propertyName);
         }
@@ -182,14 +182,14 @@ public class ComponentClassMetadata<T, CC,
      */
     public Set<CPM> getSubComponentProperties() {
         return Collections.unmodifiableSet(subComponents.values().stream()
-                .map(i -> i)
+                .map(i -> (CPM)i)
                 .filter(c -> !shadowedProperties.contains(c.getName()))
                 .collect(Collectors.toSet()));
     }
 
     public CPM getSubComponentProperty(PropertyName propertyName) {
         if (!shadowedProperties.contains(propertyName)) {
-            return subComponents.get(propertyName);
+            return (CPM)subComponents.get(propertyName);
         }
         return null;
     }

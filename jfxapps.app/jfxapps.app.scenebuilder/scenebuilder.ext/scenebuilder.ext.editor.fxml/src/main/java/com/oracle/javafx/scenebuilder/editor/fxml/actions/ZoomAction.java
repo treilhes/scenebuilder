@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,14 +36,13 @@ package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
@@ -55,8 +54,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.zoom", descriptionKey = "action.description.zoom")
 public class ZoomAction extends AbstractAction {
 
@@ -66,8 +64,13 @@ public class ZoomAction extends AbstractAction {
     private final Workspace workspace;
     private double scaleValue;
 
-    public ZoomAction(ActionExtensionFactory extensionFactory, Workspace workspace) {
-        super(extensionFactory);
+    //@formatter:off
+    public ZoomAction(
+            I18N i18n,
+            ActionExtensionFactory extensionFactory,
+            Workspace workspace) {
+        //@formatter:on
+        super(i18n, extensionFactory);
         this.workspace = workspace;
 
     }
@@ -90,9 +93,7 @@ public class ZoomAction extends AbstractAction {
         return ActionStatus.DONE;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-    @Lazy
+    @ApplicationInstanceSingleton
     public static class MenuProvider implements MenuItemProvider {
 
         private final ActionFactory actionFactory;
@@ -127,8 +128,7 @@ public class ZoomAction extends AbstractAction {
                 RadioMenuItem mi = new RadioMenuItem();
                 mi.setToggleGroup(zoomToggle);
 
-                mi = menuBuilder.radioMenuItem().menuItem(mi).id(menuId).action(zAction)
-                        .title(title).build();
+                mi = menuBuilder.radioMenuItem().menuItem(mi).id(menuId).action(zAction).title(title).build();
 
                 MenuItemAttachment attachment = MenuItemAttachment.create(mi, target, positionRequest);
 

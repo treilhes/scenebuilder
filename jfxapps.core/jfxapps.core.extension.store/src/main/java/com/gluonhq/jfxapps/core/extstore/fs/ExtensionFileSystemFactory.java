@@ -41,8 +41,9 @@ import java.util.ServiceLoader.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
@@ -58,12 +59,16 @@ public class ExtensionFileSystemFactory {
 
     private final Dialog dialog;
 
+    private final JfxAppsPlatform jfxAppsPlatform;
+
     public ExtensionFileSystemFactory(
             I18N i18n,
+            JfxAppsPlatform jfxAppsPlatform,
             FileSystem fileSystem,
             Dialog dialog) {
         super();
         this.i18n = i18n;
+        this.jfxAppsPlatform = jfxAppsPlatform;
         this.fileSystem = fileSystem;
         this.dialog = dialog;
     }
@@ -84,7 +89,7 @@ public class ExtensionFileSystemFactory {
 
         String folderName = instance.getId().toString();
 
-        File target = new File(fileSystem.getApplicationDataFolder(), folderName);
+        File target = new File(jfxAppsPlatform.getApplicationDataFolder(), folderName);
 
         return new ExtensionFileSystemImpl(i18n, dialog, target.toPath());
     }

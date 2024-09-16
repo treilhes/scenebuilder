@@ -44,24 +44,23 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.ContextManager;
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.boot.context.annotation.DeportedSingleton;
+import com.gluonhq.jfxapps.boot.api.context.ContextManager;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.MultipleProgressListener;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.DeportedSingleton;
+import com.gluonhq.jfxapps.boot.api.layer.Layer;
+import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
 import com.gluonhq.jfxapps.boot.internal.context.config.DefaultExtensionContextConfig;
-import com.gluonhq.jfxapps.boot.layer.Layer;
 import com.gluonhq.jfxapps.boot.layer.LayerNotFoundException;
-import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
-import com.gluonhq.jfxapps.boot.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.loader.extension.ExtensionValidator;
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
-import com.gluonhq.jfxapps.boot.loader.extension.SealedExtension;
 import com.gluonhq.jfxapps.boot.loader.model.AbstractExtension;
 
 // TODO: Auto-generated Javadoc
@@ -216,8 +215,7 @@ public class ContextBootstraper {
             childrenDeportedClasses.addAll(partionedByDeportable.get(Boolean.TRUE));
         }
 
-        ClassLoader classloader = currentLayer.getLoader();
-        JfxAppContext context = contextManager.create(parentContextId, layerId, classloader, classes, childrenDeportedClasses, singletonInstances,
+        JfxAppContext context = contextManager.create(parentContextId, currentLayer, classes, childrenDeportedClasses, singletonInstances,
                 progressListener);
 
         return context;

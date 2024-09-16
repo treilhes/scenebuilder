@@ -40,7 +40,7 @@ import java.util.UUID;
 
 import org.scenebuilder.fxml.api.SbApiExtension;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.debugmenu.action.ToggleDebugViewVisibilityAction;
 import com.oracle.javafx.scenebuilder.debugmenu.controller.DebugMenuController;
 import com.oracle.javafx.scenebuilder.debugmenu.controller.DebugMenuWindowController;

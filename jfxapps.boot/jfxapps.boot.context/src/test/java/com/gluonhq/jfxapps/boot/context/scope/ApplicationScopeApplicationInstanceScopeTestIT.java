@@ -59,11 +59,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Scope;
 
-import com.gluonhq.jfxapps.boot.context.Application;
-import com.gluonhq.jfxapps.boot.context.ApplicationInstance;
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.Application;
+import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 import com.gluonhq.jfxapps.boot.context.impl.JfxAppContextImpl;
 
 import jakarta.annotation.PreDestroy;
@@ -75,7 +75,7 @@ class ApplicationScopeApplicationInstanceScopeTestIT {
 
     @BeforeEach
     public void init() {
-        JfxAppContext.applicationScope.clear();
+        JfxAppContextImpl.applicationScope.clear();
     }
 
     @Test
@@ -94,36 +94,36 @@ class ApplicationScopeApplicationInstanceScopeTestIT {
         context3.setParent(context);
         context3.refresh();
 
-        JfxAppContext.applicationScope.unbindScope();
+        JfxAppContextImpl.applicationScope.unbindScope();
         var appScope1Bean = context2.getBean(AppBean.class);
 
-        JfxAppContext.applicationInstanceScope.unbindScope();
+        JfxAppContextImpl.applicationInstanceScope.unbindScope();
         var appInstScope1Bean = context2.getBean(AppInstBean.class);
         var appInstScope1BeanSomeBean1 = context2.getBean(SomeBean.class);
 
-        JfxAppContext.applicationInstanceScope.unbindScope();
+        JfxAppContextImpl.applicationInstanceScope.unbindScope();
         var appInstScope2Bean = context2.getBean(AppInstBean.class);
         var appInstScope2BeanSomeBean1 = context2.getBean(SomeBean.class);
 
-        JfxAppContext.applicationScope.unbindScope();
+        JfxAppContextImpl.applicationScope.unbindScope();
         var app2Scope1Bean = context3.getBean(App2Bean.class);
 
-        JfxAppContext.applicationInstanceScope.unbindScope();
+        JfxAppContextImpl.applicationInstanceScope.unbindScope();
         var app2InstScope1Bean = context3.getBean(App2InstBean.class);
         var app2InstScope1BeanSomeBean1 = context3.getBean(SomeBean.class);
 
-        JfxAppContext.applicationInstanceScope.unbindScope();
+        JfxAppContextImpl.applicationInstanceScope.unbindScope();
         var app2InstScope2Bean = context3.getBean(App2InstBean.class);
         var app2InstScope2BeanSomeBean1 = context3.getBean(SomeBean.class);
 
 
-        assertEquals(2, JfxAppContext.applicationScope.getAvailableScopes().size());
-        assertEquals(4, JfxAppContext.applicationInstanceScope.getAvailableScopes().size());
+        assertEquals(2, JfxAppContextImpl.applicationScope.getAvailableScopes().size());
+        assertEquals(4, JfxAppContextImpl.applicationInstanceScope.getAvailableScopes().size());
 
-        JfxAppContext.applicationScope.removeScope(appScope1Bean);
+        JfxAppContextImpl.applicationScope.removeScope(appScope1Bean);
 
-        assertEquals(1, JfxAppContext.applicationScope.getAvailableScopes().size());
-        assertEquals(2, JfxAppContext.applicationInstanceScope.getAvailableScopes().size());
+        assertEquals(1, JfxAppContextImpl.applicationScope.getAvailableScopes().size());
+        assertEquals(2, JfxAppContextImpl.applicationInstanceScope.getAvailableScopes().size());
 
         Mockito.verify(appScope1Bean).destroyMe();
         Mockito.verify(appInstScope1Bean).destroyMe();
@@ -142,10 +142,10 @@ class ApplicationScopeApplicationInstanceScopeTestIT {
         Mockito.verifyNoMoreInteractions(appScope1Bean, appInstScope1Bean, appInstScope1BeanSomeBean1,
                 appInstScope2Bean, appInstScope2BeanSomeBean1);
 
-        JfxAppContext.applicationScope.removeScope(app2Scope1Bean);
+        JfxAppContextImpl.applicationScope.removeScope(app2Scope1Bean);
 
-        assertEquals(0, JfxAppContext.applicationScope.getAvailableScopes().size());
-        assertEquals(0, JfxAppContext.applicationInstanceScope.getAvailableScopes().size());
+        assertEquals(0, JfxAppContextImpl.applicationScope.getAvailableScopes().size());
+        assertEquals(0, JfxAppContextImpl.applicationInstanceScope.getAvailableScopes().size());
 
         Mockito.verify(app2Scope1Bean).destroyMe();
         Mockito.verify(app2InstScope1Bean).destroyMe();
@@ -177,27 +177,27 @@ class ApplicationScopeApplicationInstanceScopeTestIT {
         context3.setParent(context);
         context3.refresh();
 
-        JfxAppContext.applicationScope.unbindScope();
+        JfxAppContextImpl.applicationScope.unbindScope();
         var appScope1Bean = context2.getBean(AppBean.class);
 
-        JfxAppContext.applicationInstanceScope.unbindScope();
+        JfxAppContextImpl.applicationInstanceScope.unbindScope();
         var appInstScope1Bean = context2.getBean(AppInstBean.class);
 
-        JfxAppContext.applicationScope.unbindScope();
+        JfxAppContextImpl.applicationScope.unbindScope();
         var app2Scope1Bean = context3.getBean(App2Bean.class);
 
-        JfxAppContext.applicationInstanceScope.unbindScope();
+        JfxAppContextImpl.applicationInstanceScope.unbindScope();
         var app2InstScope1Bean = context3.getBean(App2InstBean.class);
 
 
 
-        assertEquals(app2Scope1Bean, JfxAppContext.applicationScope.getActiveScope().getScopedObject());
-        assertEquals(app2InstScope1Bean, JfxAppContext.applicationInstanceScope.getActiveScope().getScopedObject());
+        assertEquals(app2Scope1Bean, JfxAppContextImpl.applicationScope.getActiveScope().getScopedObject());
+        assertEquals(app2InstScope1Bean, JfxAppContextImpl.applicationInstanceScope.getActiveScope().getScopedObject());
 
-        JfxAppContext.applicationInstanceScope.setCurrentScope(appInstScope1Bean);
+        JfxAppContextImpl.applicationInstanceScope.setCurrentScope(appInstScope1Bean);
 
-        assertEquals(appScope1Bean, JfxAppContext.applicationScope.getActiveScope().getScopedObject());
-        assertEquals(appInstScope1Bean, JfxAppContext.applicationInstanceScope.getActiveScope().getScopedObject());
+        assertEquals(appScope1Bean, JfxAppContextImpl.applicationScope.getActiveScope().getScopedObject());
+        assertEquals(appInstScope1Bean, JfxAppContextImpl.applicationInstanceScope.getActiveScope().getScopedObject());
 
         context.close();
 
@@ -219,26 +219,26 @@ class ApplicationScopeApplicationInstanceScopeTestIT {
         context3.setParent(context);
         context3.refresh();
 
-        JfxAppContext.applicationScope.unbindScope();
+        JfxAppContextImpl.applicationScope.unbindScope();
         var appScope1Bean = context2.getBean(AppBean.class);
 
-        JfxAppContext.applicationInstanceScope.unbindScope();
+        JfxAppContextImpl.applicationInstanceScope.unbindScope();
         var appInstScope1Bean = context2.getBean(AppInstBean.class);
 
-        JfxAppContext.applicationScope.unbindScope();
+        JfxAppContextImpl.applicationScope.unbindScope();
         var app2Scope1Bean = context3.getBean(App2Bean.class);
 
-        JfxAppContext.applicationInstanceScope.unbindScope();
+        JfxAppContextImpl.applicationInstanceScope.unbindScope();
         var app2InstScope1Bean = context3.getBean(App2InstBean.class);
 
 
-        assertEquals(app2Scope1Bean, JfxAppContext.applicationScope.getActiveScope().getScopedObject());
-        assertEquals(app2InstScope1Bean, JfxAppContext.applicationInstanceScope.getActiveScope().getScopedObject());
+        assertEquals(app2Scope1Bean, JfxAppContextImpl.applicationScope.getActiveScope().getScopedObject());
+        assertEquals(app2InstScope1Bean, JfxAppContextImpl.applicationInstanceScope.getActiveScope().getScopedObject());
 
-        JfxAppContext.applicationScope.setCurrentScope(appScope1Bean);
+        JfxAppContextImpl.applicationScope.setCurrentScope(appScope1Bean);
 
-        assertEquals(appScope1Bean, JfxAppContext.applicationScope.getActiveScope().getScopedObject());
-        assertEquals(null, JfxAppContext.applicationInstanceScope.getActiveScope());
+        assertEquals(appScope1Bean, JfxAppContextImpl.applicationScope.getActiveScope().getScopedObject());
+        assertEquals(null, JfxAppContextImpl.applicationInstanceScope.getActiveScope());
 
         context.close();
 
@@ -264,13 +264,13 @@ class ApplicationScopeApplicationInstanceScopeTestIT {
 ////        var p = context2.getBean(ParentBean.class);
 ////        context2.getBean(CompositeBean.class);
 ////
-////        JfxAppContext.applicationScope.unbindScopes();
+////        JfxAppContextImpl.applicationScope.unbindScopes();
 ////
 ////        var scope2Bean = context2.getBean(AppBean.class);
 ////        var p2 = context2.getBean(ParentBean.class);
 ////        context2.getBean(CompositeBean.class);
 //
-//        //JfxAppContext.applicationScope.removeScope(scope1Bean);
+//        //JfxAppContextImpl.applicationScope.removeScope(scope1Bean);
 //
 //        context3.close();
 //        context2.close();

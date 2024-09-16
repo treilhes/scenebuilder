@@ -36,12 +36,13 @@ package com.gluonhq.jfxapps.core.fs.action.impl;
 import java.io.File;
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
 
@@ -56,13 +57,14 @@ public class OpenAction extends AbstractOpenFilesAction {
     // @formatter:off
     public OpenAction(
             I18N i18n,
+            JfxAppPlatform jfxAppPlatform,
             ActionExtensionFactory extensionFactory,
             Dialog dialog,
             InstancesManager main,
             RecentItemsPreference recentItemsPreference,
             FileSystem fileSystem) {
      // @formatter:on
-        super(i18n, extensionFactory, dialog, main, recentItemsPreference);
+        super(i18n, jfxAppPlatform, extensionFactory, dialog, main, recentItemsPreference);
         this.fileSystem = fileSystem;
     }
 

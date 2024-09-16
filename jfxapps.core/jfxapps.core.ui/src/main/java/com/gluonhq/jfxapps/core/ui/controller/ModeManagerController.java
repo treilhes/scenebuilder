@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,13 +41,15 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.content.mode.AbstractModeController;
 import com.gluonhq.jfxapps.core.api.content.mode.Mode;
 import com.gluonhq.jfxapps.core.api.content.mode.ModeDescriptor;
 import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
 import com.gluonhq.jfxapps.core.api.content.mode.ModeProvider;
+import com.gluonhq.jfxapps.core.api.dnd.Drag;
+import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
@@ -60,6 +62,7 @@ public class ModeManagerController implements ModeManager {
 
     private AbstractModeController previousMode = null;
     private AbstractModeController currentMode = null;
+    private Object defaultModeId = null;
 
     private final List<ModeProvider> modeProviders;
     private final JfxAppContext context;
@@ -69,15 +72,24 @@ public class ModeManagerController implements ModeManager {
     public ModeManagerController(
             JfxAppContext context,
             ApplicationInstanceEvents documentManager,
-            List<ModeProvider> modeProviders
+            List<ModeProvider> modeProviders,
+            JobManager jobManager,
+            Drag drag
             ) {
         super();
         this.modeProviders = modeProviders;
         this.context = context;
+
+        documentManager.selectionDidChange().subscribe(s -> selectionDidChange());
+        documentManager.fxomDocument().subscribe(f -> fxomDocumentDidChange(f));
+        jobManager.revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
+        drag.dragSourceProperty().addListener((ov, t, t1) -> dragSourceDidChange());
+        drag.dropTargetProperty().addListener((ov, t, t1) -> dropTargetDidChange());
     }
 
     private void initialiazeForDocument(Class<? extends FXOMDocument> docClass) {
 
+        // FIXME what's the point of this check FXOMDocument is FXOMDocument
         if (currentDocumentClass == docClass) {
             return;
         }
@@ -89,7 +101,7 @@ public class ModeManagerController implements ModeManager {
         currentMode = null;
         availableModes.clear();
 
-        final AtomicReference<Object> defaultModeId = new AtomicReference<>();
+
 
         modeProviders.forEach(mp -> {
             for (ModeDescriptor modeDescriptor:mp.getModes()) {
@@ -102,15 +114,14 @@ public class ModeManagerController implements ModeManager {
                     availableModes.put(instance.getModeId(), instance);
 
                     if (modeDescriptor.defaultMode()) {
-                        defaultModeId.set(instance.getModeId());
+                        defaultModeId = instance.getModeId();
                     }
                 }
             }
         });
 
-        Object modeId = defaultModeId.get();
-        if (modeId != null) {
-            enableMode(modeId);
+        if (defaultModeId != null) {
+            enableMode(defaultModeId);
         }
     }
 
@@ -172,37 +183,51 @@ public class ModeManagerController implements ModeManager {
         currentMode.didBecomeActive(previousMode);
     }
 
-    @Override
-    public void fxomDocumentDidChange(FXOMDocument oldDocument) {
+    private void fxomDocumentDidChange(FXOMDocument oldDocument) {
         initialiazeForDocument(oldDocument.getClass());
         if (currentMode != null) {
             currentMode.fxomDocumentDidChange(oldDocument);
         }
     }
 
-    @Override
-    public void editorSelectionDidChange() {
+
+    /**
+     * @treatAsPrivate job manager revision has changed
+     */
+    private void jobManagerRevisionDidChange() {
+        enableDefaultMode();
+    }
+
+    private void selectionDidChange() {
         if (currentMode != null) {
             currentMode.editorSelectionDidChange();
         }
     }
 
-    @Override
-    public void dropTargetDidChange() {
+    private void dragSourceDidChange() {
+        enableDefaultMode();
+    }
+
+    private void dropTargetDidChange() {
         if (currentMode != null) {
             currentMode.dropTargetDidChange();
         }
     }
 
     @Override
-    public void fxomDocumentDidRefreshSceneGraph() {
-        if (currentMode != null) {
-            currentMode.fxomDocumentDidRefreshSceneGraph();
-        }
+    public Mode getEnabledMode() {
+        return currentMode;
     }
 
     @Override
-    public Mode getEnabledMode() {
-        return currentMode;
+    public void enableDefaultMode() {
+        enableMode(defaultModeId);
+    }
+
+    @Override
+    public void didRefreshSceneGraph() {
+        if (currentMode != null) {
+            currentMode.fxomDocumentDidRefreshSceneGraph();
+        }
     }
 }

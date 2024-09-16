@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.core.api.javafx.internal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 
 import javafx.event.Event;
 import javafx.event.EventDispatchChain;

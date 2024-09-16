@@ -7,6 +7,9 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+
 public class ExtensionValidator {
 
     private final static Logger logger = LoggerFactory.getLogger(ExtensionValidator.class);

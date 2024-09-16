@@ -44,8 +44,7 @@ import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
@@ -83,6 +82,7 @@ public class DockPanelController implements Dock {
 
     private static final Logger logger = LoggerFactory.getLogger(DockPanelController.class);
 
+    private final JfxAppPlatform jfxAppPlatform;
     private final DockManager dockManager;
     private final List<DockType<?>> dockTypes;
     private final LastDockUuidPreference lastDockUuidPreference;
@@ -115,6 +115,7 @@ public class DockPanelController implements Dock {
      */
     // @formatter:off
     public DockPanelController(
+            JfxAppPlatform jfxAppPlatform,
             DockManager dockManager,
             ViewManager viewManager,
             LastDockUuidPreference lastDockUuidPreference,
@@ -124,6 +125,7 @@ public class DockPanelController implements Dock {
      // @formatter:on
 
         this.id = UUID.randomUUID();
+        this.jfxAppPlatform= jfxAppPlatform;
         this.dockManager = dockManager;
         this.lastDockUuidPreference = lastDockUuidPreference;
         this.lastDockDockTypePreference = lastDockDockTypePreference;
@@ -228,7 +230,7 @@ public class DockPanelController implements Dock {
             view.parentDockProperty().set(null);
             viewDeleted(dockContext.getView());
 
-            JfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
+            jfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
                 updateDockView(isMinimized());
             });
         }
@@ -250,7 +252,7 @@ public class DockPanelController implements Dock {
         lastDockUuidPreference.writeToJavaPreferences();
         view.parentDockProperty().set(this);
 
-        JfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
+        jfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
             DockContext initialContext = new DockContext(view, viewAttachment, null, null, null);
             var dockContext = dockTypeProperty().get().computeView(initialContext);
             views.put(view, dockContext);

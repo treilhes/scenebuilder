@@ -37,13 +37,12 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.boot.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractKeyGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
@@ -60,7 +59,7 @@ import javafx.scene.input.InputEvent;
 /**
  *
  */
-@Prototype
+@ApplicationInstancePrototype
 public class MoveWithKeyGesture extends AbstractKeyGesture {
 
     private final Selection selection;
@@ -95,9 +94,8 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
         final double moveX = extend * vectorX;
         final double moveY = extend * vectorY;
 
-        assert selection.getGroup() instanceof DSelectionGroupFactory; // Because (1)
-        final DSelectionGroupFactory osg
-                = (DSelectionGroupFactory) selection.getGroup();
+        assert selection.getGroup() instanceof ObjectSelectionGroup; // Because (1)
+        final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
 
         /*
          * Updates layoutX/layoutY of the selected scene graph objects.
@@ -116,10 +114,9 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
     protected void keyReleased() {
         keyPressed();
 
-        assert selection.getGroup() instanceof DSelectionGroupFactory; // Because (1)
+        assert selection.getGroup() instanceof ObjectSelectionGroup; // Because (1)
 
-        final DSelectionGroupFactory osg
-                = (DSelectionGroupFactory) selection.getGroup();
+        final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
 
         // Builds a RelocateSelectionJob
         final Map<FXOMObject, Point2D> locationMap = new HashMap<>();
@@ -181,10 +178,9 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
         }
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public static class Factory extends GestureFactory<MoveWithKeyGesture> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
         public MoveWithKeyGesture getGesture() {

@@ -33,11 +33,11 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.node;
 
-import org.scenebuilder.fxml.api.Content;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
 
 import javafx.scene.Node;

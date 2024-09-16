@@ -33,7 +33,8 @@
  */
 package com.gluonhq.jfxapps.core.ui.dialog;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
@@ -42,7 +43,7 @@ import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 
 import javafx.stage.Window;
 
-@com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton
+@ApplicationInstanceSingleton
 public class DialogController implements Dialog {
 
     private final I18N i18n;

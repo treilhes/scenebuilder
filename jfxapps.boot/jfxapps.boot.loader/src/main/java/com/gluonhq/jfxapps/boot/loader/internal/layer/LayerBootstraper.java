@@ -42,14 +42,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.context.MultipleProgressListener;
-import com.gluonhq.jfxapps.boot.layer.InvalidLayerException;
-import com.gluonhq.jfxapps.boot.layer.Layer;
-import com.gluonhq.jfxapps.boot.layer.ModuleLayerManager;
+import com.gluonhq.jfxapps.boot.api.context.MultipleProgressListener;
+import com.gluonhq.jfxapps.boot.api.layer.InvalidLayerException;
+import com.gluonhq.jfxapps.boot.api.layer.Layer;
+import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.boot.loader.content.ExtensionContentProvider;
 import com.gluonhq.jfxapps.boot.loader.model.AbstractExtension;
 import com.gluonhq.jfxapps.boot.loader.model.LoadState;
-import com.gluonhq.jfxapps.boot.platform.JfxAppsPlatform;
 
 /**
  * The Class LayerBootstraper.

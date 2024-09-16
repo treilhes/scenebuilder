@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.boot.maven.client.model;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.RepositoryType;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

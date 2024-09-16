@@ -21,5 +21,6 @@
     <module>jfxapps.boot.jpa</module>
 
     <module>jfxapps.boot.jpms.patches</module>
+    <module>jfxapps.boot.api</module>
   </modules>
 </project>

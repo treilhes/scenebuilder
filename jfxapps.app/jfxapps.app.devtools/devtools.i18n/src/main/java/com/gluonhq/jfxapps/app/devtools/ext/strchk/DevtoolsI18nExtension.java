@@ -39,7 +39,7 @@ import java.util.UUID;
 import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
 import com.gluonhq.jfxapps.app.devtools.ext.strchk.action.ShowI18nToolAction;
 import com.gluonhq.jfxapps.app.devtools.ext.strchk.controller.ResourceLocationsController;
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 
 public class DevtoolsI18nExtension implements OpenExtension  {
 

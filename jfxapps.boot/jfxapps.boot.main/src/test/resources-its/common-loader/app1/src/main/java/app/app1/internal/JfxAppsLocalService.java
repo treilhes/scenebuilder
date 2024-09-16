@@ -33,7 +33,7 @@
  */
 package app.app1.internal;
 
-import com.gluonhq.jfxapps.boot.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 
 import app.app1.api.JfxAppsService;
 

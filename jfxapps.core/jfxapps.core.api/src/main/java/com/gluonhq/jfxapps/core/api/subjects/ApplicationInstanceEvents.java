@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.core.api.subjects;
 import java.nio.file.Path;
 import java.util.Map;
 
-import com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.css.StylesheetProvider;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;

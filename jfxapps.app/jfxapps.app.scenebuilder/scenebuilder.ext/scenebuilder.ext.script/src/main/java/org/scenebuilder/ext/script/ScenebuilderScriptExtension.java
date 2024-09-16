@@ -41,7 +41,7 @@ import org.scenebuilder.ext.script.i18n.I18NScenebuilderScript;
 import org.scenebuilder.ext.script.preference.global.StaticLoadPreference;
 import org.scenebuilder.fxml.api.SbApiExtension;
 
-import com.gluonhq.jfxapps.boot.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 
 public class ScenebuilderScriptExtension implements OpenExtension {
 

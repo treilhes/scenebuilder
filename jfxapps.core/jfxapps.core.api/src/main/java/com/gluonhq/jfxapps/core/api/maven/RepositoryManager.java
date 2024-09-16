@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.maven;
 
-import com.gluonhq.jfxapps.boot.maven.client.api.Repository;
+import com.gluonhq.jfxapps.boot.api.maven.Repository;
 
 import javafx.scene.Node;
 

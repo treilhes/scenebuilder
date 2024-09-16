@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,12 +33,13 @@
  */
 package com.gluonhq.jfxapps.core.ui.dock;
 
-import com.gluonhq.jfxapps.boot.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 
 import jakarta.inject.Provider;
 
-@com.gluonhq.jfxapps.boot.context.annotation.ApplicationInstanceSingleton
+@ApplicationInstanceSingleton
 public class DockWindowFactory {
 
     private final JfxAppContext context;
