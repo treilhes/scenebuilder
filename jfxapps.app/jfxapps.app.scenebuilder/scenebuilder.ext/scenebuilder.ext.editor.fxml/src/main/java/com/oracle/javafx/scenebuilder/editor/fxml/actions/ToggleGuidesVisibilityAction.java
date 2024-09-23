@@ -43,7 +43,7 @@ import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.editor.fxml.controller.ContentPanelController;
+import com.gluonhq.jfxapps.core.ui.controller.ContentPanelController;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.toggle.guides.visibility", descriptionKey = "action.description.toggle.guides.visibility")

@@ -53,7 +53,7 @@ import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.api.control.Pring;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.editor.fxml.controller.EditModeController;
@@ -75,7 +75,7 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
     private Pring<?> scopeHilit;
     private final Set<FXOMObject> candidates = new HashSet<>();
     private final Rectangle marqueeRect = new Rectangle();
-    private final Driver driver;
+    private final SbDriver driver;
     private Layer<Rudder> rudderLayer;
     private ModeManager modeManager;
     private final FXOMObjectMask.Factory maskFactory;
@@ -84,7 +84,7 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
 
     protected SelectWithMarqueeGesture(
             ApplicationInstanceEvents documentManager,
-            Driver driver,
+            SbDriver driver,
             Selection selection,
             FXOMObjectMask.Factory maskFactory,
             @Lazy Workspace workspace,

@@ -43,10 +43,12 @@ public interface ContextManager {
 
     JfxAppContext get(UUID contextId);
 
+    JfxAppContext get(ModuleLayer moduleLayer);
+
     boolean exists(UUID contextId);
 
-    JfxAppContext create(UUID parentContextId, Layer layer, Set<Class<?>> classes,
-            Set<Class<?>> deportedClasses, List<Object> singletonInstances, MultipleProgressListener progressListener);
+    JfxAppContext create(UUID parentContextId, Layer layer, Set<Class<?>> classes, Set<Class<?>> deportedClasses,
+            List<Object> singletonInstances, MultipleProgressListener progressListener);
 
     void clear();
 

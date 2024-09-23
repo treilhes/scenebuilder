@@ -130,7 +130,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
 
     private final PreferenceManager preferenceManager;
     private final DockViewController viewMenuController;
-    private final List<WindowPreferenceTracker> trackers;
+    private final WindowPreferenceTracker tracker;
 
 
 
@@ -167,7 +167,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
             DockViewController viewMenuController,
             InstancesManager main,
             ApplicationEvents sceneBuilderManager,
-            List<WindowPreferenceTracker> trackers,
+            WindowPreferenceTracker tracker,
             //Provider<PathPreference> pathPreference,
             //Provider<LastDockUuidPreference> lastDockUuidPreference,
             Provider<Optional<List<InitWithDocument>>> initializations,
@@ -204,7 +204,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
         this.initializations = initializations;
         this.finalizations = finalizations;
 
-        this.trackers = trackers;
+        this.tracker = tracker;
 
         this.preferenceManager = new PreferenceManager();
 
@@ -574,11 +574,14 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
     @Override
     @FxThread
     public void openWindow() {
-        documentWindow.openWindow();
+        jfxAppPlatform.runOnFxThreadWithActiveScope(() ->{
+            documentWindow.openWindow();
+            tracker.initialize(documentWindow);
+            // initialize preference binding
+            preferenceManager.apply();
+            preferenceManager.track();
+        });
 
-        // initialize preference binding
-        preferenceManager.apply();
-        preferenceManager.track();
     }
 
     @Override
@@ -629,21 +632,20 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
 
         public void apply() {
             viewMenuController.performLoadDockAndViewsPreferences();
-            trackers.forEach(WindowPreferenceTracker::apply);
+            tracker.apply();
         }
 
         public void onClose() {
-            trackers.forEach(WindowPreferenceTracker::onClose);
+            tracker.onClose();
         }
 
         public void track() {
-            trackers.forEach(WindowPreferenceTracker::track);
+            tracker.track();
         }
 
         public void untrack() {
-            trackers.forEach(WindowPreferenceTracker::untrack);
+            tracker.untrack();
         }
-
     }
 }
 

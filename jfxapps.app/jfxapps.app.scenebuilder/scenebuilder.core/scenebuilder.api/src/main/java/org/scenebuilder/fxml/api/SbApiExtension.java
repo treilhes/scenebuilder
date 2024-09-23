@@ -42,10 +42,8 @@ import org.scenebuilder.fxml.api.i18n.I18NFxmlApi;
 import com.gluonhq.jfxapps.boot.api.loader.extension.ApplicationExtension;
 import com.gluonhq.jfxapps.core.api.application.annotation.EditorDescriptor;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.oracle.javafx.scenebuilder.api.control.driver.DriverExtensionRegistry;
-import com.oracle.javafx.scenebuilder.api.control.driver.GenericDriver;
+import com.oracle.javafx.scenebuilder.api.control.driver.SbDriverImpl;
 import com.oracle.javafx.scenebuilder.api.control.inlineedit.SimilarInlineEditorBounds;
-import com.oracle.javafx.scenebuilder.api.control.pickrefiner.NoPickRefiner;
 import com.oracle.javafx.scenebuilder.fxml.preferences.global.ParentRingColorPreference;
 
 @EditorDescriptor(
@@ -81,12 +79,11 @@ public class SbApiExtension implements ApplicationExtension  {
                 FXOMObjectMask.class,
                 FXOMObjectMask.Factory.class,
 
-                DriverExtensionRegistry.class,
-                GenericDriver.class,
+                SbDriverImpl.class,
 
 
 
-                NoPickRefiner.class,
+
 
                 SimilarInlineEditorBounds.class,
                 I18NFxmlApi.class

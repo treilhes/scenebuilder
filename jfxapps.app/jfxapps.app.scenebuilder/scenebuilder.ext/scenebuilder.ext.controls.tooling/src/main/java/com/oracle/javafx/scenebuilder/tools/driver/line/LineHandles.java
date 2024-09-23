@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.tools.driver.line;
 
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.Gesture;
@@ -71,7 +71,7 @@ public class LineHandles extends AbstractCurveHandles<Line> {
 
     public LineHandles(
             Workspace workspace,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             DiscardGesture.Factory discardGestureFactory,
             EditCurveGesture.Factory editCurveGestureFactory) {
         super(workspace, documentManager, discardGestureFactory, Line.class);

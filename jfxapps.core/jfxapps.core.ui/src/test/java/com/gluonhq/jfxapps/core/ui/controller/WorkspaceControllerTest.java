@@ -56,6 +56,7 @@ import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.core.api.ui.tool.Driver;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.ui.preferences.global.BackgroundImagePreference;
 import com.gluonhq.jfxapps.core.ui.preferences.global.BackgroundImagePreference.BackgroundImage;
@@ -113,6 +114,11 @@ class WorkspaceControllerTest {
         @Bean
         ModeManager nodeManager() {
             return Mockito.mock(ModeManager.class);
+        }
+
+        @Bean
+        Driver driver() {
+            return Mockito.mock(Driver.class);
         }
     }
 

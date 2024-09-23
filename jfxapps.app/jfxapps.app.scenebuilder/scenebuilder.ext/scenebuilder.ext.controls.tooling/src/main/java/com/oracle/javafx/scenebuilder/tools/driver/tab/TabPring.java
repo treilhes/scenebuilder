@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.tab;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -82,7 +82,7 @@ public class TabPring extends AbstractPring<Tab> {
 
     public TabPring(
             Content contentPanelController,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             SelectWithPringGesture.Factory selectWithPringGestureFactory) {
         super(contentPanelController, documentManager, Tab.class);
         this.selectWithPringGestureFactory = selectWithPringGestureFactory;

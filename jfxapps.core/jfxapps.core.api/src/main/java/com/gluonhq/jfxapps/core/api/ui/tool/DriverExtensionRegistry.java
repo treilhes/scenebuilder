@@ -31,19 +31,15 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api.control.pickrefiner;
+package com.gluonhq.jfxapps.core.api.ui.tool;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+public interface DriverExtensionRegistry {
+    public <U> void registerExtension(Class<U> extensionInterface);
 
-import javafx.scene.Node;
+    public <T, U extends T> void registerImplementationClass(Class<T> extensionInterface, Class<?> itemClass,
+            Class<U> implementation);
 
-@Singleton
-public class NoPickRefiner extends AbstractPickRefiner {
+    public <T, U extends T> Class<U> getImplementationClass(Class<T> extensionInterface, Class<?> itemClass);
 
-    @Override
-    public FXOMObject refinePick(Node hitNode, double sceneX, double sceneY, FXOMObject fxomObject) {
-        return fxomObject;
-    }
-
+    public <T, U extends T> U getImplementationInstance(Class<T> extensionInterface, Class<?> itemClass);
 }

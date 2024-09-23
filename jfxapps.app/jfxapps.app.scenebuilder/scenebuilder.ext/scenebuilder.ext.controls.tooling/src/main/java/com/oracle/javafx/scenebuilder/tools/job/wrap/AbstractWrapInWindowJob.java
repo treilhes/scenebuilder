@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.tools.job.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
@@ -65,7 +65,7 @@ public abstract class AbstractWrapInWindowJob extends AbstractWrapInJob {
     private final FXOMObjectMask.Factory designMaskFactory;
     private final AddPropertyJob.Factory addPropertyJobFactory;
 
-    public AbstractWrapInWindowJob(JobExtensionFactory extensionFactory, FxmlDocumentManager documentManager,
+    public AbstractWrapInWindowJob(JobExtensionFactory extensionFactory, ApplicationInstanceEvents documentManager,
             Selection selection, FXOMObjectMask.Factory designMaskFactory, IMetadata metadata,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             ToggleFxRootJob.Factory toggleFxRootJobFactory,
@@ -73,7 +73,7 @@ public abstract class AbstractWrapInWindowJob extends AbstractWrapInJob {
             SetDocumentRootJob.Factory setDocumentRootJobFactory,
             RemovePropertyValueJob.Factory removePropertyValueJobFactory,
             RemovePropertyJob.Factory removePropertyJobFactory,
-            ModifyObjectJob.Factory modifyObjectJobFactory,
+            FxomJobsFactory fxomJobsFactory,
             AddPropertyJob.Factory addPropertyJobFactory,
             DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
         super(extensionFactory, documentManager, selection, designMaskFactory, metadata, addPropertyValueJobFactory,

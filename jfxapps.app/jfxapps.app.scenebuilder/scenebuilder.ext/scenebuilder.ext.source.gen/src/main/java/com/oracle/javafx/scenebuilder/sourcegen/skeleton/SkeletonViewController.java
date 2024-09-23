@@ -46,9 +46,9 @@ import com.gluonhq.jfxapps.core.api.application.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 import com.gluonhq.jfxapps.core.api.util.FXOMDocumentUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
@@ -92,7 +92,7 @@ public class SkeletonViewController extends AbstractFxmlViewController {
             ApplicationEvents scenebuilderManager,
             FxmlDocumentManager documentManager,
             @Autowired ApplicationInstanceWindow document,
-            ViewMenuController viewMenuController) {
+            ViewMenu viewMenuController) {
         super(scenebuilderManager, documentManager, viewMenuController, SkeletonViewController.class.getResource("SkeletonWindow.fxml"), I18N.getBundle());
 
         this.documentManager = documentManager;

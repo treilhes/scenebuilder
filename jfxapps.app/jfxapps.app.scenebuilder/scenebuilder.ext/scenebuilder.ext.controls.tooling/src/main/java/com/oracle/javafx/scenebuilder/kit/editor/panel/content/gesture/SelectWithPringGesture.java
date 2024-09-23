@@ -33,15 +33,13 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseDragGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 
 import javafx.scene.input.MouseEvent;
@@ -58,10 +56,9 @@ public class SelectWithPringGesture extends AbstractMouseDragGesture {
     private FXOMInstance fxomInstance;
 
     protected SelectWithPringGesture(
-            Content contentPanelController,
             Selection selection,
             ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
-        super(contentPanelController);
+        super();
         this.selection = selection;
         this.objectSelectionGroupFactory = objectSelectionGroupFactory;
     }
@@ -131,10 +128,9 @@ public class SelectWithPringGesture extends AbstractMouseDragGesture {
 //        }
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationSingleton
     public static class Factory extends GestureFactory<SelectWithPringGesture> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
         public SelectWithPringGesture getGesture(FXOMInstance fxomInstance) {

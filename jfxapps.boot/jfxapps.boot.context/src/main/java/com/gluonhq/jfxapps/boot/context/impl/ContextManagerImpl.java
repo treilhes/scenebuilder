@@ -74,6 +74,11 @@ public class ContextManagerImpl implements ContextManager {
     }
 
     @Override
+    public JfxAppContext get(ModuleLayer moduleLayer) {
+        return layerToContexts.get(moduleLayer);
+    }
+
+    @Override
     public boolean exists(UUID contextId) {
         return uuidToContexts.containsKey(contextId);
     }

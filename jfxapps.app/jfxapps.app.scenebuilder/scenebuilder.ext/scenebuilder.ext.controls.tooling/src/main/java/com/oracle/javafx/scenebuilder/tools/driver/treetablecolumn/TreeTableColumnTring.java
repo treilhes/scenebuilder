@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.treetablecolumn;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -62,7 +62,7 @@ public class TreeTableColumnTring extends AbstractGenericTring<Object> {
 
     public TreeTableColumnTring(
             Content contentPanelController,
-            FxmlDocumentManager documentManager) {
+            ApplicationInstanceEvents documentManager) {
         super(contentPanelController, documentManager, Object.class);
     }
 

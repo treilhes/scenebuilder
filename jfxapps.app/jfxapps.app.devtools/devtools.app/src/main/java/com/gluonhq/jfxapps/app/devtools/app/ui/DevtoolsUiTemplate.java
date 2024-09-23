@@ -89,7 +89,7 @@ public class DevtoolsUiTemplate extends AbstractFxmlWindowController implements 
         final VBox rootVBox = (VBox) getRoot();
         rootVBox.getChildren().add(0, menuBar.getMenuBar());
         contentPanelHost.getChildren().add(mainContent.getRoot());
-        tracker.initialize(this);;
+        tracker.initialize(this);
     }
 
     @Override

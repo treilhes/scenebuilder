@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -91,7 +91,7 @@ public final class AddRowJob extends BatchSelectionJob {
     // @formatter:off
     protected AddRowJob(
             JobExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection,
             AddRowConstraintsJob.Factory addRowConstraintsJobFactory,
             ReIndexRowContentJob.Factory reIndexRowContentJobFactory,

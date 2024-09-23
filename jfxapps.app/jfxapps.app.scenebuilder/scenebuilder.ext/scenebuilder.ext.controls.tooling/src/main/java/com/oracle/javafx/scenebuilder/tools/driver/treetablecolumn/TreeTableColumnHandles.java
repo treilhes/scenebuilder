@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.tools.driver.treetablecolumn;
 
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
@@ -46,7 +46,7 @@ import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractResilientHandles;
 import com.oracle.javafx.scenebuilder.tools.driver.treetableview.TreeTableViewDesignInfoX;
@@ -91,9 +91,9 @@ public class TreeTableColumnHandles extends AbstractResilientHandles<Object> imp
     private final ResizeTreeTableColumnGesture.Factory resizeTreeTableColumnGestureFactory;
 
     public TreeTableColumnHandles(
-            Driver driver,
+            SbDriver driver,
             Workspace workspace,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory,
             FXOMObjectMask.Factory maskFactory,

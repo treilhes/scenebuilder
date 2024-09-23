@@ -67,7 +67,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.Pring;
 import com.oracle.javafx.scenebuilder.api.control.ResizeGuide;
@@ -116,7 +116,7 @@ public class EditModeController extends AbstractModeController implements Gestur
     public final static Class<Tring> TRING_LAYER = Tring.class;
 
     // private final SceneBuilderBeanFactory context;
-    private final Driver driver;
+    private final SbDriver driver;
 
     private SelectWithMarqueeGesture selectWithMarqueeGesture;
     private SelectAndMoveGesture selectAndMoveGesture;
@@ -159,7 +159,7 @@ public class EditModeController extends AbstractModeController implements Gestur
             Workspace workspace,
             Selection selection,
             DragGesture.Factory dragGestureFactory,
-            Driver driver,
+            SbDriver driver,
             Drag drag,
             ContextMenu contextMenu,
             MessageLogger messageLogger,

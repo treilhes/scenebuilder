@@ -192,16 +192,14 @@ public class ContextBootstraper {
 
         // handle classes from parent with @ApplicationSingleton annotation
         // handle classes from parent with @ApplicationInstanceSingleton annotation
-        if (isSealed) {
-            if (parent != null) {
-                classes.addAll(parent.getDeportedClasses());
-            }
+        if (parent == null) {
+            //do nothing, let sealed children know about deported classes
+        } else if (isSealed ) {
+            classes.addAll(parent.getDeportedClasses());
             classes.addAll(childrenDeportedClasses);
-            childrenDeportedClasses.clear();
+            childrenDeportedClasses.clear(); // deported classes are handled, so clear them
         } else {
-            if (parent != null) {
-                childrenDeportedClasses.addAll(parent.getDeportedClasses());
-            }
+            childrenDeportedClasses.addAll(parent.getDeportedClasses());
         }
 
         if (parent != null) {

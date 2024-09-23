@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.tools.driver.scene;
 
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -59,7 +59,7 @@ public class ScenePring extends AbstractNodePring<Node> {
     public ScenePring(
             SelectWithPringGesture.Factory selectWithPringGestureFactory,
             Content contentPanelController,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             FXOMObjectMask.Factory maskFactory) {
         super( contentPanelController, documentManager, selectWithPringGestureFactory, Node.class);
         this.maskFactory = maskFactory;

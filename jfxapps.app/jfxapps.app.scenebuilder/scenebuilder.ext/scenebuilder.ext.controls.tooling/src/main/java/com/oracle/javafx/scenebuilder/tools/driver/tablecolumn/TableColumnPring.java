@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.tablecolumn;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -65,7 +65,7 @@ public class TableColumnPring extends AbstractGenericPring<Object> {
 
     public TableColumnPring(
             Content contentPanelController,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             SelectWithPringGesture.Factory selectWithPringGestureFactory
             ) {
         super(contentPanelController, documentManager, Object.class);

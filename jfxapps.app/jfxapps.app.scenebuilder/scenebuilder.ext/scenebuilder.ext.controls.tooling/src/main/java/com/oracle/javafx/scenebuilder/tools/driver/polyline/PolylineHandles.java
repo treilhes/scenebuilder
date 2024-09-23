@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.Gesture;
@@ -72,7 +72,7 @@ public class PolylineHandles extends AbstractCurveHandles<Polyline> {
 
     public PolylineHandles(
             Workspace workspace,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             DiscardGesture.Factory discardGestureFactory,
             EditCurveGesture.Factory editCurveGestureFactory) {
         super(workspace, documentManager, discardGestureFactory, Polyline.class);

@@ -40,6 +40,8 @@ import java.util.UUID;
 import org.scenebuilder.fxml.api.SbApiExtension;
 
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.core.ui.controller.ContentPanelController;
+import com.gluonhq.jfxapps.core.ui.controller.ContextMenuController;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.BringForwardAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.BringToFrontAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.FocusContentAction;
@@ -52,8 +54,6 @@ import com.oracle.javafx.scenebuilder.editor.fxml.actions.ToggleSampleDataAction
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.ZoomAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.ZoomInAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.ZoomOutAction;
-import com.oracle.javafx.scenebuilder.editor.fxml.controller.ContentPanelController;
-import com.oracle.javafx.scenebuilder.editor.fxml.controller.ContextMenuController;
 import com.oracle.javafx.scenebuilder.editor.fxml.controller.EditModeController;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.DragGesture;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.ZoomGesture;

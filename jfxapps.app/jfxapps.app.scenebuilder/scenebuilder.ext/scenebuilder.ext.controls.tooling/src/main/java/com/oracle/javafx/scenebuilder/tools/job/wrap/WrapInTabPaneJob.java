@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.tools.job.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -76,7 +76,7 @@ public final class WrapInTabPaneJob extends AbstractWrapInJob {
     private final FXOMObjectMask.Factory designMaskFactory;
     private final AddPropertyValueJob.Factory addPropertyValueJobFactory;
 
-    protected WrapInTabPaneJob(JobExtensionFactory extensionFactory, FxmlDocumentManager documentManager,
+    protected WrapInTabPaneJob(JobExtensionFactory extensionFactory, ApplicationInstanceEvents documentManager,
             Selection selection, FXOMObjectMask.Factory designMaskFactory, IMetadata metadata,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             ToggleFxRootJob.Factory toggleFxRootJobFactory,
@@ -84,7 +84,7 @@ public final class WrapInTabPaneJob extends AbstractWrapInJob {
             SetDocumentRootJob.Factory setDocumentRootJobFactory,
             RemovePropertyValueJob.Factory removePropertyValueJobFactory,
             RemovePropertyJob.Factory removePropertyJobFactory,
-            ModifyObjectJob.Factory modifyObjectJobFactory,
+            FxomJobsFactory fxomJobsFactory,
             AddPropertyJob.Factory addPropertyJobFactory,
             DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
         super(extensionFactory, documentManager, selection, designMaskFactory, metadata, addPropertyValueJobFactory,

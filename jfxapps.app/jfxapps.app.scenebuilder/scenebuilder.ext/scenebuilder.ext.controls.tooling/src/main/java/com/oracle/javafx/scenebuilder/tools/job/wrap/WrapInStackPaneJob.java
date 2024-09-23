@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.job.wrap;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -62,7 +62,7 @@ import javafx.scene.layout.StackPane;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public final class WrapInStackPaneJob extends AbstractWrapInSubComponentJob {
 
-    protected WrapInStackPaneJob(JobExtensionFactory extensionFactory, FxmlDocumentManager documentManager,
+    protected WrapInStackPaneJob(JobExtensionFactory extensionFactory, ApplicationInstanceEvents documentManager,
             Selection selection, FXOMObjectMask.Factory designMaskFactory, IMetadata metadata,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             ToggleFxRootJob.Factory toggleFxRootJobFactory,
@@ -70,7 +70,7 @@ public final class WrapInStackPaneJob extends AbstractWrapInSubComponentJob {
             SetDocumentRootJob.Factory setDocumentRootJobFactory,
             RemovePropertyValueJob.Factory removePropertyValueJobFactory,
             RemovePropertyJob.Factory removePropertyJobFactory,
-            ModifyObjectJob.Factory modifyObjectJobFactory,
+            FxomJobsFactory fxomJobsFactory,
             AddPropertyJob.Factory addPropertyJobFactory,
             DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
         super(extensionFactory, documentManager, selection, designMaskFactory, metadata, addPropertyValueJobFactory,

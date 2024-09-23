@@ -37,7 +37,7 @@ import com.gluonhq.jfxapps.core.menu.MenuExtension;
 open module jfxapps.core.menu {
     exports com.gluonhq.jfxapps.core.menu;
     exports com.gluonhq.jfxapps.core.menu.i18n;
-    exports com.gluonhq.jfxapps.core.menu.menubar;
+    exports com.gluonhq.jfxapps.core.menu.controller;
 
     requires transitive jfxapps.core.api;
 

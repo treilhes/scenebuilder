@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.tools.driver.hbox;
 
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -64,7 +64,7 @@ public class HBoxTring extends AbstractNodeTring<HBox> {
 
     public HBoxTring(
             Content contentPanelController,
-            FxmlDocumentManager documentManager) {
+            ApplicationInstanceEvents documentManager) {
         super(contentPanelController, documentManager, HBox.class);
         
         crackLine.getStyleClass().add(TARGET_CRACK_CLASS);

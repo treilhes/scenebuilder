@@ -34,7 +34,7 @@
 
 package com.oracle.javafx.scenebuilder.tools.driver.gridpane;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -68,7 +68,7 @@ public class GridPanePring extends AbstractPring<GridPane> implements Initializi
 
     public GridPanePring(
             Content contentPanelController,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             SelectAndMoveInGridGesture.Factory selectAndMoveInGridGestureFactory) {
         super(contentPanelController, documentManager, GridPane.class);
         this.selectAndMoveInGridGestureFactory = selectAndMoveInGridGestureFactory;

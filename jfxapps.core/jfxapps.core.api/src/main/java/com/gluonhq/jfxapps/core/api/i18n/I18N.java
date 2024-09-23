@@ -63,7 +63,11 @@ public class I18N {
 
     private CombinedResourceBundle combinedBundle;
 
-    public I18N(List<BundleProvider> bundleProviders, boolean allowUnresolvedKeys) {
+    //@formatter:off
+    public I18N(
+            List<BundleProvider> bundleProviders,
+            boolean allowUnresolvedKeys) {
+        //@formatter:on
         List<ResourceBundle> bundles = bundleProviders.stream().map(BundleProvider::getBundle)
                 .collect(Collectors.toList());
         combinedBundle = new CombinedResourceBundle(bundles, allowUnresolvedKeys);

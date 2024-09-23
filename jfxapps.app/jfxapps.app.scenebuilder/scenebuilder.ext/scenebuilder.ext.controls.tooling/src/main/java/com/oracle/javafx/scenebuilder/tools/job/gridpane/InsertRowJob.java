@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -83,7 +83,7 @@ public final class InsertRowJob extends BatchSelectionJob {
  // @formatter:off
     protected InsertRowJob(
             JobExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection,
             InsertRowConstraintsJob.Factory insertRowConstraintsJobFactory,
             MoveRowContentJob.Factory moveRowContentJobFactory,

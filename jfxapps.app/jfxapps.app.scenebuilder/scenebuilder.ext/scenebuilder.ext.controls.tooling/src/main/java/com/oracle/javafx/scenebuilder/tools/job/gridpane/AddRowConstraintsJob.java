@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -98,7 +98,7 @@ public final class AddRowConstraintsJob extends BatchDocumentJob {
 
     protected AddRowConstraintsJob(SceneBuilderBeanFactory context,
             JobExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             AddPropertyJob.Factory addPropertyJobFactory,
             GridPaneHierarchyMask.Factory maskFactory) {

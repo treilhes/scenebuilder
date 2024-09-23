@@ -58,7 +58,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.util.MathUtils;
 import com.gluonhq.jfxapps.util.javafx.BoundsUtils;
-import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 import com.oracle.javafx.scenebuilder.editor.fxml.guides.MovingGuideController;
@@ -97,7 +97,7 @@ public class DragGesture extends AbstractGesture {
     private boolean guidesDisabled;
     private Node shadow;
 
-    private final Driver driver;
+    private final SbDriver driver;
 
     @SuppressWarnings("rawtypes")
     private Layer<Rudder> rudderLayer;
@@ -115,7 +115,7 @@ public class DragGesture extends AbstractGesture {
             Content content,
             Drag dragController,
             ModeManager modeManager,
-            Driver driver,
+            SbDriver driver,
             ApplicationInstanceEvents documentManager,
             SbFXOMObjectMask.Factory maskFactory,
             DefaultDragSourceFactory defaultDragSourceFactory,

@@ -44,9 +44,9 @@ import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -80,7 +80,7 @@ public class LogViewerController extends AbstractFxmlViewController {
             JfxAppPlatform jfxAppPlatform,
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
-            ViewMenuController viewMenuController) {
+            ViewMenu viewMenuController) {
         super(i18n, scenebuilderManager, documentManager, viewMenuController, LogViewerController.class.getResource("LogViewerWindow.fxml"));
         this.jfxAppPlatform = jfxAppPlatform;
     }

@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.tools.job.gridpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -78,22 +78,22 @@ public final class SpanJob extends BatchDocumentJob {
     private SpanAction spanAction;
     private final Selection selection;
     private final IMetadata metadata;
-    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
     private final GridPaneHierarchyMask.Factory maskFactory;
 
  // @formatter:off
     protected SpanJob(
             JobExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection,
             IMetadata metadata,
-            ModifyObjectJob.Factory modifyObjectJobFactory,
+            FxomJobsFactory fxomJobsFactory,
             GridPaneHierarchyMask.Factory maskFactory) {
     // @formatter:on
         super(extensionFactory, documentManager);
         this.selection = selection;
         this.metadata = metadata;
-        this.modifyObjectJobFactory = modifyObjectJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
         this.maskFactory = maskFactory;
     }
 

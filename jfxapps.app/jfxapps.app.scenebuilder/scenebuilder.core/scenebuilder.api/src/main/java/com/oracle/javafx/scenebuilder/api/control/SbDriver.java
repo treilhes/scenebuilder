@@ -39,7 +39,7 @@ import com.oracle.javafx.scenebuilder.api.control.outline.Outline;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 
-public interface Driver {
+public interface SbDriver {
 
 	FXOMObject refinePick(Node sceneGraphNode, double sceneX, double sceneY, FXOMObject match);
 

@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.tools.driver.gridpane;
 
 import java.util.Collections;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
@@ -44,7 +44,7 @@ import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
-import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractNodeHandles;
@@ -70,9 +70,9 @@ public class GridPaneHandles extends AbstractNodeHandles<GridPane> implements In
     private final ResizeRowGesture.Factory resizeRowGestureFactory;
 
     public GridPaneHandles(
-            Driver driver,
+            SbDriver driver,
             Workspace workspace,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory,
     		Selection selection,

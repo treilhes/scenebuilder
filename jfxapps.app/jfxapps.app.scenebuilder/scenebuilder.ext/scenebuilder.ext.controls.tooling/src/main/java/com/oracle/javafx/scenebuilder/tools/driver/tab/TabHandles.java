@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.tab;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
@@ -42,7 +42,7 @@ import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.util.javafx.BoundsUtils;
-import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractResilientHandles;
 import com.oracle.javafx.scenebuilder.tools.driver.tabpane.TabPaneDesignInfoX;
@@ -72,9 +72,9 @@ public class TabHandles extends AbstractResilientHandles<Tab> {
     private Node tabNode; // Skin node representing the tab
 
     public TabHandles(
-            Driver driver,
+            SbDriver driver,
             Workspace workspace,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory) {
         super(driver, workspace, documentManager, discardGestureFactory, resizeGestureFactory, Tab.class);

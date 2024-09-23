@@ -40,6 +40,7 @@ import java.util.UUID;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.ui.controller.ApplicationInstanceController;
 import com.gluonhq.jfxapps.core.ui.controller.ApplicationWindowTracker;
+import com.gluonhq.jfxapps.core.ui.controller.ContentPanelController;
 import com.gluonhq.jfxapps.core.ui.controller.ModeManagerController;
 import com.gluonhq.jfxapps.core.ui.controller.WorkspaceController;
 import com.gluonhq.jfxapps.core.ui.dialog.AlertDialog;
@@ -55,6 +56,14 @@ import com.gluonhq.jfxapps.core.ui.dock.DockTypeTab;
 import com.gluonhq.jfxapps.core.ui.dock.DockViewControllerImpl;
 import com.gluonhq.jfxapps.core.ui.dock.DockWindowController;
 import com.gluonhq.jfxapps.core.ui.dock.DockWindowFactory;
+import com.gluonhq.jfxapps.core.ui.dock.action.DockActionFactoryImpl;
+import com.gluonhq.jfxapps.core.ui.dock.action.impl.ChangeDockTypeAction;
+import com.gluonhq.jfxapps.core.ui.dock.action.impl.CloseDockAction;
+import com.gluonhq.jfxapps.core.ui.dock.action.impl.CloseViewAction;
+import com.gluonhq.jfxapps.core.ui.dock.action.impl.MoveToDockAction;
+import com.gluonhq.jfxapps.core.ui.dock.action.impl.ToggleMinimizeDockAction;
+import com.gluonhq.jfxapps.core.ui.dock.action.impl.ToggleViewVisibilityAction;
+import com.gluonhq.jfxapps.core.ui.dock.action.impl.UndockViewAction;
 import com.gluonhq.jfxapps.core.ui.dock.preferences.document.DockMinimizedPreference;
 import com.gluonhq.jfxapps.core.ui.dock.preferences.document.LastDockDockTypePreference;
 import com.gluonhq.jfxapps.core.ui.dock.preferences.document.LastDockUuidPreference;
@@ -72,6 +81,9 @@ import com.gluonhq.jfxapps.core.ui.preferences.document.XPosPreference;
 import com.gluonhq.jfxapps.core.ui.preferences.document.YPosPreference;
 import com.gluonhq.jfxapps.core.ui.preferences.global.BackgroundImagePreference;
 import com.gluonhq.jfxapps.core.ui.selectionbar.SelectionBarController;
+import com.gluonhq.jfxapps.core.ui.tool.DriverExtensionRegistryImpl;
+import com.gluonhq.jfxapps.core.ui.tool.GenericDriver;
+import com.gluonhq.jfxapps.core.ui.tool.NoPickRefiner;
 
 public class BaseUiExtension implements OpenExtension {
 
@@ -91,31 +103,26 @@ public class BaseUiExtension implements OpenExtension {
     public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
-                AlertDialog.class,
 
-                DialogController.class,
-                ApplicationInstanceController.class,
-                //EditorsManagerImpl.class,
-                ErrorDialog.class,
-                //temp EditorController.class,
-                I18NLayout.class,
-                InlineEditController.class,
+
+
+
+
 
                 //EditorInstancesController.class,
-                MaximizedPreference.class,
-                MessageBarController.class,
-                MessageLog.class,
-                MessagePanelController.class,
-                MessagePopupController.class,
-                ModeManagerController.class,
-
-                SelectionBarController.class,
-                StageHeightPreference.class,
-                StageWidthPreference.class,
-                TextViewDialog.class,
-                XPosPreference.class,
-                YPosPreference.class,
+                //EditorsManagerImpl.class,
+                //temp EditorController.class,
+                AlertDialog.class,
                 AnnotatedViewAttachmentProvider.class,
+                ApplicationInstanceController.class,
+                ApplicationWindowTracker.class,
+                BackgroundImagePreference.class,
+                ChangeDockTypeAction.class,
+                CloseDockAction.class,
+                CloseViewAction.class,
+                ContentPanelController.class,
+                DialogController.class,
+                DockActionFactoryImpl.class,
                 DockMinimizedPreference.class,
                 DockPanelController.class,
                 DockTypeAccordion.class,
@@ -125,13 +132,33 @@ public class BaseUiExtension implements OpenExtension {
                 DockViewControllerImpl.class,
                 DockWindowController.class,
                 DockWindowFactory.class,
-
+                DriverExtensionRegistryImpl.class,
+                ErrorDialog.class,
+                GenericDriver.class,
+                I18NLayout.class,
+                InlineEditController.class,
                 LastDockDockTypePreference.class,
                 LastDockUuidPreference.class,
                 LastViewVisibilityPreference.class,
-                ApplicationWindowTracker.class,
+                MaximizedPreference.class,
+                MessageBarController.class,
+                MessageLog.class,
+                MessagePanelController.class,
+                MessagePopupController.class,
+                ModeManagerController.class,
+                MoveToDockAction.class,
+                NoPickRefiner.class,
+                SelectionBarController.class,
+                StageHeightPreference.class,
+                StageWidthPreference.class,
+                TextViewDialog.class,
+                ToggleMinimizeDockAction.class,
+                ToggleViewVisibilityAction.class,
+                UndockViewAction.class,
                 WorkspaceController.class,
-                BackgroundImagePreference.class
+                XPosPreference.class,
+                YPosPreference.class
+
             );
      // @formatter:on
     }

@@ -62,10 +62,10 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.library.LibraryItem;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMArchive;
@@ -175,7 +175,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
             LibraryController libraryController,
             ViewSearch viewSearch,
             ControlLibrary controlLibrary,
-            ViewMenuController viewMenuController,
+            ViewMenu viewMenuController,
             SceneBuilderBeanFactory sceneBuilderBeanFactory,
             ActionFactory actionFactory
             ) {

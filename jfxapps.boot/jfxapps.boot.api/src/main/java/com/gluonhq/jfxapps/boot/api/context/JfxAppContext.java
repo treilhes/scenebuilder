@@ -88,4 +88,6 @@ public interface JfxAppContext extends ConfigurableWebApplicationContext {
     ScopedExecutor<Application> getApplicationExecutor();
 
     ScopedExecutor<ApplicationInstance> getApplicationInstanceExecutor();
+
+    <T> T getLayerBean(Class<?> layerClass, Class<T> cls);
 }

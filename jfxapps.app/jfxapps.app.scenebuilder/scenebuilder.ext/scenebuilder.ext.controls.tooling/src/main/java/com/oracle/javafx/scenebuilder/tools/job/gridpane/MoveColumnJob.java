@@ -38,7 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -84,7 +84,7 @@ public final class MoveColumnJob extends BatchSelectionJob {
     // @formatter:off
     protected MoveColumnJob(
             JobExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection,
             RemoveObjectJob.Factory removeObjectJobFactory,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,

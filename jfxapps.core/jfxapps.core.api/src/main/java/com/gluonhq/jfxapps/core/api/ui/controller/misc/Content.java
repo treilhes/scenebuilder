@@ -50,7 +50,7 @@ public interface Content extends FXOMDocument.SceneGraphHolder {
 
     //Pane getGlassLayer();
 
-    FXOMObject pick(double hitX, double hitY, Set<FXOMObject> pickExcludes);
+
 
     //boolean isGuidesVisible();
 
@@ -70,11 +70,11 @@ public interface Content extends FXOMDocument.SceneGraphHolder {
 
     //void endInteraction();
 
-    FXOMObject pick(double sceneX, double sceneY);
+
 
     //void beginInteraction();
 
-    FXOMObject searchWithNode(Node node, double x, double y);
+
 
     //ModeManager getModeManager();
 

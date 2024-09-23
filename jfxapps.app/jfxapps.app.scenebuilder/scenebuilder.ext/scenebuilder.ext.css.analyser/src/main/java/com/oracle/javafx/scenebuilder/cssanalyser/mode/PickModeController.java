@@ -44,7 +44,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
-import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -59,13 +59,13 @@ import javafx.scene.input.MouseEvent;
 @ApplicationInstanceSingleton
 public class PickModeController extends AbstractModeController {
 
-    private final Driver driver;
+    private final SbDriver driver;
     private final ApplicationInstanceEvents documentManager;
     private final Selection selection;
     //private HitNodeChrome hitNodeChrome;
 
     public PickModeController(
-            Driver driver,
+            SbDriver driver,
             ApplicationInstanceEvents documentManager,
             Selection selection,
     		@Lazy Workspace contentPanelController) {

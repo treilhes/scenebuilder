@@ -38,7 +38,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
@@ -90,12 +90,12 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
     private final SetDocumentRootJob.Factory setDocumentRootJobFactory;
     private final RemovePropertyValueJob.Factory removePropertyValueJobFactory;
     private final RemovePropertyJob.Factory removePropertyJobFactory;
-    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
     private final DSelectionGroupFactory.Factory objectSelectionGroupFactory;
 
     public AbstractWrapInJob(
             JobExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection,
             FXOMObjectMask.Factory designMaskFactory,
             IMetadata metadata,
@@ -105,7 +105,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
             SetDocumentRootJob.Factory setDocumentRootJobFactory,
             RemovePropertyValueJob.Factory removePropertyValueJobFactory,
             RemovePropertyJob.Factory removePropertyJobFactory,
-            ModifyObjectJob.Factory modifyObjectJobFactory,
+            FxomJobsFactory fxomJobsFactory,
             DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
         super(extensionFactory, documentManager, selection);
         this.fxomDocument = documentManager.fxomDocument().get();
@@ -117,7 +117,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
         this.setDocumentRootJobFactory = setDocumentRootJobFactory;
         this.removePropertyValueJobFactory = removePropertyValueJobFactory;
         this.removePropertyJobFactory = removePropertyJobFactory;
-        this.modifyObjectJobFactory = modifyObjectJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
         this.objectSelectionGroupFactory = objectSelectionGroupFactory;
     }
 

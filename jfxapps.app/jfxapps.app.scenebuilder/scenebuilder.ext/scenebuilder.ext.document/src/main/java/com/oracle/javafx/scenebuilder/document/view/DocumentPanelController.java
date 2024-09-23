@@ -41,10 +41,10 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
 import com.oracle.javafx.scenebuilder.document.api.DocumentPanel;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyController;
@@ -107,7 +107,7 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
             HierarchyController hierarchyPanelController,
     		InfoPanelController infoPanelController,
     		DisplayOptionPreference displayOptionPreference,
-            ViewMenuController viewMenuController
+            ViewMenu viewMenuController
     		) {
         super(scenebuilderManager, documentManager, viewMenuController, DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle());
         this.hierarchyController = hierarchyPanelController;

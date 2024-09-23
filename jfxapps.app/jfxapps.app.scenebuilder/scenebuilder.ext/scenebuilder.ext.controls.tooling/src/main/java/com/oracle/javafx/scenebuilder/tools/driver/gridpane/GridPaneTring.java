@@ -34,7 +34,7 @@
 
 package com.oracle.javafx.scenebuilder.tools.driver.gridpane;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -60,7 +60,7 @@ public class GridPaneTring extends AbstractNodeTring<GridPane> {
 
     public GridPaneTring(
             Content contentPanelController,
-            FxmlDocumentManager documentManager) {
+            ApplicationInstanceEvents documentManager) {
         super(contentPanelController, documentManager, GridPane.class);
         getRootNode().getChildren().add(0, mosaic.getTopGroup()); // Below handles
     }

@@ -61,10 +61,10 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.library.LibraryItem;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMArchive;
@@ -174,7 +174,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
             ViewSearch viewSearch,
             ImageLibrary imageLibrary,
             ThumbnailServiceController thumbnailServiceController,
-            ViewMenuController viewMenuController
+            ViewMenu viewMenuController
             ) {
      // @formatter:on
         super(scenebuilderManager, documentManager, viewMenuController, ImageLibraryPanelController.class.getResource("LibraryPanel.fxml"),

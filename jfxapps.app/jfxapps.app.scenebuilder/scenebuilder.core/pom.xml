@@ -18,7 +18,7 @@
         <module>scenebuilder.jobs</module>
         <module>scenebuilder.selection</module>
         <module>scenebuilder.drag.and.drop</module>
-        <module>scenebuilder.ext.javafx.customization</module>
+        <!--<module>scenebuilder.ext.javafx.customization</module>-->
         <module>scenebuilder.app.starter</module>
         <module>scenebuilder.app.starter.test</module>
         <module>scenebuilder.metadata</module>

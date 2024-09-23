@@ -42,7 +42,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 import com.gluonhq.jfxapps.test.StageBuilder;
 import com.gluonhq.jfxapps.test.StageType;
@@ -60,13 +60,13 @@ class LogViewerControllerTest {
         }
 
         @Bean
-        ViewMenuController viewMenuController() {
-            return Mockito.mock(ViewMenuController.class);
+        ViewMenu viewMenuController() {
+            return Mockito.mock(ViewMenu.class);
         }
     }
 
     @Autowired
-    ViewMenuController viewMenuController;
+    ViewMenu viewMenuController;
 
     @Test
     void load_ui_success(StageBuilder builder, FxRobot robot) {

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -30,23 +31,22 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api.control;
+package com.gluonhq.jfxapps.core.ui.tool;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.ui.tool.DriverExtensionRegistry;
+import com.gluonhq.jfxapps.core.api.ui.tool.PickRefiner;
 
-import javafx.scene.Node;
+@ApplicationSingleton
+public class DriverExtensionInitializer {
 
-public interface PickRefiner {
-    
-    /**
-     * Returns the FXOMObject child object which matches (sceneGraphNode, sceneX, sceneY).
-     * 
-     * @param hitNode scene graph node found at x/y
-     * @param sceneX x coordinate of a scene point
-     * @param sceneY y coordinate of a scene point
-     * @param fxomObject scene graph node object model found at x/y
-     * @return an FXOMObject contained in fxomObject that matches (sceneGraphNode, sceneX, sceneY)
-     */
-    FXOMObject refinePick(Node hitNode, double sceneX, double sceneY, FXOMObject fxomObject);
+    public DriverExtensionInitializer(DriverExtensionRegistry registry) {
+        super();
+        registry.registerExtension(PickRefiner.class);
+
+        // Node
+        registry.registerImplementationClass(PickRefiner.class, Object.class, NoPickRefiner.class);
+
+    }
 
 }

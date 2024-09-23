@@ -39,12 +39,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewContent;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 import com.gluonhq.jfxapps.util.javafx.NodeUtils;
 
 import javafx.beans.property.BooleanProperty;
@@ -74,7 +75,7 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlController 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(AbstractFxmlViewController.class);
 
-    private final ViewMenuController viewMenuController;
+    private final ViewMenu viewMenuController;
 //	@Autowired
 //	private @Getter ViewManager viewManager;
 
@@ -99,7 +100,7 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlController 
             I18N i18n,
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
-            ViewMenuController viewMenuController,
+            ViewMenu viewMenuController,
             URL fxmlURL) {
         super(i18n, scenebuilderManager, documentManager, fxmlURL); // NOCHECK
         this.viewMenuController = viewMenuController;

@@ -135,6 +135,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private final SelectionBar selectionBar;
     private final Workspace workspace;
     private final JfxAppPlatform jfxAppPlatform;
+
     /*
      * DocumentWindowController
      */
@@ -197,6 +198,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.messageBar = messageBar;
         this.selectionBar = selectionBar;
         this.workspace = workspace;
+
     }
 
     @FXML

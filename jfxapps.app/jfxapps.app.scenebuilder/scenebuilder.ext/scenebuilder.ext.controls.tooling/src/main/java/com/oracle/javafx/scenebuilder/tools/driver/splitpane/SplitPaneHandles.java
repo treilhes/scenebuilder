@@ -35,14 +35,14 @@ package com.oracle.javafx.scenebuilder.tools.driver.splitpane;
 
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
-import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractNodeHandles;
 import com.oracle.javafx.scenebuilder.tools.driver.splitpane.AdjustDividerGesture.Factory;
@@ -71,9 +71,9 @@ public class SplitPaneHandles extends AbstractNodeHandles<SplitPane> implements 
     private final Factory adjustDividerGestureFactory;
 
     public SplitPaneHandles(
-            Driver driver,
+            SbDriver driver,
             Workspace workspace,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory,
     		AdjustDividerGesture.Factory adjustDividerGestureFactory) {

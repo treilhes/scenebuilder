@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.tools.job.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -88,14 +88,14 @@ public final class UnwrapJob extends BatchSelectionJob {
     private final ModifyFxControllerJob.Factory modifyFxControllerJobFactory;
     private final AddPropertyValueJob.Factory addPropertyValueJobFactory;
     private final IMetadata metadata;
-    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
     private final WrapInJobFactory wrapInJobFactory;
     private final DSelectionGroupFactory.Factory objectSelectionGroupFactory;
 
  // @formatter:off
     protected UnwrapJob(
             JobExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection,
             RemovePropertyJob.Factory removePropertyJobFactory,
             RemovePropertyValueJob.Factory removePropertyValueJobFactory,
@@ -103,7 +103,7 @@ public final class UnwrapJob extends BatchSelectionJob {
             SetDocumentRootJob.Factory setDocumentRootJobFactory,
             ModifyFxControllerJob.Factory modifyFxControllerJobFactory,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
-            ModifyObjectJob.Factory modifyObjectJobFactory,
+            FxomJobsFactory fxomJobsFactory,
             FXOMObjectMask.Factory designMaskFactory,
             IMetadata metadata,
             WrapInJobFactory wrapInJobFactory,
@@ -118,7 +118,7 @@ public final class UnwrapJob extends BatchSelectionJob {
         this.addPropertyValueJobFactory = addPropertyValueJobFactory;
         this.designMaskFactory = designMaskFactory;
         this.metadata = metadata;
-        this.modifyObjectJobFactory = modifyObjectJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
         this.wrapInJobFactory = wrapInJobFactory;
         this.objectSelectionGroupFactory = objectSelectionGroupFactory;
     }

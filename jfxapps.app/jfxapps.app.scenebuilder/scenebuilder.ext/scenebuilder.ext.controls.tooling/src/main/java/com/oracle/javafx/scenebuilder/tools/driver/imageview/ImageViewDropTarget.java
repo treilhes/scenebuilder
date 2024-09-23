@@ -67,7 +67,7 @@ public final class ImageViewDropTarget extends AbstractDropTarget {
     private final IMetadata metadata;
     private final com.gluonhq.jfxapps.core.api.job.base.Factory batchJobFactory;
     private final BackupSelectionJob.Factory backupSelectionJobFactory;
-    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
     private final UpdateSelectionJob.Factory updateSelectionJobFactory;
 
     private FXOMInstance targetImageView;
@@ -77,13 +77,13 @@ public final class ImageViewDropTarget extends AbstractDropTarget {
             IMetadata metadata,
             BatchJob.Factory batchJobFactory,
             BackupSelectionJob.Factory backupSelectionJobFactory,
-            ModifyObjectJob.Factory modifyObjectJobFactory,
+            FxomJobsFactory fxomJobsFactory,
             UpdateSelectionJob.Factory updateSelectionJobFactory) {
      // @formatter:on
         this.metadata = metadata;
         this.batchJobFactory = batchJobFactory;
         this.backupSelectionJobFactory = backupSelectionJobFactory;
-        this.modifyObjectJobFactory = modifyObjectJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
         this.updateSelectionJobFactory = updateSelectionJobFactory;
     }
 

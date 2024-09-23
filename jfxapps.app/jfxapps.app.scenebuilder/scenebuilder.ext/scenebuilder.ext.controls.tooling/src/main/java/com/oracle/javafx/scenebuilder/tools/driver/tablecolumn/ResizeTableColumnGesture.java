@@ -73,7 +73,7 @@ public class ResizeTableColumnGesture extends AbstractMouseGesture {
     private TableColumnResizer resizer;
 	private final JobManager jobManager;
 	private final com.gluonhq.jfxapps.core.api.job.base.Factory batchJobFactory;
-	private final ModifyObjectJob.Factory modifyObjectJobFactory;
+	private final FxomJobsFactory fxomJobsFactory;
     private final IMetadata metadata;
 
 	protected ResizeTableColumnGesture(
@@ -81,13 +81,13 @@ public class ResizeTableColumnGesture extends AbstractMouseGesture {
     		JobManager jobManager,
     		IMetadata metadata,
             BatchJob.Factory batchJobFactory,
-            ModifyObjectJob.Factory modifyObjectJobFactory
+            FxomJobsFactory fxomJobsFactory
             ) {
         super(contentPanelController);
         this.jobManager = jobManager;
         this.metadata = metadata;
         this.batchJobFactory = batchJobFactory;
-        this.modifyObjectJobFactory = modifyObjectJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
 
     }
 

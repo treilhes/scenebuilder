@@ -79,8 +79,8 @@ import com.gluonhq.jfxapps.boot.api.loader.ApplicationManager;
 import com.gluonhq.jfxapps.boot.api.loader.BootException;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
 import com.gluonhq.jfxapps.boot.api.platform.InternalRestClient;
-import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.boot.api.platform.InternalRestClient.JsonBodyHandler;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.boot.loader.StateProvider;
 import com.gluonhq.jfxapps.boot.loader.content.FileExtensionProvider;
 import com.gluonhq.jfxapps.boot.loader.model.Application;
@@ -101,9 +101,7 @@ import com.gluonhq.jfxapps.boot.registry.RegistryManager;
 @ExtendWith({ MockitoExtension.class, SpringExtension.class })
 @SpringBootTest(classes = { BootConfig.class,
         AvailableFeaturesTestIT.Configuration.class }, webEnvironment = WebEnvironment.DEFINED_PORT, properties = {
-                "spring.mvc.servlet.path=/app",
-                "server.servlet.context-path=/jfx",
-                "debug=false" })
+                "spring.mvc.servlet.path=/app", "server.servlet.context-path=/jfx", "debug=false" })
 
 //@AutoConfigureCache
 //@AutoConfigureDataJpa
@@ -231,7 +229,7 @@ public class AvailableFeaturesTestIT {
     /**
      * This work as expected and inject the random port successfully
      */
-    //@LocalServerPort
+    // @LocalServerPort
     @Value("${local.server.port:0}")
     int port;
 
@@ -285,18 +283,14 @@ public class AvailableFeaturesTestIT {
     @ParameterizedTest
     @MethodSource("allContextIds")
     public void extension_rest_endpoint_must_be_created_and_accessible(UUID contextId) throws Exception {
-        internalClient.get(contextId, "extension/id")
-            .on(200, r -> assertEquals(contextId.toString(), r.body()))
-            .ifNoneMatch(r -> fail(r.toString()))
-            .execute();
+        internalClient.get(contextId, "extension/id").on(200, r -> assertEquals(contextId.toString(), r.body()))
+                .ifNoneMatch(r -> fail(r.toString())).execute();
     }
 
     @Test
     public void boot_rest_endpoint_must_be_created_and_accessible() throws Exception {
-        internalClient.get(InternalRestClient.BOOT_CONTEXT, "version")
-        .on(200, r -> assertEquals(200, r.statusCode()))
-        .ifNoneMatch(r -> fail(r.toString()))
-        .execute();
+        internalClient.get(InternalRestClient.BOOT_CONTEXT, "version").on(200, r -> assertEquals(200, r.statusCode()))
+                .ifNoneMatch(r -> fail(r.toString())).execute();
     }
 
     @ParameterizedTest
@@ -308,26 +302,21 @@ public class AvailableFeaturesTestIT {
         postParam.setOther("SOMEDATA");
 
         TestModel postValue = internalClient.post(contextId, "models", jsonHeader, postParam)
-            .on(200, JsonBodyHandler.of(TestModel.class), r -> assertTrue(r.body() != null && r.body().getId() > 0))
-            .ifNoneMatch(r -> fail(r.toString()))
-            .execute();
+                .on(200, JsonBodyHandler.of(TestModel.class), r -> assertTrue(r.body() != null && r.body().getId() > 0))
+                .ifNoneMatch(r -> fail(r.toString())).execute();
 
         TestModel getValue = internalClient.get(contextId, InternalRestClient.pathOf("models", postValue.getId()))
-            .on(200, JsonBodyHandler.of(TestModel.class), r -> assertTrue(r.body() != null && r.body().getId() > 0))
-            .ifNoneMatch(r -> fail(r.toString()))
-            .execute();
+                .on(200, JsonBodyHandler.of(TestModel.class), r -> assertTrue(r.body() != null && r.body().getId() > 0))
+                .ifNoneMatch(r -> fail(r.toString())).execute();
 
         assertEquals(postValue.getId(), getValue.getId());
 
-        internalClient.delete(contextId, "models/" + postValue.getId())
-            .on(200, r -> assertEquals(200, r.statusCode()))
-            .ifNoneMatch(r -> fail(r.toString()))
-            .execute();
+        internalClient.delete(contextId, "models/" + postValue.getId()).on(200, r -> assertEquals(200, r.statusCode()))
+                .ifNoneMatch(r -> fail(r.toString())).execute();
 
         internalClient.get(contextId, "models/" + postValue.getId())
-            .on(200, JsonBodyHandler.of(TestModel.class), r -> assertNull(r.body()))
-            .ifNoneMatch(r -> fail(r.toString()))
-            .execute();
+                .on(200, JsonBodyHandler.of(TestModel.class), r -> assertNull(r.body()))
+                .ifNoneMatch(r -> fail(r.toString())).execute();
         ;
     }
 
@@ -341,18 +330,17 @@ public class AvailableFeaturesTestIT {
 
         internalClient.post(contextId, "models", jsonHeader, postParam)
                 .on(200, JsonBodyHandler.of(TestModel.class), r -> assertTrue(r.body() != null && r.body().getId() > 0))
-                .ifNoneMatch(r -> fail(r.toString()))
-                .execute();
+                .ifNoneMatch(r -> fail(r.toString())).execute();
 
         internalClient.get(contextId, "models/query")
-            .on(200, JsonBodyHandler.listOf(TestModel.class), r -> assertTrue(r.body() != null && r.body().size() > 0))
-            .ifNoneMatch(r -> fail(r.toString()))
-            .execute();
+                .on(200, JsonBodyHandler.listOf(TestModel.class),
+                        r -> assertTrue(r.body() != null && r.body().size() > 0))
+                .ifNoneMatch(r -> fail(r.toString())).execute();
 
         internalClient.get(contextId, "models/derivation")
-            .on(200, JsonBodyHandler.of(TestModel.class), r -> assertEquals(postParam.getOther(), r.body().getOther()))
-            .ifNoneMatch(r -> fail(r.toString()))
-            .execute();
+                .on(200, JsonBodyHandler.of(TestModel.class),
+                        r -> assertEquals(postParam.getOther(), r.body().getOther()))
+                .ifNoneMatch(r -> fail(r.toString())).execute();
 
     }
 
@@ -420,46 +408,56 @@ public class AvailableFeaturesTestIT {
     public void testing_validation_is_applied(UUID contextId) throws Exception {
         TestModel posted = new TestModel(); // "other" is null, so 400 bad request is expected
 
-        internalClient.post(contextId, "models/testing_validation_is_applied", jsonHeaderNew, posted)
-                .on(400, r -> {
-                    assertTrue(r.body().toLowerCase().contains("validation failed"));
-                })
-                .ifNoneMatch(r -> fail(r.toString())).execute();
+        internalClient.post(contextId, "models/testing_validation_is_applied", jsonHeaderNew, posted).on(400, r -> {
+            assertTrue(r.body().toLowerCase().contains("validation failed"));
+        }).ifNoneMatch(r -> fail(r.toString())).execute();
     }
 
     @ParameterizedTest
     @MethodSource("allContextIds")
     public void static_ressource_are_accessible(UUID contextId) throws Exception {
-        internalClient.get(contextId, "images/test.png")
-                .on(200, r -> {
-                    assertTrue(r.body().length() > 0);
-                })
-                .ifNoneMatch(r -> fail(r.toString())).execute();
+        internalClient.get(contextId, "images/test.png").on(200, r -> {
+            assertTrue(r.body().length() > 0);
+        }).ifNoneMatch(r -> fail(r.toString())).execute();
     }
 
     @ParameterizedTest
     @MethodSource("allContextIds")
     public void mvc_is_enabled_and_return_html(UUID contextId) throws Exception {
-        internalClient.get(contextId, "mvc/extension")
-                .on(200, r -> {
-                    assertTrue(r.body().contains("<html") && r.body().contains(contextId.toString()) && r.body().length() > 0);
-                })
-                .ifNoneMatch(r -> fail(r.toString())).execute();
+        internalClient.get(contextId, "mvc/extension").on(200, r -> {
+            assertTrue(r.body().contains("<html") && r.body().contains(contextId.toString()) && r.body().length() > 0);
+        }).ifNoneMatch(r -> fail(r.toString())).execute();
     }
 
     @ParameterizedTest
     @MethodSource("allContextIds")
     public void openapi_descriptor_and_test_webapp_are_enabled_and_return_html(UUID contextId) throws Exception {
-        internalClient.get(contextId, "v3/api-docs")
-                .on(200, r -> {
-                    assertTrue(r.body().contains("openapi") && r.body().contains(contextId.toString()) && r.body().length() > 0);
-                })
-                .ifNoneMatch(r -> fail(r.toString())).execute();
+        internalClient.get(contextId, "v3/api-docs").on(200, r -> {
+            assertTrue(
+                    r.body().contains("openapi") && r.body().contains(contextId.toString()) && r.body().length() > 0);
+        }).ifNoneMatch(r -> fail(r.toString())).execute();
 
-        internalClient.get(contextId, "swagger-ui/index.html")
-                .on(200, r -> {
-                    assertTrue(r.body().contains("<html") && r.body().length() > 0);
-                })
-                .ifNoneMatch(r -> fail(r.toString())).execute();
+        internalClient.get(contextId, "swagger-ui/index.html").on(200, r -> {
+            assertTrue(r.body().contains("<html") && r.body().length() > 0);
+        }).ifNoneMatch(r -> fail(r.toString())).execute();
     }
+
+    /**
+     * This test ensure that the application scoped bean JfxAppsRootExportedService
+     * loaded in the application context APP1 did successfully resolve the
+     * dependency to the local service from its source extension ROOT_EXT1_ID context due to the annotation
+     * {@literal @}LayerContext <br/>
+     *
+     * @ApplicationSingleton<br/> public class JfxAppsRootExportedService implements
+     * RootExportedService {<br/> public JfxAppsRootExportedService(@LayerContext
+     * JfxAppsService local) {}}<br/>
+     */
+    @Test
+    public void root_service_load_bean_in_source_context() throws Exception {
+        internalClient.get(APP1_ID, "RootExportedService/list").on(200, r -> {
+            assertTrue(r.body().contains("app.ext1.internal.JfxAppsLocalService"));
+        }).ifNoneMatch(r -> fail(r.toString())).execute();
+
+    }
+
 }

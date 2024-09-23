@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -30,10 +31,41 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api.control.pickrefiner;
+package app.app1.controller;
 
-import com.oracle.javafx.scenebuilder.api.control.PickRefiner;
+import java.util.List;
 
-public abstract class AbstractPickRefiner implements PickRefiner {
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import app.root.api.RootExportedService;
+
+@RestController
+@RequestMapping("/RootExportedService")
+
+/*
+ This rest controller expect application scoped exported services so an instance of the local application is expected
+ to be created before this one. This is why it depends on the app1Application bean.
+ */
+@DependsOn("app1Application")
+public class RootExportedController {
+
+    private final List<RootExportedService> rootExportedServices;
+
+    public RootExportedController(List<RootExportedService> rootExportedServices) {
+        super();
+        this.rootExportedServices = rootExportedServices;
+    }
+
+    @GetMapping("/list")
+    public String listServices() {
+        StringBuilder sb = new StringBuilder();
+        for (var s : rootExportedServices) {
+            sb.append(s.callLocalService()).append("\n");
+        }
+        return sb.toString();
+    }
 
 }

@@ -73,7 +73,7 @@ public class ResizeTreeTableColumnGesture extends AbstractMouseGesture {
     private TreeTableColumnResizer resizer;
 	private final com.gluonhq.jfxapps.core.api.job.base.Factory batchJobFactory;
     private final JobManager jobManager;
-    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
     private final IMetadata metadata;
 
     protected ResizeTreeTableColumnGesture(
@@ -81,12 +81,12 @@ public class ResizeTreeTableColumnGesture extends AbstractMouseGesture {
             JobManager jobManager,
             IMetadata metadata,
             BatchJob.Factory batchJobFactory,
-            ModifyObjectJob.Factory modifyObjectJobFactory) {
+            FxomJobsFactory fxomJobsFactory) {
         super(content);
         this.jobManager = jobManager;
         this.metadata = metadata;
         this.batchJobFactory = batchJobFactory;
-        this.modifyObjectJobFactory = modifyObjectJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
     }
 
     protected void setupGestureParameters(FXOMInstance fxomInstance) {

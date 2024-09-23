@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -30,49 +31,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api.control.driver;
+package com.gluonhq.jfxapps.core.ui.tool;
 
-import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.ui.tool.PickRefiner;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
-import com.oracle.javafx.scenebuilder.api.control.Driver;
-import com.oracle.javafx.scenebuilder.api.control.Handles;
-import com.oracle.javafx.scenebuilder.api.control.Pring;
-import com.oracle.javafx.scenebuilder.api.control.Resizer;
-import com.oracle.javafx.scenebuilder.api.control.Tring;
 
-import javafx.geometry.Bounds;
 import javafx.scene.Node;
 
-/**
- *
- */
-public abstract class AbstractDriver implements Driver {
+@ApplicationSingleton
+public class NoPickRefiner implements PickRefiner {
 
-    protected final Content contentPanelController;
-
-    public AbstractDriver(Content contentPanelController) {
-        assert contentPanelController != null;
-        this.contentPanelController = contentPanelController;
+    @Override
+    public FXOMObject refinePick(Node hitNode, double sceneX, double sceneY, FXOMObject fxomObject) {
+        return fxomObject;
     }
 
-    @Override
-    public abstract Handles<?> makeHandles(FXOMObject fxomObject);
-    @Override
-    public abstract Pring<?> makePring(FXOMObject fxomObject);
-    @Override
-    public abstract Tring<?> makeTring(DropTarget dropTarget);
-    @Override
-    public abstract Resizer<?> makeResizer(FXOMObject fxomObject);
-    @Override
-    public abstract CurveEditor<?> makeCurveEditor(FXOMObject fxomObject);
-    @Override
-    public abstract FXOMObject refinePick(Node hitNode, double sceneX, double sceneY, FXOMObject fxomObject);
-    @Override
-    public abstract DropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY);
-    @Override
-    public abstract Node getInlineEditorBounds(FXOMObject fxomObject);
-    @Override
-    public abstract boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds);
 }

@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.node;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -53,7 +53,7 @@ public class NodePring extends AbstractNodePring<Node> {
     public NodePring(
             SelectWithPringGesture.Factory selectWithPringGestureFactory,
             Content contentPanelController,
-            FxmlDocumentManager documentManager) {
+            ApplicationInstanceEvents documentManager) {
         super(contentPanelController, documentManager, selectWithPringGestureFactory, Node.class);
     }
 

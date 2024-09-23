@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.tools.job.gridpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -68,7 +68,7 @@ public final class RemoveRowConstraintsJob extends BatchDocumentJob {
     // @formatter:off
     protected RemoveRowConstraintsJob(
             JobExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             DeleteObjectJob.Factory deleteObjectJobFactory,
             GridPaneHierarchyMask.Factory maskFactory) {
     // @formatter:on

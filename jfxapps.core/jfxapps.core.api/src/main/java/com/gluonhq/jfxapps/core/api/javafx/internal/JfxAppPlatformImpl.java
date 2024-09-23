@@ -42,12 +42,12 @@ import com.gluonhq.jfxapps.boot.api.context.Application;
 import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.ScopedExecutor;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 
 import javafx.application.Platform;
 
-@ApplicationInstanceSingleton
+@ApplicationSingleton
 public final class JfxAppPlatformImpl implements JfxAppPlatform {
 
     ScopedExecutor<ApplicationInstance> executor;

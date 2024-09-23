@@ -63,9 +63,9 @@ import com.gluonhq.jfxapps.core.api.javafx.LoadInFxThread;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -257,7 +257,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
             Drag drag,
             FileSystem fileSystem,
             ViewSearch viewSearch,
-            ViewMenuController viewMenuController) {
+            ViewMenu viewMenuController) {
      // @formatter:on
         super(i18n, scenebuilderManager, documentManager, viewMenuController,
                 CssPanelController.class.getResource("CssPanel.fxml"));

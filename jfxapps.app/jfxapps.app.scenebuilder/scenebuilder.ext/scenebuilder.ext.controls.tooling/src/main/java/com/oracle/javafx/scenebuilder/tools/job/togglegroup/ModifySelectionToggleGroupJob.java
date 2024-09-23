@@ -37,7 +37,7 @@ package com.oracle.javafx.scenebuilder.tools.job.togglegroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -70,7 +70,7 @@ public final class ModifySelectionToggleGroupJob extends BatchDocumentJob {
 
     protected ModifySelectionToggleGroupJob(
             JobExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection,
             ModifyToggleGroupJob.Factory modifyToggleGroupJobFactory) {
         super(extensionFactory, documentManager);

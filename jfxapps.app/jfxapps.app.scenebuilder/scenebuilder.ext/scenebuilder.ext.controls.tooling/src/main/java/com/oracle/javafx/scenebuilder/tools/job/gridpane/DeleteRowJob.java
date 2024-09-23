@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -72,7 +72,7 @@ public final class DeleteRowJob extends BatchSelectionJob {
 
     // @formatter:off
     protected DeleteRowJob(JobExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection,
             GridPaneHierarchyMask.Factory maskFactory,
             RemoveRowConstraintsJob.Factory removeRowConstraintsJobFactory,

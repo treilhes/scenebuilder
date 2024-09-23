@@ -33,12 +33,12 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.node;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
-import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractNodeHandles;
 
@@ -56,9 +56,9 @@ import javafx.scene.Node;
 public class NodeHandles extends AbstractNodeHandles<Node> {
 
     public NodeHandles(
-            Driver driver,
+            SbDriver driver,
             Workspace workspace,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory) {
         super(driver, workspace, documentManager, discardGestureFactory, resizeGestureFactory, Node.class);

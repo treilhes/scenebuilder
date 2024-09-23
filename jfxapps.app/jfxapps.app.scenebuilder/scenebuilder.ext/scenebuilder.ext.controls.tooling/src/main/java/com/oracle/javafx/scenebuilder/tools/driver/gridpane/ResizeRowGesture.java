@@ -86,15 +86,15 @@ public class ResizeRowGesture extends AbstractMouseGesture {
     private GridPaneRowResizer resizer;
 
     private final JobManager jobManager;
-    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
 
     protected ResizeRowGesture(
             Content content,
             JobManager jobManager,
-            ModifyObjectJob.Factory modifyObjectJobFactory) {
+            FxomJobsFactory fxomJobsFactory) {
         super(content);
         this.jobManager = jobManager;
-        this.modifyObjectJobFactory = modifyObjectJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
     }
 
     protected void setupGestureParameters(GridPaneHandles gridPaneHandles, int rowIndex) {

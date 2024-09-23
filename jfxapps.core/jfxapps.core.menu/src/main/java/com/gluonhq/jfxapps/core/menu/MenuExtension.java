@@ -38,11 +38,13 @@ import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.core.menu.controller.ContextMenuController;
+import com.gluonhq.jfxapps.core.menu.controller.MenuBarController;
+import com.gluonhq.jfxapps.core.menu.controller.ViewMenuController;
 import com.gluonhq.jfxapps.core.menu.i18n.I18NMenu;
 import com.gluonhq.jfxapps.core.menu.items.AnnotatedActionContextMenuItemProvider;
 import com.gluonhq.jfxapps.core.menu.items.AnnotatedActionMenuItemProvider;
 import com.gluonhq.jfxapps.core.menu.items.AnnotatedActionViewMenuItemProvider;
-import com.gluonhq.jfxapps.core.menu.menubar.MenuBarController;
 
 public class MenuExtension implements OpenExtension {
     @Override
@@ -68,7 +70,9 @@ public class MenuExtension implements OpenExtension {
                 AnnotatedActionMenuItemProvider.class,
                 AnnotatedActionViewMenuItemProvider.class,
                 I18NMenu.class,
-                MenuBarController.class
+                MenuBarController.class,
+                ContextMenuController.class,
+                ViewMenuController.class
             );
      // @formatter:on
     }

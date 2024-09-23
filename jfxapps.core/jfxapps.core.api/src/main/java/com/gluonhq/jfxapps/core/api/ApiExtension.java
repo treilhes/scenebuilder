@@ -62,7 +62,6 @@ import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.subjects.NetworkManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockNameHelper;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.SearchController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewController;
@@ -85,21 +84,22 @@ public class ApiExtension implements RootExtension {
     @Override
     public List<Class<?>> localContextClasses() {
         return Arrays.asList(
+                //Selection.class,
+                ActionExtensionFactory.class,
+                ActionFactory.class,
                 ApplicationEvents.ApplicationEventsImpl.class,
                 ApplicationInstanceEvents.ApplicationInstanceEventsImpl.class,
                 ContextClassLoaderEventDispatcher.class,
-                FxmlControllerBeanPostProcessor.class,
-                JavafxThreadBootstrapper.class,
-                ActionExtensionFactory.class,
-                ActionFactory.class,
                 ContextClassLoaderEventDispatcher.class,
-                DiscardGesture.class,
+                DefaultSelectionGroupFactory.class,
                 DiscardGesture.Factory.class,
-                DockNameHelper.class,
+                DiscardGesture.class,
                 DockManager.DockManagerImpl.class,
-
-
+                DockNameHelper.class,
+                DocumentPreferencesNodeImpl.class,
+                FxmlControllerBeanPostProcessor.class,
                 I18N.class,
+                JavafxThreadBootstrapper.class,
                 JavafxThreadClassloader.class,
                 JavafxThreadClassloaderDispatcherImpl.class,
                 JfxAppPlatformImpl.class,
@@ -107,19 +107,13 @@ public class ApiExtension implements RootExtension {
                 MavenSetting.class,
                 MenuBuilder.class,
                 NetworkManager.NetworkManagerImpl.class,
+                ObjectSelectionGroup.Factory.class,
                 PreferencesContext.class,
-
-                SearchController.class,
-                //Selection.class,
-                ViewController.class,
-                ViewManager.ViewManagerImpl.class,
-                ViewMenuController.class,
-                DocumentPreferencesNodeImpl.class,
                 RootPreferencesNodeImpl.class,
-
-                DefaultSelectionGroupFactory.class,
+                SearchController.class,
                 SelectionGroupFactoryRegistry.class,
-                ObjectSelectionGroup.Factory.class
+                ViewController.class,
+                ViewManager.ViewManagerImpl.class
         );
     }
 

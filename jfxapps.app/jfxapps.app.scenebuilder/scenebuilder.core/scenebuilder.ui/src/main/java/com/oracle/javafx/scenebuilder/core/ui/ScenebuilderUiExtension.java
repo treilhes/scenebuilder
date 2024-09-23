@@ -47,6 +47,7 @@ import com.oracle.javafx.scenebuilder.core.ui.action.ToggleMinimizeBottomDockAct
 import com.oracle.javafx.scenebuilder.core.ui.action.ToggleMinimizeLeftDockAction;
 import com.oracle.javafx.scenebuilder.core.ui.action.ToggleMinimizeRightDockAction;
 import com.oracle.javafx.scenebuilder.core.ui.i18n.I18NScenebuilderUiExtension;
+import com.oracle.javafx.scenebuilder.core.ui.menu.MainMenuProvider;
 import com.oracle.javafx.scenebuilder.core.ui.preferences.document.BottomDividerVPosPreference;
 import com.oracle.javafx.scenebuilder.core.ui.preferences.document.LeftDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.core.ui.preferences.document.RightDividerHPosPreference;
@@ -71,17 +72,18 @@ public class ScenebuilderUiExtension implements OpenExtension {
     public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
-                DocumentWindowController.class,
                 BottomDividerVPosPreference.class,
-                LeftDividerHPosPreference.class,
-                RightDividerHPosPreference.class,
                 CloseBottomDockAction.class,
                 CloseLeftDockAction.class,
                 CloseRightDockAction.class,
+                DocumentWindowController.class,
+                I18NScenebuilderUiExtension.class,
+                LeftDividerHPosPreference.class,
+                MainMenuProvider.class,
+                RightDividerHPosPreference.class,
                 ToggleMinimizeBottomDockAction.class,
                 ToggleMinimizeLeftDockAction.class,
                 ToggleMinimizeRightDockAction.class,
-                I18NScenebuilderUiExtension.class,
                 WindowIconSetting.class
             );
      // @formatter:on

@@ -48,7 +48,7 @@ open module scenebuilder.api {
     exports com.oracle.javafx.scenebuilder.api.control.inlineedit;
     exports com.oracle.javafx.scenebuilder.api.control.intersect;
     exports com.oracle.javafx.scenebuilder.api.control.outline;
-    exports com.oracle.javafx.scenebuilder.api.control.pickrefiner;
+
     exports com.oracle.javafx.scenebuilder.api.control.pring;
     exports com.oracle.javafx.scenebuilder.api.control.relocater;
     exports com.oracle.javafx.scenebuilder.api.control.resizer;

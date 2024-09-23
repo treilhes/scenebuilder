@@ -60,7 +60,7 @@ import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.Relocater;
 import com.oracle.javafx.scenebuilder.api.control.ResizeGuide;
@@ -98,10 +98,10 @@ public class ResizeGesture extends AbstractMouseGesture {
     //private RegionRectangle shadow;
     private boolean snapEnabled;
     private boolean guidesDisabled;
-	private final Driver driver;
+	private final SbDriver driver;
     private final IMetadata metadata;
     private final FXOMObjectMask.Factory designMaskFactory;
-    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
 
     @SuppressWarnings("rawtypes")
     private Layer<Rudder> rudderLayer;
@@ -125,18 +125,18 @@ public class ResizeGesture extends AbstractMouseGesture {
             HudWindow hud,
             Content contentPanelController,
             IMetadata metadata,
-            Driver driver,
+            SbDriver driver,
             JobManager jobManager,
             FXOMObjectMask.Factory designMaskFactory,
             ModeManager modeManager,
-            ModifyObjectJob.Factory modifyObjectJobFactory) {
+            FxomJobsFactory fxomJobsFactory) {
         super(workspace);
         this.metadata = metadata;
         this.driver = driver;
         this.jobManager = jobManager;
         this.hud = hud;
         this.designMaskFactory = designMaskFactory;
-        this.modifyObjectJobFactory = modifyObjectJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
 
         if (modeManager.hasModeEnabled()) {
             rudderLayer = modeManager.getEnabledMode().getLayer(Rudder.class);

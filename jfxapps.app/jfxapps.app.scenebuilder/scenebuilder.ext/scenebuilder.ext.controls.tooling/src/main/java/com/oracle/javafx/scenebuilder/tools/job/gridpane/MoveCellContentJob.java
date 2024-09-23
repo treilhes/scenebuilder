@@ -34,7 +34,7 @@
 
 package com.oracle.javafx.scenebuilder.tools.job.gridpane;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -82,7 +82,7 @@ public final class MoveCellContentJob extends AbstractJob {
 
     protected MoveCellContentJob(
             JobExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager) {
+            ApplicationInstanceEvents documentManager) {
         super(extensionFactory);
         this.fxomDocument = documentManager.fxomDocument().get();
     }

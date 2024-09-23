@@ -46,6 +46,7 @@ import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
 import _test.TestConfig;
 import app.app1.aspect.JfxAppsAspect;
 import app.app1.controller.ExtensionController;
+import app.app1.controller.RootExportedController;
 import app.app1.internal.JfxAppsLocalService;
 import app.app1.model.JfxAppsModel;
 import app.app1.repository.JfxAppsRepository;
@@ -80,13 +81,15 @@ public class JfxAppsExtension implements SealedExtension {
     @Override
     public List<Class<?>> localContextClasses() {
         return List.of(
+                App1Application.class,
                 JfxAppsLocalService.class,
                 JfxAppsAspect.class,
                 JfxAppsAspectTest.class,
                 JfxAppsRestController.class,
                 JfxAppsDataService.class,
                 RestExceptionHandler.class,
-                ExtensionController.class);
+                ExtensionController.class,
+                RootExportedController.class);
     }
 
     @Bean

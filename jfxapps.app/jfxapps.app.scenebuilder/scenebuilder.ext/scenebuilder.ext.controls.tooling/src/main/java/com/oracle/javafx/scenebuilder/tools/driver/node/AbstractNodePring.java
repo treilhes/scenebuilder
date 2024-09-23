@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.node;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
@@ -56,7 +56,7 @@ public abstract class AbstractNodePring<T extends Node> extends AbstractGenericP
 
     public AbstractNodePring(
             Content contentPanelController,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             SelectWithPringGesture.Factory selectWithPringGestureFactory,
             Class<T> sceneGraphClass) {
         super(contentPanelController, documentManager, sceneGraphClass);

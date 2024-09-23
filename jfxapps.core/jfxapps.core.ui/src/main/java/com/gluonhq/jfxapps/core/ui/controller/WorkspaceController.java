@@ -33,6 +33,11 @@
  */
 package com.gluonhq.jfxapps.core.ui.controller;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,12 +55,16 @@ import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
+import com.gluonhq.jfxapps.core.api.ui.tool.Driver;
+import com.gluonhq.jfxapps.core.api.ui.tool.PickRefiner;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.SceneGraphObject;
+import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
 import com.gluonhq.jfxapps.core.ui.preferences.global.BackgroundImagePreference;
 import com.gluonhq.jfxapps.util.javafx.BoundsUnion;
 import com.gluonhq.jfxapps.util.javafx.BoundsUtils;
+import com.gluonhq.jfxapps.util.javafx.Picker;
 import com.gluonhq.jfxapps.util.javafx.ScrollPaneBooster;
 
 import javafx.animation.FadeTransition;
@@ -154,6 +163,8 @@ public class WorkspaceController extends AbstractFxmlController implements Works
     private Paint guidesColor = Color.RED;
 
     private final JfxAppPlatform jfxAppPlatform;
+    private final Driver driver;
+    private final Picker picker = new Picker();
 
     public WorkspaceController(
             I18N i18n,
@@ -165,7 +176,8 @@ public class WorkspaceController extends AbstractFxmlController implements Works
             FXOMObjectMask.Factory maskFactory,
             Selection selection,
             Content content,
-            ModeManager modeManager) {
+            ModeManager modeManager,
+            Driver driver) {
         super(i18n, scenebuilderManager, documentManager, WorkspaceController.class.getResource("Workspace.fxml"));
         this.jfxAppPlatform = jfxAppPlatform;
         this.documentManager = documentManager;
@@ -175,6 +187,7 @@ public class WorkspaceController extends AbstractFxmlController implements Works
         this.selection = selection;
         this.content = content;
         this.modeManager = modeManager;
+        this.driver = driver;
     }
 
     @FXML
@@ -961,5 +974,146 @@ public class WorkspaceController extends AbstractFxmlController implements Works
 //        modeManager.getEnabledMode().getLayer(EditModeController.OUTLINE_LAYER).disable();
 //        showContent();
 //    }
+
+
+    /**
+     * Returns the topmost FXOMObject at (sceneX, sceneY) in this content panel.
+     *
+     * @param sceneX x coordinate of a scene point
+     * @param sceneY y coordinate of a scene point
+     * @return null or the topmost FXOMObject located at (sceneX, sceneY)
+     */
+    @Override
+    public FXOMObject pick(double sceneX, double sceneY) {
+        return pick(sceneX, sceneY, Collections.emptySet());
+    }
+
+    /**
+     * Returns the topmost FXOMObject at (sceneX, sceneY) but ignoring objects from
+     * the exclude set.
+     *
+     * @param sceneX   x coordinate of a scene point
+     * @param sceneY   y coordinate of a scene point
+     * @param excludes null or a set of FXOMObject to be excluded from the pick.
+     * @return null or the topmost FXOMObject located at (sceneX, sceneY)
+     */
+    @Override
+    public FXOMObject pick(double sceneX, double sceneY, Set<FXOMObject> excludes) {
+        final FXOMObject result;
+
+        if (content.isDisplayable()) {
+            result = pick(documentManager.fxomDocument().get(), sceneX, sceneY, excludes);
+        } else {
+            result = null;
+        }
+
+        return result;
+    }
+
+    private FXOMObject pick(FXOMDocument fxomDocument, double sceneX, double sceneY, Set<FXOMObject> excludes) {
+        assert fxomDocument != null;
+
+        if (fxomDocument.getFxomRoot() == null) {
+            return null;
+        }
+
+        Node displayNode = fxomDocument.getDisplayNode();
+        if (displayNode != null) {
+            FXOMObject startObject = fxomDocument.getFxomRoot().collect(SceneGraphCollector.findSceneGraphObject(displayNode)).get();
+            if (startObject == null || excludes.contains(startObject)) {
+                return null;
+            }
+            return pick(startObject, sceneX, sceneY, excludes);
+        }
+
+        if (excludes.contains(fxomDocument.getFxomRoot())) {
+            return null;
+        }
+
+        return pick(fxomDocument.getFxomRoot(), sceneX, sceneY, excludes);
+    }
+
+    /**
+     * Returns the topmost FXOMObject at (sceneX, sceneY) but ignoring objects from
+     * the exclude set and starting the search from startObject.
+     *
+     * @param startObject starting point of the search
+     * @param sceneX      x coordinate of a scene point
+     * @param sceneY      y coordinate of a scene point
+     * @param excludes    null or a set of FXOMObject to be excluded from the pick.
+     * @return null or the topmost FXOMObject located at (sceneX, sceneY)
+     */
+    public FXOMObject pick(FXOMObject startObject, double sceneX, double sceneY, Set<FXOMObject> excludes) {
+
+        final FXOMObject result;
+
+        assert content.isDisplayable();
+        assert startObject != null;
+        assert startObject.getSceneGraphObject().isInstanceOf(Node.class);
+        assert excludes != null;
+        assert excludes.contains(startObject) == false;
+
+        picker.getExcludes().clear();
+
+        excludes.stream().map(FXOMObject::getSceneGraphObject).filter(SceneGraphObject::isNode)
+                .map(sgo -> sgo.getAs(Node.class)).forEach(picker.getExcludes()::add);
+
+//        for (FXOMObject exclude : excludes) {
+//            if (exclude.getSceneGraphObject().isInstanceOf(Node.class)) {
+//                picker.getExcludes().add(exclude.getSceneGraphObject().getAs(Node.class));
+//            }
+//        }
+
+        final Node startNode = startObject.getSceneGraphObject().getAs(Node.class);
+        final List<Node> hitNodes = picker.pick(startNode, sceneX, sceneY);
+        if (hitNodes == null) {
+            result = null;
+        } else {
+            assert hitNodes.isEmpty() == false;
+
+            FXOMObject hitObject = null;
+            final Iterator<Node> it = hitNodes.iterator();
+            while ((hitObject == null) && it.hasNext()) {
+                final Node hitNode = it.next();
+                hitObject = searchWithNode(hitNode, sceneX, sceneY);
+                if (excludes.contains(hitObject)) {
+                    hitObject = null;
+                }
+            }
+            result = hitObject;
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns the FXOMObject which matches (sceneGraphNode, sceneX, sceneY).
+     *
+     * @param sceneGraphNode scene graph node
+     * @param sceneX         x coordinate of a scene point
+     * @param sceneY         y coordinate of a scene point
+     * @return an FXOMObject that matches (sceneGraphNode, sceneX, sceneY)
+     */
+    @Override
+    public FXOMObject searchWithNode(Node sceneGraphNode, double sceneX, double sceneY) {
+        final FXOMObject result;
+
+        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        final FXOMObject match = fxomDocument.collect(SceneGraphCollector.findSceneGraphObject(sceneGraphNode)).get();
+        /*
+         * Refine the search. With the logic above, a click in a 'tab header' returns
+         * the fxom object associated to the 'tab pane'. We would like to get the fxom
+         * object associated to the 'tab'. When the pick result is a 'TabPane' we need
+         * to refine this result. This refinement logic is available in AbstractDriver.
+         */
+        if (match != null) {
+            var refiner = driver.make(PickRefiner.class, match);
+            result = refiner.refinePick(sceneGraphNode, sceneX, sceneY, match);
+        } else {
+            result = null;
+        }
+
+        return result;
+    }
 
 }

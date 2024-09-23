@@ -37,7 +37,7 @@ package com.oracle.javafx.scenebuilder.tools.job.gridpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -82,7 +82,7 @@ public final class MoveColumnContentJob extends BatchDocumentJob {
     // @formatter:off
     protected MoveColumnContentJob(
             JobExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             MoveCellContentJob.Factory moveCellContentJobFactory,
             FXOMObjectMask.Factory GridPaneHierarchyMask) {
     // @formatter:on

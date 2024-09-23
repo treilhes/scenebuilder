@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,14 +33,13 @@
  */
 package com.oracle.javafx.scenebuilder.tools;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.ui.tool.DriverExtensionRegistry;
+import com.gluonhq.jfxapps.core.api.ui.tool.PickRefiner;
 import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
 import com.oracle.javafx.scenebuilder.api.control.DropTargetProvider;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.InlineEditorBounds;
-import com.oracle.javafx.scenebuilder.api.control.PickRefiner;
 import com.oracle.javafx.scenebuilder.api.control.Pring;
 import com.oracle.javafx.scenebuilder.api.control.Relocater;
 import com.oracle.javafx.scenebuilder.api.control.ResizeGuide;
@@ -48,7 +47,6 @@ import com.oracle.javafx.scenebuilder.api.control.Resizer;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.control.Shadow;
 import com.oracle.javafx.scenebuilder.api.control.Tring;
-import com.oracle.javafx.scenebuilder.api.control.driver.DriverExtensionRegistry;
 import com.oracle.javafx.scenebuilder.api.control.inlineedit.SimilarInlineEditorBounds;
 import com.oracle.javafx.scenebuilder.api.control.intersect.IntersectsBoundsCheck;
 import com.oracle.javafx.scenebuilder.api.control.outline.Outline;
@@ -171,10 +169,10 @@ import javafx.scene.web.WebView;
 import javafx.stage.PopupWindow;
 import javafx.stage.Window;
 
-@Component
+@ApplicationSingleton
 public class DriverExtensionInitializer {
 
-    public DriverExtensionInitializer(@Autowired DriverExtensionRegistry registry) {
+    public DriverExtensionInitializer(DriverExtensionRegistry registry) {
         super();
         registry.registerExtension(CurveEditor.class);
         registry.registerExtension(DropTargetProvider.class);

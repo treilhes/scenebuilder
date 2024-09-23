@@ -42,19 +42,23 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.CardinalPoint;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.HudWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -64,11 +68,12 @@ import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
-import com.oracle.javafx.scenebuilder.api.control.Driver;
+import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide;
 import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
@@ -83,8 +88,7 @@ import javafx.scene.shape.Circle;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class EditCurveGesture extends AbstractMouseGesture {
 
     private FXOMInstance fxomInstance;
@@ -99,33 +103,33 @@ public class EditCurveGesture extends AbstractMouseGesture {
 
     private final EnumMap<Tunable, Integer> tunableMap = new EnumMap<>(Tunable.class);
 
-	private final IMetadata metadata;
+	private final SbMetadata metadata;
 	private final FXOMObjectMask.Factory designMaskFactory;
 	private final JobManager jobManager;
-	private final Driver driver;
+	private final SbDriver driver;
 	private final HudWindow hudWindow;
-	private final FxmlDocumentManager documentManager;
-	private final ModifyObjectJob.Factory modifyObjectJobFactory;
+	private final ApplicationInstanceEvents documentManager;
+	private final FxomJobsFactory fxomJobsFactory;
 
 	private Parent closestParent;
 
 	protected EditCurveGesture(
-	        Content contentPanelController,
-	        IMetadata metadata,
-	        Driver driver,
+	        Workspace workspace,
+	        SbMetadata metadata,
+	        SbDriver driver,
 	        FXOMObjectMask.Factory designMaskFactory,
 	        JobManager jobManager,
-	        FxmlDocumentManager documentManager,
+	        ApplicationInstanceEvents documentManager,
 	        HudWindow hudWindow,
-	        ModifyObjectJob.Factory modifyObjectJobFactory) {
-        super(contentPanelController);
+	        FxomJobsFactory fxomJobsFactory) {
+        super(workspace);
         this.metadata = metadata;
         this.designMaskFactory = designMaskFactory;
         this.driver = driver;
         this.hudWindow = hudWindow;
         this.jobManager = jobManager;
         this.documentManager = documentManager;
-        this.modifyObjectJobFactory = modifyObjectJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
     }
 
 	protected void setupGestureParameters(FXOMInstance fxomInstance, Tunable tunable) {

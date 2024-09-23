@@ -41,7 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -94,9 +94,9 @@ public final class WrapInGridPaneJob extends AbstractWrapInSubComponentJob {
     private final Map<FXOMObject, int[]> indices = new HashMap<>();
     private final FXOMDocument fxomDocument;
     private final IMetadata metadata;
-    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
 
-    protected WrapInGridPaneJob(JobExtensionFactory extensionFactory, FxmlDocumentManager documentManager,
+    protected WrapInGridPaneJob(JobExtensionFactory extensionFactory, ApplicationInstanceEvents documentManager,
             Selection selection, FXOMObjectMask.Factory designMaskFactory, IMetadata metadata,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             ToggleFxRootJob.Factory toggleFxRootJobFactory,
@@ -104,14 +104,14 @@ public final class WrapInGridPaneJob extends AbstractWrapInSubComponentJob {
             SetDocumentRootJob.Factory setDocumentRootJobFactory,
             RemovePropertyValueJob.Factory removePropertyValueJobFactory,
             RemovePropertyJob.Factory removePropertyJobFactory,
-            ModifyObjectJob.Factory modifyObjectJobFactory,
+            FxomJobsFactory fxomJobsFactory,
             AddPropertyJob.Factory addPropertyJobFactory,
             DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
         super(extensionFactory, documentManager, selection, designMaskFactory, metadata, addPropertyValueJobFactory,
                 toggleFxRootJobFactory, modifyFxControllerJobFactory, setDocumentRootJobFactory, removePropertyValueJobFactory,
                 removePropertyJobFactory, modifyObjectJobFactory, addPropertyJobFactory, objectSelectionGroupFactory);
         this.metadata = metadata;
-        this.modifyObjectJobFactory = modifyObjectJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
         this.fxomDocument = documentManager.fxomDocument().get();
         newContainerClass = GridPane.class;
     }

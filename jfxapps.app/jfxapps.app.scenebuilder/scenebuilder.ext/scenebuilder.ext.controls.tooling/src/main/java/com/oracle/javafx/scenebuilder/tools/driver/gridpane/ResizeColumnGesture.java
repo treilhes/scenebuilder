@@ -84,15 +84,15 @@ public class ResizeColumnGesture extends AbstractMouseGesture {
     private GridPaneColumnResizer resizer;
 
     private final JobManager jobManager;
-    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
 
 	protected ResizeColumnGesture(
             Content content,
             JobManager jobManager,
-            ModifyObjectJob.Factory modifyObjectJobFactory) {
+            FxomJobsFactory fxomJobsFactory) {
         super(content);
         this.jobManager = jobManager;
-        this.modifyObjectJobFactory = modifyObjectJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
     }
 
 	protected void setupGestureParameters(GridPaneHandles gridPaneHandles, int columnIndex) {

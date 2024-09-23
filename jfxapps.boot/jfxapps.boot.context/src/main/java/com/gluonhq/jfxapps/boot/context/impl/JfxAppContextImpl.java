@@ -47,7 +47,6 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import org.apache.commons.logging.Log;
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeanUtils;
@@ -68,13 +67,16 @@ import org.springframework.core.ResolvableType;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.lang.Nullable;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 
 import com.gluonhq.jfxapps.boot.api.context.Application;
 import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
+import com.gluonhq.jfxapps.boot.api.context.ContextManager;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.MultipleProgressListener;
 import com.gluonhq.jfxapps.boot.api.context.ScopedExecutor;
+import com.gluonhq.jfxapps.boot.api.context.annotation.LayerContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.LocalContextOnly;
 import com.gluonhq.jfxapps.boot.context.internal.ContextProgressHandler;
 import com.gluonhq.jfxapps.boot.context.scope.ApplicationInstanceScope;
@@ -95,11 +97,6 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
     private final UUID id;
     private final Set<Class<?>> registeredClasses = new HashSet<>();
     private final Set<Class<?>> deportedClasses = new HashSet<>();
-    public JfxAppContextImpl(UUID id) {
-        this(id, null);
-    }
-
-    private Log x;
 
     public static JfxAppContext fromScratch(Class<?>... array) {
         JfxAppContextImpl ctx = new JfxAppContextImpl(UUID.randomUUID());
@@ -107,6 +104,10 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
         ctx.refresh();
         ctx.start();
         return ctx;
+    }
+
+    public JfxAppContextImpl(UUID id) {
+        this(id, null);
     }
 
     public JfxAppContextImpl(UUID contextId, ClassLoader loader) {
@@ -176,28 +177,19 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
         }
     }
 
-//    @Override
-//    public <T> T getLayerBean(Class<?> layerClass, Class<T> cls) {
-//
-//        var moduleLayer = layerClass.getModule().getLayer();
-//        var contextManager = getBean(ContextManager.class);
-//        var layerContext = contextManager.get(moduleLayer.);
-//        if (getParent() == null) {
-//            return getBean(cls);
-//        }
-//
-//        Map<String, T> globalMap = getBeansOfType(cls);
-//        Map<String, T> parentMap = getParent().getBeansOfType(cls);
-//
-//        Set<T> result = new HashSet<>(globalMap.values());
-//        result.removeAll(parentMap.values());
-//
-//        if (result.size() == 1) {
-//            return result.iterator().next();
-//        } else {
-//            throw new NoUniqueBeanDefinitionException(cls, result.size(), "No unique bean found");
-//        }
-//    }
+    @Override
+    public <T> T getLayerBean(Class<?> layerClass, Class<T> cls) {
+
+        var moduleLayer = layerClass.getModule().getLayer();
+        var contextManager = getBean(ContextManager.class);
+        var layerContext = contextManager.get(moduleLayer);
+
+        if (layerContext == null) {
+            return null;
+        }
+
+        return layerContext.getBean(cls);
+    }
 
     @Override
     public String[] getBeanNamesForType(Class<?> cls, Class<?> genericClass) {
@@ -346,6 +338,30 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
 //            ChildFirstBeanFactoryWrapper bf = new ChildFirstBeanFactoryWrapper(parent, this);
 //            return bf;
 //        }
+
+
+        @Override
+        protected Map<String, Object> findAutowireCandidates(@Nullable String beanName, Class<?> requiredType,
+                DependencyDescriptor descriptor) {
+
+            var layerContext = descriptor.getAnnotation(LayerContext.class);
+
+            if (layerContext != null) {
+                var resolvable = descriptor.getResolvableType();
+                var beanClass = resolvable.getRawClass();
+
+                if (beanClass.getClassLoader() != getBeanClassLoader()) {
+                    var moduleLayer = beanClass.getModule().getLayer();
+                    var contextManager = getBean(ContextManager.class);
+                    var targetContext = contextManager.get(moduleLayer);
+
+                    if (targetContext != null && targetContext.getBeanFactory() instanceof JfxAppContextImpl.SbBeanFactoryImpl beanFactory) {
+                        return beanFactory.findAutowireCandidates(beanName, requiredType, descriptor);
+                    }
+                }
+            }
+            return super.findAutowireCandidates(beanName, requiredType, descriptor);
+        }
 
         @Override
         protected boolean isAutowireCandidate(String beanName, DependencyDescriptor descriptor,

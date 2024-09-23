@@ -31,59 +31,26 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.api.control.driver;
+package app.ext1.service;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.LayerContext;
 
-import org.springframework.stereotype.Component;
+import app.ext1.api.JfxAppsService;
+import app.root.api.RootExportedService;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.util.InheritanceMap;
+@ApplicationSingleton
+public class JfxAppsRootExportedService implements RootExportedService {
 
-@Component
-public class DriverExtensionRegistry {
+    JfxAppsService local;
 
-    private final JfxAppContext context;
-    private final Map<Class<?>, InheritanceMap<?>> extensions = new HashMap<>();
-
-    public DriverExtensionRegistry(JfxAppContext context) {
-        super();
-        this.context = context;
+    public JfxAppsRootExportedService(@LayerContext JfxAppsService local) {
+        this.local = local;
     }
 
-    public <U> void registerExtension(Class<U> extensionInterface) {
-        if (!extensions.containsKey(extensionInterface)) {
-            extensions.put(extensionInterface, new InheritanceMap<U>());
-        }
+    @Override
+    public String callLocalService() {
+        return local.getClass().getName();
     }
 
-    public <T, U extends T> void registerImplementationClass(Class<T> extensionInterface, Class<?> itemClass,
-            Class<U> implementation) {
-        assert extensions.containsKey(extensionInterface);
-
-        @SuppressWarnings("unchecked")
-        InheritanceMap<T> ef = (InheritanceMap<T>)extensions.get(extensionInterface);
-
-        ef.put(itemClass, implementation);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T, U extends T> Class<U> getImplementationClass(Class<T> extensionInterface, Class<?> itemClass) {
-        assert extensions.containsKey(extensionInterface);
-
-        InheritanceMap<T> ef = (InheritanceMap<T>)extensions.get(extensionInterface);
-
-        return (Class<U>)ef.getFirstInherited(itemClass);
-    }
-
-    public <T, U extends T> U getImplementationInstance(Class<T> extensionInterface, Class<?> itemClass) {
-        Class<U> uClass = getImplementationClass(extensionInterface, itemClass);
-
-        if (uClass == null) {
-            return null;
-        }
-
-        return context.getBean(uClass);
-    }
 }

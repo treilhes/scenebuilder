@@ -33,6 +33,8 @@
  */
 package com.gluonhq.jfxapps.core.api.ui.controller.misc;
 
+import java.util.Set;
+
 import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
 import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -105,4 +107,8 @@ public interface Workspace {
     Node getWorkspacePane();
 
     //ModeManager getModeManager();
+
+    FXOMObject searchWithNode(Node node, double x, double y);
+    FXOMObject pick(double hitX, double hitY, Set<FXOMObject> pickExcludes);
+    FXOMObject pick(double sceneX, double sceneY);
 }

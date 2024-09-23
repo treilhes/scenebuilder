@@ -38,7 +38,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -70,7 +70,7 @@ import javafx.scene.layout.HBox;
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
 public final class WrapInHBoxJob extends AbstractWrapInSubComponentJob {
 
-    protected WrapInHBoxJob(JobExtensionFactory extensionFactory, FxmlDocumentManager documentManager,
+    protected WrapInHBoxJob(JobExtensionFactory extensionFactory, ApplicationInstanceEvents documentManager,
             Selection selection, FXOMObjectMask.Factory designMaskFactory, IMetadata metadata,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             ToggleFxRootJob.Factory toggleFxRootJobFactory,
@@ -78,7 +78,7 @@ public final class WrapInHBoxJob extends AbstractWrapInSubComponentJob {
             SetDocumentRootJob.Factory setDocumentRootJobFactory,
             RemovePropertyValueJob.Factory removePropertyValueJobFactory,
             RemovePropertyJob.Factory removePropertyJobFactory,
-            ModifyObjectJob.Factory modifyObjectJobFactory,
+            FxomJobsFactory fxomJobsFactory,
             AddPropertyJob.Factory addPropertyJobFactory,
             DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
         super(extensionFactory, documentManager, selection, designMaskFactory, metadata, addPropertyValueJobFactory,

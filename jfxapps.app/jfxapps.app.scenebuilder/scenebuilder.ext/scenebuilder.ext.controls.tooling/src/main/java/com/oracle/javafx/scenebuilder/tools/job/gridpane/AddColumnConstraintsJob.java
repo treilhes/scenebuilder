@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -100,7 +100,7 @@ public final class AddColumnConstraintsJob extends BatchDocumentJob {
 
     protected AddColumnConstraintsJob(
             JobExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             IMetadata metadata,
             AddPropertyValueJob.Factory addPropertyValueJobFactory,
             AddPropertyJob.Factory addPropertyJobFactory,

@@ -68,10 +68,10 @@ import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.ViewMenuController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
@@ -254,7 +254,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             ModifySelectionJob.Factory modifySelectionJobFactory,
             ModifyFxIdJob.Factory modifyFxIdJobFactory,
             ModifySelectionToggleGroupJob.Factory modifySelectionToggleGroupJobFactory,
-            ViewMenuController viewMenuController) {
+            ViewMenu viewMenuController) {
      // @formatter:on
         super(scenebuilderManager, documentManager, viewMenuController, InspectorPanelController.class.getResource(fxmlFile),
                 I18N.getBundle());

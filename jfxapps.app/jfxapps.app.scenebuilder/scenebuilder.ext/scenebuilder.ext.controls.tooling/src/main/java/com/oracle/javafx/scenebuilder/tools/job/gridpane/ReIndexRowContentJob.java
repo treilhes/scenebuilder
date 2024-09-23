@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.tools.job.gridpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -72,23 +72,23 @@ public final class ReIndexRowContentJob extends AbstractJob {
     private final FXOMDocument fxomDocument;
     private final IMetadata metadata;
     private final com.gluonhq.jfxapps.core.api.job.base.Factory batchJobFactory;
-    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
     private final GridPaneHierarchyMask.Factory maskFactory;
 
     // @formatter:off
     protected ReIndexRowContentJob(
             JobExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             IMetadata metadata,
             BatchJob.Factory batchJobFactory,
-            ModifyObjectJob.Factory modifyObjectJobFactory,
+            FxomJobsFactory fxomJobsFactory,
             GridPaneHierarchyMask.Factory maskFactory) {
     // @formatter:on
         super(extensionFactory);
         this.fxomDocument = documentManager.fxomDocument().get();
         this.metadata = metadata;
         this.batchJobFactory = batchJobFactory;
-        this.modifyObjectJobFactory = modifyObjectJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
         this.maskFactory = maskFactory;
     }
 

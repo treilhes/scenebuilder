@@ -98,6 +98,14 @@
                                             <version>${project.version}</version>
                                         </dependency>
                                     </extension>
+                                    <extension>
+                                        <uuid>285f16bb-9af8-4c60-9ca9-5098a9d6e920</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>jfxapps.core.drag.and.drop</artifactId>
+                                            <version>${project.version}</version>
+                                        </dependency>
+                                    </extension>
                                     
                                     <!-- temp -->
                                     <extension>

@@ -35,23 +35,23 @@ package com.oracle.javafx.scenebuilder.api.control.driver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Lazy;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.core.api.ui.tool.DriverExtensionRegistry;
+import com.gluonhq.jfxapps.core.api.ui.tool.PickRefiner;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
 import com.oracle.javafx.scenebuilder.api.control.DropTargetProvider;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.InlineEditorBounds;
-import com.oracle.javafx.scenebuilder.api.control.PickRefiner;
 import com.oracle.javafx.scenebuilder.api.control.Pring;
 import com.oracle.javafx.scenebuilder.api.control.Relocater;
 import com.oracle.javafx.scenebuilder.api.control.ResizeGuide;
 import com.oracle.javafx.scenebuilder.api.control.Resizer;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
+import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.api.control.Shadow;
 import com.oracle.javafx.scenebuilder.api.control.Tring;
 import com.oracle.javafx.scenebuilder.api.control.curve.AbstractCurveEditor;
@@ -61,7 +61,6 @@ import com.oracle.javafx.scenebuilder.api.control.intersect.AbstractIntersectsBo
 import com.oracle.javafx.scenebuilder.api.control.intersect.IntersectsBoundsCheck;
 import com.oracle.javafx.scenebuilder.api.control.outline.AbstractOutline;
 import com.oracle.javafx.scenebuilder.api.control.outline.Outline;
-import com.oracle.javafx.scenebuilder.api.control.pickrefiner.AbstractPickRefiner;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractPring;
 import com.oracle.javafx.scenebuilder.api.control.relocater.AbstractRelocater;
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizeGuide;
@@ -74,16 +73,14 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 
 @ApplicationSingleton
-public class GenericDriver extends AbstractDriver {
+public class SbDriverImpl implements SbDriver {
 
-    private static final Logger logger = LoggerFactory.getLogger(GenericDriver.class);
+    private static final Logger logger = LoggerFactory.getLogger(SbDriverImpl.class);
 
     private final DriverExtensionRegistry registry;
 
-    public GenericDriver(
-            DriverExtensionRegistry registry,
-            @Lazy Content contentPanelController) {
-        super(contentPanelController);
+    public SbDriverImpl(DriverExtensionRegistry registry) {
+        super();
         this.registry = registry;
     }
 
@@ -138,8 +135,7 @@ public class GenericDriver extends AbstractDriver {
         if (parentObject == null || node.getParent() == null) {// root element or detached graph
             relocater = new RootRelocater();
         } else {
-            final Object sceneGraphParent = parentObject.getSceneGraphObject().get();
-            relocater = (AbstractRelocater)registry.getImplementationInstance(Relocater.class, sceneGraphParent.getClass());
+            relocater = (AbstractRelocater)make(Relocater.class, parentObject);
         }
         if (relocater != null) {
             relocater.setFxomObject(fxomObject);
@@ -206,7 +202,7 @@ public class GenericDriver extends AbstractDriver {
 
     @Override
     public FXOMObject refinePick(Node hitNode, double sceneX, double sceneY, FXOMObject fxomObject) {
-        AbstractPickRefiner pickRefiner = (AbstractPickRefiner)make(PickRefiner.class, fxomObject);
+        var pickRefiner = make(PickRefiner.class, fxomObject);
 
         if (pickRefiner != null) {
 //            pickRefiner.setSceneGraphObject(fxomObject.getSceneGraphObject().getAs(Node.class));
