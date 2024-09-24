@@ -51,45 +51,6 @@
                                 </extensions>
                             </application>
                             <application>
-                                <uuid>06ae1f67-a8aa-49e3-abb5-4f108534578c</uuid>
-                                <dependency>
-                                    <groupId>com.gluonhq.jfxapps</groupId>
-                                    <artifactId>scenebuilder.api</artifactId>
-                                    <version>${scenebuilder.version}</version>
-                                </dependency>
-                                <description>
-                                    <icon>fxmlRunner64x64.png</icon>
-                                    <title>FXML Runner</title>
-                                    <text>App that run fxml files</text>
-                                </description>
-                                <extensions>
-                                    <extension>
-                                        <uuid>86de1209-5c5e-41a5-941b-1484fadccdd6</uuid>
-                                        <dependency>
-                                            <groupId>com.gluonhq.jfxapps</groupId>
-                                            <artifactId>scenebuilder.ui</artifactId>
-                                            <version>${scenebuilder.version}</version>
-                                        </dependency>
-                                    </extension>
-                                    <extension>
-                                        <uuid>26cd6a45-7750-4b3e-bbd2-018187df0c49</uuid>
-                                        <dependency>
-                                            <groupId>com.gluonhq.jfxapps</groupId>
-                                            <artifactId>scenebuilder.app</artifactId>
-                                            <version>${scenebuilder.version}</version>
-                                        </dependency>
-                                    </extension>
-                                    <extension>
-                                        <uuid>3d5e0c86-fda2-4a8a-b7b2-85394f2eb9de</uuid>
-                                        <dependency>
-                                            <groupId>com.gluonhq.jfxapps</groupId>
-                                            <artifactId>scenebuilder.main</artifactId>
-                                            <version>${scenebuilder.version}</version>
-                                        </dependency>
-                                    </extension>
-                                </extensions>
-                            </application>
-                            <application>
                                 <uuid>1b8bb5f3-efb3-41a6-b6f0-12c9d96fc6a2</uuid>
                                 <dependency>
                                     <groupId>com.gluonhq.jfxapps</groupId>
@@ -121,7 +82,17 @@
                                 </extensions>
                             </application>
                         </applications>
+                        <registries>
+                            <registry>
+                                <dependency>
+                                    <groupId>com.gluonhq.jfxapps</groupId>
+                                    <artifactId>scenebuilder.registry</artifactId>
+                                    <version>${scenebuilder.version}</version>
+                                </dependency>
+                            </registry>
+                        </registries>
                     </registry>
+
                 </configuration>
             </plugin>
         </plugins>

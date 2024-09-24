@@ -58,9 +58,9 @@ import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
-import com.gluonhq.jfxapps.boot.internal.context.config.DefaultExtensionContextConfig;
 import com.gluonhq.jfxapps.boot.layer.LayerNotFoundException;
 import com.gluonhq.jfxapps.boot.loader.extension.ExtensionValidator;
+import com.gluonhq.jfxapps.boot.loader.extension.context.DefaultExtensionContextConfig;
 import com.gluonhq.jfxapps.boot.loader.model.AbstractExtension;
 
 // TODO: Auto-generated Javadoc

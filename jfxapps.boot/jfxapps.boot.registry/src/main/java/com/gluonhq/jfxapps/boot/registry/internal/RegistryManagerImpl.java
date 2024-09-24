@@ -46,6 +46,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,12 +117,19 @@ public class RegistryManagerImpl implements RegistryManager {
     }
 
     private void loadAndDispatch(RegistryArtifact src) {
-        var a = loadArtifact(src);
+        var r = loadArtifact(src);
         if (src.mandatory()) {
-            mandatoryRegistries.add(a);
+            mandatoryRegistries.addAll(flatten(r));
         } else {
-            guestRegistries.add(a);
+            guestRegistries.addAll(flatten(r));
         }
+    }
+
+    private Collection<Registry> flatten(Registry r) {
+        var list = new ArrayList<Registry>();
+        list.add(r);
+        r.getRegistries().forEach(sr -> list.addAll(flatten(sr)));
+        return list;
     }
 
     private Layer createLayer(List<Path> a) {
@@ -151,6 +159,21 @@ public class RegistryManagerImpl implements RegistryManager {
         var layer = createLayer(resolved.toPaths());
 
         var registry = loadRegistryLayer(layer).orElseThrow(() -> new RegistryException(String.format("Layer not loaded %s", layer)));
+
+        var populated = registry.getRegistries().stream().map(r -> {
+
+            var coordinates = r.getDependency();
+            var registryArtifact = new RegistryArtifact(coordinates.getGroupId(), coordinates.getArtifactId(), null,
+                    src.mandatory());
+
+            var subRegistry = loadArtifact(registryArtifact);
+            subRegistry.getApplications().addAll(r.getApplications());
+            subRegistry.getExtensions().addAll(r.getExtensions());
+
+            return subRegistry;
+        }).collect(Collectors.toSet());
+
+        registry.setRegistries(populated);
 
         return registry;
     }

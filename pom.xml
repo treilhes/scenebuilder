@@ -40,7 +40,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <spring.boot.version>3.3.3</spring.boot.version>
-        <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <org.mapstruct.version>1.6.2</org.mapstruct.version>
         <rxjavafx.version>3.0.2</rxjavafx.version>
 
     </properties>
@@ -58,7 +58,7 @@
 
     <dependencyManagement>
         <dependencies>
-            
+
             <!-- jfxapps.boot -->
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
@@ -325,7 +325,7 @@
                 <artifactId>rxjavafx</artifactId>
                 <version>${rxjavafx.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -419,7 +419,7 @@
     <build>
         <plugins>
             <plugin>
-                <!-- 
+                <!--
                 This plugin has 2 internal usages:
                 - generate a flattened version of the pom.xml in the repository, maven actions
                 will use the flattened pom.xml as the effective pom reducing the
@@ -629,7 +629,7 @@
                                         </execute>
                                     </action>
                                 </pluginExecution>
-                                
+
                                 <pluginExecution>
                                     <pluginExecutionFilter>
                                         <groupId>org.codehaus.mojo</groupId>

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -48,12 +48,14 @@ public class Registry {
     private Dependency dependency;
     private Set<Application> applications = new HashSet<>();
     private Set<Extension> extensions = new HashSet<>();
+    private Set<Registry> registries = new HashSet<>();
 
-    public Registry(UUID uuid, Dependency dependency, Set<Application> applications, Set<Extension> extensions) {
+    public Registry(UUID uuid, Dependency dependency, Set<Application> applications, Set<Extension> extensions, Set<Registry> registries) {
         this.uuid = uuid;
         this.dependency = dependency;
         this.applications = Set.copyOf(applications);
         this.extensions = Set.copyOf(extensions);
+        this.registries = Set.copyOf(registries);
     }
 
     public Registry() {
@@ -91,9 +93,17 @@ public class Registry {
         this.extensions = extensions;
     }
 
+    public Set<Registry> getRegistries() {
+        return registries;
+    }
+
+    public void setRegistries(Set<Registry> registries) {
+        this.registries = registries;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(applications, dependency, extensions, uuid);
+        return Objects.hash(applications, dependency, extensions, registries, uuid);
     }
 
     @Override
@@ -106,13 +116,14 @@ public class Registry {
             return false;
         Registry other = (Registry) obj;
         return Objects.equals(applications, other.applications) && Objects.equals(dependency, other.dependency)
-                && Objects.equals(extensions, other.extensions) && Objects.equals(uuid, other.uuid);
+                && Objects.equals(extensions, other.extensions) && Objects.equals(registries, other.registries)
+                && Objects.equals(uuid, other.uuid);
     }
 
     @Override
     public String toString() {
         return "Registry [uuid=" + uuid + ", dependency=" + dependency + ", applications=" + applications
-                + ", extensions=" + extensions + "]";
+                + ", extensions=" + extensions + ", registries=" + registries + "]";
     }
 
 }
