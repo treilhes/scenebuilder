@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,33 +36,38 @@ package com.oracle.javafx.scenebuilder.exporter.menu;
 import java.util.Arrays;
 import java.util.List;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemProvider;
-import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.exporter.controller.ExporterMenuController;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 public class ExporterMenuProvider implements MenuItemProvider {
 
     private final static String IMPORT_MENU_ID = "importMenu";
     private final static String EXPORT_MENU_ID = "exportMenu";
     private final static String SELECTION_EXPORT_MENU_ID = "selectionExportMenu";
     private final static String SCENE_EXPORT_MENU_ID = "sceneExportMenu";
-    
+
     private final ExporterMenuController exporterMenuController;
     private final Selection selection;
+    private final I18N i18n;
 
     public ExporterMenuProvider(
+            I18N i18n,
             @Autowired  @Lazy ExporterMenuController exporterMenuController,
             @Autowired  @Lazy Selection selection
             ) {
+        this.i18n = i18n;
         this.exporterMenuController = exporterMenuController;
         this.selection = selection;
     }
@@ -95,23 +101,23 @@ public class ExporterMenuProvider implements MenuItemProvider {
                 return menu;
             }
 
-            Menu exportMenu = new Menu(I18N.getString("menu.title.export"));
+            Menu exportMenu = new Menu(i18n.getString("menu.title.export"));
             exportMenu.setId(EXPORT_MENU_ID);
-            
-            MenuItem selectionMenu = new MenuItem(I18N.getString("menu.title.export.selection"));
+
+            MenuItem selectionMenu = new MenuItem(i18n.getString("menu.title.export.selection"));
             selectionMenu.setId(SELECTION_EXPORT_MENU_ID);
             selectionMenu.setOnAction((e) -> exporterMenuController.performExportSelection());
             selectionMenu.setDisable(!exporterMenuController.hasSelectionExportFormat());
-            
-            MenuItem sceneMenu = new MenuItem(I18N.getString("menu.title.export.scene"));
+
+            MenuItem sceneMenu = new MenuItem(i18n.getString("menu.title.export.scene"));
             sceneMenu.setId(SCENE_EXPORT_MENU_ID);
             sceneMenu.setOnAction((e) -> exporterMenuController.performExportScene());
             sceneMenu.setDisable(!exporterMenuController.hasSceneExportFormat());
-            
+
             exportMenu.getItems().add(sceneMenu);
             exportMenu.getItems().add(selectionMenu);
             exportMenu.setOnShowing((e) -> selectionMenu.setDisable(selection.getGroup() == null));
-            
+
             menu = exportMenu;
             return menu;
         }

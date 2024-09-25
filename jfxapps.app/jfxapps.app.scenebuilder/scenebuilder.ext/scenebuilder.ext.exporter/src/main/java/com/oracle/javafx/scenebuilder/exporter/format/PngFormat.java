@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,8 +39,9 @@ import java.io.FileOutputStream;
 
 import javax.imageio.ImageIO;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.embed.swing.SwingFXUtils;
@@ -47,21 +49,23 @@ import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-@Lazy
+@ApplicationSingleton
 public class PngFormat implements ExportFormat {
 
-    protected PngFormat() {}
+    private final I18N i18n;
+
+    protected PngFormat(I18N i18n) {
+        this.i18n = i18n;
+    }
 
     @Override
     public String getDescription() {
-        return I18N.getString("export.png.format.description");
+        return i18n.getString("export.png.format.description");
     }
 
     @Override
     public String getExtension() {
-        return I18N.getString("export.png.format.extension");
+        return i18n.getString("export.png.format.extension");
     }
 
     @Override
@@ -78,13 +82,14 @@ public class PngFormat implements ExportFormat {
     public void exportSelection(Selection selection, File output) {
         String baseName = output.getName().substring(0, output.getName().lastIndexOf("."));
         String extension = output.getName().substring(output.getName().lastIndexOf(".") + 1);
-        
+
         int targetIndex = 1;
         for (FXOMObject fxo : selection.getGroup().getItems()) {
-            if (fxo.isNode()) {
+            var scnegraphObject = fxo.getSceneGraphObject();
+            if (scnegraphObject.isNode()) {
                 String idx = targetIndex == 1 ? "" : "_" + String.format("%04d", targetIndex);//NOCHECK
                 File target = new File(output.getParentFile(), baseName + idx + "." + extension);//NOCHECK
-                exportScene((Node)fxo.getSceneGraphObject(), target);
+                exportScene(scnegraphObject.getAs(Node.class), target);
                 targetIndex++;
             }
         }
@@ -96,7 +101,7 @@ public class PngFormat implements ExportFormat {
         param.setDepthBuffer(true);
         WritableImage snapshot = rootNode.snapshot(param, null);
         BufferedImage tempImg = SwingFXUtils.fromFXImage(snapshot, null);
-        
+
         try (FileOutputStream fos = new FileOutputStream(output)){
             ImageIO.write(tempImg, "png", fos);//NOCHECK
         } catch(Exception e) {

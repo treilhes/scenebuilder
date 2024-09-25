@@ -38,13 +38,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
 import com.oracle.javafx.scenebuilder.exporter.format.ExportFormat;
 
+import jakarta.inject.Provider;
 import javafx.scene.Node;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -52,19 +54,20 @@ import javafx.stage.FileChooser.ExtensionFilter;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 public class ExporterMenuController {
 
-    private final EditorInstanceWindow document;
+    private final I18N i18n;
+    private final Provider<MainInstanceWindow> document;
     private final List<ExportFormat> formats;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     public ExporterMenuController(
-            @Autowired @Lazy EditorInstanceWindow document,
-            @Autowired @Lazy FxmlDocumentManager documentManager,
-            @Autowired List<ExportFormat> formats) {
+            I18N i18n,
+            Provider<MainInstanceWindow> document,
+            ApplicationInstanceEvents documentManager,
+            List<ExportFormat> formats) {
+        this.i18n = i18n;
         this.document = document;
         this.documentManager = documentManager;
         this.formats = formats;
@@ -81,14 +84,15 @@ public class ExporterMenuController {
     public void performExportSelection() {
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(I18N.getString("menu.title.export") + " " + I18N.getString("menu.title.export.selection"));
+        fileChooser.setTitle(i18n.getString("menu.title.export") + " " + i18n.getString("menu.title.export.selection"));
 
         List<ExportFormat> sceneFormats = formats.stream().filter(f -> f.canHandleSelection()).collect(Collectors.toList());
 
         sceneFormats.forEach(f -> fileChooser.getExtensionFilters()
                 .add(new ExtensionFilter(f.getDescription(), "*." + f.getExtension())));
 
-        File result = fileChooser.showSaveDialog(document.getStage());
+        var stage = document.get().getStage();
+        File result = fileChooser.showSaveDialog(stage);
         if (result != null) {
             if (!result.getParentFile().exists()) {
                 result.getParentFile().mkdirs();
@@ -109,14 +113,15 @@ public class ExporterMenuController {
     public void performExportScene() {
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(I18N.getString("menu.title.export") + " " + I18N.getString("menu.title.export.scene"));
+        fileChooser.setTitle(i18n.getString("menu.title.export") + " " + i18n.getString("menu.title.export.scene"));
 
         List<ExportFormat> sceneFormats = formats.stream().filter(f -> f.canHandleScene()).collect(Collectors.toList());
 
         sceneFormats.forEach(f -> fileChooser.getExtensionFilters()
                 .add(new ExtensionFilter(f.getDescription(), "*." + f.getExtension())));
 
-        File result = fileChooser.showSaveDialog(document.getStage());
+        var stage = document.get().getStage();
+        File result = fileChooser.showSaveDialog(stage);
         if (result != null) {
             if (!result.getParentFile().exists()) {
                 result.getParentFile().mkdirs();
