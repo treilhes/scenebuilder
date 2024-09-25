@@ -33,8 +33,6 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 
-import org.scenebuilder.fxml.api.SbEditor;
-
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
@@ -44,6 +42,7 @@ import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.api.SbEditor;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.toggle.dock", descriptionKey = "action.description.toggle.dock")

@@ -42,7 +42,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.scenebuilder.fxml.api.Documentation;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
@@ -53,6 +52,7 @@ import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
 
 @ExtendWith(ApplicationExtension.class)

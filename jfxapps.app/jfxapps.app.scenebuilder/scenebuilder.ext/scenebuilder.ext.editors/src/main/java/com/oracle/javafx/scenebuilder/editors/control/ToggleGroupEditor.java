@@ -36,7 +36,6 @@ package com.oracle.javafx.scenebuilder.editors.control;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.Documentation;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -50,6 +49,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMFxIdIndex;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.util.JavaLanguage;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.core.editors.AutoSuggestEditor;
 
 import javafx.event.ActionEvent;

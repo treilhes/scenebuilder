@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.scenebuilder.fxml.api.SbEditor;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -59,6 +58,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyFxControllerJob;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ToggleFxRootJob;
+import com.oracle.javafx.scenebuilder.api.SbEditor;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;

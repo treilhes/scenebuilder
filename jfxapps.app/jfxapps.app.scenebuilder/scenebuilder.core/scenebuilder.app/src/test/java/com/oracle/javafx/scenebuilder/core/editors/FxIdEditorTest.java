@@ -43,7 +43,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.scenebuilder.fxml.api.Documentation;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import com.gluonhq.jfxapps.core.api.Glossary;
@@ -53,6 +52,8 @@ import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.app.editors.FxIdEditor;
 
 @ExtendWith({ApplicationExtension.class, MockitoExtension.class})
 public class FxIdEditorTest {

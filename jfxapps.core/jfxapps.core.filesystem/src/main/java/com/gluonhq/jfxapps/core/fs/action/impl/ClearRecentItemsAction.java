@@ -40,7 +40,7 @@ import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
 
-@ApplicationInstancePrototype
+@ApplicationInstancePrototype("com.gluonhq.jfxapps.core.fs.action.impl.ClearRecentItemsAction")
 @ActionMeta(
         nameKey = "action.name.show.about",
         descriptionKey = "action.description.show.about")

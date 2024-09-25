@@ -122,6 +122,7 @@ public class CommandHandlerImpl implements CommandHandler, Application{
             ApplicationInstance instance = instancesManager.lookupUnusedInstance();
             if (instance == null) {
                 instance = instancesManager.newInstance();
+                instance.loadBlank();
             }
             instance.openWindow();
         }

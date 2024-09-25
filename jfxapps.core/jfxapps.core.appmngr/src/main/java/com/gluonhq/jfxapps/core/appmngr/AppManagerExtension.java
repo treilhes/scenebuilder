@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.core.appmngr.action.ApplicationActionFactoryImpl;
 import com.gluonhq.jfxapps.core.appmngr.impl.CommandHandlerImpl;
 import com.gluonhq.jfxapps.core.appmngr.impl.InstancesControllerImpl;
 
@@ -64,6 +65,7 @@ public class AppManagerExtension implements OpenExtension {
     public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
+                ApplicationActionFactoryImpl.class,
                 CommandHandlerImpl.class,
                 InstancesControllerImpl.class
             );

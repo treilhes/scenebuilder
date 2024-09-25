@@ -38,11 +38,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.SbEditor;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
 import com.gluonhq.jfxapps.core.fs.preference.global.WildcardImportsPreference;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.oracle.javafx.scenebuilder.api.SbEditor;
 import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
 import com.oracle.javafx.scenebuilder.api.ui.dock.ViewSearch;

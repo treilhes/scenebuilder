@@ -40,6 +40,9 @@ import java.util.UUID;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
 import com.gluonhq.jfxapps.core.job.manager.JobManagerImpl;
+import com.gluonhq.jfxapps.core.job.manager.action.JobManagerActionFactoryImpl;
+import com.gluonhq.jfxapps.core.job.manager.action.impl.RedoAction;
+import com.gluonhq.jfxapps.core.job.manager.action.impl.UndoAction;
 
 public class JobsExtension implements OpenExtension {
 
@@ -64,8 +67,11 @@ public class JobsExtension implements OpenExtension {
         return Arrays.asList(
                 BatchJob.class,
                 BatchJob.Factory.class,
+                FxomJobsFactoryImpl.class,
+                JobManagerActionFactoryImpl.class,
                 JobManagerImpl.class,
-                FxomJobsFactoryImpl.class
+                RedoAction.class,
+                UndoAction.class
             );
      // @formatter:on
     }

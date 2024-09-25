@@ -60,7 +60,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 import javafx.stage.FileChooser;
 
-@ApplicationInstancePrototype
+@ApplicationInstancePrototype("com.gluonhq.jfxapps.core.fs.action.impl.SaveAsAction")
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 public class SaveAsAction extends AbstractAction {
 

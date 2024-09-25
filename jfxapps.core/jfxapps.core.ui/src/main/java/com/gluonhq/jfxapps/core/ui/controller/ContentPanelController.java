@@ -303,7 +303,7 @@ public class ContentPanelController //extends AbstractFxmlController
     public void layoutContent() {
         final Exception currentLayoutException = getLayoutException();
 
-        if (fxomDocument == null) {
+        if (fxomDocument == null || fxomDocument.getFxomRoot() == null) {
             layoutException = null;
             return;
         }

@@ -31,13 +31,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import org.scenebuilder.fxml.api.SbApiExtension;
-
 import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+import com.oracle.javafx.scenebuilder.api.SbApiExtension;
 
 open module scenebuilder.api {
-    exports org.scenebuilder.fxml.api;
-    exports org.scenebuilder.fxml.api.i18n;
+    exports com.oracle.javafx.scenebuilder.api;
+    exports com.oracle.javafx.scenebuilder.api.i18n;
 
     exports com.oracle.javafx.scenebuilder.api.control;
     exports com.oracle.javafx.scenebuilder.api.control.curve;

@@ -37,11 +37,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.scenebuilder.fxml.api.SbApiExtension;
-
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.ui.controller.ContentPanelController;
 import com.gluonhq.jfxapps.core.ui.controller.ContextMenuController;
+import com.oracle.javafx.scenebuilder.api.SbApiExtension;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.BringForwardAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.BringToFrontAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.FocusContentAction;

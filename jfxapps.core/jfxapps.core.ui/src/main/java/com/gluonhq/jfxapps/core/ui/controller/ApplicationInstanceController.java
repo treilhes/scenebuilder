@@ -310,7 +310,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
             fxomDocument = fd;
 
             if (firstLoad) { // load the last ui prefs of the document if any
-                preferenceManager.untrack();
+                //preferenceManager.untrack();
                 documentPreferencesController.readFromJavaPreferences();
 
                 jfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
@@ -439,6 +439,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
         documentWindow.setMainKeyPressedEvent(mainKeyEventFilter);
 
         //editorController.setOwnerWindow(documentWindow.getStage());
+        tracker.initialize(documentWindow);
 
         logger.info("Opening window");
         documentWindow.openWindow();
@@ -576,7 +577,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
     public void openWindow() {
         jfxAppPlatform.runOnFxThreadWithActiveScope(() ->{
             documentWindow.openWindow();
-            tracker.initialize(documentWindow);
+
             // initialize preference binding
             preferenceManager.apply();
             preferenceManager.track();

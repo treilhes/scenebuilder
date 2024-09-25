@@ -39,8 +39,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import org.scenebuilder.fxml.api.Documentation;
-
 import com.gluonhq.jfxapps.core.api.css.CssPropAuthorInfo;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
@@ -50,6 +48,7 @@ import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.api.Documentation;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;

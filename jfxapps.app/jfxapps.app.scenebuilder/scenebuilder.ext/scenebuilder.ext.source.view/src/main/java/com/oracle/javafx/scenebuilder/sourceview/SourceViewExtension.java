@@ -37,9 +37,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.scenebuilder.fxml.api.SbApiExtension;
-
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import com.oracle.javafx.scenebuilder.api.SbApiExtension;
 import com.oracle.javafx.scenebuilder.sourceview.actions.GenerateFxmlContentAction;
 import com.oracle.javafx.scenebuilder.sourceview.controller.SourceViewWindowController;
 import com.oracle.javafx.scenebuilder.sourceview.i18n.I18NSourceView;

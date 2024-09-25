@@ -17,6 +17,9 @@ jfxapps:
         artifactId: jfxapps.core.ui
         path: ../../jfxapps.core/jfxapps.core.ui/target/classes
       - groupId: com.gluonhq.jfxapps
+        artifactId: jfxapps.core.jobs
+        path: ../../jfxapps.core/jfxapps.core.jobs/target/classes
+      - groupId: com.gluonhq.jfxapps
         artifactId: jfxapps.core.filesystem
         path: ../../jfxapps.core/jfxapps.core.filesystem/target/classes
       - groupId: com.gluonhq.jfxapps
@@ -41,7 +44,7 @@ jfxapps:
       - groupId: com.gluonhq.jfxapps
         artifactId: manager.app
         path: ../../jfxapps.app/jfxapps.app.manager/manager.app/target/classes
-        
+
       - groupId: com.gluonhq.jfxapps
         artifactId: devtools.api
         path: ../../jfxapps.app/jfxapps.app.devtools/devtools.api/target/classes
@@ -51,6 +54,16 @@ jfxapps:
       - groupId: com.gluonhq.jfxapps
         artifactId: devtools.i18n
         path: ../../jfxapps.app/jfxapps.app.devtools/devtools.i18n/target/classes
+
+      - groupId: com.gluonhq.jfxapps
+        artifactId: scenebuilder.api
+        path: ../../jfxapps.app/jfxapps.app.scenebuilder/scenebuilder.core/scenebuilder.api/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: scenebuilder.app
+        path: ../../jfxapps.app/jfxapps.app.scenebuilder/scenebuilder.core/scenebuilder.app/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: scenebuilder.ui
+        path: ../../jfxapps.app/jfxapps.app.scenebuilder/scenebuilder.core/scenebuilder.ui/target/classes
 
 server:
   port: 8080

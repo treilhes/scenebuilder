@@ -43,6 +43,7 @@ open module scenebuilder.core.ui {
     requires transitive scenebuilder.api;
     requires jfxapps.core.utils;
     requires scenebuilder.app.starter;
+    requires spring.beans;
 
     provides Extension with ScenebuilderUiExtension;
 }

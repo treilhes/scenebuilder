@@ -50,7 +50,6 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.SbEditor;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -71,6 +70,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMArchive;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.library.util.LibraryUtil;
+import com.oracle.javafx.scenebuilder.api.SbEditor;
 import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageLibraryController;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ThumbnailServiceController;

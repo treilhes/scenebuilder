@@ -34,8 +34,6 @@
 package com.oracle.javafx.scenebuilder.inspector.actions;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.Inspector;
-import org.scenebuilder.fxml.api.Inspector.SectionId;
 
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
@@ -43,6 +41,8 @@ import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.Inspector;
+import com.oracle.javafx.scenebuilder.api.Inspector.SectionId;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)

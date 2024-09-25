@@ -42,7 +42,7 @@ import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 
-@ApplicationInstancePrototype
+@ApplicationInstancePrototype("com.gluonhq.jfxapps.core.fs.action.impl.LoadUrlAction")
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 public class LoadUrlAction extends AbstractAction {
 

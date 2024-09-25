@@ -47,9 +47,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import org.scenebuilder.fxml.api.Documentation;
-import org.scenebuilder.fxml.api.SbEditor;
-
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardHandler;
@@ -73,6 +70,8 @@ import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.util.javafx.NodeUtils;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.api.SbEditor;
 import com.oracle.javafx.scenebuilder.api.ui.Docks;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath.Item;

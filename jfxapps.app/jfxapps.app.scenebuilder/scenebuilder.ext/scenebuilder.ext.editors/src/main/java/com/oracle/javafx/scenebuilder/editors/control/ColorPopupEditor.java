@@ -33,7 +33,6 @@
  */
 package com.oracle.javafx.scenebuilder.editors.control;
 
-import org.scenebuilder.fxml.api.Documentation;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -42,6 +41,7 @@ import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.controls.paintpicker.PaintPicker;
+import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.PaintPopupEditor;
 
 /**

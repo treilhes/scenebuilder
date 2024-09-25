@@ -46,7 +46,7 @@ import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
 
-@ApplicationInstancePrototype
+@ApplicationInstancePrototype("com.gluonhq.jfxapps.core.fs.action.impl.OpenFilesAction")
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 public class OpenFilesAction extends AbstractOpenFilesAction {
 

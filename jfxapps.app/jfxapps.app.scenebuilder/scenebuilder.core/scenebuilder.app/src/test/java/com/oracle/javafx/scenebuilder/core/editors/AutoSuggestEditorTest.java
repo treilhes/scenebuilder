@@ -40,7 +40,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Spy;
-import org.scenebuilder.fxml.api.Documentation;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
@@ -53,6 +52,8 @@ import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.IntegerPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.StringPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.StringPropertyMetadata.MultilineI18nStringPropertyMetadata;
+import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.oracle.javafx.scenebuilder.app.editors.AutoSuggestEditor;
 
 @ExtendWith(ApplicationExtension.class)
 public class AutoSuggestEditorTest {

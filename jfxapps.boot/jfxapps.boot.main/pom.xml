@@ -50,7 +50,7 @@
             <artifactId>jfxapps.boot.starter.test</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>spring.core.patch</artifactId>
@@ -93,7 +93,6 @@
                 <configuration>
                     <useModulePath>true</useModulePath>
                     <argLine>
-                        --illegal-access=permit
                         --patch-module spring.core=${com.gluonhq.jfxapps:spring.core.patch:jar}
                         --patch-module org.hibernate.orm.core=${com.gluonhq.jfxapps:org.hibernate.orm.core.patch:jar}
                     </argLine>
@@ -108,7 +107,6 @@
                             <useModulePath>true</useModulePath>
                             <classesDirectory>${project.build.outputDirectory}</classesDirectory>
                             <argLine>
-                                --illegal-access=permit
                                 --patch-module spring.core=${com.gluonhq.jfxapps:spring.core.patch:jar}
                                 --patch-module org.hibernate.orm.core=${com.gluonhq.jfxapps:org.hibernate.orm.core.patch:jar}
                             </argLine>
@@ -121,13 +119,13 @@
                 </executions>
             </plugin>
             <plugin>
-                <!-- 
+                <!--
                     In eclipse, this plugin crash with the embedded maven installation
-                    because maven.home must be set to a directory and not to a jar file. 
+                    because maven.home must be set to a directory and not to a jar file.
                     Please create an external maven installation and use it in eclipse
                  -->
                 <artifactId>maven-invoker-plugin</artifactId>
-                
+
                 <configuration>
                     <projectsDirectory>${basedir}/src/test/resources-its</projectsDirectory>
                     <pomIncludes>

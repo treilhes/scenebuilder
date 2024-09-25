@@ -41,7 +41,7 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 
-@ApplicationInstancePrototype
+@ApplicationInstancePrototype("com.gluonhq.jfxapps.core.job.manager.action.impl.RedoAction")
 @ActionMeta(
         nameKey = "action.name.redo",
         descriptionKey = "action.description.redo")

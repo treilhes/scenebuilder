@@ -36,7 +36,6 @@ package com.oracle.javafx.scenebuilder.menu.action.file;
 import java.io.File;
 import java.io.IOException;
 
-import org.scenebuilder.fxml.api.SbEditor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -49,6 +48,7 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.SbEditor;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)

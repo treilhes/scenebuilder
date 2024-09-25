@@ -47,7 +47,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.scenebuilder.fxml.api.Documentation;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -60,6 +59,7 @@ import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata;
+import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
 import com.oracle.javafx.scenebuilder.editors.control.BoundedDoubleEditor;
 

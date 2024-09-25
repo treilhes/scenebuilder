@@ -33,13 +33,12 @@
  */
 package com.oracle.javafx.scenebuilder.inspector.actions;
 
-import org.scenebuilder.fxml.api.Inspector;
-import org.scenebuilder.fxml.api.Inspector.SectionId;
-
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
+import com.oracle.javafx.scenebuilder.api.Inspector;
+import com.oracle.javafx.scenebuilder.api.Inspector.SectionId;
 
 public abstract class AbstractFocusTabAction extends AbstractAction {
 

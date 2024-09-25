@@ -34,12 +34,12 @@
 package com.oracle.javafx.scenebuilder.inspector.actions;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.Inspector;
-import org.scenebuilder.fxml.api.Inspector.SectionId;
 
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.oracle.javafx.scenebuilder.api.Inspector;
+import com.oracle.javafx.scenebuilder.api.Inspector.SectionId;
 
 @Component
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)

@@ -33,13 +33,13 @@
  */
 package com.oracle.javafx.scenebuilder.editors.popupeditors;
 
-import org.scenebuilder.fxml.api.Documentation;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
+import com.oracle.javafx.scenebuilder.api.Documentation;
 
 /**
  * Popup editor for the Paint property.

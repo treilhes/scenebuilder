@@ -57,7 +57,7 @@ import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.fs.preference.global.WildcardImportsPreference;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
-@ApplicationInstancePrototype
+@ApplicationInstancePrototype("com.gluonhq.jfxapps.core.fs.action.impl.SaveAction")
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 public class SaveAction extends AbstractAction {
 

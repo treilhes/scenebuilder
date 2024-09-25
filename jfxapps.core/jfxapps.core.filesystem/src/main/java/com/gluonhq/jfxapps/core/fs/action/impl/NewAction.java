@@ -42,7 +42,7 @@ import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 
-@ApplicationInstancePrototype
+@ApplicationInstancePrototype("com.gluonhq.jfxapps.core.fs.action.impl.NewAction")
 @ActionMeta(
         nameKey = "action.name.save",
         descriptionKey = "action.description.save")

@@ -41,7 +41,7 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 
-@ApplicationInstancePrototype
+@ApplicationInstancePrototype("com.gluonhq.jfxapps.core.job.manager.action.impl.UndoAction")
 @ActionMeta(
         nameKey = "action.name.undo",
         descriptionKey = "action.description.undo")

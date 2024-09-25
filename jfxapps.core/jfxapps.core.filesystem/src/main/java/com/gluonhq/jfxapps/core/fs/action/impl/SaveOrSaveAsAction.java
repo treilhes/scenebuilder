@@ -42,7 +42,7 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
-@ApplicationInstancePrototype
+@ApplicationInstancePrototype("com.gluonhq.jfxapps.core.fs.action.impl.SaveOrSaveAsAction")
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 public class SaveOrSaveAsAction extends AbstractAction {
 

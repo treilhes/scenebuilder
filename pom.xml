@@ -577,9 +577,7 @@
                             <javafx.allowjs>true</javafx.allowjs>
                         </systemPropertyVariables>
                         <useModulePath>false</useModulePath>
-                        <argLine>
-                            --illegal-access=permit
-                        </argLine>
+                        <argLine></argLine>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -591,9 +589,7 @@
                             <javafx.allowjs>true</javafx.allowjs>
                         </systemPropertyVariables>
                         <useModulePath>true</useModulePath>
-                        <argLine>
-                            --illegal-access=permit
-                        </argLine>
+                        <argLine></argLine>
                     </configuration>
                 </plugin>
                 <plugin>

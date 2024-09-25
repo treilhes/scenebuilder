@@ -33,12 +33,14 @@
  */
 package com.gluonhq.jfxapps.core.job.manager.action;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobManagerActionFactory;
 import com.gluonhq.jfxapps.core.job.manager.action.impl.RedoAction;
 import com.gluonhq.jfxapps.core.job.manager.action.impl.UndoAction;
 
+@ApplicationInstanceSingleton
 public class JobManagerActionFactoryImpl implements JobManagerActionFactory {
 
     private final ActionFactory actionFactory;

@@ -35,7 +35,6 @@ package com.oracle.javafx.scenebuilder.menu.action.edit;
 
 import java.util.Map;
 
-import org.scenebuilder.fxml.api.SbEditor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -54,6 +53,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.api.SbEditor;
 import com.oracle.javafx.scenebuilder.api.editors.ApplicationInstanceWindow;
 
 import javafx.scene.Node;

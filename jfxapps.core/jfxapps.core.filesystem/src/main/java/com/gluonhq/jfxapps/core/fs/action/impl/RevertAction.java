@@ -47,7 +47,9 @@ import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
-@ApplicationInstancePrototype
+import jakarta.inject.Provider;
+
+@ApplicationInstancePrototype("com.gluonhq.jfxapps.core.fs.action.impl.RevertAction")
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 public class RevertAction extends AbstractAction {
 
@@ -56,7 +58,7 @@ public class RevertAction extends AbstractAction {
     private final ApplicationInstance document;
     private final ApplicationInstanceEvents documentManager;
     private final Dialog dialog;
-    private final MainInstanceWindow documentWindow;
+    private final Provider<MainInstanceWindow> documentWindow;
     private final ActionFactory actionFactory;
 
     public RevertAction(
@@ -64,7 +66,7 @@ public class RevertAction extends AbstractAction {
             ActionExtensionFactory extensionFactory,
             ApplicationInstance document,
             ApplicationInstanceEvents documentManager,
-            MainInstanceWindow documentWindow,
+            Provider<MainInstanceWindow> documentWindow,
             Dialog dialog,
             ActionFactory actionFactory) {
         super(i18n, extensionFactory);
@@ -89,8 +91,9 @@ public class RevertAction extends AbstractAction {
         assert omDocument != null;
         assert omDocument.getLocation() != null;
 
-        final Alert d = dialog.customAlert(documentWindow.getStage());
-        d.setMessage(getI18n().getString("alert.revert.question.message", documentWindow.getStage().getTitle()));
+        var stage = documentWindow.get().getStage();
+        final Alert d = dialog.customAlert(stage);
+        d.setMessage(getI18n().getString("alert.revert.question.message", stage.getTitle()));
         d.setDetails(getI18n().getString("alert.revert.question.details"));
         d.setOKButtonTitle(getI18n().getString("label.revert"));
 

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,6 +37,19 @@ import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.core.fs.action.FileSystemActionFactoryImpl;
+import com.gluonhq.jfxapps.core.fs.action.impl.ClearRecentItemsAction;
+import com.gluonhq.jfxapps.core.fs.action.impl.LoadBlankAction;
+import com.gluonhq.jfxapps.core.fs.action.impl.LoadFileAction;
+import com.gluonhq.jfxapps.core.fs.action.impl.LoadUrlAction;
+import com.gluonhq.jfxapps.core.fs.action.impl.NewAction;
+import com.gluonhq.jfxapps.core.fs.action.impl.OpenAction;
+import com.gluonhq.jfxapps.core.fs.action.impl.OpenFilesAction;
+import com.gluonhq.jfxapps.core.fs.action.impl.ReloadFileAction;
+import com.gluonhq.jfxapps.core.fs.action.impl.RevertAction;
+import com.gluonhq.jfxapps.core.fs.action.impl.SaveAction;
+import com.gluonhq.jfxapps.core.fs.action.impl.SaveAsAction;
+import com.gluonhq.jfxapps.core.fs.action.impl.SaveOrSaveAsAction;
 import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
 import com.gluonhq.jfxapps.core.fs.controller.FileSystemController;
 import com.gluonhq.jfxapps.core.fs.preference.document.PathPreference;
@@ -68,12 +81,25 @@ public class FileSystemExtension implements OpenExtension {
     public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return List.of(
+                ClassLoaderController.class,
+                ClearRecentItemsAction.class,
+                FileSystemActionFactoryImpl.class,
                 FileSystemController.class,
                 InitialDirectoryPreference.class,
+                LoadBlankAction.class,
+                LoadFileAction.class,
+                LoadUrlAction.class,
+                NewAction.class,
+                OpenAction.class,
+                OpenFilesAction.class,
+                PathPreference.class,
                 RecentItemsPreference.class,
                 RecentItemsSizePreference.class,
-                ClassLoaderController.class,
-                PathPreference.class,
+                ReloadFileAction.class,
+                RevertAction.class,
+                SaveAction.class,
+                SaveAsAction.class,
+                SaveOrSaveAsAction.class,
                 WildcardImportsPreference.class
             );
      // @formatter:on

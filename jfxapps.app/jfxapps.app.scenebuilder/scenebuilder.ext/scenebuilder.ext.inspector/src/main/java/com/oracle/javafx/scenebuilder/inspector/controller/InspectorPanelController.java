@@ -53,7 +53,6 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.Inspector;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
@@ -89,6 +88,7 @@ import com.gluonhq.jfxapps.core.metadata.util.ValuePropertyMetadataClassComparat
 import com.gluonhq.jfxapps.core.metadata.util.ValuePropertyMetadataNameComparator;
 import com.gluonhq.jfxapps.core.selection.SelectionStateImpl;
 import com.gluonhq.jfxapps.core.selection.job.ModifySelectionJob;
+import com.oracle.javafx.scenebuilder.api.Inspector;
 import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertiesEditor;
 import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor.LayoutFormat;

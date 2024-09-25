@@ -48,7 +48,7 @@ import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
 
 import javafx.stage.FileChooser;
 
-@ApplicationInstancePrototype
+@ApplicationInstancePrototype("com.gluonhq.jfxapps.core.fs.action.impl.OpenAction")
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 public class OpenAction extends AbstractOpenFilesAction {
 

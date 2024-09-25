@@ -33,12 +33,14 @@
  */
 package com.gluonhq.jfxapps.core.appmngr.action;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.application.ApplicationActionFactory;
 import com.gluonhq.jfxapps.core.appmngr.action.impl.CloseFileAction;
 import com.gluonhq.jfxapps.core.appmngr.action.impl.QuitScenebuilderAction;
 
+@ApplicationInstanceSingleton
 public class ApplicationActionFactoryImpl implements ApplicationActionFactory {
 
     private final ActionFactory actionFactory;

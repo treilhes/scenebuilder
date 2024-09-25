@@ -33,6 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.core.ui.template;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
@@ -60,6 +61,7 @@ import com.oracle.javafx.scenebuilder.core.ui.preferences.document.LeftDividerHP
 import com.oracle.javafx.scenebuilder.core.ui.preferences.document.RightDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.core.ui.template.InnerDockManager.DividerPosition;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.inject.Provider;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
@@ -82,7 +84,7 @@ import javafx.stage.Stage;
  *
  */
 @ApplicationInstanceSingleton
-public class DocumentWindowController extends AbstractFxmlWindowController implements MainInstanceWindow {
+public class DocumentWindowController extends AbstractFxmlWindowController implements MainInstanceWindow, InitializingBean {
 
     private enum InsertPosition {
         First, Last
@@ -224,13 +226,22 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
 
     }
 
+    @PostConstruct
+    public void initialize1() {
+        System.out.println();
+    }
+
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println();
+    }
+
     /*
      * AbstractFxmlWindowController
      */
-
     @Override
     public void controllerDidLoadFxml() {
-
         assert contentPanelHost != null;
         assert messageBarHost != null;
 
@@ -427,7 +438,11 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     public void updateStageTitle() {
         if (contentPanelHost != null) {
             final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
-            getStage().setTitle(FXOMDocumentUtils.makeTitle(getI18n(), fxomDocument));
+
+            jfxAppPlatform.runOnFxThreadWithActiveScope(()->{
+                getStage().setTitle(FXOMDocumentUtils.makeTitle(getI18n(), fxomDocument));
+            });
+
         } // else controllerDidLoadFxml() will invoke me again
 
     }
