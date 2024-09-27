@@ -18,6 +18,10 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>javafx.fxml.patch</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>javafx.fxml.patch.link</artifactId>
         </dependency>
 

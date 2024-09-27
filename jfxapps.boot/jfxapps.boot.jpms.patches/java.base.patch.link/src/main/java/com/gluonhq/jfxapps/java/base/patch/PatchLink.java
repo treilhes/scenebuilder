@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,16 +31,17 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.gluonhq.jfxapps.java.base.patch;
 
-open module jfxapps.boot.layer {
-    exports com.gluonhq.jfxapps.boot.layer;
-    exports com.gluonhq.jfxapps.boot.layer.config;
+import java.lang.module.ModuleFinder;
+import javapatch.lang.module.PatchedModuleFinder;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
 
-    requires jfxapps.boot.api;
-    requires jfxapps.boot.starter;
+public class PatchLink {
 
-    requires jfxapps.spring.core.patch.link;
-    requires jfxapps.hibernate.core.patch.link;
-    requires java.base.patch.link;
-
+    public static ModuleFinder moduleFinderOf(Map<String, List<String>> patches, Path... entries) {
+        return PatchedModuleFinder.of(patches, entries);
+    }
 }

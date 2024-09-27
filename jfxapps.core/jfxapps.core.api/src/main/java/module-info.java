@@ -112,6 +112,7 @@ open module jfxapps.core.api {
     requires transitive io.reactivex.rxjava3;
     requires transitive org.reactivestreams;
     requires transitive org.pdfsam.rxjavafx;
+    requires jfxapps.javafx.fxml.patch.link;
 
     provides Extension with ApiExtension;
 }

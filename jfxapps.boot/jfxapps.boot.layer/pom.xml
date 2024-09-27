@@ -16,6 +16,14 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>java.base.patch</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>java.base.patch.link</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>spring.core.patch.link</artifactId>
         </dependency>
         <dependency>
@@ -32,13 +40,25 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
     <properties>
         <skip.integration.test>false</skip.integration.test>
     </properties>
-    
+
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <executions>
@@ -49,6 +69,11 @@
                             <excludes>
                                 <exclude>com.gluonhq.jfxapps.boot.layer.internal.LayerLifecycleIT</exclude>
                             </excludes>
+                            <useModulePath>true</useModulePath>
+                            <argLine>
+                                --patch-module java.base=${com.gluonhq.jfxapps:java.base.patch:jar}
+                                --add-exports java.base/javapatch.lang.module=java.base.patch.link
+                            </argLine>
                         </configuration>
                         <goals>
                             <goal>integration-test</goal>
@@ -58,6 +83,16 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <compilerArgs>
+                        <arg>--patch-module</arg>
+                        <arg>java.base=${com.gluonhq.jfxapps:java.base.patch:jar}</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
                 <artifactId>maven-invoker-plugin</artifactId>
                 <version>3.6.1</version>
                 <configuration>
@@ -65,7 +100,7 @@
                     <pomIncludes>
                         <pomInclude>common/pom.xml</pomInclude>
                     </pomIncludes>
-                    
+
                     <streamLogs>true</streamLogs>
                     <goals>
                         <goal>clean</goal>

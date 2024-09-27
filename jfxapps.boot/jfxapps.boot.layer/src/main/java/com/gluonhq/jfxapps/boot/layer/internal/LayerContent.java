@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,16 +31,40 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.gluonhq.jfxapps.boot.layer.internal;
 
-open module jfxapps.boot.layer {
-    exports com.gluonhq.jfxapps.boot.layer;
-    exports com.gluonhq.jfxapps.boot.layer.config;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-    requires jfxapps.boot.api;
-    requires jfxapps.boot.starter;
+public class LayerContent {
 
-    requires jfxapps.spring.core.patch.link;
-    requires jfxapps.hibernate.core.patch.link;
-    requires java.base.patch.link;
+    private final Map<String, List<String>> patches = new HashMap<>();
+    private final Set<Path> paths = new HashSet<>();
+
+    public void addPatch(String module, String path) {
+        patches.computeIfAbsent(module, k -> new ArrayList<>()).add(path);
+    }
+
+    public void addPath(Path path) {
+        paths.add(path);
+    }
+
+    public Map<String, List<String>> getPatches() {
+        return patches;
+    }
+
+    public Set<Path> getPaths() {
+        return paths;
+    }
+
+    @Override
+    public String toString() {
+        return "LayerContent [patches=" + patches + ", paths=" + paths + "]";
+    }
 
 }

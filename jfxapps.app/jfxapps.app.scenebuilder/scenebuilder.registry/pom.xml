@@ -62,6 +62,16 @@
                                             <version>${scenebuilder.version}</version>
                                         </dependency>
                                     </extension>
+
+                                    <!--temp-->
+                                    <extension>
+                                        <uuid>f38264b5-aaea-444d-8ca8-f6d8ab910b2b</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>scenebuilder.ext.exporter</artifactId>
+                                            <version>${scenebuilder.version}</version>
+                                        </dependency>
+                                    </extension>
                                 </extensions>
                             </application>
                         </applications>

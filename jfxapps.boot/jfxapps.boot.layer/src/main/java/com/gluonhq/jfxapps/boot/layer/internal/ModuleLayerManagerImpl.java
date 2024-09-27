@@ -34,6 +34,7 @@
 package com.gluonhq.jfxapps.boot.layer.internal;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.module.Configuration;
 import java.lang.module.ModuleFinder;
 import java.lang.module.ModuleReference;
@@ -50,6 +51,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,8 +61,8 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.api.layer.InvalidLayerException;
 import com.gluonhq.jfxapps.boot.api.layer.Layer;
 import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
+import com.gluonhq.jfxapps.java.base.patch.PatchLink;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ModuleLayerManagerImpl.
  */
@@ -256,10 +259,11 @@ public class ModuleLayerManagerImpl implements ModuleLayerManager {
 
             ClassLoader scl = ClassLoader.getSystemClassLoader();
 
-            List<Path> contentList = new ArrayList<>();
+            var layerContent = new LayerContent();
+
             if (tempDirectory != null && Files.isDirectory(tempDirectory)) {
                 try {
-                    populateContentWith(contentList, tempDirectory);
+                    populateContentWith(layerContent, tempDirectory);
                 } catch (IOException e) {
                     logger.error("Exception processing tempDirectory folder {}", tempDirectory);
                 }
@@ -268,18 +272,20 @@ public class ModuleLayerManagerImpl implements ModuleLayerManager {
             if (paths != null) {
                 paths.forEach(f -> {
                     try {
-                        populateContentWith(contentList, f);
+                        populateContentWith(layerContent, f);
                     } catch (IOException e) {
                         logger.error("Exception processing folder {}", f);
                     }
                 });
             }
 
-            Path[] content = contentList.toArray(Path[]::new);
+            var content = layerContent.getPaths().toArray(Path[]::new);
+            var patches = layerContent.getPatches();
 
-            logger.debug("Content found for module creation : {}", (Object) content);
+            logger.debug("Content found for module creation : {}", content);
 
-            ModuleFinder finder = ModuleFinder.of(content);
+            //ModuleFinder finder = ModuleFinder.of(content);
+            ModuleFinder finder = PatchLink.moduleFinderOf(patches, content);
 
             Map<String, ModuleReference> moduleReferences = new HashMap<>();
 
@@ -322,30 +328,51 @@ public class ModuleLayerManagerImpl implements ModuleLayerManager {
          * @param f
          * @throws IOException
          */
-        private static void populateContentWith(List<Path> contentList, Path f) throws IOException {
+        private static void populateContentWith(LayerContent layerContent, Path f) throws IOException {
 
-            Predicate<Path> jarOrExpandedModule = p -> p.getFileName().toString().toLowerCase().endsWith(".jar")
-                    || Files.exists(p.resolve(MODULE_INFO_CLASS_FILE));
+            Predicate<Path> isJar = p -> p.getFileName().toString().toLowerCase().endsWith(".jar");
+            Predicate<Path> isExpandedModule = p -> Files.exists(p.resolve(MODULE_INFO_CLASS_FILE));
+            Predicate<Path> jarOrExpandedModule = p -> isJar.or(isExpandedModule).test(p);
 
-            if (Files.isReadable(f)) {
-                contentList.add(f);
+            if (Files.isRegularFile(f) && Files.isReadable(f)) {
+                layerContent.addPath(f);
             } else if (Files.isDirectory(f)) {
                 if (Files.exists(f.resolve(MODULE_INFO_CLASS_FILE))) {
-                    contentList.add(f);
+                    layerContent.addPath(f);
                 } else if (Files.list(f).anyMatch(jarOrExpandedModule)) {
                     try {
-                        contentList.addAll(Files.list(f).toList());
+                        Files.list(f).forEach(p -> {
+                            if (isJar.test(p)) {
+                                String patchedModule = tryGetPatchJpms(p);
+                                if (patchedModule == null) {
+                                    layerContent.addPath(p);
+                                } else {
+                                    layerContent.addPatch(patchedModule, p.toString());
+                                }
+                            } else {
+                                layerContent.addPath(p);
+                            }
+                        });
+
                     } catch (IOException e) {
                         logger.error("Unable to list directory content of {}", f);
                     }
                 } else {
-                    contentList.add(f);
+                    layerContent.addPath(f);
                 }
             } else {
                 logger.error("Discarded layer content {}", f);
             }
         }
 
+        private static String tryGetPatchJpms(Path path) {
+            try (ZipFile zf = new ZipFile(path.toFile())) {
+              InputStream in = zf.getInputStream(zf.getEntry("patch.jpms"));
+              return new String(in.readAllBytes()).trim();
+            } catch (Exception e) {}
+
+            return null;
+        }
     }
 
     /**

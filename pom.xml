@@ -30,7 +30,7 @@
 
         <!-- compiler -->
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
-        <maven.compiler.release>21</maven.compiler.release>
+        <!--<maven.compiler.release>21</maven.compiler.release>-->
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
 
@@ -73,6 +73,16 @@
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.boot.jpa</artifactId>
+                <version>${jfxapps.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>java.base.patch</artifactId>
+                <version>${jfxapps.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>java.base.patch.link</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
             <dependency>

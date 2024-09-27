@@ -31,18 +31,20 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.utils</artifactId>
         </dependency>
-        
-        
+
+
         <!-- https://mvnrepository.com/artifact/org.pdfsam.rxjava3/rxjavafx -->
         <dependency>
             <groupId>org.pdfsam.rxjava3</groupId>
             <artifactId>rxjavafx</artifactId>
         </dependency>
-                
+
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.starter</artifactId>
             <exclusions>
+                <!-- we want the jfxapps.core.starter module jar to be loaded here but not
+                the dependencies which are already present in the boot classpath -->
                 <exclusion>
                   <groupId>*</groupId>
                   <artifactId>*</artifactId>
@@ -69,15 +71,15 @@
             <artifactId>jfxapps.boot.starter.test</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <!--<dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.extension.api</artifactId>
         </dependency>-->
         <!-- JavaFX -->
-        
-        
-        <!-- TODELETE 
+
+
+        <!-- TODELETE
         <dependency>
         <groupId>com.gluonhq.jfxapps</groupId>
         <artifactId>jfxapps.core.fxom</artifactId>
@@ -91,6 +93,6 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.starter</artifactId>
         </dependency>-->
-        
+
     </dependencies>
 </project>

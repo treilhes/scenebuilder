@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.boot.api.layer.Layer;
 import com.gluonhq.jfxapps.boot.api.loader.extension.RootExtension;
 import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
@@ -67,9 +68,21 @@ import com.gluonhq.jfxapps.core.api.ui.controller.dock.SearchController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 
+
 public class ApiExtension implements RootExtension {
 
     public final static UUID ID = ROOT_ID;
+
+
+    @Override
+    public void initializeModule(Layer layer) {
+        RootExtension.super.initializeModule(layer);
+
+        var module = this.getClass().getModule();
+        var fxomModule = module.getLayer().findModule("jfxapps.core.fxom").get();
+
+        com.gluonhq.jfxapps.javafx.fxml.patch.PatchLink.addOpen(fxomModule, "com.sun.javafx.fxml");
+    }
 
     @Override
     public UUID getParentId() {

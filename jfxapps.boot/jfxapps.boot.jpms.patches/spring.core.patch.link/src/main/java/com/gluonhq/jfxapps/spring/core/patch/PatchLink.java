@@ -33,15 +33,21 @@
  */
 package com.gluonhq.jfxapps.spring.core.patch;
 
-import org.springframework.core.Patch;
 
 public class PatchLink {
 
     public static void addRead(Module module) {
-        Patch.addRead(module);
+        System.out.println("PatchLink.addRead");
+        try {
+            PatchLink.class.getClassLoader().loadClass("org.springframework.core.Patch");
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        org.springframework.core.Patch.addRead(module);
     }
 
     public static boolean addOpen(Module module, String packageName) {
-        return Patch.addOpen(module, packageName);
+        return org.springframework.core.Patch.addOpen(module, packageName);
     }
 }

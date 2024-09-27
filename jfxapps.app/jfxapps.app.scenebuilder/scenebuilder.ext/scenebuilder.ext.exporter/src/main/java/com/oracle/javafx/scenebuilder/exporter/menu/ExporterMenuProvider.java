@@ -45,6 +45,7 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.exporter.controller.ExporterMenuController;
 
 import javafx.scene.control.Menu;
@@ -86,12 +87,14 @@ public class ExporterMenuProvider implements MenuItemProvider {
 
         @Override
         public String getTargetId() {
-            return IMPORT_MENU_ID;
+            return DefaultMenu.FILE_MENU_ID;
+            //return IMPORT_MENU_ID;
         }
 
         @Override
         public PositionRequest getPositionRequest() {
-            return PositionRequest.AsNextSibling;
+            return PositionRequest.AsLastChild;
+            //return PositionRequest.AsNextSibling;
         }
 
         @Override
