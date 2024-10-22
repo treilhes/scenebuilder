@@ -81,8 +81,7 @@ import javafx.scene.input.TransferMode;
  *
  * @treatAsPrivate
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class HierarchyDNDController implements HierarchyDND {
 
     // When DND few pixels of the top or bottom of the Hierarchy

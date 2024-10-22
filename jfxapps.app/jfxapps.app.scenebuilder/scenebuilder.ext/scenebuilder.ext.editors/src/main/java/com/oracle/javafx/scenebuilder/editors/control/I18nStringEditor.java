@@ -69,8 +69,7 @@ import javafx.scene.layout.Priority;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class I18nStringEditor extends AbstractPropertyEditor {
 
     private static final String PERCENT_STR = "%"; //NOCHECK

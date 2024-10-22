@@ -44,10 +44,9 @@ open module jfxapps.core.ui {
     exports com.gluonhq.jfxapps.core.ui.selectionbar;
 
     exports com.gluonhq.jfxapps.core.ui.dock;
-    exports com.gluonhq.jfxapps.core.ui.dock.preferences.document;
+    exports com.gluonhq.jfxapps.core.ui.dock.preference;
 
-    exports com.gluonhq.jfxapps.core.ui.preferences.document;
-    exports com.gluonhq.jfxapps.core.ui.preferences.global;
+    exports com.gluonhq.jfxapps.core.ui.preference;
 
     requires transitive jfxapps.core.api;
     requires jakarta.inject;

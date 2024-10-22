@@ -23,6 +23,7 @@
         <module>jfxapps.metadata</module>
         <module>jfxapps.registry</module>
 
+        <module>jfxapps.utils</module>
     </modules>
 
     <properties>
@@ -322,6 +323,12 @@
                 <version>${jfxapps.version}</version>
             </dependency>
 
+            <!-- jfxapps.utils -->
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps-dependency-plugin</artifactId>
+                <version>${jfxapps.version}</version>
+            </dependency>
             <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
             <dependency>
                 <groupId>org.mapstruct</groupId>
@@ -471,6 +478,11 @@
                     <version>${jfxapps.version}</version>
                 </plugin>
                 <plugin>
+                    <groupId>com.gluonhq.jfxapps</groupId>
+                    <artifactId>jfxapps-dependency-plugin</artifactId>
+                    <version>${jfxapps.version}</version>
+                </plugin>
+                <plugin>
                     <groupId>org.openjfx</groupId>
                     <artifactId>javafx-maven-plugin</artifactId>
                     <version>0.0.5</version>
@@ -598,7 +610,7 @@
                         <systemPropertyVariables>
                             <javafx.allowjs>true</javafx.allowjs>
                         </systemPropertyVariables>
-                        <useModulePath>true</useModulePath>
+                        <useModulePath>false</useModulePath>
                         <argLine></argLine>
                     </configuration>
                 </plugin>
@@ -620,6 +632,22 @@
                     <configuration>
                         <lifecycleMappingMetadata>
                             <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>com.gluonhq.jfxapps</groupId>
+                                        <artifactId>jfxapps-dependency-plugin</artifactId>
+                                        <versionRange>[0.0.0,)</versionRange>
+                                        <goals>
+                                            <goal>properties</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <execute>
+                                            <runOnConfiguration>true</runOnConfiguration>
+                                        </execute>
+                                    </action>
+                                </pluginExecution>
+
                                 <pluginExecution>
                                     <pluginExecutionFilter>
                                         <groupId>org.apache.maven.plugins</groupId>

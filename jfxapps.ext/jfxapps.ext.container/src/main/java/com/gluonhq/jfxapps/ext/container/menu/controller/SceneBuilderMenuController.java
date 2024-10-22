@@ -58,7 +58,7 @@ public class SceneBuilderMenuController {
     }
 
     public void performCloseSceneBuilder() {
-        sceneBuilderManager.closed().onNext(true);
+        sceneBuilderManager.closed().set(sceneBuilderManager.opened().get());
     }
 
 }

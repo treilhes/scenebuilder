@@ -76,8 +76,7 @@ import javafx.stage.Modality;
 /**
  * Controller for Window when calling "Show Preview in Window"
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 public class PreviewWindowController extends AbstractWindowController implements InitializingBean {
 

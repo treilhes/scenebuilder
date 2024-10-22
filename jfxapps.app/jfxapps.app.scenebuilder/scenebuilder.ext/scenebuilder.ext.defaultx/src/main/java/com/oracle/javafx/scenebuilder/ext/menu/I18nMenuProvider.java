@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,11 +38,9 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
@@ -55,20 +54,21 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 public class I18nMenuProvider implements MenuItemProvider {
 
 	private final static String THEME_ID = "themeMenu";
 
+	private final I18N i18n;
 	private final I18NResourcePreference i18nResourcePreference;
 	private final I18nResourceMenuController i18nResourceMenuController;
 
 	public I18nMenuProvider(
-			@Autowired @Lazy I18nResourceMenuController i18nResourceMenuController,
-			@Autowired @Lazy I18NResourcePreference i18nResourcePreference
+	        I18N i18n,
+			@Lazy I18nResourceMenuController i18nResourceMenuController,
+			@Lazy I18NResourcePreference i18nResourcePreference
 			) {
+	    this.i18n = i18n;
 		this.i18nResourceMenuController = i18nResourceMenuController;
 		this.i18nResourcePreference = i18nResourcePreference;
 	}
@@ -136,11 +136,11 @@ public class I18nMenuProvider implements MenuItemProvider {
 	        revealResourceMenuItem.getItems().clear();
 
             if (resources.size() == 0) {
-            	MenuItem miRemove = new MenuItem(I18N.getString("scenestylesheet.none"));
+            	MenuItem miRemove = new MenuItem(i18n.getString("scenestylesheet.none"));
 				miRemove.setDisable(true);
 				removeResourceMenuItem.getItems().add(miRemove);
 
-				MenuItem miOpen = new MenuItem(I18N.getString("scenestylesheet.none"));
+				MenuItem miOpen = new MenuItem(i18n.getString("scenestylesheet.none"));
 				miOpen.setDisable(true);
 				revealResourceMenuItem.getItems().add(miOpen);
             } else {

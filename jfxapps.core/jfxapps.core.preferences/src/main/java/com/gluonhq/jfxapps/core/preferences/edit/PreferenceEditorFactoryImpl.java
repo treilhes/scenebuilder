@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,9 +39,8 @@ import java.util.function.Function;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.core.api.preferences.Preference;
-import com.gluonhq.jfxapps.core.api.preferences.PreferenceEditorFactory;
-import com.gluonhq.jfxapps.core.api.preferences.type.EnumPreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceEditorFactory;
 import com.gluonhq.jfxapps.core.controls.DoubleField;
 import com.gluonhq.jfxapps.core.controls.paintpicker.PaintPicker;
 import com.gluonhq.jfxapps.core.controls.paintpicker.PaintPicker.Mode;
@@ -74,7 +73,7 @@ public class PreferenceEditorFactoryImpl implements PreferenceEditorFactory {
         DoubleField field = new DoubleField();
         field.setText(preference.getValue().toString());
         field.textProperty().addListener((ob, o, n) -> {
-            preference.setValue(Double.valueOf(n)).writeToJavaPreferences();
+            preference.setValue(Double.valueOf(n)).save();
             field.selectAll();
         });
         preference.getObservableValue().addListener((ob, o, n) -> {
@@ -88,7 +87,7 @@ public class PreferenceEditorFactoryImpl implements PreferenceEditorFactory {
         CheckBox field = new CheckBox();
         field.setSelected(preference.getValue());
         field.selectedProperty().addListener((ob, o, n) -> {
-            preference.setValue(n).writeToJavaPreferences();
+            preference.setValue(n).save();
         });
         preference.getObservableValue().addListener((ob, o, n) -> {
             field.setSelected(n);
@@ -97,13 +96,13 @@ public class PreferenceEditorFactoryImpl implements PreferenceEditorFactory {
     }
 
     @Override
-    public <T extends Enum<T>> Parent newEnumFieldEditor(EnumPreference<T> preference) {
+    public <T extends Enum<T>> Parent newEnumFieldEditor(Preference<T> preference) {
         ChoiceBox<T> field = new ChoiceBox<>();
-        EnumSet<T> set = EnumSet.allOf(preference.getEnumClass());
+        EnumSet<T> set = EnumSet.allOf(preference.getDataClass());
         field.getItems().setAll(set);
         field.setValue(preference.getValue());
         field.getSelectionModel().selectedItemProperty().addListener((ob, o, n) -> {
-            preference.setValue(n).writeToJavaPreferences();
+            preference.setValue(n).save();
         });
         preference.getObservableValue().addListener((ob, o, n) -> {
             field.setValue(n);
@@ -112,7 +111,7 @@ public class PreferenceEditorFactoryImpl implements PreferenceEditorFactory {
     }
 
     @Override
-    public <T extends Enum<T>> Parent newEnumFieldEditor(EnumPreference<T> preference,
+    public <T extends Enum<T>> Parent newEnumFieldEditor(Preference<T> preference,
             Function<T, Node> createGraphic) {
         ComboBox<T> field = new ComboBox<>();
         Callback<ListView<T>, ListCell<T>> cellFactory = null;
@@ -123,12 +122,12 @@ public class PreferenceEditorFactoryImpl implements PreferenceEditorFactory {
             field.setButtonCell(cellFactory.call(null));
         }
 
-        EnumSet<T> set = EnumSet.allOf(preference.getEnumClass());
+        EnumSet<T> set = EnumSet.allOf(preference.getDataClass());
         field.getItems().setAll(set);
         field.setValue(preference.getValue());
 
         field.getSelectionModel().selectedItemProperty().addListener((ob, o, n) -> {
-            preference.setValue(n).writeToJavaPreferences();
+            preference.setValue(n).save();
         });
         preference.getObservableValue().addListener((ob, o, n) -> {
             field.setValue(n);
@@ -169,7 +168,7 @@ public class PreferenceEditorFactoryImpl implements PreferenceEditorFactory {
         picker.setPaintProperty(color);
         picker.paintProperty().addListener((ob, o, n) -> {
             graphic.setFill(n);
-            preference.setValue((Color) n).writeToJavaPreferences();
+            preference.setValue((Color) n).save();
         });
         preference.getObservableValue().addListener((ob, o, n) -> {
             graphic.setFill(n);
@@ -192,7 +191,7 @@ public class PreferenceEditorFactoryImpl implements PreferenceEditorFactory {
         field.getItems().setAll(availableValues);
         field.setValue(preference.getValue());
         field.getSelectionModel().selectedItemProperty().addListener((ob, o, n) -> {
-            preference.setValue(n).writeToJavaPreferences();
+            preference.setValue(n).save();
         });
         preference.getObservableValue().addListener((ob, o, n) -> {
             field.setValue(n);
@@ -218,7 +217,7 @@ public class PreferenceEditorFactoryImpl implements PreferenceEditorFactory {
             }
         });
         field.getSelectionModel().selectedItemProperty().addListener((ob, o, n) -> {
-            preference.setValue(n).writeToJavaPreferences();
+            preference.setValue(n).save();
         });
         preference.getObservableValue().addListener((ob, o, n) -> {
             field.setValue(n);
@@ -233,7 +232,7 @@ public class PreferenceEditorFactoryImpl implements PreferenceEditorFactory {
         field.getItems().setAll(availableValues);
         field.setValue(adapter.apply(preference.getValue()));
         field.getSelectionModel().selectedItemProperty().addListener((ob, o, n) -> {
-            preference.setValue(reverseAdapter.apply(n)).writeToJavaPreferences();
+            preference.setValue(reverseAdapter.apply(n)).save();
         });
         preference.getObservableValue().addListener((ob, o, n) -> {
             field.setValue(adapter.apply(n));

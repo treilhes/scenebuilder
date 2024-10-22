@@ -76,8 +76,7 @@ import javafx.util.StringConverter;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 public class ButtonTypeEditor extends InlineListEditor {
 

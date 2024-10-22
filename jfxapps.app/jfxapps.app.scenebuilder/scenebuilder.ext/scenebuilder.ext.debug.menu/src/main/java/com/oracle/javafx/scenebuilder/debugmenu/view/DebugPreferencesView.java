@@ -38,9 +38,9 @@ import java.util.stream.Stream;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
-import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preferences.Preference;
+import com.gluonhq.jfxapps.core.api.preference.ManagedDocumentPreference;
+import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;

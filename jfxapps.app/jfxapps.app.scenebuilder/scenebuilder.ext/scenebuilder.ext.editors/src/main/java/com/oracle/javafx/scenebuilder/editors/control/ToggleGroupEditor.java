@@ -60,8 +60,7 @@ import javafx.event.EventHandler;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 public class ToggleGroupEditor extends AutoSuggestEditor {
 

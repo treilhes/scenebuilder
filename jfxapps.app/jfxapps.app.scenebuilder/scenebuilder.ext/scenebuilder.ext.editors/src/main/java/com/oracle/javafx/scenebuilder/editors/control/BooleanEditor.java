@@ -56,8 +56,7 @@ import javafx.scene.layout.HBox;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class BooleanEditor extends AbstractPropertyEditor {
 
     private final CheckBox checkBox;

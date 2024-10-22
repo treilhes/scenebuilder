@@ -57,7 +57,7 @@ import com.gluonhq.jfxapps.boot.api.layer.Layer;
 import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.api.maven.Artifact;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
-import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient.Scope;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient.VersionType;
 import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
 import com.gluonhq.jfxapps.boot.registry.RegistryArtifact;
 import com.gluonhq.jfxapps.boot.registry.RegistryException;
@@ -148,7 +148,7 @@ public class RegistryManagerImpl implements RegistryManager {
 
         logger.info("Loading artifact registry {}", artifact);
 
-        var scope = config.isSnapshotsAllowed() ? Scope.RELEASE_SNAPHOT : Scope.RELEASE;
+        var scope = config.isSnapshotsAllowed() ? VersionType.RELEASE_SNAPHOT : VersionType.RELEASE;
 
         var latest = mavenClient.getLatestVersion(artifact, scope).orElseThrow(
                 () -> new RegistryException(String.format("Artifact not found %s scope: %s", artifact, scope)));

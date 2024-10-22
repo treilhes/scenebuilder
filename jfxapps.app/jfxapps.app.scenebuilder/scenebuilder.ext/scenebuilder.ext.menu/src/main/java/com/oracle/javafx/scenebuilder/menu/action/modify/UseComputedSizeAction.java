@@ -48,8 +48,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ContextMenuIte
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.selection.job.UseComputedSizesSelectionJob;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(
         nameKey = "action.name.save",
         descriptionKey = "action.description.save")

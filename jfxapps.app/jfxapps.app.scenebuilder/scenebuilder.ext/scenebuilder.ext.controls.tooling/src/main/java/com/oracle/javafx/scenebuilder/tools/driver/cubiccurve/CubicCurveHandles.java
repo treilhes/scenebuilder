@@ -35,11 +35,10 @@ package com.oracle.javafx.scenebuilder.tools.driver.cubiccurve;
 
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
-
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.Gesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;

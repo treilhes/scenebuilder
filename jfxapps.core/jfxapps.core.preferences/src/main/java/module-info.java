@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,8 +39,7 @@ open module jfxapps.core.preferences {
     exports com.gluonhq.jfxapps.core.preferences.i18n;
 
     requires jfxapps.core.api;
-    requires org.slf4j;
-    requires spring.context;
+    requires jfxapps.core.starter;
     requires jfxapps.core.controls;
 
     provides Extension with PreferencesExtension;

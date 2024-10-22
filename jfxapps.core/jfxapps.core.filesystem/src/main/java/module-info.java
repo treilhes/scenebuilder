@@ -36,7 +36,7 @@ import com.gluonhq.jfxapps.core.fs.FileSystemExtension;
 
 open module jfxapps.core.filesystem {
     exports com.gluonhq.jfxapps.core.fs.util;
-    exports com.gluonhq.jfxapps.core.fs.preference.global;
+    exports com.gluonhq.jfxapps.core.fs.preference;
     exports com.gluonhq.jfxapps.core.fs.controller;
     exports com.gluonhq.jfxapps.core.fs;
 

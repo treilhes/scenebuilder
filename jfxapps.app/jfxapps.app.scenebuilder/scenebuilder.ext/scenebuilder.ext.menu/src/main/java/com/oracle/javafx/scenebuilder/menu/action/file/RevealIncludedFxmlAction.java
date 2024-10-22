@@ -50,8 +50,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ContextMenuIte
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.SbEditor;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(
         nameKey = "action.name.show.about",
         descriptionKey = "action.description.show.about")

@@ -79,8 +79,7 @@ import javafx.util.StringConverter;
  * KeyCombination popup editor (for keyboard shortcuts).
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 public class KeyCombinationPopupEditor extends PopupEditor {
 

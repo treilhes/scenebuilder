@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,19 +37,25 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
+import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.gluonhq.jfxapps.core.fs.preference.global.WildcardImportsPreference;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.util.FXOMDocumentUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.SbEditor;
-import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
 import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
-import com.oracle.javafx.scenebuilder.api.ui.dock.ViewSearch;
-import com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment;
-import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
 
-import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -62,9 +68,7 @@ import javafx.util.Duration;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 @ViewAttachment(name = SourceViewWindowController.VIEW_NAME, id = SourceViewWindowController.VIEW_ID,
     icon = "ViewIconSource.png", iconX2 = "ViewIconSource@2x.png")
 public class SourceViewWindowController extends AbstractFxmlViewController {
@@ -80,9 +84,9 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
     @FXML
     Label updateResultLabel;
 
-    private FXOMDocument fxomDocument;
-    private String documentName;
-    private final FxmlDocumentManager documentManager;
+
+    private final JfxAppPlatform platform;
+    private final ApplicationInstanceEvents documentManager;
     private final WildcardImportsPreference wildcardImportsPreference;
 
     private final SbEditor editor;
@@ -92,14 +96,21 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
     private FadeTransition labelFadeTransition;
     private boolean dirty = true;
 
-    public SourceViewWindowController(
-            SceneBuilderManager scenebuilderManager,
-            FxmlDocumentManager documentManager,
-            @Autowired SbEditor editor,
-            @Autowired WildcardImportsPreference wildcardImportsPreference,
-            ViewMenuController viewMenuController) {
-        super(scenebuilderManager, documentManager, viewMenuController, SourceViewWindowController.class.getResource("SourceWindow.fxml"), I18N.getBundle());
+    private FXOMDocument fxomDocument;
+    private String documentName;
 
+    //@formatter:off
+    public SourceViewWindowController(
+            I18N i18n,
+            JfxAppPlatform platform,
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager,
+            SbEditor editor,
+            WildcardImportsPreference wildcardImportsPreference,
+            ViewMenuController viewMenuController) {
+        //@formatter:on
+        super(i18n, scenebuilderManager, documentManager, viewMenuController, SourceViewWindowController.class.getResource("SourceWindow.fxml"));
+        this.platform = platform;
         this.documentManager = documentManager;
         this.editor = editor;
         this.wildcardImportsPreference = wildcardImportsPreference;
@@ -116,7 +127,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
     private void setFxomDocument(FXOMDocument fxomDocument) {
         assert fxomDocument != null;
         this.fxomDocument = fxomDocument;
-        this.documentName = FXOMDocumentUtils.makeTitle(fxomDocument);
+        this.documentName = FXOMDocumentUtils.makeTitle(getI18n(), fxomDocument);
         update();
     }
     @FXML
@@ -186,7 +197,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
     }
 
     private void updateTitle() {
-        final String title = I18N.getString("sourceview.window.title", documentName);
+        final String title = getI18n().getString("sourceview.window.title", documentName);
         setName(title);
     }
 
@@ -199,7 +210,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
             String fxml = fxomDocument.getFxmlText(wildcardImportsPreference.getValue());
             textArea.setText(fxml);
 
-            SbPlatform.runLater(() -> {
+            platform.runOnFxThreadWithActiveScope(() -> {
                 textArea.setScrollLeft(scrollLeftSave);
                 textArea.setScrollTop(scrollTopSave);
             });

@@ -44,11 +44,14 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.ContextConfiguration;
 import com.gluonhq.jfxapps.boot.api.context.ContextManager;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.MultipleProgressListener;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationConfiguration;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
@@ -74,7 +77,7 @@ public class ContextBootstraper {
     private static final Logger logger = LoggerFactory.getLogger(ContextBootstraper.class);
 
     private static final Set<Class<? extends Annotation>> deportableAnnotations = Set.of(ApplicationSingleton.class,
-            ApplicationInstanceSingleton.class, ApplicationInstancePrototype.class, DeportedSingleton.class);
+            ApplicationInstanceSingleton.class, ApplicationInstancePrototype.class, DeportedSingleton.class, ApplicationConfiguration.class);
 
     /** The context manager. */
     private final ContextManager contextManager;
@@ -169,10 +172,11 @@ public class ContextBootstraper {
         Set<Class<?>> childrenExportedClasses = new HashSet<>();
         Set<Class<?>> childrenDeportedClasses = new HashSet<>();
 
+        Set<ImportBeanDefinitionRegistrar> allRegistrars = new HashSet<>();
+
         for (UUID id : extensionIds) {
             try {
                 var map = findExportedClasses2(loader, layerId, id);
-
                 childrenExportedClasses.addAll(map.getOrDefault(ExportType.EXPORTED, List.of()));
                 childrenDeportedClasses.addAll(map.getOrDefault(ExportType.DEPORTED, List.of()));
             } catch (LayerNotFoundException e) {
@@ -213,8 +217,15 @@ public class ContextBootstraper {
             childrenDeportedClasses.addAll(partionedByDeportable.get(Boolean.TRUE));
         }
 
-        JfxAppContext context = contextManager.create(parentContextId, currentLayer, classes, childrenDeportedClasses, singletonInstances,
-                progressListener);
+        ContextConfiguration configuration = new ContextConfiguration();
+        configuration.setParentContextId(parentContextId);
+        configuration.setLayer(currentLayer);
+        configuration.setClasses(classes);
+        configuration.setDeportedClasses(childrenDeportedClasses);
+        configuration.setSingletonInstances(singletonInstances);
+        configuration.setProgressListener(progressListener);
+
+        JfxAppContext context = contextManager.create(configuration);
 
         return context;
     }
@@ -276,6 +287,7 @@ public class ContextBootstraper {
             return loader.loadService(layer, Extension.class).stream()
                     .filter(OpenExtension.class::isInstance)
                     .map(OpenExtension.class::cast)
+                    .peek(e -> e.initializeModule(layer))
                     .peek(e -> validateExtension(e, extensionId, parentId))
                     .flatMap(e -> e.exportedContextClasses().stream())
                     .collect(Collectors.groupingBy(c -> isDeportableClass(c) ? ExportType.DEPORTED : ExportType.EXPORTED));

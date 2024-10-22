@@ -1,0 +1,14 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.gluonhq.jfxapps</groupId>
+    <artifactId>parent</artifactId>
+    <version>${jfxapps.version}</version>
+  </parent>
+  <artifactId>jfxapps.utils</artifactId>
+  <packaging>pom</packaging>
+  <modules>
+      <module>jfxapps-dependency-plugin</module>
+  </modules>
+  <description>This plugin is similar to the maven-dependency-plugin goal:properties except it will load the plugin dependecies itself into maven variables</description>
+</project>

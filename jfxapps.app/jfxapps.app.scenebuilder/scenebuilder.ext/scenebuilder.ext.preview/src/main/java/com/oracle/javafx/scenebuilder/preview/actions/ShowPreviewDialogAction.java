@@ -45,8 +45,7 @@ import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController
 
 import javafx.scene.control.DialogPane;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 @ActionMeta(nameKey = "action.name.show.preview", descriptionKey = "action.description.show.preview")
 @MenuItemAttachment(

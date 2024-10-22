@@ -55,8 +55,7 @@ import javafx.scene.shape.Line;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class HierarchyInsertLine {
 
     public static final String CSS_CLASS_PARENT_INDICATOR_LINE = "cell-parent-indicator-line";

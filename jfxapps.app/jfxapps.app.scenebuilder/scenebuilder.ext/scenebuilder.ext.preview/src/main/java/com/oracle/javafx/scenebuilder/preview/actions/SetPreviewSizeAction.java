@@ -43,8 +43,7 @@ import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController
 
 import javafx.css.Size;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 @ActionMeta(nameKey = "action.name.set.preview.size", descriptionKey = "action.description.set.preview.size")
 public class SetPreviewSizeAction extends AbstractAction {

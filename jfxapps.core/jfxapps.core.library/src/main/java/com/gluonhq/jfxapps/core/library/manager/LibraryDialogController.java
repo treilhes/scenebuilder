@@ -57,7 +57,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.library.api.AbstractLibrary;
 import com.gluonhq.jfxapps.core.library.api.LibraryStoreConfiguration;
-import com.gluonhq.jfxapps.core.library.preferences.global.MavenArtifactsPreferences;
+import com.gluonhq.jfxapps.core.library.preference.MavenArtifactsPreferences;
 
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -301,7 +301,9 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
             // releaseLocks();
 
             // Update record artifact
-            mavenPreferences.getRecordArtifact(mappers.map(m)).writeToJavaPreferences();
+            var artifact = mappers.map(m);
+            mavenPreferences.getValue().add(artifact);
+            mavenPreferences.save();
 
             // startWatching();
             // enableLocks();
@@ -323,7 +325,9 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
             // releaseLocks();
 
             // Update record artifact
-            mavenPreferences.getRecordArtifact(mappers.map(m)).writeToJavaPreferences();
+            var artifact = mappers.map(m);
+            mavenPreferences.getValue().add(artifact);
+            mavenPreferences.save();
 
             // startWatching();
             // enableLocks();
@@ -382,7 +386,8 @@ public class LibraryDialogController extends AbstractFxmlWindowController{
         //libraryConfiguration.releaseLocks();
 
         // Update record artifact
-        mavenPreferences.getRecordArtifact(mavenArtifact).writeToJavaPreferences();
+        mavenPreferences.getValue().add(mavenArtifact);
+        mavenPreferences.save();
 
         //library.startWatching();
         //libraryConfiguration.enableLocks();

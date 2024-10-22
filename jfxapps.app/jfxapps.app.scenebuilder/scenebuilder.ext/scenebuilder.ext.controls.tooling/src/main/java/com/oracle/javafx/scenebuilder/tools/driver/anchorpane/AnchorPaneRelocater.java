@@ -38,9 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.util.MathUtils;
 import com.gluonhq.jfxapps.util.javafx.AnchorUtils;
@@ -53,8 +51,7 @@ import javafx.scene.layout.AnchorPane;
  *
  * 
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class AnchorPaneRelocater extends AbstractRelocater<AnchorPane> {
     
     private double originalLayoutX;

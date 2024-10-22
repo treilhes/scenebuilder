@@ -36,8 +36,9 @@ package com.oracle.javafx.scenebuilder.template.controller;
 
 import java.util.List;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.template.Template;
@@ -46,8 +47,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 
 import javafx.stage.Modality;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 public class TemplatesWindowController extends TemplatesBaseWindowController {
     public TemplatesWindowController(

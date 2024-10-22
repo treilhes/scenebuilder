@@ -174,7 +174,7 @@ public class StageBuilder {
             var provider = builder.build();
             if (controller != null) {
                 //use events
-                events.stylesheetConfig().onNext(provider);
+                events.stylesheetConfig().set(provider);
             } else {
                 // use stage
                 if (provider.getUserAgentStylesheet() != null) {

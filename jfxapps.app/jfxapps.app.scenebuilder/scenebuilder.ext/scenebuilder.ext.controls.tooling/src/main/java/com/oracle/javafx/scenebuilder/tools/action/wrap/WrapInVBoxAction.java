@@ -33,9 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.action.wrap;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractJobAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
@@ -52,8 +50,7 @@ import com.oracle.javafx.scenebuilder.tools.job.wrap.WrapInVBoxJob;
         nameKey = "action.name.save",
         descriptionKey = "action.description.save")
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @MenuItemAttachment(
         id = WrapInVBoxAction.MENU_ID,
         targetMenuId = WrapInToolBarAction.MENU_ID,

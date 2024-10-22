@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,9 +42,7 @@ import com.gluonhq.jfxapps.core.library.api.LibraryDialogFactory;
 import com.gluonhq.jfxapps.core.library.api.LibraryStoreFactory;
 import com.gluonhq.jfxapps.core.library.manager.ImportProgressDialogController;
 import com.gluonhq.jfxapps.core.library.manager.LibraryDialogController;
-import com.gluonhq.jfxapps.core.library.preferences.global.MavenArtifactPreferences;
-import com.gluonhq.jfxapps.core.library.preferences.global.MavenArtifactsPreferences;
-import com.gluonhq.jfxapps.core.library.preferences.global.MavenArtifactsPreferencesFactory;
+import com.gluonhq.jfxapps.core.library.preference.MavenArtifactsPreferences;
 
 public class LibraryExtension implements OpenExtension {
 
@@ -71,9 +69,7 @@ public class LibraryExtension implements OpenExtension {
                 LibraryDialogFactory.class,
                 LibraryStoreFactory.class,
                 ImportProgressDialogController.class,
-                MavenArtifactsPreferences.class,
-                MavenArtifactPreferences.class,
-                MavenArtifactsPreferencesFactory.class
+                MavenArtifactsPreferences.class
             );
      // @formatter:on
     }

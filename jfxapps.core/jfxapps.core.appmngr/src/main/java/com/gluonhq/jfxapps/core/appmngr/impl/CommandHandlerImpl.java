@@ -66,8 +66,13 @@ public class CommandHandlerImpl implements CommandHandler, Application{
 
     private final JfxAppContext context;
 
-    public CommandHandlerImpl(JfxAppContext context, InstancesManager instancesManager, JavafxThreadHolder fxThreadHolder,
+    //@formatter:off
+    public CommandHandlerImpl(
+            JfxAppContext context,
+            InstancesManager instancesManager,
+            JavafxThreadHolder fxThreadHolder,
             Set<ApplicationExtension> applications) {
+        //@formatter:on
         super();
         this.context = context;
         this.instancesManager = instancesManager;

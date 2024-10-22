@@ -41,23 +41,38 @@ import java.util.Set;
 
 public interface RepositoryClient {
 
-    public enum Scope {
+    public enum VersionType {
         RELEASE, RELEASE_SNAPHOT
     }
 
+    /**
+     * Sets the local path to use as a repository folder.
+     * Dependencies will be downloaded to this folder.
+     * @param path
+     * @return
+     */
     RepositoryClient localPath(File path);
 
+    /**
+     * Sets the list of remote repositories to use for searching and downloading dependencies.
+     * @param repositories
+     * @return
+     */
     RepositoryClient repositories(List<Repository> repositories);
 
+    /**
+     * Disable remote repositories, only use local repository.
+     * @return
+     */
     RepositoryClient localOnly();
 
     List<UniqueArtifact> getAvailableVersions(Artifact artifact);
 
-    List<UniqueArtifact> getAvailableVersions(Artifact artifact, Scope scope);
+    List<UniqueArtifact> getAvailableVersions(Artifact artifact, VersionType scope);
 
     Optional<UniqueArtifact> getLatestVersion(Artifact artifact);
 
-    Optional<UniqueArtifact> getLatestVersion(Artifact artifact, Scope scope);
+    Optional<UniqueArtifact> getLatestVersion(Artifact artifact, VersionType scope);
 
     Optional<ResolvedArtifact> resolve(UniqueArtifact artifact);
 

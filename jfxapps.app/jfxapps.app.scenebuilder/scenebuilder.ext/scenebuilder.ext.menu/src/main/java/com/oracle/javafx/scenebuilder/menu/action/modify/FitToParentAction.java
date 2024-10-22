@@ -50,8 +50,7 @@ import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.menu.action.edit.SelectParentAction;
 import com.oracle.javafx.scenebuilder.selection.job.FitToParentSelectionJob;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(
         nameKey = "action.name.save",
         descriptionKey = "action.description.save")

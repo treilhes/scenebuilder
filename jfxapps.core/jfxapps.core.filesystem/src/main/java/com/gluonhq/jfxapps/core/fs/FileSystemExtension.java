@@ -52,11 +52,11 @@ import com.gluonhq.jfxapps.core.fs.action.impl.SaveAsAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.SaveOrSaveAsAction;
 import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
 import com.gluonhq.jfxapps.core.fs.controller.FileSystemController;
-import com.gluonhq.jfxapps.core.fs.preference.document.PathPreference;
-import com.gluonhq.jfxapps.core.fs.preference.global.InitialDirectoryPreference;
-import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
-import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsSizePreference;
-import com.gluonhq.jfxapps.core.fs.preference.global.WildcardImportsPreference;
+import com.gluonhq.jfxapps.core.fs.controller.RecentItemsController;
+import com.gluonhq.jfxapps.core.fs.preference.InitialDirectoryPreference;
+import com.gluonhq.jfxapps.core.fs.preference.RecentItemsPreference;
+import com.gluonhq.jfxapps.core.fs.preference.RecentItemsSizePreference;
+import com.gluonhq.jfxapps.core.fs.preference.WildcardImportsPreference;
 
 public class FileSystemExtension implements OpenExtension {
 
@@ -92,7 +92,7 @@ public class FileSystemExtension implements OpenExtension {
                 NewAction.class,
                 OpenAction.class,
                 OpenFilesAction.class,
-                PathPreference.class,
+                RecentItemsController.class,
                 RecentItemsPreference.class,
                 RecentItemsSizePreference.class,
                 ReloadFileAction.class,

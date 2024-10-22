@@ -33,16 +33,12 @@
  */
 package com.oracle.javafx.scenebuilder.ext.menu;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
@@ -51,7 +47,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
-import com.oracle.javafx.scenebuilder.api.theme.ThemeProvider;
+import com.oracle.javafx.scenebuilder.api.theme.ThemeManager;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 
@@ -68,20 +64,21 @@ public class ThemeMenuProvider implements MenuItemProvider {
     private final static String FIRST_SEPARATOR_ID = "previewMenu";
 
     private final I18N i18n;
-    private final List<ThemeProvider> themeProviders;
+    private final ThemeManager themeManager;
     private final ThemeDocumentPreference themePreference;
     private final ActionFactory actionFactory;
 
+    //@formatter:off
     public ThemeMenuProvider(
             I18N i18n,
             ActionFactory actionFactory,
             @Lazy ThemeDocumentPreference themePreference,
-            @Lazy List<ThemeProvider> themeProviders
-
-    ) {
+            ThemeManager themeManager
+            ) {
+        //@formatter:on
         this.i18n = i18n;
         this.actionFactory = actionFactory;
-        this.themeProviders = themeProviders;
+        this.themeManager = themeManager;
         this.themePreference = themePreference;
     }
 
@@ -92,13 +89,9 @@ public class ThemeMenuProvider implements MenuItemProvider {
 
     public class ThemeAttachment implements MenuItemAttachment {
 
-        private final List<Class<? extends Theme>> themeClasses;
-
         private Menu theme = null;
 
         public ThemeAttachment() {
-            themeClasses = new ArrayList<>();
-            themeProviders.forEach(tp -> themeClasses.addAll(tp.themes()));
         }
 
         @Override
@@ -121,8 +114,8 @@ public class ThemeMenuProvider implements MenuItemProvider {
 
             theme = new Menu(i18n.getString("menu.title.theme"));
             theme.setId("themeMenu");
-            Map<String, List<Class<? extends Theme>>> groups = themeClasses.stream()
-                    .collect(Collectors.groupingBy(t -> Theme.group(t).getName()));
+            Map<String, List<Theme>> groups = themeManager.getAll().stream()
+                    .collect(Collectors.groupingBy(t -> t.getGroup().getName()));
 
             ToggleGroup tg = new ToggleGroup();
 
@@ -134,11 +127,11 @@ public class ThemeMenuProvider implements MenuItemProvider {
                     theme.getItems().add(sep);
                 }
 
-                groups.get(k).stream().sorted((t1, t2) -> Theme.name(t1).compareTo(Theme.name(t2))).forEach(t -> {
-                    RadioMenuItem mi = new RadioMenuItem(Theme.name(t));
+                groups.get(k).stream().sorted((t1, t2) -> name(i18n, t1).compareTo(name(i18n, t2))).forEach(t -> {
+                    RadioMenuItem mi = new RadioMenuItem(name(i18n, t));
                     mi.setToggleGroup(tg);
-                    mi.setSelected(themePreference.getValue() == t);
-                    mi.setUserData(t);
+                    mi.setSelected(themePreference.getValue() == t.getClass());
+                    mi.setUserData(t.getClass());
                     mi.setOnAction((e) -> themePreference.setValue((Class<? extends Theme>) mi.getUserData()));
                     theme.getItems().add(mi);
                 });
@@ -150,6 +143,10 @@ public class ThemeMenuProvider implements MenuItemProvider {
                 actionFactory.create(ApplyCssContentAction.class).checkAndPerform();
             });
             return theme;
+        }
+
+        private String name(I18N i18n, Theme t) {
+            return i18n.getStringOrDefault(t.getName(), t.getName());
         }
     }
 }

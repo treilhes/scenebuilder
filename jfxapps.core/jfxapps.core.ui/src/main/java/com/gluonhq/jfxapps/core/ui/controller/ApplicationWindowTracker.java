@@ -37,11 +37,11 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingle
 import com.gluonhq.jfxapps.core.api.javafx.FxThread;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.WindowPreferenceTracker;
-import com.gluonhq.jfxapps.core.ui.preferences.document.MaximizedPreference;
-import com.gluonhq.jfxapps.core.ui.preferences.document.StageHeightPreference;
-import com.gluonhq.jfxapps.core.ui.preferences.document.StageWidthPreference;
-import com.gluonhq.jfxapps.core.ui.preferences.document.XPosPreference;
-import com.gluonhq.jfxapps.core.ui.preferences.document.YPosPreference;
+import com.gluonhq.jfxapps.core.ui.preference.MaximizedPreference;
+import com.gluonhq.jfxapps.core.ui.preference.StageHeightPreference;
+import com.gluonhq.jfxapps.core.ui.preference.StageWidthPreference;
+import com.gluonhq.jfxapps.core.ui.preference.XPosPreference;
+import com.gluonhq.jfxapps.core.ui.preference.YPosPreference;
 
 import jakarta.inject.Provider;
 import javafx.beans.value.ChangeListener;

@@ -43,8 +43,7 @@ import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 @ActionMeta(nameKey = "action.name.show.preview.dialog", descriptionKey = "action.description.show.preview.dialog")
 @MenuItemAttachment(

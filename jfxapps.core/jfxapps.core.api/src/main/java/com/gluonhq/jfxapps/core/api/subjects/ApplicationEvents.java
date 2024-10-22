@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.subjects;
 
+import com.gluonhq.jfxapps.boot.api.context.Application;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
@@ -45,15 +46,17 @@ public interface ApplicationEvents {
 
     SubjectItem<Boolean> debugMode();
 
-    Subject<Boolean> closed();
+    SubjectItem<Application> opened();
+
+    SubjectItem<Application> closed();
 
     Subject<ApplicationInstance> documentOpened();
 
     Subject<ApplicationInstance> documentClosed();
 
-    Subject<ApplicationInstance> documentScoped();
+    SubjectItem<ApplicationInstance> documentScoped();
 
-    Subject<ToolStylesheetProvider> stylesheetConfig();
+    SubjectItem<ToolStylesheetProvider> stylesheetConfig();
 
     SubjectItem<ClassLoader> classloader();
 
@@ -64,21 +67,35 @@ public interface ApplicationEvents {
         private final SubjectItem<Boolean> debugMode;
         private final SubjectItem<ClassLoader> classloader;
 
+        private final SubjectItem<ToolStylesheetProvider> stylesheetConfig;
+        private final SubjectItem<Application> opened;
+        private final SubjectItem<Application> closed;
+        private final SubjectItem<ApplicationInstance> documentScoped;
+
 
         public ApplicationEventsImpl() {
             subjects = new ApplicationSubjects();
             debugMode = new SubjectItem<Boolean>(subjects.getDebugMode()).set(false);
             classloader = new SubjectItem<ClassLoader>(subjects.getClassloader()).set(this.getClass().getClassLoader());
+            stylesheetConfig = new SubjectItem<ToolStylesheetProvider>(subjects.getStylesheetConfig());
+            opened = new SubjectItem<Application>(subjects.getOpened());
+            closed = new SubjectItem<Application>(subjects.getClosed());
+            documentScoped = new SubjectItem<ApplicationInstance>(subjects.getDocumentScoped());
         }
 
         @Override
-        public Subject<ToolStylesheetProvider> stylesheetConfig() {
-            return subjects.getStylesheetConfig();
+        public SubjectItem<ToolStylesheetProvider> stylesheetConfig() {
+            return stylesheetConfig;
         }
 
         @Override
-        public Subject<Boolean> closed() {
-            return subjects.getClosed();
+        public SubjectItem<Application> opened() {
+            return opened;
+        }
+
+        @Override
+        public SubjectItem<Application> closed() {
+            return closed;
         }
 
         @Override
@@ -92,8 +109,8 @@ public interface ApplicationEvents {
         }
 
         @Override
-        public Subject<ApplicationInstance> documentScoped() {
-            return subjects.getDocumentScoped();
+        public SubjectItem<ApplicationInstance> documentScoped() {
+            return documentScoped;
         }
 
         @Override
@@ -110,7 +127,8 @@ public interface ApplicationEvents {
     public class ApplicationSubjects extends SubjectManager {
 
         private ReplaySubject<ToolStylesheetProvider> stylesheetConfig;
-        private PublishSubject<Boolean> closed;
+        private ReplaySubject<Application> opened;
+        private ReplaySubject<Application> closed;
         private PublishSubject<ApplicationInstance> documentOpened;
         private PublishSubject<ApplicationInstance> documentClosed;
         private ReplaySubject<ApplicationInstance> documentScoped;
@@ -118,7 +136,8 @@ public interface ApplicationEvents {
         private ReplaySubject<ClassLoader> classloader;
 
         public ApplicationSubjects() {
-            closed = wrap(ApplicationSubjects.class, "closed", PublishSubject.create()); // NOI18N
+            opened = wrap(ApplicationSubjects.class, "opened", ReplaySubject.create(1)); // NOI18N
+            closed = wrap(ApplicationSubjects.class, "closed", ReplaySubject.create(1)); // NOI18N
             debugMode = wrap(ApplicationSubjects.class, "debugMode", ReplaySubject.create(1)); // NOI18N
             stylesheetConfig = wrap(ApplicationSubjects.class, "stylesheetConfig", ReplaySubject.create(1)); // NOI18N
             documentOpened = wrap(ApplicationSubjects.class, "documentOpened", PublishSubject.create()); // NOI18N
@@ -131,7 +150,11 @@ public interface ApplicationEvents {
             return stylesheetConfig;
         }
 
-        public PublishSubject<Boolean> getClosed() {
+        public ReplaySubject<Application> getOpened() {
+            return opened;
+        }
+
+        public ReplaySubject<Application> getClosed() {
             return closed;
         }
 

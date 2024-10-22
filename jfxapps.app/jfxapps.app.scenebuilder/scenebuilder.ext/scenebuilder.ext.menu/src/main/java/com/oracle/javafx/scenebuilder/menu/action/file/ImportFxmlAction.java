@@ -53,8 +53,7 @@ import com.oracle.javafx.scenebuilder.menu.action.AbstractFxmlAction;
  * common ancestor node otherwise).
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
 
 @MenuItemAttachment(

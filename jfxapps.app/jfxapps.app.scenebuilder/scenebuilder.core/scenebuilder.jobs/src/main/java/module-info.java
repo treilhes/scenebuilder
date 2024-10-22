@@ -36,7 +36,7 @@ import com.oracle.javafx.scenebuilder.job.SbJobsExtension;
 
 open module scenebuilder.fxml.core.jobs {
     exports com.oracle.javafx.scenebuilder.job;
-    exports com.oracle.javafx.scenebuilder.job.preferences.global;
+    exports com.oracle.javafx.scenebuilder.job.preference;
 
     requires transitive jfxapps.core.api;
     requires transitive scenebuilder.api;

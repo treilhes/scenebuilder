@@ -74,6 +74,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     @FXML
     private Button emptyApp;
 
+    private final I18N i18n;
     private final InstancesManager sceneBuilderApp;
 
 	private final RecentItemsPreference recentItemsPreference;
@@ -87,6 +88,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     private final ActionFactory actionFactory;
 
     private WelcomeDialogWindowController(
+            I18N i18n,
             ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
     		@Autowired InstancesManager sceneBuilderApp,
@@ -97,8 +99,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     		@Autowired TemplateController templateController,
     		@Autowired List<TemplateGroup> templateGroups,
             @Autowired List<Template> templates) {
-        super(sceneBuilderManager, iconSetting, WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"),
-                I18N.getBundle(),
+        super(i18n, sceneBuilderManager, iconSetting, WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"),
                 null, templateGroups, templates); // We want it to be a top level window so we're setting the owner to null.
 
         this.sceneBuilderApp = sceneBuilderApp;
@@ -128,7 +129,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
         assert getRoot().getScene().getWindow() != null;
 
         windowIconSetting.setWindowIcon(this.getStage());
-        getStage().setTitle(I18N.getString("welcome.title"));
+        getStage().setTitle(getI18n().getString("welcome.title"));
         getStage().initModality(Modality.APPLICATION_MODAL);
     }
 
@@ -141,7 +142,7 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
         int recentItemsSize = recentItemsSizePreference.getValue();
 
         if (recentItems.size() == 0) {
-            Label noRecentItems = new Label(I18N.getString("welcome.recent.items.no.recent.items"));
+            Label noRecentItems = new Label(getI18n().getString("welcome.recent.items.no.recent.items"));
             noRecentItems.getStyleClass().add("no-recent-items-label");
             recentDocuments.getChildren().add(noRecentItems);
         }

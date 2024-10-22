@@ -61,8 +61,7 @@ import javafx.scene.control.TreeItem;
  * p
  * @treatAsPrivate
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class HierarchyTaskScheduler {
 
     private final TreeItemFactory treeItemFactory;

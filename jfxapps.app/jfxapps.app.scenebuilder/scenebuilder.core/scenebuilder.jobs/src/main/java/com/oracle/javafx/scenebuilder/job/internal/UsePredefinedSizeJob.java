@@ -40,8 +40,8 @@ import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
-import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerHeightPreference;
-import com.oracle.javafx.scenebuilder.job.preferences.global.RootContainerWidthPreference;
+import com.oracle.javafx.scenebuilder.job.preference.RootContainerHeightPreference;
+import com.oracle.javafx.scenebuilder.job.preference.RootContainerWidthPreference;
 
 /**
  * Job to use for setting the size of the given FXOMObject; when not provided

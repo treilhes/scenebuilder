@@ -35,13 +35,10 @@ package com.oracle.javafx.scenebuilder.tools.driver.hbox;
 
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
-import com.gluonhq.jfxapps.core.dnd.target.AccessoryDropTarget;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
 
@@ -55,8 +52,7 @@ import javafx.scene.shape.Line;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class HBoxTring extends AbstractNodeTring<HBox> {
 
     private int targetIndex = Integer.MIN_VALUE;

@@ -80,8 +80,7 @@ open module jfxapps.core.api {
     exports com.gluonhq.jfxapps.core.api.ui.dialog;
     exports com.gluonhq.jfxapps.core.api.ui.tool;
 
-    exports com.gluonhq.jfxapps.core.api.preferences;
-    exports com.gluonhq.jfxapps.core.api.preferences.type;
+    exports com.gluonhq.jfxapps.core.api.preference;
 
     exports com.gluonhq.jfxapps.core.api.settings;
     exports com.gluonhq.jfxapps.core.api.shortcut;

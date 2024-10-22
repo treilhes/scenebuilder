@@ -62,8 +62,7 @@ import javafx.scene.input.KeyEvent;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class InsetsEditor extends AbstractPropertyEditor {
 
     private Parent root;

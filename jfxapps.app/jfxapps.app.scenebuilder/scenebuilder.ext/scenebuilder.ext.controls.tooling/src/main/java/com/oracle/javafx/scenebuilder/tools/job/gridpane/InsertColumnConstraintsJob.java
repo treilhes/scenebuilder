@@ -41,6 +41,7 @@ import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
@@ -57,8 +58,7 @@ import javafx.scene.layout.GridPane;
  * Insert "insertCount" columns constraints into the provided {@link GridPane} at the specified "columnIndex"<br/>
  * Specific to {@link GridPane}
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public final class InsertColumnConstraintsJob extends AbstractJob {
 
     private static final ColumnConstraintsListPropertyMetadata columnContraintsMeta =

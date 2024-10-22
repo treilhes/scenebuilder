@@ -38,32 +38,24 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
-
 import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.job.editor.atomic.AddPropertyValueJob;
-import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyFxControllerJob;
-import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
-import com.gluonhq.jfxapps.core.job.editor.atomic.RemovePropertyJob;
-import com.gluonhq.jfxapps.core.job.editor.atomic.RemovePropertyValueJob;
-import com.gluonhq.jfxapps.core.job.editor.atomic.ToggleFxRootJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.gluonhq.jfxapps.core.selection.job.SetDocumentRootJob;
-import com.oracle.javafx.scenebuilder.metadata.javafx.javafx.scene.NodeMetadata;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

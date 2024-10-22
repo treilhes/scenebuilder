@@ -62,8 +62,7 @@ import com.oracle.javafx.scenebuilder.menu.action.SaveAction;
 
 import javafx.stage.FileChooser;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 

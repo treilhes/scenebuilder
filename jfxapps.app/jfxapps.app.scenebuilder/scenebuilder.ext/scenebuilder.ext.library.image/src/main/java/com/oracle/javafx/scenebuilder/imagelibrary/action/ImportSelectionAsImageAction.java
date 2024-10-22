@@ -50,8 +50,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAt
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelController;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 @ActionMeta(
 		nameKey = "action.name.import.selection",

@@ -49,8 +49,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ContextMenuIte
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.selection.job.DuplicateSelectionJob;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 @ActionMeta(
         nameKey = "action.name.duplicate",

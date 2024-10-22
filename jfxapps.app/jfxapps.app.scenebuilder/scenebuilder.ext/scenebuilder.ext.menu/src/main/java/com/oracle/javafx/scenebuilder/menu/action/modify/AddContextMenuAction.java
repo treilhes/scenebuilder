@@ -50,8 +50,7 @@ import com.oracle.javafx.scenebuilder.selection.job.AddContextMenuToSelectionJob
  * of ContextMenu and sets it in the contextMenu property of the selected
  * objects.
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(
         nameKey = "action.name.save",
         descriptionKey = "action.description.save")

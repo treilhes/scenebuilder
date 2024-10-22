@@ -54,7 +54,7 @@ import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloaderDispatcher;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.lifecycle.DisposeWithDocument;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
-import com.gluonhq.jfxapps.core.api.preferences.Preferences;
+import com.gluonhq.jfxapps.core.api.preference.Preferences;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
@@ -475,7 +475,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
     @Override
     public void onFocus() {
         jfxAppPlatform.setCurrentScope(this);
-        sceneBuilderManager.documentScoped().onNext(this);
+        sceneBuilderManager.documentScoped().set(this);
     }
 
 

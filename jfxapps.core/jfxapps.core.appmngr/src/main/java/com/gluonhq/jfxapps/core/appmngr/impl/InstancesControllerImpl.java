@@ -470,7 +470,7 @@ public class InstancesControllerImpl implements InstancesManager {
         final ApplicationEvents sceneBuilderManager = context.getBean(ApplicationEvents.class);
         final ApplicationInstanceEvents documentManager = context.getBean(ApplicationInstanceEvents.class);
 
-        sceneBuilderManager.documentScoped().onNext(result);
+        sceneBuilderManager.documentScoped().set(result);
         documentManager.dependenciesLoaded().set(true);
 
         //TODO checkme: can be deleted, already handled by documentWidowController

@@ -55,8 +55,7 @@ import javafx.scene.Parent;
 /**
  * Rectangle2D popup editor. Used for ImageView/MediaView viewPort property.
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 public class Rectangle2DPopupEditor extends PopupEditor {
 

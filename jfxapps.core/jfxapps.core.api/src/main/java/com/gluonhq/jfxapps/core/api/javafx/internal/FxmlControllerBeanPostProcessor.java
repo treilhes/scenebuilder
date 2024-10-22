@@ -84,8 +84,7 @@ public class FxmlControllerBeanPostProcessor implements PriorityOrdered, BeanPos
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         bean = BeanPostProcessor.super.postProcessAfterInitialization(bean, beanName);
 
-        if (FxmlController.class.isAssignableFrom(bean.getClass())) {
-            FxmlController controller = (FxmlController) bean;
+        if (bean instanceof FxmlController controller) {
             FXMLLoader loader = new FXMLLoader();
             loader.setController(controller);
             loader.setLocation(controller.getFxmlURL());

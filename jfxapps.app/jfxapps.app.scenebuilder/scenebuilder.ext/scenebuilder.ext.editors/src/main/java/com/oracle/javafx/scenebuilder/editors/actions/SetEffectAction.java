@@ -70,8 +70,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.effect.Effect;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.set.effect", descriptionKey = "action.description.set.effect")
 public class SetEffectAction extends AbstractAction {
 

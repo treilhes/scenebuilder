@@ -18,10 +18,6 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>javafx.fxml.patch</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>javafx.fxml.patch.link</artifactId>
         </dependency>
 
@@ -61,6 +57,26 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>resolve-jar-path</id>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.gluonhq.jfxapps</groupId>
+                        <artifactId>javafx.fxml.patch</artifactId>
+                        <version>${jfxapps.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -68,15 +84,15 @@
                     <compilerArgs>
                         <!-- Enable instrumentation -->
                         <arg>--patch-module</arg>
-                        <arg>javafx.fxml=D:\Dev\eclipse\scenebuilderx\scenebuilder\jfxapps.core\jfxapps.core.jpms.patches\javafx.fxml.patch\target\javafx.fxml.patch-17.0.0-SNAPSHOT.jar</arg>
-                        <!-- Enable access to com.sun.javafx.fxml.FXMLLoaderHelper for staticLoad in FXOMLOader-->
+                        <arg>javafx.fxml=${com.gluonhq.jfxapps:javafx.fxml.patch:jar}</arg>
+                        <!-- Enable access to
+                        com.sun.javafx.fxml.FXMLLoaderHelper for staticLoad in
+                        FXOMLOader-->
                         <arg>--add-exports</arg>
                         <arg>javafx.fxml/com.sun.javafx.fxml=jfxapps.core.fxom</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>
-
-
         </plugins>
     </build>
 </project>

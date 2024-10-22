@@ -57,8 +57,7 @@ import javafx.scene.control.TreeItem;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class TreeItemFactory {
 
     private final static Logger logger = LoggerFactory.getLogger(TreeItemFactory.class);

@@ -59,8 +59,7 @@ import javafx.scene.input.TransferMode;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 public class ImageLibraryController {
 

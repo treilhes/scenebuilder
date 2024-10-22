@@ -56,8 +56,7 @@ import com.oracle.javafx.scenebuilder.menu.action.AbstractFxmlAction;
  * fx:include element to the FXML document.
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
 @MenuItemAttachment(
         id = IncludeFxmlAction.MENU_ID,

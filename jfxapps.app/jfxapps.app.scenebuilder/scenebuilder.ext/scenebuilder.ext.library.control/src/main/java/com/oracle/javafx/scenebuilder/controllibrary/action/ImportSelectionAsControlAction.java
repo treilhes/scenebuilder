@@ -48,8 +48,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAt
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 @ActionMeta(nameKey = "action.name.import.selection", descriptionKey = "action.description.import.selection")
 @ViewMenuItemAttachment(

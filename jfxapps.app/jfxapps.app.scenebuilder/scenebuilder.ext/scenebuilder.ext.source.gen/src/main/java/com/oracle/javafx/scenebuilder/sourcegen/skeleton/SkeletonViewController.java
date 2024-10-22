@@ -64,8 +64,7 @@ import javafx.scene.input.DataFormat;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 @ViewAttachment(name = SkeletonViewController.VIEW_NAME, id = SkeletonViewController.VIEW_ID,
         icon = "ViewIconSkeleton.png", iconX2 = "ViewIconSkeleton@2x.png")

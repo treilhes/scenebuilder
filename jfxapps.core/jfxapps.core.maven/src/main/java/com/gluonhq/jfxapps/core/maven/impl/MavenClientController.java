@@ -44,15 +44,15 @@ import com.gluonhq.jfxapps.boot.api.maven.Artifact;
 import com.gluonhq.jfxapps.boot.api.maven.Classifier;
 import com.gluonhq.jfxapps.boot.api.maven.Repository;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient.VersionType;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryManager;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryType;
 import com.gluonhq.jfxapps.boot.api.maven.ResolvedArtifact;
 import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
-import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient.Scope;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoriesPreferences;
-import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoryPathPreference;
+import com.gluonhq.jfxapps.core.maven.preference.MavenRepositoriesPreferences;
+import com.gluonhq.jfxapps.core.maven.preference.MavenRepositoryPathPreference;
 
 import jakarta.annotation.PostConstruct;
 import javafx.beans.property.BooleanProperty;
@@ -95,8 +95,11 @@ public class MavenClientController implements com.gluonhq.jfxapps.core.api.maven
             // client =
             // RepositoryClient.newDefaultClient(RepositoryClient.getDefaultUserM2Repository());
         } else {
-            List<Repository> prefs = repositoryPreferences.getRepositories();
-            File repoPath = new File(repositoryPathPreference.getValue());
+            List<Repository> prefs = repositoryPreferences.getValue();
+
+            File repoPath = repositoryPathPreference.getValue() == null ? platform.defaultUserM2Repository()
+                    : new File(repositoryPathPreference.getValue());
+
             client = client.localPath(repoPath).repositories(prefs);
         }
     }
@@ -104,22 +107,22 @@ public class MavenClientController implements com.gluonhq.jfxapps.core.api.maven
     @Override
     public List<UniqueArtifact> getAvailableVersions(String groupId, String artifactId) {
         var a = Artifact.builder().groupId(groupId).artifactId(artifactId).build();
-        return client.getAvailableVersions(a, Scope.RELEASE_SNAPHOT);
+        return client.getAvailableVersions(a, VersionType.RELEASE_SNAPHOT);
     }
 
     public List<UniqueArtifact> getAvailableVersions(String groupId, String artifactId, boolean onlyRelease) {
         var a = Artifact.builder().groupId(groupId).artifactId(artifactId).build();
-        return client.getAvailableVersions(a, onlyRelease ? Scope.RELEASE : Scope.RELEASE_SNAPHOT);
+        return client.getAvailableVersions(a, onlyRelease ? VersionType.RELEASE : VersionType.RELEASE_SNAPHOT);
     }
 
     public Optional<UniqueArtifact> getLatestVersion(String groupId, String artifactId) {
         var a = Artifact.builder().groupId(groupId).artifactId(artifactId).build();
-        return client.getLatestVersion(a, Scope.RELEASE_SNAPHOT);
+        return client.getLatestVersion(a, VersionType.RELEASE_SNAPHOT);
     }
 
     public Optional<UniqueArtifact> getLatestVersion(String groupId, String artifactId, boolean onlyRelease) {
         var a = Artifact.builder().groupId(groupId).artifactId(artifactId).build();
-        return client.getLatestVersion(a, onlyRelease ? Scope.RELEASE : Scope.RELEASE_SNAPHOT);
+        return client.getLatestVersion(a, onlyRelease ? VersionType.RELEASE : VersionType.RELEASE_SNAPHOT);
     }
 
     public Optional<ResolvedArtifact> resolve(UniqueArtifact artifact, Classifier classifier) {
@@ -143,13 +146,15 @@ public class MavenClientController implements com.gluonhq.jfxapps.core.api.maven
     @Override
     public void add(Repository repository) {
         repositoryManager.add(repository);
-        repositoryPreferences.getRecordRepository(repository).writeToJavaPreferences();
+        repositoryPreferences.getValue().add(repository);
+        repositoryPreferences.save();
     }
 
     @Override
     public void remove(Repository repository) {
         repositoryManager.remove(repository);
-        repositoryPreferences.removeRecord(repository.getId());
+        repositoryPreferences.getValue().remove(repository);
+        repositoryPreferences.save();
     }
 
     @Override

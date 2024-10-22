@@ -43,8 +43,7 @@ import com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 @ViewAttachment(name = DummyWindowController.VIEW_NAME, id = DummyWindowController.VIEW_ID)
 public class DummyWindowController extends AbstractFxmlViewController {

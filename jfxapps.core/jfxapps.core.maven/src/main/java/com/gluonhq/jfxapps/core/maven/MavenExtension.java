@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,8 +40,7 @@ import java.util.UUID;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.maven.artifact.GetMavenArtifactDialogController;
 import com.gluonhq.jfxapps.core.maven.artifact.SearchMavenArtifactDialogController;
-import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoriesPreferences;
-import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoryPreferences;
+import com.gluonhq.jfxapps.core.maven.preference.MavenRepositoriesPreferences;
 import com.gluonhq.jfxapps.core.maven.repository.AddEditRepositoryDialogController;
 import com.gluonhq.jfxapps.core.maven.repository.RepositoryManagerController;
 
@@ -70,7 +69,6 @@ public class MavenExtension implements OpenExtension {
                 SearchMavenArtifactDialogController.class,
                 GetMavenArtifactDialogController.class,
                 MavenRepositoriesPreferences.class,
-                MavenRepositoryPreferences.class,
                 RepositoryManagerController.class,
                 AddEditRepositoryDialogController.class
             );

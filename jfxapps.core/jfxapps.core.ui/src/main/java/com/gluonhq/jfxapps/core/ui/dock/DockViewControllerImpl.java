@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -58,8 +58,8 @@ import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachmentProvider;
-import com.gluonhq.jfxapps.core.ui.dock.preferences.document.LastDockUuidPreference;
-import com.gluonhq.jfxapps.core.ui.dock.preferences.document.LastViewVisibilityPreference;
+import com.gluonhq.jfxapps.core.ui.dock.preference.LastDockUuidPreference;
+import com.gluonhq.jfxapps.core.ui.dock.preference.LastViewVisibilityPreference;
 
 /**
  *
@@ -194,7 +194,7 @@ public class DockViewControllerImpl implements InitWithDocument, DockViewControl
         view.visibleProperty().addListener((ob, o , n) -> { if (n == false) this.performCloseView(view);});
 
         // get last saved dock target
-        UUID targetDock = lastDockUuidPreference.get(view.getId());
+        UUID targetDock = lastDockUuidPreference.getValue().get(view.getId());
 
         if (targetDock == null) {// no preference so use the default for view
             targetDock = vi.getPrefDockId();
@@ -226,13 +226,13 @@ public class DockViewControllerImpl implements InitWithDocument, DockViewControl
                 dock.getParentWindow().openWindow();
             }
         }
-        lastViewVisibilityPreference.put(view.getId(), Boolean.TRUE);
+        lastViewVisibilityPreference.getValue().put(view.getId(), Boolean.TRUE);
     }
 
     @Override
     public void performCloseView(View view) {
         viewManager.undock().onNext(view);
-        lastViewVisibilityPreference.put(view.getId(), Boolean.FALSE);
+        lastViewVisibilityPreference.getValue().put(view.getId(), Boolean.FALSE);
         view.visibleProperty().set(false);
     }
 

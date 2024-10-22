@@ -59,8 +59,7 @@ import javafx.scene.Parent;
  * (used for instance by Transforms.rotationAxis property)
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 public class Point3DEditor extends AbstractPropertyEditor {
 

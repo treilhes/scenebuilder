@@ -14,8 +14,7 @@ import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.ext.LoaderCapabilitiesManager;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class LoaderCapabilitiesManagerImpl implements LoaderCapabilitiesManager, InitWithDocument {
 
     private static Logger logger = LoggerFactory.getLogger(LoaderCapabilitiesManagerImpl.class);

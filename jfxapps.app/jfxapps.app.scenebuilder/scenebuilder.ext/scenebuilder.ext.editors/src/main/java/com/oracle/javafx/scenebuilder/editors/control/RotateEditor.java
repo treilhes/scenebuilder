@@ -62,8 +62,7 @@ import javafx.scene.input.MouseEvent;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class RotateEditor extends AbstractPropertyEditor {
 
     @FXML

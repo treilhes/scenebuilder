@@ -44,8 +44,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAt
 import com.oracle.javafx.scenebuilder.controllibrary.controller.JarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 @ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report")
 @ViewMenuItemAttachment(

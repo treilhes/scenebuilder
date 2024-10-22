@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,8 +36,8 @@ package com.gluonhq.jfxapps.core.preferences.controller;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
-import com.gluonhq.jfxapps.core.api.preferences.Preferences;
+import com.gluonhq.jfxapps.core.api.preference.ManagedDocumentPreference;
+import com.gluonhq.jfxapps.core.api.preference.Preferences;
 
 /**
  * Defines preferences for Scene Builder App.
@@ -60,12 +61,12 @@ public class DocumentPreferencesController implements Preferences {
 
     @Override
     public void readFromJavaPreferences() {
-    	preferences.forEach((p) -> p.readFromJavaPreferences());
+    	preferences.forEach((p) -> p.load());
     }
 
     @Override
     public void writeToJavaPreferences() {
-    	preferences.forEach((p) -> p.writeToJavaPreferences());
+    	preferences.forEach((p) -> p.save());
     }
 
 }

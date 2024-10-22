@@ -54,8 +54,7 @@ import javafx.scene.control.TextField;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class GenericEditor extends AbstractPropertyEditor {
 
     private TextField textField;

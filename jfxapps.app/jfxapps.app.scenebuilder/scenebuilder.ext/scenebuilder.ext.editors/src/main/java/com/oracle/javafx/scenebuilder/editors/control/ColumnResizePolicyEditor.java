@@ -49,8 +49,7 @@ import javafx.scene.control.TreeTableView;
 /**
  * Editor for TableView columnResizePolicy property.
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class ColumnResizePolicyEditor extends EnumEditor {
 
     boolean isTableView;

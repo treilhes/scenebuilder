@@ -55,7 +55,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
+import com.gluonhq.jfxapps.core.fs.controller.RecentItemsController;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 import javafx.stage.FileChooser;
@@ -71,7 +71,7 @@ public class SaveAsAction extends AbstractAction {
     private final Dialog dialog;
     private final MainInstanceWindow documentWindow;
     private final FileSystem fileSystem;
-    private final RecentItemsPreference recentItemsPreference;
+    private final RecentItemsController recentItems;
     private final InstancesManager main;
     private final ActionFactory actionFactory;
 
@@ -85,7 +85,7 @@ public class SaveAsAction extends AbstractAction {
             FileSystem fileSystem,
             ActionFactory actionFactory,
             InstancesManager main,
-            RecentItemsPreference recentItemsPreference) {
+            RecentItemsController recentItems) {
         super(i18n, extensionFactory);
         this.documentManager = documentManager;
         this.inlineEdit = inlineEdit;
@@ -94,7 +94,7 @@ public class SaveAsAction extends AbstractAction {
         this.fileSystem = fileSystem;
         this.actionFactory = actionFactory;
         this.main = main;
-        this.recentItemsPreference = recentItemsPreference;
+        this.recentItems = recentItems;
     }
 
     @Override
@@ -216,7 +216,7 @@ public class SaveAsAction extends AbstractAction {
                     fileSystem.updateNextInitialDirectory(fxmlFile);
 
                     // Update recent items with just saved file
-                    recentItemsPreference.addRecentItem(fxmlFile);
+                    recentItems.addRecentItem(fxmlFile);
                 }
             }
         } else {

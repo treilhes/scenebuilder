@@ -66,8 +66,7 @@ import javafx.stage.FileChooser;
  * Editor for including FXML files into the main document (through fx:include).
  */
 // FIXME strange editor : instead of editing the currently selected include, it adds include / FIXED, NEED TESTING
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class IncludeFxmlEditor extends InlineListEditor {
 
     private final StackPane root = new StackPane();

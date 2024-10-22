@@ -64,6 +64,7 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ContextAnnotationAutowireCandidateResolver;
 import org.springframework.core.ResolvableType;
+import org.springframework.core.env.MapPropertySource;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
@@ -95,17 +96,41 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
     // private final AnnotationConfigServletWebApplicationContext context;
     private final SbBeanFactoryImpl beanFactory;
     private final UUID id;
-    private final Set<Class<?>> registeredClasses = new HashSet<>();
+    private final Map<String, Class<?>> registeredClasses = new HashMap<>();
     private final Set<Class<?>> deportedClasses = new HashSet<>();
 
-    public static JfxAppContext fromScratch(Class<?>... array) {
+
+    public static JfxAppContext fromScratch(String[] propertySourceProperties, Class<?>[] array) {
+
         JfxAppContextImpl ctx = new JfxAppContextImpl(UUID.randomUUID());
+
+        if (array != null) {
+            ctx.getEnvironment().getPropertySources().addLast(toMapSource(propertySourceProperties));
+        }
+
         ctx.register(array);
         ctx.refresh();
         ctx.start();
         return ctx;
     }
+    public static JfxAppContext fromScratch(Class<?>... array) {
+        return fromScratch(new String[0], array);
+    }
 
+    private static MapPropertySource toMapSource(String[] array) {
+        Map<String, Object> propertyMap = new HashMap<>();
+
+        // Convert the String array to a Map
+        for (String pair : array) {
+            if (pair.contains("=")) {
+                String[] keyValue = pair.split("=", 2);
+                propertyMap.put(keyValue[0], keyValue[1]);
+            }
+        }
+
+        // Create a MapPropertySource
+        return new MapPropertySource("customMapProperties", propertyMap);
+    }
     public JfxAppContextImpl(UUID id) {
         this(id, null);
     }
@@ -153,10 +178,15 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
 
     @Override
     public void register(Class<?>... classes) {
-        registeredClasses.addAll(Arrays.asList(classes));
+        for (Class<?> cls : classes) {
+            registeredClasses.put(cls.getName(), cls);
+        }
         super.register(classes);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T getLocalBean(Class<T> cls) {
 
@@ -177,6 +207,9 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T getLayerBean(Class<?> layerClass, Class<T> cls) {
 
@@ -185,7 +218,7 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
         var layerContext = contextManager.get(moduleLayer);
 
         if (layerContext == null) {
-            return null;
+            return getBean(cls);
         }
 
         return layerContext.getBean(cls);
@@ -248,7 +281,12 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
 
     @Override
     public Set<Class<?>> getRegisteredClasses() {
-        return registeredClasses;
+        return new HashSet<>(registeredClasses.values());
+    }
+
+    @Override
+    public Class<?> getRegisteredClass(String name) {
+        return registeredClasses.get(name);
     }
 
     @Override
@@ -319,8 +357,13 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
                 return super.createBean(beanName, mbd, args);
             } catch (Exception e) {
                 if (e instanceof BeanCreationException) {
-                    rawClass.getModule().addOpens(rawClass.getPackage().getName(), BeanUtils.class.getModule());
+                    try {
+                        rawClass.getModule().addOpens(rawClass.getPackage().getName(), BeanUtils.class.getModule());
+                    } catch (Exception e1) {
+                        throw e;
+                    }
                     return super.createBean(beanName, mbd, args);
+
                 } else {
                     throw e;
                 }
@@ -478,5 +521,6 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
     public ScopedExecutor<ApplicationInstance> getApplicationInstanceExecutor() {
         return JfxAppContextImpl.applicationInstanceScope;
     }
+
 
 }

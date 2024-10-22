@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,8 +40,8 @@ import java.util.UUID;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.accelerators.controller.AcceleratorsController;
 import com.gluonhq.jfxapps.core.accelerators.i18n.I18NAccelerators;
-import com.gluonhq.jfxapps.core.accelerators.preferences.global.AcceleratorsMapPreference;
-import com.gluonhq.jfxapps.core.accelerators.preferences.global.FocusedAcceleratorsMapPreference;
+import com.gluonhq.jfxapps.core.accelerators.preference.AcceleratorsMapPreference;
+import com.gluonhq.jfxapps.core.accelerators.preference.FocusedAcceleratorsMapPreference;
 import com.gluonhq.jfxapps.core.accelerators.shortcut.AnnotatedActionAcceleratorProvider;
 
 public class AcceleratorsExtension implements OpenExtension {
@@ -67,7 +67,7 @@ public class AcceleratorsExtension implements OpenExtension {
                 AcceleratorsMapPreference.class,
                 AcceleratorsController.class,
                 AnnotatedActionAcceleratorProvider.class,
-                FocusedAcceleratorsMapPreference.Factory.class,
+                FocusedAcceleratorsMapPreference.class,
                 I18NAccelerators.class
             );
      // @formatter:on

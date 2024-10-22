@@ -57,8 +57,7 @@ import javafx.scene.text.TextAlignment;
  * icons).
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class TextAlignmentEditor extends AbstractPropertyEditor {
 
     private Parent root;

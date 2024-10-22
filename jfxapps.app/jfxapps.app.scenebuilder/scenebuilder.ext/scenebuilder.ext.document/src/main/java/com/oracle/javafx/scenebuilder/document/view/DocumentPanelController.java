@@ -60,8 +60,7 @@ import javafx.scene.layout.StackPane;
  * Kit.
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 @ViewAttachment(
         name = DocumentPanelController.VIEW_NAME,

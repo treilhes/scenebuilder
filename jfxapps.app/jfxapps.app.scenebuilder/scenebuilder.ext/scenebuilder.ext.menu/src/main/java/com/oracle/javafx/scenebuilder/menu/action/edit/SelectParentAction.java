@@ -48,8 +48,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttach
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(
         nameKey = "action.name.show.about",
         descriptionKey = "action.description.show.about")

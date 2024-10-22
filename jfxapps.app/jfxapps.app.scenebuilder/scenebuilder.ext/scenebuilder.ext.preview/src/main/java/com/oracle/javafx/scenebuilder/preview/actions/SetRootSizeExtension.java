@@ -37,8 +37,7 @@ import org.graalvm.compiler.lir.CompositeValue.Component;
 
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.SetRootSizeAction;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class SetRootSizeExtension extends AbstractActionExtension<SetRootSizeAction> {
 
     private final ActionFactory actionFactory;

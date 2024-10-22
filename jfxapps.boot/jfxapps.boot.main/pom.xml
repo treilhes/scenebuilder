@@ -53,6 +53,10 @@
 
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>java.base.patch</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>spring.core.patch</artifactId>
         </dependency>
         <dependency>
@@ -85,6 +89,9 @@
                         <arg>spring.core=${com.gluonhq.jfxapps:spring.core.patch:jar}</arg>
                         <arg>--patch-module</arg>
                         <arg>org.hibernate.orm.core=${com.gluonhq.jfxapps:org.hibernate.orm.core.patch:jar}</arg>
+                        <arg>--patch-module</arg>
+                        <arg>java.base=${com.gluonhq.jfxapps:java.base.patch:jar}</arg>
+
                     </compilerArgs>
                 </configuration>
             </plugin>
@@ -95,6 +102,8 @@
                     <argLine>
                         --patch-module spring.core=${com.gluonhq.jfxapps:spring.core.patch:jar}
                         --patch-module org.hibernate.orm.core=${com.gluonhq.jfxapps:org.hibernate.orm.core.patch:jar}
+                        --patch-module java.base=${com.gluonhq.jfxapps:java.base.patch:jar}
+                        --add-exports java.base/javapatch.lang.module=java.base.patch.link
                     </argLine>
                 </configuration>
             </plugin>
@@ -109,6 +118,8 @@
                             <argLine>
                                 --patch-module spring.core=${com.gluonhq.jfxapps:spring.core.patch:jar}
                                 --patch-module org.hibernate.orm.core=${com.gluonhq.jfxapps:org.hibernate.orm.core.patch:jar}
+                                --patch-module java.base=${com.gluonhq.jfxapps:java.base.patch:jar}
+                                --add-exports java.base/javapatch.lang.module=java.base.patch.link
                             </argLine>
                         </configuration>
                         <goals>

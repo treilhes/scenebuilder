@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,15 +37,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
-import com.gluonhq.jfxapps.core.api.application.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyI18nContentAction;
 import com.oracle.javafx.scenebuilder.ext.theme.document.I18NResourcePreference;
@@ -56,20 +54,27 @@ import javafx.stage.FileChooser;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 public class I18nResourceMenuController {
 
+    private final I18N i18n;
     private final ActionFactory actionFactory;
-    private final ApplicationInstanceWindow document;
+    private final MainInstanceWindow document;
     private final FileSystem fileSystem;
     private final Dialog dialog;
     private final I18NResourcePreference i18nResourcePreference;
 
-    public I18nResourceMenuController(@Autowired ActionFactory actionFactory, @Autowired @Lazy ApplicationInstanceWindow document,
-            @Autowired FileSystem fileSystem, @Autowired Dialog dialog,
-            @Autowired @Lazy I18NResourcePreference i18nResourcePreference) {
+    //@formatter:off
+    public I18nResourceMenuController(
+            I18N i18n,
+            ActionFactory actionFactory,
+            @Lazy MainInstanceWindow document,
+            FileSystem fileSystem,
+            Dialog dialog,
+            @Lazy I18NResourcePreference i18nResourcePreference) {
+        //@formatter:on
+        this.i18n = i18n;
         this.actionFactory = actionFactory;
         this.document = document;
         this.fileSystem = fileSystem;
@@ -86,7 +91,7 @@ public class I18nResourceMenuController {
         // Open a file chooser for *.properties & *.bss
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter(I18N.getString("resource.filechooser.filter.msg"), "*.properties")); // NOCHECK
+                new FileChooser.ExtensionFilter(i18n.getString("resource.filechooser.filter.msg"), "*.properties")); // NOCHECK
         fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
 
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(document.getStage());
@@ -115,8 +120,8 @@ public class I18nResourceMenuController {
         try {
             fileSystem.revealInFileBrowser(resourceFile);
         } catch (IOException ioe) {
-            dialog.showErrorAndWait(I18N.getString("error.file.reveal.title"),
-                    I18N.getString("error.file.reveal.message"), I18N.getString("error.filesystem.details"), ioe);
+            dialog.showErrorAndWait(i18n.getString("error.file.reveal.title"),
+                    i18n.getString("error.file.reveal.message"), i18n.getString("error.filesystem.details"), ioe);
         }
     }
 

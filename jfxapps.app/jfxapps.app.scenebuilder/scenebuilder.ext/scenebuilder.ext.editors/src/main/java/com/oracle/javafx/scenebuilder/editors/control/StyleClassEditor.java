@@ -85,8 +85,7 @@ import javafx.scene.layout.StackPane;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 public class StyleClassEditor extends InlineListEditor {
 

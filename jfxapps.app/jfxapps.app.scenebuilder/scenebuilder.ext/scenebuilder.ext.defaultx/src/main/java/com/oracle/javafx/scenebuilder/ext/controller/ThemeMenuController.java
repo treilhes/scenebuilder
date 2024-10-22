@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,15 +37,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
-import com.gluonhq.jfxapps.core.api.application.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
 import com.oracle.javafx.scenebuilder.ext.theme.document.UserStylesheetsPreference;
@@ -55,20 +51,25 @@ import javafx.stage.FileChooser;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 public class ThemeMenuController {
 
+    private final I18N i18n;
     private final ActionFactory actionFactory;
-    private final ApplicationInstanceWindow document;
+    private final MainInstanceWindow document;
     private final Dialog dialog;
     private final FileSystem fileSystem;
     private final UserStylesheetsPreference userStylesheetsPreference;
 
-    public ThemeMenuController(@Autowired ActionFactory actionFactory, @Autowired ApplicationInstanceWindow document,
-            @Autowired Dialog dialog, @Autowired FileSystem fileSystem,
-            @Autowired UserStylesheetsPreference userStylesheetsPreference) {
+
+    public ThemeMenuController(
+            I18N i18n,
+            ActionFactory actionFactory,
+            MainInstanceWindow document,
+            Dialog dialog,
+            FileSystem fileSystem,
+            UserStylesheetsPreference userStylesheetsPreference) {
+        this.i18n = i18n;
         this.actionFactory = actionFactory;
         this.document = document;
         this.dialog = dialog;
@@ -84,7 +85,7 @@ public class ThemeMenuController {
         // Open a file chooser for *.css & *.bss
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-                I18N.getString("scenestylesheet.filechooser.filter.msg"), "*.css", "*.bss")); // NOCHECK
+                i18n.getString("scenestylesheet.filechooser.filter.msg"), "*.css", "*.bss")); // NOCHECK
         fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(document.getStage());
 
@@ -117,8 +118,8 @@ public class ThemeMenuController {
         try {
             fileSystem.open(toOpen.getPath());
         } catch (IOException ioe) {
-            dialog.showErrorAndWait(I18N.getString("error.file.open.title"), I18N.getString("error.file.open.message"),
-                    I18N.getString("error.filesystem.details"), ioe);
+            dialog.showErrorAndWait(i18n.getString("error.file.open.title"), i18n.getString("error.file.open.message"),
+                    i18n.getString("error.filesystem.details"), ioe);
         }
     }
 

@@ -50,8 +50,7 @@ import javafx.util.Duration;
  * p
  * @treatAsPrivate
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class HierarchyAnimationScheduler {
 
     private Timeline timeline;

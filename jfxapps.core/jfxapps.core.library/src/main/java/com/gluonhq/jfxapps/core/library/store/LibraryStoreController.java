@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -63,11 +63,10 @@ import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
 import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
 import com.gluonhq.jfxapps.core.extstore.fs.ExtensionFileSystem;
 import com.gluonhq.jfxapps.core.library.api.LibraryStore;
-import com.gluonhq.jfxapps.core.library.preferences.global.MavenArtifactsPreferences;
+import com.gluonhq.jfxapps.core.library.preference.MavenArtifactsPreferences;
 import com.gluonhq.jfxapps.core.library.util.LibraryUtil;
 
 import javafx.collections.FXCollections;
@@ -115,7 +114,7 @@ public class LibraryStoreController implements LibraryStore, Runnable {
         this.libraryFoldersFile = libraryFilesRoot.resolve(Paths.get(LibraryUtil.FOLDERS_LIBRARY_FILENAME));
         this.libraryConfigFile = libraryRoot.resolve(Paths.get(LibraryUtil.CONFIG_LIBRARY_FILENAME));
         this.libraryThumbnailsRoot = libraryRoot.resolve(Paths.get(LibraryUtil.FOLDERS_FOR_THUMBNAILS));
-        mavenArtifactsPreferences.readFromJavaPreferences();
+        mavenArtifactsPreferences.load();
 
         if (Files.exists(this.libraryConfigFile)) {
             try (FileInputStream input = new FileInputStream(this.libraryConfigFile.toFile())){
@@ -172,10 +171,7 @@ public class LibraryStoreController implements LibraryStore, Runnable {
     public boolean load() throws IOException {
 System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
         List<Path> localFilesAndFolders = new ArrayList<>();
-        List<LibraryArtifact> localArtifacts = new ArrayList<>();
-
-        localArtifacts.addAll(mavenArtifactsPreferences.getRecords().values().stream().map(ma -> ma.getValue())
-                .collect(Collectors.toList()));
+        List<LibraryArtifact> localArtifacts = mavenArtifactsPreferences.getValue();
 
         List<Path> folders = LibraryUtil.getFolderPaths(libraryFoldersFile);
         localFilesAndFolders.addAll(folders);
@@ -199,8 +195,8 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
     @Override
     public boolean save() throws IOException {
         mavenArtifactsPreferences.reset();
-        artifacts.forEach(a -> mavenArtifactsPreferences.getRecord(a));
-        mavenArtifactsPreferences.writeToJavaPreferences();
+        artifacts.forEach(a -> mavenArtifactsPreferences.getValue().add(a));
+        mavenArtifactsPreferences.save();
 
         // collect directories from importFiles and add to library.folders file
         // for other filex (jar, fxml) copy them directly
@@ -367,8 +363,8 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
     @Override
     public boolean add(LibraryArtifact artifact) {
         try {
-            mavenArtifactsPreferences.getRecord(artifact);
-            mavenArtifactsPreferences.writeToJavaPreferences();
+            mavenArtifactsPreferences.getValue().add(artifact);
+            mavenArtifactsPreferences.save();
             return true;
         } catch (Exception e) {
             logger.error("Unable to add artifact", e);
@@ -409,8 +405,8 @@ System.out.println("LOADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
     @Override
     public boolean remove(LibraryArtifact artifact) {
         try {
-            mavenArtifactsPreferences.removeArtifact(artifact.getCoordinates());
-            mavenArtifactsPreferences.writeToJavaPreferences();
+            mavenArtifactsPreferences.getValue().remove(artifact);
+            mavenArtifactsPreferences.save();
             return true;
         } catch (Exception e) {
             logger.error("Unable to remove artifact", e);

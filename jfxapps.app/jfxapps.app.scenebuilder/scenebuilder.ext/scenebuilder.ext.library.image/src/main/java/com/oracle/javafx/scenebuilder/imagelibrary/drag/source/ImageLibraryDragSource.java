@@ -64,8 +64,7 @@ import javafx.scene.input.ClipboardContent;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public final class ImageLibraryDragSource extends AbstractDragSource {
 
     private final FXOMDocument targetDocument;

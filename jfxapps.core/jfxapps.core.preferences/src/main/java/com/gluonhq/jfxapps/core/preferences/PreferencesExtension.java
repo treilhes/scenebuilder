@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,17 +33,22 @@
  */
 package com.gluonhq.jfxapps.core.preferences;
 
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.preferences.controller.DocumentPreferencesController;
 import com.gluonhq.jfxapps.core.preferences.controller.PreferencesController;
 import com.gluonhq.jfxapps.core.preferences.edit.PreferenceEditorFactoryImpl;
 import com.gluonhq.jfxapps.core.preferences.i18n.I18NPreferences;
+import com.gluonhq.jfxapps.core.preferences.internal.preference.PreferenceBeanDefinitionRegistryPostProcessor;
+import com.gluonhq.jfxapps.core.preferences.internal.scan.PreferenceScanBeanDefinitionRegistryPostProcessor;
+import com.gluonhq.jfxapps.core.preferences.repository.PreferenceRepository;
 
+@EnableJpaRepositories(basePackageClasses = { PreferenceRepository.class })
 public class PreferencesExtension implements OpenExtension {
 
     public final static UUID ID = UUID.fromString("d82c47c7-e3a7-483c-bb49-f1d3b086c2bf");
@@ -65,7 +70,9 @@ public class PreferencesExtension implements OpenExtension {
                 I18NPreferences.class,
                 DocumentPreferencesController.class,
                 PreferencesController.class,
-                PreferenceEditorFactoryImpl.class
+                PreferenceEditorFactoryImpl.class,
+                PreferenceBeanDefinitionRegistryPostProcessor.class,
+                PreferenceScanBeanDefinitionRegistryPostProcessor.class
             );
      // @formatter:on
     }

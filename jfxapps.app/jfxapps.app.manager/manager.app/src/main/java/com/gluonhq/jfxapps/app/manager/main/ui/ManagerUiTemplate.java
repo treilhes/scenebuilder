@@ -35,7 +35,7 @@ package com.gluonhq.jfxapps.app.manager.main.ui;
 
 import com.gluonhq.jfxapps.app.manager.api.ui.Docks;
 import com.gluonhq.jfxapps.app.manager.api.ui.MainContent;
-import com.gluonhq.jfxapps.app.manager.preferences.document.BottomDividerVPosPreference;
+import com.gluonhq.jfxapps.app.manager.preference.BottomDividerVPosPreference;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;

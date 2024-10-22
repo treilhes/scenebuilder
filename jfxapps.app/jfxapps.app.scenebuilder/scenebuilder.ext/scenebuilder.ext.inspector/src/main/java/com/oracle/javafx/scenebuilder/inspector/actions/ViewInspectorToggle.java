@@ -40,8 +40,7 @@ import javafx.scene.control.ToggleGroup;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class ViewInspectorToggle extends ToggleGroup {
 
 }

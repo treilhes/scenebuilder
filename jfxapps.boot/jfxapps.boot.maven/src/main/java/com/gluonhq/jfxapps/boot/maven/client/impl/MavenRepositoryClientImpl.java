@@ -124,11 +124,11 @@ public class MavenRepositoryClientImpl implements RepositoryClient {
 
     @Override
     public List<UniqueArtifact> getAvailableVersions(Artifact artifact) {
-        return getAvailableVersions(artifact, Scope.RELEASE_SNAPHOT);
+        return getAvailableVersions(artifact, VersionType.RELEASE_SNAPHOT);
     }
 
     @Override
-    public List<UniqueArtifact> getAvailableVersions(Artifact artifact,  Scope scope) {
+    public List<UniqueArtifact> getAvailableVersions(Artifact artifact,  VersionType scope) {
         return switch (scope) {
         case RELEASE -> maven.findReleases(artifact);
         case RELEASE_SNAPHOT -> maven.findVersions(artifact);
@@ -138,11 +138,11 @@ public class MavenRepositoryClientImpl implements RepositoryClient {
 
     @Override
     public Optional<UniqueArtifact> getLatestVersion(Artifact artifact) {
-        return getLatestVersion(artifact, Scope.RELEASE_SNAPHOT);
+        return getLatestVersion(artifact, VersionType.RELEASE_SNAPHOT);
     }
 
     @Override
-    public Optional<UniqueArtifact> getLatestVersion(Artifact artifact, Scope scope) {
+    public Optional<UniqueArtifact> getLatestVersion(Artifact artifact, VersionType scope) {
         return switch (scope) {
         case RELEASE -> maven.findLatestRelease(artifact);
         case RELEASE_SNAPHOT -> maven.findLatestVersion(artifact);

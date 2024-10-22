@@ -55,9 +55,9 @@ import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockContext;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockType;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachment;
-import com.gluonhq.jfxapps.core.ui.dock.preferences.document.DockMinimizedPreference;
-import com.gluonhq.jfxapps.core.ui.dock.preferences.document.LastDockDockTypePreference;
-import com.gluonhq.jfxapps.core.ui.dock.preferences.document.LastDockUuidPreference;
+import com.gluonhq.jfxapps.core.ui.dock.preference.DockMinimizedPreference;
+import com.gluonhq.jfxapps.core.ui.dock.preference.LastDockDockTypePreference;
+import com.gluonhq.jfxapps.core.ui.dock.preference.LastDockUuidPreference;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -248,8 +248,8 @@ public class DockPanelController implements Dock {
         assert dockTypeProperty().isNotNull().get();
         assert dockTypes.size() > 0;
 
-        lastDockUuidPreference.put(view.getId(), this.getId());
-        lastDockUuidPreference.writeToJavaPreferences();
+        lastDockUuidPreference.getValue().put(view.getId(), this.getId());
+        lastDockUuidPreference.save();
         view.parentDockProperty().set(this);
 
         jfxAppPlatform.runOnFxThreadWithActiveScope(() -> {

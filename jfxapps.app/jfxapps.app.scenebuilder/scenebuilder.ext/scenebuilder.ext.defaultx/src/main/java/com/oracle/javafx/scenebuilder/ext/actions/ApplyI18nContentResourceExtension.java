@@ -47,14 +47,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractActionExtension;
 import com.oracle.javafx.scenebuilder.ext.theme.document.I18NResourcePreference;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class ApplyI18nContentResourceExtension extends AbstractActionExtension<ApplyI18nContentAction> {
 
     private final I18NResourcePreference i18NResourcePreference;

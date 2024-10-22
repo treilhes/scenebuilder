@@ -35,9 +35,7 @@ package com.oracle.javafx.scenebuilder.tools.action.wrap;
 
 import java.util.List;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemProvider;
@@ -53,8 +51,7 @@ import javafx.scene.control.Menu;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class WrapInMenuItemProvider implements MenuItemProvider, ContextMenuItemProvider {
 
     public final static String MENU_ID = "wrapInMenu";

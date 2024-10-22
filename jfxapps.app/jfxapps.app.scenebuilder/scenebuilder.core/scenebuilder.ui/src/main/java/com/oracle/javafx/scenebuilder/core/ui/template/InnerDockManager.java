@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.preferences.type.DoublePreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 
 import javafx.beans.value.ChangeListener;
@@ -70,7 +70,7 @@ public class InnerDockManager {
     private final VBox dockHost;
     private final SplitPane splitPane;
     private final DividerPosition dividerPosition;
-    private final DoublePreference dividerPositionPreference;
+    private final Preference<Double> dividerPositionPreference;
 
     private ChangeListener<? super Number> dividerListener;
     private ChangeListener<? super Double> preferenceListener;
@@ -80,7 +80,7 @@ public class InnerDockManager {
     //double dividerMinimizedValue;
 
     public InnerDockManager(JfxAppPlatform jfxAppPlatform ,Dock dock, VBox dockHost, SplitPane splitPane, DividerPosition dividerPosition,
-            DoublePreference dividerPositionPreference) {
+            Preference<Double> dividerPositionPreference) {
         super();
         this.jfxAppPlatform = jfxAppPlatform;
         this.dock = dock;

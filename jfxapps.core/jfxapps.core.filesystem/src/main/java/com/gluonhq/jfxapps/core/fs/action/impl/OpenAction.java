@@ -44,7 +44,7 @@ import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
+import com.gluonhq.jfxapps.core.fs.controller.RecentItemsController;
 
 import javafx.stage.FileChooser;
 
@@ -61,10 +61,10 @@ public class OpenAction extends AbstractOpenFilesAction {
             ActionExtensionFactory extensionFactory,
             Dialog dialog,
             InstancesManager main,
-            RecentItemsPreference recentItemsPreference,
+            RecentItemsController recentItems,
             FileSystem fileSystem) {
      // @formatter:on
-        super(i18n, jfxAppPlatform, extensionFactory, dialog, main, recentItemsPreference);
+        super(i18n, jfxAppPlatform, extensionFactory, dialog, main, recentItems);
         this.fileSystem = fileSystem;
     }
 

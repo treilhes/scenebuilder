@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,8 +33,10 @@
  */
 package com.oracle.javafx.scenebuilder.template.controller;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
+import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
@@ -42,6 +44,7 @@ import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.template.Template;
+import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 
@@ -55,10 +58,10 @@ import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference
 public class TemplateController {
 
     private final InstancesManager main;
-    private final SceneBuilderBeanFactory context;
+    private final JfxAppContext context;
     private final ActionFactory actionFactory;
     private final JobManager jobManager;
-    private final UseSizeJob.Factory useSizeJobFactory;
+    private final SbJobsFactory sbJobsFactory;
     /**
      * Instantiates a new template controller.
      *
@@ -66,15 +69,15 @@ public class TemplateController {
      * @param main the main controller instance
      */
     public TemplateController(
-            SceneBuilderBeanFactory context,
+            JfxAppContext context,
             ActionFactory actionFactory,
     		InstancesManager main,
     		@Lazy JobManager jobManager,
-    		UseSizeJob.Factory useSizeJobFactory) {
+    		SbJobsFactory sbJobsFactory) {
         this.context = context;
         this.actionFactory = actionFactory;
         this.jobManager = jobManager;
-        this.useSizeJobFactory = useSizeJobFactory;
+        this.sbJobsFactory = sbJobsFactory;
     	this.main = main;
     }
 
@@ -134,7 +137,7 @@ public class TemplateController {
         }
 
         if (template != null && (template.getWidth() != 0 || template.getHeight() != 0)) {
-            final AbstractJob job = useSizeJobFactory.getJob(template.getWidth(), template.getHeight());
+            final AbstractJob job = sbJobsFactory.useSize(template.getWidth(), template.getHeight());
             if (job.isExecutable()) {
                 jobManager.push(job);
             }

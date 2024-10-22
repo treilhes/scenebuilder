@@ -80,6 +80,7 @@ public class ScenebuilderUiExtension implements OpenExtension {
                 LeftDividerHPosPreference.class,
                 MainMenuProvider.class,
                 RightDividerHPosPreference.class,
+                ScenebuilderUiConfig.class,
                 ToggleMinimizeBottomDockAction.class,
                 ToggleMinimizeLeftDockAction.class,
                 ToggleMinimizeRightDockAction.class,

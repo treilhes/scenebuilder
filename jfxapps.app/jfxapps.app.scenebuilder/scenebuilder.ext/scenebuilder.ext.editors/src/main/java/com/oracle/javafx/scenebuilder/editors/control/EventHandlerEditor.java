@@ -69,8 +69,7 @@ import javafx.scene.layout.StackPane;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class EventHandlerEditor extends AutoSuggestEditor {
 
     private static final String HASH_STR = "#"; //NOCHECK

@@ -47,8 +47,7 @@ import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelControlle
 
 import javafx.scene.control.Menu;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class LibraryFolderMenuProvider implements ViewMenuItemProvider {
 
     public final static String MENU_ID = "libraryFolderMenu";

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,11 +38,9 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
@@ -55,106 +54,109 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 public class UserStylesheetsMenuProvider implements MenuItemProvider {
 
-	private final static String THEME_ID = "themeMenu";
+    private final static String THEME_ID = "themeMenu";
 
-	private final UserStylesheetsPreference userStylesheetsPreference;
-	private final SceneStyleSheetMenuController sceneStyleSheetMenuController;
+    private final I18N i18n;
+    private final UserStylesheetsPreference userStylesheetsPreference;
+    private final SceneStyleSheetMenuController sceneStyleSheetMenuController;
 
-	public UserStylesheetsMenuProvider(
-			@Autowired @Lazy SceneStyleSheetMenuController sceneStyleSheetMenuController,
-			@Autowired @Lazy UserStylesheetsPreference userStylesheetsPreference
-			) {
-		this.sceneStyleSheetMenuController = sceneStyleSheetMenuController;
-		this.userStylesheetsPreference = userStylesheetsPreference;
-	}
+    //@formatter:off
+    public UserStylesheetsMenuProvider(
+            I18N i18n,
+            @Lazy SceneStyleSheetMenuController sceneStyleSheetMenuController,
+            @Lazy UserStylesheetsPreference userStylesheetsPreference) {
+        //@formatter:on
+        this.i18n = i18n;
+        this.sceneStyleSheetMenuController = sceneStyleSheetMenuController;
+        this.userStylesheetsPreference = userStylesheetsPreference;
+    }
 
-	@Override
-	public List<MenuItemAttachment> menuItems() {
-		return Arrays.asList(new UserStylesheetsMenuAttachment());
-	}
+    @Override
+    public List<MenuItemAttachment> menuItems() {
+        return Arrays.asList(new UserStylesheetsMenuAttachment());
+    }
 
-	public class UserStylesheetsMenuAttachment implements MenuItemAttachment {
+    public class UserStylesheetsMenuAttachment implements MenuItemAttachment {
 
-	    private Menu stylesheetMenu = null;
+        private Menu stylesheetMenu = null;
 
-	    @FXML
-	    private MenuItem addSceneStyleSheetMenuItem;
-	    @FXML
-	    private Menu removeSceneStyleSheetMenu;
-	    @FXML
-	    private Menu openSceneStyleSheetMenu;
+        @FXML
+        private MenuItem addSceneStyleSheetMenuItem;
+        @FXML
+        private Menu removeSceneStyleSheetMenu;
+        @FXML
+        private Menu openSceneStyleSheetMenu;
 
-		public UserStylesheetsMenuAttachment() {}
+        public UserStylesheetsMenuAttachment() {
+        }
 
-		@Override
-		public String getTargetId() {
-			return THEME_ID;
-		}
+        @Override
+        public String getTargetId() {
+            return THEME_ID;
+        }
 
-		@Override
-		public PositionRequest getPositionRequest() {
-			return PositionRequest.AsNextSibling;
-		}
+        @Override
+        public PositionRequest getPositionRequest() {
+            return PositionRequest.AsNextSibling;
+        }
 
-		@Override
-		public MenuItem getMenuItem() {
+        @Override
+        public MenuItem getMenuItem() {
 
-			if (stylesheetMenu != null) {
-				return stylesheetMenu;
-			}
+            if (stylesheetMenu != null) {
+                return stylesheetMenu;
+            }
 
-			stylesheetMenu = FXMLUtils.load(this, "userStylesheetsMenu.fxml");
+            stylesheetMenu = FXMLUtils.load(this, "userStylesheetsMenu.fxml");
 
-			assert addSceneStyleSheetMenuItem != null;
-	        assert removeSceneStyleSheetMenu != null;
-	        assert openSceneStyleSheetMenu != null;
+            assert addSceneStyleSheetMenuItem != null;
+            assert removeSceneStyleSheetMenu != null;
+            assert openSceneStyleSheetMenu != null;
 
-	        stylesheetMenu.setId("stylesheetMenu");
+            stylesheetMenu.setId("stylesheetMenu");
 
-	        addSceneStyleSheetMenuItem.setOnAction((e) -> sceneStyleSheetMenuController.performAddSceneStyleSheet());
+            addSceneStyleSheetMenuItem.setOnAction((e) -> sceneStyleSheetMenuController.performAddSceneStyleSheet());
 
-	        updateOpenAndRemoveSceneStyleSheetMenus();
+            updateOpenAndRemoveSceneStyleSheetMenus();
 
-	        userStylesheetsPreference.getValue().addListener((Change<? extends String> c) -> {
-				updateOpenAndRemoveSceneStyleSheetMenus();
-			});
+            userStylesheetsPreference.getValue().addListener((Change<? extends String> c) -> {
+                updateOpenAndRemoveSceneStyleSheetMenus();
+            });
 
-			return stylesheetMenu;
-		}
+            return stylesheetMenu;
+        }
 
-		private void updateOpenAndRemoveSceneStyleSheetMenus() {
-	        assert removeSceneStyleSheetMenu != null;
+        private void updateOpenAndRemoveSceneStyleSheetMenus() {
+            assert removeSceneStyleSheetMenu != null;
 
-	        List<String> sceneStyleSheets = userStylesheetsPreference.getValue();
+            List<String> sceneStyleSheets = userStylesheetsPreference.getValue();
 
-	        removeSceneStyleSheetMenu.getItems().clear();
+            removeSceneStyleSheetMenu.getItems().clear();
             openSceneStyleSheetMenu.getItems().clear();
 
             if (sceneStyleSheets.size() == 0) {
-            	MenuItem miRemove = new MenuItem(I18N.getString("scenestylesheet.none"));
-				miRemove.setDisable(true);
-				removeSceneStyleSheetMenu.getItems().add(miRemove);
+                MenuItem miRemove = new MenuItem(i18n.getString("scenestylesheet.none"));
+                miRemove.setDisable(true);
+                removeSceneStyleSheetMenu.getItems().add(miRemove);
 
-				MenuItem miOpen = new MenuItem(I18N.getString("scenestylesheet.none"));
-				miOpen.setDisable(true);
-				openSceneStyleSheetMenu.getItems().add(miOpen);
+                MenuItem miOpen = new MenuItem(i18n.getString("scenestylesheet.none"));
+                miOpen.setDisable(true);
+                openSceneStyleSheetMenu.getItems().add(miOpen);
             } else {
                 for (String f : sceneStyleSheets) {
-                	File file = new File(URI.create(f));
-                	MenuItem miRemove = new MenuItem(file.getName());
-					miRemove.setOnAction((e) -> sceneStyleSheetMenuController.performRemoveSceneStyleSheet(file));
-					removeSceneStyleSheetMenu.getItems().add(miRemove);
+                    File file = new File(URI.create(f));
+                    MenuItem miRemove = new MenuItem(file.getName());
+                    miRemove.setOnAction((e) -> sceneStyleSheetMenuController.performRemoveSceneStyleSheet(file));
+                    removeSceneStyleSheetMenu.getItems().add(miRemove);
 
-					MenuItem miOpen = new MenuItem(file.getName());
-					miOpen.setOnAction((e) -> sceneStyleSheetMenuController.performOpenSceneStyleSheet(file));
-					openSceneStyleSheetMenu.getItems().add(miOpen);
+                    MenuItem miOpen = new MenuItem(file.getName());
+                    miOpen.setOnAction((e) -> sceneStyleSheetMenuController.performOpenSceneStyleSheet(file));
+                    openSceneStyleSheetMenu.getItems().add(miOpen);
                 }
             }
-	    }
-	}
+        }
+    }
 }

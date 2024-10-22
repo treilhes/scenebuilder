@@ -100,8 +100,7 @@ import javafx.util.Callback;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 public class ImageImportWindowController extends AbstractModalDialog {
 

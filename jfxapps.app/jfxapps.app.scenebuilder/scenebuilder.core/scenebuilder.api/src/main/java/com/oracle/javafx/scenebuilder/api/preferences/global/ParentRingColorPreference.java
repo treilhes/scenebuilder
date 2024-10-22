@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,75 +35,97 @@ package com.oracle.javafx.scenebuilder.api.preferences.global;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups;
-import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preferences.PreferenceEditorFactory;
-import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preferences.UserPreference;
-import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
-import com.gluonhq.jfxapps.core.api.preferences.type.ColorPreference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups;
+import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
+import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
+import com.gluonhq.jfxapps.core.api.preference.JsonMapper;
+import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
+import com.gluonhq.jfxapps.core.api.preference.UserPreference;
 import com.gluonhq.jfxapps.core.api.tooltheme.CssPreference;
 import com.oracle.javafx.scenebuilder.api.css.CssVariable;
 
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 
-@Component
-public class ParentRingColorPreference extends ColorPreference implements ManagedGlobalPreference, UserPreference<Color>, CssPreference<Color> {
+@ApplicationSingleton
+@PreferenceContext(id = "95778e73-cbce-4a50-b71a-c0c25658bd55", // NO CHECK
+        name = ParentRingColorPreference.PREFERENCE_KEY, //
+        defaultValueProvider = ParentRingColorPreference.DefaultProvider.class, //
+        jsonMapper = ParentRingColorPreference.ColorJsonMapper.class)
+public interface ParentRingColorPreference
+        extends Preference<Color>, ManagedGlobalPreference, UserPreference<Color>, CssPreference<Color> {
 
-	public static final String PREFERENCE_KEY = "PARENT_RING_COLOR"; //NOCHECK
-	public static final Color PREFERENCE_DEFAULT_VALUE = Color.rgb(238, 168, 47); //NOCHECK
-
-	private final PreferenceEditorFactory preferenceEditorFactory;
-
-	public ParentRingColorPreference(
-			@Autowired PreferencesContext preferencesContext,
-			@Autowired PreferenceEditorFactory preferenceEditorFactory) {
-		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-		this.preferenceEditorFactory = preferenceEditorFactory;
-	}
-
-	@Override
-	public String getLabelI18NKey() {
-		return "prefs.drop.ring";
-	}
-
-	@Override
-	public Parent getEditor() {
-		return preferenceEditorFactory.newColorFieldEditor(this);
-	}
-
-
-	@Override
-	public PreferenceGroup getGroup() {
-		return DefaultPreferenceGroups.GLOBAL_GROUP_B;
-	}
-
-	@Override
-	public String getOrderKey() {
-		return getGroup().getOrderKey() + "_C";
-	}
+    public static final String PREFERENCE_KEY = "prefs.drop.ring"; // NOCHECK
+    public static final Color PREFERENCE_DEFAULT_VALUE = Color.rgb(238, 168, 47); // NOCHECK
 
     @Override
-    public List<CssClass> getClasses() {
+    default String getLabelI18NKey() {
+        return PREFERENCE_KEY;
+    }
+
+    @Override
+    default Parent getEditor() {
+        return getPreferenceEditorFactory().newColorFieldEditor(this);
+    }
+
+    @Override
+    default PreferenceGroup getGroup() {
+        return DefaultPreferenceGroups.GLOBAL_GROUP_B;
+    }
+
+    @Override
+    default String getOrderKey() {
+        return getGroup().getOrderKey() + "_C";
+    }
+
+    @Override
+    default List<CssClass> getClasses() {
         CssClass allClass = new CssClass(CssVariable.ALL_CLASS);
         allClass.add(new CssProperty(CssVariable.PARENT_COLOR, toHexString(getValue())));
         allClass.add(new CssProperty(CssVariable.DROP_TARGET_COLOR, toHexString(getValue())));
         return List.of(allClass);
     }
 
-    //TODO move below functions to some util package/function
+    // TODO move below functions to some util package/function
     // Helper method
     private String format(double val) {
         String in = Integer.toHexString((int) Math.round(val * 255));
         return in.length() == 1 ? "0" + in : in;
     }
 
-    public String toHexString(Color value) {
-        return "#" + (format(value.getRed()) + format(value.getGreen()) + format(value.getBlue()) + format(value.getOpacity()))
-                .toUpperCase();
+    private String toHexString(Color value) {
+        return "#" + (format(value.getRed()) + format(value.getGreen()) + format(value.getBlue())
+                + format(value.getOpacity())).toUpperCase();
+    }
+
+    public static class DefaultProvider implements DefaultValueProvider<Color> {
+        @Override
+        public Color get() {
+            return PREFERENCE_DEFAULT_VALUE;
+        }
+    }
+
+    static class ColorJsonMapper implements JsonMapper<Color> {
+        @Override
+        public String toJson(Color color) throws JsonProcessingException {
+            var privColor = new PrivColor(color.getRed(), color.getGreen(), color.getBlue());
+            return Preference.objectMapper.writeValueAsString(privColor);
+        }
+
+        @Override
+        public Color fromJson(String json, JavaType type) throws JsonProcessingException {
+            var privColor = Preference.objectMapper.readValue(json, PrivColor.class);
+            var color = Color.color(privColor.red, privColor.green, privColor.blue);
+            return color;
+        }
+    }
+
+    record PrivColor(@JsonProperty double red, @JsonProperty double green, @JsonProperty double blue) {
     }
 }

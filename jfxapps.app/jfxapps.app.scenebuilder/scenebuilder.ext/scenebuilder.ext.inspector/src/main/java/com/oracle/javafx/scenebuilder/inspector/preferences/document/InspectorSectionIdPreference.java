@@ -34,13 +34,12 @@ package com.oracle.javafx.scenebuilder.inspector.preferences.document;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
 
-import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
-import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preferences.type.EnumPreference;
+import com.gluonhq.jfxapps.core.api.preference.ManagedDocumentPreference;
+import com.gluonhq.jfxapps.core.api.preference.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preference.type.EnumPreference;
 import com.oracle.javafx.scenebuilder.api.Inspector.SectionId;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class InspectorSectionIdPreference extends EnumPreference<SectionId> implements ManagedDocumentPreference {
 	    
     /***************************************************************************

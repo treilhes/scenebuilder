@@ -49,8 +49,7 @@ import javafx.scene.control.Menu;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class AddPopupControlMenuProvider implements MenuItemProvider {
 
     public final static String MENU_ID = "addPopupControlMenu";

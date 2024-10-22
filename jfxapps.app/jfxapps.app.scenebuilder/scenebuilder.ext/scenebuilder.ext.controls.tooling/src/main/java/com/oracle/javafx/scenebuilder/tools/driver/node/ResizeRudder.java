@@ -33,10 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.node;
 
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.util.javafx.LineEquation;
@@ -54,8 +52,7 @@ import javafx.scene.shape.Line;
 * Appear by default while resizing a <a href="https://openjfx.io/javadoc/15/javafx.graphics/javafx/scene/shape/Circle.html">javafx.scene.shape.Circle</a>
 * or by holding the SHIFT key for others
 */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class ResizeRudder extends AbstractRudder<Node> {
 
     private final Line diagonalLine = new Line();

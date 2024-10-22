@@ -61,7 +61,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.SceneGraphObject;
 import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
-import com.gluonhq.jfxapps.core.ui.preferences.global.BackgroundImagePreference;
+import com.gluonhq.jfxapps.core.ui.preference.BackgroundImagePreference;
 import com.gluonhq.jfxapps.util.javafx.BoundsUnion;
 import com.gluonhq.jfxapps.util.javafx.BoundsUtils;
 import com.gluonhq.jfxapps.util.javafx.Picker;

@@ -51,8 +51,7 @@ import javafx.scene.control.TreeView;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class HierarchyParentRing {
 
     private final HierarchyPanel panelController;

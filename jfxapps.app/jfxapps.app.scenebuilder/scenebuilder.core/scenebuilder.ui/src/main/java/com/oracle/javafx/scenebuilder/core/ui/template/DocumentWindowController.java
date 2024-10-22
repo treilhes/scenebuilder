@@ -194,7 +194,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.rightDividerHPos = rightDividerHPos;
         this.bottomDividerVPos = bottomDividerVPos;
 
-
         this.menuBar = menuBar;
         this.content = content;
         this.messageBar = messageBar;

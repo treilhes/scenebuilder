@@ -65,8 +65,7 @@ import javafx.scene.text.TextFlow;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 public class ImageJarAnalysisReportController extends AbstractFxmlWindowController {
 

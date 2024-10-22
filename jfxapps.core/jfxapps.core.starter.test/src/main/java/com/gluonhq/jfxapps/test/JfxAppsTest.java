@@ -44,6 +44,10 @@ import org.springframework.test.context.BootstrapWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testfx.framework.junit5.ApplicationExtension;
 
+import com.gluonhq.jfxapps.boot.api.context.Application;
+import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.test.JfxAppsExtension.JfxAppsTestContextBootstrapper;
 
 @Retention(RetentionPolicy.RUNTIME)
@@ -56,5 +60,22 @@ import com.gluonhq.jfxapps.test.JfxAppsExtension.JfxAppsTestContextBootstrapper;
     JfxAppsExtension.class
     })
 public @interface JfxAppsTest {
+    String[] properties() default {};
+    boolean loadDefaultScopes() default true;
 
+    @ApplicationSingleton
+    public static class Application1Bean implements Application {
+    }
+
+    @ApplicationInstanceSingleton
+    public static class Application1InstanceBean implements ApplicationInstance {
+    }
+
+    @ApplicationSingleton
+    public static class Application2Bean implements Application {
+    }
+
+    @ApplicationInstanceSingleton
+    public static class Application2InstanceBean implements ApplicationInstance {
+    }
 }

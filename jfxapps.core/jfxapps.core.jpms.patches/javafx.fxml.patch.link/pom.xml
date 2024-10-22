@@ -12,11 +12,6 @@
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>javafx.fxml.patch</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.javafx.starter</artifactId>
             <scope>provided</scope>
         </dependency>
@@ -25,8 +20,8 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps-dependency-plugin</artifactId>
                 <executions>
                     <execution>
                         <phase>initialize</phase>
@@ -35,6 +30,13 @@
                         </goals>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.gluonhq.jfxapps</groupId>
+                        <artifactId>javafx.fxml.patch</artifactId>
+                        <version>${jfxapps.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

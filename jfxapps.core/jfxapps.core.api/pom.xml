@@ -31,7 +31,10 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.utils</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>javafx.fxml.patch</artifactId>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.pdfsam.rxjava3/rxjavafx -->
         <dependency>

@@ -87,8 +87,7 @@ import javafx.stage.FileChooser;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 public class StylesheetEditor extends InlineListEditor {
 

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,8 +36,7 @@ package com.oracle.javafx.scenebuilder.helpfeatures.menu;
 import java.util.Arrays;
 import java.util.List;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
@@ -45,20 +45,21 @@ import com.oracle.javafx.scenebuilder.helpfeatures.controller.JavaFxFeaturesMenu
 
 import javafx.scene.control.MenuItem;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 public class JavaFxFeaturesMenuProvider implements MenuItemProvider {
 
     private final static String HELP_MENU_ID = "helpMenu";
     private final static String SHOW_FEATURES_WINDOW_ID = "showJavaFxFeaturesMenuItem";
-    
+
+    private final I18N i18n;
     private final JavaFxFeaturesMenuController featuresMenuController;
 
     public JavaFxFeaturesMenuProvider(
-            @Autowired  @Lazy JavaFxFeaturesMenuController featuresMenuController
+            I18N i18n,
+            JavaFxFeaturesMenuController featuresMenuController
             ) {
         this.featuresMenuController = featuresMenuController;
+        this.i18n = i18n;
     }
 
     @Override
@@ -90,7 +91,7 @@ public class JavaFxFeaturesMenuProvider implements MenuItemProvider {
                 return menu;
             }
 
-            menu = new MenuItem(I18N.getString("menu.title.show.javafx.features"));
+            menu = new MenuItem(i18n.getString("menu.title.show.javafx.features"));
             menu.setId(SHOW_FEATURES_WINDOW_ID);
             //menu.setAccelerator(new KeyCodeCombination(KeyCode.F, KeyboardModifier.control()));
             menu.setOnAction((e) -> featuresMenuController.performOpenFeaturesWindow());

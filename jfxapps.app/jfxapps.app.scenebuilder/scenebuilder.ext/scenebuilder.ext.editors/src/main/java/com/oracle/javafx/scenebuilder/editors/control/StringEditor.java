@@ -56,8 +56,7 @@ import javafx.scene.control.TextInputControl;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class StringEditor extends AbstractPropertyEditor {
 
     private TextInputControl textField = new TextField();

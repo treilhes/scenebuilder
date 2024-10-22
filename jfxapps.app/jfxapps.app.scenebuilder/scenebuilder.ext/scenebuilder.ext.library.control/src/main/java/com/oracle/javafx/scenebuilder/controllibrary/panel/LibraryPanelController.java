@@ -103,8 +103,7 @@ import javafx.util.Callback;
  * Kit.
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 @ViewAttachment(name = LibraryPanelController.VIEW_NAME, id = LibraryPanelController.VIEW_ID, prefDockId = Dock.LEFT_DOCK_ID, openOnStart = true, selectOnStart = true,
         icon = "ViewIconControlLib.png", iconX2 = "ViewIconControlLib@2x.png")

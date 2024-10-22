@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,22 +34,28 @@
 package com.oracle.javafx.scenebuilder.core.ui.preferences.document;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
-import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preferences.type.DoublePreference;
+import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
+import com.gluonhq.jfxapps.core.api.preference.ManagedDocumentPreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
 
+//@formatter:off
 @ApplicationInstanceSingleton
-public class RightDividerHPosPreference extends DoublePreference implements ManagedDocumentPreference {
+@PreferenceContext(
+        id = "cdca465f-fb62-4ada-83e6-aece08c82957",
+        name = RightDividerHPosPreference.NAME,
+        defaultValueProvider = RightDividerHPosPreference.DefaultProvider.class,
+        validator = DividerValueValidator.class)
+//@formatter:on
+public interface RightDividerHPosPreference extends Preference<Double>, ManagedDocumentPreference {
 
-	public static final String PREFERENCE_KEY = "rightDividerHPos"; //NOCHECK
-	public static final Double PREFERENCE_DEFAULT_VALUE = 0.8; //NOCHECK
+	public static final String NAME = "rightDividerHPos"; //NOCHECK
+	public static final Double DEFAULT_VALUE = 0.8; //NOCHECK
 
-    public RightDividerHPosPreference(PreferencesContext preferencesContext) {
-		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-	}
-
-    @Override
-	public boolean isValid() {
-		return super.isValid() && !getValue().equals(PREFERENCE_DEFAULT_VALUE);
-	}
+	public static class DefaultProvider implements DefaultValueProvider<Double> {
+        @Override
+        public Double get() {
+            return DEFAULT_VALUE;
+        }
+    }
 }

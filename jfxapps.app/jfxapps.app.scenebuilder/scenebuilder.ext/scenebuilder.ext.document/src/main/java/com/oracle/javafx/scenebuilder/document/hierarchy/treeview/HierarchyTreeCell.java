@@ -92,8 +92,7 @@ import javafx.util.Callback;
  *
  * @param <T>
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<HierarchyItem> implements HierarchyCell {
 
     private static final Logger logger = LoggerFactory.getLogger(HierarchyTreeCell.class);

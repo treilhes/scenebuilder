@@ -60,8 +60,7 @@ import javafx.scene.layout.StackPane;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 @ViewAttachment(name = ScriptEditorViewController.VIEW_NAME, id = ScriptEditorViewController.VIEW_ID,
         icon = "ViewIconSkeleton.png", iconX2 = "ViewIconSkeleton@2x.png")

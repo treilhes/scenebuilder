@@ -34,7 +34,6 @@
 package com.gluonhq.jfxapps.boot.loader.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -52,6 +51,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.gluonhq.jfxapps.boot.api.context.ContextConfiguration;
 import com.gluonhq.jfxapps.boot.api.context.ContextManager;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
@@ -124,7 +124,7 @@ class ContextBootstraperTest {
     ServiceLoader loader;
 
     @Captor
-    ArgumentCaptor<Set<Class<?>>> contextClassesCaptor;
+    ArgumentCaptor<ContextConfiguration> contextConfigCaptor;
 
     /**
      * Must throw if module layer parent layer does not exists.
@@ -182,9 +182,11 @@ class ContextBootstraperTest {
 
         ctxBoot.create(null, parentExtensionModel, null, null, loader);
 
-        verify(contextManager).create(any(), any(), contextClassesCaptor.capture(), any(), any(), any());
+        verify(contextManager).create(contextConfigCaptor.capture());
 
-        assertThat(contextClassesCaptor.getValue()).contains(LocalParentComponent.class,
+        ContextConfiguration config = contextConfigCaptor.getValue();
+
+        assertThat(config.getClasses()).contains(LocalParentComponent.class,
                 parentExtensionLoaded.getClass());
     }
 
@@ -225,9 +227,11 @@ class ContextBootstraperTest {
 
         ctxBoot.create(ctx, childExtensionModel, null, null, loader);
 
-        verify(contextManager).create(any(), any(), contextClassesCaptor.capture(), any(), any(), any());
+        verify(contextManager).create(contextConfigCaptor.capture());
 
-        assertThat(contextClassesCaptor.getValue()).contains(LocalChildComponent.class,
+        ContextConfiguration config = contextConfigCaptor.getValue();
+
+        assertThat(config.getClasses()).contains(LocalChildComponent.class,
                 childExtensionLoaded.getClass());
     }
 
@@ -264,9 +268,11 @@ class ContextBootstraperTest {
 
         ctxBoot.create(ctx, childExtensionModel, null, null, loader);
 
-        verify(contextManager).create(any(), any(), contextClassesCaptor.capture(), any(), any(), any());
+        verify(contextManager).create(contextConfigCaptor.capture());
 
-        assertThat(contextClassesCaptor.getValue()).contains(LocalChildComponent.class,
+        ContextConfiguration config = contextConfigCaptor.getValue();
+
+        assertThat(config.getClasses()).contains(LocalChildComponent.class,
                 childExtensionLoaded.getClass());
     }
 
@@ -303,9 +309,11 @@ class ContextBootstraperTest {
 
         ctxBoot.create(ctx, childExtensionModel, null, null, loader);
 
-        verify(contextManager).create(any(), any(), contextClassesCaptor.capture(), any(), any(), any());
+        verify(contextManager).create(contextConfigCaptor.capture());
 
-        assertThat(contextClassesCaptor.getValue()).contains(LocalChildComponent.class,
+        ContextConfiguration config = contextConfigCaptor.getValue();
+
+        assertThat(config.getClasses()).contains(LocalChildComponent.class,
                 WindowParentComponent.class, EditorSingletonParentComponent.class,
                 sealedChildExtensionLoaded.getClass());
     }
@@ -365,12 +373,14 @@ class ContextBootstraperTest {
 
         ctxBoot.create(null, parentExtensionModel, null, null, loader);
 
-        verify(contextManager).create(any(), any(), contextClassesCaptor.capture(), any(), any(), any());
+        verify(contextManager).create(contextConfigCaptor.capture());
 
-        assertThat(contextClassesCaptor.getValue()).contains(LocalParentComponent.class,
+        ContextConfiguration config = contextConfigCaptor.getValue();
+
+        assertThat(config.getClasses()).contains(LocalParentComponent.class,
                 ExportedChildComponent.class);
 
-        assertThat(contextClassesCaptor.getValue()).doesNotContain(LocalChildComponent.class);
+        assertThat(config.getClasses()).doesNotContain(LocalChildComponent.class);
     }
 
     /**

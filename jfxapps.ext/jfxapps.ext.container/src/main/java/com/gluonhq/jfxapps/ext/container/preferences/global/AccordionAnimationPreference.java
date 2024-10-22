@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,65 +35,60 @@ package com.gluonhq.jfxapps.ext.container.preferences.global;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups;
-import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preferences.PreferenceEditorFactory;
-import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preferences.UserPreference;
-import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
-import com.gluonhq.jfxapps.core.api.preferences.type.BooleanPreference;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups;
+import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
+import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
+import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
+import com.gluonhq.jfxapps.core.api.preference.UserPreference;
 import com.gluonhq.jfxapps.core.api.tooltheme.CssPreference;
 
 import javafx.scene.Parent;
 
-@Component
-public class AccordionAnimationPreference extends BooleanPreference implements ManagedGlobalPreference, UserPreference<Boolean>, CssPreference<Boolean> {
+@ApplicationSingleton
+@PreferenceContext(id = "9cf53239-6948-44ce-b473-7424178a8ea9", // NO CHECK
+        name = AccordionAnimationPreference.PREFERENCE_KEY,
+        defaultValueProvider = AccordionAnimationPreference.DefaultProvider.class)
+public interface AccordionAnimationPreference
+        extends Preference<Boolean>, ManagedGlobalPreference, UserPreference<Boolean>, CssPreference<Boolean> {
 
-    /***************************************************************************
-     *                                                                         *
-     * Static fields                                                           *
-     *                                                                         *
-     **************************************************************************/
-    public static final String PREFERENCE_KEY = "ACCORDION_ANIMATION"; //NOCHECK
+    public static final String PREFERENCE_KEY = "prefs.animate.accordion"; //NOCHECK
     public static final boolean PREFERENCE_DEFAULT_VALUE = true;
 
-	private final PreferenceEditorFactory preferenceEditorFactory;
-
-	public AccordionAnimationPreference(
-			@Autowired PreferencesContext preferencesContext,
-			@Autowired PreferenceEditorFactory preferenceEditorFactory) {
-		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-		this.preferenceEditorFactory = preferenceEditorFactory;
+	@Override
+	default String getLabelI18NKey() {
+		return PREFERENCE_KEY;
 	}
 
 	@Override
-	public String getLabelI18NKey() {
-		return "prefs.animate.accordion";
-	}
-
-	@Override
-	public Parent getEditor() {
-		return preferenceEditorFactory.newBooleanFieldEditor(this);
+	default Parent getEditor() {
+		return getPreferenceEditorFactory().newBooleanFieldEditor(this);
 	}
 
 
 	@Override
-	public PreferenceGroup getGroup() {
+	default PreferenceGroup getGroup() {
 		return DefaultPreferenceGroups.GLOBAL_GROUP_F;
 	}
 
 	@Override
-	public String getOrderKey() {
+	default String getOrderKey() {
 		return getGroup().getOrderKey() + "_A";
 	}
 
     @Override
-    public List<CssClass> getClasses() {
+    default List<CssClass> getClasses() {
         CssClass css = new CssClass(".titled-pane");
         css.add(new CssProperty("-fx-animated", Boolean.toString(getValue())));
         return List.of(css);
+    }
+
+    public static class DefaultProvider implements DefaultValueProvider<Boolean> {
+        @Override
+        public Boolean get() {
+            return PREFERENCE_DEFAULT_VALUE;
+        }
     }
 }

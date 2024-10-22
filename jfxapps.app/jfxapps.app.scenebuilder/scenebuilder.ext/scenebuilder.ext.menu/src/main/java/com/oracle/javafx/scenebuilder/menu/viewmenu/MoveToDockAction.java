@@ -57,8 +57,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenuItemProvider;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(
         nameKey = "action.name.save",
         descriptionKey = "action.description.save")

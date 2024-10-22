@@ -54,13 +54,11 @@ import com.gluonhq.jfxapps.core.api.javafx.internal.JavafxThreadBootstrapper;
 import com.gluonhq.jfxapps.core.api.javafx.internal.JavafxThreadClassloaderDispatcherImpl;
 import com.gluonhq.jfxapps.core.api.javafx.internal.JfxAppPlatformImpl;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preferences.init.DocumentPreferencesNodeImpl;
-import com.gluonhq.jfxapps.core.api.preferences.init.RootPreferencesNodeImpl;
 import com.gluonhq.jfxapps.core.api.settings.MavenSetting;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
+import com.gluonhq.jfxapps.core.api.subjects.LifecyclePostProcessor;
 import com.gluonhq.jfxapps.core.api.subjects.NetworkManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockNameHelper;
@@ -109,7 +107,6 @@ public class ApiExtension implements RootExtension {
                 DiscardGesture.class,
                 DockManager.DockManagerImpl.class,
                 DockNameHelper.class,
-                DocumentPreferencesNodeImpl.class,
                 FxmlControllerBeanPostProcessor.class,
                 I18N.class,
                 JavafxThreadBootstrapper.class,
@@ -117,12 +114,11 @@ public class ApiExtension implements RootExtension {
                 JavafxThreadClassloaderDispatcherImpl.class,
                 JfxAppPlatformImpl.class,
                 JobExtensionFactory.class,
+                LifecyclePostProcessor.class,
                 MavenSetting.class,
                 MenuBuilder.class,
                 NetworkManager.NetworkManagerImpl.class,
                 ObjectSelectionGroup.Factory.class,
-                PreferencesContext.class,
-                RootPreferencesNodeImpl.class,
                 SearchController.class,
                 SelectionGroupFactoryRegistry.class,
                 ViewController.class,

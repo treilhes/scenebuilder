@@ -34,30 +34,11 @@
 package com.oracle.javafx.scenebuilder.api.theme;
 
 import com.gluonhq.jfxapps.core.api.css.StylesheetProvider;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
 
 /**
  * Theme contract supported by Scene Builder Kit.
  */
 public interface Theme extends StylesheetProvider {
-
-	Class<? extends AbstractGroup> getThemeGroupClass();
-
-	public static String name(I18N i18n, Class<? extends Theme> cls) {
-		ThemeMeta themeMeta = cls.getAnnotation(ThemeMeta.class);
-		if (themeMeta == null) {
-			throw new RuntimeException("Class implementing Theme interface must be annotated with @ThemeMeta");
-		}
-		return i18n.getString(themeMeta.name());
-	}
-
-	public static Class<? extends AbstractGroup> group(Class<? extends Theme> cls) {
-		ThemeMeta themeMeta = cls.getAnnotation(ThemeMeta.class);
-		if (themeMeta == null) {
-			throw new RuntimeException("Class implementing Theme interface must be annotated with @ThemeMeta");
-		}
-		return themeMeta.group();
-	}
-
-
+    String getName();
+    ThemeGroup getGroup();
 }

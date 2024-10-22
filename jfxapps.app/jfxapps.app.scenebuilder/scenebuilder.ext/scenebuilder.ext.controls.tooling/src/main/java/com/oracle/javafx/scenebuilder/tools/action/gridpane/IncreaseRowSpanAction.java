@@ -33,9 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.action.gridpane;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
@@ -46,8 +44,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttach
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.SpanJob;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.SpanJob.SpanAction;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(
         nameKey = "action.name.save",
         descriptionKey = "action.description.save")

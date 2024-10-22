@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,91 +33,169 @@
  */
 package com.oracle.javafx.scenebuilder.template.templates;
 
-import java.util.ArrayList;
+import java.net.URL;
+import java.util.UUID;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.Size;
-import com.gluonhq.jfxapps.core.api.template.AbstractTemplate;
-import com.gluonhq.jfxapps.core.api.template.AbstractTemplateGroup;
-import com.oracle.javafx.scenebuilder.api.theme.Theme;
+import com.gluonhq.jfxapps.core.api.template.Template;
+import com.gluonhq.jfxapps.core.api.template.TemplateGroup;
+import com.gluonhq.jfxapps.core.api.util.Ordered;
 
 public class DefaultTemplateList {
-    
-    @Component
-    public static class DefaultGroup extends AbstractTemplateGroup{
+
+    @ApplicationSingleton
+    public static class DefaultGroup extends InnerGroup{
         public DefaultGroup() {
             super("0", null);
         }
     }
 
-    @Component
-    public static class DesktopGroup extends AbstractTemplateGroup{
+    @ApplicationSingleton
+    public static class DesktopGroup extends InnerGroup{
         public DesktopGroup() {
             super("A", "template.title.header.desktop");
         }
     }
-    
-    @Component
-    public static class PhoneGroup extends AbstractTemplateGroup{
+
+    @ApplicationSingleton
+    public static class PhoneGroup extends InnerGroup{
         public PhoneGroup() {
             super("B", "template.title.header.phone");
         }
     }
-    
-    @Component
-    public static class TabletGroup extends AbstractTemplateGroup{
+
+    @ApplicationSingleton
+    public static class TabletGroup extends InnerGroup{
         public TabletGroup() {
             super("C", "template.title.header.tablet");
         }
     }
-    
-    @Component
-    public static class OtherGroup extends AbstractTemplateGroup{
+
+    @ApplicationSingleton
+    public static class OtherGroup extends InnerGroup{
         public OtherGroup() {
             super("D", "template.title.header.other");
         }
     }
-    
-    @Component
-    public static class EmptyTemplate extends AbstractTemplate{
+
+    @ApplicationSingleton
+    public static class EmptyTemplate extends InnerTemplate{
 
         public EmptyTemplate(@Autowired DefaultGroup group) {
-            super(group, "A", "template.title.new.empty.app", 
-                    null, 
-                    Size.SIZE_640x480,
+            //@formatter:off
+            super(UUID.fromString("a4c55174-e299-4dbe-bd0c-ee7f90cf89aa"),
+                    group,
+                    "A",
+                    "template.title.new.empty.app",
+                    Size.SIZE_640x480.getI18nKey(),
                     null,
                     null,
-                    new ArrayList<Class<? extends Theme>>());
+                    null,
+                    null);
+            //@formatter:on
         }
-        
+
     }
-    
-    @Component
-    public static class BasicDesktopTemplate extends AbstractTemplate{
+
+    @ApplicationSingleton
+    public static class BasicDesktopTemplate extends InnerTemplate{
 
         public BasicDesktopTemplate(@Autowired DesktopGroup group) {
-            super(group, "A", "template.title.new.basic.desktop.app", 
+            //@formatter:off
+            super(UUID.fromString("ba373a83-0f6a-4025-9041-3a0106b13e41"),
+                    group,
+                    "A",
+                    "template.title.new.basic.desktop.app",
+                    Size.SIZE_640x480.getI18nKey(),
                     BasicDesktopTemplate.class.getResource("BasicDesktopApplication.fxml"),
-                    Size.SIZE_640x480,
                     BasicDesktopTemplate.class.getResource("basic_desktop.png"),
                     BasicDesktopTemplate.class.getResource("basic_desktop@2x.png"),
-                    new ArrayList<Class<? extends Theme>>());
+                    null);
+            //@formatter:on
         }
-        
-    }
-    
-    @Component
-    public static class ComplexDesktopTemplate extends AbstractTemplate{
 
+    }
+
+    @ApplicationSingleton
+    public static class ComplexDesktopTemplate extends InnerTemplate{
         public ComplexDesktopTemplate(@Autowired DesktopGroup group) {
-            super(group, "B", "template.title.new.complex.desktop.app", 
+            //@formatter:off
+            super(UUID.fromString("9f98b594-a9a0-4487-8f31-1964a0cb38e1"),
+                    group,
+                    "B",
+                    "template.title.new.complex.desktop.app",
+                    Size.SIZE_640x480.getI18nKey(),
                     ComplexDesktopTemplate.class.getResource("ComplexDesktopApplication.fxml"),
-                    Size.SIZE_640x480,
                     ComplexDesktopTemplate.class.getResource("complex_desktop.png"),
                     ComplexDesktopTemplate.class.getResource("complex_desktop@2x.png"),
-                    new ArrayList<Class<? extends Theme>>());
+                    null);
+            //@formatter:on
         }
-        
     }
+
+    private static class InnerGroup extends Ordered implements TemplateGroup {
+        public InnerGroup(String orderKey, String name) {
+            super(orderKey, name);
+        }
+    }
+
+    private static class InnerTemplate extends Ordered implements Template {
+
+        private final UUID id;
+        private final TemplateGroup group;
+        private final String size;
+        private final URL fxmlUrl;
+        private final URL iconUrl;
+        private final URL iconX2Url;
+        private final UUID defaultThemeId;
+
+        public InnerTemplate(UUID id, TemplateGroup group, String orderKey, String name, String size, URL fxmlUrl, URL iconUrl, URL iconX2Url, UUID defaultThemeId) {
+            super(orderKey, name);
+            this.id = id;
+            this.group = group;
+            this.size = size;
+            this.fxmlUrl = fxmlUrl;
+            this.iconUrl = iconUrl;
+            this.iconX2Url = iconX2Url;
+            this.defaultThemeId = defaultThemeId;
+        }
+
+        @Override
+        public TemplateGroup getGroup() {
+            return group;
+        }
+
+        @Override
+        public URL getFxmlUrl() {
+            return fxmlUrl;
+        }
+
+        @Override
+        public URL getIconUrl() {
+            return iconUrl;
+        }
+
+        @Override
+        public URL getIconX2Url() {
+            return iconX2Url;
+        }
+
+        @Override
+        public UUID getId() {
+            return id;
+        }
+
+        public String getSize() {
+            return size;
+        }
+
+        @Override
+        public UUID getDefaultThemeId() {
+            return defaultThemeId;
+        }
+
+}
 }

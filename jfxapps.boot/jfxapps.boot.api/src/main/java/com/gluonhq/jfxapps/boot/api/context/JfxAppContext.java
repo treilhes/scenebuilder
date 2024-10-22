@@ -66,6 +66,7 @@ public interface JfxAppContext extends ConfigurableWebApplicationContext {
     <T> List<Class<T>> getBeanClassesForType(Class<T> cls);
 
     Set<Class<?>> getRegisteredClasses();
+    Class<?> getRegisteredClass(String className);
 
     Set<Class<?>> getDeportedClasses();
 
@@ -89,5 +90,13 @@ public interface JfxAppContext extends ConfigurableWebApplicationContext {
 
     ScopedExecutor<ApplicationInstance> getApplicationInstanceExecutor();
 
+    /**
+     * Get a bean from the {@link JfxAppContext} associated to the {@link ModuleLayer} of the provided layerClass.
+     * If the layer context isn't found fallback to this current {@link JfxAppContext}
+     * @param <T>
+     * @param layerClass
+     * @param cls
+     * @return
+     */
     <T> T getLayerBean(Class<?> layerClass, Class<T> cls);
 }

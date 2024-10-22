@@ -48,8 +48,7 @@ import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelContro
 
 import javafx.scene.control.Menu;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class ImageLibraryFolderMenuProvider implements ViewMenuItemProvider {
 
     /**

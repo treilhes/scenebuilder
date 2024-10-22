@@ -41,11 +41,6 @@ open module scenebuilder.ext.welcome {
 
     requires scenebuilder.app.starter;
     requires transitive scenebuilder.api;
-    requires transitive scenebuilder.core.extension.api;
-    requires scenebuilder.ext.templates;
-    requires scenebuilder.core.filesystem;
-    requires scenebuilder.core.launcher;
-    requires scenebuilder.ext.menu;
 
     provides Extension with WelcomeExtension;
 }

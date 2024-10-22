@@ -43,8 +43,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAt
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.ViewMode;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 @ActionMeta(
 		nameKey = "action.name.view.by.property.type",

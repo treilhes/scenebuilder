@@ -75,8 +75,7 @@ import javafx.scene.text.Font;
 /**
  * Font popup editor.
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class FontPopupEditor extends PopupEditor {
 
     private final static Map<String, Object> fontSizeConstants = new HashMap<>();

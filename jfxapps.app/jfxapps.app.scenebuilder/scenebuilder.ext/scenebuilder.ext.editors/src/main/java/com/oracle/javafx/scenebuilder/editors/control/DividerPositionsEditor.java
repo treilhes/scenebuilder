@@ -59,8 +59,7 @@ import javafx.scene.layout.VBox;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class DividerPositionsEditor extends AbstractPropertyEditor {
 
     private final VBox vbox = new VBox(5);

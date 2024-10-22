@@ -65,8 +65,7 @@ import javafx.scene.control.MenuItem;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class CursorEditor extends AbstractPropertyEditor {
 
     private Parent root;

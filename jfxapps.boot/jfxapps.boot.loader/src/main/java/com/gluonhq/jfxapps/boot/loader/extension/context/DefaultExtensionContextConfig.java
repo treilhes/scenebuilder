@@ -167,7 +167,7 @@ import jakarta.servlet.ServletException;
  *
  */
 @Configuration
-//@EnableAspectJAutoProxy(proxyTargetClass = true)
+@ConditionalOnBean(name = "servletContext")
 @EnableJpaRepositories
 @EnableTransactionManagement
 @EnableWebMvc
@@ -196,7 +196,9 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         WebMvcConfigurer.super.addResourceHandlers(registry);
-        registry.addResourceHandler(internalContextPath + "/**").addResourceLocations("classpath:/static/");
+        registry //
+            .addResourceHandler(internalContextPath + "/**") //
+            .addResourceLocations("classpath:/static/");
     }
 
     public final static List<Class<?>> classesToRegister = List.of(
@@ -826,6 +828,8 @@ public class DefaultExtensionContextConfig implements WebMvcConfigurer {
         }
     }
 
+    @Configuration
+    @ConditionalOnBean(name = "servletContext")
     public static class SwaggerConfig {
 
         @Bean

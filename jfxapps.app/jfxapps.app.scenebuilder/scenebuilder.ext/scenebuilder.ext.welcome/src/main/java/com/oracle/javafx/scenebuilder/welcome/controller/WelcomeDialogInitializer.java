@@ -45,13 +45,16 @@ public class WelcomeDialogInitializer implements InitWithApplication {
 
 
     private final JfxAppContext context;
+    private final JfxAppPlatform platform;
     private final InstancesManager main;
 
     public WelcomeDialogInitializer(
             JfxAppContext context,
+            JfxAppPlatform platform,
             InstancesManager main) {
         super();
         this.context = context;
+        this.platform = platform;
         this.main = main;
     }
 
@@ -62,7 +65,7 @@ public class WelcomeDialogInitializer implements InitWithApplication {
         // Unless we're on a Mac we're starting SB directly (fresh start)
         // so we're not opening any file and as such we should show the Welcome Dialog
         if (main.lookupUnusedInstance() != null) {
-            JfxAppPlatform.runOnFxThread(() -> {
+            platform.runOnFxThreadWithActiveScope(() -> {
                 wdwc.getStage().show();
             });
         }

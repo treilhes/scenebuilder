@@ -38,7 +38,7 @@ import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
+import com.gluonhq.jfxapps.core.fs.controller.RecentItemsController;
 
 @ApplicationInstancePrototype("com.gluonhq.jfxapps.core.fs.action.impl.ClearRecentItemsAction")
 @ActionMeta(
@@ -47,25 +47,25 @@ import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
 
 public class ClearRecentItemsAction extends AbstractAction {
 
-    private final RecentItemsPreference recentItemsPreference;
+    private final RecentItemsController recentItems;
 
     public ClearRecentItemsAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            RecentItemsPreference recentItemsPreference) {
+            RecentItemsController recentItems) {
         super(i18n, extensionFactory);
-        this.recentItemsPreference = recentItemsPreference;
+        this.recentItems = recentItems;
     }
 
     @Override
     public boolean canPerform() {
-        return !recentItemsPreference.getValue().isEmpty();
+        return !recentItems.getRecentItems().isEmpty();
     }
 
     @Override
     public ActionStatus doPerform() {
         assert canPerform(); // (1)
-        recentItemsPreference.clearRecentItems();
+        recentItems.clearRecentItems();
         return ActionStatus.DONE;
     }
 

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,13 +33,12 @@
  */
 package com.oracle.javafx.scenebuilder.helpfeatures.controller;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 import javafx.application.ConditionalFeature;
 import javafx.application.Platform;
@@ -49,24 +48,17 @@ import javafx.scene.control.TextArea;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 public class JavaFxFeaturesWindowController extends AbstractFxmlWindowController {
 
     @FXML
     TextArea textArea;
 
-    private FXOMDocument fxomDocument;
-
-    public JavaFxFeaturesWindowController(
-            ApplicationEvents sceneBuilderManager,
-            IconSetting iconSetting,
-            ApplicationInstanceWindow document) {
-        super(sceneBuilderManager, iconSetting, JavaFxFeaturesWindowController.class.getResource("JavaFxFeaturesWindow.fxml"), I18N.getBundle(),
-                document); // NOI18N
+    public JavaFxFeaturesWindowController(I18N i18n, ApplicationEvents sceneBuilderManager, IconSetting iconSetting,
+            MainInstanceWindow document) {
+        super(i18n, sceneBuilderManager, iconSetting,
+                JavaFxFeaturesWindowController.class.getResource("JavaFxFeaturesWindow.fxml"), document); // NOI18N
     }
-
 
     @Override
     public void onCloseRequest() {
@@ -93,14 +85,14 @@ public class JavaFxFeaturesWindowController extends AbstractFxmlWindowController
     }
 
     private void updateTitle() {
-        final String title = I18N.getString("javafxfeatures.window.title");
+        final String title = getI18n().getString("javafxfeatures.window.title");
         getStage().setTitle(title);
     }
 
     private void update() {
         updateTitle();
         StringBuilder builder = new StringBuilder();
-        for (ConditionalFeature cf:ConditionalFeature.values()) {
+        for (ConditionalFeature cf : ConditionalFeature.values()) {
             builder.append(cf.toString()).append(" : ").append(Platform.isSupported(cf)).append("\n");
         }
         textArea.setText(builder.toString());

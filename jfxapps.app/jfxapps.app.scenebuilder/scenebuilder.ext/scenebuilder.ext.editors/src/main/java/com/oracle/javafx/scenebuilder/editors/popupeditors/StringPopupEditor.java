@@ -50,8 +50,7 @@ import javafx.scene.control.TextField;
 /**
  * Simple string popup editor.
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 public class StringPopupEditor extends PopupEditor {
 

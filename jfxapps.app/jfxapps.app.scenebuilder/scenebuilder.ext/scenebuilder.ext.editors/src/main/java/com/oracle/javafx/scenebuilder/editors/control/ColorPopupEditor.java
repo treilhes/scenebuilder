@@ -48,8 +48,7 @@ import com.oracle.javafx.scenebuilder.editors.popupeditors.PaintPopupEditor;
  * The editor is shown as a MenuButton. This button then shows a popup
  * to select a {@link javafx.scene.paint.Color}.
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 public class ColorPopupEditor extends PaintPopupEditor {
 

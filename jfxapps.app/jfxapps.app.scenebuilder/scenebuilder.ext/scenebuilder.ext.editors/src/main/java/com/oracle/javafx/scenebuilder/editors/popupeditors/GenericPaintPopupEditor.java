@@ -44,8 +44,7 @@ import com.oracle.javafx.scenebuilder.api.Documentation;
 /**
  * Popup editor for the Paint property.
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class GenericPaintPopupEditor extends PaintPopupEditor {
 
     public GenericPaintPopupEditor(Dialog dialog,

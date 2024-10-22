@@ -40,9 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.api.control.curve.AbstractCurveEditor;
@@ -50,8 +48,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.EditCurveG
 
 import javafx.collections.ObservableList;
 import javafx.scene.shape.Polyline;
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class PolylineEditor extends AbstractCurveEditor<Polyline> {
 
     private List<Double> originalPoints;

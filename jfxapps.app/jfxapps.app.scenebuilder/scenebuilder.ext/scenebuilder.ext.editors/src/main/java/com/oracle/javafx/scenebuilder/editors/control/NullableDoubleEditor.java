@@ -59,8 +59,7 @@ import javafx.event.EventHandler;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class NullableDoubleEditor extends AutoSuggestEditor {
 
     private Map<String, Object> constants;

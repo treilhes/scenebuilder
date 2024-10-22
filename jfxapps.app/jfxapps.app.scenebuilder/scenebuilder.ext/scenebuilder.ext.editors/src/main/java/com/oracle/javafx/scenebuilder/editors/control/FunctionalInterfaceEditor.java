@@ -69,8 +69,7 @@ import javafx.scene.layout.StackPane;
  * This class is a good candidate for removal.
  * FunctionalInterfacePropertyMetadata is never used yet in any property
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class FunctionalInterfaceEditor extends AutoSuggestEditor {
     private static final String HASH_STR = "#"; //NOCHECK
     private final MenuItem controllerMethodMenuItem = new MenuItem(I18N.getString("inspector.event.menu.methodmode"));

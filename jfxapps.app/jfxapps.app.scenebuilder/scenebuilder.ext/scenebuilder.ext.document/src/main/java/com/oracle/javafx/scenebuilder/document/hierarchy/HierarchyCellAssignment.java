@@ -50,8 +50,7 @@ import javafx.scene.control.TreeItem;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class HierarchyCellAssignment {
 
     private final Map<TreeItem<HierarchyItem>, HierarchyCell> treeItemAssignments = new HashMap<>();

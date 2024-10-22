@@ -39,9 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
@@ -50,8 +48,7 @@ import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.EditCurveG
 
 import javafx.geometry.Point2D;
 import javafx.scene.shape.QuadCurve;
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class QuadCurveEditor extends AbstractCurveEditor<QuadCurve> {
 
     private double originalStartX;

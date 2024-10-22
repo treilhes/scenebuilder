@@ -33,100 +33,60 @@
  */
 package com.gluonhq.jfxapps.ext.container.preferences.global;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups;
-import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preferences.PreferenceEditorFactory;
-import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preferences.UserPreference;
-import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
-import com.gluonhq.jfxapps.core.api.preferences.type.ObjectPreference;
+import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups;
+import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
+import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
+import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
+import com.gluonhq.jfxapps.core.api.preference.UserPreference;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolTheme;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolThemeProvider;
 import com.gluonhq.jfxapps.ext.container.tooltheme.DefaultToolThemesList;
 
 import javafx.scene.Parent;
 
-@Component
-public class ToolThemePreference extends ObjectPreference<Class<? extends ToolTheme>>
-        implements ManagedGlobalPreference, UserPreference<Class<? extends ToolTheme>> {
-//	private static ToolThemePreference instance = null;
-    /***************************************************************************
-     * * Static fields * *
-     **************************************************************************/
+@ApplicationSingleton
+@PreferenceContext(id = "f3f9b196-9e90-4aa8-acc4-ba5c7b0defcd", // NO CHECK
+        name = ToolThemePreference.PREFERENCE_KEY,
+        defaultValueProvider = ToolThemePreference.DefaultProvider.class)
+public interface ToolThemePreference
+        extends Preference<Class<? extends ToolTheme>>, ManagedGlobalPreference, UserPreference<Class<? extends ToolTheme>> {
+
     public static final String PREFERENCE_KEY = "TOOL_THEME"; // NOI18N
     public static final Class<? extends ToolTheme> PREFERENCE_DEFAULT_VALUE = DefaultToolThemesList.Default.class;
 
-    private final I18N i18n;
-
-    private final List<Class<? extends ToolTheme>> toolThemeClasses;
-
-    // TODO bad bad bad, but PropertyEditors need this instance and i don't want to
-    // change editors constructors
-    // TODO editors musn't use dialogs internaly, change this later
-    // TODO same problem for FXOMLoadr
-//    public static ToolThemePreference getInstance() {
-//    	return instance;
-//    }
-
-    private final PreferenceEditorFactory preferenceEditorFactory;
-
-    //@formatter:off
-    public ToolThemePreference(
-            I18N i18n,
-            PreferencesContext preferencesContext,
-            PreferenceEditorFactory preferenceEditorFactory,
-            List<ToolThemeProvider> toolThemeProviders) {
-      //@formatter:on
-        super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-        this.i18n = i18n;
-        this.preferenceEditorFactory = preferenceEditorFactory;
-        toolThemeClasses = new ArrayList<>();
-        toolThemeProviders.forEach(tp -> toolThemeClasses.addAll(tp.toolThemes()));
-    }
-
     @Override
-    protected void write() {
-        getNode().put(getName(), getValue().getName());
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    protected void read() {
-        assert getName() != null;
-        String clsName = getNode().get(getName(), null);
-        try {
-            setValue(clsName == null ? getDefault() : (Class<? extends ToolTheme>) Class.forName(clsName));
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public String getLabelI18NKey() {
+    default String getLabelI18NKey() {
         return "prefs.tooltheme";
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Parent getEditor() {
-        return preferenceEditorFactory.newChoiceFieldEditor(this,
+    default Parent getEditor() {
+        var toolThemeProviders = getContext().getBeansOfType(ToolThemeProvider.class);
+        var toolThemeClasses = toolThemeProviders.values().stream().map(ToolThemeProvider::toolThemes).toList();
+        var i18n = getContext().getBean(I18N.class);
+        return getPreferenceEditorFactory().newChoiceFieldEditor(this,
                 toolThemeClasses.toArray((Class<? extends ToolTheme>[]) new Class[0]), (c) -> ToolTheme.name(i18n, c));
     }
 
     @Override
-    public PreferenceGroup getGroup() {
+    default PreferenceGroup getGroup() {
         return DefaultPreferenceGroups.GLOBAL_GROUP_C;
     }
 
     @Override
-    public String getOrderKey() {
+    default String getOrderKey() {
         return getGroup().getOrderKey() + "_A";
+    }
+
+    public static class DefaultProvider implements DefaultValueProvider<Class<? extends ToolTheme>> {
+        @Override
+        public Class<? extends ToolTheme> get() {
+            return PREFERENCE_DEFAULT_VALUE;
+        }
     }
 }

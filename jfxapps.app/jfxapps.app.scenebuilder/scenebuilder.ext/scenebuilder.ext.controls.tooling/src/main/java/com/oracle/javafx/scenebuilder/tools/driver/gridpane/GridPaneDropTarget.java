@@ -40,6 +40,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.dnd.AbstractDropTarget;
 import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.dnd.DropTargetFactory;
@@ -50,10 +51,6 @@ import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
-import com.gluonhq.jfxapps.core.job.editor.atomic.RemoveObjectJob;
-import com.gluonhq.jfxapps.core.selection.job.ClearSelectionJob;
-import com.gluonhq.jfxapps.core.selection.job.InsertAsSubComponentJob;
-import com.gluonhq.jfxapps.core.selection.job.UpdateSelectionJob;
 import com.gluonhq.jfxapps.util.javafx.GridBounds;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.GridSnapshot;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.InsertColumnJob;
@@ -66,8 +63,7 @@ import javafx.scene.layout.GridPane;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public final class GridPaneDropTarget extends AbstractDropTarget {
 
     public enum ColumnArea {

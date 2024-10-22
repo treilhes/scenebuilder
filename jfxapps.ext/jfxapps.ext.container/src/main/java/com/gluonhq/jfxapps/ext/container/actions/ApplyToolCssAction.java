@@ -77,7 +77,7 @@ public class ApplyToolCssAction extends AbstractAction implements InitWithDocume
     @Override
     public ActionStatus doPerform() {
         assert getActionConfig() != null;
-        sceneBuilderManager.stylesheetConfig().onNext(getActionConfig());
+        sceneBuilderManager.stylesheetConfig().set(getActionConfig());
         return ActionStatus.DONE;
     }
 

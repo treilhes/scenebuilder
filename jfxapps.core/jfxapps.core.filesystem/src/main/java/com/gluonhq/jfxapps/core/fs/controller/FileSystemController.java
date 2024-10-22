@@ -55,23 +55,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.CombinedResourceBundle;
 import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
-import com.gluonhq.jfxapps.core.fs.preference.document.PathPreference;
-import com.gluonhq.jfxapps.core.fs.preference.global.InitialDirectoryPreference;
-import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
-import com.gluonhq.jfxapps.core.fs.preference.global.WildcardImportsPreference;
+import com.gluonhq.jfxapps.core.fs.preference.InitialDirectoryPreference;
+import com.gluonhq.jfxapps.core.fs.preference.WildcardImportsPreference;
 import com.gluonhq.jfxapps.core.fs.util.FileWatcher;
 import com.gluonhq.jfxapps.core.fxom.FXOMAssetIndex;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
-import jakarta.inject.Provider;
 import javafx.collections.ObservableList;
 
 @ApplicationInstanceSingleton
@@ -79,9 +75,11 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
     private final static Logger logger = LoggerFactory.getLogger(FileSystemController.class);
 
+    private final JfxAppPlatform jfxAppPlatform;
+    private final ApplicationEvents sceneBuilderManager;
+    private final ApplicationInstanceEvents documentManager;
+    private final RecentItemsController recentItems;
     private final InitialDirectoryPreference initialDirectoryPreference;
-    private final RecentItemsPreference recentItemsPreference;
-    private final Provider<PathPreference> pathPreference;
     private final WildcardImportsPreference wildcardImportsPreference;
 
     private final Map<MainInstanceWindow, List<Object>> documentWatchKeys = new HashMap<>();
@@ -91,29 +89,23 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     private final FileWatcher fileWatcher = new FileWatcher(2000 /* ms */, this,
             FileSystemController.class.getSimpleName());
 
-    private final ApplicationEvents sceneBuilderManager;
-    private final ApplicationInstanceEvents documentManager;
 
     private FileTime loadFileTime;
-
-    private final JfxAppPlatform jfxAppPlatform;
 
     // @formatter:off
     public FileSystemController(
             JfxAppPlatform jfxAppPlatform,
             ApplicationEvents sceneBuilderManager,
             ApplicationInstanceEvents documentManager,
-            RecentItemsPreference recentItemsPreference,
-            Provider<PathPreference> pathPreference,
+            RecentItemsController recentItems,
             InitialDirectoryPreference initialDirectoryPreference,
             WildcardImportsPreference wildcardImportsPreference) {
      // @formatter:on
         this.jfxAppPlatform = jfxAppPlatform;
         this.documentManager = documentManager;
         this.sceneBuilderManager = sceneBuilderManager;
+        this.recentItems = recentItems;
         this.initialDirectoryPreference = initialDirectoryPreference;
-        this.recentItemsPreference = recentItemsPreference;
-        this.pathPreference = pathPreference;
         this.wildcardImportsPreference = wildcardImportsPreference;
 
     }
@@ -129,7 +121,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
         final Path chosenFolder = chosenFile.toPath().getParent();
         if (chosenFolder != null) {
-            initialDirectoryPreference.setValue(chosenFolder.toFile()).writeToJavaPreferences();
+            initialDirectoryPreference.setValue(chosenFolder.toFile()).save();
         }
     }
 
@@ -415,17 +407,10 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
                 checkTheme);
 
         if (fxmlLocation != null) {
-            try {
-                pathPreference.get().setValue(new File(fxmlLocation.toURI()).getPath());
-            } catch (URISyntaxException e) {
-                // TODO log something here
-                e.printStackTrace();
-            }
-
             // recentItems may not contain the current document
             // if the Open Recent -> Clear menu has been invoked
-            if (!recentItemsPreference.containsRecentItem(fxmlLocation)) {
-                recentItemsPreference.addRecentItem(fxmlLocation);
+            if (!recentItems.containsRecentItem(fxmlLocation)) {
+                recentItems.addRecentItem(fxmlLocation);
             }
         }
 
@@ -516,13 +501,13 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
     @Override
     public ObservableList<String> getRecentItems() {
-        return recentItemsPreference.getValue();
+        return recentItems.getRecentItems();
     }
 
     @Override
     public void cleanupRecentItems() {
         final List<String> toRemove = getRecentItems().stream().filter(s -> !new File(s).exists()).toList();
-        recentItemsPreference.removeRecentItems(toRemove);
+        recentItems.removeRecentItems(toRemove);
     }
 
 }

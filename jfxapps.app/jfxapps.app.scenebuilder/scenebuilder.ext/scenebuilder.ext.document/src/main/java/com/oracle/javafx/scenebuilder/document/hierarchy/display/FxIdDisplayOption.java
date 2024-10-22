@@ -57,8 +57,7 @@ import com.oracle.javafx.scenebuilder.document.api.annotation.DisplayOptionName;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @DisplayOptionName("hierarchy.displayoption.fxid")
 public class FxIdDisplayOption extends AbstractDisplayOption {
 

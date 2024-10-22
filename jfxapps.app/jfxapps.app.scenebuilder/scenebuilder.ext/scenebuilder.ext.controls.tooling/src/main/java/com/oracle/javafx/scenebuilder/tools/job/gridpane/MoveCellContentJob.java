@@ -34,13 +34,14 @@
 
 package com.oracle.javafx.scenebuilder.tools.job.gridpane;
 
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -55,8 +56,7 @@ import javafx.scene.layout.GridPane;
  * Move an {@link FXOMObject} in a {@link GridPane}.<br/>
  * The columnIndex/rowIndex of an object is updated of the specified columnIndexDelta/rowIndexDelta
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public final class MoveCellContentJob extends AbstractJob {
 
     private static final IntegerPropertyMetadata columnIndexMeta =

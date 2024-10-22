@@ -77,8 +77,7 @@ import javafx.scene.layout.VBox;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 public class InfoPanelController extends AbstractFxmlController {
 

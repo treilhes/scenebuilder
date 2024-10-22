@@ -49,8 +49,7 @@ import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 import javafx.scene.control.Menu;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class MainMenuProvider implements MenuProvider {
 
     private final MenuBuilder menuBuilder;

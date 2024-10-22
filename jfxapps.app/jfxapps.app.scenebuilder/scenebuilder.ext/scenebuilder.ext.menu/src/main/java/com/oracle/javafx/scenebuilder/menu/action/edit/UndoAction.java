@@ -48,8 +48,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttach
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(
         nameKey = "action.name.undo",
         descriptionKey = "action.description.undo")

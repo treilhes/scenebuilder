@@ -47,8 +47,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import javafx.scene.control.Menu;
 import javafx.scene.control.SeparatorMenuItem;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 public class ImportProvider implements MenuItemProvider {
 

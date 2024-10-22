@@ -58,8 +58,8 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.api.ui.tool.Driver;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.ui.preferences.global.BackgroundImagePreference;
-import com.gluonhq.jfxapps.core.ui.preferences.global.BackgroundImagePreference.BackgroundImage;
+import com.gluonhq.jfxapps.core.ui.preference.BackgroundImagePreference;
+import com.gluonhq.jfxapps.core.ui.preference.BackgroundImagePreference.BackgroundImage;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 import com.gluonhq.jfxapps.test.StageBuilder;
 import com.gluonhq.jfxapps.test.StageType;
@@ -164,7 +164,7 @@ class WorkspaceControllerTest {
 
         System.out.println();
 
-        applicationEvents.stylesheetConfig().onNext(ToolStylesheetProvider.builder()
+        applicationEvents.stylesheetConfig().set(ToolStylesheetProvider.builder()
                 .stylesheet(URLUtils.toDataURI("""
                     #scrollPane {
                         -fx-border-color: green;

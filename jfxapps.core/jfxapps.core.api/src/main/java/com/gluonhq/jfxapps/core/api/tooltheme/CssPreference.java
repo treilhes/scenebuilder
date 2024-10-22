@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.core.api.tooltheme;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.preferences.Preference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
 
 /**
  * The Interface CssPreference must be implemented by {@link Preference} which aim to modify the scenebuilder tool css.<br/>

@@ -36,9 +36,7 @@ package com.oracle.javafx.scenebuilder.tools.action.gridpane;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemProvider;
@@ -53,8 +51,7 @@ import javafx.scene.control.Menu;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class GridPaneMenuProvider implements MenuItemProvider, ContextMenuItemProvider {
 
     public static final String MENU_ID = "gridPaneMenu"; // NOCHECK

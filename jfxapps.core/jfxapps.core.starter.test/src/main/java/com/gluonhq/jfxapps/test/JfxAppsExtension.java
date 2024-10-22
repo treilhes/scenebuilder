@@ -34,43 +34,67 @@
 package com.gluonhq.jfxapps.test;
 
 import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.create;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
+
+import javax.sql.DataSource;
 
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springdoc.core.properties.SpringDocConfigProperties;
+import org.springdoc.core.properties.SwaggerUiConfigProperties;
+import org.springdoc.core.properties.SwaggerUiOAuthProperties;
+import org.springdoc.core.providers.ObjectMapperProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.test.context.SpringBootTestContextBootstrapper;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.MergedAnnotations;
+import org.springframework.core.annotation.MergedAnnotations.SearchStrategy;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.test.context.ContextLoader;
 import org.springframework.test.context.MergedContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.AbstractContextLoader;
-import org.springframework.test.context.support.DefaultTestContextBootstrapper;
 import org.testfx.api.FxToolkit;
-import org.testfx.framework.junit5.ApplicationExtension;
 
-import com.gluonhq.jfxapps.boot.api.context.Application;
-import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.api.layer.Layer;
+import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.RootExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
+import com.gluonhq.jfxapps.boot.context.impl.ContextManagerImpl;
 import com.gluonhq.jfxapps.boot.context.impl.JfxAppContextImpl;
+import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
+import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper.ServiceLoader;
+import com.gluonhq.jfxapps.boot.loader.model.AbstractExtension;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.LifecyclePostProcessor;
 
 import javafx.stage.Stage;
 
 public class JfxAppsExtension implements BeforeEachCallback, ParameterResolver {
-
+    private final static Logger logger = LoggerFactory.getLogger(JfxAppsExtension.class);
     private final static Namespace JFXAPPS = create("com.gluonhq.jfxapps");
 
     // This constructor is invoked by JUnit Jupiter via reflection or ServiceLoader
@@ -85,23 +109,13 @@ public class JfxAppsExtension implements BeforeEachCallback, ParameterResolver {
      */
     @Override
     public void beforeEach(final ExtensionContext context) {
-        Stage stage = FxToolkit.toolkitContext().getRegisteredStage();
-
-        final var globalStore = context.getStore(ExtensionContext.Namespace.GLOBAL);
-        final var spring = globalStore.get(SpringExtension.class, SpringExtension.class);
-        final var app = globalStore.get(ApplicationExtension.class, ApplicationExtension.class);
-System.out.println();
-
-//        context.getStore(JFXAPPS).put(MOCKS, new HashSet<>());
-//        context.getStore(JFXAPPS).put(SESSION, session);
     }
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
         // Check if the parameter is supported, e.g., by type or annotation
         var type = parameterContext.getParameter().getType();
-        return type == Stage.class
-                || type == StageBuilder.class;
+        return type == Stage.class || type == StageBuilder.class;
     }
 
     @Override
@@ -124,19 +138,17 @@ System.out.println();
         return null;
     }
 
-    @ApplicationSingleton
-    public static class AppBean implements Application {
-    }
-
-    @ApplicationInstanceSingleton
-    public static class AppInstanceBean implements ApplicationInstance {
-    }
-
-    public static class JfxAppsTestContextBootstrapper extends DefaultTestContextBootstrapper {
+    public static class JfxAppsTestContextBootstrapper extends SpringBootTestContextBootstrapper {
 
         @Override
         protected Class<? extends ContextLoader> getDefaultContextLoaderClass(Class<?> testClass) {
             return JfxAppsContextLoader.class;
+        }
+
+        @Override
+        protected String[] getProperties(Class<?> testClass) {
+            return MergedAnnotations.from(testClass, SearchStrategy.INHERITED_ANNOTATIONS).get(JfxAppsTest.class)
+                    .getValue("properties", String[].class).orElse(null);
         }
 
     }
@@ -145,27 +157,75 @@ System.out.println();
 
         protected static final ThreadLocal<JfxAppContext> testContextHolder = new ThreadLocal<>();
 
+        private Class<?> testClass;
+
+        private Boolean loadDefaultScopes;
+
+        public JfxAppsContextLoader() {
+            super();
+        }
+
+        @Override
+        protected String[] generateDefaultLocations(Class<?> clazz) {
+            this.testClass = clazz;
+
+            this.loadDefaultScopes = MergedAnnotations.from(testClass, SearchStrategy.INHERITED_ANNOTATIONS)
+                    .get(JfxAppsTest.class).getValue("loadDefaultScopes", Boolean.class).orElse(null);
+
+            return super.generateDefaultLocations(clazz);
+        }
+
         @Override
         public ApplicationContext loadContext(MergedContextConfiguration mergedConfig) throws Exception {
             JfxAppContextImpl.applicationScope.clear();
 
+            var contextId = SealedExtension.ROOT_ID;
+            var parent = Mockito.mock(JfxAppContext.class);
+            var loader = Mockito.mock(ServiceLoader.class);
+            var extensionDefinition = Mockito.mock(AbstractExtension.class);
+            var extension = Mockito.mock(RootExtension.class);
+            var layer = Mockito.mock(Layer.class);
+            var layerManager = Mockito.mock(ModuleLayerManager.class);
+            // we want the context manager to return the same context everytime
+            var contextManager = new ContextManagerImpl(null);
+            var bootstraper = new ContextBootstraper(layerManager, contextManager);
+
+            when(layer.getId()).thenReturn(contextId);
+            when(layer.getModuleLayer()).thenReturn(ModuleLayer.boot());
+            when(layerManager.get(any())).thenReturn(layer);
+            when(loader.loadService(layer, Extension.class)).thenReturn(Set.of(extension));
+
+            when(extension.getId()).thenReturn(contextId);
+
             var classes = new ArrayList<Class<?>>(List.of(mergedConfig.getClasses()));
+
+            //@formatter:off
             classes.addAll(List.of(
                     I18NTestConfig.class,
+                    LifecyclePostProcessor.class,
                     FxmlControllerBeanPostProcessor.class,
-                    AppBean.class,
-                    AppInstanceBean.class,
+                    JfxAppsTest.Application1Bean.class,
+                    JfxAppsTest.Application1InstanceBean.class,
+                    JfxAppsTest.Application2Bean.class,
+                    JfxAppsTest.Application2InstanceBean.class,
                     ApplicationEvents.ApplicationEventsImpl.class,
                     ApplicationInstanceEvents.ApplicationInstanceEventsImpl.class,
                     JavafxThreadClassloader.class,
                     StageBuilder.class));
+            //@formatter:on
 
+            when(extension.localContextClasses()).thenReturn(classes);
+            //@formatter:on
+            var ctx = bootstraper.create(parent, extensionDefinition, List.of(contextManager), null, loader);
 
-            var ctx = JfxAppContextImpl.fromScratch(classes.toArray(new Class<?>[0]));
+            if (loadDefaultScopes) {
+                // set the current scopes
+                var appBean = ctx.getBean(JfxAppsTest.Application1Bean.class);
+                logger.info("Loaded Application Bean: {}", appBean);
+                var instanceBean = ctx.getBean(JfxAppsTest.Application1InstanceBean.class);
+                logger.info("Loaded Application Instance Bean: {}", instanceBean);
 
-            // set the current scopes
-            ctx.getBean(AppBean.class);
-            ctx.getBean(AppInstanceBean.class);
+            }
 
             testContextHolder.set(ctx);
 
@@ -185,11 +245,53 @@ System.out.println();
     }
 
     @TestConfiguration
+    //@AutoConfigureMockMvc
     static class I18NTestConfig {
         @Bean
         @ConditionalOnMissingBean
         I18N i18nTest() {
             return new I18N(List.of(), true);
         }
+
+        @Bean
+        @ConditionalOnMissingBean
+        public DataSource dataSource() {
+            DriverManagerDataSource dataSource = new DriverManagerDataSource();
+            dataSource.setDriverClassName("org.h2.Driver");
+            dataSource.setUrl("jdbc:h2:mem:testdb"); // Pour une base en mémoire ou file:./data/testdb pour fichier
+            dataSource.setUsername("sa");
+            dataSource.setPassword(""); // H2 par défaut n'a pas de mot de passe pour l'utilisateur 'sa'
+
+            return dataSource;
+        }
+
+        @Bean
+        @ConditionalOnBean(name = "servletContext")
+        public JpaVendorAdapter jpaVendorAdapter() {
+            HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
+            adapter.setGenerateDdl(true); // Générer automatiquement le schéma de base de données
+            adapter.setShowSql(true); // Afficher les requêtes SQL dans la console
+            adapter.setDatabasePlatform("org.hibernate.dialect.H2Dialect"); // Utilisation de H2
+            return adapter;
+        }
+
+        @Bean
+        @ConditionalOnBean(name = "servletContext")
+        public SwaggerUiConfigProperties swaggerUiConfigProperties() {
+            return new SwaggerUiConfigProperties();
+        }
+
+        @Bean
+        @ConditionalOnBean(name = "servletContext")
+        public SwaggerUiOAuthProperties swaggerUiOAuthProperties() {
+            return new SwaggerUiOAuthProperties();
+        }
+
+        @Bean
+        @ConditionalOnBean(name = "servletContext")
+        public ObjectMapperProvider objectMapperProvider(SpringDocConfigProperties config) {
+            return new ObjectMapperProvider(config);
+        }
+
     }
 }

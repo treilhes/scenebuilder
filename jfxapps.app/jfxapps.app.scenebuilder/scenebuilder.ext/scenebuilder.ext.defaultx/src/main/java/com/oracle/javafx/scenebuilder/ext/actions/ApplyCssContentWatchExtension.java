@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,29 +41,32 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.AbstractActionExtension;
-import com.gluonhq.jfxapps.core.api.application.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem.WatchingCallback;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.oracle.javafx.scenebuilder.ext.controller.SceneStyleSheetMenuController;
 import com.oracle.javafx.scenebuilder.ext.theme.document.UserStylesheetsPreference;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class ApplyCssContentWatchExtension extends AbstractActionExtension<ApplyCssContentAction>
         implements WatchingCallback {
 
     private final UserStylesheetsPreference userStylesheetsPreference;
     private final FileSystem fileSystem;
     private final SceneStyleSheetMenuController sceneStyleSheetMenuController;
-    private final SceneBuilderBeanFactory context;
+    private final JfxAppContext context;
 
-    public ApplyCssContentWatchExtension(@Autowired FileSystem fileSystem, @Autowired SceneBuilderBeanFactory context,
+    //@formatter:off
+    public ApplyCssContentWatchExtension(
+            @Autowired FileSystem fileSystem,
+            @Autowired JfxAppContext context,
             @Autowired SceneStyleSheetMenuController sceneStyleSheetMenuController,
             @Autowired @Lazy UserStylesheetsPreference userStylesheetsPreference) {
+        //@formatter:on
         super();
         this.fileSystem = fileSystem;
         this.context = context;
@@ -86,7 +89,7 @@ public class ApplyCssContentWatchExtension extends AbstractActionExtension<Apply
         if (userStylesheetsPreference.getValue() != null) {
             List<File> toWatch = userStylesheetsPreference.getValue().stream().map(s -> new File(URI.create(s)))
                     .collect(Collectors.toList());
-            fileSystem.watch(context.getBean(ApplicationInstanceWindow.class), toWatch, this);
+            fileSystem.watch(context.getBean(MainInstanceWindow.class), toWatch, this);
         }
     }
 

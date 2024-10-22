@@ -44,8 +44,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttach
 import com.gluonhq.jfxapps.ext.menu.action.AbstractToggleViewVisibilityAction;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.ControlLibraryPanel;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
 @MenuItemAttachment(
         id = ToggleControlLibraryVisibilityAction.MENU_ID,

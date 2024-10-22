@@ -46,8 +46,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 
 import javafx.scene.control.Menu;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 public class IncludeProvider implements MenuItemProvider {
 

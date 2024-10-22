@@ -44,6 +44,7 @@ import java.lang.annotation.Target;
  * want to inject a bean that is available in the local context and also in one
  * or more parent contexts, but you want to make sure that the local instance is
  * injected.
+ *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.FIELD })

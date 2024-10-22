@@ -35,9 +35,9 @@ package com.oracle.javafx.scenebuilder.gluon.preferences.global;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preferences.type.BooleanPreference;
+import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preference.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preference.type.BooleanPreference;
 
 @Component
 public class RegistrationOptInPreference extends BooleanPreference implements ManagedGlobalPreference {

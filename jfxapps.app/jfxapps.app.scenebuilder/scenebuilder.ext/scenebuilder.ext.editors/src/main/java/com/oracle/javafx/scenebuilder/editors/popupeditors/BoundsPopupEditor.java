@@ -52,8 +52,7 @@ import javafx.scene.control.Label;
 /**
  * Simple string popup editor.
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 public class BoundsPopupEditor extends PopupEditor {
 

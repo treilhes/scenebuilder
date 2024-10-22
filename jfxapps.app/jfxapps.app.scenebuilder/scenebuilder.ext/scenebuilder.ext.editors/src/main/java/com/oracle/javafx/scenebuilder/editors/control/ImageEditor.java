@@ -70,8 +70,7 @@ import javafx.stage.FileChooser;
 /**
  * Image property editor (handle the url path).
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class ImageEditor extends AbstractPropertyEditor {
 
     @FXML

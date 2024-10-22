@@ -64,8 +64,7 @@ import javafx.util.Duration;
 /**
  * Editor for Duration properties.
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class DurationEditor extends AutoSuggestEditor{
 
     private static final Map<String, SBDuration> constants = new HashMap<>();

@@ -54,7 +54,7 @@ import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
-import com.gluonhq.jfxapps.core.maven.preferences.global.MavenRepositoriesPreferences;
+import com.gluonhq.jfxapps.core.maven.preference.MavenRepositoriesPreferences;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;

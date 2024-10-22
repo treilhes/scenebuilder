@@ -31,6 +31,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
+
 import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 
 
@@ -54,4 +56,5 @@ open module jfxapps.boot.loader {
     requires java.compiler;
 
     uses Extension;
+    uses ImportBeanDefinitionRegistrar;
 }

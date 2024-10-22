@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,23 +36,22 @@ package com.oracle.javafx.scenebuilder.ext.theme.global;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups;
-import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
-import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preferences.PreferenceEditorFactory;
-import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preferences.UserPreference;
-import com.gluonhq.jfxapps.core.api.preferences.type.ObjectPreference;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups;
+import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceEditorFactory;
+import com.gluonhq.jfxapps.core.api.preference.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preference.UserPreference;
+import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
+import com.gluonhq.jfxapps.core.api.preference.type.ObjectPreference;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeProvider;
 import com.oracle.javafx.scenebuilder.ext.theme.DefaultThemesList;
 
 import javafx.scene.Parent;
 
-@Component
+@ApplicationSingleton
 public class ThemePreference extends ObjectPreference<Class<? extends Theme>> implements ManagedGlobalPreference, UserPreference<Class<? extends Theme>> {
 
     /***************************************************************************
@@ -62,15 +62,18 @@ public class ThemePreference extends ObjectPreference<Class<? extends Theme>> im
     public static final String PREFERENCE_KEY = "theme"; //NOCHECK
     public static final Class<? extends Theme> PREFERENCE_DEFAULT_VALUE = DefaultThemesList.Modena.class;
 
+    private final I18N i18n;
     private final List<Class<? extends Theme>> themeClasses;
 
 	private final PreferenceEditorFactory preferenceEditorFactory;
 
 	public ThemePreference(
-			@Autowired PreferencesContext preferencesContext,
-			@Autowired PreferenceEditorFactory preferenceEditorFactory,
-			@Autowired List<ThemeProvider> themeProviders) {
+	        I18N i18n,
+			PreferencesContext preferencesContext,
+			PreferenceEditorFactory preferenceEditorFactory,
+			List<ThemeProvider> themeProviders) {
 		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
+		this.i18n = i18n;
 		this.preferenceEditorFactory = preferenceEditorFactory;
 		themeClasses = new ArrayList<>();
 		themeProviders.forEach(tp -> themeClasses.addAll(tp.themes()));
@@ -102,7 +105,7 @@ public class ThemePreference extends ObjectPreference<Class<? extends Theme>> im
 	@Override
 	public Parent getEditor() {
 		return preferenceEditorFactory.newChoiceFieldEditor(this,
-				themeClasses.toArray((Class<? extends Theme>[])new Class[0]), (c) -> Theme.name(c));
+				themeClasses.toArray((Class<? extends Theme>[])new Class[0]), (c) -> Theme.name(i18n, c));
 	}
 
 	@Override

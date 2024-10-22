@@ -95,7 +95,7 @@ public class RedirectedRepositoryClientImpl implements RepositoryClient {
     }
 
     @Override
-    public List<UniqueArtifact> getAvailableVersions(Artifact artifact, Scope scope) {
+    public List<UniqueArtifact> getAvailableVersions(Artifact artifact, VersionType scope) {
         return findMatch(artifact).map(mappers::map).map(ResolvedArtifact::getUniqueArtifact).map(List::of)
                 .orElseGet(() -> client.getAvailableVersions(artifact, scope));
     }
@@ -107,7 +107,7 @@ public class RedirectedRepositoryClientImpl implements RepositoryClient {
     }
 
     @Override
-    public Optional<UniqueArtifact> getLatestVersion(Artifact artifact, Scope scope) {
+    public Optional<UniqueArtifact> getLatestVersion(Artifact artifact, VersionType scope) {
         return findMatch(artifact).map(mappers::map).map(ResolvedArtifact::getUniqueArtifact)
                 .or(() -> client.getLatestVersion(artifact, scope));
     }

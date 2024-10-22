@@ -53,8 +53,7 @@ import javafx.stage.Window;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 public class LibraryController {
 

@@ -62,8 +62,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
  *
  * @param mediaFile the media file to be imported
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
 
 @MenuItemAttachment(

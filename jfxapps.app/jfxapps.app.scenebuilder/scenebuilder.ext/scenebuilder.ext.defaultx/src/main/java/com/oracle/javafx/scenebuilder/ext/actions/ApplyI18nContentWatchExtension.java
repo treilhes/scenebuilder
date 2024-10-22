@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,28 +41,29 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.AbstractActionExtension;
-import com.gluonhq.jfxapps.core.api.application.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem.WatchingCallback;
 import com.gluonhq.jfxapps.core.api.lifecycle.DisposeWithDocument;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.oracle.javafx.scenebuilder.ext.controller.I18nResourceMenuController;
 import com.oracle.javafx.scenebuilder.ext.theme.document.I18NResourcePreference;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class ApplyI18nContentWatchExtension extends AbstractActionExtension<ApplyI18nContentAction>
         implements DisposeWithDocument, WatchingCallback {
 
     private final I18NResourcePreference i18NResourcePreference;
     private final FileSystem fileSystem;
     private final I18nResourceMenuController i18nResourceMenuController;
-    private final SceneBuilderBeanFactory context;
+    private final JfxAppContext context;
 
-    public ApplyI18nContentWatchExtension(@Autowired FileSystem fileSystem, @Autowired SceneBuilderBeanFactory context,
+    public ApplyI18nContentWatchExtension(
+            @Autowired FileSystem fileSystem,
+            @Autowired JfxAppContext context,
             @Autowired I18nResourceMenuController i18nResourceMenuController,
             @Autowired @Lazy I18NResourcePreference i18NResourcePreference) {
         super();
@@ -87,7 +88,7 @@ public class ApplyI18nContentWatchExtension extends AbstractActionExtension<Appl
         if (i18NResourcePreference.getValue() != null) {
             List<File> toWatch = i18NResourcePreference.getValue().stream().map(s -> new File(URI.create(s)))
                     .collect(Collectors.toList());
-            fileSystem.watch(context.getBean(ApplicationInstanceWindow.class), toWatch, this);
+            fileSystem.watch(context.getBean(MainInstanceWindow.class), toWatch, this);
         }
     }
 

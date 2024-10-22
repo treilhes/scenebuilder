@@ -49,8 +49,7 @@ import com.oracle.javafx.scenebuilder.selection.job.AddTooltipToSelectionJob;
  * Performs the 'add tooltip' edit action. This method creates an instance of
  * Tooltip and sets it in the tooltip property of the selected objects.
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(
         nameKey = "action.name.save",
         descriptionKey = "action.description.save")

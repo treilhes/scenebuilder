@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,24 +36,30 @@ package com.oracle.javafx.scenebuilder.sourceview.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.css.StylesheetProvider;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
-
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report")
 public class GenerateFxmlContentAction extends AbstractAction implements InitWithDocument {
 
     private ApplyCssContentConfig config;
 
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
-    public GenerateFxmlContentAction(ActionExtensionFactory extensionFactory, FxmlDocumentManager documentManager) {
-        super(extensionFactory);
+    //@formatter:off
+    public GenerateFxmlContentAction(
+            I18N i18n,
+            ActionExtensionFactory extensionFactory,
+            ApplicationInstanceEvents documentManager) {
+        //@formatter:on
+        super(i18n, extensionFactory);
         this.documentManager = documentManager;
     }
 

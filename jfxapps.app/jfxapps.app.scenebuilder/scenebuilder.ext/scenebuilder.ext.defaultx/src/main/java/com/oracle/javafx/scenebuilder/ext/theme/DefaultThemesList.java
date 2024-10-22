@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,183 +33,173 @@
  */
 package com.oracle.javafx.scenebuilder.ext.theme;
 
-import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
-
-import com.oracle.javafx.scenebuilder.api.theme.AbstractTheme;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
-import com.oracle.javafx.scenebuilder.api.theme.ThemeMeta;
-import com.oracle.javafx.scenebuilder.api.theme.ThemeProvider;
-import com.oracle.javafx.scenebuilder.ext.theme.group.CaspianGroup;
-import com.oracle.javafx.scenebuilder.ext.theme.group.ModenaGroup;
+import com.oracle.javafx.scenebuilder.api.theme.ThemeGroup;
 
-@Component
-@Qualifier("default")
-public class DefaultThemesList implements ThemeProvider {
+public class DefaultThemesList {
 
-	public DefaultThemesList() {}
+    @ApplicationSingleton
+    public class CaspianGroup extends InnerGroup {
+        public CaspianGroup() {
+            super("theme.group.caspian");
+        }
+    }
 
-	@Override
-	public List<Class<? extends Theme>> themes() {
-		return Arrays.asList(
-				Modena.class,
-				ModenaHighContrastBlackOnWhite.class,
-				ModenaHighContrastWhiteOnBlack.class,
-				ModenaHighContrastYellowOnBlack.class,
-				ModenaTouch.class,
-				ModenaTouchHighContrastBlackOnWhite.class,
-				ModenaTouchHighContrastWhiteOnBlack.class,
-				ModenaTouchHighContrastYellowOnBlack.class,
-				Caspian.class,
-				CaspianHighContrast.class,
-				CaspianEmbedded.class,
-				CaspianEmbeddedHighContrast.class,
-				CaspianEmbeddedQvga.class,
-				CaspianEmbeddedQvgaHighContrast.class
-				);
-	}
+    @ApplicationSingleton
+    public class ModenaGroup extends InnerGroup {
+        public ModenaGroup() {
+            super("theme.group.modena");
+        }
+    }
 
-	@Component
-	@Lazy
-	@ThemeMeta(name = "title.theme.modena", group = ModenaGroup.class)
-	public static class Modena extends AbstractTheme {
-		public Modena() {
-			super("com/sun/javafx/scene/control/skin/modena/modena.bss", Arrays.asList());
-		}
-	}
+    @ApplicationSingleton
+    public static class Modena extends InnerTheme {
+        public Modena(ModenaGroup group) {
+            super("title.theme.modena", "com/sun/javafx/scene/control/skin/modena/modena.bss", List.of(), group);
+        }
+    }
 
-	@Component
-	@Lazy
-	@ThemeMeta(name = "title.theme.modena_touch", group = ModenaGroup.class)
-	public static class ModenaTouch extends AbstractTheme {
-		public ModenaTouch() {
-			super("com/oracle/javafx/scenebuilder/ext/theme/modena/modena-touch.css", Arrays.asList());
-		}
-	}
+    @ApplicationSingleton
+    public static class ModenaTouch extends InnerTheme {
+        public ModenaTouch(ModenaGroup group) {
+            super("title.theme.modena_touch", "com/oracle/javafx/scenebuilder/ext/theme/modena/modena-touch.css", List.of(), group);
+        }
+    }
 
-	@Component
-	@Lazy
-	@ThemeMeta(name = "title.theme.modena_high_contrast_black_on_white", group = ModenaGroup.class)
-	public static class ModenaHighContrastBlackOnWhite extends AbstractTheme {
-		public ModenaHighContrastBlackOnWhite() {
-			super("com/oracle/javafx/scenebuilder/ext/theme/modena/modena-highContrast-blackOnWhite.css",
-					Arrays.asList());
-		}
-	}
+    @ApplicationSingleton
+    public static class ModenaHighContrastBlackOnWhite extends InnerTheme {
+        public ModenaHighContrastBlackOnWhite(ModenaGroup group) {
+            super("title.theme.modena_high_contrast_black_on_white","com/oracle/javafx/scenebuilder/ext/theme/modena/modena-highContrast-blackOnWhite.css", List.of(), group);
+        }
+    }
 
-	@Component
-	@Lazy
-	@ThemeMeta(name = "title.theme.modena_high_contrast_white_on_black", group = ModenaGroup.class)
-	public static class ModenaHighContrastWhiteOnBlack extends AbstractTheme {
-		public ModenaHighContrastWhiteOnBlack() {
-			super("com/oracle/javafx/scenebuilder/ext/theme/modena/modena-highContrast-whiteOnBlack.css",
-					Arrays.asList());
-		}
-	}
+    @ApplicationSingleton
+    public static class ModenaHighContrastWhiteOnBlack extends InnerTheme {
+        public ModenaHighContrastWhiteOnBlack(ModenaGroup group) {
+            super("title.theme.modena_high_contrast_white_on_black","com/oracle/javafx/scenebuilder/ext/theme/modena/modena-highContrast-whiteOnBlack.css", List.of(), group);
+        }
+    }
 
-	@Component
-	@Lazy
-	@ThemeMeta(name = "title.theme.modena_high_contrast_yellow_on_black", group = ModenaGroup.class)
-	public static class ModenaHighContrastYellowOnBlack extends AbstractTheme {
-		public ModenaHighContrastYellowOnBlack() {
-			super("com/oracle/javafx/scenebuilder/ext/theme/modena/modena-highContrast-yellowOnBlack.css",
-					Arrays.asList());
-		}
-	}
+    @ApplicationSingleton
+    public static class ModenaHighContrastYellowOnBlack extends InnerTheme {
+        public ModenaHighContrastYellowOnBlack(ModenaGroup group) {
+            super("title.theme.modena_high_contrast_yellow_on_black","com/oracle/javafx/scenebuilder/ext/theme/modena/modena-highContrast-yellowOnBlack.css", List.of(), group);
+        }
+    }
 
-	@Component
-	@Lazy
-	@ThemeMeta(name = "title.theme.modena_touch_high_contrast_black_on_white", group = ModenaGroup.class)
-	public static class ModenaTouchHighContrastBlackOnWhite extends AbstractTheme {
-		public ModenaTouchHighContrastBlackOnWhite() {
-			super("com/oracle/javafx/scenebuilder/ext/theme/modena/modena-touch-highContrast-blackOnWhite.css",
-					Arrays.asList());
-		}
-	}
+    @ApplicationSingleton
+    public static class ModenaTouchHighContrastBlackOnWhite extends InnerTheme {
+        public ModenaTouchHighContrastBlackOnWhite(ModenaGroup group) {
+            super("title.theme.modena_touch_high_contrast_black_on_white","com/oracle/javafx/scenebuilder/ext/theme/modena/modena-touch-highContrast-blackOnWhite.css", List.of(), group);
+        }
+    }
 
-	@Component
-	@Lazy
-	@ThemeMeta(name = "title.theme.modena_touch_high_contrast_white_on_black", group = ModenaGroup.class)
-	public static class ModenaTouchHighContrastWhiteOnBlack extends AbstractTheme {
-		public ModenaTouchHighContrastWhiteOnBlack() {
-			super("com/oracle/javafx/scenebuilder/ext/theme/modena/modena-touch-highContrast-whiteOnBlack.css",
-					Arrays.asList());
-		}
-	}
+    @ApplicationSingleton
+    public static class ModenaTouchHighContrastWhiteOnBlack extends InnerTheme {
+        public ModenaTouchHighContrastWhiteOnBlack(ModenaGroup group) {
+            super("title.theme.modena_touch_high_contrast_white_on_black","com/oracle/javafx/scenebuilder/ext/theme/modena/modena-touch-highContrast-whiteOnBlack.css", List.of(), group);
+        }
+    }
 
-	@Component
-	@Lazy
-	@ThemeMeta(name = "title.theme.modena_touch_high_contrast_yellow_on_black", group = ModenaGroup.class)
-	public static class ModenaTouchHighContrastYellowOnBlack extends AbstractTheme {
-		public ModenaTouchHighContrastYellowOnBlack() {
-			super("com/oracle/javafx/scenebuilder/ext/theme/modena/modena-touch-highContrast-yellowOnBlack.css",
-					Arrays.asList());
-		}
-	}
+    @ApplicationSingleton
+    public static class ModenaTouchHighContrastYellowOnBlack extends InnerTheme {
+        public ModenaTouchHighContrastYellowOnBlack(ModenaGroup group) {
+            super("title.theme.modena_touch_high_contrast_yellow_on_black","com/oracle/javafx/scenebuilder/ext/theme/modena/modena-touch-highContrast-yellowOnBlack.css", List.of(), group);
+        }
+    }
 
-	@Component
-	@Lazy
-	@ThemeMeta(name = "title.theme.caspian", group = CaspianGroup.class)
-	public static class Caspian extends AbstractTheme {
-		public Caspian() {
-			super("com/sun/javafx/scene/control/skin/caspian/caspian.bss", Arrays.asList());
-		}
-	}
+    @ApplicationSingleton
+    public static class Caspian extends InnerTheme {
+        public Caspian(CaspianGroup group) {
+            super("title.theme.caspian","com/sun/javafx/scene/control/skin/caspian/caspian.bss", List.of(), group);
+        }
+    }
 
-	@Component
-	@Lazy
-	@ThemeMeta(name = "title.theme.caspian_high_contrast", group = CaspianGroup.class)
-	public static class CaspianHighContrast extends AbstractTheme {
-		public CaspianHighContrast() {
-			super("com/oracle/javafx/scenebuilder/ext/theme/caspian/caspian-highContrast.css",
-					Arrays.asList());
-		}
-	}
+    @ApplicationSingleton
+    public static class CaspianHighContrast extends InnerTheme {
+        public CaspianHighContrast(CaspianGroup group) {
+            super("title.theme.caspian_high_contrast","com/oracle/javafx/scenebuilder/ext/theme/caspian/caspian-highContrast.css", List.of(), group);
+        }
+    }
 
-	@Component
-	@Lazy
-	@ThemeMeta(name = "title.theme.caspian_embedded", group = CaspianGroup.class)
-	public static class CaspianEmbedded extends AbstractTheme {
-		public CaspianEmbedded() {
-			super("com/oracle/javafx/scenebuilder/ext/theme/caspian/caspian-embedded.css",
-					Arrays.asList());
-		}
-	}
+    @ApplicationSingleton
+    public static class CaspianEmbedded extends InnerTheme {
+        public CaspianEmbedded(CaspianGroup group) {
+            super("title.theme.caspian_embedded","com/oracle/javafx/scenebuilder/ext/theme/caspian/caspian-embedded.css", List.of(), group);
+        }
+    }
 
-	@Component
-	@Lazy
-	@ThemeMeta(name = "title.theme.caspian_embedded_high_contrast", group = CaspianGroup.class)
-	public static class CaspianEmbeddedHighContrast extends AbstractTheme {
-		public CaspianEmbeddedHighContrast() {
-			super("com/oracle/javafx/scenebuilder/ext/theme/caspian/caspian-embedded-highContrast.css",
-					Arrays.asList());
-		}
-	}
+    @ApplicationSingleton
+    public static class CaspianEmbeddedHighContrast extends InnerTheme {
+        public CaspianEmbeddedHighContrast(CaspianGroup group) {
+            super("title.theme.caspian_embedded_high_contrast","com/oracle/javafx/scenebuilder/ext/theme/caspian/caspian-embedded-highContrast.css", List.of(), group);
+        }
+    }
 
-	@Component
-	@Lazy
-	@ThemeMeta(name = "title.theme.caspian_embedded_qvga", group = CaspianGroup.class)
-	public static class CaspianEmbeddedQvga extends AbstractTheme {
-		public CaspianEmbeddedQvga() {
-			super("com/oracle/javafx/scenebuilder/ext/theme/caspian/caspian-embedded-qvga.css",
-					Arrays.asList());
-		}
-	}
+    @ApplicationSingleton
+    public static class CaspianEmbeddedQvga extends InnerTheme {
+        public CaspianEmbeddedQvga(CaspianGroup group) {
+            super("title.theme.caspian_embedded_qvga","com/oracle/javafx/scenebuilder/ext/theme/caspian/caspian-embedded-qvga.css", List.of(), group);
+        }
+    }
 
-	@Component
-	@Lazy
-	@ThemeMeta(name = "title.theme.caspian_embedded_qvga_high_contrast", group = CaspianGroup.class)
-	public static class CaspianEmbeddedQvgaHighContrast extends AbstractTheme {
-		public CaspianEmbeddedQvgaHighContrast() {
-			super("com/oracle/javafx/scenebuilder/ext/theme/caspian/caspian-embedded-qvga-highContrast.css",
-					Arrays.asList());
-		}
-	}
+    @ApplicationSingleton
+    public static class CaspianEmbeddedQvgaHighContrast extends InnerTheme {
+        public CaspianEmbeddedQvgaHighContrast(CaspianGroup group) {
+            super("title.theme.caspian_embedded_qvga_high_contrast","com/oracle/javafx/scenebuilder/ext/theme/caspian/caspian-embedded-qvga-highContrast.css", List.of(), group);
+        }
+    }
 
+    private static class InnerTheme implements Theme {
+        private final String name;
+        private final String userAgentStylesheet;
+        private final List<String> stylesheets;
+        private final ThemeGroup group;
 
+        public InnerTheme(String name, String userAgentStylesheet, List<String> stylesheets, ThemeGroup group) {
+            this.name = name;
+            this.userAgentStylesheet = userAgentStylesheet;
+            this.stylesheets = stylesheets;
+            this.group = group;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public String getUserAgentStylesheet() {
+            return userAgentStylesheet;
+        }
+
+        @Override
+        public List<String> getStylesheets() {
+            return stylesheets;
+        }
+
+        @Override
+        public ThemeGroup getGroup() {
+            return group;
+        }
+
+    }
+
+    private static class InnerGroup implements ThemeGroup {
+        private final String name;
+
+        public InnerGroup(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+    }
 
 }

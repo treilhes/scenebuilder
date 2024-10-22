@@ -33,10 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.node;
 
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.util.javafx.RegionRectangle;
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractShadow;
@@ -48,8 +46,7 @@ import javafx.scene.transform.Transform;
  *
  * 
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class NodeShadow extends AbstractShadow<Node> {
 
     private RegionRectangle shadow;

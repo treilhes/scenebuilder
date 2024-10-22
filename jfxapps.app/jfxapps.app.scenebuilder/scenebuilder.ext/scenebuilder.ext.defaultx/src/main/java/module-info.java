@@ -44,9 +44,9 @@ open module scenebuilder.ext.defaultx {
     exports com.oracle.javafx.scenebuilder.ext.actions;
     exports com.oracle.javafx.scenebuilder.ext.theme.document;
 
-    //requires scenebuilder.starter;
+
     requires transitive scenebuilder.api;
-    requires transitive jfxapps.core.api;
+    requires scenebuilder.app.starter;
 
     provides Extension with BasicThemeAndResourceExtension;
 }

@@ -46,6 +46,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.ContextConfiguration;
+import com.gluonhq.jfxapps.boot.api.context.ContextCustomizer;
 import com.gluonhq.jfxapps.boot.api.context.ContextManager;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.MultipleProgressListener;
@@ -84,7 +86,14 @@ public class ContextManagerImpl implements ContextManager {
     }
 
     @Override
-    public JfxAppContext create(UUID parentContextId, Layer layer, Set<Class<?>> classes,Set<Class<?>> deportedClasses, List<Object> singletonInstances, MultipleProgressListener progressListener) {
+    public JfxAppContext create(ContextConfiguration configuration) {
+
+        UUID parentContextId = configuration.getParentContextId();
+        Layer layer = configuration.getLayer();
+        Set<Class<?>> classes = configuration.getClasses();
+        Set<Class<?>> deportedClasses = configuration.getDeportedClasses();
+        List<Object> singletonInstances = configuration.getSingletonInstances();
+        MultipleProgressListener progressListener = configuration.getProgressListener();
 
         JfxAppContextImpl parent = uuidToContexts.get(parentContextId);
 
@@ -103,6 +112,12 @@ public class ContextManagerImpl implements ContextManager {
         }
 
         JfxAppContextImpl context = new JfxAppContextImpl(uuid, loader);
+
+        uuidToContexts.put(uuid, context);
+
+        if (moduleLayer != null) {
+            layerToContexts.put(moduleLayer, context);
+        }
 
         if (parent != null) {
             context.setParent(parent);
@@ -128,6 +143,19 @@ public class ContextManagerImpl implements ContextManager {
             singletonInstances.forEach(context::registerSingleton);
         }
 
+        for (var cls : context.getRegisteredClasses()) {
+            if (ContextCustomizer.class.isAssignableFrom(cls)) {
+                logger.info("Cutomizing class {}", cls);
+                try {
+                    ContextCustomizer customizer = (ContextCustomizer) cls.getDeclaredConstructor().newInstance();
+                    customizer.customize(classes, context);
+                } catch (Exception e) {
+                    logger.error("Error customizing class {}", cls, e);
+                }
+            }
+
+        }
+
         context.refresh();
         context.start();
 
@@ -136,12 +164,6 @@ public class ContextManagerImpl implements ContextManager {
 
         if (logger.isDebugEnabled()) {
             Arrays.stream(context.getBeanDefinitionNames()).sorted().forEach(c -> logger.debug("Bean {}", c));
-        }
-
-        uuidToContexts.put(uuid, context);
-
-        if (moduleLayer != null) {
-            layerToContexts.put(moduleLayer, context);
         }
 
         return context;

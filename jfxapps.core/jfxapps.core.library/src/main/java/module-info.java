@@ -40,13 +40,13 @@ open module jfxapps.core.library {
     exports com.gluonhq.jfxapps.core.library;
     exports com.gluonhq.jfxapps.core.library.store;
     exports com.gluonhq.jfxapps.core.library.util;
-    exports com.gluonhq.jfxapps.core.library.preferences.global;
+    exports com.gluonhq.jfxapps.core.library.preference;
 
     requires jfxapps.core.starter;
 
     requires jfxapps.core.extension.store;
     requires jfxapps.core.filesystem;
-    requires java.compiler;
+
 
     provides Extension with LibraryExtension;
 }

@@ -33,17 +33,14 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.imageview;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetProvider;
 
 import javafx.scene.image.ImageView;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public final class ImageViewDropTargetProvider extends AbstractDropTargetProvider {
 
     private final ImageViewDropTarget.Factory imageViewDropTargetFactory;

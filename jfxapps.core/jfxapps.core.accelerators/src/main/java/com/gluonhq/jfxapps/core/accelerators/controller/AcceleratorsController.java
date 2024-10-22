@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,10 +44,10 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
-import com.gluonhq.jfxapps.core.accelerators.preferences.global.AcceleratorsMapPreference;
-import com.gluonhq.jfxapps.core.accelerators.preferences.global.FocusedAcceleratorsMapPreference;
+import com.gluonhq.jfxapps.core.accelerators.preference.AcceleratorsMapPreference;
+import com.gluonhq.jfxapps.core.accelerators.preference.FocusedAcceleratorsMapPreference;
 import com.gluonhq.jfxapps.core.api.action.Action;
-import com.gluonhq.jfxapps.core.api.preferences.Preference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
 import com.gluonhq.jfxapps.core.api.shortcut.Accelerator;
 import com.gluonhq.jfxapps.core.api.shortcut.AcceleratorProvider;
 import com.gluonhq.jfxapps.core.api.shortcut.Accelerators;
@@ -83,7 +83,7 @@ public class AcceleratorsController implements Accelerators {
     private static final Logger logger = LoggerFactory.getLogger(AcceleratorsController.class);
 
     private final AcceleratorsMapPreference acceleratorsMapPreference;
-    private final FocusedAcceleratorsMapPreference.Factory focusedAcceleratorsMapPreferenceFactory;
+    private final FocusedAcceleratorsMapPreference focusedAcceleratorsMapPreference;
     private final Optional<List<AcceleratorProvider>> acceleratorProviders;
 
     private ApplicationInstanceEvents documentManager;
@@ -96,11 +96,11 @@ public class AcceleratorsController implements Accelerators {
             ApplicationInstanceEvents documentManager,
             MainInstanceWindow documentWindow,
             AcceleratorsMapPreference acceleratorsMapPreference,
-            FocusedAcceleratorsMapPreference.Factory focusedAcceleratorsMapPreferenceFactory,
+            FocusedAcceleratorsMapPreference focusedAcceleratorsMapPreference,
             Optional<List<AcceleratorProvider>> acceleratorProviders) {
         super();
         this.acceleratorsMapPreference = acceleratorsMapPreference;
-        this.focusedAcceleratorsMapPreferenceFactory = focusedAcceleratorsMapPreferenceFactory;
+        this.focusedAcceleratorsMapPreference = focusedAcceleratorsMapPreference;
         this.acceleratorProviders = acceleratorProviders;
         this.documentManager = documentManager;
         this.documentWindow = documentWindow;
@@ -138,9 +138,12 @@ public class AcceleratorsController implements Accelerators {
                     .computeIfAbsent(accelerator.getAcceleratorTarget(), (k) -> new HashMap<>())
                     .computeIfAbsent(accelerator.getAction(), (k) -> new ArrayList<>()).add(keyCombination);
 
-            FocusedAcceleratorsMapPreference focusedMapPreference = focusedAcceleratorsMapPreferenceFactory.get(accelerator.getAcceleratorTarget());
+            var focusedMapPreference = focusedAcceleratorsMapPreference.getValue()
+                    .computeIfAbsent(accelerator.getAcceleratorTarget(), k -> FXCollections.observableHashMap());
 
-            focusedMapPreference.getValue().computeIfAbsent(accelerator.getAction().getClass(), k -> FXCollections.observableArrayList()).add(keyCombination);
+            focusedMapPreference
+                    .computeIfAbsent(accelerator.getAction().getClass(), k -> FXCollections.observableArrayList())
+                    .add(keyCombination);
 
         } else {
             defaultGlobalAccelerators.computeIfAbsent(accelerator.getAction(), (k) -> new ArrayList<>())
@@ -182,20 +185,20 @@ public class AcceleratorsController implements Accelerators {
         });
 
         if (focusedPart != null) { // some view has the focus, we override default accelerators with specific ones if any
-            List<Class<?>> hierarchy = new ArrayList<>();
+            var hierarchy = new ArrayList<Class<? extends AbstractCommonUiController>>();
             Class<?> cls = focusedPart.getClass();
             while (cls != null && AbstractCommonUiController.class.isAssignableFrom(cls)) {
-                hierarchy.add(0, cls);
+                hierarchy.add(0, (Class<? extends AbstractCommonUiController>)cls);
                 cls = cls.getSuperclass();
             }
 
-            for (Class<?> hierarchyClass:hierarchy) {
-                final FocusedAcceleratorsMapPreference focusedMapPreference = focusedAcceleratorsMapPreferenceFactory.get(hierarchyClass);
+            for (var hierarchyClass:hierarchy) {
+                final var focusedMapPreference = focusedAcceleratorsMapPreference.getValue().computeIfAbsent(hierarchyClass, k -> FXCollections.observableHashMap());
                 final Map<Action, List<KeyCombination>> focusedAccelerators = defaultFocusedAccelerators.get(hierarchyClass);
 
                 if (focusedMapPreference != null && focusedAccelerators != null) {
                     focusedAccelerators.keySet().forEach(action -> {
-                        List<KeyCombination> keys = focusedMapPreference.getValue().get(action.getClass());
+                        List<KeyCombination> keys = focusedMapPreference.get(action.getClass());
                         if (keys != null) {
                             keys.forEach(key -> {
                                 ActionRunner runner = new ActionRunner(action);
@@ -250,15 +253,16 @@ public class AcceleratorsController implements Accelerators {
         }
 
         Class<? extends Action> actionClass = action.getClass();
-        FocusedAcceleratorsMapPreference focusedMapPreference = focusedAcceleratorsMapPreferenceFactory.get(focusedClass);
+        final var focusedMapPreference = focusedAcceleratorsMapPreference.getValue().computeIfAbsent(focusedClass,
+                k -> FXCollections.observableHashMap());
 
         final ObservableList<KeyCombination> accelerators;
-        if (!focusedMapPreference.getValue().containsKey(actionClass)) {
+        if (!focusedMapPreference.containsKey(actionClass)) {
             accelerators = FXCollections.observableArrayList();
-            focusedMapPreference.getValue().put(actionClass, accelerators);
+            focusedMapPreference.put(actionClass, accelerators);
 
         } else {
-            accelerators = focusedMapPreference.getValue().get(actionClass);
+            accelerators = focusedMapPreference.get(actionClass);
         }
         if (accelerators != null) {
             //menuItem.setAccelerator(accelerators.get(0));

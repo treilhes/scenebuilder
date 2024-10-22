@@ -36,42 +36,35 @@ package com.gluonhq.jfxapps.core.preferences.controller;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.core.api.preferences.DocumentPreferencesNode;
-import com.gluonhq.jfxapps.core.api.preferences.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
 
 /**
  * Defines preferences for Scene Builder App.
  */
 @ApplicationSingleton
-public class PreferencesController  {
+public class PreferencesController {
 
     private final List<ManagedGlobalPreference> preferences;
 
-	/***************************************************************************
-     *                                                                         *
-     * Constructors                                                            *
-     *                                                                         *
+    /***************************************************************************
+     * * Constructors * *
      **************************************************************************/
 
-    private PreferencesController(
-    		DocumentPreferencesNode documentPreferenceNode,
-    		List<ManagedGlobalPreference> preferences
-    	) {
-    	this.preferences = preferences;
+    private PreferencesController(List<ManagedGlobalPreference> preferences) {
+        this.preferences = preferences;
 
-        documentPreferenceNode.cleanupCorruptedNodes();
         readFromJavaPreferences();
     }
 
     public void readFromJavaPreferences() {
-    	preferences.forEach((p) -> p.readFromJavaPreferences());
+        preferences.forEach((p) -> p.load());
     }
 
     public void writeToJavaPreferences() {
-    	preferences.forEach((p) -> p.writeToJavaPreferences());
+        preferences.forEach((p) -> p.save());
     }
 
-    //TODO what to do with that?
+    // TODO what to do with that?
     public void temp() {
         // Document size
 //        if (getRootContainerHeight() == -1) {

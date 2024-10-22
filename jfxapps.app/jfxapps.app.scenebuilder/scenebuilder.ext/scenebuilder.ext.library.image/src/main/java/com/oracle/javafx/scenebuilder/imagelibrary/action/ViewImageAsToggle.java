@@ -41,8 +41,7 @@ import javafx.scene.control.ToggleGroup;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 public class ViewImageAsToggle extends ToggleGroup {
 
 }

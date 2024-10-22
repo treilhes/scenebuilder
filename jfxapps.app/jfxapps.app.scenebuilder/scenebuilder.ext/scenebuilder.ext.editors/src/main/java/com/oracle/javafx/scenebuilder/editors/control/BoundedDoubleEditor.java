@@ -72,8 +72,7 @@ import javafx.scene.layout.StackPane;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class BoundedDoubleEditor extends AutoSuggestEditor {
 
     @FXML

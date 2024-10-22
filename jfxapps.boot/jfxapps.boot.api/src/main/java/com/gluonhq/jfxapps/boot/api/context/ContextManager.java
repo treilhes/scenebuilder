@@ -33,11 +33,7 @@
  */
 package com.gluonhq.jfxapps.boot.api.context;
 
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
-
-import com.gluonhq.jfxapps.boot.api.layer.Layer;
 
 public interface ContextManager {
 
@@ -47,8 +43,7 @@ public interface ContextManager {
 
     boolean exists(UUID contextId);
 
-    JfxAppContext create(UUID parentContextId, Layer layer, Set<Class<?>> classes, Set<Class<?>> deportedClasses,
-            List<Object> singletonInstances, MultipleProgressListener progressListener);
+    JfxAppContext create(ContextConfiguration configuration);
 
     void clear();
 

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,88 +36,85 @@ package com.oracle.javafx.scenebuilder.ext.theme.document;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups;
-import com.gluonhq.jfxapps.core.api.preferences.DefaultPreferenceGroups.PreferenceGroup;
-import com.gluonhq.jfxapps.core.api.preferences.ManagedDocumentPreference;
-import com.gluonhq.jfxapps.core.api.preferences.PreferenceEditorFactory;
-import com.gluonhq.jfxapps.core.api.preferences.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preferences.UserPreference;
-import com.gluonhq.jfxapps.core.api.preferences.type.ObjectPreference;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups;
+import com.gluonhq.jfxapps.core.api.preference.ManagedDocumentPreference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceEditorFactory;
+import com.gluonhq.jfxapps.core.api.preference.PreferencesContext;
+import com.gluonhq.jfxapps.core.api.preference.UserPreference;
+import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
+import com.gluonhq.jfxapps.core.api.preference.type.ObjectPreference;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
+import com.oracle.javafx.scenebuilder.api.theme.ThemeManager;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeProvider;
 
 import javafx.scene.Parent;
 
-@Component("themeDocumentPreference")
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
-public class ThemeDocumentPreference extends ObjectPreference<Class<? extends Theme>> implements ManagedDocumentPreference, UserPreference<Class<? extends Theme>> {
+@ApplicationInstanceSingleton
+public class ThemeDocumentPreference extends ObjectPreference<Theme>
+        implements ManagedDocumentPreference, UserPreference<Theme> {
 
     /***************************************************************************
-     *                                                                         *
-     * Static fields                                                           *
-     *                                                                         *
+     * * Static fields * *
      **************************************************************************/
-    public static final String PREFERENCE_KEY = "theme"; //NOCHECK
+    public static final String PREFERENCE_KEY = "theme"; // NOCHECK
 
-    private final List<Class<? extends Theme>> themeClasses;
+    private final I18N i18n;
+    private final ThemeManager themeManager;
 
-	private final PreferenceEditorFactory preferenceEditorFactory;
+    private final PreferenceEditorFactory preferenceEditorFactory;
 
-	public ThemeDocumentPreference(
-			@Autowired PreferencesContext preferencesContext,
-			@Autowired PreferenceEditorFactory preferenceEditorFactory,
-			@Autowired com.oracle.javafx.scenebuilder.ext.theme.global.ThemePreference defaultThemePreference,
-			@Autowired List<ThemeProvider> themeProviders
-			) {
-		super(preferencesContext, PREFERENCE_KEY, defaultThemePreference.getValue());
-		this.preferenceEditorFactory = preferenceEditorFactory;
-		themeClasses = new ArrayList<>();
-		themeProviders.forEach(tp -> themeClasses.addAll(tp.themes()));
-	}
+    //@formatter:off
+    public ThemeDocumentPreference(
+            I18N i18n,
+            PreferencesContext preferencesContext,
+            PreferenceEditorFactory preferenceEditorFactory,
+            com.oracle.javafx.scenebuilder.ext.theme.global.ThemePreference defaultThemePreference,
+            ThemeManager themeManager) {
+        //@formatter:on
+        super(preferencesContext, PREFERENCE_KEY, defaultThemePreference.getValue());
+        this.i18n = i18n;
+        this.preferenceEditorFactory = preferenceEditorFactory;
+        this.themeManager = themeManager;
+    }
 
-	@Override
-	protected void write() {
-		getNode().put(getName(), getValue().getName());
-	}
+    @Override
+    protected void write() {
+        getNode().put(getName(), getValue().getName());
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void read() {
-		assert getName() != null;
-		String clsName = getNode().get(getName(), null);
-		try {
-			setValue(clsName == null ? getDefault() : (Class<? extends Theme>) Class.forName(clsName));
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void read() {
+        assert getName() != null;
+        String clsName = getNode().get(getName(), null);
+        try {
+            setValue(clsName == null ? getDefault() : (Class<? extends Theme>) Class.forName(clsName));
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	@Override
-	public String getLabelI18NKey() {
-		return "prefs.document.theme";
-	}
+    @Override
+    public String getLabelI18NKey() {
+        return "prefs.document.theme";
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Parent getEditor() {
-		return preferenceEditorFactory.newChoiceFieldEditor(this,
-				themeClasses.toArray((Class<? extends Theme>[])new Class[0]), (c) -> Theme.name(c));
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public Parent getEditor() {
+        return preferenceEditorFactory.newChoiceFieldEditor(this, themeManager.getAll().toArray(new Theme[0]), (t) -> i18n.getStringOrDefault(t.getName(), t.getName()));
+    }
 
-	@Override
-	public PreferenceGroup getGroup() {
-		return DefaultPreferenceGroups.GLOBAL_GROUP_D;
-	}
+    @Override
+    public PreferenceGroup getGroup() {
+        return DefaultPreferenceGroups.GLOBAL_GROUP_D;
+    }
 
-	@Override
-	public String getOrderKey() {
-		return getGroup().getOrderKey() + "_A";
-	}
+    @Override
+    public String getOrderKey() {
+        return getGroup().getOrderKey() + "_A";
+    }
 
 }

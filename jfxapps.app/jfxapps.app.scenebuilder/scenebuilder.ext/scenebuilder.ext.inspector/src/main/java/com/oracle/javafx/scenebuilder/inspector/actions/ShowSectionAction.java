@@ -41,8 +41,7 @@ import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.oracle.javafx.scenebuilder.api.Inspector;
 import com.oracle.javafx.scenebuilder.api.Inspector.SectionId;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
+@ApplicationInstanceSingleton
 @Lazy
 @ActionMeta(
 		nameKey = "action.name.show.edited",

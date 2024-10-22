@@ -583,7 +583,7 @@ public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.contro
         @Override
         public void handle(ActionEvent t) {
             context.getApplicationInstanceExecutor().setCurrentScope(dwc);// TODO realy necessary ?, check if onFocus is not sufficient
-            sceneBuilderManager.documentScoped().onNext(dwc);
+            sceneBuilderManager.documentScoped().set(dwc);
             dwc.getDocumentWindow().getStage().toFront();
         }
     }

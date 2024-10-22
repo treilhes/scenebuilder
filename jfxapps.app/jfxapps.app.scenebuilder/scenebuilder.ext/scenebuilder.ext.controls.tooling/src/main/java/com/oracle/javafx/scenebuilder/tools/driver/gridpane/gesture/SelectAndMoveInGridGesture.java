@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.editor.EditorPlatform;
 import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseDragGesture;
 import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
@@ -54,8 +55,7 @@ import javafx.scene.layout.GridPane;
  *
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
 
     private final static Logger logger = LoggerFactory.getLogger(SelectAndMoveInGridGesture.class);

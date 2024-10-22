@@ -57,8 +57,7 @@ import javafx.scene.effect.Effect;
 /**
  * Popup editor for the Effect property.
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 public class EffectPopupEditor extends PopupEditor {
 

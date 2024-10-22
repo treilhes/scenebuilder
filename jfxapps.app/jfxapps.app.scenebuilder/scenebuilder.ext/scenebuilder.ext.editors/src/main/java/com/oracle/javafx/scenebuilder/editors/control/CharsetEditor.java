@@ -56,8 +56,7 @@ import javafx.event.EventHandler;
 /**
  * Editor for setting a charset property of an included element.
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class CharsetEditor extends AutoSuggestEditor {
 
     private final Map<String, Charset> availableCharsets;

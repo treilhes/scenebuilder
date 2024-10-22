@@ -55,8 +55,7 @@ import com.oracle.javafx.scenebuilder.api.editors.ApplicationInstanceWindow;
 import javafx.scene.Node;
 import javafx.scene.control.TextInputControl;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 @Lazy
 @ActionMeta(
         nameKey = "action.name.show.about",

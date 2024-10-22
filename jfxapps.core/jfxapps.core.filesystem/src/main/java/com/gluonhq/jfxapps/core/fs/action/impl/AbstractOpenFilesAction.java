@@ -51,14 +51,14 @@ import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
+import com.gluonhq.jfxapps.core.fs.controller.RecentItemsController;
 
 public abstract class AbstractOpenFilesAction extends AbstractAction {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractOpenFilesAction.class);
 
     private final Dialog dialog;
-    private final RecentItemsPreference recentItemsPreference;
+    private final RecentItemsController recentItems;
     private final InstancesManager main;
 
     private final JfxAppPlatform jfxAppPlatform;
@@ -70,13 +70,13 @@ public abstract class AbstractOpenFilesAction extends AbstractAction {
             ActionExtensionFactory extensionFactory,
             Dialog dialog,
             InstancesManager main,
-            RecentItemsPreference recentItemsPreference) {
+            RecentItemsController recentItems) {
      // @formatter:on
         super(i18n, extensionFactory);
         this.jfxAppPlatform = jfxAppPlatform;
         this.dialog = dialog;
         this.main = main;
-        this.recentItemsPreference = recentItemsPreference;
+        this.recentItems = recentItems;
     }
 
 
@@ -136,7 +136,7 @@ public abstract class AbstractOpenFilesAction extends AbstractAction {
                 switch (exceptions.size()) {
                     case 0: { // Good
                         // Update recent items with opened files
-                        recentItemsPreference.addRecentItems(fxmlFiles);
+                        recentItems.addRecentItems(fxmlFiles);
                         break;
                     }
                     case 1: {

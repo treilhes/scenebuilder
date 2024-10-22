@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,8 +34,11 @@
 package com.gluonhq.jfxapps.core.api.template;
 
 import java.net.URL;
+import java.util.UUID;
 
 public interface Template {
+
+    UUID getId();
 
     String getOrderKey();
 
@@ -47,5 +51,7 @@ public interface Template {
     URL getIconUrl();
 
     URL getIconX2Url();
+
+    UUID getDefaultThemeId();
 
 }

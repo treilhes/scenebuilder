@@ -64,8 +64,7 @@ import javafx.scene.layout.BorderPane;
 /**
  *
  */
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public final class HierarchyDropTarget extends AbstractDropTarget {
 
     private final FXOMObjectMask.Factory designMaskFactory;
