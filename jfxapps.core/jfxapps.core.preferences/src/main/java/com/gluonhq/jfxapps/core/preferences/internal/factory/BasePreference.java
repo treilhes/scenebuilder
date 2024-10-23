@@ -37,7 +37,6 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.framework.AopContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
@@ -167,4 +166,5 @@ public class BasePreference<T> implements Preference<T> {
         T value = jsonMapper != null ? (T) jsonMapper.fromJson(json, type) : (T) objectMapper.readValue(json, type);
         setValue(value);
     }
+
 }

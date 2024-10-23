@@ -188,7 +188,10 @@ public class PreferenceFactory implements BeanClassLoaderAware, BeanFactoryAware
         // TODO: check if this realy needed
         result.addAdvisor(ExposeInvocationInterceptor.ADVISOR);
 
-        result.addAdvice(new ImplementationInterceptor(target));
+        PreferenceFactory.class.getModule().addReads(preferenceInterface.getModule());
+
+        result.addAdvice(new DefaultMethodInterceptor());
+        result.addAdvice(new ImplementationInterceptor(target, preferenceInterface));
 
         T preference = (T) result.getProxy(preferenceInterface.getClassLoader());
 
@@ -205,9 +208,11 @@ public class PreferenceFactory implements BeanClassLoaderAware, BeanFactoryAware
     static class ImplementationInterceptor implements MethodInterceptor {
 
         private final BasePreference<?> base;
+        private Class<?> preferenceInterface;
 
-        public ImplementationInterceptor(BasePreference<?> base) {
+        public ImplementationInterceptor(BasePreference<?> base, Class<?> preferenceInterface) {
             this.base = base;
+            this.preferenceInterface = preferenceInterface;
         }
 
         @Nullable

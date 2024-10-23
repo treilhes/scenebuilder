@@ -42,8 +42,15 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
-        
-                <!-- https://mvnrepository.com/artifact/info.picocli/picocli -->
+
+        <!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/info.picocli/picocli -->
         <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
