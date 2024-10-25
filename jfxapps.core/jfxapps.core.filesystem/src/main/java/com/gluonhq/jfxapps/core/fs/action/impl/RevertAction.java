@@ -33,6 +33,8 @@
  */
 package com.gluonhq.jfxapps.core.fs.action.impl;
 
+import org.springframework.context.annotation.Lazy;
+
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
@@ -64,7 +66,7 @@ public class RevertAction extends AbstractAction {
     public RevertAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            ApplicationInstance document,
+            @Lazy ApplicationInstance document,
             ApplicationInstanceEvents documentManager,
             Provider<MainInstanceWindow> documentWindow,
             Dialog dialog,

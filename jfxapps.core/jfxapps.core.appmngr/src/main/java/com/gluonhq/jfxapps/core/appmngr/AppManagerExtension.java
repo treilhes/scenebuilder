@@ -39,6 +39,8 @@ import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.appmngr.action.ApplicationActionFactoryImpl;
+import com.gluonhq.jfxapps.core.appmngr.action.impl.CloseFileAction;
+import com.gluonhq.jfxapps.core.appmngr.action.impl.QuitScenebuilderAction;
 import com.gluonhq.jfxapps.core.appmngr.impl.CommandHandlerImpl;
 import com.gluonhq.jfxapps.core.appmngr.impl.InstancesControllerImpl;
 
@@ -67,7 +69,9 @@ public class AppManagerExtension implements OpenExtension {
         return Arrays.asList(
                 ApplicationActionFactoryImpl.class,
                 CommandHandlerImpl.class,
-                InstancesControllerImpl.class
+                InstancesControllerImpl.class,
+                CloseFileAction.class,
+                QuitScenebuilderAction.class
             );
      // @formatter:on
     }

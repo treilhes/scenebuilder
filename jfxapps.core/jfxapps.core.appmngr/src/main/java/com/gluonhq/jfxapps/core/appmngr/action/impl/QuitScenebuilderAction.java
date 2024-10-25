@@ -53,7 +53,7 @@ import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 
 import javafx.application.Platform;
 
-@ApplicationInstancePrototype
+@ApplicationInstancePrototype("com.gluonhq.jfxapps.core.appmngr.action.impl.QuitScenebuilderAction")
 @ActionMeta(nameKey = "action.name.toggle.dock", descriptionKey = "action.description.toggle.dock")
 public class QuitScenebuilderAction extends AbstractAction {
 

@@ -33,6 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.app.action;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.LayerContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
@@ -65,7 +66,7 @@ public class ShowPreferencesAction extends AbstractAction {
     public ShowPreferencesAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            PrefEditApi prefeditApi) {
+            @LayerContext PrefEditApi prefeditApi) {
         super(i18n, extensionFactory);
         this.prefeditApi = prefeditApi;
     }

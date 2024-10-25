@@ -46,7 +46,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 
-@ApplicationInstancePrototype
+@ApplicationInstancePrototype("com.gluonhq.jfxapps.core.appmngr.action.impl.CloseFileAction")
 @ActionMeta(
         nameKey = "action.name.save",
         descriptionKey = "action.description.save")

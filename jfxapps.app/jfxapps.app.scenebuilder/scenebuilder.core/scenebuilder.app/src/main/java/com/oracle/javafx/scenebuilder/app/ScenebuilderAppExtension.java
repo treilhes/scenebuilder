@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.ext.prefedit.api.PrefEditApi;
 import com.oracle.javafx.scenebuilder.api.SbApiExtension;
 import com.oracle.javafx.scenebuilder.app.action.CloseFileAction;
 import com.oracle.javafx.scenebuilder.app.action.NewAction;
@@ -112,7 +113,7 @@ public class ScenebuilderAppExtension implements OpenExtension {
 
     @Override
     public List<Class<?>> localContextClasses() {
-        return List.of();
+        return List.of(PrefEditApi.class);
     }
 
 }
