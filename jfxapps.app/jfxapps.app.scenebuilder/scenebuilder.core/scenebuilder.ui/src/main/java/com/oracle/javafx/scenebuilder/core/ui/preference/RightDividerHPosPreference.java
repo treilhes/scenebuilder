@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.core.ui.preferences.document;
+package com.oracle.javafx.scenebuilder.core.ui.preference;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
@@ -42,21 +42,20 @@ import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
 //@formatter:off
 @ApplicationInstanceSingleton
 @PreferenceContext(
-        id = "adca465f-fb62-4ada-83e6-aece08c82957",
-        name = BottomDividerVPosPreference.NAME,
-        defaultValueProvider = BottomDividerVPosPreference.DefaultProvider.class,
+        id = "cdca465f-fb62-4ada-83e6-aece08c82957",
+        name = RightDividerHPosPreference.NAME,
+        defaultValueProvider = RightDividerHPosPreference.DefaultProvider.class,
         validator = DividerValueValidator.class)
 //@formatter:on
-public interface BottomDividerVPosPreference extends Preference<Double>, ManagedDocumentPreference {
+public interface RightDividerHPosPreference extends Preference<Double>, ManagedDocumentPreference {
 
-    public static final String NAME = "bottomDividerVPos"; // NOCHECK
-    public static final Double DEFAULT_VALUE = 0.8;
+	public static final String NAME = "rightDividerHPos"; //NOCHECK
+	public static final Double DEFAULT_VALUE = 0.8; //NOCHECK
 
-    public static class DefaultProvider implements DefaultValueProvider<Double> {
+	public static class DefaultProvider implements DefaultValueProvider<Double> {
         @Override
         public Double get() {
             return DEFAULT_VALUE;
         }
     }
-
 }

@@ -37,7 +37,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationConfiguration;
 import com.gluonhq.jfxapps.core.api.preference.PreferenceScan;
-import com.oracle.javafx.scenebuilder.core.ui.preferences.document.BottomDividerVPosPreference;
+import com.oracle.javafx.scenebuilder.core.ui.preference.BottomDividerVPosPreference;
 
 @ApplicationConfiguration
 @Configuration

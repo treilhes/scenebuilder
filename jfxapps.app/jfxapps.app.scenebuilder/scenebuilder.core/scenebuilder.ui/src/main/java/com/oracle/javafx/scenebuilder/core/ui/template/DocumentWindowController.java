@@ -56,9 +56,9 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.util.FXOMDocumentUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.ui.Docks;
-import com.oracle.javafx.scenebuilder.core.ui.preferences.document.BottomDividerVPosPreference;
-import com.oracle.javafx.scenebuilder.core.ui.preferences.document.LeftDividerHPosPreference;
-import com.oracle.javafx.scenebuilder.core.ui.preferences.document.RightDividerHPosPreference;
+import com.oracle.javafx.scenebuilder.core.ui.preference.BottomDividerVPosPreference;
+import com.oracle.javafx.scenebuilder.core.ui.preference.LeftDividerHPosPreference;
+import com.oracle.javafx.scenebuilder.core.ui.preference.RightDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.core.ui.template.InnerDockManager.DividerPosition;
 
 import jakarta.annotation.PostConstruct;

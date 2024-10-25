@@ -60,9 +60,9 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 import com.gluonhq.jfxapps.test.StageBuilder;
 import com.gluonhq.jfxapps.test.StageType;
-import com.oracle.javafx.scenebuilder.core.ui.preferences.document.BottomDividerVPosPreference;
-import com.oracle.javafx.scenebuilder.core.ui.preferences.document.LeftDividerHPosPreference;
-import com.oracle.javafx.scenebuilder.core.ui.preferences.document.RightDividerHPosPreference;
+import com.oracle.javafx.scenebuilder.core.ui.preference.BottomDividerVPosPreference;
+import com.oracle.javafx.scenebuilder.core.ui.preference.LeftDividerHPosPreference;
+import com.oracle.javafx.scenebuilder.core.ui.preference.RightDividerHPosPreference;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;

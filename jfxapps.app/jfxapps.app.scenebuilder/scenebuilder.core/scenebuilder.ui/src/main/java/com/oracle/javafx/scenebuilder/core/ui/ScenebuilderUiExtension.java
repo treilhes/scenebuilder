@@ -47,9 +47,9 @@ import com.oracle.javafx.scenebuilder.core.ui.action.ToggleMinimizeLeftDockActio
 import com.oracle.javafx.scenebuilder.core.ui.action.ToggleMinimizeRightDockAction;
 import com.oracle.javafx.scenebuilder.core.ui.i18n.I18NScenebuilderUiExtension;
 import com.oracle.javafx.scenebuilder.core.ui.menu.MainMenuProvider;
-import com.oracle.javafx.scenebuilder.core.ui.preferences.document.BottomDividerVPosPreference;
-import com.oracle.javafx.scenebuilder.core.ui.preferences.document.LeftDividerHPosPreference;
-import com.oracle.javafx.scenebuilder.core.ui.preferences.document.RightDividerHPosPreference;
+import com.oracle.javafx.scenebuilder.core.ui.preference.BottomDividerVPosPreference;
+import com.oracle.javafx.scenebuilder.core.ui.preference.LeftDividerHPosPreference;
+import com.oracle.javafx.scenebuilder.core.ui.preference.RightDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.core.ui.settings.WindowIconSetting;
 import com.oracle.javafx.scenebuilder.core.ui.template.DocumentWindowController;
 
