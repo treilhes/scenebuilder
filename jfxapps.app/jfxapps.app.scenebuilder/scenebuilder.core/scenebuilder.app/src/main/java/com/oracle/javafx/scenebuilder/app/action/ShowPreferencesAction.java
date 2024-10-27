@@ -39,6 +39,7 @@ import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceActionFactory;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
@@ -61,24 +62,23 @@ public class ShowPreferencesAction extends AbstractAction {
 
     public final static String MENU_ID = "showPreferencesMenuItem";
 
-    private final PrefEditApi prefeditApi;
+    private final PreferenceActionFactory preferenceActionFactory;
 
     public ShowPreferencesAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            @LayerContext PrefEditApi prefeditApi) {
+            PreferenceActionFactory preferenceActionFactory) {
         super(i18n, extensionFactory);
-        this.prefeditApi = prefeditApi;
+        this.preferenceActionFactory = preferenceActionFactory;
     }
 
     @Override
     public boolean canPerform() {
-        return true;
+        return preferenceActionFactory.showPreferences().canPerform();
     }
 
     @Override
     public ActionStatus doPerform() {
-        prefeditApi.showPreferenceEditor();
-        return ActionStatus.DONE;
+        return preferenceActionFactory.showPreferences().checkAndPerform();
     }
 }

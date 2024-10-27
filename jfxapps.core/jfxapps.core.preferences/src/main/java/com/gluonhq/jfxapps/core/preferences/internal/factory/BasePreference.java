@@ -41,18 +41,21 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
 import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
 import com.gluonhq.jfxapps.core.api.preference.JsonMapper;
 import com.gluonhq.jfxapps.core.api.preference.Preference;
 import com.gluonhq.jfxapps.core.api.preference.PreferenceEditorFactory;
+import com.gluonhq.jfxapps.core.api.preference.UserPreference;
 import com.gluonhq.jfxapps.core.api.preference.ValueValidator;
 import com.gluonhq.jfxapps.core.preferences.internal.behaviour.PreferenceBehaviour;
 
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Parent;
 
-public class BasePreference<T> implements Preference<T> {
+public class BasePreference<T> implements Preference<T>, UserPreference<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(BasePreference.class);
 
@@ -154,6 +157,7 @@ public class BasePreference<T> implements Preference<T> {
         preferenceBehaviour.write(this);
     }
 
+    @Override
     public PreferenceEditorFactory getPreferenceEditorFactory() {
         return preferenceEditorFactory;
     }
@@ -165,6 +169,26 @@ public class BasePreference<T> implements Preference<T> {
     public void fromJson(String json, JavaType type) throws JsonProcessingException {
         T value = jsonMapper != null ? (T) jsonMapper.fromJson(json, type) : (T) objectMapper.readValue(json, type);
         setValue(value);
+    }
+
+    @Override
+    public PreferenceGroup getGroup() {
+        throw new UnsupportedOperationException("UserPreference.getGroup() must be implemented using default method in interface");
+    }
+
+    @Override
+    public String getOrderKey() {
+        throw new UnsupportedOperationException("UserPreference.getOrderKey() must be implemented using default method in interface");
+    }
+
+    @Override
+    public String getLabelI18NKey() {
+        throw new UnsupportedOperationException("UserPreference.getLabelI18NKey() must be implemented using default method in interface");
+    }
+
+    @Override
+    public Parent getEditor() {
+        throw new UnsupportedOperationException("UserPreference.getEditor() must be implemented using default method in interface");
     }
 
 }

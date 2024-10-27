@@ -95,9 +95,10 @@ public class JavafxThreadClassloaderDispatcherImpl implements JavafxThreadClassl
         assert Platform.isFxApplicationThread();
 
         try {
-            if (windowToClassloader.containsKey(window)) {
-                var loader = windowToClassloader.get(window);
-                log.info("Setting context class loader for window {} to {}", window, loader);
+            Window owner = ownerWindowOf(window);
+            if (windowToClassloader.containsKey(owner)) {
+                var loader = windowToClassloader.get(owner);
+                log.info("Setting context class loader for window {} with owner {} to {}", window, owner, loader);
                 Thread.currentThread().setContextClassLoader(loader);
             } else {
                 throw new IllegalArgumentException("Window not registered: " + window);
@@ -107,16 +108,24 @@ public class JavafxThreadClassloaderDispatcherImpl implements JavafxThreadClassl
         }
     }
 
+    private static Window ownerWindowOf(Window window) {
+        if (window instanceof Stage stage && stage.getOwner() != null) {
+            return ownerWindowOf(stage.getOwner());
+        }
+        return window;
+    }
+
     public <T> T callWith(Window window, Callable<T> callable) throws Exception {
         assert Platform.isFxApplicationThread();
 
         var backup = Thread.currentThread().getContextClassLoader();
 
         try {
-            if (windowToClassloader.containsKey(window)) {
-                var loader = windowToClassloader.get(window);
+            Window owner = ownerWindowOf(window);
+            if (windowToClassloader.containsKey(owner)) {
+                var loader = windowToClassloader.get(owner);
                 if (loader != Thread.currentThread().getContextClassLoader()) {
-                    log.info("Setting context class loader for window {} to {}", window, loader);
+                    log.info("Setting context class loader for window {} with owner {} to {}", window, owner, loader);
                     Thread.currentThread().setContextClassLoader(loader);
                 }
             } else {

@@ -106,7 +106,8 @@ open module jfxapps.core.api {
     requires transitive jfxapps.core.utils;
     requires transitive jfxapps.core.fxom;
     requires transitive jfxapps.core.metadata;
-    //requires transitive jfxapps.core.controls;
+    // required to allow class access from JavafxThreadClassloader
+    requires transitive jfxapps.core.controls;
 
     requires transitive io.reactivex.rxjava3;
     requires transitive org.reactivestreams;

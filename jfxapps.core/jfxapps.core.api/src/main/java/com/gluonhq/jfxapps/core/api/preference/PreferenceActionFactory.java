@@ -31,16 +31,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
-import com.gluonhq.jfxapps.ext.prefedit.PreferenceEditorExtension;
+package com.gluonhq.jfxapps.core.api.preference;
 
-open module jfxapps.ext.preference.editor {
+import com.gluonhq.jfxapps.core.api.action.Action;
 
-    exports com.gluonhq.jfxapps.ext.prefedit.i18n;
-    exports com.gluonhq.jfxapps.ext.prefedit;
-    exports com.gluonhq.jfxapps.ext.prefedit.controller;
-
-    requires transitive jfxapps.core.api;
-
-    provides Extension with PreferenceEditorExtension;
+public interface PreferenceActionFactory {
+    Action showPreferences();
 }

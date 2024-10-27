@@ -31,45 +31,26 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.ext.prefedit;
+package com.gluonhq.jfxapps.core.preferences.action;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.action.Action;
+import com.gluonhq.jfxapps.core.api.action.ActionFactory;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceActionFactory;
 
-import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
-import com.gluonhq.jfxapps.ext.prefedit.actions.ShowPreferencesAction;
-import com.gluonhq.jfxapps.ext.prefedit.controller.PreferencesWindowController;
-import com.gluonhq.jfxapps.ext.prefedit.i18n.I18NPreferenceEditor;
+@ApplicationInstanceSingleton
+public class PreferencesActionFactoryImpl implements PreferenceActionFactory {
 
-public class PreferenceEditorExtension implements OpenExtension {
+    private final ActionFactory actionFactory;
 
-    public static final UUID ID = UUID.fromString("75f8ee7c-f2b6-45ed-934a-8e190d4931f2");
-
-    @Override
-    public UUID getId() {
-        return ID;
+    public PreferencesActionFactoryImpl(ActionFactory actionFactory) {
+        this.actionFactory = actionFactory;
     }
 
 
     @Override
-    public UUID getParentId() {
-        return OpenExtension.ROOT_ID;
+    public Action showPreferences() {
+        return actionFactory.create(ShowPreferencesAction.class);
     }
 
-    @Override
-    public List<Class<?>> localContextClasses() {
-        return List.of();
-    }
-
-    @Override
-    public List<Class<?>> exportedContextClasses() {
-     // @formatter:off
-        return Arrays.asList(
-                PreferencesWindowController.class,
-                ShowPreferencesAction.class,
-                I18NPreferenceEditor.class
-            );
-     // @formatter:on
-    }
 }

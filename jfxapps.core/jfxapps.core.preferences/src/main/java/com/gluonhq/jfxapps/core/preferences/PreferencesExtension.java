@@ -40,9 +40,12 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.core.preferences.action.PreferencesActionFactoryImpl;
+import com.gluonhq.jfxapps.core.preferences.action.ShowPreferencesAction;
 import com.gluonhq.jfxapps.core.preferences.controller.DocumentPreferencesController;
 import com.gluonhq.jfxapps.core.preferences.controller.PreferencesController;
 import com.gluonhq.jfxapps.core.preferences.edit.PreferenceEditorFactoryImpl;
+import com.gluonhq.jfxapps.core.preferences.edit.PreferencesWindowController;
 import com.gluonhq.jfxapps.core.preferences.i18n.I18NPreferences;
 import com.gluonhq.jfxapps.core.preferences.internal.preference.PreferenceBeanDefinitionRegistryPostProcessor;
 import com.gluonhq.jfxapps.core.preferences.internal.scan.PreferenceScanBeanDefinitionRegistryPostProcessor;
@@ -67,12 +70,15 @@ public class PreferencesExtension implements OpenExtension {
     public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
-                I18NPreferences.class,
                 DocumentPreferencesController.class,
-                PreferencesController.class,
-                PreferenceEditorFactoryImpl.class,
+                I18NPreferences.class,
                 PreferenceBeanDefinitionRegistryPostProcessor.class,
-                PreferenceScanBeanDefinitionRegistryPostProcessor.class
+                PreferenceEditorFactoryImpl.class,
+                PreferenceScanBeanDefinitionRegistryPostProcessor.class,
+                PreferencesController.class,
+                PreferencesWindowController.class,
+                ShowPreferencesAction.class,
+                PreferencesActionFactoryImpl.class
             );
      // @formatter:on
     }

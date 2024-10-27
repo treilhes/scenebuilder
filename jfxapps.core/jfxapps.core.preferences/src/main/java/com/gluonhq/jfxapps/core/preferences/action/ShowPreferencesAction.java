@@ -31,37 +31,42 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.ext.prefedit.rest;
+package com.gluonhq.jfxapps.core.preferences.action;
 
-import java.util.UUID;
+import org.springframework.context.annotation.Lazy;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.preferences.edit.PreferencesWindowController;
 
-import com.gluonhq.jfxapps.boot.api.context.ContextManager;
-import com.gluonhq.jfxapps.core.api.action.ActionFactory;
-import com.gluonhq.jfxapps.ext.prefedit.actions.ShowPreferencesAction;
+@ApplicationInstancePrototype("com.gluonhq.jfxapps.core.preferences.action.ShowPreferencesAction")
+@ActionMeta(
+        nameKey = "action.name.show.preferences",
+        descriptionKey = "action.description.show.preferences")
+public class ShowPreferencesAction extends AbstractAction {
 
-@RestController
-@RequestMapping("/prefedit")
-public class PrefeditRestEndpoint {
+    private final PreferencesWindowController preferencesWindowController;
 
-    private final ContextManager contextManager;
-
-    public PrefeditRestEndpoint(ContextManager contextManager) {
-        super();
-        this.contextManager = contextManager;
+    public ShowPreferencesAction(
+            I18N i18n,
+            ActionExtensionFactory extensionFactory,
+            @Lazy PreferencesWindowController preferencesWindowController) {
+        super(i18n, extensionFactory);
+        this.preferencesWindowController = preferencesWindowController;
     }
 
-    @GetMapping("/show/{emitter}")
-    public ResponseEntity<Void> show(@PathVariable(name ="emitter") String emitter) {
-        final var context = contextManager.get(UUID.fromString(emitter));
-        ActionFactory actionFactory = context.getBean(ActionFactory.class);
-        actionFactory.create(ShowPreferencesAction.class).checkAndPerform();
-        return ResponseEntity.ok().build();
+    @Override
+    public boolean canPerform() {
+        return true;
     }
 
+    @Override
+    public ActionStatus doPerform() {
+        preferencesWindowController.getStage().centerOnScreen();
+        preferencesWindowController.openWindow();
+        return ActionStatus.DONE;
+    }
 }

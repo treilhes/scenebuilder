@@ -1,4 +1,4 @@
-module jfxapps.core.controls {
+open module jfxapps.core.controls {
     exports com.gluonhq.jfxapps.core.controls;
     exports com.gluonhq.jfxapps.core.controls.paintpicker.rotator;
     exports com.gluonhq.jfxapps.core.controls.paintpicker.colorpicker;

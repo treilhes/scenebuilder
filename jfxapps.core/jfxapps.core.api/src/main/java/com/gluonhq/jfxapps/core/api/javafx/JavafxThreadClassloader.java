@@ -37,6 +37,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.BeanClassLoaderAware;
+
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 /**
@@ -55,7 +57,7 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingle
  * of the extension during class to {@link JfxAppPlatform} runWithScope/callWithScope methods invocation
  */
 @ApplicationInstanceSingleton
-public class JavafxThreadClassloader extends ClassLoader {
+public class JavafxThreadClassloader extends ClassLoader implements BeanClassLoaderAware {
 
     private final List<ClassLoader> classLoaders = new ArrayList<>();
 
@@ -87,6 +89,11 @@ public class JavafxThreadClassloader extends ClassLoader {
             }
         }
         return null;
+    }
+
+    @Override
+    public void setBeanClassLoader(ClassLoader classLoader) {
+        classLoaders.add(classLoader);
     }
 
 
