@@ -78,7 +78,7 @@ public abstract class AbstractShowAction extends AbstractAction {
 
     	displayOptionPreference
     		.setBean(hierarchy.getDisplayOption())
-    		.writeToJavaPreferences();
+    		.save();
     	return ActionStatus.DONE;
 	}
 

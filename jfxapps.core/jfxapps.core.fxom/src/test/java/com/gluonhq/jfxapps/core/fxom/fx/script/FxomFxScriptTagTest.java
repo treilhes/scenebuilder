@@ -50,6 +50,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMSaver;
 import com.gluonhq.jfxapps.core.fxom.FXOMScript;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
@@ -137,7 +138,7 @@ public class FxomFxScriptTagTest {
 
         try (var stream = getClass().getResourceAsStream(testCase.getFileName())){
             String content = new String(stream.readAllBytes());
-            FXOMDocument fxomDocument = new FXOMDocument(content, null, FxomFxScriptTagTest.class.getClassLoader(), null);
+            FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(content, null, FxomFxScriptTagTest.class.getClassLoader(), null);
 
             List<FXOMScript> scripts = fxomDocument.getFxomRoot().collect(FxCollector.allFxScripts());
 

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
+import com.gluonhq.jfxapps.core.api.fxom.FxomDocumentFactory;
 import com.gluonhq.jfxapps.core.api.library.LibraryItem;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
@@ -49,15 +50,17 @@ public class LibraryItemImpl implements LibraryItem {
 
     private static Logger logger = LoggerFactory.getLogger(LibraryItemImpl.class);
 
+    private final FxomDocumentFactory fxomDocumentFactory;
     private final String fxmlText;
     private final String name;
     private final Qualifier qualifier;
 
-    public LibraryItemImpl(String name, Qualifier qualifier, String fxmlText) {
+    public LibraryItemImpl(FxomDocumentFactory fxomDocumentFactory, String name, Qualifier qualifier, String fxmlText) {
         assert name != null;
         assert qualifier != null;
         assert fxmlText != null;
 
+        this.fxomDocumentFactory = fxomDocumentFactory;
         this.name = name;
         this.qualifier = qualifier;
         this.fxmlText = fxmlText;
@@ -93,7 +96,7 @@ public class LibraryItemImpl implements LibraryItem {
         FXOMDocument result;
 
         try {
-            result = new FXOMDocument(fxmlText, null, classloader, null);
+            result = fxomDocumentFactory.newDocument(fxmlText, null, classloader, null);
         } catch(Error|IOException x) {
             logger.error("Unable to instanciate {} with following fxml content : \n{}", getName(), fxmlText, x);
             result = null;

@@ -48,7 +48,6 @@ import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroupFactoryRegistry;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
-import com.gluonhq.jfxapps.core.api.javafx.internal.ContextClassLoaderEventDispatcher;
 import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
 import com.gluonhq.jfxapps.core.api.javafx.internal.JavafxThreadBootstrapper;
 import com.gluonhq.jfxapps.core.api.javafx.internal.JavafxThreadClassloaderDispatcherImpl;
@@ -100,8 +99,6 @@ public class ApiExtension implements RootExtension {
                 ActionFactory.class,
                 ApplicationEvents.ApplicationEventsImpl.class,
                 ApplicationInstanceEvents.ApplicationInstanceEventsImpl.class,
-                ContextClassLoaderEventDispatcher.class,
-                ContextClassLoaderEventDispatcher.class,
                 DefaultSelectionGroupFactory.class,
                 DiscardGesture.Factory.class,
                 DiscardGesture.class,

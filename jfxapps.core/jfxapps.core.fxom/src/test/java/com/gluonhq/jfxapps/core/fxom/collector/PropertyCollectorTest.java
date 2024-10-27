@@ -45,6 +45,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
@@ -97,7 +98,7 @@ public class PropertyCollectorTest {
                     </children>
                 </AnchorPane>
                 """;
-        FXOMDocument fxomDocument = new FXOMDocument(fxml);
+        FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(fxml);
 
         Collection<FXOMPropertyT> properties = fxomDocument.getFxomRoot()
                 .collect(PropertyCollector.allSimpleProperties());
@@ -141,7 +142,7 @@ public class PropertyCollectorTest {
 
                 """;
 
-        FXOMDocument fxomDocument = new FXOMDocument(fxml);
+        FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(fxml);
 
         PropertyName text = new PropertyName("text");
 
@@ -184,7 +185,7 @@ public class PropertyCollectorTest {
                     </children>
                 </AnchorPane>
                 """;
-        FXOMDocument fxomDocument = new FXOMDocument(fxml);
+        FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(fxml);
 
         Collection<FXOMPropertyT> properties = fxomDocument.getFxomRoot().collect(PropertyCollector.fxNullProperties());
 

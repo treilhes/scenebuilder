@@ -442,76 +442,79 @@ public class WorkspaceController extends AbstractFxmlController implements Works
          * fxomRoot
          */
 
-        final String statusMessageText, statusStyleClass;
-        contentGroup.getChildren().clear();
+        JfxAppPlatform.ensureFxThread(() -> {
+            final String statusMessageText, statusStyleClass;
+            contentGroup.getChildren().clear();
 
-        boolean canDisplayDocument = false;
-        if (!content.hasContent()) {
-            statusMessageText = "FXOMDocument is null"; // NOCHECK
-            statusStyleClass = "stage-prompt"; // NOCHECK
-        } else if (!content.isDisplayable()) {
-            statusMessageText = getI18n().getString(I18N_CONTENT_LABEL_STATUS_INVITATION);
-            statusStyleClass = "stage-prompt"; // NOCHECK
-        } else {
-            final Object userSceneGraph = content.getRoot();
-            if (userSceneGraph instanceof Node) {
-                final Node rootNode = (Node) userSceneGraph;
-                assert rootNode.getParent() == null;
-                contentGroup.getChildren().add(rootNode);
-                layoutContent(true /* applyCSS */);
-                if (content.getLayoutException() == null) {
-                    statusMessageText = ""; // NOCHECK
-                    statusStyleClass = "stage-prompt-default"; // NOCHECK
-                    canDisplayDocument = true;
+            boolean canDisplayDocument = false;
+            if (!content.hasContent()) {
+                statusMessageText = "FXOMDocument is null"; // NOCHECK
+                statusStyleClass = "stage-prompt"; // NOCHECK
+            } else if (!content.isDisplayable()) {
+                statusMessageText = getI18n().getString(I18N_CONTENT_LABEL_STATUS_INVITATION);
+                statusStyleClass = "stage-prompt"; // NOCHECK
+            } else {
+                final Object userSceneGraph = content.getRoot();
+                if (userSceneGraph instanceof Node) {
+                    final Node rootNode = (Node) userSceneGraph;
+                    assert rootNode.getParent() == null;
+                    contentGroup.getChildren().add(rootNode);
+                    layoutContent(true /* applyCSS */);
+                    if (content.getLayoutException() == null) {
+                        statusMessageText = ""; // NOCHECK
+                        statusStyleClass = "stage-prompt-default"; // NOCHECK
+                        canDisplayDocument = true;
+                    } else {
+                        contentGroup.getChildren().clear();
+                        statusMessageText = getI18n().getString(I18N_CONTENT_LABEL_STATUS_CANNOT_DISPLAY);
+                        statusStyleClass = "stage-prompt"; // NOCHECK
+                    }
                 } else {
-                    contentGroup.getChildren().clear();
                     statusMessageText = getI18n().getString(I18N_CONTENT_LABEL_STATUS_CANNOT_DISPLAY);
                     statusStyleClass = "stage-prompt"; // NOCHECK
                 }
-            } else {
-                statusMessageText = getI18n().getString(I18N_CONTENT_LABEL_STATUS_CANNOT_DISPLAY);
-                statusStyleClass = "stage-prompt"; // NOCHECK
-            }
-        }
-
-        backgroundPane.setText(statusMessageText);
-        backgroundPane.getStyleClass().clear();
-        backgroundPane.getStyleClass().add(statusStyleClass);
-
-        // Display background fill of the Window/Scene
-        if (canDisplayDocument) {
-            FXOMDocument fxomDocument = documentManager.fxomDocument().get();
-
-            assert fxomDocument != null;
-            assert fxomDocument.getFxomRoot() != null;
-
-            SceneGraphObject sceneGraphObject = fxomDocument.getFxomRoot().getSceneGraphObject();
-
-            Paint backgroundPaneFillPaint = Color.WHITE;
-
-            if (sceneGraphObject.isInstanceOf(Window.class)) {
-                Window window = sceneGraphObject.getAs(Window.class);
-                Scene scene = window.getScene();
-                if (scene != null && scene.getFill() != null) {
-                    backgroundPaneFillPaint = scene.getFill();
-                }
-            } else if (sceneGraphObject.isInstanceOf(Scene.class)) {
-                Scene scene = sceneGraphObject.getAs(Scene.class);
-                if (scene.getFill() != null) {
-                    backgroundPaneFillPaint = scene.getFill();
-                }
             }
 
-            BackgroundFill backgroundPaneFill = new BackgroundFill(backgroundPaneFillPaint, CornerRadii.EMPTY,
-                    Insets.EMPTY);
-            backgroundPane.setBackground(new Background(backgroundPaneFill));
-        }
+            backgroundPane.setText(statusMessageText);
+            backgroundPane.getStyleClass().clear();
+            backgroundPane.getStyleClass().add(statusStyleClass);
 
-        // If layoutException != null, then this layout call is required
-        // so that backgroundPane updates its message... Strange...
-        backgroundPane.layout();
+            // Display background fill of the Window/Scene
+            if (canDisplayDocument) {
+                FXOMDocument fxomDocument = documentManager.fxomDocument().get();
 
-        adjustWorkspace();
+                assert fxomDocument != null;
+                assert fxomDocument.getFxomRoot() != null;
+
+                SceneGraphObject sceneGraphObject = fxomDocument.getFxomRoot().getSceneGraphObject();
+
+                Paint backgroundPaneFillPaint = Color.WHITE;
+
+                if (sceneGraphObject.isInstanceOf(Window.class)) {
+                    Window window = sceneGraphObject.getAs(Window.class);
+                    Scene scene = window.getScene();
+                    if (scene != null && scene.getFill() != null) {
+                        backgroundPaneFillPaint = scene.getFill();
+                    }
+                } else if (sceneGraphObject.isInstanceOf(Scene.class)) {
+                    Scene scene = sceneGraphObject.getAs(Scene.class);
+                    if (scene.getFill() != null) {
+                        backgroundPaneFillPaint = scene.getFill();
+                    }
+                }
+
+                BackgroundFill backgroundPaneFill = new BackgroundFill(backgroundPaneFillPaint, CornerRadii.EMPTY,
+                        Insets.EMPTY);
+                backgroundPane.setBackground(new Background(backgroundPaneFill));
+            }
+
+            // If layoutException != null, then this layout call is required
+            // so that backgroundPane updates its message... Strange...
+            backgroundPane.layout();
+
+            adjustWorkspace();
+        });
+
     }
 
     private void updateScalingGroup() {
@@ -524,16 +527,19 @@ public class WorkspaceController extends AbstractFxmlController implements Works
                 actualScaling = 1.0;
             }
 
-            scalingGroup.setScaleX(actualScaling);
-            scalingGroup.setScaleY(actualScaling);
+            JfxAppPlatform.ensureFxThread(() -> {
+                scalingGroup.setScaleX(actualScaling);
+                scalingGroup.setScaleY(actualScaling);
 
-            if (Platform.isSupported(ConditionalFeature.SCENE3D)) {
-                scalingGroup.setScaleZ(actualScaling);
-            }
-            // else {
-            // leave scaleZ unchanged else it breaks zooming when running
-            // with the software pipeline (see DTL-6661).
-            // }
+                if (Platform.isSupported(ConditionalFeature.SCENE3D)) {
+                    scalingGroup.setScaleZ(actualScaling);
+                }
+                // else {
+                // leave scaleZ unchanged else it breaks zooming when running
+                // with the software pipeline (see DTL-6661).
+                // }
+            });
+
         }
     }
 

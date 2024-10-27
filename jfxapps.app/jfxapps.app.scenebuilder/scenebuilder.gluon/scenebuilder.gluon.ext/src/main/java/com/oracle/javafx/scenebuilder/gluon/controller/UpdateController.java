@@ -169,7 +169,7 @@ public class UpdateController {
     }
 
     public void setIgnoreVersion(String ignoreVersion) {
-        this.ignoreVersionPreference.setValue(ignoreVersion).writeToJavaPreferences();
+        this.ignoreVersionPreference.setValue(ignoreVersion).save();
     }
 
     public String getIgnoreVersion() {
@@ -177,7 +177,7 @@ public class UpdateController {
     }
 
     public void setShowUpdateDialogAfter(LocalDate showUpdateDialogDate) {
-        this.showUpdateDialogDatePreference.setValue(showUpdateDialogDate).writeToJavaPreferences();
+        this.showUpdateDialogDatePreference.setValue(showUpdateDialogDate).save();
     }
 
     public LocalDate getShowUpdateDialogDate() {

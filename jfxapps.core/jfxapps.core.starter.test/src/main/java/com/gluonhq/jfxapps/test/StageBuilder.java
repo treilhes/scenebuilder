@@ -44,6 +44,7 @@ import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.util.URLUtils;
 
 import javafx.scene.Parent;
@@ -188,7 +189,7 @@ public class StageBuilder {
                 doc = document;
             } else if (fxml != null) {
                 try {
-                    doc = new FXOMDocument(fxml);
+                    doc = FXOMDocumentFactory.DEFAULT.newDocument(fxml);
                 } catch (Exception e) {
                     throw new IllegalArgumentException("Invalid fxml document", e);
                 }

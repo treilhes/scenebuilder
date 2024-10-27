@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -43,8 +43,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.gluonhq.jfxapps.core.api.fxom.FxomDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.library.util.LibraryUtil;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibraryFilter;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl.SubStatus;
@@ -134,7 +137,7 @@ public class ControlExplorerUtil {
         return new ControlReportEntryImpl(entryName, status, subStatus, entryException, entryClass, className);
     }
 
-    public static ControlReportEntryImpl exploreFxml(Path fxmlFile, ClassLoader classLoader) {
+    public static ControlReportEntryImpl exploreFxml(FxomDocumentFactory fxomDocumentFactory, Path fxmlFile, ClassLoader classLoader) {
         ControlReportEntryImpl.Status status;
         ControlReportEntryImpl.SubStatus subStatus = SubStatus.NONE;
         Throwable entryException;
@@ -143,7 +146,7 @@ public class ControlExplorerUtil {
         try {
             logger.debug("Loading custom control file {}", fxmlFile);
             String content = Files.readString(fxmlFile, StandardCharsets.UTF_8);
-            FXOMDocument result= new FXOMDocument(content, null, classLoader, null);
+            FXOMDocument result= fxomDocumentFactory.newDocument(content, null, classLoader, null);
             entryClass = result.getFxomRoot().getSceneGraphObject().getObjectClass();
             status = ControlReportEntryImpl.Status.OK;
             entryException = null;

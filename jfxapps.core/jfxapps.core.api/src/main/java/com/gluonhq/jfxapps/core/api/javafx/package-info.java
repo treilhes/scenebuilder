@@ -95,5 +95,4 @@
  */
 package com.gluonhq.jfxapps.core.api.javafx;
 
-import com.gluonhq.jfxapps.core.api.javafx.internal.ContextClassLoaderEventDispatcher;
 import com.gluonhq.jfxapps.core.api.javafx.internal.JavafxThreadClassloaderDispatcherImpl;

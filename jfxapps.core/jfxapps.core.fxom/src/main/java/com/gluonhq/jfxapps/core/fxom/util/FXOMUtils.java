@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
@@ -69,14 +70,15 @@ public class FXOMUtils {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	// FIXME only used by libraries, move this function to libraries common parent if any or create one
-	public static boolean fxmlHasDependencies(File fxmlFile, ClassLoader classloader, ResourceBundle resources) throws IOException {
+	public static boolean fxmlHasDependencies(FXOMDocumentFactory factory, File fxmlFile, ClassLoader classloader, ResourceBundle resources) throws IOException {
         boolean res = false;
         URL location;
 
         location = fxmlFile.toURI().toURL();
-        FXOMDocument fxomDocument =
-                new FXOMDocument(FXOMDocument.readContentFromURL(location), location,
-                        classloader, resources);
+
+        FXOMDocument fxomDocument = factory.newDocument(FXOMDocument.readContentFromURL(location), location,
+                classloader, resources);
+
         res = hasDependencies(fxomDocument.getFxomRoot());
 
         return res;

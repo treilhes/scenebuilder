@@ -51,6 +51,7 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.util.ClassUtils;
 
@@ -386,7 +387,7 @@ public final class ExternalDragSource extends AbstractDragSource {
 //    static final PropertyName fitHeightName = new PropertyName("fitHeight"); //NOCHECK
 //
 //    static FXOMDocument makeFxomDocumentFromImageURL(Image image, double fitWidth, double fitHeight) {
-//        final FXOMDocument result = new FXOMDocument();
+//        final FXOMDocument result = FXOMDocumentFactory.DEFAULT.newDocument();
 //        final FXOMInstance imageView = new FXOMInstance(result, ImageView.class);
 //
 //        final ImagePropertyMetadata imageMeta = ImageViewMetadata.imagePropertyMetadata;

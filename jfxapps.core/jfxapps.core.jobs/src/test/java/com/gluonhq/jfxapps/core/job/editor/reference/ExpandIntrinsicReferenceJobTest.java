@@ -55,6 +55,7 @@ import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMCloner;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ReplaceObjectJob;
 
@@ -112,7 +113,7 @@ class ExpandIntrinsicReferenceJobTest {
 
         Files.writeString(new File(tmpDir,  "included.fxml").toPath(), FXML_INCLUDED, StandardCharsets.UTF_8, StandardOpenOption.CREATE);
 
-        FXOMDocument doc = new FXOMDocument(FXML_FX_INCLUDE, new File(tmpDir,  "test.fxml").toURI().toURL(), null, null);
+        FXOMDocument doc = FXOMDocumentFactory.DEFAULT.newDocument(FXML_FX_INCLUDE, new File(tmpDir,  "test.fxml").toURI().toURL(), null, null);
         documentManager.fxomDocument().set(doc);
 
 //        final var fxRef = doc.collect(FxCollector.allFxReferences());
@@ -156,7 +157,7 @@ class ExpandIntrinsicReferenceJobTest {
             return job;
         });
 
-        FXOMDocument doc = new FXOMDocument(FXML_FX_REFERENCE);
+        FXOMDocument doc = FXOMDocumentFactory.DEFAULT.newDocument(FXML_FX_REFERENCE);
         documentManager.fxomDocument().set(doc);
 
         final var fxRef = doc.collect(FxCollector.allFxReferences());

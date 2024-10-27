@@ -46,8 +46,16 @@ import jakarta.annotation.PostConstruct;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.collections.ListChangeListener.Change;
+import javafx.event.Event;
+import javafx.event.EventDispatchChain;
+import javafx.event.EventDispatcher;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.MenuItem;
+import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 
 @Singleton
 public class JavafxThreadBootstrapper implements ApplicationListener<StageReadyEvent>, JavafxThreadHolder {
@@ -56,7 +64,6 @@ public class JavafxThreadBootstrapper implements ApplicationListener<StageReadyE
 
     private static JfxAppContext context;
     private final JavafxThreadClassloaderDispatcherImpl fxThreadClassloaderDispatcher;
-    private final ContextClassLoaderEventDispatcher eventDispatcher;
 
     private static Application javafxApplication;
 
@@ -73,11 +80,9 @@ public class JavafxThreadBootstrapper implements ApplicationListener<StageReadyE
     // @formatter:off
     public JavafxThreadBootstrapper(
             JavafxThreadClassloaderDispatcherImpl fxThreadClassloaderDispatcher,
-            ContextClassLoaderEventDispatcher eventDispatcher,
             JfxAppContext context) {
      // @formatter:on
         this.fxThreadClassloaderDispatcher = fxThreadClassloaderDispatcher;
-        this.eventDispatcher = eventDispatcher;
 
         JavafxThreadBootstrapper.context = context;
     }
@@ -91,12 +96,15 @@ public class JavafxThreadBootstrapper implements ApplicationListener<StageReadyE
     public void onApplicationEvent(@NonNull StageReadyEvent stageReadyEvent) {
         started = stageReadyEvent.getStage() != null;
         primaryStage = stageReadyEvent.getStage();
-        eventDispatcher.setup(primaryStage.getEventDispatcher());
+
+        var primaryDispatcher = new ContextClassLoaderEventDispatcher(primaryStage, fxThreadClassloaderDispatcher);
+        primaryStage.setEventDispatcher(primaryDispatcher);
 
         Window.getWindows().addListener((Change<? extends Window> c) -> {
             while (c.next()) {
                 c.getAddedSubList().forEach( w -> {
-                    w.setEventDispatcher(eventDispatcher);
+                    var windowDispatcher = new ContextClassLoaderEventDispatcher(w, fxThreadClassloaderDispatcher);
+                    w.setEventDispatcher(windowDispatcher);
                     fxThreadClassloaderDispatcher.listenFocus(w);
                 });
 
@@ -164,4 +172,63 @@ public class JavafxThreadBootstrapper implements ApplicationListener<StageReadyE
 
     }
 
+    private class ContextClassLoaderEventDispatcher implements EventDispatcher {
+
+        private static final Logger log = LoggerFactory.getLogger(ContextClassLoaderEventDispatcher.class);
+
+        private final Window window;
+        private final JavafxThreadClassloaderDispatcherImpl dispatcher;
+        private final EventDispatcher originalDispatcher;
+
+
+
+
+        public ContextClassLoaderEventDispatcher(Window window, JavafxThreadClassloaderDispatcherImpl dispatcher) {
+            this.window = window;
+            this.dispatcher = dispatcher;
+            this.originalDispatcher = window.getEventDispatcher();
+        }
+
+        private Window windowFromSource(Object source) {
+            Window window = switch (source) {
+                case null -> null;
+                case Node o -> windowFromSource(o.getScene().getWindow());
+                case Scene o -> windowFromSource(o.getWindow());
+                case MenuItem o -> windowFromSource(o.getParentPopup());
+                case PopupWindow o -> windowFromSource(o.getOwnerWindow());
+                case Window o -> o;
+                default -> null;
+            };
+
+            return window == null ? null : window.getScene().getWindow();
+        }
+        @Override
+        public Event dispatchEvent(Event event, EventDispatchChain tail) {
+
+            Window sourceWindow = windowFromSource(event.getTarget());
+
+            if (sourceWindow == null) {
+                sourceWindow = windowFromSource(window);
+            }
+
+            try {
+                if (event instanceof WindowEvent we
+                        && we.getEventType() == WindowEvent.WINDOW_HIDDEN
+                        && window == we.getSource() && window == we.getTarget()) {
+                    tail.append((e,t) -> {
+                        dispatcher.unregister(window);
+                        return e;
+                    });
+                }
+
+                return dispatcher.callWith(sourceWindow, () -> {
+                    return originalDispatcher.dispatchEvent(event, tail);
+                });
+            } catch (Exception e) {
+                log.error("Error dispatching event", event, e);
+            }
+
+            return null;
+        }
+    }
 }

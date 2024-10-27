@@ -175,11 +175,13 @@ public class FXOMNodes {
         if (file.getAbsolutePath().endsWith(".fxml")) { //NOCHECK
             final String fxmlText
                     = FXOMDocument.readContentFromURL(file.toURI().toURL());
-            final FXOMDocument transientDoc = new FXOMDocument(
+
+            final FXOMDocument transientDoc = targetDocument.getFactory().newDocument(
                     fxmlText,
                     targetDocument.getLocation(),
                     targetDocument.getClassLoader(),
                     targetDocument.getResources());
+
             result = transientDoc.getFxomRoot();
             if (result != null) {
                 result.moveToFxomDocument(targetDocument);
@@ -205,11 +207,13 @@ public class FXOMNodes {
         if (file.getAbsolutePath().endsWith(".fxml")) { //NOCHECK
             final URL fxmlURL = file.toURI().toURL();
             final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
-            final FXOMDocument transientDoc = new FXOMDocument(
+
+            final FXOMDocument transientDoc = targetDocument.getFactory().newDocument(
                     fxmlText,
                     fxmlURL,
                     targetDocument.getClassLoader(),
                     targetDocument.getResources());
+
             if (transientDoc.getFxomRoot() != null) {
                 final PrefixedValue pv
                         = PrefixedValue.makePrefixedValue(fxmlURL, targetDocument.getLocation());
@@ -228,7 +232,7 @@ public class FXOMNodes {
     public static FXOMDocument newDocument(FXOMObject source) {
         assert source != null;
 
-        final FXOMDocument result = new FXOMDocument();
+        final FXOMDocument result = source.getFxomDocument().getFactory().newDocument();
 
         /*
          * If source's document contains unresolved objects,

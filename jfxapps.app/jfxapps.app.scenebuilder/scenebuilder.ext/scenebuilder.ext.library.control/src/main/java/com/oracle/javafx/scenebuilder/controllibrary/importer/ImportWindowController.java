@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -48,16 +48,19 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.fxom.FxomDocumentFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.dialog.AbstractModalDialog;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
+import com.gluonhq.jfxapps.core.controls.IntegerField;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.library.util.LibraryUtil;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlFilterTransform;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;
@@ -89,7 +92,6 @@ import javafx.util.Callback;
  *
  */
 @ApplicationInstancePrototype
-@Lazy
 public class ImportWindowController extends AbstractModalDialog {
 
     private static final Logger logger = LoggerFactory.getLogger(ImportWindowController.class);
@@ -195,6 +197,7 @@ public class ImportWindowController extends AbstractModalDialog {
     ToggleButton checkAllUncheckAllToggle;
 
     private final Dialog dialog;
+    private final FxomDocumentFactory fxomDocumentFactory;
 
 //    protected ImportWindowController(Api api, LibraryPanelController lpc,  List<File> files, MavenArtifactsPreferences mavenPreferences, Stage owner) {
 //        this(api, lpc, files, mavenPreferences, owner, true, new ArrayList<>());
@@ -203,7 +206,8 @@ public class ImportWindowController extends AbstractModalDialog {
     protected ImportWindowController(
             ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
-            Dialog dialog) {
+            Dialog dialog,
+            FxomDocumentFactory fxomDocumentFactory) {
         super(sceneBuilderManager, iconSetting, ImportWindowController.class.getResource("ImportDialog.fxml"), I18N.getBundle(), null);
         // libPanelController = lpc;
         // importFiles = new ArrayList<>(files);
@@ -212,6 +216,7 @@ public class ImportWindowController extends AbstractModalDialog {
         //this.owner = owner;
         // this.mavenPreferences = mavenPreferences;
         this.dialog = dialog;
+        this.fxomDocumentFactory = fxomDocumentFactory;
     }
 
     public ControlFilterTransform editTransform(List<ControlReportImpl> reports, ControlFilterTransform controlFilter, ClassLoader classLoader) {
@@ -516,8 +521,8 @@ public class ImportWindowController extends AbstractModalDialog {
 
 
             try {
-                FXOMDocument fxomDoc = new FXOMDocument(fxmlText, null, importClassLoader, null);
-//                FXOMDocument fxomDoc = new FXOMDocument(fxmlText, null, null, null);
+                FXOMDocument fxomDoc = fxomDocumentFactory.newDocument(fxmlText, null, importClassLoader, null);
+//                FXOMDocument fxomDoc = fxomDocumentFactory.newDocument(fxmlText, null, null, null);
                 zeNode = (Node) fxomDoc.getSceneGraphRoot();
             } catch (IOException ioe) {
                 showErrorDialog(ioe);

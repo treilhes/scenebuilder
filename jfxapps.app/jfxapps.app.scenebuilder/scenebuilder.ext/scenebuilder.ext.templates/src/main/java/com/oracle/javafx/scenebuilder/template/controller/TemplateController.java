@@ -131,7 +131,7 @@ public class TemplateController {
         if (template != null && template.getThemes().size() > 0) {
             ThemeDocumentPreference docThemePref = context.getBean(ThemeDocumentPreference.class);
             docThemePref.setValue(template.getThemes().get(0));
-            docThemePref.writeToJavaPreferences();
+            docThemePref.save();
             Action action = actionFactory.create(ApplyCssContentAction.class);
             action.checkAndPerform();
         }

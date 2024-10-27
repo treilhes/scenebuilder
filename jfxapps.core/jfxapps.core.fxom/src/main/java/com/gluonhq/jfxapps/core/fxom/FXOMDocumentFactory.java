@@ -31,19 +31,45 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.api.javafx;
+package com.gluonhq.jfxapps.core.fxom;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
- * deprecated or need an update, jfxAppPlatform is loaded once and not on each call
+ *
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
-@Deprecated
-public @interface FxThread {
+public interface FXOMDocumentFactory {
+
+    public static final  boolean DEFAULT_NORMALIZE = true;
+
+    public static FXOMDocumentFactory DEFAULT = new FXOMDocumentFactory() {
+        @Override
+        public FXOMDocument newDocument(FXOMDocumentFactory factory) {
+            return new FXOMDocument(factory);
+        }
+        @Override
+        public FXOMDocument newDocument(FXOMDocumentFactory factory, String fxmlText, URL location, ClassLoader classLoader, ResourceBundle resources, boolean normalize)
+                throws IOException {
+            return new FXOMDocument(factory, fxmlText, location, classLoader, resources, normalize);
+        }
+    };
+
+    FXOMDocument newDocument(FXOMDocumentFactory factory);
+    FXOMDocument newDocument(FXOMDocumentFactory factory, String fxmlText, URL location, ClassLoader classLoader, ResourceBundle resources, boolean normalize) throws IOException;
+
+    default FXOMDocument newDocument() {
+        return newDocument(this);
+    }
+    default FXOMDocument newDocument(String fxmlText) throws IOException {
+        return newDocument(this, fxmlText, null, null, null, DEFAULT_NORMALIZE);
+    }
+    default FXOMDocument newDocument(String fxmlText, URL location, ClassLoader classLoader, ResourceBundle resources) throws IOException {
+        return newDocument(this, fxmlText, location, classLoader, resources, DEFAULT_NORMALIZE);
+    }
+    default FXOMDocument newDocument(String fxmlText, URL location, ClassLoader classLoader, ResourceBundle resources, boolean normalize) throws IOException {
+        return newDocument(this, fxmlText, location, classLoader, resources, normalize);
+    }
 
 }

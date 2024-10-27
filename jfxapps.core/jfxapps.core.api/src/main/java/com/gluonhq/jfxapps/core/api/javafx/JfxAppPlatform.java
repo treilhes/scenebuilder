@@ -44,7 +44,13 @@ import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
 import javafx.application.Platform;
 
 public interface JfxAppPlatform {
-
+    public static void ensureFxThread(Runnable runnable) {
+        if (Platform.isFxApplicationThread()) {
+            runnable.run();
+        } else {
+            Platform.runLater(runnable);
+        }
+    }
     /**
      * Same as {@link Platform#runOnFxThread(Runnable)}
      * @param runnable

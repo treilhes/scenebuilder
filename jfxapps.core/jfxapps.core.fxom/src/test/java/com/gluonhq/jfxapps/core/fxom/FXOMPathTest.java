@@ -84,7 +84,7 @@ class FXOMPathTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        fxomDocument = new FXOMDocument(FXML);
+        fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(FXML);
         var graphObjects = fxomDocument.collect(SceneGraphCollector.allSceneGraphObjects());
         pane1 = graphObjects.get(0);
         button1 = graphObjects.get(1);

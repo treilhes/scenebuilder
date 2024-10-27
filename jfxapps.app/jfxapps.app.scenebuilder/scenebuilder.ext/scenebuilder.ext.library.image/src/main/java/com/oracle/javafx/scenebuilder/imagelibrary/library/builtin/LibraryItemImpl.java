@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,6 +37,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
+import com.gluonhq.jfxapps.core.api.fxom.FxomDocumentFactory;
 import com.gluonhq.jfxapps.core.api.library.LibraryItem;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
@@ -45,16 +47,17 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
  */
 public class LibraryItemImpl implements LibraryItem {
 
-
+    private final FxomDocumentFactory fxomDocumentFactory;
     private final String fxmlText;
     private final String name;
     private final String section;
 
-    public LibraryItemImpl(String name, String section, String fxmlText) {
+    public LibraryItemImpl(FxomDocumentFactory fxomDocumentFactory, String name, String section, String fxmlText) {
         assert name != null;
         assert section != null;
         assert fxmlText != null;
 
+        this.fxomDocumentFactory = fxomDocumentFactory;
         this.name = name;
         this.section = section;
         this.fxmlText = fxmlText;
@@ -79,13 +82,13 @@ public class LibraryItemImpl implements LibraryItem {
     public URL getIconURL() {
         return null;
     }
-    
+
     @Override
     public FXOMDocument instantiate(ClassLoader classloader) {
         FXOMDocument result;
 
         try {
-            result = new FXOMDocument(fxmlText, null, classloader, null);
+            result = fxomDocumentFactory.newDocument(fxmlText, null, classloader, null);
         } catch(Error|IOException x) {
             x.printStackTrace();
             result = null;

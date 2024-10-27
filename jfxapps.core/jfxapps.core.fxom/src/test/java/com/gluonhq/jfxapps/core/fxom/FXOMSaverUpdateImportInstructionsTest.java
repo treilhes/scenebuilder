@@ -301,7 +301,7 @@ public class FXOMSaverUpdateImportInstructionsTest {
             URL location = fxmlTesterFile.toFile().toURI().toURL();
             String fxmlString = getFxmlAsString(fxmlTesterFile);
 
-            fxomDocument = new FXOMDocument(fxmlString, location, null, null);
+            fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(fxmlString, location, null, null);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -83,7 +83,7 @@ public class ViewControlAsListAction extends AbstractAction {
             libraryPanelController.setPreviousDisplayMode(LibraryPanelController.DISPLAY_MODE.LIST);
         }
 
-        displayModePreference.setValue(libraryPanelController.getDisplayMode()).writeToJavaPreferences();
+        displayModePreference.setValue(libraryPanelController.getDisplayMode()).save();
         return ActionStatus.DONE;
     }
 }

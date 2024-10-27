@@ -83,7 +83,7 @@ public class ToggleExpertViewAction extends AbstractAction {
     @Override
     public ActionStatus doPerform() {
         showExpertByDefaultPreference.setValue(!showExpertByDefaultPreference.getValue());
-        showExpertByDefaultPreference.writeToJavaPreferences();
+        showExpertByDefaultPreference.save();
         return ActionStatus.DONE;
     }
 

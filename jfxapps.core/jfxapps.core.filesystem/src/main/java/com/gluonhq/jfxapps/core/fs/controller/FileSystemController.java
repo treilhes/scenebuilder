@@ -67,6 +67,7 @@ import com.gluonhq.jfxapps.core.fs.preference.WildcardImportsPreference;
 import com.gluonhq.jfxapps.core.fs.util.FileWatcher;
 import com.gluonhq.jfxapps.core.fxom.FXOMAssetIndex;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 
 import javafx.collections.ObservableList;
 
@@ -78,6 +79,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     private final JfxAppPlatform jfxAppPlatform;
     private final ApplicationEvents sceneBuilderManager;
     private final ApplicationInstanceEvents documentManager;
+    private final FXOMDocumentFactory fxomDocumentFactory;
     private final RecentItemsController recentItems;
     private final InitialDirectoryPreference initialDirectoryPreference;
     private final WildcardImportsPreference wildcardImportsPreference;
@@ -97,6 +99,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
             JfxAppPlatform jfxAppPlatform,
             ApplicationEvents sceneBuilderManager,
             ApplicationInstanceEvents documentManager,
+            FXOMDocumentFactory fxomDocumentFactory,
             RecentItemsController recentItems,
             InitialDirectoryPreference initialDirectoryPreference,
             WildcardImportsPreference wildcardImportsPreference) {
@@ -104,6 +107,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
         this.jfxAppPlatform = jfxAppPlatform;
         this.documentManager = documentManager;
         this.sceneBuilderManager = sceneBuilderManager;
+        this.fxomDocumentFactory = fxomDocumentFactory;
         this.recentItems = recentItems;
         this.initialDirectoryPreference = initialDirectoryPreference;
         this.wildcardImportsPreference = wildcardImportsPreference;
@@ -422,7 +426,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
         final FXOMDocument newFxomDocument;
 
         if (fxmlText != null) {
-            newFxomDocument = new FXOMDocument(fxmlText, fxmlLocation, sceneBuilderManager.classloader().get(),
+            newFxomDocument = fxomDocumentFactory.newDocument(fxmlText, fxmlLocation, sceneBuilderManager.classloader().get(),
                     resources);
         } else {
             newFxomDocument = null;

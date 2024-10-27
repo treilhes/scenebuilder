@@ -83,6 +83,7 @@ public class FileSystemExtension implements OpenExtension {
         return List.of(
                 ClassLoaderController.class,
                 ClearRecentItemsAction.class,
+                DefaultDocumentFactory.class,
                 FileSystemActionFactoryImpl.class,
                 FileSystemController.class,
                 InitialDirectoryPreference.class,

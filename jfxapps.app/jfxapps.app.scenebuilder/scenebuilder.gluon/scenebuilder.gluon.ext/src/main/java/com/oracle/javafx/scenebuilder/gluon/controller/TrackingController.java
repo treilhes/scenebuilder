@@ -172,7 +172,7 @@ public class TrackingController {
     }
 
     public void setLastSentTrackingInfoDate(LocalDate date) {
-        lastSentTrackingInfoDatePreference.setValue(date).writeToJavaPreferences();
+        lastSentTrackingInfoDatePreference.setValue(date).save();
     }
 
 }

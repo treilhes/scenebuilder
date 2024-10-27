@@ -38,8 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.javafx.internal.ContextClassLoaderEventDispatcher;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 
 /**
  * Composite class loader dedicated to the JavaFX thread for a specific application instance

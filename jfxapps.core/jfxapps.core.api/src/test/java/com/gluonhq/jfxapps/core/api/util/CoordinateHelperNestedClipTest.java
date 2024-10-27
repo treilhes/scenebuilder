@@ -49,6 +49,7 @@ import org.testfx.framework.junit5.Start;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
@@ -92,7 +93,7 @@ class CoordinateHelperNestedClipTest {
         try {
             URL url = CoordinateHelperNestedClipTest.class.getResource("3levelClipedRectangle.fxml");
             String fxmlText = new String(Files.readAllBytes(Path.of(url.toURI())));
-            newFxomDocument = new FXOMDocument(fxmlText, url, CoordinateHelperNestedClipTest.class.getClassLoader(), null);
+            newFxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(fxmlText, url, CoordinateHelperNestedClipTest.class.getClassLoader(), null);
             Parent root = (Parent)newFxomDocument.getSceneGraphRoot();
             stage.setScene(new Scene(root, 300, 300));
             stage.show();

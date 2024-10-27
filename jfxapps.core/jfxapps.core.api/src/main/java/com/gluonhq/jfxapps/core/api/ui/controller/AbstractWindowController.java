@@ -39,9 +39,9 @@ import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.javafx.FxThread;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
@@ -52,6 +52,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -220,12 +221,13 @@ public abstract class AbstractWindowController implements InstanceWindow {
      * Opens this window and place it in front.
      */
     @Override
-    @FxThread
+
     public void openWindow() {
-        assert Platform.isFxApplicationThread();
-        iconSetting.setWindowIcon(getStage());
-        getStage().show();
-        getStage().toFront();
+        JfxAppPlatform.ensureFxThread(() -> {
+            iconSetting.setWindowIcon(getStage());
+            getStage().show();
+            getStage().toFront();
+        });
     }
 
     /**
@@ -233,8 +235,9 @@ public abstract class AbstractWindowController implements InstanceWindow {
      */
     @Override
     public void closeWindow() {
-        assert Platform.isFxApplicationThread();
-        getStage().close();
+        JfxAppPlatform.ensureFxThread(() -> {
+            getStage().close();
+        });
     }
 
 

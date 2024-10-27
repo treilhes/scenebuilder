@@ -51,6 +51,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
@@ -133,7 +134,7 @@ class FxCollectorTest {
 
     @BeforeEach
     public void setup() throws Exception {
-        fxomDocument = new FXOMDocument(MAIN, tempDir.toAbsolutePath().toUri().toURL(), null, null);
+        fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(MAIN, tempDir.toAbsolutePath().toUri().toURL(), null, null);
     }
 
     @Test

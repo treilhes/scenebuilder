@@ -56,6 +56,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.fxom.FXOMAssetIndex;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -80,6 +81,7 @@ import javafx.beans.value.ObservableValue;
 public class FxomDisplayController implements FxomDisplay, InitWithDocument {
 
     private static final boolean ALLOW_UNRESOLVED = true;
+    private final FXOMDocumentFactory fxomDocumentFactory;;
     private final Selection selection;
     private final JobManager jobManager;
     private final MessageLogger messageLogger;
@@ -106,6 +108,7 @@ public class FxomDisplayController implements FxomDisplay, InitWithDocument {
      */
     // @formatter:off
     public FxomDisplayController(
+            FXOMDocumentFactory fxomDocumentFactory,
             ApplicationEvents sceneBuilderManager,
             JobManager jobManager,
             FileSystem fileSystem,
@@ -116,6 +119,7 @@ public class FxomDisplayController implements FxomDisplay, InitWithDocument {
             InlineEdit inlineEditController
         	) {
         // @formatter:on
+        this.fxomDocumentFactory = fxomDocumentFactory;
         // this.api = api;
         this.sceneBuilderManager = sceneBuilderManager;
         this.jobManager = jobManager;
@@ -455,7 +459,7 @@ public class FxomDisplayController implements FxomDisplay, InitWithDocument {
         final FXOMDocument newFxomDocument;
 
         if (fxmlText != null) {
-            newFxomDocument = new FXOMDocument(fxmlText, fxmlLocation, sceneBuilderManager.classloader().get(),
+            newFxomDocument = fxomDocumentFactory.newDocument(fxmlText, fxmlLocation, sceneBuilderManager.classloader().get(),
                     resources);
         } else {
             newFxomDocument = null;

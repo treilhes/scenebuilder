@@ -103,7 +103,7 @@ public class DisplayOptionPreference extends BeanPreference<DisplayOption>
         field.getItems().setAll(displayOptions);
         field.setValue(getValue());
         field.getSelectionModel().selectedItemProperty().addListener((ob, o, n) -> {
-            setValue(n).writeToJavaPreferences();
+            setValue(n).save();
         });
         getObservableValue().addListener((ob, o, n) -> {
             field.setValue(n);

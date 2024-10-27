@@ -34,7 +34,6 @@
 package com.gluonhq.jfxapps.core.ui.controller;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.javafx.FxThread;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.WindowPreferenceTracker;
 import com.gluonhq.jfxapps.core.ui.preference.MaximizedPreference;
@@ -97,12 +96,8 @@ public class ApplicationWindowTracker implements WindowPreferenceTracker { // , 
     }
 
     @Override
-    @FxThread
     public void initialize(MainInstanceWindow windowInstance) {
         this.windowInstance = windowInstance;
-        System.out.println( this + "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuNNNNNNNNNNNNNNNNNNNNNNN");
-        System.out.println("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuNNNNNNNNNNNNNNNNNNNNNNN");
-        System.out.println("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuNNNNNNNNNNNNNNNNNNNNNNN");
         xPropertyListener = (ob, o, n) -> {
             if (!windowInstance.getStage().isMaximized()) {
                 xPosPreference.get().setValue(n.doubleValue());

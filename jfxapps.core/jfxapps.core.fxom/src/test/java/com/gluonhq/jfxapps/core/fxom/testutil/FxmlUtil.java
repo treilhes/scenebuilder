@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,6 +41,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 
 public class FxmlUtil {
 
@@ -48,7 +49,7 @@ public class FxmlUtil {
         try {
             URL location = loader.getClass().getResource(filename.getFilename() + ".fxml");
             String fxmlString = getFxmlAsString(Path.of(location.toURI()));
-            return new FXOMDocument(fxmlString, location, null, null);
+            return FXOMDocumentFactory.DEFAULT.newDocument(fxmlString, location, null, null);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -41,6 +41,7 @@ import java.util.Set;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
@@ -63,7 +64,7 @@ public class FXMLSerializer{
 
     }
     public String serialize(Object object) {
-        FXOMDocument document = new FXOMDocument();
+        FXOMDocument document = FXOMDocumentFactory.DEFAULT.newDocument();
 
 
         Class<?> declaredClass = object.getClass();

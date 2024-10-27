@@ -85,7 +85,7 @@ public class ViewControlAsSectionsAction extends AbstractAction {
             libraryPanelController.setPreviousDisplayMode(LibraryPanelController.DISPLAY_MODE.SECTIONS);
         }
 
-        displayModePreference.setValue(libraryPanelController.getDisplayMode()).writeToJavaPreferences();
+        displayModePreference.setValue(libraryPanelController.getDisplayMode()).save();
         return ActionStatus.DONE;
     }
 }

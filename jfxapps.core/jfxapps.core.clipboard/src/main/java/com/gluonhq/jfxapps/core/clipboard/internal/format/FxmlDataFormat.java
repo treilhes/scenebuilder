@@ -44,6 +44,7 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingle
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
@@ -57,11 +58,14 @@ public class FxmlDataFormat implements ClipboardDataFormat {
     // FXML Format
     static final DataFormat FXML_DATA_FORMAT = new DataFormat("com.oracle.javafx/fxml"); // NOCHECK
 
+    private final FXOMDocumentFactory fxomDocumentFactory;
     private final ApplicationInstanceEvents documentManager;
 
     public FxmlDataFormat(
+            FXOMDocumentFactory fxomDocumentFactory,
             ApplicationInstanceEvents documentManager) {
         super();
+        this.fxomDocumentFactory = fxomDocumentFactory;
         this.documentManager = documentManager;
     }
 
@@ -93,7 +97,7 @@ public class FxmlDataFormat implements ClipboardDataFormat {
                     final ClassLoader classLoader = targetDocument.getClassLoader();
                     final ResourceBundle resources = targetDocument.getResources();
                     final FXOMDocument transientDoc
-                            = new FXOMDocument(fxmlText, location, classLoader, resources);
+                            = fxomDocumentFactory.newDocument(fxmlText, location, classLoader, resources);
                     result = Arrays.asList(transientDoc.getFxomRoot());
                 } catch(IOException x) {
                     if (errorHandler != null) {

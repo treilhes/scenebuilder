@@ -49,6 +49,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 
 import javafx.stage.Stage;
@@ -103,7 +104,7 @@ class FxIncludeCollectorTest {
 
     @Test
     public void should_return_the_right_number_of_fxincludes() throws Exception {
-        FXOMDocument fxomDocument = new FXOMDocument(FXML, tempDir.toAbsolutePath().toUri().toURL(), null, null);
+        FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(FXML, tempDir.toAbsolutePath().toUri().toURL(), null, null);
 
         List<FXOMIntrinsic> items = fxomDocument.getFxomRoot().collect(FxCollector.allFxIncludes());
 
@@ -112,7 +113,7 @@ class FxIncludeCollectorTest {
 
     @Test
     public void should_return_the_right_number_of_fxincludes_by_source() throws Exception {
-        FXOMDocument fxomDocument = new FXOMDocument(FXML, tempDir.toAbsolutePath().toUri().toURL(), null, null);
+        FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(FXML, tempDir.toAbsolutePath().toUri().toURL(), null, null);
 
         String source = "included2.fxml";
         List<FXOMIntrinsic> items = fxomDocument.getFxomRoot().collect(FxCollector.fxIncludeBySource(source));

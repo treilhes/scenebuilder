@@ -152,7 +152,7 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
     public void cancelUserRegistration() {
         if (registrationHashPreference.getValue() == null) {
             String hash = getUniqueId();
-            registrationHashPreference.setValue(hash).writeToJavaPreferences();
+            registrationHashPreference.setValue(hash).save();
             tracking.sendTrackingInfo(TrackingController.SCENEBUILDER_TYPE, hash, "", false, false);
         }
 
@@ -172,9 +172,9 @@ public class RegistrationWindowController extends AbstractFxmlWindowController {
         boolean optIn = cbOptIn.isSelected();
 
         // Update preferences
-        registrationHashPreference.setValue(hash).writeToJavaPreferences();
-        registrationEmailPreference.setValue(email).writeToJavaPreferences();
-        registrationOptInPreference.setValue(optIn).writeToJavaPreferences();
+        registrationHashPreference.setValue(hash).save();
+        registrationEmailPreference.setValue(email).save();
+        registrationOptInPreference.setValue(optIn).save();
 
         tracking.sendTrackingInfo(TrackingController.SCENEBUILDER_TYPE, hash, email, optIn, update);
 

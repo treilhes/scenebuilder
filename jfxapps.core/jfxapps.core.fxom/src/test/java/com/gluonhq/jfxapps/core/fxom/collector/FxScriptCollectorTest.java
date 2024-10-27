@@ -49,6 +49,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMScript;
 import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
 import com.gluonhq.jfxapps.core.fxom.testutil.FxmlUtil;
@@ -109,7 +110,7 @@ public class FxScriptCollectorTest {
 
     @Test
     public void should_return_the_right_number_of_fxscripts() throws Exception {
-        FXOMDocument fxomDocument = new FXOMDocument(FXML, tempDir.toAbsolutePath().toUri().toURL(), null, null);
+        FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(FXML, tempDir.toAbsolutePath().toUri().toURL(), null, null);
 
         List<FXOMScript> items = fxomDocument.getFxomRoot().collect(FxCollector.allFxScripts());
 
@@ -118,7 +119,7 @@ public class FxScriptCollectorTest {
 
     @Test
     public void should_return_the_right_number_of_fxincludes_by_source() throws Exception {
-        FXOMDocument fxomDocument = new FXOMDocument(FXML, tempDir.toAbsolutePath().toUri().toURL(), null, null);
+        FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(FXML, tempDir.toAbsolutePath().toUri().toURL(), null, null);
 
         String source = "script2.js";
         List<FXOMScript> items = fxomDocument.getFxomRoot().collect(FxCollector.fxScriptBySource(source));

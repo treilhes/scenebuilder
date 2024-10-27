@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,6 +42,7 @@ import java.io.IOException;
 import org.junitpioneer.jupiter.SetSystemProperty;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMSaver;
 import com.gluonhq.jfxapps.core.fxom.fx.script.FxomFxScriptTagTest;
 
@@ -65,7 +66,7 @@ public class IOFixture {
 
     public static void testIsFxomLoadable(Object owner, String fileName, boolean failureExpected) {
         try (var stream = owner.getClass().getResourceAsStream(fileName)) {
-            new FXOMDocument(new String(stream.readAllBytes()), owner.getClass().getResource(fileName),
+            FXOMDocumentFactory.DEFAULT.newDocument(new String(stream.readAllBytes()), owner.getClass().getResource(fileName),
                     IOFixture.class.getClassLoader(), null);
         } catch (IOException e) {
             if (!failureExpected) {
@@ -76,7 +77,7 @@ public class IOFixture {
 
     public static void testIsFxomSerializable(Object owner, String fileName, boolean failureExpected) {
         try (var stream = owner.getClass().getResourceAsStream(fileName)) {
-            FXOMDocument fxomDocument = new FXOMDocument(new String(stream.readAllBytes()),
+            FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(new String(stream.readAllBytes()),
                     owner.getClass().getResource(fileName), FxomFxScriptTagTest.class.getClassLoader(), null);
             new FXOMSaver().save(fxomDocument);
         } catch (IOException e) {
@@ -89,7 +90,7 @@ public class IOFixture {
     public static void testSerializedIsEqualToSource(Object owner, String fileName, boolean failureExpected) {
         try (var stream = owner.getClass().getResourceAsStream(fileName)) {
             String content = new String(stream.readAllBytes());
-            FXOMDocument fxomDocument = new FXOMDocument(content, owner.getClass().getResource(fileName),
+            FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(content, owner.getClass().getResource(fileName),
                     IOFixture.class.getClassLoader(), null);
             String serializedContent = new FXOMSaver().save(fxomDocument, JFX_VERSION);
             assertNotNull(serializedContent);

@@ -52,6 +52,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector.FxIdUniqueMap;
 
@@ -108,7 +109,7 @@ class FxIdCollectorTest {
                 </Pane>
                 """;
 
-        FXOMDocument fxomDocument = new FXOMDocument(fxml, tempDir.toAbsolutePath().toUri().toURL(), null, null);
+        FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(fxml, tempDir.toAbsolutePath().toUri().toURL(), null, null);
 
         Map<String, FXOMObject> items = fxomDocument.getFxomRoot().collect(FxCollector.fxIdsUniqueMap());
 
@@ -129,7 +130,7 @@ class FxIdCollectorTest {
                 </Pane>
                 """;
 
-        FXOMDocument fxomDocument = new FXOMDocument(fxml);
+        FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(fxml);
         boolean ENSURE_UNICITY = true;
 
         assertThrows(FxIdUniqueMap.DuplicateIdException.class,
@@ -169,7 +170,7 @@ class FxIdCollectorTest {
                    </children>
                 </Pane>
                 """;
-        FXOMDocument fxomDocument = new FXOMDocument(fxml, tempDir.toAbsolutePath().toUri().toURL(), null, null);
+        FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(fxml, tempDir.toAbsolutePath().toUri().toURL(), null, null);
 
         final String value = "first";
         String id = null;

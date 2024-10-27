@@ -49,6 +49,7 @@ import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMComment;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.gluonhq.jfxapps.core.fxom.collector.ExpressionCollector;
 import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
@@ -110,7 +111,7 @@ class FXMLLoaderInstrumentTest {
 //
 //                """;
 //
-//        FXOMDocument fxomDocument = new FXOMDocument(fxml);
+//        FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(fxml);
 //        List<FXOMNode> items = fxomDocument.collect(ExpressionCollector.allUndeclaredExpressionReferences());
 //
 //        assertEquals(2, items.size());

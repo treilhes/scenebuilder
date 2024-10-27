@@ -61,6 +61,7 @@ import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
 import com.gluonhq.jfxapps.core.api.preference.ValueValidator;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.preferences.internal.preference.PreferenceBeanDefinitionRegistryPostProcessor;
 import com.gluonhq.jfxapps.core.preferences.internal.scan.PreferenceScanBeanDefinitionRegistryPostProcessor;
 import com.gluonhq.jfxapps.core.preferences.model.PreferenceEntity;
@@ -241,10 +242,10 @@ public class ScopedPreferenceTest {
         var all = preferenceRepository.findAll();
         assertTrue(all.size() == 0);
 
-        instance1Events.fxomDocument().set(new FXOMDocument(""));
-        instance2Events.fxomDocument().set(new FXOMDocument(""));
-        instance3Events.fxomDocument().set(new FXOMDocument(""));
-        instance4Events.fxomDocument().set(new FXOMDocument(""));
+        instance1Events.fxomDocument().set(FXOMDocumentFactory.DEFAULT.newDocument(""));
+        instance2Events.fxomDocument().set(FXOMDocumentFactory.DEFAULT.newDocument(""));
+        instance3Events.fxomDocument().set(FXOMDocumentFactory.DEFAULT.newDocument(""));
+        instance4Events.fxomDocument().set(FXOMDocumentFactory.DEFAULT.newDocument(""));
 
         // here we have fxomDocuments for all instance, but no locations set so nothing should be saved in db
         all = preferenceRepository.findAll();

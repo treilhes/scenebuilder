@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,19 +41,27 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
+import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.springframework.beans.factory.InitializingBean;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.css.StylesheetProvider;
+import com.gluonhq.jfxapps.core.api.fxom.FxomDocumentFactory;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractWindowController;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.util.FXOMDocumentUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.api.SbEditor;
-import com.oracle.javafx.scenebuilder.api.theme.StylesheetProvider;
-import com.oracle.javafx.scenebuilder.api.ui.AbstractWindowController;
-import com.oracle.javafx.scenebuilder.api.ui.misc.IconSetting;
-import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController.CameraType;
 
-import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -77,9 +85,10 @@ import javafx.stage.Modality;
  * Controller for Window when calling "Show Preview in Window"
  */
 @ApplicationInstanceSingleton
-@Lazy
 public class PreviewWindowController extends AbstractWindowController implements InitializingBean {
 
+    private final I18N i18n;
+    private final FxomDocumentFactory fxomDocumentFactory;
     private final SbEditor editorController;
     private Timer timer = null;
     private final int WIDTH_WHEN_EMPTY = 320;
@@ -104,8 +113,8 @@ public class PreviewWindowController extends AbstractWindowController implements
 	private StylesheetProvider stylesheetConfig;
     private I18nResourceProvider resourceConfig;
     private FXOMDocument fxomDocument;
-    private final FxmlDocumentManager documentManager;
-
+    private final ApplicationInstanceEvents documentManager;
+    private final JfxAppPlatform jfxAppPlatform;
     /**
      * The type of Camera used by the Preview panel.
      */
@@ -115,15 +124,20 @@ public class PreviewWindowController extends AbstractWindowController implements
     }
 
     public PreviewWindowController(
-            SceneBuilderManager sceneBuilderManager,
+            I18N i18n,
+            JfxAppPlatform jfxAppPlatform,
+            ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             SbEditor editorController,
-            ApplicationInstanceWindow document,
-            FxmlDocumentManager documentManager) {
+            InstanceWindow document,
+            ApplicationInstanceEvents documentManager,
+            FxomDocumentFactory fxomDocumentFactory) {
         super(sceneBuilderManager, iconSetting, document);
         this.editorController = editorController;
         this.documentManager = documentManager;
-
+        this.fxomDocumentFactory = fxomDocumentFactory;
+        this.jfxAppPlatform = jfxAppPlatform;
+        this.i18n = i18n;
     }
 
 
@@ -214,7 +228,7 @@ public class PreviewWindowController extends AbstractWindowController implements
         // We clone the FXOMDocument
         FXOMDocument clone;
         try {
-            clone = new FXOMDocument(fxomDocument.getFxmlText(false),
+            clone = fxomDocumentFactory.newDocument(fxomDocument.getFxmlText(false),
                     fxomDocument.getLocation(),
                     fxomDocument.getClassLoader(),
                     fxomDocument.getResources());
@@ -260,14 +274,14 @@ public class PreviewWindowController extends AbstractWindowController implements
             public void run() {
             // JavaFX data should only be accessed on the JavaFX thread.
             // => we must wrap the code into a Runnable object and call the SbPlatform.runLater
-            SbPlatform.runOnFxThread(() -> {
+            jfxAppPlatform.runOnFxThread(() -> {
                 String themeStyleSheetString = null;
                 if (fxomDocument != null) {
                     // We clone the FXOMDocument
                     FXOMDocument clone;
 
                     try {
-                        clone = new FXOMDocument(fxomDocument.getFxmlText(false),
+                        clone = fxomDocumentFactory.newDocument(fxomDocument.getFxmlText(false),
                                 fxomDocument.getLocation(),
                                 fxomDocument.getClassLoader(),
                                 fxomDocument.getResources());
@@ -315,7 +329,7 @@ public class PreviewWindowController extends AbstractWindowController implements
                     } else {
                         setCameraType(CameraType.PARALLEL);
                         sizeChangedFromMenu = false;
-                        StackPane sp2 = new StackPane(new Label(I18N.getString("preview.not.node")));
+                        StackPane sp2 = new StackPane(new Label(i18n.getString("preview.not.node")));
                         sp2.setId(NID_PREVIEW_ROOT);
                         sp2.setPrefSize(WIDTH_WHEN_EMPTY, HEIGHT_WHEN_EMPTY);
                         setRoot(sp2);
@@ -323,7 +337,7 @@ public class PreviewWindowController extends AbstractWindowController implements
                 } else {
                     setCameraType(CameraType.PARALLEL);
                     sizeChangedFromMenu = false;
-                    StackPane sp3 = new StackPane(new Label(I18N.getString("preview.no.document")));
+                    StackPane sp3 = new StackPane(new Label(i18n.getString("preview.no.document")));
                     sp3.setId(NID_PREVIEW_ROOT);
                     sp3.setPrefSize(WIDTH_WHEN_EMPTY, HEIGHT_WHEN_EMPTY);
                     setRoot(sp3);
@@ -423,7 +437,7 @@ public class PreviewWindowController extends AbstractWindowController implements
     }
 
     private void updateWindowTitle() {
-        getStage().setTitle(fxomDocument == null ? "Undefined" : FXOMDocumentUtils.makeTitle(fxomDocument));
+        getStage().setTitle(fxomDocument == null ? "Undefined" : FXOMDocumentUtils.makeTitle(i18n, fxomDocument));
     }
 
     public void setCameraType(PreviewWindowController.CameraType ct) {

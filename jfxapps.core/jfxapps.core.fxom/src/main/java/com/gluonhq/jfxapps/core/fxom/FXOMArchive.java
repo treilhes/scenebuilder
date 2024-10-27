@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -71,7 +72,7 @@ public class FXOMArchive implements Serializable {
         for (Entry e : entries) {
             final URL location = e.getLocation();
             final String fxmlText = e.getFxmlText();
-            final FXOMDocument d = new FXOMDocument(fxmlText, location,
+            final FXOMDocument d = targetDocument.getFactory().newDocument(fxmlText, location,
                     targetDocument.getClassLoader(), targetDocument.getResources());
             final FXOMObject fxomRoot = d.getFxomRoot();
             assert fxomRoot != null;

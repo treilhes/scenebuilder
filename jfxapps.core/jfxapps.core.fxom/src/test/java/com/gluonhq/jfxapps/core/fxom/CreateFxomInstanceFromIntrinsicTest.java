@@ -60,7 +60,7 @@ public class CreateFxomInstanceFromIntrinsicTest {
 
     private static void prepareTestData() {
         final String sourceFile = "test_include.fxml";
-        fxomDocument = new FXOMDocument();
+        fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument();
         fxomIntrinsic = new FXOMInclude(fxomDocument, sourceFile);
     }
 

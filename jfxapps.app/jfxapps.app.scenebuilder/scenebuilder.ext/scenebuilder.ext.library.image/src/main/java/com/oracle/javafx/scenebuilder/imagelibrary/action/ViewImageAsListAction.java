@@ -87,7 +87,7 @@ public class ViewImageAsListAction extends AbstractAction {
             libraryPanelController.setPreviousDisplayMode(ImageLibraryPanelController.DISPLAY_MODE.LIST);
         }
 
-        displayModePreference.setValue(libraryPanelController.getDisplayMode()).writeToJavaPreferences();
+        displayModePreference.setValue(libraryPanelController.getDisplayMode()).save();
         return ActionStatus.DONE;
     }
 }

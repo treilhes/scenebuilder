@@ -53,6 +53,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
@@ -136,7 +137,7 @@ class ExpressionReferenceTest {
 
     @BeforeEach
     public void setup() throws Exception {
-        fxomDocument = new FXOMDocument(MAIN, tempDir.toAbsolutePath().toUri().toURL(), null, null);
+        fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(MAIN, tempDir.toAbsolutePath().toUri().toURL(), null, null);
     }
 
     @Test
@@ -204,7 +205,7 @@ class ExpressionReferenceTest {
 
                 """;
 
-        FXOMDocument fxomDocument = new FXOMDocument(fxml);
+        FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(fxml);
         var items = fxomDocument.collect(ExpressionCollector.allUndeclaredExpressionReferences());
 
         assertEquals(2, items.size());
@@ -240,7 +241,7 @@ class ExpressionReferenceTest {
 
                 """;
 
-        FXOMDocument fxomDocument = new FXOMDocument(fxml);
+        FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(fxml);
         var items = fxomDocument.collect(ExpressionCollector.allUndeclaredExpressionReferences());
 
         assertEquals(1, items.size());

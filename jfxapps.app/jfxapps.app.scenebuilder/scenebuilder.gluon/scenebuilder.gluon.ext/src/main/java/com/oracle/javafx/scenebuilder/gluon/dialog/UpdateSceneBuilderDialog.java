@@ -122,9 +122,9 @@ public class UpdateSceneBuilderDialog extends Dialog<ButtonType> {
             if (newValue == downloadButton) {
                 hostServices.showDocument(VersionSetting.DOWNLOAD_URL);
             } else if (newValue == remindLater) {
-                showUpdateDialogDate.setValue(LocalDate.now().plusWeeks(1)).writeToJavaPreferences();;
+                showUpdateDialogDate.setValue(LocalDate.now().plusWeeks(1)).save();;
             } else if (newValue == ignoreThisUpdate) {
-                ignoreVersion.setValue(latestVersion).writeToJavaPreferences();;
+                ignoreVersion.setValue(latestVersion).save();;
             } else if (newValue == learnMore) {
                 hostServices.showDocument(announcementURL);
             }

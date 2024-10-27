@@ -51,6 +51,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
 import com.gluonhq.jfxapps.core.fxom.testutil.FxmlUtil;
@@ -111,7 +112,7 @@ class EventHandlerCollectorTest {
 
                 """;
 
-        FXOMDocument fxomDocument = new FXOMDocument(fxml, tempDir.toAbsolutePath().toUri().toURL(), null, null);
+        FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(fxml, tempDir.toAbsolutePath().toUri().toURL(), null, null);
 
         List<FXOMPropertyT> items = fxomDocument.getFxomRoot().collect(EventHandlerCollector.allEventHandlers());
 

@@ -48,6 +48,7 @@ import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMComment;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
 import com.gluonhq.jfxapps.core.fxom.testutil.FxmlUtil;
 
@@ -98,7 +99,7 @@ class CommentCollectorTest {
 
     @BeforeEach
     public void setup() throws Exception {
-        fxomDocument = new FXOMDocument(MAIN);
+        fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(MAIN);
     }
 
     @Test

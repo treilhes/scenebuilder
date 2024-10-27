@@ -49,7 +49,6 @@ import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
 import com.gluonhq.jfxapps.core.fxom.glue.GlueDocument;
 import com.gluonhq.jfxapps.core.fxom.sampledata.SampleDataGenerator;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
-import com.gluonhq.jfxapps.core.fxom.util.FXMLLoaderInstrument;
 import com.gluonhq.jfxapps.util.URLUtils;
 
 import javafx.beans.property.ObjectProperty;
@@ -70,6 +69,7 @@ public class FXOMDocument {
 
     public static Map<String, Object> DEFAULT_NAMESPACE = new HashMap<>();
 
+    private final FXOMDocumentFactory factory;
     private final GlueDocument glue;
     private ClassLoader classLoader;
     private ResourceBundle resources;
@@ -94,36 +94,21 @@ public class FXOMDocument {
 
     private List<Class<?>> initialDeclaredClasses;
 
-
-    public FXOMDocument(Builder builder) throws IOException {
-        this.locationProperty.set(builder.location);
-        this.fxomRoot = builder.root;
-        this.glue = builder.fxmlText == null ? new GlueDocument(): new GlueDocument(builder.fxmlText);
-        this.classLoader = builder.classloader;
-        this.resources = builder.resources;
-
-        initialDeclaredClasses = new ArrayList<>();
-
-        if (this.glue.getMainElement() != null) {
-            final FXOMLoader loader = new FXOMLoader(this);
-            loader.load(builder.fxmlText);
-            if (builder.normalize) {
-                final FXOMNormalizer normalizer = new FXOMNormalizer(this);
-                normalizer.normalize();
-            }
-        } else {
-            // Document is empty
-            assert GlueDocument.isEmptyXmlText(builder.fxmlText);
-            // Keeps this.fxomRoot == null
-            // Keeps this.sceneGraphRoot == null
-        }
+    FXOMDocument(FXOMDocumentFactory factory) {
+        this.factory = factory;
+        this.glue = new GlueDocument();
     }
 
-    public FXOMDocument(String fxmlText) throws IOException {
-        this(fxmlText, null, null, null);
+    FXOMDocument(FXOMDocumentFactory factory, String fxmlText) throws IOException {
+        this(factory, fxmlText, null, null, null);
     }
 
-    public FXOMDocument(String fxmlText, URL location, ClassLoader classLoader, ResourceBundle resources, boolean normalize) throws IOException {
+    FXOMDocument(FXOMDocumentFactory factory, String fxmlText, URL location, ClassLoader classLoader, ResourceBundle resources) throws IOException {
+        this(factory, fxmlText, location, classLoader, resources, true /* normalize */);
+    }
+
+    FXOMDocument(FXOMDocumentFactory factory, String fxmlText, URL location, ClassLoader classLoader, ResourceBundle resources, boolean normalize) throws IOException {
+        this.factory = factory;
         this.locationProperty.set(location);
         this.glue = new GlueDocument(fxmlText);
         this.classLoader = classLoader;
@@ -143,16 +128,6 @@ public class FXOMDocument {
             // Keeps this.fxomRoot == null
             // Keeps this.sceneGraphRoot == null
         }
-    }
-
-
-    public FXOMDocument(String fxmlText, URL location, ClassLoader classLoader, ResourceBundle resources) throws IOException {
-        this(fxmlText, location, classLoader, resources, true /* normalize */);
-    }
-
-
-    public FXOMDocument() {
-        this.glue = new GlueDocument();
     }
 
     public void beginUpdate() {
@@ -596,46 +571,8 @@ public class FXOMDocument {
         endUpdate();
     }
 
-    public static class Builder {
-
-        protected FXOMObject root;
-        protected URL location;
-        private ResourceBundle resources;
-        private boolean normalize;
-        private String fxmlText;
-        protected ClassLoader classloader;
-
-        protected Builder root(FXOMObject root) {
-            this.root = root;
-            return this;
-        }
-
-
-        protected Builder location(URL location) {
-            this.location = location;
-            return this;
-        }
-
-        protected Builder fxmlText(String fxmlText) {
-            this.fxmlText = fxmlText;
-            return this;
-        }
-
-        public Builder resourceBundle(ResourceBundle resources) {
-            this.resources = resources;
-            return this;
-        }
-
-        public Builder normalization(boolean normalize) {
-            this.normalize = normalize;
-            return this;
-        }
-
-        protected Builder classLoader(ClassLoader classloader) {
-            this.classloader = classloader;
-            return this;
-        }
-
+    public FXOMDocumentFactory getFactory() {
+        return factory;
     }
 
 }

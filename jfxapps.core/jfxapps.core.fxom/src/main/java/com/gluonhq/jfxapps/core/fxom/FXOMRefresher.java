@@ -68,8 +68,7 @@ class FXOMRefresher {
         String fxmlText = null;
         try {
             fxmlText = document.getFxmlText(false);
-            final FXOMDocument newDocument
-                    = new FXOMDocument(fxmlText,
+            final FXOMDocument newDocument = document.getFactory().newDocument(fxmlText,
                     document.getLocation(),
                     document.getClassLoader(),
                     document.getResources(),

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,6 +40,7 @@ import org.junitpioneer.jupiter.SetSystemProperty;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMScript;
 import com.gluonhq.jfxapps.core.fxom.fx.CloneFixture;
 import com.gluonhq.jfxapps.core.fxom.fx.IOFixture;
@@ -122,7 +123,7 @@ public class FxomFxIncludeTagTest {
 //
 //        try (var stream = getClass().getResourceAsStream(testCase.getFileName())){
 //            String content = new String(stream.readAllBytes());
-//            FXOMDocument fxomDocument = new FXOMDocument(content, null, FxomFxIncludeTagTest.class.getClassLoader(), null);
+//            FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(content, null, FxomFxIncludeTagTest.class.getClassLoader(), null);
 //
 //            List<FXOMScript> scripts = fxomDocument.getFxomRoot().collectScripts(null);
 //

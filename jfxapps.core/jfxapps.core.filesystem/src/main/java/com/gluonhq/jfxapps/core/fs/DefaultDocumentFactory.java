@@ -31,57 +31,52 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.api.javafx;
+package com.gluonhq.jfxapps.core.fs;
 
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.stereotype.Component;
 
-import javafx.application.Platform;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 
 /**
- * deprecated or need an update, jfxAppPlatform is loaded once and not on each call
- *
+ * Default implementation of the {@link FXOMDocumentFactory} interface.
+ * The main goal of this class is to ensure each document is created on the JavaFX Thread.
+ * Why ? Because controls like WebView or WebEngine must be created on the JavaFX Thread.
+ * Until a better solution is found, this class is the best way to ensure the document is created on the JavaFX Thread.
  */
-@Aspect
-@Component
-@EnableAspectJAutoProxy
-@Deprecated
-public class FxThreadAspect {
+@ApplicationSingleton
+public class DefaultDocumentFactory implements FXOMDocumentFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(FxThreadAspect.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultDocumentFactory.class);
+    private final JfxAppPlatform platform;
 
-    private final JfxAppPlatform jfxAppPlatform;
-
-    public FxThreadAspect(JfxAppPlatform jfxAppPlatform) {
-        super();
-        this.jfxAppPlatform = jfxAppPlatform;
+    public DefaultDocumentFactory(JfxAppPlatform platform) {
+        this.platform = platform;
     }
 
-    @Around("@annotation(com.gluonhq.jfxapps.core.api.javafx.FxThread)")
-    public Object fxThreadAround(ProceedingJoinPoint joinPoint) throws Throwable {
+    @Override
+    public FXOMDocument newDocument(FXOMDocumentFactory factory) {
+        return FXOMDocumentFactory.DEFAULT.newDocument(this);
+    }
 
-        logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-        logger.info("Executing aspect");
-        logger.info("Executing aspect for " + joinPoint.getSignature().getName());
-        logger.info("Executing aspect");
-        logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-
-        if (Platform.isFxApplicationThread()) {
-            return joinPoint.proceed();
+    @Override
+    public FXOMDocument newDocument(FXOMDocumentFactory factory, String fxmlText, URL location, ClassLoader classLoader,
+            ResourceBundle resources, boolean normalize) throws IOException {
+        try {
+            return platform.callOnFxThreadWithActiveScope(() -> {
+                return FXOMDocumentFactory.DEFAULT.newDocument(this, fxmlText, location, classLoader, resources, FXOMDocumentFactory.DEFAULT_NORMALIZE);
+            }).get();
+        } catch (InterruptedException | ExecutionException e) {
+            logger.error("Error creating new document", e);
         }
-
-        return jfxAppPlatform.callOnFxThreadWithActiveScope(() -> {
-            try {
-                return joinPoint.proceed();
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
-            }
-        });
+        return null;
     }
 }

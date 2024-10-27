@@ -48,7 +48,6 @@ import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.javafx.FxThread;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloaderDispatcher;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
@@ -108,7 +107,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
     //private final Content contentPanelController;
     //private final Workspace workspace;
     //private final RecentItemsPreference recentItemsPreference;
-    private final Preferences documentPreferencesController;
+    private final Preferences preferences;
     //private final LastDockUuidPreference lastDockUuidPreference;
     // PREFERENCES
     //private FileTime loadFileTime;
@@ -148,7 +147,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
             FileSystem fileSystem,
             //RecentItemsPreference recentItemsPreference,
             //WildcardImportsPreference wildcardImportsPreference,
-            Preferences documentPreferencesController,
+            Preferences preferences,
             //Workspace workspace,
 //            @Autowired(required = false) Content contentPanelController,
 //            @Autowired Editor editorController,
@@ -196,7 +195,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
 
         this.viewMenuController = viewMenuController;
         this.documentManager = documentManager;
-        this.documentPreferencesController = documentPreferencesController;
+        this.preferences = preferences;
         //this.inspectorPanelController = inspectorPanelController;
         //this.libraryPanelController = libraryPanelController;
 
@@ -208,7 +207,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
 
         this.preferenceManager = new PreferenceManager();
 
-        documentPreferencesController.readFromJavaPreferences();
+        preferences.read();
 
         mainKeyEventFilter = event -> {
             // ------------------------------------------------------------------
@@ -311,7 +310,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
 
             if (firstLoad) { // load the last ui prefs of the document if any
                 //preferenceManager.untrack();
-                documentPreferencesController.readFromJavaPreferences();
+                preferences.read();
 
                 jfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
                     preferenceManager.apply();
@@ -420,7 +419,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
             return;
         }
 
-        documentPreferencesController.writeToJavaPreferences();
+        preferences.save();
     }
 
     public void initializeDocumentWindow() {
@@ -573,7 +572,6 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
     }
 
     @Override
-    @FxThread
     public void openWindow() {
         jfxAppPlatform.runOnFxThreadWithActiveScope(() ->{
             documentWindow.openWindow();

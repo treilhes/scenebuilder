@@ -47,6 +47,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 
@@ -78,7 +79,7 @@ class CoordinateHelperTest {
         try {
             URL url = CoordinateHelperTest.class.getResource("clipedRectangle.fxml");
             String fxmlText = new String(Files.readAllBytes(Path.of(url.toURI())));
-            newFxomDocument = new FXOMDocument(fxmlText, url, CoordinateHelperTest.class.getClassLoader(), null);
+            newFxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(fxmlText, url, CoordinateHelperTest.class.getClassLoader(), null);
             Parent root = (Parent)newFxomDocument.getSceneGraphRoot();
             stage.setScene(new Scene(root, 300, 300));
             stage.show();

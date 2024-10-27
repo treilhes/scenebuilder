@@ -60,12 +60,12 @@ public class DocumentPreferencesController implements Preferences {
     }
 
     @Override
-    public void readFromJavaPreferences() {
+    public void read() {
     	preferences.forEach((p) -> p.load());
     }
 
     @Override
-    public void writeToJavaPreferences() {
+    public void save() {
     	preferences.forEach((p) -> p.save());
     }
 
