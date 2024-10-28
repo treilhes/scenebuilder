@@ -31,80 +31,79 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.gluonhq.jfxapps.core.fxom.collector;
 
-package com.gluonhq.jfxapps.core.fxom;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.fxom.transform.FXOMSerializer;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 
-/**
- *
- */
-public class FXOMArchive implements Serializable {
+public class FXOMObjectCollector {
 
-    private static final long serialVersionUID = 7777;
+    public static FindAll all() {
+        return new FindAll();
+    }
 
-    private final List<Entry> entries = new ArrayList<>();
+    public static <T extends FXOMObject> FindByType<T> allOfType(Class<T> type) {
+        return new FindByType<T>(type);
+    }
 
-    public FXOMArchive(List<FXOMObject> fxomObjects) {
-        assert fxomObjects != null;
+    public static class FindAll implements FXOMCollector<List<FXOMObject>>{
 
-        for (FXOMObject o : fxomObjects) {
-            final URL location = o.getFxomDocument().getLocation();
-            final String fxmlText = FXOMSerializer.DEFAULT_FXML.serialize(FXOMNodes.newDocument(o));
-            entries.add(new Entry(fxmlText, location));
+        private List<FXOMObject> result = new ArrayList<>();
+
+        public FindAll() {
+            super();
+        }
+
+        @Override
+        public Strategy collectionStrategy() {
+            return Strategy.OBJECT;
+        }
+
+        @Override
+        public void collect(FXOMObject object) {
+            result.add(object);
+        }
+
+        @Override
+        public void collect(FXOMProperty property) {}
+
+        @Override
+        public List<FXOMObject> getCollected() {
+            return result;
         }
     }
 
-    public List<Entry> getEntries() {
-        return entries;
-    }
+    public static class FindByType<T extends FXOMObject> implements FXOMCollector<List<T>>{
 
-    public List<FXOMObject> decode(FXOMDocument targetDocument)
-    throws IOException {
-        final List<FXOMObject> result = new ArrayList<>();
+        private final List<T> result = new ArrayList<>();
+        private final Class<T> type;
 
-        assert targetDocument != null;
-
-        for (Entry e : entries) {
-            final URL location = e.getLocation();
-            final String fxmlText = e.getFxmlText();
-            final FXOMDocument d = targetDocument.getFactory().newDocument(fxmlText, location,
-                    targetDocument.getClassLoader(), targetDocument.getResources());
-            final FXOMObject fxomRoot = d.getFxomRoot();
-            assert fxomRoot != null;
-            fxomRoot.moveToFxomDocument(targetDocument);
-            result.add(fxomRoot);
+        public FindByType(Class<T> type) {
+            super();
+            this.type = type;
         }
 
-        return result;
-    }
-
-
-    public static class Entry implements Serializable {
-
-        private static final long serialVersionUID = 8888;
-
-        private final String fxmlText;
-        private final URL location;
-
-        public Entry(String fxmlText, URL location) {
-            this.fxmlText = fxmlText;
-            this.location = location;
+        @Override
+        public Strategy collectionStrategy() {
+            return Strategy.OBJECT;
         }
 
-        public String getFxmlText() {
-            return fxmlText;
+        @Override
+        public void collect(FXOMObject object) {
+            if (type.isAssignableFrom(object.getClass())) {
+                result.add(type.cast(object));
+            }
         }
 
-        public URL getLocation() {
-            return location;
-        }
+        @Override
+        public void collect(FXOMProperty property) {}
 
+        @Override
+        public List<T> getCollected() {
+            return result;
+        }
     }
 }

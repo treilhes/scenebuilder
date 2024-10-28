@@ -31,39 +31,56 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.dnd.source;
+package com.gluonhq.jfxapps.core.fs.preference;
 
-import java.util.Collection;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups;
+import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
+import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
+import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
+import com.gluonhq.jfxapps.core.api.preference.UserPreference;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.dnd.DefaultDragSourceFactory;
-import com.gluonhq.jfxapps.core.api.dnd.DragSource;
-import com.gluonhq.jfxapps.core.api.dnd.DragSourceFactory;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import javafx.scene.Parent;
 
-import javafx.scene.image.Image;
-import javafx.scene.input.Dragboard;
+@ApplicationSingleton
+@PreferenceContext(id = "fadcedbc-539f-40dd-b11a-6be43f9de019", // NO CHECK
+        name = UseSampleDataPreference.PREFERENCE_KEY,
+        defaultValueProvider = UseSampleDataPreference.DefaultProvider.class)
+public interface UseSampleDataPreference
+        extends Preference<Boolean>, ManagedGlobalPreference, UserPreference<Boolean> {
 
-@ApplicationInstanceSingleton
-public class DefaultDragSourceFactoryImpl extends DragSourceFactory<DragSource> implements DefaultDragSourceFactory {
+    /***************************************************************************
+     * * Static fields * *
+     **************************************************************************/
+    public static final String PREFERENCE_KEY = "prefs.use.sample.data"; // NOCHECK
+    public static final boolean PREFERENCE_DEFAULT_VALUE = false;
 
-    public DefaultDragSourceFactoryImpl(JfxAppContext sbContext) {
-        super(sbContext);
+    @Override
+    default String getLabelI18NKey() {
+        return PREFERENCE_KEY;
     }
 
     @Override
-    public DragSource document(Image image, Collection<FXOMObject> draggedObjects, FXOMObject hitObject, double hitX, double hitY) {
-        return create(DocumentDragSource.class, j -> j.setDragSourceParameters(image, draggedObjects, hitObject, hitX, hitY));
+    default Parent getEditor() {
+        return getPreferenceEditorFactory().newBooleanFieldEditor(this);
     }
 
     @Override
-    public DragSource document(Image image, Collection<FXOMObject> draggedObjects, FXOMObject hitObject) {
-        return create(DocumentDragSource.class, j -> j.setDragSourceParameters(image, draggedObjects, hitObject, null, null));
+    default PreferenceGroup getGroup() {
+        return DefaultPreferenceGroups.GLOBAL_GROUP_F;
     }
 
     @Override
-    public DragSource external(Dragboard clipboardContent) {
-        return create(ExternalDragSource.class, j -> j.setDragSourceParameters(clipboardContent));
+    default String getOrderKey() {
+        return getGroup().getOrderKey() + "_B";
+    }
+
+    public static class DefaultProvider implements DefaultValueProvider<Boolean> {
+        @Override
+        public Boolean get() {
+            return PREFERENCE_DEFAULT_VALUE;
+        }
     }
 }

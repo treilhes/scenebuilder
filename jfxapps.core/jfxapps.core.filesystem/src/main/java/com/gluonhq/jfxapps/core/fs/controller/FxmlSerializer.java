@@ -31,22 +31,32 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.ui.dock;
+package com.gluonhq.jfxapps.core.fs.controller;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-
-import javafx.geometry.Orientation;
+import com.gluonhq.jfxapps.core.fs.preference.CompressFxmlPreference;
+import com.gluonhq.jfxapps.core.fs.preference.WildcardImportsPreference;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.transform.DefaultFxmlSerializer;
+import com.gluonhq.jfxapps.core.fxom.transform.FXOMSerializer;
 
 @ApplicationInstanceSingleton
-public class DockTypeSplitV extends AbstractDockTypeSplit {
+public class FxmlSerializer implements FXOMSerializer {
 
-    public DockTypeSplitV(JfxAppContext context) {
-        super(context, Orientation.VERTICAL);
+    private final WildcardImportsPreference wildcardImportsPreference;
+    private final CompressFxmlPreference compressFxmlPreference;
+
+    public FxmlSerializer(WildcardImportsPreference wildcardImportsPreference,
+            CompressFxmlPreference compressFxmlPreference) {
+        this.wildcardImportsPreference = wildcardImportsPreference;
+        this.compressFxmlPreference = compressFxmlPreference;
     }
 
     @Override
-    public String getNameKey() {
-        return "viewtype.splitv";
+    public String serialize(FXOMDocument fxomDocument) {
+        var serializer = new DefaultFxmlSerializer(wildcardImportsPreference.getValue(), null,
+                compressFxmlPreference.getValue());
+        return serializer.serialize(fxomDocument);
     }
+
 }

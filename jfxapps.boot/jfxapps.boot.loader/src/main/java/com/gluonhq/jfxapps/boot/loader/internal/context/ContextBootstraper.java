@@ -202,9 +202,10 @@ public class ContextBootstraper {
             classes.addAll(parent.getDeportedClasses());
             classes.addAll(childrenDeportedClasses);
             childrenDeportedClasses.clear(); // deported classes are handled, so clear them
-        } else {
-            childrenDeportedClasses.addAll(parent.getDeportedClasses());
         }
+//        else {
+//            childrenDeportedClasses.addAll(parent.getDeportedClasses());
+//        }
 
         if (parent != null) {
             classes.addAll(extensionLocalClasses);

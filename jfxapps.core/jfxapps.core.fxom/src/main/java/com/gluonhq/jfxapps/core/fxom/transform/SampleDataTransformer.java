@@ -31,22 +31,44 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.ui.dock;
+package com.gluonhq.jfxapps.core.fxom.transform;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import java.io.IOException;
 
-import javafx.geometry.Orientation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@ApplicationInstanceSingleton
-public class DockTypeSplitV extends AbstractDockTypeSplit {
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.sampledata.SampleDataGenerator;
 
-    public DockTypeSplitV(JfxAppContext context) {
-        super(context, Orientation.VERTICAL);
+public class SampleDataTransformer implements FXOMDocumentTransformer {
+
+    private static final Logger logger = LoggerFactory.getLogger(SampleDataTransformer.class);
+
+    private final SampleDataGenerator generator;
+    private final FXOMSerializer serializer;
+
+    public SampleDataTransformer(SampleDataGenerator generator, FXOMSerializer serializer) {
+        super();
+        this.generator = generator;
+        this.serializer = serializer;
     }
 
     @Override
-    public String getNameKey() {
-        return "viewtype.splitv";
+    public FXOMDocument transform(FXOMDocument document) {
+        try {
+            FXOMDocument copy = copy(document);
+            generator.assignSampleData(copy.getFxomRoot());
+            return copy;
+        } catch (IOException e) {
+            logger.error("Error while copying the document, unable to apply sample data! Document unchanged", e);
+        }
+        return document;
     }
+
+    private FXOMDocument copy(FXOMDocument document) throws IOException {
+        String text = serializer.serialize(document);
+        return document.getFactory().newDocument(text, document.getLocation(), document.getClassLoader(), document.getResources(), document.isNormalized());
+    }
+
 }

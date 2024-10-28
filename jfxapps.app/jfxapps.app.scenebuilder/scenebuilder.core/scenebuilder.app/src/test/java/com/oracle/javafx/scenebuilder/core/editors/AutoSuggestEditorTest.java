@@ -55,6 +55,8 @@ import com.gluonhq.jfxapps.core.metadata.property.value.StringPropertyMetadata.M
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.app.editors.AutoSuggestEditor;
 
+import javafx.beans.value.ObservableValue;
+
 @ExtendWith(ApplicationExtension.class)
 public class AutoSuggestEditorTest {
 
@@ -118,6 +120,11 @@ public class AutoSuggestEditorTest {
         @Override
         public void reset(ValuePropertyMetadata propMeta, SelectionState selectionState) {
             super.reset(propMeta, selectionState);
+        }
+
+        @Override
+        public ObservableValue<Boolean> focusedProperty() {
+            return null;
         }
 
     }

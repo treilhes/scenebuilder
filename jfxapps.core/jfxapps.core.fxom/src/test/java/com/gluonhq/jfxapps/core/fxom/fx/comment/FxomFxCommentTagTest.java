@@ -51,10 +51,11 @@ import org.testfx.framework.junit5.Start;
 import com.gluonhq.jfxapps.core.fxom.FXOMComment;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
-import com.gluonhq.jfxapps.core.fxom.FXOMSaver;
 import com.gluonhq.jfxapps.core.fxom.collector.CommentCollector;
 import com.gluonhq.jfxapps.core.fxom.fx.CloneFixture;
 import com.gluonhq.jfxapps.core.fxom.fx.IOFixture;
+import com.gluonhq.jfxapps.core.fxom.transform.DefaultFxmlSerializer;
+import com.gluonhq.jfxapps.core.fxom.transform.FXOMSerializer;
 
 import javafx.stage.Stage;
 
@@ -142,7 +143,8 @@ public class FxomFxCommentTagTest {
             comment = comment.replace("this is some", "there is some");
             comments.get(0).setComment(comment);
 
-            String serializedContent = new FXOMSaver().save(fxomDocument, IOFixture.JFX_VERSION);
+            FXOMSerializer serializer = new DefaultFxmlSerializer(false, IOFixture.JFX_VERSION, false);
+            String serializedContent = serializer.serialize(fxomDocument);
 
             assertNotNull(serializedContent);
 

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,25 +35,21 @@ package com.oracle.javafx.scenebuilder.document.hierarchy;
 
 import java.util.Optional;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.dnd.DefaultDragSourceFactory;
+import com.gluonhq.jfxapps.core.api.dnd.DefaultDropTargetFactory;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroupFactory;
-import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask.Accessory;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
-import com.gluonhq.jfxapps.core.dnd.source.DocumentDragSource;
-import com.gluonhq.jfxapps.core.dnd.source.ExternalDragSource;
-import com.gluonhq.jfxapps.core.dnd.target.AccessoryDropTarget;
-import com.gluonhq.jfxapps.core.dnd.target.RootDropTarget;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.api.mask.SbAccessory;
+import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell.BorderSide;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyDND;
@@ -89,13 +85,14 @@ public class HierarchyDNDController implements HierarchyDND {
     private static final double AUTO_SCROLLING_ZONE_HEIGHT = 40.0;
 
     private final Drag drag;
-    private final RootDropTarget.Factory rootDropTargetFactory;
-    private final FXOMObjectMask.Factory designHierarchyMaskFactory;
-    private final AccessoryDropTarget.Factory accessoryDropTargetFactory;
+
+    private final DefaultDropTargetFactory defaultDropTargetFactory;
+    private final DefaultDragSourceFactory defaultDragSourceFactory;
+    private final SbFXOMObjectMask.Factory designHierarchyMaskFactory;
 
     private final HierarchyTreeViewController hierarchyTreeView;
     private HierarchyTaskScheduler scheduler;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final HierarchyAnimationScheduler animationScheduler;
     private final HierarchyInsertLine insertLine;
     private final HierarchyParentRing parentRing;
@@ -103,8 +100,6 @@ public class HierarchyDNDController implements HierarchyDND {
     private final Selection selection;
     private final InlineEdit inlineEdit;
 
-    private final DocumentDragSource.Factory documentDragSourceFactory;
-    private final ExternalDragSource.Factory externalDragSourceFactory;
 
     /**
      * Defines the mouse location within the cell when the dropping gesture
@@ -121,7 +116,7 @@ public class HierarchyDNDController implements HierarchyDND {
 
     protected HierarchyDNDController(
             Drag drag,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection,
             InlineEdit inlineEdit,
             HierarchyTreeViewController hierarchyTreeView,
@@ -130,12 +125,9 @@ public class HierarchyDNDController implements HierarchyDND {
             HierarchyInsertLine insertLine,
             HierarchyParentRing parentRing,
             HierarchyCellAssignment cellAssignments,
-            RootDropTarget.Factory rootDropTargetFactory,
-            FXOMObjectMask.Factory designHierarchyMaskFactory,
-            AccessoryDropTarget.Factory accessoryDropTargetFactory,
-            DocumentDragSource.Factory documentDragSourceFactory,
-            ExternalDragSource.Factory externalDragSourceFactory
-
+            DefaultDropTargetFactory defaultDropTargetFactory,
+            DefaultDragSourceFactory defaultDragSourceFactory,
+            SbFXOMObjectMask.Factory designHierarchyMaskFactory
             ) {
         this.drag = drag;
         this.documentManager = documentManager;
@@ -147,12 +139,9 @@ public class HierarchyDNDController implements HierarchyDND {
         this.inlineEdit = inlineEdit;
         this.parentRing = parentRing;
         this.cellAssignments = cellAssignments;
-        this.rootDropTargetFactory = rootDropTargetFactory;
+        this.defaultDropTargetFactory = defaultDropTargetFactory;
+        this.defaultDragSourceFactory = defaultDragSourceFactory;
         this.designHierarchyMaskFactory = designHierarchyMaskFactory;
-        this.accessoryDropTargetFactory = accessoryDropTargetFactory;
-        this.documentDragSourceFactory = documentDragSourceFactory;
-        this.externalDragSourceFactory = externalDragSourceFactory;
-
     }
 
     /**
@@ -171,7 +160,7 @@ public class HierarchyDNDController implements HierarchyDND {
         treeCell.clearBorders();
 
         // Remove insert line indicator
-        insertLine.clearLine();
+        insertLine.clear();
     }
 
     /**
@@ -245,7 +234,7 @@ public class HierarchyDNDController implements HierarchyDND {
         treeCell.clearBorders();
 
         // Remove insert line indicator
-        insertLine.clearLine();
+        insertLine.clear();
     }
 
     /**
@@ -278,7 +267,7 @@ public class HierarchyDNDController implements HierarchyDND {
       // First update drop target
       final DropTarget dropTarget = makeDropTarget(treeItem, location);
       drag.setDropTarget(dropTarget);
-System.out.println();
+
       // Then update transfer mode
       event.acceptTransferModes(drag.getAcceptedTransferModes());
 
@@ -317,7 +306,7 @@ System.out.println();
         parentRing.clear();
 
         // Remove insert line indicator
-        insertLine.clearLine();
+        insertLine.clear();
 
         // If an animation timeline is running
         // (auto-scroll when DND to the top or bottom of the Hierarchy),
@@ -347,14 +336,15 @@ System.out.println();
             // or on the accessory owner cell.
             //==========================================================
 
-            Accessory targetAccessory = dropTarget instanceof AccessoryDropTarget ? ((AccessoryDropTarget) dropTarget).findTargetAccessory(drag.getDragSource().getDraggedObjects()) : null;
+            //Accessory targetAccessory = dropTarget instanceof AccessoryDropTarget ? ((AccessoryDropTarget) dropTarget).findTargetAccessory(drag.getDragSource().getDraggedObjects()) : null;
 
             // TreeItem is null when dropping below the datas
             // => the drop target is the root
             if (treeItem == null) {
                 final Optional<HierarchyCell> cell = cellAssignments.getCell(rootTreeItem);
                 cell.ifPresent(c -> c.setBorder(BorderSide.TOP_RIGHT_BOTTOM_LEFT));
-            } else if (dropTarget instanceof AccessoryDropTarget && targetAccessory != null && treeItem.getValue().isPlaceHolder()) {
+            //} else if (dropTarget instanceof AccessoryDropTarget && targetAccessory != null && treeItem.getValue().isPlaceHolder()) {
+            } else if (treeItem.getValue().isPlaceHolder()) {
 
                 final HierarchyItem item = treeItem.getValue();
 
@@ -421,12 +411,12 @@ System.out.println();
 
         final FXOMObject dropTargetObject;
         final DropTarget result;
-        Accessory accessory = null; // Used if we insert as accessory (drop over a place holder)
+        SbAccessory accessory = null; // Used if we insert as accessory (drop over a place holder)
         int targetIndex = -1; // Used if we insert as sub components
 
         final FXOMDocument document = documentManager.fxomDocument().get();
         if (document == null || document.getFxomRoot() == null) {
-            return rootDropTargetFactory.getDropTarget();
+            return defaultDropTargetFactory.root();
         }
         // TreeItem is null when dropping below the datas
         // => the drop target is the root
@@ -516,9 +506,9 @@ System.out.println();
                             if (parentItem.isPlaceHolder()) {
                                 //TODO new case to test
                                 // If it is a placeholder get the parent
-                                final TreeItem<HierarchyItem> realParentTreeItem = parentTreeItem.getParent();
-                                final FXOMObject parentObject = realParentTreeItem.getValue().getFxomObject();
-                                final FXOMObjectMask parentMask = designHierarchyMaskFactory.getMask(parentObject);
+                                final var realParentTreeItem = parentTreeItem.getParent();
+                                final var parentObject = realParentTreeItem.getValue().getFxomObject();
+                                final var parentMask = designHierarchyMaskFactory.getMask(parentObject);
 
                                 HierarchyItemAccessory accessoryItem = (HierarchyItemAccessory)parentItem;
                                 accessory = accessoryItem.getAccessory();
@@ -535,8 +525,8 @@ System.out.println();
                             } else {
                                 // If the parent accepts sub components,
                                 // this is a reordering gesture and the target is the parent
-                                final FXOMObject parentObject = parentTreeItem.getValue().getFxomObject();
-                                final FXOMObjectMask parentMask = designHierarchyMaskFactory.getMask(parentObject);
+                                final var parentObject = parentTreeItem.getValue().getFxomObject();
+                                final var parentMask = designHierarchyMaskFactory.getMask(parentObject);
                                 if (parentMask.isAcceptingSubComponent(dragSource.getDraggedObjects())) {
                                     dropTargetObject = parentObject;
                                     targetIndex = item.getFxomObject().getIndexInParentProperty();
@@ -569,9 +559,9 @@ System.out.println();
                                 if (parentItem.isPlaceHolder()) {
                                     //TODO new case to test
                                     // If it is a placeholder get the parent
-                                    final TreeItem<HierarchyItem> realParentTreeItem = parentTreeItem.getParent();
-                                    final FXOMObject parentObject = realParentTreeItem.getValue().getFxomObject();
-                                    final FXOMObjectMask parentMask = designHierarchyMaskFactory.getMask(parentObject);
+                                    final var realParentTreeItem = parentTreeItem.getParent();
+                                    final var parentObject = realParentTreeItem.getValue().getFxomObject();
+                                    final var parentMask = designHierarchyMaskFactory.getMask(parentObject);
 
                                     HierarchyItemAccessory accessoryItem = (HierarchyItemAccessory)parentItem;
                                     accessory = accessoryItem.getAccessory();
@@ -585,8 +575,8 @@ System.out.println();
                                         dropTargetObject = item.getFxomObject();
                                     }
                                 } else {
-                                    final FXOMObject parentObject = parentTreeItem.getValue().getFxomObject();
-                                    final FXOMObjectMask parentMask = designHierarchyMaskFactory.getMask(parentObject);
+                                    final var parentObject = parentTreeItem.getValue().getFxomObject();
+                                    final var parentMask = designHierarchyMaskFactory.getMask(parentObject);
                                     if (parentMask.isAcceptingSubComponent(dragSource.getDraggedObjects())) {
                                         dropTargetObject = parentTreeItem.getValue().getFxomObject();
                                         targetIndex = item.getFxomObject().getIndexInParentProperty() + 1;
@@ -616,7 +606,7 @@ System.out.println();
 
     private DropTarget makeDropTarget(
             final FXOMObject dropTargetObject,
-            final Accessory accessory,
+            final SbAccessory accessory,
             int targetIndex) {
 
         DropTarget result = null;
@@ -626,7 +616,7 @@ System.out.println();
             final DragSource dragSource = drag.getDragSource();
             assert dragSource != null;
             final FXOMElement dropTargetInstance = (FXOMElement) dropTargetObject;
-            final FXOMObjectMask dropTargetMask = designHierarchyMaskFactory.getMask(dropTargetInstance);
+            final SbFXOMObjectMask dropTargetMask = designHierarchyMaskFactory.getMask(dropTargetInstance);
 
             if (accessory != null) {
              // Check if the drop target accepts sub components
@@ -642,7 +632,7 @@ System.out.println();
                             beforeChild = dropTargetMask.getSubComponentAtIndex(accessory, targetIndex, true);
                         }
                     }
-                    result = accessoryDropTargetFactory.getDropTarget(dropTargetInstance, accessory, beforeChild);
+                    result = defaultDropTargetFactory.accessory(dropTargetInstance, accessory, beforeChild);
                 }
             } else {
 
@@ -659,7 +649,7 @@ System.out.println();
                             beforeChild = dropTargetMask.getSubComponentAtIndex(dropTargetMask.getMainAccessory(), targetIndex, true);
                         }
                     }
-                    result = accessoryDropTargetFactory.getDropTarget(dropTargetInstance, beforeChild);
+                    result = defaultDropTargetFactory.accessory(dropTargetInstance, beforeChild);
                 } //
                 // Check if the drop target accepts accessories
                 else {
@@ -681,8 +671,8 @@ System.out.println();
 //                        Accessory.EXPANDABLE_CONTENT,
 //                        Accessory.SCENE
 //                    };
-                    for (Accessory a : dropTargetMask.getAccessories()) {
-                        final AccessoryDropTarget dropTarget = accessoryDropTargetFactory.getDropTarget(dropTargetInstance, a);
+                    for (SbAccessory a : dropTargetMask.getAccessories()) {
+                        final DropTarget dropTarget = defaultDropTargetFactory.accessory(dropTargetInstance, a);
                         // If the accessory drop target accepts the dragged objects,
                         // we return this drop target.
                         // Otherwise, we look for the next accessory.
@@ -731,7 +721,7 @@ System.out.println();
         // has been started from outside (from the explorer / finder)
         if (drag.getDragSource() == null) { // Drag started externally
             // Build drag source
-            final ExternalDragSource dragSource = externalDragSourceFactory.getDragSource(event.getDragboard());
+            final var dragSource = defaultDragSourceFactory.external(event.getDragboard());
             assert dragSource.isAcceptable();
             drag.begin(dragSource);
             shouldEndOnExit = true;
@@ -801,45 +791,40 @@ System.out.println();
             return;
         }
 
-        if (selection.isEmpty() == false) { // (1)
-            if (selection.getGroup() instanceof SelectionGroupFactory) {
-                // A set of regular component (ie fxom objects) are selected
-                final SelectionGroupFactory osg = (SelectionGroupFactory) selection.getGroup();
+        if (selection.isEmpty() == false) {
+            // A set of regular component (ie fxom objects) are selected
+            final SelectionGroup osg = selection.getGroup();
 
-                // Abort dragging an empty place holder
-                for (TreeItem<HierarchyItem> selectedTreeItem : selectedTreeItems) {
-                    final HierarchyItem item = selectedTreeItem.getValue();
-                    if (item.isEmpty()) {
-                        return;
-                    }
+            // Abort dragging an empty place holder
+            for (TreeItem<HierarchyItem> selectedTreeItem : selectedTreeItems) {
+                final HierarchyItem item = selectedTreeItem.getValue();
+                if (item.isEmpty()) {
+                    return;
                 }
-                // Retrieve the hit object
-                final Cell<?> cell = hierarchyTreeView.lookupCell(event.getTarget());
-                final Object item = cell.getItem();
-                assert item instanceof HierarchyItemBase;
-                final HierarchyItemBase hierarchyItem = (HierarchyItemBase) item;
-                final FXOMObject hitObject = hierarchyItem.getFxomObject();
-                assert (hitObject != null); // Because we cannot drag placeholders
-                // Build drag source
-
-                final DocumentDragSource dragSource = documentDragSourceFactory.getDragSource(osg.getSortedItems(),
-                        hitObject);
-
-                if (dragSource.isAcceptable()) {
-                    // Start drag and drop
-                    final Dragboard db = hierarchyTreeView.getTreeView().startDragAndDrop(TransferMode.COPY_OR_MOVE);
-                    db.setContent(dragSource.makeClipboardContent());
-                    db.setDragView(dragSource.makeDragView());
-                    // DragController.begin
-                    assert drag.getDragSource() == null;
-                    drag.begin(dragSource);
-                }
-
-            } else {
-                // Emergency code : a new type of AbstractSelectionGroup
-                // exists but is not managed by this code yet.
-                assert false : "Add implementation for " + selection.getGroup().getClass();
             }
+            // Retrieve the hit object
+            final Cell<?> cell = hierarchyTreeView.lookupCell(event.getTarget());
+            final Object item = cell.getItem();
+            assert item instanceof HierarchyItemBase;
+            final HierarchyItemBase hierarchyItem = (HierarchyItemBase) item;
+            final FXOMObject hitObject = hierarchyItem.getFxomObject();
+            assert (hitObject != null); // Because we cannot drag placeholders
+            // Build drag source
+
+            var mask =designHierarchyMaskFactory.getMask(hitObject);
+
+            final var dragSource = defaultDragSourceFactory.document(mask.getClassNameIcon(), osg.getItems(), hitObject);
+
+            if (dragSource.isAcceptable()) {
+                // Start drag and drop
+                final Dragboard db = hierarchyTreeView.getTreeView().startDragAndDrop(TransferMode.COPY_OR_MOVE);
+                db.setContent(dragSource.makeClipboardContent());
+                db.setDragView(dragSource.makeDragView());
+                // DragController.begin
+                assert drag.getDragSource() == null;
+                drag.begin(dragSource);
+            }
+
         }
     }
 

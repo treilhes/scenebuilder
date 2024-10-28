@@ -39,10 +39,13 @@ import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor.LayoutFormat;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.MenuButton;
+import javafx.scene.layout.HBox;
 
 public interface PropertyEditor {
 
@@ -130,5 +133,11 @@ public interface PropertyEditor {
     public void setLayoutFormat(LayoutFormat doubleLine);
 
     public void requestFocus();
+
+    HBox getPropNameNode();
+
+    ObjectProperty<Object> valueProperty();
+
+    ObservableValue<Boolean> focusedProperty();
 
 }

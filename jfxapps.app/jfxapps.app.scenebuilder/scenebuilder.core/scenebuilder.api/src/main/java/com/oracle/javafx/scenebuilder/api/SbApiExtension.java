@@ -43,7 +43,7 @@ import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.oracle.javafx.scenebuilder.api.control.driver.SbDriverImpl;
 import com.oracle.javafx.scenebuilder.api.control.inlineedit.SimilarInlineEditorBounds;
 import com.oracle.javafx.scenebuilder.api.i18n.I18NSceneBuilderApi;
-import com.oracle.javafx.scenebuilder.api.preferences.global.ParentRingColorPreference;
+import com.oracle.javafx.scenebuilder.api.preference.ParentRingColorPreference;
 
 @EditorDescriptor(
             label = "scenebuilder.app.label",

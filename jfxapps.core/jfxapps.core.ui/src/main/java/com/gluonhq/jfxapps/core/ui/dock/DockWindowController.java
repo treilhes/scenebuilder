@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.ui.dock;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -55,7 +56,7 @@ import javafx.stage.Stage;
 /**
  *
  */
-@Prototype
+@ApplicationInstancePrototype
 public class DockWindowController extends AbstractFxmlWindowController {
 
     @FXML

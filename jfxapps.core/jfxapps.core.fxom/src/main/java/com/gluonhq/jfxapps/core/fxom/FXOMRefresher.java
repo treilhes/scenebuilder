@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.core.fxom.transform.FXOMSerializer;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 
 import javafx.scene.Node;
@@ -67,7 +68,7 @@ class FXOMRefresher {
     public void refresh(FXOMDocument document) {
         String fxmlText = null;
         try {
-            fxmlText = document.getFxmlText(false);
+            fxmlText = FXOMSerializer.DEFAULT_FXML.serialize(document);
             final FXOMDocument newDocument = document.getFactory().newDocument(fxmlText,
                     document.getLocation(),
                     document.getClassLoader(),

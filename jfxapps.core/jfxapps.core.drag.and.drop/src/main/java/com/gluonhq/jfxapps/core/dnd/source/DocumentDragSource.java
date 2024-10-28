@@ -34,6 +34,7 @@
 package com.gluonhq.jfxapps.core.dnd.source;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -82,7 +83,7 @@ public final class DocumentDragSource extends AbstractDragSource {
         this.clipboardEncoder = clipboardEncoder;
     }
 
-    public void setDragSourceParameters(Image image, List<FXOMObject> draggedObjects, FXOMObject hitObject, Double hitX, Double hitY) {
+    public void setDragSourceParameters(Image image, Collection<FXOMObject> draggedObjects, FXOMObject hitObject, Double hitX, Double hitY) {
         assert draggedObjects != null;
         assert hitObject != null;
         assert draggedObjects.contains(hitObject);

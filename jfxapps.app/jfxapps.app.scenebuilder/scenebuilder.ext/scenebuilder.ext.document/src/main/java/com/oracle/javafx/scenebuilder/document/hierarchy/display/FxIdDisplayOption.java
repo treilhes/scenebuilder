@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,18 +39,17 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.Glossary;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
-import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyFxIdJob;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
+import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
 import com.oracle.javafx.scenebuilder.document.api.AbstractDisplayOption;
 import com.oracle.javafx.scenebuilder.document.api.annotation.DisplayOptionName;
 
@@ -66,18 +65,18 @@ public class FxIdDisplayOption extends AbstractDisplayOption {
     private final JobManager jobManager;
     private final MessageLogger messageLogger;
     private final Glossary glossary;
-    private final ModifyFxIdJob.Factory modifyFxIdJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
 
     public FxIdDisplayOption(
             JobManager jobManager,
             MessageLogger messageLogger,
             Glossary glossary,
-            ModifyFxIdJob.Factory modifyFxIdJobFactory) {
+            FxomJobsFactory fxomJobsFactory) {
         super();
         this.jobManager = jobManager;
         this.messageLogger = messageLogger;
         this.glossary = glossary;
-        this.modifyFxIdJobFactory = modifyFxIdJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
     }
 
     /**
@@ -86,7 +85,7 @@ public class FxIdDisplayOption extends AbstractDisplayOption {
      * @return the FX ID of the FX object represented by this item.
      */
     @Override
-    public String getValue(HierarchyMask mask) {
+    public String getValue(SbHierarchyMask mask) {
         // Can be null for place holder items
         String id = mask == null ? null : mask.getFxId();
 
@@ -99,33 +98,33 @@ public class FxIdDisplayOption extends AbstractDisplayOption {
     }
 
     @Override
-    public String getResolvedValue(HierarchyMask mask) {
+    public String getResolvedValue(SbHierarchyMask mask) {
         return getValue(mask);
     }
 
     @Override
-    public boolean isReadOnly(HierarchyMask mask) {
+    public boolean isReadOnly(SbHierarchyMask mask) {
         return false;
     }
 
     @Override
-    public boolean isMultiline(HierarchyMask mask) {
+    public boolean isMultiline(SbHierarchyMask mask) {
         return false;
     }
 
     @Override
-    public boolean hasValue(HierarchyMask mask) {
+    public boolean hasValue(SbHierarchyMask mask) {
         return mask != null;
     }
 
     @Override
-    public void setValue(HierarchyMask mask, String newValue) {
+    public void setValue(SbHierarchyMask mask, String newValue) {
         FXOMObject fxomObject = mask.getFxomObject();
         assert newValue != null;
         final String fxId = newValue.isEmpty() ? null : newValue;
         final String oldID = mask.getFxId();
 
-        final AbstractJob job2 = modifyFxIdJobFactory.getJob(fxomObject, fxId);
+        final Job job2 = fxomJobsFactory.modifyFxId(fxomObject, fxId);
         if (job2.isExecutable()) {
 
             if (logger.isDebugEnabled()) {
@@ -152,7 +151,7 @@ public class FxIdDisplayOption extends AbstractDisplayOption {
 
             // Check duplicared fx ids
             //final FXOMDocument fxomDocument = editorController.getFxomDocument();
-            final Set<String> fxIds2 = fxomDocument.collect(FxIdCollector.fxIdsMap()).keySet();
+            final Set<String> fxIds2 = fxomDocument.collect(FxCollector.fxIdMap()).keySet();
             if (fxIds2.contains(fxId)) {
                 messageLogger.logWarningMessage("log.warning.duplicate.fxid", fxId);
             }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,13 +40,16 @@ import java.util.function.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.mask.Accessory;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask.Accessory;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.api.mask.SbAccessory;
+import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
+import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
 import com.oracle.javafx.scenebuilder.document.hierarchy.item.HierarchyItemAccessory;
 import com.oracle.javafx.scenebuilder.document.hierarchy.item.HierarchyItemBase;
@@ -64,15 +67,18 @@ public class TreeItemFactory {
 
     private final Map<ExpandedKey, Boolean> treeItemsExpandedMapProperty = new HashMap<>();
 
+    private final I18N i18n;
     private final HierarchyTreeViewController hierarchyTreeView;
-    private final FXOMObjectMask.Factory designHierarchyMaskFactory;
+    private final SbFXOMObjectMask.Factory designHierarchyMaskFactory;
     private final ShowExpertByDefaultPreference showExpertByDefaultPreference;
 
     public TreeItemFactory(
+            I18N i18n,
             HierarchyTreeViewController hierarchyTreeView,
             ShowExpertByDefaultPreference showExpertByDefaultPreference,
-            FXOMObjectMask.Factory designHierarchyMaskFactory) {
+            SbFXOMObjectMask.Factory designHierarchyMaskFactory) {
         super();
+        this.i18n = i18n;
         this.hierarchyTreeView = hierarchyTreeView;
         this.showExpertByDefaultPreference = showExpertByDefaultPreference;
         this.designHierarchyMaskFactory = designHierarchyMaskFactory;
@@ -105,14 +111,14 @@ public class TreeItemFactory {
      * @return the tree item
      */
     public TreeItem<HierarchyItem> makeTreeItemAccessory(
-            final HierarchyMask owner,
-            final Accessory accessory) {
+            final SbHierarchyMask<SbAccessory> owner,
+            final SbAccessory accessory) {
 
         List<FXOMObject> values = owner.getAccessories(accessory, true);
 
         if (values.isEmpty()) {
 
-            final HierarchyItemAccessory item = new HierarchyItemAccessory(designHierarchyMaskFactory, owner, null, accessory);
+            final HierarchyItemAccessory item = new HierarchyItemAccessory(i18n, designHierarchyMaskFactory, owner, null, accessory);
             return new TreeItem<>(item);
 //        } else if (values.size() == 1) {
 //
@@ -130,7 +136,7 @@ public class TreeItemFactory {
 //            }
 //            return treeItem;
         } else {
-            final HierarchyItemAccessory item = new HierarchyItemAccessory(designHierarchyMaskFactory, owner, null, accessory);
+            final HierarchyItemAccessory item = new HierarchyItemAccessory(i18n, designHierarchyMaskFactory, owner, null, accessory);
             final TreeItem<HierarchyItem> treeItem = new TreeItem<>(item);
 
             // Set back the TreeItem expanded property if any
@@ -160,7 +166,7 @@ public class TreeItemFactory {
 
     private void updateTreeItem(final TreeItem<HierarchyItem> treeItem) {
 
-        final HierarchyMask mask = treeItem.getValue().getMask();
+        final SbHierarchyMask<SbAccessory> mask = treeItem.getValue().getMask();
         assert mask != null;
         assert mask.getFxomObject() != null;
 
@@ -172,11 +178,11 @@ public class TreeItemFactory {
 //            .collect(Collectors.toList());
 
 
-        Predicate<Accessory> canSeeExpertOrNotEmpty = Predicate.not(Accessory::isExpert)
+        Predicate<SbAccessory> canSeeExpertOrNotEmpty = Predicate.not(SbAccessory::isExpert)
                 .or(a -> showExpertByDefaultPreference.getValue())
                 .or(a -> !mask.getAccessories(a, true).isEmpty());
 
-        List<Accessory> accessories = mask.getAccessories();
+        List<SbAccessory> accessories = mask.getAccessories();
         //showExpertByDefaultPreference
 
         accessories.stream()

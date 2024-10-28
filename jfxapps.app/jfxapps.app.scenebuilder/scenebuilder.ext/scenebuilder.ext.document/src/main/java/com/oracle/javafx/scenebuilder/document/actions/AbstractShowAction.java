@@ -46,42 +46,42 @@ import javafx.scene.control.ToggleGroup;
 
 public abstract class AbstractShowAction extends AbstractAction {
 
-	private final DocumentPanel documentPanel;
-	private final Hierarchy hierarchy;
-	private final DisplayOptionPreference displayOptionPreference;
-	private final DisplayOption option;
+    private final DocumentPanel documentPanel;
+    private final Hierarchy hierarchy;
+    private final DisplayOptionPreference displayOptionPreference;
+    private final DisplayOption option;
 
-	public AbstractShowAction(
-	        I18N i18n,
-	        ActionExtensionFactory extensionFactory,
-	        DisplayOption option,
-	        DocumentPanel documentPanel,
-	        Hierarchy hierarchy,
-	        DisplayOptionPreference displayOptionPreference) {
-		super(i18n, extensionFactory);
-		this.option = option;
-		this.documentPanel = documentPanel;
-		this.hierarchy = hierarchy;
-		this.displayOptionPreference = displayOptionPreference;
-	}
+    //@formatter:off
+    public AbstractShowAction(
+            I18N i18n,
+            ActionExtensionFactory extensionFactory,
+            DisplayOption option,
+            DocumentPanel documentPanel,
+            Hierarchy hierarchy,
+            DisplayOptionPreference displayOptionPreference) {
+        //@formatter:on
+        super(i18n, extensionFactory);
+        this.option = option;
+        this.documentPanel = documentPanel;
+        this.hierarchy = hierarchy;
+        this.displayOptionPreference = displayOptionPreference;
+    }
 
-	@Override
-	public boolean canPerform() {
-		return hierarchy.getDisplayOption() != option;
-	}
+    @Override
+    public boolean canPerform() {
+        return hierarchy.getDisplayOption() != option;
+    }
 
-	@Override
-	public ActionStatus doPerform() {
-	    hierarchy.setDisplayOption(option);
-    	documentPanel.getDocumentAccordion().setExpandedPane(
-    		documentPanel.getDocumentAccordion().getPanes().get(0));
+    @Override
+    public ActionStatus doPerform() {
+        hierarchy.setDisplayOption(option);
+        documentPanel.getDocumentAccordion().setExpandedPane(documentPanel.getDocumentAccordion().getPanes().get(0));
 
-    	displayOptionPreference
-    		.setBean(hierarchy.getDisplayOption())
-    		.save();
-    	return ActionStatus.DONE;
-	}
+        displayOptionPreference.setValue((Class<DisplayOption>) hierarchy.getDisplayOption().getClass()).save();
+        return ActionStatus.DONE;
+    }
 
-	@ApplicationInstanceSingleton
-	public static class ShowActionToggle extends ToggleGroup {}
+    @ApplicationInstanceSingleton
+    public static class ShowActionToggle extends ToggleGroup {
+    }
 }

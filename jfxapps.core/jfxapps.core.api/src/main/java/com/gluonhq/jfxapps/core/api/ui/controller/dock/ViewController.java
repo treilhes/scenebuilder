@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.ui.controller.dock;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
@@ -54,7 +55,7 @@ import javafx.scene.layout.StackPane;
  *
  * It provides input controls for filtering, a placeholder menu and basic docking functionalities
  */
-@Prototype
+@ApplicationInstancePrototype
 public class ViewController {
 
 	/** The views. */

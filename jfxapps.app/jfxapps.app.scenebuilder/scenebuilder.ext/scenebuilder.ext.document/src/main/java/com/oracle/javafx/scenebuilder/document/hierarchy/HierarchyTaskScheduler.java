@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,12 +37,12 @@ import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
+import com.gluonhq.jfxapps.core.api.mask.Accessory;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask.Accessory;
+import com.oracle.javafx.scenebuilder.api.mask.SbAccessory;
+import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell.BorderSide;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
@@ -92,16 +92,16 @@ public class HierarchyTaskScheduler {
     public void scheduleAddEmptyGraphicTask(final TreeItem<HierarchyItem> treeItem) {
         final HierarchyItem item = treeItem.getValue();
         assert item != null;
-        final HierarchyMask owner = item.getMask();
+        final SbHierarchyMask<SbAccessory> owner = item.getMask();
         assert owner != null;
         timerTask = new TimerTask() {
             @Override
             public void run() {
                 // JavaFX data should only be accessed on the JavaFX thread.
                 // => we must wrap the code into a Runnable object and call the SbPlatform.runLater
-                JfxAppPlatform.runOnFxThread(() -> {
+                JfxAppPlatform.ensureFxThread(() -> {
 
-                    for (Accessory accessory:owner.getAccessories()) {
+                    for (SbAccessory accessory:owner.getAccessories()) {
                       //TODO may be deletable
 //                      final TreeItem<HierarchyItem> graphicTreeItem
 //                              = panelController.makeTreeItemGraphic(owner, null);
@@ -161,7 +161,7 @@ public class HierarchyTaskScheduler {
         public void run() {
             // JavaFX data should only be accessed on the JavaFX thread.
             // => we must wrap the code into a Runnable object and call the SbPlatform.runLater
-            JfxAppPlatform.runOnFxThread(() -> treeItem.setExpanded(true));
+            JfxAppPlatform.ensureFxThread(() -> treeItem.setExpanded(true));
         }
     }
 }

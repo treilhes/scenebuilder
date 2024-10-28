@@ -48,9 +48,11 @@ import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.editors.EditorMapProvider;
 import com.oracle.javafx.scenebuilder.api.editors.PropertyEditor;
+import com.oracle.javafx.scenebuilder.api.editors.PropertyEditorFactory;
+import com.oracle.javafx.scenebuilder.api.editors.PropertyEditorFactorySession;
 
 @ApplicationSingleton
-public class PropertyEditorFactory {
+public class PropertyEditorFactoryImpl implements PropertyEditorFactory {
 
     // Map metadata class to editor class
     private final HashMap<Class<? extends PropertyMetadata>, List<Class<? extends PropertyEditor>>> metadataToEditors;
@@ -61,7 +63,7 @@ public class PropertyEditorFactory {
     /** The spring context. */
     private final JfxAppContext context;
 
-    public PropertyEditorFactory(
+    public PropertyEditorFactoryImpl(
             JfxAppContext context,
             List<EditorMapProvider> editorMapProviders
             ) {
@@ -117,6 +119,7 @@ public class PropertyEditorFactory {
         }
         return null;
     }
+    @Override
     public PropertyEditor newEditor(PropertyMetadata propMeta) {
         Class<? extends PropertyEditor> editorClass = findEditorClass(propMeta.getClass());
 
@@ -136,12 +139,14 @@ public class PropertyEditorFactory {
         }
     }
 
+    @Override
     public void releaseEditors(List<PropertyEditor> editorsInUse) {
      // Put all the editors used in the editor pools
         for (PropertyEditor editor : editorsInUse) {
             releaseEditor(editor);
         }
     }
+    @Override
     public void releaseEditor(PropertyEditor editor) {
         Stack<PropertyEditor> editorPool = editorPools.get(editor.getClass());
         assert editorPool != null;
@@ -150,15 +155,16 @@ public class PropertyEditorFactory {
         editor.removeAllListeners();
     }
 
-    public class PropertyEditorFactorySession {
+    public class PropertyEditorFactorySessionImpl implements PropertyEditorFactorySession {
         // Editors currently in use
         //   Could be a HashMap<SectionId, PropertyEditor>
         //   if we want to optimize a bit more the property editors usage,
         //   by re-using them directly in the GridPane, instead of using the pools.
         private final List<PropertyEditor> editorsInUse = new ArrayList<>();
 
-        protected PropertyEditorFactorySession() {}
+        protected PropertyEditorFactorySessionImpl() {}
 
+        @Override
         public PropertyEditor getEditor(ValuePropertyMetadata propMeta, SelectionState selectionState) {
             assert propMeta != null;
 
@@ -172,11 +178,13 @@ public class PropertyEditorFactory {
             return editor;
         }
 
+        @Override
         public void clear() {
             releaseEditors(editorsInUse);
             editorsInUse.clear();
         }
 
+        @Override
         public void reset(SelectionState selectionState, PropertyEditor... excludedEditors) {
             List<PropertyEditor> excluded = Arrays.asList(excludedEditors);
             editorsInUse.stream()
@@ -184,6 +192,7 @@ public class PropertyEditorFactory {
                 .forEach(e -> e.reset(e.getPropertyMeta(), selectionState));
         }
 
+        @Override
         public void forEach(Consumer<PropertyEditor> doSomething, PropertyEditor... excludedEditors) {
             List<PropertyEditor> excluded = Arrays.asList(excludedEditors);
             editorsInUse.stream()
@@ -191,14 +200,17 @@ public class PropertyEditorFactory {
                 .forEach(e -> doSomething.accept(e));
         }
 
+        @Override
         public PropertyEditor getFxIdEditor(SelectionState selectionState) {
             return getEditor(CoreEditors.FXID_EDITOR, selectionState);
         }
 
+        @Override
         public PropertyEditor getControllerClassEditor(SelectionState selectionState) {
             return getEditor(CoreEditors.FXCONTROLLER_EDITOR, selectionState);
         }
 
+        @Override
         public PropertyEditor find(PropertyName propName) {
             try {
                 return editorsInUse.stream().filter(e -> e.getPropertyName().equals(propName)).findFirst().get();
@@ -208,7 +220,8 @@ public class PropertyEditorFactory {
         }
     }
 
+    @Override
     public PropertyEditorFactorySession newSession() {
-        return new PropertyEditorFactorySession();
+        return new PropertyEditorFactorySessionImpl();
     }
 }

@@ -38,10 +38,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -51,10 +49,11 @@ import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 import com.gluonhq.jfxapps.core.api.util.FXOMDocumentUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.api.SbEditor;
-import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
+import com.gluonhq.jfxapps.core.fxom.transform.FXOMSerializer;
 
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
@@ -86,10 +85,10 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
 
 
     private final JfxAppPlatform platform;
-    private final ApplicationInstanceEvents documentManager;
-    private final WildcardImportsPreference wildcardImportsPreference;
+    private final ApplicationInstanceEvents applicationInstanceEvents;
+    private final FXOMSerializer fxomSerializer;
 
-    private final SbEditor editor;
+    private final FXOMDocumentFactory fxomDocumentFactory;
 
     private double scrollLeftSave;
     private double scrollTopSave;
@@ -103,17 +102,17 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
     public SourceViewWindowController(
             I18N i18n,
             JfxAppPlatform platform,
-            ApplicationEvents scenebuilderManager,
-            ApplicationInstanceEvents documentManager,
-            SbEditor editor,
-            WildcardImportsPreference wildcardImportsPreference,
-            ViewMenuController viewMenuController) {
+            ApplicationEvents applicationEvents,
+            ApplicationInstanceEvents applicationInstanceEvents,
+            FXOMDocumentFactory fxomDocumentFactory,
+            FXOMSerializer fxomSerializer,
+            ViewMenu viewMenu) {
         //@formatter:on
-        super(i18n, scenebuilderManager, documentManager, viewMenuController, SourceViewWindowController.class.getResource("SourceWindow.fxml"));
+        super(i18n, applicationEvents, applicationInstanceEvents, viewMenu, SourceViewWindowController.class.getResource("SourceWindow.fxml"));
         this.platform = platform;
-        this.documentManager = documentManager;
-        this.editor = editor;
-        this.wildcardImportsPreference = wildcardImportsPreference;
+        this.applicationInstanceEvents = applicationInstanceEvents;
+        this.fxomDocumentFactory = fxomDocumentFactory;
+        this.fxomSerializer = fxomSerializer;
     }
 
     private void setupFadeTransition() {
@@ -152,7 +151,12 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
             updateResultLabel.setText("");
 
             String fxmlText = textArea.getText();
-            editor.setFxmlTextAndLocation(fxmlText, fxomDocument.getLocation(), false);
+            var location = fxomDocument.getLocation();
+            var loader = fxomDocument.getClassLoader();
+            var bundle = fxomDocument.getResources();
+            var newDocument = fxomDocumentFactory.newDocument(fxmlText, location, loader, bundle);
+
+            applicationInstanceEvents.fxomDocument().set(newDocument);
 
             updateResultLabel.setOpacity(1.0);
             updateResultLabel.setText("SUCCESS!");
@@ -188,8 +192,8 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
     public void controllerDidLoadFxml() {
         assert textArea != null;
         setupFadeTransition();
-        documentManager.fxomDocument().subscribe(fx -> setFxomDocument(fx));
-        documentManager.sceneGraphRevisionDidChange().observeOn(JavaFxScheduler.platform()).subscribe(fx -> {
+        applicationInstanceEvents.fxomDocument().subscribe(fx -> setFxomDocument(fx));
+        applicationInstanceEvents.sceneGraphRevisionDidChange().observeOn(JavaFxScheduler.platform()).subscribe(fx -> {
             scrollLeftSave = textArea.getScrollLeft();
             scrollTopSave = textArea.getScrollTop();
             update();
@@ -202,19 +206,21 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
     }
 
     private void update() {
-        assert fxomDocument != null;
+        if (fxomDocument == null) {
+            return;
+        }
 
         // No need to eat CPU if the skeleton window isn't opened
         if (isVisible()) {
             updateTitle();
-            String fxml = fxomDocument.getFxmlText(wildcardImportsPreference.getValue());
+            String fxml = fxomSerializer.serialize(fxomDocument);
             textArea.setText(fxml);
 
             platform.runOnFxThreadWithActiveScope(() -> {
                 textArea.setScrollLeft(scrollLeftSave);
                 textArea.setScrollTop(scrollTopSave);
             });
-            documentManager.dirty().set(true);
+            applicationInstanceEvents.dirty().set(true);
             dirty  = false;
         } else {
             dirty = true;

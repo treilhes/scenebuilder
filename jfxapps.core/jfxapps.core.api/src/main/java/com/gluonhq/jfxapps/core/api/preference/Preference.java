@@ -55,6 +55,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -71,6 +72,8 @@ public interface Preference<T> extends ManagedPreference {
             .build();
 
     JfxAppContext getContext();
+
+    I18N getI18n();
 
     UUID getId();
 

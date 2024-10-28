@@ -57,6 +57,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.fxom.FXOMAssetIndex;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
+import com.gluonhq.jfxapps.core.fxom.transform.FXOMSerializer;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -102,6 +103,7 @@ public class FxomDisplayController implements FxomDisplay, InitWithDocument {
 
     private FXOMDocument fxomDocument;
     private final ApplicationEvents sceneBuilderManager;
+    private final FXOMSerializer serializer;
 
     /**
      * Creates an empty editor controller (ie it has no associated fxom document).
@@ -116,7 +118,8 @@ public class FxomDisplayController implements FxomDisplay, InitWithDocument {
             Selection selection,
             ApplicationInstanceEvents documentManager,
             ErrorReport errorReport,
-            InlineEdit inlineEditController
+            InlineEdit inlineEditController,
+            FXOMSerializer serializer
         	) {
         // @formatter:on
         this.fxomDocumentFactory = fxomDocumentFactory;
@@ -130,6 +133,7 @@ public class FxomDisplayController implements FxomDisplay, InitWithDocument {
         this.documentManager = documentManager;
         this.errorReport = errorReport;
         this.inlineEdit = inlineEditController;
+        this.serializer = serializer;
 
         fxmlLocationProperty = new SimpleObjectProperty<>();
 
@@ -173,14 +177,15 @@ public class FxomDisplayController implements FxomDisplay, InitWithDocument {
         if (fxomDocument == null) {
             result = null;
         } else {
-            final boolean sampleDataEnabled = fxomDocument.isSampleDataEnabled();
-            if (sampleDataEnabled) {
-                fxomDocument.setSampleDataEnabled(false);
-            }
-            result = fxomDocument.getFxmlText(wildcardImports);
-            if (sampleDataEnabled) {
-                fxomDocument.setSampleDataEnabled(true);
-            }
+            // FIXME find where to add sample data or simply delete this class cause i think it is deprecated
+//            final boolean sampleDataEnabled = fxomDocument.isSampleDataEnabled();
+//            if (sampleDataEnabled) {
+//                fxomDocument.setSampleDataEnabled(false);
+//            }
+            result = serializer.serialize(fxomDocument);
+//            if (sampleDataEnabled) {
+//                fxomDocument.setSampleDataEnabled(true);
+//            }
         }
 
         return result;

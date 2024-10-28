@@ -57,6 +57,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMCloner;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
+import com.gluonhq.jfxapps.core.fxom.transform.FXOMSerializer;
 import com.gluonhq.jfxapps.core.job.editor.atomic.ReplaceObjectJob;
 
 import javafx.stage.Stage;
@@ -123,7 +124,7 @@ class ExpandIntrinsicReferenceJobTest {
 //        job.setJobParameters(fxRef.get(0), new FXOMCloner(doc));
 //        job.execute();
 
-        System.out.println(doc.getFxmlText(false));
+        System.out.println(FXOMSerializer.DEFAULT_FXML.serialize(doc));
         //fail("Not yet implemented");
     }
 
@@ -167,7 +168,7 @@ class ExpandIntrinsicReferenceJobTest {
         job.setJobParameters(fxRef.get(0), new FXOMCloner(doc));
         job.execute();
 
-        System.out.println(doc.getFxmlText(false));
+        System.out.println(FXOMSerializer.DEFAULT_FXML.serialize(doc));
         //fail("Not yet implemented");
     }
 

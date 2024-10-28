@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,18 +33,16 @@
  */
 package com.oracle.javafx.scenebuilder.document.view;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
+import com.oracle.javafx.scenebuilder.api.ui.Docks;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
 import com.oracle.javafx.scenebuilder.document.api.DocumentPanel;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyController;
@@ -60,36 +58,44 @@ import javafx.scene.layout.StackPane;
  * Kit.
  *
  */
+//@formatter:off
 @ApplicationInstanceSingleton
-@Lazy
 @ViewAttachment(
         name = DocumentPanelController.VIEW_NAME,
-        id=DocumentPanelController.VIEW_ID,
-        prefDockId = Dock.LEFT_DOCK_ID,
+        id = DocumentPanelController.VIEW_ID,
+        prefDockId = Docks.LEFT_DOCK_ID,
         openOnStart = true,
         selectOnStart = false,
         order = 200,
-        icon = "Document.png", iconX2 = "Document@2x.png")
+        icon = "Document.png",
+        iconX2 = "Document@2x.png")
+//@formatter:on
 public class DocumentPanelController extends AbstractFxmlViewController implements DocumentPanel {
 
     public final static String VIEW_ID = "d1fd6f6a-5de0-4d92-9300-4309c4332ea5";
     public final static String VIEW_NAME = "document";
 
-	private final HierarchyController hierarchyController;
-	private final InfoPanelController infoPanelController;
-	private final DisplayOptionPreference displayOptionPreference;
+    private final HierarchyController hierarchyController;
+    private final InfoPanelController infoPanelController;
+    private final DisplayOptionPreference displayOptionPreference;
+    private final JfxAppContext context;
 
-	@FXML private StackPane hierarchyPanelHost;
-	@FXML private StackPane infoPanelHost;
-	@FXML private Accordion documentAccordion;
+    @FXML
+    private StackPane hierarchyPanelHost;
+    @FXML
+    private StackPane infoPanelHost;
+    @FXML
+    private Accordion documentAccordion;
 
     /*
      * Public
      */
 
-    //TODO after verifying setLibrary is never reused in editorcontroller, must use UserLibrary bean instead of libraryProperty
+    // TODO after verifying setLibrary is never reused in editorcontroller, must use
+    // UserLibrary bean instead of libraryProperty
     /**
      * Creates a library panel controller for the specified editor controller.
+     *
      * @param api
      * @param sceneBuilderFactory
      * @param hierarchyPanelController
@@ -100,19 +106,23 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
      * @param showFxIdAction
      * @param showNodeIdAction
      */
+    //@formatter:off
     public DocumentPanelController(
+            I18N i18n,
             ApplicationEvents scenebuilderManager,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             HierarchyController hierarchyPanelController,
-    		InfoPanelController infoPanelController,
-    		DisplayOptionPreference displayOptionPreference,
-            ViewMenu viewMenuController
-    		) {
-        super(scenebuilderManager, documentManager, viewMenuController, DocumentPanelController.class.getResource("DocumentPanel.fxml"), I18N.getBundle());
+            InfoPanelController infoPanelController,
+            DisplayOptionPreference displayOptionPreference,
+            ViewMenu viewMenuController,
+            JfxAppContext context) {
+        //@formatter:on
+        super(i18n, scenebuilderManager, documentManager, viewMenuController,
+                DocumentPanelController.class.getResource("DocumentPanel.fxml"));
         this.hierarchyController = hierarchyPanelController;
         this.infoPanelController = infoPanelController;
         this.displayOptionPreference = displayOptionPreference;
-
+        this.context = context;
     }
 
     @FXML
@@ -123,23 +133,21 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
 //    	accordionAnimationPreference.getObservableValue().addListener(
 //    			(ob, o, n) -> getDocumentAccordion().getPanes().forEach(tp -> tp.setAnimated(n)));
 
-    	refreshHierarchyDisplayOption(displayOptionPreference.getBean());
-    	displayOptionPreference.getObservableValue().addListener(
-    			(ob, o, n) -> refreshHierarchyDisplayOption(displayOptionPreference.getBean()));
+        refreshHierarchyDisplayOption(displayOptionPreference.getValue());
+        displayOptionPreference.getObservableValue().addListener((ob, o, n) -> refreshHierarchyDisplayOption(n));
     }
-
 
     /**
      * @treatAsPrivate Controller did load fxml.
      */
     @Override
     public void controllerDidLoadFxml() {
-    	assert hierarchyPanelHost != null;
+        assert hierarchyPanelHost != null;
         assert infoPanelHost != null;
         assert documentAccordion != null;
         assert !documentAccordion.getPanes().isEmpty();
 
-		hierarchyPanelHost.getChildren().add(hierarchyController.getRoot());
+        hierarchyPanelHost.getChildren().add(hierarchyController.getRoot());
         infoPanelHost.getChildren().add(infoPanelController.getRoot());
 
         documentAccordion.setExpandedPane(documentAccordion.getPanes().get(0));
@@ -152,11 +160,12 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
 
     @Override
     public Accordion getDocumentAccordion() {
-		return documentAccordion;
-	}
+        return documentAccordion;
+    }
 
-	public void refreshHierarchyDisplayOption(DisplayOption option) {
-        hierarchyController.setDisplayOption(option);
+    public void refreshHierarchyDisplayOption(Class<DisplayOption> optionClass) {
+        var value = context.getBean(optionClass);
+        hierarchyController.setDisplayOption(value);
     }
 
     @Override

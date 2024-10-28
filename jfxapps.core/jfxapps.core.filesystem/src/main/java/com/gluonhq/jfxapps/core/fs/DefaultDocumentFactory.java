@@ -36,6 +36,7 @@ package com.gluonhq.jfxapps.core.fs;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import org.slf4j.Logger;
@@ -70,13 +71,22 @@ public class DefaultDocumentFactory implements FXOMDocumentFactory {
     @Override
     public FXOMDocument newDocument(FXOMDocumentFactory factory, String fxmlText, URL location, ClassLoader classLoader,
             ResourceBundle resources, boolean normalize) throws IOException {
+
         try {
-            return platform.callOnFxThreadWithActiveScope(() -> {
+            final Callable<FXOMDocument> callable = () -> {
                 return FXOMDocumentFactory.DEFAULT.newDocument(this, fxmlText, location, classLoader, resources, FXOMDocumentFactory.DEFAULT_NORMALIZE);
-            }).get();
-        } catch (InterruptedException | ExecutionException e) {
-            logger.error("Error creating new document", e);
+            };
+
+            var future = platform.callOnFxThreadWithActiveScope(callable);
+            return future.get();
+
+        } catch (ExecutionException e) {
+            if (e.getCause() instanceof IOException ioe) {
+                throw ioe;
+            }
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-        return null;
     }
 }

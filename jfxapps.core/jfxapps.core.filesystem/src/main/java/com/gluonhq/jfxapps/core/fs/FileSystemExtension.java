@@ -52,10 +52,13 @@ import com.gluonhq.jfxapps.core.fs.action.impl.SaveAsAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.SaveOrSaveAsAction;
 import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
 import com.gluonhq.jfxapps.core.fs.controller.FileSystemController;
+import com.gluonhq.jfxapps.core.fs.controller.FxmlSerializer;
 import com.gluonhq.jfxapps.core.fs.controller.RecentItemsController;
+import com.gluonhq.jfxapps.core.fs.preference.CompressFxmlPreference;
 import com.gluonhq.jfxapps.core.fs.preference.InitialDirectoryPreference;
 import com.gluonhq.jfxapps.core.fs.preference.RecentItemsPreference;
 import com.gluonhq.jfxapps.core.fs.preference.RecentItemsSizePreference;
+import com.gluonhq.jfxapps.core.fs.preference.UseSampleDataPreference;
 import com.gluonhq.jfxapps.core.fs.preference.WildcardImportsPreference;
 
 public class FileSystemExtension implements OpenExtension {
@@ -83,9 +86,11 @@ public class FileSystemExtension implements OpenExtension {
         return List.of(
                 ClassLoaderController.class,
                 ClearRecentItemsAction.class,
+                CompressFxmlPreference.class,
                 DefaultDocumentFactory.class,
                 FileSystemActionFactoryImpl.class,
                 FileSystemController.class,
+                FxmlSerializer.class,
                 InitialDirectoryPreference.class,
                 LoadBlankAction.class,
                 LoadFileAction.class,
@@ -101,6 +106,7 @@ public class FileSystemExtension implements OpenExtension {
                 SaveAction.class,
                 SaveAsAction.class,
                 SaveOrSaveAsAction.class,
+                UseSampleDataPreference.class,
                 WildcardImportsPreference.class
             );
      // @formatter:on

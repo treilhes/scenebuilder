@@ -170,6 +170,7 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
         EditorUtils.makeWidthStretchable(propNameNode);
     }
 
+    @Override
     public HBox getPropNameNode() {
         return propNameNode;
     }
@@ -477,6 +478,7 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
         this.defaultValue = defaultValue;
     }
 
+    @Override
     public ObjectProperty<Object> valueProperty() {
         return valueProperty;
     }

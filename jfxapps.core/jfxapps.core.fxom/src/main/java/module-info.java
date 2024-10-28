@@ -45,6 +45,7 @@ open module jfxapps.core.fxom {
     exports com.gluonhq.jfxapps.core.fxom.glue;
     exports com.gluonhq.jfxapps.core.fxom.sampledata;
     exports com.gluonhq.jfxapps.core.fxom.ext;
+    exports com.gluonhq.jfxapps.core.fxom.transform;
     exports com.gluonhq.jfxapps.core.fxom.util;
 
 

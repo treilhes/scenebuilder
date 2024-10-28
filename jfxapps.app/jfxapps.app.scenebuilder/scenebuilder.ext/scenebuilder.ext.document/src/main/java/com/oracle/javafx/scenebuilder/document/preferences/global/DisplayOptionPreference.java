@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,18 +33,16 @@
  */
 package com.oracle.javafx.scenebuilder.document.preferences.global;
 
-import java.util.List;
 import java.util.function.Supplier;
 
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups;
-import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preference.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preference.UserPreference;
 import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
-import com.gluonhq.jfxapps.core.api.preference.type.BeanPreference;
+import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
+import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
+import com.gluonhq.jfxapps.core.api.preference.UserPreference;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
 import com.oracle.javafx.scenebuilder.document.hierarchy.display.MetadataInfoDisplayOption;
 
@@ -52,9 +50,12 @@ import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 
-@Component
-public class DisplayOptionPreference extends BeanPreference<DisplayOption>
-        implements ManagedGlobalPreference, UserPreference<Class<DisplayOption>> {
+@ApplicationInstanceSingleton
+@PreferenceContext(id = "a402955a-ed2a-4c05-8239-1b6bdcd2bcb0", // NO CHECK
+    name = DisplayOptionPreference.PREFERENCE_KEY,
+    defaultValueProvider = DisplayOptionPreference.DefaultProvider.class)
+public interface DisplayOptionPreference
+        extends Preference<Class<DisplayOption>>, ManagedGlobalPreference, UserPreference<Class<DisplayOption>> {
 
     /***************************************************************************
      * * Static fields * *
@@ -65,20 +66,16 @@ public class DisplayOptionPreference extends BeanPreference<DisplayOption>
     public static final Class<DisplayOption> PREFERENCE_DEFAULT_VALUE = (Class<DisplayOption>) MetadataInfoDisplayOption.class
             .asSubclass(DisplayOption.class);
 
-    private final List<Class<DisplayOption>> displayOptions;
-
-    public DisplayOptionPreference(PreferencesContext preferencesContext, SceneBuilderBeanFactory context) {
-        super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE, context);
-        this.displayOptions = context.getBeanClassesForType(DisplayOption.class);
-    }
+    //private final List<Class<DisplayOption>> displayOptions;
 
     @Override
-    public String getLabelI18NKey() {
+    default String getLabelI18NKey() {
         return "prefs.hierarchy.displayoption";
     }
 
     @Override
-    public Parent getEditor() {
+    default Parent getEditor() {
+        var displayOptions = getContext().getBeanClassesForType(DisplayOption.class);
         ComboBox<Class<DisplayOption>> field = new ComboBox<>();
 
         Supplier<ListCell<Class<DisplayOption>>> cell = () -> {
@@ -90,7 +87,7 @@ public class DisplayOptionPreference extends BeanPreference<DisplayOption>
                         setGraphic(null);
                     } else {
                         String name = DisplayOption.getName(item);
-                        name = I18N.getStringOrDefault(name, name);
+                        name = getI18n().getStringOrDefault(name, name);
                         setText(name);
                     }
                 }
@@ -112,12 +109,19 @@ public class DisplayOptionPreference extends BeanPreference<DisplayOption>
     }
 
     @Override
-    public PreferenceGroup getGroup() {
+    default PreferenceGroup getGroup() {
         return DefaultPreferenceGroups.GLOBAL_GROUP_C;
     }
 
     @Override
-    public String getOrderKey() {
+    default String getOrderKey() {
         return getGroup().getOrderKey() + "_C";
+    }
+
+    public static class DefaultProvider implements DefaultValueProvider<Class<DisplayOption>> {
+        @Override
+        public Class<DisplayOption> get() {
+            return PREFERENCE_DEFAULT_VALUE;
+        }
     }
 }

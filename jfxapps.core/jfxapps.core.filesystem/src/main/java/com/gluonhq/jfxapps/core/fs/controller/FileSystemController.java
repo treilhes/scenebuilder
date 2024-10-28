@@ -63,11 +63,11 @@ import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.fs.preference.InitialDirectoryPreference;
-import com.gluonhq.jfxapps.core.fs.preference.WildcardImportsPreference;
 import com.gluonhq.jfxapps.core.fs.util.FileWatcher;
 import com.gluonhq.jfxapps.core.fxom.FXOMAssetIndex;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
+import com.gluonhq.jfxapps.core.fxom.transform.FXOMSerializer;
 
 import javafx.collections.ObservableList;
 
@@ -82,7 +82,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     private final FXOMDocumentFactory fxomDocumentFactory;
     private final RecentItemsController recentItems;
     private final InitialDirectoryPreference initialDirectoryPreference;
-    private final WildcardImportsPreference wildcardImportsPreference;
+    private final FXOMSerializer serializer;
 
     private final Map<MainInstanceWindow, List<Object>> documentWatchKeys = new HashMap<>();
     private final Map<Object, List<Path>> watchedFiles = new HashMap<>();
@@ -102,7 +102,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
             FXOMDocumentFactory fxomDocumentFactory,
             RecentItemsController recentItems,
             InitialDirectoryPreference initialDirectoryPreference,
-            WildcardImportsPreference wildcardImportsPreference) {
+            FXOMSerializer serializer) {
      // @formatter:on
         this.jfxAppPlatform = jfxAppPlatform;
         this.documentManager = documentManager;
@@ -110,7 +110,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
         this.fxomDocumentFactory = fxomDocumentFactory;
         this.recentItems = recentItems;
         this.initialDirectoryPreference = initialDirectoryPreference;
-        this.wildcardImportsPreference = wildcardImportsPreference;
+        this.serializer = serializer;
 
     }
 
@@ -493,8 +493,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
         final Path fxmlPath = Paths.get(target.toURI());
 
-        final byte[] fxmlBytes = fxomDocument.getFxmlText(wildcardImportsPreference.getValue())
-                .getBytes(StandardCharsets.UTF_8); // NOI18N
+        final byte[] fxmlBytes = serializer.serialize(fxomDocument).getBytes(StandardCharsets.UTF_8); // NOI18N
         Files.write(fxmlPath, fxmlBytes);
 
         updateLoadFileTime();

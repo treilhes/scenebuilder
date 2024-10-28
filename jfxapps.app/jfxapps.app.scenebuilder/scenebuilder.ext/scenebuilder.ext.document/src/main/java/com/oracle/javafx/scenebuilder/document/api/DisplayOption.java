@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.document.api;
 
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
+import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
 import com.oracle.javafx.scenebuilder.document.api.annotation.DisplayOptionName;
 
 /**
@@ -42,12 +42,12 @@ import com.oracle.javafx.scenebuilder.document.api.annotation.DisplayOptionName;
 public interface DisplayOption {
 
 
-    boolean hasValue(HierarchyMask mask);
-    boolean isReadOnly(HierarchyMask mask);
-    boolean isMultiline(HierarchyMask mask);
-    String getValue(HierarchyMask mask);
-    String getResolvedValue(HierarchyMask mask);
-    void setValue(HierarchyMask mask, String newValue);
+    boolean hasValue(SbHierarchyMask mask);
+    boolean isReadOnly(SbHierarchyMask mask);
+    boolean isMultiline(SbHierarchyMask mask);
+    String getValue(SbHierarchyMask mask);
+    String getResolvedValue(SbHierarchyMask mask);
+    void setValue(SbHierarchyMask mask, String newValue);
 
     public default String getName() {
         return ensureMandatoryAnnotationIsPresent(this.getClass()).value();

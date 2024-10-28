@@ -68,9 +68,9 @@ public interface ToolThemePreference
     default Parent getEditor() {
         var toolThemeProviders = getContext().getBeansOfType(ToolThemeProvider.class);
         var toolThemeClasses = toolThemeProviders.values().stream().map(ToolThemeProvider::toolThemes).toList();
-        var i18n = getContext().getBean(I18N.class);
+
         return getPreferenceEditorFactory().newChoiceFieldEditor(this,
-                toolThemeClasses.toArray((Class<? extends ToolTheme>[]) new Class[0]), (c) -> ToolTheme.name(i18n, c));
+                toolThemeClasses.toArray((Class<? extends ToolTheme>[]) new Class[0]), (c) -> ToolTheme.name(getI18n(), c));
     }
 
     @Override

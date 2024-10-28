@@ -55,6 +55,7 @@ import org.springframework.util.Assert;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
 import com.gluonhq.jfxapps.core.api.preference.JsonMapper;
 import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
@@ -93,6 +94,7 @@ public class PreferenceFactory implements BeanClassLoaderAware, BeanFactoryAware
         boolean isEditable = UserPreference.class.isAssignableFrom(preferenceInterface);
 
         var jfxAppContext = (JfxAppContext) context;
+        var i18n = jfxAppContext.getBean(I18N.class);
 
         var preferenceRepository = jfxAppContext.getLayerBean(this.getClass(), PreferenceRepository.class);
 
@@ -148,7 +150,7 @@ public class PreferenceFactory implements BeanClassLoaderAware, BeanFactoryAware
         default -> throw new IllegalArgumentException("Unexpected value: " + scope);
         };
 
-        var preference = new BasePreference(jfxAppContext, id, name, dataClass, defaultValueProvider, valueValidator,
+        var preference = new BasePreference(jfxAppContext, i18n, id, name, dataClass, defaultValueProvider, valueValidator,
                 behaviourClass, defaultEditorFactory, jsonMapper);
 
         return preference;

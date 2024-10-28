@@ -102,7 +102,12 @@ public final class JfxAppPlatformImpl implements JfxAppPlatform {
             throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
         }
         final FutureTask<T> task = new FutureTask<>(callable);
-        Platform.runLater(() -> executor.executeRunnable(task, scopedDocument));
+        if (Platform.isFxApplicationThread()) {
+            executor.executeRunnable(task, scopedDocument);
+        } else {
+            Platform.runLater(() -> executor.executeRunnable(task, scopedDocument));
+        }
+
         return task;
     }
 

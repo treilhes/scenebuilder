@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,16 +38,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -60,6 +58,7 @@ import com.oracle.javafx.scenebuilder.document.hierarchy.display.MetadataInfoDis
 import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeViewController;
 import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.TreeItemFactory;
 
+import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
@@ -75,16 +74,15 @@ import javafx.scene.layout.Pane;
 /**
  * Hierarchy panel controller based on the TreeView control.
  */
-@Component
-@Scope(value = SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 public class HierarchyController implements Hierarchy {
 
     private static final Logger logger = LoggerFactory.getLogger(HierarchyController.class);
 
     public static final String CSS_CLASS_HIERARCHY_PROMPT_LABEL = "hierarchy-prompt-label";
 
-    private final FxmlDocumentManager documentManager;
+    private final I18N i18n;
+    private final ApplicationInstanceEvents documentManager;
     private final Selection selection;
     private final InlineEdit inlineEdit;
     private final TreeItemFactory rootTreeItemFactory;
@@ -111,8 +109,9 @@ public class HierarchyController implements Hierarchy {
     private TreeItem<HierarchyItem> rootTreeItem;
 
     public HierarchyController(
+            I18N i18n,
             ContextMenu contextMenu,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             HierarchyCellAssignment cellAssignments,
             HierarchyDNDController dndController,
             HierarchyParentRing parentRing,
@@ -123,7 +122,7 @@ public class HierarchyController implements Hierarchy {
             Selection selection,
             TreeItemFactory rootTreeItemFactory
             ) {
-
+        this.i18n = i18n;
         this.cellAssignments = cellAssignments;
         this.contextMenu = contextMenu;
         this.dndController = dndController;
@@ -370,9 +369,9 @@ public class HierarchyController implements Hierarchy {
             rootTreeItem = null;
             // Add place holder to the parent
             if (fxomDocument == null) {
-                label.setText(I18N.getString("contant.label.status.fxomdocument.null"));
+                label.setText(i18n.getString("contant.label.status.fxomdocument.null"));
             } else {
-                label.setText(I18N.getString("content.label.status.invitation"));
+                label.setText(i18n.getString("content.label.status.invitation"));
             }
             if (pane.getChildren().contains(label) == false) {
                 // This may occur when closing en empty document

@@ -31,22 +31,19 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.ui.dock;
+package com.gluonhq.jfxapps.core.fxom.transform;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
-import javafx.geometry.Orientation;
+@FunctionalInterface
+public interface FXOMSerializer {
 
-@ApplicationInstanceSingleton
-public class DockTypeSplitV extends AbstractDockTypeSplit {
+    public static final FXOMSerializer DEFAULT_FXML = new DefaultFxmlSerializer();
 
-    public DockTypeSplitV(JfxAppContext context) {
-        super(context, Orientation.VERTICAL);
-    }
-
-    @Override
-    public String getNameKey() {
-        return "viewtype.splitv";
-    }
+    /**
+     * Returns the FXML string representation of the FXOMDocument.
+     * @param fxomDocument The FXOMDocument to serialize.
+     * @return The string representation. This can be empty if current root is null.
+     */
+    String serialize(FXOMDocument fxomDocument);
 }

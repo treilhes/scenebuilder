@@ -45,6 +45,7 @@ import com.oracle.javafx.scenebuilder.core.ui.action.CloseRightDockAction;
 import com.oracle.javafx.scenebuilder.core.ui.action.ToggleMinimizeBottomDockAction;
 import com.oracle.javafx.scenebuilder.core.ui.action.ToggleMinimizeLeftDockAction;
 import com.oracle.javafx.scenebuilder.core.ui.action.ToggleMinimizeRightDockAction;
+import com.oracle.javafx.scenebuilder.core.ui.action.ViewMenuProvider;
 import com.oracle.javafx.scenebuilder.core.ui.i18n.I18NScenebuilderUiExtension;
 import com.oracle.javafx.scenebuilder.core.ui.menu.MainMenuProvider;
 import com.oracle.javafx.scenebuilder.core.ui.preference.BottomDividerVPosPreference;
@@ -84,6 +85,7 @@ public class ScenebuilderUiExtension implements OpenExtension {
                 ToggleMinimizeBottomDockAction.class,
                 ToggleMinimizeLeftDockAction.class,
                 ToggleMinimizeRightDockAction.class,
+                ViewMenuProvider.class,
                 WindowIconSetting.class
             );
      // @formatter:on

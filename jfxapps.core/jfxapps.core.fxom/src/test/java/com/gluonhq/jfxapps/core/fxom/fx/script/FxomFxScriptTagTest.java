@@ -51,11 +51,12 @@ import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
-import com.gluonhq.jfxapps.core.fxom.FXOMSaver;
 import com.gluonhq.jfxapps.core.fxom.FXOMScript;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 import com.gluonhq.jfxapps.core.fxom.fx.CloneFixture;
 import com.gluonhq.jfxapps.core.fxom.fx.IOFixture;
+import com.gluonhq.jfxapps.core.fxom.transform.DefaultFxmlSerializer;
+import com.gluonhq.jfxapps.core.fxom.transform.FXOMSerializer;
 
 import javafx.stage.Stage;
 
@@ -148,7 +149,8 @@ public class FxomFxScriptTagTest {
             script = script.replace("You clicked me!", "You changed me!");
             scripts.get(0).setScript(script);
 
-            String serializedContent = new FXOMSaver().save(fxomDocument, JFX_VERSION);
+            FXOMSerializer serializer = new DefaultFxmlSerializer(false, JFX_VERSION, false);
+            String serializedContent = serializer.serialize(fxomDocument);
 
             assertNotNull(serializedContent);
 

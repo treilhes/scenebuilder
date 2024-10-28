@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,13 +33,11 @@
  */
 package com.oracle.javafx.scenebuilder.document.hierarchy.display;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
+import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
 import com.oracle.javafx.scenebuilder.document.api.annotation.DisplayOptionName;
 
 /**
@@ -51,12 +49,12 @@ public class MetadataInfoDisplayOption extends AbstractPropertyDisplayOption {
 
     public MetadataInfoDisplayOption(
             JobManager jobManager,
-            ModifyObjectJob.Factory modifyObjectJobFactory) {
-        super(jobManager, modifyObjectJobFactory);
+            FxomJobsFactory fxomJobsFactory) {
+        super(jobManager, fxomJobsFactory);
     }
 
     @Override
-    PropertyName getTargetProperty(HierarchyMask mask) {
+    PropertyName getTargetProperty(SbHierarchyMask mask) {
         return mask == null ? null : mask.getPropertyNameForDescription();
     }
 }

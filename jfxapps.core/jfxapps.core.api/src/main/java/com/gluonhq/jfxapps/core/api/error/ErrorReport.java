@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,26 +37,15 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMNode;
+
 public interface ErrorReport {
 
-    <T> List<ErrorReportEntry> query(T fxomObject, InternalItemsCollector<T> internalCollector);
+    List<ErrorReportEntry> query(FXOMNode fxomNode, boolean recursive);
 
-    <T> List<ErrorReportEntry> queryRecursive(T fxomObject, InternalItemsCollector<T> internalCollector,
-            ChildrenCollector<T> childrenCollector);
-
-    Map<Object, List<ErrorReportEntry>> getEntries();
+    Map<FXOMNode, List<ErrorReportEntry>> getEntries();
 
     void forget();
-
-    @FunctionalInterface
-    public interface InternalItemsCollector<T> {
-        List<Object> collectInternals(T container);
-    }
-
-    @FunctionalInterface
-    public interface ChildrenCollector<T> {
-        List<T> collectChildren(T parent);
-    }
 
     void fileDidChange(Path target);
 

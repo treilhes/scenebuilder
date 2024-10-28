@@ -36,9 +36,10 @@ package com.oracle.javafx.scenebuilder.document.hierarchy.item;
 import java.net.URL;
 import java.util.Objects;
 
-import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.api.mask.SbAccessory;
+import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
+import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
 
 import javafx.scene.image.Image;
@@ -50,7 +51,7 @@ import javafx.scene.image.Image;
  */
 public class HierarchyItemBase implements HierarchyItem {
 
-    protected HierarchyMask mask;
+    protected SbHierarchyMask<SbAccessory> mask;
 
     /**
      * Creates a hierarchy item. Empty constructor used by the HierarchyItem
@@ -64,7 +65,7 @@ public class HierarchyItemBase implements HierarchyItem {
      *
      * @param fxomObject The FX object represented by this item
      */
-    public HierarchyItemBase(FXOMObjectMask.Factory maskFactory, final FXOMObject fxomObject) {
+    public HierarchyItemBase(SbFXOMObjectMask.Factory maskFactory, final FXOMObject fxomObject) {
         assert fxomObject != null;
         this.mask = maskFactory.getMask(fxomObject);
     }
@@ -104,7 +105,7 @@ public class HierarchyItemBase implements HierarchyItem {
      * @return the mask represented by this item.
      */
     @Override
-    public final HierarchyMask getMask() {
+    public final SbHierarchyMask<SbAccessory> getMask() {
         return mask;
     }
 

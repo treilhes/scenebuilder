@@ -47,6 +47,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.transform.FXOMSerializer;
 
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -60,13 +61,16 @@ public class FxmlDataFormat implements ClipboardDataFormat {
 
     private final FXOMDocumentFactory fxomDocumentFactory;
     private final ApplicationInstanceEvents documentManager;
+    private final FXOMSerializer serializer;
 
     public FxmlDataFormat(
             FXOMDocumentFactory fxomDocumentFactory,
-            ApplicationInstanceEvents documentManager) {
+            ApplicationInstanceEvents documentManager,
+            FXOMSerializer serializer) {
         super();
         this.fxomDocumentFactory = fxomDocumentFactory;
         this.documentManager = documentManager;
+        this.serializer = serializer;
     }
 
     public DataFormat getDataFormat() {
@@ -124,7 +128,7 @@ public class FxmlDataFormat implements ClipboardDataFormat {
         final ClipboardContent result = new ClipboardContent();
 
         // FXML_DATA_FORMAT
-        result.put(FXML_DATA_FORMAT, FXOMNodes.newDocument(fxomObject).getFxmlText(false));
+        result.put(FXML_DATA_FORMAT, serializer.serialize(FXOMNodes.newDocument(fxomObject)));
 
         return result;
     }

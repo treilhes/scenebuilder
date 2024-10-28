@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,26 +39,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
-import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyFxControllerJob;
-import com.gluonhq.jfxapps.core.job.editor.atomic.ToggleFxRootJob;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 import com.oracle.javafx.scenebuilder.api.SbEditor;
+import com.oracle.javafx.scenebuilder.api.editors.PropertyEditor;
+import com.oracle.javafx.scenebuilder.api.editors.PropertyEditorFactory;
+import com.oracle.javafx.scenebuilder.api.editors.PropertyEditorFactorySession;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -89,33 +89,32 @@ public class InfoPanelController extends AbstractFxmlController {
     @FXML HBox controllerAndCogHBox;
 
     private IndexEntry.Type entryType = IndexEntry.Type.FX_ID;
-    private ControllerClassEditor controllerClassEditor;
+    //private ControllerClassEditor controllerClassEditor;
+    private PropertyEditor controllerClassEditor;
     private boolean controllerDidLoadFxmlOver = false;
     private final PropertyEditorFactorySession editorFactorysession;
     private final SbEditor editor;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final Selection selection;
     private final JobManager jobManager;
-    private final ToggleFxRootJob.Factory toggleFxRootJobFactory;
-    private final ModifyFxControllerJob.Factory modifyFxControllerJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
 
     public InfoPanelController(
+            I18N i18n,
             ApplicationEvents scenebuilderManager,
-            FxmlDocumentManager documentManager,
-    		SbEditor editor,
-    		Selection selection,
-    		JobManager jobManager,
-    		PropertyEditorFactory propertyEditorFactory,
-    		ToggleFxRootJob.Factory toggleFxRootJobFactory,
-    		ModifyFxControllerJob.Factory modifyFxControllerJobFactory
-    		) {
-        super(scenebuilderManager, documentManager, InfoPanelController.class.getResource("InfoPanel.fxml"), I18N.getBundle());
+            ApplicationInstanceEvents documentManager,
+            SbEditor editor,
+            Selection selection,
+            JobManager jobManager,
+            PropertyEditorFactory propertyEditorFactory,
+            FxomJobsFactory fxomJobsFactory
+        ) {
+        super(i18n, scenebuilderManager, documentManager, InfoPanelController.class.getResource("InfoPanel.fxml"));
         this.editor = editor;
         this.documentManager = documentManager;
         this.selection = selection;
         this.jobManager = jobManager;
-        this.toggleFxRootJobFactory = toggleFxRootJobFactory;
-        this.modifyFxControllerJobFactory = modifyFxControllerJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
         this.editorFactorysession = propertyEditorFactory.newSession();
     }
 
@@ -204,10 +203,11 @@ public class InfoPanelController extends AbstractFxmlController {
     // has to call performInitialization (turned public), a path we do not want
     // to take.
     private void performInitialization() {
-        SelectionState selectionState = new SelectionStateImpl(selection);
+
+        SelectionState selectionState = documentManager.selectionDidChange().get();
 
         if (controllerClassEditor == null) {
-            controllerClassEditor = (ControllerClassEditor) editorFactorysession.getControllerClassEditor(selectionState);
+            controllerClassEditor = editorFactorysession.getControllerClassEditor(selectionState);
         } else {
             controllerClassEditor.reset(null, selectionState);
         }
@@ -234,10 +234,10 @@ public class InfoPanelController extends AbstractFxmlController {
         });
 
         // DTL-6626
-        controllerClassEditor.getTextField().focusedProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> {
+        controllerClassEditor.focusedProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> {
             if (!t1) {
                 // Focus loss triggers an update. The text field can be empty.
-                updateControllerAndControllerClassEditor(controllerClassEditor.getTextField().getText());
+                updateControllerAndControllerClassEditor(controllerClassEditor.valueProperty().orElse("").toString());
             }
         });
 
@@ -272,7 +272,7 @@ public class InfoPanelController extends AbstractFxmlController {
             if (root != null) {
                 String zeClassName = computeProperClassName(className, root);
 
-                final AbstractJob job = modifyFxControllerJobFactory.getJob(root, zeClassName);
+                final var job = fxomJobsFactory.modifyFxController(root, zeClassName);
 
                 if (job.isExecutable()) {
                     jobManager.push(job);
@@ -333,8 +333,7 @@ public class InfoPanelController extends AbstractFxmlController {
             if (fxomDocument != null) {
                 switch(entryType) {
                     case FX_ID: {
-                        final Map<String, FXOMObject> fxIds
-                                = fxomDocument.collect(FxIdCollector.fxIdsMap());
+                        final Map<String, FXOMObject> fxIds = fxomDocument.collect(FxCollector.fxIdsUniqueMap());
                         for (Map.Entry<String, FXOMObject> e : fxIds.entrySet()) {
                             final String fxId = e.getKey();
                             final FXOMObject fxomObject = e.getValue();
@@ -376,11 +375,11 @@ public class InfoPanelController extends AbstractFxmlController {
                     break;
                 case 1:
                     labelText = "1 " //NOCHECK
-                            + I18N.getString("info.label.item");
+                            + getI18n().getString("info.label.item");
                     break;
                 default:
                     labelText = count + " " //NOCHECK
-                            + I18N.getString("info.label.items");
+                            + getI18n().getString("info.label.items");
                     break;
             }
             bottomLabel.setText(labelText);
@@ -463,7 +462,7 @@ public class InfoPanelController extends AbstractFxmlController {
             } else {
                 fxrootCheckBox.setDisable(false);
                 String topClassName = fxomDocument.getGlue().getMainElement().getTagName();
-                fxrootCheckBox.setTooltip(new Tooltip(I18N.getString("info.tooltip.controller", topClassName)));
+                fxrootCheckBox.setTooltip(new Tooltip(getI18n().getString("info.tooltip.controller", topClassName)));
                 controllerClassEditor.setDisable(false);
             }
         }
@@ -474,7 +473,7 @@ public class InfoPanelController extends AbstractFxmlController {
         if (fxomDocument != null) {
             final FXOMObject root = fxomDocument.getFxomRoot();
             if (root instanceof FXOMInstance) {
-                final AbstractJob job = toggleFxRootJobFactory.getJob();
+                final var job = fxomJobsFactory.toggleFxRoot();
                 if (job.isExecutable()) {
                     // TODO check for infinite loop here
                     //stopListeningToJobManagerRevision();
@@ -503,7 +502,7 @@ public class InfoPanelController extends AbstractFxmlController {
         if (controllerClassEditor != null) {
             // The listener on fxmlLocationProperty is called before the file
             // denoted by the location is created on disk, hence the runLater.
-            JfxAppPlatform.runOnFxThread(() -> {
+            JfxAppPlatform.ensureFxThread(() -> {
                 controllerClassEditor.setUpdateFromModel(true);
                 controllerClassEditor.reset(null, null);
                 controllerClassEditor.setUpdateFromModel(false);

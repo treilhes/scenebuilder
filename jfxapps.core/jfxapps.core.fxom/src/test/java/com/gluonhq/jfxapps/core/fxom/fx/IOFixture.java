@@ -39,12 +39,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 
-import org.junitpioneer.jupiter.SetSystemProperty;
-
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
-import com.gluonhq.jfxapps.core.fxom.FXOMSaver;
 import com.gluonhq.jfxapps.core.fxom.fx.script.FxomFxScriptTagTest;
+import com.gluonhq.jfxapps.core.fxom.transform.DefaultFxmlSerializer;
+import com.gluonhq.jfxapps.core.fxom.transform.FXOMSerializer;
 
 import javafx.fxml.FXMLLoader;
 
@@ -76,10 +75,11 @@ public class IOFixture {
     }
 
     public static void testIsFxomSerializable(Object owner, String fileName, boolean failureExpected) {
+        FXOMSerializer serializer = new DefaultFxmlSerializer(false, JFX_VERSION, false);
         try (var stream = owner.getClass().getResourceAsStream(fileName)) {
             FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(new String(stream.readAllBytes()),
                     owner.getClass().getResource(fileName), FxomFxScriptTagTest.class.getClassLoader(), null);
-            new FXOMSaver().save(fxomDocument);
+            serializer.serialize(fxomDocument);
         } catch (IOException e) {
             if (!failureExpected) {
                 fail(e);
@@ -92,7 +92,9 @@ public class IOFixture {
             String content = new String(stream.readAllBytes());
             FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(content, owner.getClass().getResource(fileName),
                     IOFixture.class.getClassLoader(), null);
-            String serializedContent = new FXOMSaver().save(fxomDocument, JFX_VERSION);
+
+            FXOMSerializer serializer = new DefaultFxmlSerializer(false, JFX_VERSION, false);
+            String serializedContent = serializer.serialize(fxomDocument);
             assertNotNull(serializedContent);
             assertEquals(content.trim(), serializedContent.trim());
         } catch (IOException e) {

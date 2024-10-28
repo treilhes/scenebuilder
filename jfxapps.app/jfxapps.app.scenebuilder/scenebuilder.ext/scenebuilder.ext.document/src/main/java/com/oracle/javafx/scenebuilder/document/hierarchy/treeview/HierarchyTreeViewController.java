@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,16 +42,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask.Accessory;
+import com.gluonhq.jfxapps.core.api.mask.Accessory;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
@@ -78,9 +76,7 @@ import javafx.scene.control.TreeView;
 /**
  * Hierarchy panel controller based on the TreeView control.
  */
-@Component
-@Scope(value = SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-@Lazy
+@ApplicationInstanceSingleton
 public class HierarchyTreeViewController extends AbstractFxmlController implements HierarchyPanel {
 
     private static final Logger logger = LoggerFactory.getLogger(HierarchyTreeViewController.class);
@@ -92,12 +88,13 @@ public class HierarchyTreeViewController extends AbstractFxmlController implemen
 	private final HierarchyCellAssignment cellAssignments;
 
     public HierarchyTreeViewController(
+            I18N i18n,
             ApplicationEvents scenebuilderManager,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             HierarchyCellAssignment cellAssignments,
             HierarchyTreeCell.Factory hierarchyTreeCellFactory,
             MetadataInfoDisplayOption defaultDisplayOptions) {
-        super(scenebuilderManager, documentManager, HierarchyTreeViewController.class.getResource("HierarchyTreeView.fxml"), I18N.getBundle());
+        super(i18n, scenebuilderManager, documentManager, HierarchyTreeViewController.class.getResource("HierarchyTreeView.fxml"));
 
         this.hierarchyTreeCellFactory = hierarchyTreeCellFactory;
         this.cellAssignments = cellAssignments;

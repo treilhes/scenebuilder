@@ -127,7 +127,7 @@ public final class AccessoryDropTarget extends AbstractDropTarget {
         assert dragSource != null;
         assert dragSource.getDraggedObjects() != null;
 
-        Accessory targetAccessory = findTargetAccessory(dragSource.getDraggedObjects());
+        Accessory<?> targetAccessory = findTargetAccessory(dragSource.getDraggedObjects());
 
         boolean result = targetAccessory != null; // we found an accessory accepting the drop
 
@@ -166,7 +166,7 @@ public final class AccessoryDropTarget extends AbstractDropTarget {
     }
 
     @Override
-    public AbstractJob makeDropJob(DragSource dragSource) {
+    public Job makeDropJob(DragSource dragSource) {
         assert acceptDragSource(dragSource);
 
         final Accessory targetAccessory = findTargetAccessory(dragSource.getDraggedObjects());

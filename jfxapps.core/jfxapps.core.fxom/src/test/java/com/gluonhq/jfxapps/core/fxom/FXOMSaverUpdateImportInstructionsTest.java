@@ -49,7 +49,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
@@ -57,10 +56,9 @@ import org.junitpioneer.jupiter.SetSystemProperty;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMSaver;
 import com.gluonhq.jfxapps.core.fxom.collector.DeclaredClassCollector;
 import com.gluonhq.jfxapps.core.fxom.glue.GlueComment;
+import com.gluonhq.jfxapps.core.fxom.transform.FXOMSerializer;
 
 import javafx.stage.Stage;
 
@@ -75,7 +73,7 @@ public class FXOMSaverUpdateImportInstructionsTest {
     public File temporaryFolder;
 
     private static FXOMDocument fxomDocument;
-    private static FXOMSaver serviceUnderTest;
+    private static FXOMSerializer serviceUnderTest = FXOMSerializer.DEFAULT_FXML;
 
     @Start
     private void start(Stage stage) {
@@ -86,7 +84,7 @@ public class FXOMSaverUpdateImportInstructionsTest {
     public void testEmptyFXML() throws IOException {
         setupTestCase(FxmlTestInfo.EMPTY);
 
-        assertTrue("fxml is empty", fxomDocument.getFxmlText(false).isEmpty());
+        assertTrue("fxml is empty", serviceUnderTest.serialize(fxomDocument).isEmpty());
     }
 
     @Test
@@ -273,7 +271,7 @@ public class FXOMSaverUpdateImportInstructionsTest {
     }
 
     private String callService() {
-        return serviceUnderTest.save(fxomDocument);
+        return serviceUnderTest.serialize(fxomDocument);
     }
 
     private void setupTestCase(FxmlTestInfo n) {
@@ -296,7 +294,6 @@ public class FXOMSaverUpdateImportInstructionsTest {
 
     // setup for the FXOMDocument that will be tested
     private void setupFXOMDocument(Path fxmlTesterFile) {
-        serviceUnderTest = new FXOMSaver();
         try {
             URL location = fxmlTesterFile.toFile().toURI().toURL();
             String fxmlString = getFxmlAsString(fxmlTesterFile);

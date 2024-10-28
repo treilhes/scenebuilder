@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,10 +39,13 @@ import java.util.Objects;
 
 import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.mask.Accessory;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask.Accessory;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.api.mask.SbAccessory;
+import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
+import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
 
 import javafx.scene.image.Image;
 
@@ -54,9 +57,10 @@ import javafx.scene.image.Image;
  */
 public class HierarchyItemAccessory extends HierarchyItemBase {
 
-    private final Accessory position;
+    private final SbAccessory position;
     // The accessory owner. Used for the equals method.
-    private final HierarchyMask owner;
+    private final SbHierarchyMask<SbAccessory> owner;
+    private final I18N i18n;
 
     /**
      * Creates a hierarchy item.
@@ -66,11 +70,13 @@ public class HierarchyItemAccessory extends HierarchyItemBase {
      * @param position The position of the FX object within the BorderPane
      */
     public HierarchyItemAccessory(
-            FXOMObjectMask.Factory maskFactory,
-            final HierarchyMask owner,
+            I18N i18n,
+            SbFXOMObjectMask.Factory maskFactory,
+            final SbHierarchyMask<SbAccessory> owner,
             final FXOMObject fxomObject,
-            final Accessory position) {
+            final SbAccessory position) {
         assert owner != null;
+        this.i18n = i18n;
         this.owner = owner;
         // fxomObject can be null for place holder items
         this.mask = fxomObject == null ? null : maskFactory.getMask(fxomObject);
@@ -121,7 +127,7 @@ public class HierarchyItemAccessory extends HierarchyItemBase {
      *
      * @return the DesignHierarchyMask owner
      */
-    public HierarchyMask getOwner() {
+    public SbHierarchyMask<SbAccessory> getOwner() {
         return owner;
     }
 
@@ -130,18 +136,18 @@ public class HierarchyItemAccessory extends HierarchyItemBase {
      *
      * @return the BorderPane position represented by this item.
      */
-    public Accessory getAccessory() {
+    public SbAccessory getAccessory() {
         return this.position;
     }
 
     @Override
     public Image getPlaceHolderImage() {
-        return ImageUtils.getImage(position.getPropertyMetadata().getIconUrl());
+        return ImageUtils.getImage(position.getPropertyMetadata().getCustomization().getIconUrl());
     }
 
     @Override
     public String getPlaceHolderInfo() {
-        return (mask != null ? null : I18N.getString("hierarchy.placeholder.insert") + " " + position.getName().getName().toUpperCase(Locale.getDefault()));
+        return (mask != null ? null : i18n.getString("hierarchy.placeholder.insert") + " " + position.getName().getName().toUpperCase(Locale.getDefault()));
     }
 
     @Override

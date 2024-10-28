@@ -47,7 +47,6 @@ import java.util.ResourceBundle;
 
 import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
 import com.gluonhq.jfxapps.core.fxom.glue.GlueDocument;
-import com.gluonhq.jfxapps.core.fxom.sampledata.SampleDataGenerator;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
 import com.gluonhq.jfxapps.util.URLUtils;
 
@@ -73,8 +72,7 @@ public class FXOMDocument {
     private final GlueDocument glue;
     private ClassLoader classLoader;
     private ResourceBundle resources;
-    private SampleDataGenerator sampleDataGenerator;
-
+    private boolean normalized;
 
     private SceneGraphHolder sceneGraphHolder;
     private int updateDepth;
@@ -113,12 +111,14 @@ public class FXOMDocument {
         this.glue = new GlueDocument(fxmlText);
         this.classLoader = classLoader;
         this.resources = resources;
+        this.normalized = normalize;
+
         initialDeclaredClasses = new ArrayList<>();
         if (this.glue.getMainElement() != null) {
             final FXOMLoader loader = new FXOMLoader(this);
 
             loader.load(fxmlText);
-            if (normalize) {
+            if (this.normalized) {
                 final FXOMNormalizer normalizer = new FXOMNormalizer(this);
                 normalizer.normalize();
             }
@@ -339,36 +339,6 @@ public class FXOMDocument {
         endUpdate();
     }
 
-    public boolean isSampleDataEnabled() {
-        return sampleDataGenerator != null;
-    }
-
-    public void setSampleDataEnabled(boolean sampleDataEnabled) {
-        assert isUpdateOnGoing() == false;
-
-        final SampleDataGenerator newSampleDataGenerator;
-        if (sampleDataEnabled) {
-            if (sampleDataGenerator != null) {
-                newSampleDataGenerator = sampleDataGenerator;
-            } else {
-                newSampleDataGenerator = new SampleDataGenerator();
-            }
-        } else {
-            newSampleDataGenerator = null;
-        }
-
-        if (newSampleDataGenerator != sampleDataGenerator) {
-            if (sampleDataGenerator != null) {
-                sampleDataGenerator.removeSampleData(getFxomRoot());
-            }
-            sampleDataGenerator = newSampleDataGenerator;
-            if (sampleDataGenerator != null) {
-                sampleDataGenerator.assignSampleData(getFxomRoot());
-            }
-        }
-    }
-
-
     protected void notifyRootUpdated(FXOMObject fxomRoot) {
         assert fxomRoot == null || fxomRoot.getFxomDocument() == this;
 
@@ -380,51 +350,6 @@ public class FXOMDocument {
 
         this.setDisplayNode(null);
         this.clearDisplayStylesheets();
-    }
-
-    /**
-     * Returns the FXML string representation of the FXOMDocument.
-     * @param wildcardImports If the FXML should have wildcards in its imports.
-     * @return The FXML string representation. This can be empty if current root is null.
-     */
-    public String getFxmlText(boolean wildcardImports) {
-        final String result;
-        if (getFxomRoot() == null) {
-            assert glue.getMainElement() == null;
-            assert getSceneGraphRoot() == null;
-            result = "";
-        } else {
-            assert glue.getMainElement() != null;
-            // Note that sceneGraphRoot might be null if fxomRoot is unresolved
-            glue.updateIndent();
-            final FXOMSaver saver = new FXOMSaver(wildcardImports);
-            result = saver.save(this);
-        }
-        return result;
-    }
-
-    /**
-     * Returns the FXML string representation of the FXOMDocument.
-     * @param wildcardImports If the FXML should have wildcards in its imports.
-     * @param useSampleData force he usage or not of sample data regardless of the fxomDocument configuration
-     * @return The FXML string representation. This can be empty if current root is null.
-     */
-    public String getFxmlText(boolean wildcardImports, boolean useSampleData) {
-        final String result;
-
-        final boolean sampleDataEnabled = this.isSampleDataEnabled();
-
-        if (sampleDataEnabled && !useSampleData) {
-            this.setSampleDataEnabled(false);
-        }
-
-        result = this.getFxmlText(wildcardImports);
-
-        if (sampleDataEnabled && !useSampleData) {
-            this.setSampleDataEnabled(true);
-        }
-
-        return result;
     }
 
     public boolean isNamespaceFxId(String fxId) {
@@ -444,9 +369,6 @@ public class FXOMDocument {
 
         final FXOMRefresher fxomRefresher = new FXOMRefresher();
         fxomRefresher.refresh(this);
-        if ((sampleDataGenerator != null) && (getFxomRoot() != null)) {
-            sampleDataGenerator.assignSampleData(getFxomRoot());
-        }
 
     }
 
@@ -573,6 +495,10 @@ public class FXOMDocument {
 
     public FXOMDocumentFactory getFactory() {
         return factory;
+    }
+
+    public boolean isNormalized() {
+        return normalized;
     }
 
 }

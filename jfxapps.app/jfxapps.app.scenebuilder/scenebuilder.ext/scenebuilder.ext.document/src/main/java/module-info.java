@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,6 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.document.DocumentExtension;
 
 open module scenebuilder.ext.document {
@@ -41,13 +42,8 @@ open module scenebuilder.ext.document {
     exports com.oracle.javafx.scenebuilder.document.preferences.global;
     exports com.oracle.javafx.scenebuilder.document.preferences.document;
 
-    requires scenebuilder.starter;
-    requires scenebuilder.core.drag.and.drop;
-    requires scenebuilder.core.jobs;
-    requires scenebuilder.core.selection;
+    requires scenebuilder.app.starter;
     requires transitive scenebuilder.api;
-    requires scenebuilder.core.extension.api;
-    requires scenebuilder.ext.menu;
 
     provides Extension with DocumentExtension;
 }

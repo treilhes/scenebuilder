@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 public interface ErrorCollector {
 

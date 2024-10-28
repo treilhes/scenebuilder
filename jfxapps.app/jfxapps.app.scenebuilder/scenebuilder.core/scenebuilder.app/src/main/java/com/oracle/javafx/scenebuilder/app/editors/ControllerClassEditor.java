@@ -48,6 +48,7 @@ import com.gluonhq.jfxapps.core.fxom.util.JavaLanguage;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
@@ -123,4 +124,11 @@ public class ControllerClassEditor extends AutoSuggestEditor {
         FXOMDocument fxomDocument = documentManager.fxomDocument().get();
         return glossary.queryControllerClasses(fxomDocument == null ? null : fxomDocument.getLocation());
     }
+
+    @Override
+    public ObservableValue<Boolean> focusedProperty() {
+        return textField.focusedProperty();
+    }
+
+
 }

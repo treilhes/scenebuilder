@@ -39,9 +39,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.error.ErrorCollector;
@@ -50,6 +49,7 @@ import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.collector.FXOMObjectCollector;
 
 /**
  *
@@ -83,29 +83,29 @@ public class ErrorReportImpl implements ErrorReport {
     }
 
     @Override
-    public <T> List<ErrorReportEntry> query(T fxomObject, InternalItemsCollector<T> internalCollector) {
+    public List<ErrorReportEntry> query(FXOMNode fxomNode, boolean recursive) {
         final List<ErrorReportEntry> result;
+
+        if (fxomNode == null) {
+            return Collections.emptyList();
+        }
 
         updateReport();
 
         final List<ErrorReportEntry> collected = new ArrayList<>();
+        final List<FXOMNode> fxomNodes = new ArrayList<>();
 
-        if (documentErrors.get(fxomObject) != null) {
-            collected.addAll(documentErrors.get(fxomObject));
+        fxomNodes.add(fxomNode);
+
+        if (recursive && fxomNode instanceof FXOMObject fxomObject) {
+            var children = fxomObject.collect(FXOMObjectCollector.all());
+            fxomNodes.addAll(children);
         }
 
-        if (internalCollector != null) {
-            List<Object> internals = internalCollector.collectInternals(fxomObject);
-
-            if (internals != null) {
-                internals.forEach(i -> {
-                    List<ErrorReportEntry> internalErrors = documentErrors.get(i);
-                    if (internalErrors != null) {
-                        collected.addAll(internalErrors);
-                    }
-                });
-            }
-        }
+        fxomNodes.stream()
+            .map(documentErrors::get)
+            .filter(Objects::nonNull)
+            .forEach(collected::addAll);
 
         if (collected.isEmpty()) {
             result = null;
@@ -119,47 +119,7 @@ public class ErrorReportImpl implements ErrorReport {
     }
 
     @Override
-    public <T> List<ErrorReportEntry> queryRecursive(T fxomObject, InternalItemsCollector<T> internalCollector, ChildrenCollector<T> childrenCollector) {
-
-        final List<ErrorReportEntry> result;
-
-        updateReport();
-
-        final List<ErrorReportEntry> collected = new ArrayList<>();
-
-        List<ErrorReportEntry> localErrors = query(fxomObject, internalCollector);
-
-        if (localErrors != null) {
-            collected.addAll(localErrors);
-        }
-
-        if (childrenCollector != null) {
-            List<T> children = childrenCollector.collectChildren(fxomObject);
-
-            if (children != null) {
-                children.forEach(c -> {
-                    List<ErrorReportEntry> childErrors = queryRecursive(c, internalCollector, childrenCollector);
-
-                    if (childErrors != null) {
-                        collected.addAll(childErrors);
-                    }
-                });
-            }
-        }
-
-        if (collected.isEmpty()) {
-            result = null;
-        } else {
-            result = collected;
-        }
-
-        assert (result == null) || (result.size() >= 1);
-
-        return result;
-    }
-
-    @Override
-    public Map<Object, List<ErrorReportEntry>> getEntries() {
+    public Map<FXOMNode, List<ErrorReportEntry>> getEntries() {
         updateReport();
         return Collections.unmodifiableMap(documentErrors);
     }

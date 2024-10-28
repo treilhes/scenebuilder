@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,13 +34,11 @@
 package com.gluonhq.jfxapps.core.ui.dock;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 import javafx.geometry.Orientation;
 
-@Singleton
-@Lazy
+@ApplicationInstanceSingleton
 public class DockTypeSplitH extends AbstractDockTypeSplit {
 
     public DockTypeSplitH(JfxAppContext context) {

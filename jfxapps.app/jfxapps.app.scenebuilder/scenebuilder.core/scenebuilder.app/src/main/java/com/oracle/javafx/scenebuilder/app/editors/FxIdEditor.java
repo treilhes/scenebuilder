@@ -52,6 +52,7 @@ import com.gluonhq.jfxapps.core.fxom.util.JavaLanguage;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
@@ -169,4 +170,10 @@ public class FxIdEditor extends AutoSuggestEditor {
         assert selectionState.getSelectedClasses().size() == 1;
         return (Class<?>) selectionState.getSelectedClasses().toArray()[0];
     }
+
+    @Override
+    public ObservableValue<Boolean> focusedProperty() {
+        return textField.focusedProperty();
+    }
+
 }

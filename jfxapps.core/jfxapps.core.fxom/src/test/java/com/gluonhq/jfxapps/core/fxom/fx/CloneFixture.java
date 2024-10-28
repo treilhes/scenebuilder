@@ -41,8 +41,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 
-import org.junitpioneer.jupiter.SetSystemProperty;
-
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -51,8 +49,9 @@ import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
-import com.gluonhq.jfxapps.core.fxom.FXOMSaver;
 import com.gluonhq.jfxapps.core.fxom.fx.script.FxomFxScriptTagTest;
+import com.gluonhq.jfxapps.core.fxom.transform.DefaultFxmlSerializer;
+import com.gluonhq.jfxapps.core.fxom.transform.FXOMSerializer;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 
 public class CloneFixture {
@@ -69,8 +68,8 @@ public class CloneFixture {
 
             final FXOMDocument newDocument = FXOMNodes.newDocument(fileDocument.getFxomRoot());
 
-
-            String serializedContent = new FXOMSaver().save(newDocument, JFX_VERSION);
+            FXOMSerializer serializer = new DefaultFxmlSerializer(false, JFX_VERSION, false);
+            String serializedContent = serializer.serialize(newDocument);
             assertNotNull(serializedContent);
             //assertEquals(content.trim(), serializedContent.trim());
 

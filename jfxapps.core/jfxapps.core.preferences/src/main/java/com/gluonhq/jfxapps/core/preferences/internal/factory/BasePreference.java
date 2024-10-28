@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
 import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
 import com.gluonhq.jfxapps.core.api.preference.JsonMapper;
@@ -60,6 +61,7 @@ public class BasePreference<T> implements Preference<T>, UserPreference<T> {
     private static final Logger logger = LoggerFactory.getLogger(BasePreference.class);
 
     private final JfxAppContext context;
+    private final I18N i18n;
     private final UUID id;
     private final String name;
     private final Class<T> dataClass;
@@ -73,6 +75,7 @@ public class BasePreference<T> implements Preference<T>, UserPreference<T> {
     //@formatter:off
     public BasePreference(
             JfxAppContext context,
+            I18N i18n,
             UUID id,
             String name,
             Class<T> dataClass,
@@ -83,6 +86,7 @@ public class BasePreference<T> implements Preference<T>, UserPreference<T> {
             JsonMapper<?> jsonMapper) {
         //@formatter:on
         this.context = context;
+        this.i18n = i18n;
         this.id = id;
         this.name = name;
         this.defaultValueProvider = defaultValueProvider != null ? defaultValueProvider : () -> null;
@@ -189,6 +193,10 @@ public class BasePreference<T> implements Preference<T>, UserPreference<T> {
     @Override
     public Parent getEditor() {
         throw new UnsupportedOperationException("UserPreference.getEditor() must be implemented using default method in interface");
+    }
+
+    public I18N getI18n() {
+        return i18n;
     }
 
 }

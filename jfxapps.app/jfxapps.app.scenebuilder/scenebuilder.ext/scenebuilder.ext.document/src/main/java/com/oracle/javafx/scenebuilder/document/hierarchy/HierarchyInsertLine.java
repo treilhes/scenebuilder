@@ -35,9 +35,7 @@ package com.oracle.javafx.scenebuilder.document.hierarchy;
 
 import java.util.Optional;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell.BorderSide;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
@@ -82,7 +80,7 @@ public class HierarchyInsertLine {
         insertLineIndicator.setStrokeWidth(2.0);
     }
 
-    public void clearLine() {
+    public void clear() {
         removeFromPanelControlSkin(insertLineIndicator);
     }
 

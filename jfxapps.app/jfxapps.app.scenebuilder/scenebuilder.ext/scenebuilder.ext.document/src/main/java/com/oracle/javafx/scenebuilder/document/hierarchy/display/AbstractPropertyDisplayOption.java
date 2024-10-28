@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,13 +33,12 @@
  */
 package com.oracle.javafx.scenebuilder.document.hierarchy.display;
 
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
+import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyObjectJob;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
 import com.oracle.javafx.scenebuilder.document.api.AbstractDisplayOption;
 
 /**
@@ -48,20 +47,20 @@ import com.oracle.javafx.scenebuilder.document.api.AbstractDisplayOption;
 public abstract class AbstractPropertyDisplayOption extends AbstractDisplayOption {
 
     private final JobManager jobManager;
-    private final ModifyObjectJob.Factory modifyObjectJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
 
     public AbstractPropertyDisplayOption(
             JobManager jobManager,
-            ModifyObjectJob.Factory modifyObjectJobFactory) {
+            FxomJobsFactory fxomJobsFactory) {
         super();
         this.jobManager = jobManager;
-        this.modifyObjectJobFactory = modifyObjectJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
     }
 
-    abstract PropertyName getTargetProperty(HierarchyMask mask);
+    abstract PropertyName getTargetProperty(SbHierarchyMask mask);
 
     @Override
-    public String getResolvedValue(HierarchyMask mask) {
+    public String getResolvedValue(SbHierarchyMask mask) {
         PropertyName propName = getTargetProperty(mask);
 
         if (propName == null) {
@@ -76,7 +75,7 @@ public abstract class AbstractPropertyDisplayOption extends AbstractDisplayOptio
     }
 
     @Override
-    public String getValue(HierarchyMask mask) {
+    public String getValue(SbHierarchyMask mask) {
         PropertyName propName = getTargetProperty(mask);
 
         if (propName == null) {
@@ -91,7 +90,7 @@ public abstract class AbstractPropertyDisplayOption extends AbstractDisplayOptio
     }
 
     @Override
-    public boolean isReadOnly(HierarchyMask mask) {
+    public boolean isReadOnly(SbHierarchyMask mask) {
         PropertyName propName = getTargetProperty(mask);
 
         if (propName == null) {
@@ -102,7 +101,7 @@ public abstract class AbstractPropertyDisplayOption extends AbstractDisplayOptio
     }
 
     @Override
-    public boolean isMultiline(HierarchyMask mask) {
+    public boolean isMultiline(SbHierarchyMask mask) {
         PropertyName propName = getTargetProperty(mask);
 
         if (propName == null) {
@@ -113,7 +112,7 @@ public abstract class AbstractPropertyDisplayOption extends AbstractDisplayOptio
     }
 
     @Override
-    public boolean hasValue(HierarchyMask mask) {
+    public boolean hasValue(SbHierarchyMask mask) {
         PropertyName propName = getTargetProperty(mask);
 
         if (propName == null) {
@@ -124,20 +123,21 @@ public abstract class AbstractPropertyDisplayOption extends AbstractDisplayOptio
     }
 
     @Override
-    public void setValue(HierarchyMask mask, String newValue) {
+    public void setValue(SbHierarchyMask mask, String newValue) {
         PropertyName propName = getTargetProperty(mask);
 
         if (propName == null) {
             return;
         }
 
-        ValuePropertyMetadata vpm = mask.getPropertyMetadata(propName);
+        var vpm = mask.getPropertyMetadata(propName);
 
         if (vpm != null) {
-            final AbstractJob job1 = modifyObjectJobFactory.getJob((FXOMInstance)mask.getFxomObject(), vpm, newValue);
+            final Job job1 = fxomJobsFactory.modifyObject((FXOMElement)mask.getFxomObject(), vpm, newValue);
             if (job1.isExecutable()) {
                 jobManager.push(job1);
             }
         }
     }
+
 }

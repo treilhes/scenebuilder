@@ -55,6 +55,7 @@ import com.gluonhq.jfxapps.core.metadata.property.value.StringPropertyMetadata.M
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor;
 
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 
 @ExtendWith(ApplicationExtension.class)
@@ -143,5 +144,11 @@ public class AbstractPropertyEditorTest {
         public Node getValueEditor() {
             return null;
         }
+
+        @Override
+        public ObservableValue<Boolean> focusedProperty() {
+            return null;
+        }
+
     }
 }

@@ -31,22 +31,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.ui.dock;
+package com.gluonhq.jfxapps.core.fxom.transform;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
-import javafx.geometry.Orientation;
-
-@ApplicationInstanceSingleton
-public class DockTypeSplitV extends AbstractDockTypeSplit {
-
-    public DockTypeSplitV(JfxAppContext context) {
-        super(context, Orientation.VERTICAL);
-    }
-
-    @Override
-    public String getNameKey() {
-        return "viewtype.splitv";
-    }
+@FunctionalInterface
+public interface FXOMDocumentTransformer {
+    FXOMDocument transform(FXOMDocument document);
 }

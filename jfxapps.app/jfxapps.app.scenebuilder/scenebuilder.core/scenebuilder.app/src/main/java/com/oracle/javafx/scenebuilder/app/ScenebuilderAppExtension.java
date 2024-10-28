@@ -56,7 +56,7 @@ import com.oracle.javafx.scenebuilder.app.doc.DocumentationImpl;
 import com.oracle.javafx.scenebuilder.app.editors.ControllerClassEditor;
 import com.oracle.javafx.scenebuilder.app.editors.CoreEditors;
 import com.oracle.javafx.scenebuilder.app.editors.FxIdEditor;
-import com.oracle.javafx.scenebuilder.app.editors.PropertyEditorFactory;
+import com.oracle.javafx.scenebuilder.app.editors.PropertyEditorFactoryImpl;
 import com.oracle.javafx.scenebuilder.app.i18n.I18NFxmlCoreExtension;
 import com.oracle.javafx.scenebuilder.app.job.fs.ImportFileJob;
 import com.oracle.javafx.scenebuilder.app.job.fs.IncludeFileJob;
@@ -106,7 +106,7 @@ public class ScenebuilderAppExtension implements OpenExtension {
 
                 FxIdEditor.class,
 
-                PropertyEditorFactory.class
+                PropertyEditorFactoryImpl.class
             );
      // @formatter:on
     }

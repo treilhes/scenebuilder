@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,8 +36,7 @@ package com.gluonhq.jfxapps.core.ui.dock;
 import java.util.Collection;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockContext;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockType;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
@@ -53,8 +52,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-@Singleton
-@Lazy
+@ApplicationInstanceSingleton
 public class DockTypeTab implements DockType<Tab> {
 
     private final static String VIEW_SOURCE = "Tab.fxml";

@@ -53,7 +53,6 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
-import com.gluonhq.jfxapps.core.fs.preference.WildcardImportsPreference;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
@@ -81,8 +80,7 @@ public class SaveAction extends AbstractAction {
             InlineEdit inlineEdit,
             Dialog dialog,
             MessageLogger messageLogger,
-            FileSystem fileSystem,
-            WildcardImportsPreference wildcardImportsPreference) {
+            FileSystem fileSystem) {
      // @formatter:on
         super(i18n, extensionFactory);
         this.document = document;

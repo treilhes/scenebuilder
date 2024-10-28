@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,23 +38,23 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
 import com.gluonhq.jfxapps.core.api.error.ErrorReport;
 import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
 import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit.Type;
 import com.gluonhq.jfxapps.core.api.util.StringUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
 import com.oracle.javafx.scenebuilder.document.api.Hierarchy;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
-import com.oracle.javafx.scenebuilder.document.api.HierarchyCell.BorderSide;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyPanel;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyCellAssignment;
@@ -350,8 +350,8 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
     @Override
     public void startEditingDisplayOption() {
 
-        DisplayOption displayOption = hierarchy.getDisplayOption();
-        final HierarchyMask mask = getItem().getMask();
+        final var displayOption = hierarchy.getDisplayOption();
+        final var mask = getItem().getMask();
 
         assert displayOption != null;
         assert mask != null;
@@ -379,7 +379,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         // false otherwise
         //----------------------------------------------------------------------
         final Callback<String, Boolean> requestCommit = newValue -> {
-            
+
             // 1) Check the input value is valid
             // 2) If valid, commit the new value and return true
             // 3) Otherwise, return false
@@ -387,11 +387,11 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
             // Item may be null when invoking UNDO while inline editing session is on going
             if (item != null) {
                 assert newValue != null;
-                
+
                 // Using PrefixedValue PLAIN_STRING allow to consider special characters (such as @, %,...)
                 // as "standard" characters (i.e. to backslash them)
                 final String newPlainValue = new PrefixedValue(PrefixedValue.Type.PLAIN_STRING, newValue).toString();
-                
+
                 final DisplayOption option = hierarchy.getDisplayOption();
                 option.setValue(mask, newPlainValue);
             }
@@ -438,7 +438,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
             assert !entries.isEmpty();
             // Update tooltip with the first entry
             final ErrorReportEntry entry = entries.get(0);
-            warningBadgeTooltip.setText(getErrorReport(entry));
+            warningBadgeTooltip.setText(entry.getText());
             warningBadgeImageView.setImage(ImageUtils.getWarningBadgeImage());
             warningBadgeImageView.setManaged(true);
             iconsLabel.setTooltip(warningBadgeTooltip);
@@ -462,8 +462,8 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
 
         final DisplayOption option = hierarchy.getDisplayOption();
 
-        HierarchyMask mask = getItem().getMask();
-        final boolean hasInfo = option.hasValue(mask);
+        final var mask = getItem().getMask();
+        final var hasInfo = option.hasValue(mask);
         String displayInfo = option.getResolvedValue(mask);
 
         displayInfo = StringUtils.firstLine(displayInfo, "...");
@@ -479,14 +479,6 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         displayInfoLabel.setText(displayInfo);
         displayInfoLabel.setManaged(hasInfo);
         displayInfoLabel.setVisible(hasInfo);
-    }
-
-    /**
-     * @param entry
-     * @return
-     */
-    private String getErrorReport(ErrorReportEntry entry) {
-        return errorReport.getText(entry);
     }
 
     private List<ErrorReportEntry> getErrorReportEntries(HierarchyItem item) {
@@ -587,11 +579,10 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
         return String.format("%s, item=%s, index=%s", superToString, localToString, getIndex());
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     @SuppressWarnings({"unchecked", "rawtypes"})
     public final static class Factory extends AbstractFactory<HierarchyTreeCell> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

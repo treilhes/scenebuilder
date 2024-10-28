@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,27 +33,26 @@
  */
 package com.oracle.javafx.scenebuilder.document.preferences.document;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
 import com.gluonhq.jfxapps.core.api.preference.ManagedDocumentPreference;
-import com.gluonhq.jfxapps.core.api.preference.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preference.type.BooleanPreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
 
 @ApplicationInstanceSingleton
-public class ShowExpertByDefaultPreference extends BooleanPreference implements ManagedDocumentPreference {
+@PreferenceContext(id = "6ebf9f62-5b99-46ed-a4e6-8b7f3c283c7c",
+    name = ShowExpertByDefaultPreference.PREFERENCE_KEY,
+    defaultValueProvider = ShowExpertByDefaultPreference.DefaultProvider.class)
+public interface ShowExpertByDefaultPreference extends Preference<Boolean>, ManagedDocumentPreference {
 
-    /***************************************************************************
-     *                                                                         *
-     * Static fields                                                           *
-     *                                                                         *
-     **************************************************************************/
-    public static final String PREFERENCE_KEY = "showExpertByDefault"; //NOCHECK
-    public static final boolean PREFERENCE_DEFAULT_VALUE = false;
+    public static final String PREFERENCE_KEY = "showExpertByDefault"; // NOCHECK
+    public static final Boolean PREFERENCE_DEFAULT_VALUE = false;
 
-	public ShowExpertByDefaultPreference(@Autowired PreferencesContext preferencesContext) {
-		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-	}
+    public static class DefaultProvider implements DefaultValueProvider<Boolean> {
+        @Override
+        public Boolean get() {
+            return PREFERENCE_DEFAULT_VALUE;
+        }
+    }
 
 }

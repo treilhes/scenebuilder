@@ -34,11 +34,15 @@
 package com.oracle.javafx.scenebuilder.document.actions;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
+import com.gluonhq.jfxapps.core.api.ui.DockActionFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.document.api.DocumentPanel;
@@ -52,7 +56,7 @@ import com.oracle.javafx.scenebuilder.document.api.DocumentPanel;
         positionRequest = PositionRequest.AsNextSibling)
 @Accelerator(accelerator = "CTRL+5")
 @Accelerator(accelerator = "CTRL+Numpad 5")
-public class ToggleDocumentVisibilityAction extends AbstractToggleViewVisibilityAction {
+public class ToggleDocumentVisibilityAction  extends AbstractAction {
 
     /**
      * This is the menu id where the insertion will take place
@@ -63,20 +67,36 @@ public class ToggleDocumentVisibilityAction extends AbstractToggleViewVisibility
     public final static String TOGGLE_LIBRARY_MENU_ID = "toggleControlLibraryVisibilityMenuItem"; //NOCHECK
 
     public final static String MENU_ID = "toggleDocumentVisibilityMenuItem"; //NOCHECK
-  //@formatter:off
+
+    private View view;
+    private Action toggleAction;
+
+    //@formatter:off
     public ToggleDocumentVisibilityAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
+            DockActionFactory dockActionFactory,
             DockViewController dockViewController,
             DocumentPanel documentPanel) {
       //@formatter:on
-        super(i18n, extensionFactory, dockViewController);
-        setView(documentPanel);
+        super(i18n, extensionFactory);
+        this.view = documentPanel;
+        this.toggleAction = dockActionFactory.toggleViewVisibility(view);
+    }
+
+    @Override
+    public boolean canPerform() {
+        return toggleAction.canPerform();
+    }
+
+    @Override
+    public ActionStatus doPerform() {
+        return toggleAction.perform();
     }
 
     public String getTitle() {
         final String title;
-        if (getView().isVisible() && !getView().getParentDock().isMinimized()) {
+        if (view.isVisible() && !view.getParentDock().isMinimized()) {
             title = "menu.title.hide.document.panel";
         } else {
             title = "menu.title.show.document.panel";
