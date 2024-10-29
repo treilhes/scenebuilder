@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,34 +33,39 @@
  */
 package com.oracle.javafx.scenebuilder.dummy.controller;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-
-import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
-import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
-import com.oracle.javafx.scenebuilder.api.ui.dock.ViewSearch;
-import com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 
 /**
  *
  */
 @ApplicationInstanceSingleton
-@Lazy
 @ViewAttachment(name = DummyWindowController.VIEW_NAME, id = DummyWindowController.VIEW_ID)
 public class DummyWindowController extends AbstractFxmlViewController {
 
     public final static String VIEW_ID = "07a57164-de78-40f0-bb26-7c6b95afc35a";
     public final static String VIEW_NAME = "menu.title.dummy";
 
+    //@formatter:off
     public DummyWindowController(
-            SceneBuilderManager scenebuilderManager,
-            DocumentManager documentManager,
-            ViewMenuController viewMenuController
-            ) {
-        super(scenebuilderManager, documentManager, viewMenuController, DummyWindowController.class.getResource("DummyWindow.fxml"), I18N.getBundle());
+            I18N i18n,
+            ApplicationEvents applicationEvents,
+            ApplicationInstanceEvents applicationInstanceEvents,
+            ViewMenu viewMenuController) {
+        //@formatter:on
+        super(i18n, applicationEvents, applicationInstanceEvents, viewMenuController,
+                DummyWindowController.class.getResource("DummyWindow.fxml"));
     }
 
     @Override
-    public void controllerDidLoadFxml() {}
+    public void controllerDidLoadFxml() {
+    }
 
     @Override
     public ViewSearch getSearchController() {
