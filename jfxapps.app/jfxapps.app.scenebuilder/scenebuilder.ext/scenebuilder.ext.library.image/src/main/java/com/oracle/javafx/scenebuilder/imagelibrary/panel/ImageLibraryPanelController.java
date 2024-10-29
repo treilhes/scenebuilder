@@ -50,7 +50,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
@@ -164,7 +164,7 @@ public class ImageLibraryPanelController extends AbstractFxmlViewController impl
     // @formatter:off
     public ImageLibraryPanelController(
             ApplicationEvents scenebuilderManager,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             SbEditor editor,
             Drag drag,
             Dialog dialog,

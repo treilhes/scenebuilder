@@ -34,7 +34,7 @@
 package com.oracle.javafx.scenebuilder.controllibrary.controller;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
@@ -69,7 +69,7 @@ public class LibraryController {
     public LibraryController(
             @Autowired JobManager jobManager,
             @Autowired Drag drag,
-            @Autowired @Lazy FxmlDocumentManager documentManager,
+            @Autowired @Lazy ApplicationInstanceEvents documentManager,
             ControlLibraryDragSource.Factory libraryDragSourceFactory,
             SetDocumentRootJob.Factory setDocumentRootJobFactory,
             InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory) {

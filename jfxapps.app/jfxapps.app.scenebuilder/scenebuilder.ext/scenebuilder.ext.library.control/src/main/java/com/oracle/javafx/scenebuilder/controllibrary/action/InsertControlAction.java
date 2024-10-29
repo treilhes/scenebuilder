@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
@@ -80,7 +80,7 @@ public class InsertControlAction extends AbstractAction {
     private final SetDocumentRootJob.Factory setDocumentRootJobFactory;
     private final InsertAsAccessoryJob.Factory insertAsAccessoryJobFactory;
     private final JobManager jobManager;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final Selection selection;
     private final FXOMObjectMask.Factory designMaskFactory;
 
@@ -88,7 +88,7 @@ public class InsertControlAction extends AbstractAction {
 
     public InsertControlAction(
             ActionExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection,
             JobManager jobManager,
             FXOMObjectMask.Factory designMaskFactory,

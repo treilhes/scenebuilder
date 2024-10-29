@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.menu.viewmenu;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -63,11 +63,11 @@ public class UndockViewAction extends AbstractAction {
     public final static String MENU_ID = "undockViewMenu";
 
     private final DockViewController viewMenuController;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     public UndockViewAction(
             ActionExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             DockViewController viewMenuController) {
         super(extensionFactory);
         this.viewMenuController = viewMenuController;

@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.menu.action.file;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -64,12 +64,12 @@ public class SaveOrSaveAsAction extends AbstractAction {
 
     public final static String MENU_ID = "saveMenu";
 
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final ActionFactory actionFactory;
 
     public SaveOrSaveAsAction(
             ActionExtensionFactory extensionFactory,
-            @Autowired FxmlDocumentManager documentManager,
+            @Autowired ApplicationInstanceEvents documentManager,
             @Autowired ActionFactory actionFactory) {
         super(extensionFactory);
         this.documentManager = documentManager;

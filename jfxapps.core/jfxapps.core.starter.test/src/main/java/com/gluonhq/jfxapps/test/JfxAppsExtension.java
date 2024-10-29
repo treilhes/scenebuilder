@@ -84,6 +84,7 @@ import com.gluonhq.jfxapps.boot.context.impl.JfxAppContextImpl;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper.ServiceLoader;
 import com.gluonhq.jfxapps.boot.loader.model.AbstractExtension;
+import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
@@ -249,8 +250,8 @@ public class JfxAppsExtension implements BeforeEachCallback, ParameterResolver {
     static class I18NTestConfig {
         @Bean
         @ConditionalOnMissingBean
-        I18N i18nTest() {
-            return new I18N(List.of(), true);
+        I18N i18nTest(List<BundleProvider> bundleProviders) {
+            return new I18N(bundleProviders, true);
         }
 
         @Bean

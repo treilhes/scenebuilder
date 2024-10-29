@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.menu.action.edit;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -66,13 +66,13 @@ public class UndoAction extends AbstractAction {
     public final static String MENU_ID = "undoMenuItem"; //NOCHECK
 
     private final JobManager jobManager;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     public UndoAction(
         ActionExtensionFactory extensionFactory,
         Content content,
         JobManager jobManager,
-        FxmlDocumentManager documentManager) {
+        ApplicationInstanceEvents documentManager) {
         super(extensionFactory);
         this.jobManager = jobManager;
         this.documentManager = documentManager;

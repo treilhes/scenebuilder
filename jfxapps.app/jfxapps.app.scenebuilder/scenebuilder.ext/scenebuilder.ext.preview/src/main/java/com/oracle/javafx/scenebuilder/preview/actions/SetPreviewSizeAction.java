@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.preview.actions;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
@@ -49,13 +49,13 @@ import javafx.css.Size;
 public class SetPreviewSizeAction extends AbstractAction {
 
     private final PreviewWindowController previewWindowController;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     private Size size;
 
     public SetPreviewSizeAction(
             ActionExtensionFactory extensionFactory,
-            @Autowired FxmlDocumentManager documentManager,
+            @Autowired ApplicationInstanceEvents documentManager,
             @Autowired PreviewWindowController previewWindowController) {
         super(extensionFactory);
         this.documentManager = documentManager;

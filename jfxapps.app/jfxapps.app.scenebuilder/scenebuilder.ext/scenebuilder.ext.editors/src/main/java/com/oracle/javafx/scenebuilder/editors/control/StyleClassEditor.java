@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -111,7 +111,7 @@ public class StyleClassEditor extends InlineListEditor {
             Documentation documentation,
             FileSystem fileSystem,
             MessageLogger messageLogger,
-            FxmlDocumentManager documentManager) {
+            ApplicationInstanceEvents documentManager) {
         super(dialog, documentation, fileSystem);
         this.dialog = dialog;
         this.documentation = documentation;

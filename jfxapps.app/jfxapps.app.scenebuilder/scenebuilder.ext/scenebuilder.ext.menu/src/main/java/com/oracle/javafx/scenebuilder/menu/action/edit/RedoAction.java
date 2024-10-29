@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.menu.action.edit;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -65,13 +65,13 @@ public class RedoAction extends AbstractAction {
     public final static String MENU_ID = "redoMenuItem"; //NOCHECK
 
     private final JobManager jobManager;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     public RedoAction(
         ActionExtensionFactory extensionFactory,
         Content content,
         JobManager jobManager,
-        FxmlDocumentManager documentManager) {
+        ApplicationInstanceEvents documentManager) {
         super(extensionFactory);
         this.jobManager = jobManager;
         this.documentManager = documentManager;

@@ -40,22 +40,23 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.List;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
+import com.gluonhq.jfxapps.test.JfxAppsTest;
+import com.oracle.javafx.scenebuilder.sourcegen.i18n.I18NSourceGen;
 
+@JfxAppsTest
+@ContextConfiguration(classes = { I18NSourceGen.class })
 public class SkeletonBufferKotlinTest {
 
-    private I18N i18n = new I18N(List.of(), true);
-
-    @BeforeClass
-    public static void initialize() {
-        JfxInitializer.initialize();
-    }
+    @Autowired
+    private I18N i18n;
 
     @Test
     public void skeletonToString_nestedTestFxml() throws IOException {
@@ -124,8 +125,8 @@ public class SkeletonBufferKotlinTest {
     private SkeletonBuffer load(String fxmlFile) throws IOException {
         final URL fxmlURL = SkeletonBufferKotlinTest.class.getResource(fxmlFile);
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
-        FXOMDocument fxomDocument = new FXOMDocument(fxmlText, fxmlURL, SkeletonBufferKotlinTest.class.getClassLoader(), null);
-        SkeletonBuffer skeletonBuffer = new SkeletonBuffer(fxomDocument, "test");
+        FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(fxmlText, fxmlURL, SkeletonBufferKotlinTest.class.getClassLoader(), null);
+        SkeletonBuffer skeletonBuffer = new SkeletonBuffer(i18n, fxomDocument, "test");
         skeletonBuffer.setLanguage(SkeletonSettings.LANGUAGE.KOTLIN);
         return skeletonBuffer;
     }

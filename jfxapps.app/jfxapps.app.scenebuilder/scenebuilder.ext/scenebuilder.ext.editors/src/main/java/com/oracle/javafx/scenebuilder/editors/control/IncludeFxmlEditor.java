@@ -41,7 +41,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -77,13 +77,13 @@ public class IncludeFxmlEditor extends InlineListEditor {
     private TextField includeFxmlField;
 
     private final FileSystem fileSystem;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     public IncludeFxmlEditor(
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem,
-            FxmlDocumentManager documentManager) {
+            ApplicationInstanceEvents documentManager) {
         super(dialog, documentation, fileSystem);
         this.fileSystem = fileSystem;
         this.documentManager = documentManager;

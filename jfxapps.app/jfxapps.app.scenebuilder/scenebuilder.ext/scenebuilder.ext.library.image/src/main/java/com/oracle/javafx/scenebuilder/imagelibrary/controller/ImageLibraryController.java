@@ -34,7 +34,7 @@
 package com.oracle.javafx.scenebuilder.imagelibrary.controller;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -76,7 +76,7 @@ public class ImageLibraryController {
     public ImageLibraryController(
             @Autowired JobManager jobManager,
             @Autowired Drag drag,
-            @Autowired @Lazy FxmlDocumentManager documentManager,
+            @Autowired @Lazy ApplicationInstanceEvents documentManager,
             ImageLibraryDragSource.Factory libraryDragSourceFactory,
             SetDocumentRootJob.Factory setDocumentRootJobFactory,
             InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory) {

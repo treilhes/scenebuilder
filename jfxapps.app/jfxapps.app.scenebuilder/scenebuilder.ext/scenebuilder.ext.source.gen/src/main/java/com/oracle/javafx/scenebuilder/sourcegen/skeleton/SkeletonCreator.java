@@ -1,5 +1,7 @@
 /*
- * Copyright (c) 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
  * This file is available and licensed under the following license:
@@ -13,7 +15,7 @@
  *  - Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the distribution.
- *  - Neither the name of Oracle Corporation nor the names of its
+ *  - Neither the name of Oracle Corporation and Gluon nor the names of its
  *    contributors may be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
@@ -31,10 +33,20 @@
  */
 package com.oracle.javafx.scenebuilder.sourcegen.skeleton;
 
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+
 class SkeletonCreator {
 
-    private final SkeletonCreatorJava skeletonCreatorJava = new SkeletonCreatorJava();
-    private final SkeletonCreatorKotlin skeletonCreatorKotlin = new SkeletonCreatorKotlin();
+    private final SkeletonCreatorJava skeletonCreatorJava;
+    private final SkeletonCreatorKotlin skeletonCreatorKotlin;
+
+
+    public SkeletonCreator(I18N i18n) {
+        super();
+        this.skeletonCreatorJava = new SkeletonCreatorJava(i18n);
+        this.skeletonCreatorKotlin = new SkeletonCreatorKotlin(i18n);
+    }
+
 
     /**
      * @return a code skeleton for the given context

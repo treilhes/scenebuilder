@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -67,14 +67,14 @@ public class MoveToDockAction extends AbstractAction {
     public final static String MENU_ID = "viewMoveToMenu";
     public final static String MENU_ITEM_ID = "viewMoveToMenu-%s";
 
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     private UUID targetDockId;
     private final DockViewController dockViewController;
 
     public MoveToDockAction(
             ActionExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             DockViewController dockViewController) {
         super(extensionFactory);
         this.documentManager = documentManager;

@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.preview.actions;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
@@ -57,13 +57,13 @@ public class ShowPreviewDialogAction extends AbstractAction {
 
     public final static String SHOW_PREVIEW_IN_DIALOG_ID = "showPreviewInDialog";
 
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final PreviewWindowController previewWindowController;
 
     public ShowPreviewDialogAction(
             ActionExtensionFactory extensionFactory,
             @Autowired PreviewWindowController previewWindowController,
-            @Autowired FxmlDocumentManager documentManager) {
+            @Autowired ApplicationInstanceEvents documentManager) {
         super(extensionFactory);
         this.documentManager = documentManager;
         this.previewWindowController = previewWindowController;

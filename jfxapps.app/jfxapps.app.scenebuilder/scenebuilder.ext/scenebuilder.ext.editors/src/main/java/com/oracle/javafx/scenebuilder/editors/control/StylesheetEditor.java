@@ -43,7 +43,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -104,12 +104,12 @@ public class StylesheetEditor extends InlineListEditor {
     private Type type;
     private URL fxmlFileLocation;
 	private final FileSystem fileSystem;
-	private final FxmlDocumentManager documentManager;
+	private final ApplicationInstanceEvents documentManager;
     public StylesheetEditor(
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem,
-            FxmlDocumentManager documentManager) {
+            ApplicationInstanceEvents documentManager) {
         super(dialog, documentation, fileSystem);
         this.fileSystem = fileSystem;
         this.documentManager = documentManager;

@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
@@ -72,7 +72,7 @@ public final class ImageLibraryDragSource extends AbstractDragSource {
     private FXOMObject libraryItemObject; // Populated lazily
     private List<FXOMObject> draggedObjects; // Opmization
 
-    protected ImageLibraryDragSource(FxmlDocumentManager documentManager, ApplicationInstanceWindow ownerWindow) {
+    protected ImageLibraryDragSource(ApplicationInstanceEvents documentManager, ApplicationInstanceWindow ownerWindow) {
         super(ownerWindow.getScene().getWindow());
         this.targetDocument = documentManager.fxomDocument().get();
         assert targetDocument != null;

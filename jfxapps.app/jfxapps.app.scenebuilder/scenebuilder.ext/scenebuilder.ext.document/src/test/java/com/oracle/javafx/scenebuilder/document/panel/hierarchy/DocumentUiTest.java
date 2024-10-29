@@ -44,7 +44,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.TestContext;
 import org.testfx.framework.junit5.ApplicationExtension;
@@ -102,7 +102,7 @@ class DocumentUiTest {
     ApplicationEvents scenebuilderManager = new ApplicationEvents.SceneBuilderManagerImpl();
 
     @Spy
-    FxmlDocumentManager documentManager = new ApplicationInstanceEvents.DocumentManagerImpl();
+    ApplicationInstanceEvents documentManager = new ApplicationInstanceEvents.DocumentManagerImpl();
 
     @Mock
     UpdateReferencesJob.Factory updateReferencesJobFactory;

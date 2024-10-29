@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.menu.action.file;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -67,7 +67,7 @@ public class IncludeFxmlAction extends AbstractFxmlAction {
 
     public final static String MENU_ID = "includeFxmlMenu"; //NOCHECK
 
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     public IncludeFxmlAction(
             ActionExtensionFactory extensionFactory,
             FileSystem fileSystem,
@@ -76,7 +76,7 @@ public class IncludeFxmlAction extends AbstractFxmlAction {
             MessageLogger messageLogger,
             ImportFileJob.Factory importFileJobFactory,
             IncludeFileJob.Factory includeFileJobFactory,
-            FxmlDocumentManager documentManager) {
+            ApplicationInstanceEvents documentManager) {
         super(extensionFactory, fileSystem, documentWindow, jobManager, messageLogger, importFileJobFactory, includeFileJobFactory);
         this.documentManager = documentManager;
     }

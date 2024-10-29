@@ -52,7 +52,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
@@ -166,7 +166,7 @@ public class LibraryPanelController extends AbstractFxmlViewController implement
  // @formatter:off
     public LibraryPanelController(
             ApplicationEvents scenebuilderManager,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             SbEditor editor,
             Dialog dialog,
             Drag drag,

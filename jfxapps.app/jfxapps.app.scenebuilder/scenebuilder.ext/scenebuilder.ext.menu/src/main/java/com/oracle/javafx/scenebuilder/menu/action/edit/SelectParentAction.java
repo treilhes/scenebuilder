@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.menu.action.edit;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -72,12 +72,12 @@ public class SelectParentAction extends AbstractAction {
     public final static String MENU_ID = "selectParentMenu";
     public final static String TITLE = "menu.title.select.parent";
 
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final Selection selection;
 
     public SelectParentAction(
             ActionExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection) {
         super(extensionFactory);
         this.documentManager = documentManager;

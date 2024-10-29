@@ -53,7 +53,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.css.CssInternal;
@@ -222,7 +222,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     private final MessageLogger messageLogger;
     private final InspectorSectionIdPreference inspectorSectionIdPreference;
 
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final Drag drag;
     private final ModifyCacheHintJob.Factory modifyCacheHintJobFactory;
     private final ModifySelectionJob.Factory modifySelectionJobFactory;
@@ -240,7 +240,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
  // @formatter:off
     public InspectorPanelController(
             ApplicationEvents scenebuilderManager,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Selection selection,
             InlineEdit inlineEdit,
             JobManager jobManager,

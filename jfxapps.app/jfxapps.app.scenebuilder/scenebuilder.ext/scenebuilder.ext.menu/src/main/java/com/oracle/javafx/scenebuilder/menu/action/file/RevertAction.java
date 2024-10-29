@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.menu.action.file;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -64,7 +64,7 @@ public class RevertAction extends AbstractAction {
     public final static String MENU_ID = "revertMenu";
 
     private final ApplicationInstance document;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final Dialog dialog;
     private final ApplicationInstanceWindow documentWindow;
     private final ActionFactory actionFactory;
@@ -72,7 +72,7 @@ public class RevertAction extends AbstractAction {
     public RevertAction(
             ActionExtensionFactory extensionFactory,
             @Autowired ApplicationInstance document,
-            @Autowired FxmlDocumentManager documentManager,
+            @Autowired ApplicationInstanceEvents documentManager,
             @Autowired ApplicationInstanceWindow documentWindow,
             @Autowired Dialog dialog,
             @Autowired ActionFactory actionFactory) {

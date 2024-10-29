@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.api.ui.menu.MenuBuilder;
@@ -60,12 +60,12 @@ import javafx.scene.control.ToggleGroup;
 public class PreviewMenuProvider implements MenuItemProvider {
 
     private final MenuBuilder menuBuilder;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final PreviewWindowController previewWindowController;
 
     public PreviewMenuProvider(
             MenuBuilder menuBuilder,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             @Lazy PreviewWindowController previewWindowController) {
         this.menuBuilder = menuBuilder;
         this.documentManager = documentManager;

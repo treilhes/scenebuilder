@@ -43,6 +43,7 @@ import org.junit.Test;
 
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 
 /**
  * Unit test for {@link SkeletonBuffer#toString()}.
@@ -93,7 +94,7 @@ public class SkeletonBufferTest {
     private SkeletonBuffer load(String fxmlFile) throws IOException {
         final URL fxmlURL = SkeletonBufferTest.class.getResource(fxmlFile);
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
-        FXOMDocument fxomDocument = new FXOMDocument(fxmlText, fxmlURL, SkeletonBufferTest.class.getClassLoader(), null);
-        return new SkeletonBuffer(fxomDocument, "test");
+        FXOMDocument fxomDocument = FXOMDocumentFactory.DEFAULT.newDocument(fxmlText, fxmlURL, SkeletonBufferTest.class.getClassLoader(), null);
+        return new SkeletonBuffer(i18n, fxomDocument, "test");
     }
 }

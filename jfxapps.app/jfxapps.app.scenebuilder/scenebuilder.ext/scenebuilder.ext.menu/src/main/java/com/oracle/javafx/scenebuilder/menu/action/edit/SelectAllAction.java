@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.menu.action.edit;
 
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -74,13 +74,13 @@ public class SelectAllAction extends AbstractAction {
 
     private final ApplicationInstanceWindow documentWindow;
     private final InlineEdit inlineEdit;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final Selection selection;
 
     public SelectAllAction(
             ActionExtensionFactory extensionFactory,
             @Autowired ApplicationInstanceWindow documentWindow,
-            @Autowired FxmlDocumentManager documentManager,
+            @Autowired ApplicationInstanceEvents documentManager,
             @Autowired InlineEdit inlineEdit,
             Selection selection) {
         super(extensionFactory);

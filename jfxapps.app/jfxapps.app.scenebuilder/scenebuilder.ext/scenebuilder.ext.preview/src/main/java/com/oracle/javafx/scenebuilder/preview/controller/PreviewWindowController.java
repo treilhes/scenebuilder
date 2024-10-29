@@ -42,7 +42,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;

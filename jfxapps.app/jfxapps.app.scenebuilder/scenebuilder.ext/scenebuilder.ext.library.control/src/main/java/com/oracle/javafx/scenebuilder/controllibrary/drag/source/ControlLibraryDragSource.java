@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.gluonhq.jfxapps.core.api.dnd.DragSourceFactory;
 import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
@@ -70,7 +70,7 @@ public final class ControlLibraryDragSource extends AbstractDragSource {
     private FXOMObject libraryItemObject; // Populated lazily
     private List<FXOMObject> draggedObjects; // Opmization
 
-    protected ControlLibraryDragSource(FxmlDocumentManager documentManager, ApplicationInstanceWindow ownerWindow) {
+    protected ControlLibraryDragSource(ApplicationInstanceEvents documentManager, ApplicationInstanceWindow ownerWindow) {
         super(ownerWindow.getScene().getWindow());
         this.targetDocument = documentManager.fxomDocument().get();
         assert targetDocument != null;

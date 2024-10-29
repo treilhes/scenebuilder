@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.menu.viewmenu;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -66,13 +66,13 @@ public class ChangeDockTypeAction extends AbstractAction {
     public final static String MENU_ID = "changeViewTypeMenu";
     public final static String MENU_ITEM_ID = "changeViewTypeMenu-%s";
 
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     private DockType<?> dockType;
 
     public ChangeDockTypeAction(
             ActionExtensionFactory extensionFactory,
-            FxmlDocumentManager documentManager) {
+            ApplicationInstanceEvents documentManager) {
         super(extensionFactory);
         this.documentManager = documentManager;
     }

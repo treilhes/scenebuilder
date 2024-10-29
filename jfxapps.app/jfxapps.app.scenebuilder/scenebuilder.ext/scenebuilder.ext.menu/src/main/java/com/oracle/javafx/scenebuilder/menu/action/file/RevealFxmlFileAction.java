@@ -38,7 +38,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
@@ -64,14 +64,14 @@ public class RevealFxmlFileAction extends AbstractAction {
 
     public final static String MENU_ID = "revealMenu";
 
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final ApplicationInstanceWindow documentWindow;
     private final FileSystem fileSystem;
     private final Dialog dialog;
 
     public RevealFxmlFileAction(
             ActionExtensionFactory extensionFactory,
-            @Autowired FxmlDocumentManager documentManager,
+            @Autowired ApplicationInstanceEvents documentManager,
             @Autowired ApplicationInstanceWindow documentWindow,
             @Autowired FileSystem fileSystem,
             @Autowired Dialog dialog) {

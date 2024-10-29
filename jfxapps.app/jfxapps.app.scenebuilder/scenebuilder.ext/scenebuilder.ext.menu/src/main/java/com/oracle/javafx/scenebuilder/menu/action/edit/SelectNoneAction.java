@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.menu.action.edit;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -69,12 +69,12 @@ public class SelectNoneAction extends AbstractAction {
 
     private final ApplicationInstanceWindow documentWindow;
     private final InlineEdit inlineEdit;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     public SelectNoneAction(
             ActionExtensionFactory extensionFactory,
             @Autowired ApplicationInstanceWindow documentWindow,
-            @Autowired FxmlDocumentManager documentManager,
+            @Autowired ApplicationInstanceEvents documentManager,
             @Autowired InlineEdit inlineEdit) {
         super(extensionFactory);
         this.documentWindow = documentWindow;

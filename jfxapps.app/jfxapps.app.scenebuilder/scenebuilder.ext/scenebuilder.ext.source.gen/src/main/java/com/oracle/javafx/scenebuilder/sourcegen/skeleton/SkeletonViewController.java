@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,15 +36,10 @@ package com.oracle.javafx.scenebuilder.sourcegen.skeleton;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.core.api.application.ApplicationInstanceWindow;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
@@ -65,7 +60,6 @@ import javafx.scene.input.DataFormat;
  *
  */
 @ApplicationInstanceSingleton
-@Lazy
 @ViewAttachment(name = SkeletonViewController.VIEW_NAME, id = SkeletonViewController.VIEW_ID,
         icon = "ViewIconSkeleton.png", iconX2 = "ViewIconSkeleton@2x.png")
 public class SkeletonViewController extends AbstractFxmlViewController {
@@ -85,14 +79,14 @@ public class SkeletonViewController extends AbstractFxmlViewController {
     private FXOMDocument fxomDocument;
     private String documentName;
     private boolean dirty = true;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     public SkeletonViewController(
+            I18N i18n,
             ApplicationEvents scenebuilderManager,
-            FxmlDocumentManager documentManager,
-            @Autowired ApplicationInstanceWindow document,
+            ApplicationInstanceEvents documentManager,
             ViewMenu viewMenuController) {
-        super(scenebuilderManager, documentManager, viewMenuController, SkeletonViewController.class.getResource("SkeletonWindow.fxml"), I18N.getBundle());
+        super(i18n, scenebuilderManager, documentManager, viewMenuController, SkeletonViewController.class.getResource("SkeletonWindow.fxml"));
 
         this.documentManager = documentManager;
     }
@@ -100,7 +94,7 @@ public class SkeletonViewController extends AbstractFxmlViewController {
     private void setFxomDocument(FXOMDocument fxomDocument) {
         assert fxomDocument != null;
         this.fxomDocument = fxomDocument;
-        this.documentName = FXOMDocumentUtils.makeTitle(fxomDocument);
+        this.documentName = FXOMDocumentUtils.makeTitle(getI18n(), fxomDocument);
         update();
     }
     @FXML
@@ -139,7 +133,7 @@ public class SkeletonViewController extends AbstractFxmlViewController {
     }
 
     private void updateTitle() {
-        final String title = I18N.getString("skeleton.window.title", documentName);
+        final String title = getI18n().getString("skeleton.window.title", documentName);
         setName(title);
     }
 
@@ -149,7 +143,7 @@ public class SkeletonViewController extends AbstractFxmlViewController {
         // No need to eat CPU if the skeleton window isn't opened
         if (isVisible()) {
             updateTitle();
-            final SkeletonBuffer buf = new SkeletonBuffer(fxomDocument, documentName);
+            final SkeletonBuffer buf = new SkeletonBuffer(getI18n(), fxomDocument, documentName);
 
             buf.setLanguage(languageChoiceBox.getSelectionModel().getSelectedItem());
 

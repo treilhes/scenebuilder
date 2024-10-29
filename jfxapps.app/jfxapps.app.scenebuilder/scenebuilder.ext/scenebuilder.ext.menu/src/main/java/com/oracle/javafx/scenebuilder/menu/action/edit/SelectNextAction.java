@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.menu.action.edit;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -64,13 +64,13 @@ public class SelectNextAction extends AbstractAction {
 
     private final ApplicationInstanceWindow documentWindow;
     private final InlineEdit inlineEdit;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final Selection selection;
 
     public SelectNextAction(
             ActionExtensionFactory extensionFactory,
             ApplicationInstanceWindow documentWindow,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             InlineEdit inlineEdit,
             Selection selection) {
         super(extensionFactory);

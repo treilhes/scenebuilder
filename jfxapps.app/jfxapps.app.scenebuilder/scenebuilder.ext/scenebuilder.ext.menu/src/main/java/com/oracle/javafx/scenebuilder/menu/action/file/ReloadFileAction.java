@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.menu.action.file;
 import java.io.IOException;
 import java.net.URL;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -56,7 +56,7 @@ import com.oracle.javafx.scenebuilder.api.editors.ApplicationInstanceWindow;
 public class ReloadFileAction extends AbstractAction {
 
     private final ApplicationInstance document;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final Dialog dialog;
     private final ApplicationInstanceWindow documentWindow;
     private final SbEditor editor;
@@ -64,7 +64,7 @@ public class ReloadFileAction extends AbstractAction {
     public ReloadFileAction(
             ActionExtensionFactory extensionFactory,
             @Autowired ApplicationInstance document,
-            @Autowired FxmlDocumentManager documentManager,
+            @Autowired ApplicationInstanceEvents documentManager,
             @Autowired ApplicationInstanceWindow documentWindow,
             @Autowired SbEditor editor,
             @Autowired Dialog dialog) {

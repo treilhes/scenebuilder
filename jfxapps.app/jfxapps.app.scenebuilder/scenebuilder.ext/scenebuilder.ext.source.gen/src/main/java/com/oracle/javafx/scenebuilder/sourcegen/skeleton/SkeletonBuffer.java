@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,7 +41,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.collector.EventHandlerCollector;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 import com.oracle.javafx.scenebuilder.sourcegen.util.eventnames.FindEventNamesUtil;
 
 class SkeletonBuffer {
@@ -51,12 +51,15 @@ class SkeletonBuffer {
 
     private final SkeletonSettings settings = new SkeletonSettings();
 
-    private final SkeletonCreator skeletonCreator = new SkeletonCreator();
+    private final SkeletonCreator skeletonCreator;
+    private final I18N i18n;
 
-    SkeletonBuffer(FXOMDocument document, String documentName) {
+    SkeletonBuffer(I18N i18n, FXOMDocument document, String documentName) {
         assert document != null;
+        this.i18n = i18n;
         this.document = document;
         this.documentName = documentName;
+        this.skeletonCreator = new SkeletonCreator(i18n);
     }
 
     void setLanguage(SkeletonSettings.LANGUAGE language) {
@@ -78,7 +81,7 @@ class SkeletonBuffer {
     @Override
     public String toString() {
         if (document.getFxomRoot() == null) {
-            return I18N.getString("skeleton.empty");
+            return i18n.getString("skeleton.empty");
         } else {
             SkeletonContext.Builder builder = SkeletonContext.builder()
                 .fxController(document.getFxomRoot().getFxController())
@@ -98,7 +101,7 @@ class SkeletonBuffer {
     }
 
     private void constructFxIds(SkeletonContext.Builder builder) {
-        for (FXOMObject value : document.collect(FxIdCollector.fxIdsMap()).values()) {
+        for (FXOMObject value : document.collect(FxCollector.fxIdsUniqueMap()).values()) {
             builder.addFxId(value);
         }
     }

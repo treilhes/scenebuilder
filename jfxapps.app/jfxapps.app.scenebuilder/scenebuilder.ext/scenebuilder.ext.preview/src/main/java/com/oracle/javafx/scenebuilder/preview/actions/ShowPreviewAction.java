@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.preview.actions;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
@@ -56,13 +56,13 @@ public class ShowPreviewAction extends AbstractAction {
 
     public final static String SHOW_PREVIEW_IN_WINDOW_ID = "showPreviewInWindow";
 
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
     private final PreviewWindowController previewWindowController;
 
     public ShowPreviewAction(
             ActionExtensionFactory extensionFactory,
             @Autowired PreviewWindowController previewWindowController,
-            @Autowired FxmlDocumentManager documentManager) {
+            @Autowired ApplicationInstanceEvents documentManager) {
         super(extensionFactory);
         this.documentManager = documentManager;
         this.previewWindowController = previewWindowController;

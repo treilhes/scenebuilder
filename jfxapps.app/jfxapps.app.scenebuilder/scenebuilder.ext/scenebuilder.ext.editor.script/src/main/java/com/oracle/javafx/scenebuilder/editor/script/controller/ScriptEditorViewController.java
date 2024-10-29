@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
@@ -83,11 +83,11 @@ public class ScriptEditorViewController extends AbstractFxmlViewController {
     private FXOMDocument fxomDocument;
     private String documentName;
     private boolean dirty = true;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
     public ScriptEditorViewController(
             SceneBuilderManager scenebuilderManager,
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             @Autowired EditorInstanceWindow document,
             ViewMenuController viewMenuController) {
         super(scenebuilderManager, documentManager, viewMenuController, ScriptEditorViewController.class.getResource("ScriptEditor.fxml"), I18N.getBundle());

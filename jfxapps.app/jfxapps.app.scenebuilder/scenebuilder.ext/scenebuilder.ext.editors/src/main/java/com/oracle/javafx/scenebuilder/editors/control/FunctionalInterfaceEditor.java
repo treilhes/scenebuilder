@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -80,7 +80,7 @@ public class FunctionalInterfaceEditor extends AutoSuggestEditor {
     private List<String> suggestedMethods;
 
     private final Glossary glossary;
-    private final FxmlDocumentManager documentManager;
+    private final ApplicationInstanceEvents documentManager;
 
 
     public FunctionalInterfaceEditor(
@@ -88,7 +88,7 @@ public class FunctionalInterfaceEditor extends AutoSuggestEditor {
             Documentation documentation,
             FileSystem fileSystem,
             Glossary glossary,
-            FxmlDocumentManager documentManager
+            ApplicationInstanceEvents documentManager
             ) {
         super(dialog, documentation, fileSystem);
         this.glossary = glossary;

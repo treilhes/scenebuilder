@@ -38,7 +38,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
-import org.scenebuilder.fxml.api.subjects.FxmlDocumentManager;
+import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -93,7 +93,7 @@ public class ImageEditor extends AbstractPropertyEditor {
     private FXOMDocument fxomDocument;
 
     public ImageEditor(
-            FxmlDocumentManager documentManager,
+            ApplicationInstanceEvents documentManager,
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem) {
