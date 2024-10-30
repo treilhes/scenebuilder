@@ -44,6 +44,7 @@ import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
 import javafx.application.Platform;
 
 public interface JfxAppPlatform {
+
     public static void ensureFxThread(Runnable runnable) {
         if (Platform.isFxApplicationThread()) {
             runnable.run();
@@ -51,6 +52,17 @@ public interface JfxAppPlatform {
             Platform.runLater(runnable);
         }
     }
+
+    public static <T> FutureTask<T> callOnFxThread(Callable<T> callable) {
+        final FutureTask<T> task = new FutureTask<>(callable);
+        if (Platform.isFxApplicationThread()) {
+            task.run();
+        } else {
+            Platform.runLater(task);
+        }
+        return task;
+    }
+
     /**
      * Same as {@link Platform#runOnFxThread(Runnable)}
      * @param runnable

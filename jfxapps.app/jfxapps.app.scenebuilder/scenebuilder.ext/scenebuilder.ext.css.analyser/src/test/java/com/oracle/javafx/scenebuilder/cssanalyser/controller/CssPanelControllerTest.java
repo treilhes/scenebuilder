@@ -44,7 +44,6 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.scenicview.ScenicView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -56,13 +55,11 @@ import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.preference.AbstractPreference;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.menu.controller.ViewMenuController;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 import com.gluonhq.jfxapps.test.StageBuilder;
 import com.gluonhq.jfxapps.test.StageType;
@@ -128,7 +125,7 @@ class CssPanelControllerTest {
 
         @Bean
         ViewMenu viewMenuController() {
-            return Mockito.mock(ViewMenuController.class);
+            return Mockito.mock(ViewMenu.class);
         }
     }
 
@@ -177,7 +174,7 @@ class CssPanelControllerTest {
     @Test
     void inline_style_must_be_shown_in_table(StageBuilder builder, FxRobot robot) throws IOException {
 
-        var document = new FXOMDocument("""
+        var document = FXOMDocumentFactory.DEFAULT.newDocument("""
                 <?import javafx.scene.control.Label?>
                 <Label xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
                     text="txt" style="-fx-background-color:Orange;"/>
@@ -196,6 +193,7 @@ class CssPanelControllerTest {
                 .controller(CssPanelController.class)
                 .setup(StageType.Fill)
                 .size(1024, 600).show();
+
 
         var items = robot.lookup("#table").queryTableView().getItems();
 

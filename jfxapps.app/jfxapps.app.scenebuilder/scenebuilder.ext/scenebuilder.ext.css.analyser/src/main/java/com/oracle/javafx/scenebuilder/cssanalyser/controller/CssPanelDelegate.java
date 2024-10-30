@@ -35,10 +35,7 @@
 package com.oracle.javafx.scenebuilder.cssanalyser.controller;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
-import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.Inspector;
@@ -49,12 +46,18 @@ import com.oracle.javafx.scenebuilder.api.Inspector;
 @ApplicationInstanceSingleton
 public class CssPanelDelegate extends CssPanelController.Delegate {
 
+    private final JfxAppPlatform jfxAppPlatform;
     private final Inspector inspectorController;
     private final ViewManager viewManager;
 
+
+    //@formatter:off
     public CssPanelDelegate(
-    		Inspector inspectorController,
-    		ViewManager viewManager) {
+            JfxAppPlatform jfxAppPlatform,
+            Inspector inspectorController,
+            ViewManager viewManager) {
+        //@formatter:on
+        this.jfxAppPlatform = jfxAppPlatform;
         this.inspectorController = inspectorController;
         this.viewManager = viewManager;
     }
@@ -73,7 +76,7 @@ public class CssPanelDelegate extends CssPanelController.Delegate {
 //        }
 
         // Need to delay the focus to the editor, so that the section is actually expanded first.
-        JfxAppPlatform.runOnFxThread(() -> JfxAppPlatform.runOnFxThread(() -> inspectorController.setFocusToEditor(propMeta)));
+        jfxAppPlatform.runOnFxThread(() -> jfxAppPlatform.runOnFxThread(() -> inspectorController.setFocusToEditor(propMeta)));
     }
 
 }

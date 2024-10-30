@@ -35,23 +35,23 @@ package com.oracle.javafx.scenebuilder.cssanalyser.preferences.global;
 
 import java.util.function.Function;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups;
-import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preference.PreferenceEditorFactory;
-import com.gluonhq.jfxapps.core.api.preference.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preference.UserPreference;
 import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
-import com.gluonhq.jfxapps.core.api.preference.type.BooleanPreference;
+import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
+import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
+import com.gluonhq.jfxapps.core.api.preference.UserPreference;
 
 import javafx.scene.Parent;
 
 @ApplicationSingleton
-public class CssTableColumnsOrderingReversedPreference extends BooleanPreference
-        implements ManagedGlobalPreference, UserPreference<Boolean> {
+@PreferenceContext(id = "ce387603-ff39-40db-9e42-0825b3a115ff", // NO CHECK
+        name = CssTableColumnsOrderingReversedPreference.PREFERENCE_KEY,
+        defaultValueProvider = CssTableColumnsOrderingReversedPreference.DefaultProvider.class)
+public interface CssTableColumnsOrderingReversedPreference
+        extends Preference<Boolean>, ManagedGlobalPreference, UserPreference<Boolean> {
     /***************************************************************************
      * * Support Classes * *
      **************************************************************************/
@@ -76,37 +76,26 @@ public class CssTableColumnsOrderingReversedPreference extends BooleanPreference
         }
     }
 
-    /***************************************************************************
-     * * Static fields * *
-     **************************************************************************/
-    public static final String PREFERENCE_KEY = "CSS_TABLE_COLUMNS_ORDERING_REVERSED"; // NOCHECK
+    public static final String PREFERENCE_KEY = "prefs.cssanalyzer.columns.order"; // NOCHECK
     public static final boolean PREFERENCE_DEFAULT_VALUE = false;
 
-    private final PreferenceEditorFactory preferenceEditorFactory;
-
-    public CssTableColumnsOrderingReversedPreference(@Autowired PreferencesContext preferencesContext,
-            @Autowired PreferenceEditorFactory preferenceEditorFactory) {
-        super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-        this.preferenceEditorFactory = preferenceEditorFactory;
-    }
-
     @Override
-    public PreferenceGroup getGroup() {
+    default PreferenceGroup getGroup() {
         return DefaultPreferenceGroups.GLOBAL_GROUP_C;
     }
 
     @Override
-    public String getOrderKey() {
+    default String getOrderKey() {
         return getGroup() + "_D";
     }
 
     @Override
-    public String getLabelI18NKey() {
-        return "prefs.cssanalyzer.columns.order";
+    default String getLabelI18NKey() {
+        return PREFERENCE_KEY;
     }
 
     @Override
-    public Parent getEditor() {
+    default Parent getEditor() {
         Function<Boolean, CSSAnalyzerColumnsOrder> adapter = b -> b ? CSSAnalyzerColumnsOrder.DEFAULTS_LAST
                 : CSSAnalyzerColumnsOrder.DEFAULTS_FIRST;
 
@@ -118,8 +107,14 @@ public class CssTableColumnsOrderingReversedPreference extends BooleanPreference
                 return true;
             }
         };
-        return preferenceEditorFactory.newChoiceFieldEditor(this, CSSAnalyzerColumnsOrder.values(), adapter,
+        return getPreferenceEditorFactory().newChoiceFieldEditor(this, CSSAnalyzerColumnsOrder.values(), adapter,
                 reverseAdapter);
     }
 
+    public static class DefaultProvider implements DefaultValueProvider<Boolean> {
+        @Override
+        public Boolean get() {
+            return PREFERENCE_DEFAULT_VALUE;
+        }
+    }
 }

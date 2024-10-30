@@ -47,7 +47,9 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.util.URLUtils;
 
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -194,12 +196,18 @@ public class StageBuilder {
                     throw new IllegalArgumentException("Invalid fxml document", e);
                 }
             }
-            // create an hidden stage for the document scene graph
+            // create an hidden stage for the document scene graph if it is a node (needed for css handling)
             if (doc != null) {
-//                var hiddenStage = new Stage();
-//                var pane = new Pane(doc.getFxomRoot().getSceneGraphObject().getAs(Node.class));
-//                hiddenStage.hide();
-//                hiddenStage.setScene(new Scene(pane));
+                var sceneGraphObject = doc.getFxomRoot().getSceneGraphObject();
+
+                if (sceneGraphObject.isInstanceOf(Node.class)) {
+                    var node = sceneGraphObject.getAs(Node.class);
+                    var hiddenStage = new Stage();
+                    var pane = new Pane(node);
+                    hiddenStage.hide();
+                    hiddenStage.setScene(new Scene(pane));
+                }
+
                 instanceEvents.fxomDocument().set(doc);
             }
 
