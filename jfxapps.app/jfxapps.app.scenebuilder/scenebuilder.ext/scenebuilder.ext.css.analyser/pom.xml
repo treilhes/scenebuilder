@@ -9,6 +9,11 @@
         <version>${scenebuilder.version}</version>
     </parent>
 
+    <description>
+        Scene Builder CSS Analyser Extension, provide a view that analyses CSS configuration of a document
+        and shows the results in a table.
+    </description>
+
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
