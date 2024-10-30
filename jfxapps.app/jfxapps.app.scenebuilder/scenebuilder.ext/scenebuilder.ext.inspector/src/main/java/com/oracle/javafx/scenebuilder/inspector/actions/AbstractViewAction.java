@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,33 +35,37 @@ package com.oracle.javafx.scenebuilder.inspector.actions;
 
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.ViewMode;
 
 public abstract class AbstractViewAction extends AbstractAction {
 
-	private final InspectorPanelController inspectorPanelController;
-	private final ViewMode option;
+    private final InspectorPanelController inspectorPanelController;
+    private final ViewMode option;
 
-	public AbstractViewAction(
-	        ActionExtensionFactory extensionFactory,
-	        InspectorPanelController inspectorPanelController,
-	        ViewMode option) {
-		super(extensionFactory);
-		this.option = option;
-		this.inspectorPanelController = inspectorPanelController;
-	}
+    //@formatter:off
+    public AbstractViewAction(
+            I18N i18n,
+            ActionExtensionFactory extensionFactory,
+            InspectorPanelController inspectorPanelController,
+            ViewMode option) {
+        //@formatter:on
+        super(i18n, extensionFactory);
+        this.option = option;
+        this.inspectorPanelController = inspectorPanelController;
+    }
 
-	@Override
-	public boolean canPerform() {
-		//return inspectorPanelController.getViewMode() != option;
-		return true;
-	}
+    @Override
+    public boolean canPerform() {
+        // return inspectorPanelController.getViewMode() != option;
+        return true;
+    }
 
-	@Override
-	public ActionStatus doPerform() {
-		inspectorPanelController.setViewMode(option);
-		return ActionStatus.DONE;
-	}
+    @Override
+    public ActionStatus doPerform() {
+        inspectorPanelController.setViewMode(option);
+        return ActionStatus.DONE;
+    }
 
 }

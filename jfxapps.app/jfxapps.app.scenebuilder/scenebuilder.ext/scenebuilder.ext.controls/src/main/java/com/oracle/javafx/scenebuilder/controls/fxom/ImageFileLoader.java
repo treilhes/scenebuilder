@@ -67,7 +67,7 @@ public class ImageFileLoader implements FileLoader {
         final Image image = new Image(fileURL);
 
         if (image.isError() == false) {
-            final FXOMDocument transientDoc = makeFxomDocumentFromImageURL(image, 200.0);
+            final FXOMDocument transientDoc = makeFxomDocumentFromImageURL(targetDocument, image, 200.0);
             result = transientDoc.getFxomRoot();
             if (result != null) {
                 result.moveToFxomDocument(targetDocument);
@@ -76,7 +76,7 @@ public class ImageFileLoader implements FileLoader {
         return result;
     }
 
-    private static FXOMDocument makeFxomDocumentFromImageURL(Image image, double fitSize) throws IOException {
+    private static FXOMDocument makeFxomDocumentFromImageURL(FXOMDocument target, Image image, double fitSize) throws IOException {
 
         assert image != null;
         assert fitSize > 0.0;
@@ -97,12 +97,12 @@ public class ImageFileLoader implements FileLoader {
             fitHeight = Math.floor(imageHeight * scale);
         }
 
-        return makeFxomDocumentFromImageURL(image, fitWidth, fitHeight);
+        return makeFxomDocumentFromImageURL(target, image, fitWidth, fitHeight);
     }
 
-    private static FXOMDocument makeFxomDocumentFromImageURL(Image image, double fitWidth, double fitHeight) {
+    private static FXOMDocument makeFxomDocumentFromImageURL(FXOMDocument target,Image image, double fitWidth, double fitHeight) {
 
-        final FXOMDocument result = new FXOMDocument();
+        final FXOMDocument result = target.getFactory().newDocument();;
         final FXOMInstance imageView = new FXOMInstance(result, ImageView.class);
 
         final ImagePropertyMetadata imageMeta = ImageViewMetadata.imagePropertyMetadata;

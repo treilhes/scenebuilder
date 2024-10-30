@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,15 +36,16 @@ package com.oracle.javafx.scenebuilder.preview.menu;
 import java.util.Arrays;
 import java.util.List;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.util.StringUtils;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuBuilder;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemAttachment;
-import com.oracle.javafx.scenebuilder.api.ui.menu.MenuItemProvider;
-import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.util.StringUtils;
 import com.oracle.javafx.scenebuilder.preview.actions.ShowPreviewDialogAction;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 
@@ -56,17 +57,21 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.ToggleGroup;
 
 @ApplicationInstanceSingleton
-@Lazy
 public class PreviewMenuProvider implements MenuItemProvider {
 
+    private final I18N i18n;
     private final MenuBuilder menuBuilder;
     private final ApplicationInstanceEvents documentManager;
     private final PreviewWindowController previewWindowController;
 
+    //@formatter:off
     public PreviewMenuProvider(
+            I18N i18n,
             MenuBuilder menuBuilder,
             ApplicationInstanceEvents documentManager,
             @Lazy PreviewWindowController previewWindowController) {
+        //@formatter:on
+        this.i18n = i18n;
         this.menuBuilder = menuBuilder;
         this.documentManager = documentManager;
         this.previewWindowController = previewWindowController;
@@ -106,7 +111,7 @@ public class PreviewMenuProvider implements MenuItemProvider {
             }
 
             ToggleGroup sizeToggle = new ToggleGroup();
-            menu = new Menu(I18N.getString("menu.title.preview.size"));
+            menu = new Menu(i18n.getString("menu.title.preview.size"));
 
             RadioMenuItem mi = createSizeMenu(Size.SIZE_PREFERRED, sizeToggle);
             mi.setSelected(true);
@@ -121,7 +126,7 @@ public class PreviewMenuProvider implements MenuItemProvider {
             }
 
             menu.setOnMenuValidation((e) -> {
-                mi.setText(I18N.getString("menu.title.size.preferred.with.value",
+                mi.setText(i18n.getString("menu.title.size.preferred.with.value",
                         StringUtils.getStringFromDouble(previewWindowController.getRoot().prefWidth(-1)),
                         StringUtils.getStringFromDouble(previewWindowController.getRoot().prefHeight(-1))));
             });

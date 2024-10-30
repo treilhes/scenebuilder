@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,10 +33,10 @@
  */
 package com.oracle.javafx.scenebuilder.inspector.actions;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
@@ -44,6 +44,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttach
 import com.oracle.javafx.scenebuilder.api.Inspector;
 import com.oracle.javafx.scenebuilder.api.Inspector.SectionId;
 
+//@formatter:off
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
 @MenuItemAttachment(
@@ -53,23 +54,28 @@ import com.oracle.javafx.scenebuilder.api.Inspector.SectionId;
         positionRequest = PositionRequest.AsNextSibling)
 @Accelerator(accelerator = "CTRL+1")
 @Accelerator(accelerator = "CTRL+Numpad 1")
+//@formatter:on
 public class FocusPropertyTabAction extends AbstractFocusTabAction {
 
     /**
-     * This is the menu id where the insertion will take place
-     * It is a copy to prevent adding a direct dependecy to FocusContentAction in  scenebuilder.ext.editor.fxml module
-     * but is it the right choice, i'm wondering ?
+     * This is the menu id where the insertion will take place It is a copy to
+     * prevent adding a direct dependecy to FocusContentAction in
+     * scenebuilder.ext.editor.fxml module but is it the right choice, i'm wondering
+     * ?
      */
     // TODO reevaluate adding a direct dependency
-    public final static String GOTO_CONTENT_MENU_ID = "gotoContentMenuItem"; //NOCHECK
+    public final static String GOTO_CONTENT_MENU_ID = "gotoContentMenuItem"; // NOCHECK
 
-    public final static String MENU_ID = "gotoPropertiesMenuItem"; //NOCHECK
+    public final static String MENU_ID = "gotoPropertiesMenuItem"; // NOCHECK
 
+    //@formatter:off
     public FocusPropertyTabAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             DockViewController dockViewController,
             Inspector inspector) {
-        super(extensionFactory, dockViewController, inspector, SectionId.PROPERTIES);
+        //@formatter:on
+        super(i18n, extensionFactory, dockViewController, inspector, SectionId.PROPERTIES);
     }
 
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,18 +33,20 @@
  */
 package com.oracle.javafx.scenebuilder.preview.actions;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-
-import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
-
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
-import com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest;
-import com.oracle.javafx.scenebuilder.api.ui.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 
+//@formatter:off
 @ApplicationInstancePrototype
-@Lazy
 @ActionMeta(nameKey = "action.name.show.preview.dialog", descriptionKey = "action.description.show.preview.dialog")
 @MenuItemAttachment(
         id = ShowPreviewAction.SHOW_PREVIEW_IN_WINDOW_ID,
@@ -52,6 +54,7 @@ import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController
         label = "menu.title.show.preview.in.window",
         positionRequest = PositionRequest.AsFirstChild)
 @Accelerator(accelerator = "CTRL+P")
+//@formatter:on
 public class ShowPreviewAction extends AbstractAction {
 
     public final static String SHOW_PREVIEW_IN_WINDOW_ID = "showPreviewInWindow";
@@ -59,11 +62,14 @@ public class ShowPreviewAction extends AbstractAction {
     private final ApplicationInstanceEvents documentManager;
     private final PreviewWindowController previewWindowController;
 
+    //@formatter:off
     public ShowPreviewAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
-            @Autowired PreviewWindowController previewWindowController,
-            @Autowired ApplicationInstanceEvents documentManager) {
-        super(extensionFactory);
+            PreviewWindowController previewWindowController,
+            ApplicationInstanceEvents documentManager) {
+        //@formatter:on
+        super(i18n, extensionFactory);
         this.documentManager = documentManager;
         this.previewWindowController = previewWindowController;
     }

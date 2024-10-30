@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,21 +33,22 @@
  */
 package com.oracle.javafx.scenebuilder.inspector.actions;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.ViewMode;
 
+//@formatter:off
 @ApplicationInstanceSingleton
-@Lazy
 @ActionMeta(
-		nameKey = "action.name.view.by.property.type",
-		descriptionKey = "action.description.view.by.property.type")
+        nameKey = "action.name.view.by.property.type",
+        descriptionKey = "action.description.view.by.property.type")
 @ViewMenuItemAttachment(
         id = ViewByPropertyTypeAction.MENU_ID,
         targetMenuId = ViewByPropertyNameAction.MENU_ID,
@@ -55,14 +56,20 @@ import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelControl
         positionRequest = PositionRequest.AsNextSibling,
         viewClass = InspectorPanelController.class,
         toggleClass = ViewInspectorToggle.class)
-@Accelerator(accelerator = "CTRL+T", whenFocusing = InspectorPanelController.class)
+@Accelerator(
+        accelerator = "CTRL+T",
+        whenFocusing = InspectorPanelController.class)
+//@formatter:on
 public class ViewByPropertyTypeAction extends AbstractViewAction {
 
     public final static String MENU_ID = "inspectorViewByPropTypeMenu";
 
-	public ViewByPropertyTypeAction(
-	        ActionExtensionFactory extensionFactory,
+    //@formatter:off
+    public ViewByPropertyTypeAction(
+            I18N i18n,
+            ActionExtensionFactory extensionFactory,
             @Lazy InspectorPanelController inspectorPanelController) {
-        super(extensionFactory, inspectorPanelController, ViewMode.PROPERTY_TYPE);
-	}
+        //@formatter:on
+        super(i18n, extensionFactory, inspectorPanelController, ViewMode.PROPERTY_TYPE);
+    }
 }

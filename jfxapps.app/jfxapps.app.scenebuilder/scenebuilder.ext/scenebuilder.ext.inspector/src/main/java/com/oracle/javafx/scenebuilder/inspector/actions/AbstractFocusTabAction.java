@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.inspector.actions;
 
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
 import com.oracle.javafx.scenebuilder.api.Inspector;
@@ -48,12 +49,15 @@ public abstract class AbstractFocusTabAction extends AbstractAction {
 
     private final SectionId sectionId;
 
+    //@formatter:off
     public AbstractFocusTabAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             DockViewController dockViewController,
             Inspector inspector,
             SectionId sectionId) {
-        super(extensionFactory);
+        //@formatter:on
+        super(i18n, extensionFactory);
         this.inspector = inspector;
         this.dockViewController = dockViewController;
         this.sectionId = sectionId;

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,21 +33,22 @@
  */
 package com.oracle.javafx.scenebuilder.inspector.actions;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.ShowMode;
 
+//@formatter:off
 @ApplicationInstanceSingleton
-@Lazy
 @ActionMeta(
-		nameKey = "action.name.show.all",
-		descriptionKey = "action.description.show.all")
+        nameKey = "action.name.show.all",
+        descriptionKey = "action.description.show.all")
 @ViewMenuItemAttachment(
         id = ShowAllAction.MENU_ID,
         label = "inspector.show.all",
@@ -55,13 +56,17 @@ import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelControl
         viewClass = InspectorPanelController.class,
         toggleClass = ShowInspectorToggle.class)
 @Accelerator(accelerator = "CTRL+A", whenFocusing = InspectorPanelController.class)
+//@formatter:on
 public class ShowAllAction extends AbstractShowAction {
 
     public final static String MENU_ID = "inspectorShowAllMenu";
 
-	public ShowAllAction(
-	        ActionExtensionFactory extensionFactory,
-	        @Lazy InspectorPanelController inspectorPanelController) {
-		super(extensionFactory, inspectorPanelController, ShowMode.ALL);
-	}
+    //@formatter:off
+    public ShowAllAction(
+            I18N i18n,
+            ActionExtensionFactory extensionFactory,
+            @Lazy InspectorPanelController inspectorPanelController) {
+        //@formatter:on
+        super(i18n, extensionFactory, inspectorPanelController, ShowMode.ALL);
+    }
 }

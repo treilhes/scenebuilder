@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -30,28 +31,30 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.inspector.preferences.document;
+package com.oracle.javafx.scenebuilder.inspector.preference;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
 import com.gluonhq.jfxapps.core.api.preference.ManagedDocumentPreference;
-import com.gluonhq.jfxapps.core.api.preference.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preference.type.EnumPreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
 import com.oracle.javafx.scenebuilder.api.Inspector.SectionId;
 
+//@formatter:off
 @ApplicationInstanceSingleton
-public class InspectorSectionIdPreference extends EnumPreference<SectionId> implements ManagedDocumentPreference {
-	    
-    /***************************************************************************
-     *                                                                         *
-     * Static fields                                                           *
-     *                                                                         *
-     **************************************************************************/
-    public static final String PREFERENCE_KEY = "inspectorSectionId"; //NOCHECK
+@PreferenceContext(id = "ff8300ee-f0e9-4e01-882d-19d564b820ae", // NO CHECK
+        name = InspectorSectionIdPreference.PREFERENCE_KEY,
+        defaultValueProvider = InspectorSectionIdPreference.DefaultProvider.class)
+//@formatter:on
+public interface InspectorSectionIdPreference extends Preference<SectionId>, ManagedDocumentPreference {
+
+    public static final String PREFERENCE_KEY = "inspectorSectionId"; // NOCHECK
     public static final SectionId PREFERENCE_DEFAULT_VALUE = SectionId.PROPERTIES;
 
-	public InspectorSectionIdPreference(@Autowired PreferencesContext preferencesContext) {
-		super(preferencesContext, PREFERENCE_KEY, SectionId.class, PREFERENCE_DEFAULT_VALUE);
-	}
-
+    public static class DefaultProvider implements DefaultValueProvider<SectionId> {
+        @Override
+        public SectionId get() {
+            return PREFERENCE_DEFAULT_VALUE;
+        }
+    }
 }

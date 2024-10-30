@@ -36,7 +36,6 @@ package com.oracle.javafx.scenebuilder.inspector.controller;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -45,15 +44,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.Stack;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
+import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.css.CssInternal;
@@ -61,13 +58,16 @@ import com.gluonhq.jfxapps.core.api.css.CssPropAuthorInfo;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
@@ -76,33 +76,32 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.job.editor.atomic.ModifyFxIdJob;
-import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.util.ValuePropertyMetadataClassComparator;
 import com.gluonhq.jfxapps.core.metadata.util.ValuePropertyMetadataNameComparator;
-import com.gluonhq.jfxapps.core.selection.SelectionStateImpl;
-import com.gluonhq.jfxapps.core.selection.job.ModifySelectionJob;
 import com.oracle.javafx.scenebuilder.api.Inspector;
 import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertiesEditor;
 import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor.LayoutFormat;
 import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
+import com.oracle.javafx.scenebuilder.api.editors.PropertyEditor;
+import com.oracle.javafx.scenebuilder.api.editors.PropertyEditorFactory;
+import com.oracle.javafx.scenebuilder.api.editors.PropertyEditorFactorySession;
+import com.oracle.javafx.scenebuilder.api.selection.SbSelectionJobsFactory;
+import com.oracle.javafx.scenebuilder.api.ui.Docks;
 import com.oracle.javafx.scenebuilder.core.editors.FxIdEditor;
-import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory;
-import com.oracle.javafx.scenebuilder.core.editors.PropertyEditorFactory.PropertyEditorFactorySession;
 import com.oracle.javafx.scenebuilder.editors.control.GenericEditor;
 import com.oracle.javafx.scenebuilder.editors.control.ToggleGroupEditor;
-import com.oracle.javafx.scenebuilder.inspector.preferences.document.InspectorSectionIdPreference;
+import com.oracle.javafx.scenebuilder.inspector.preference.InspectorSectionIdPreference;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
-import com.oracle.javafx.scenebuilder.tools.job.togglegroup.ModifySelectionToggleGroupJob;
 
-import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -131,9 +130,17 @@ import javafx.scene.layout.VBox;
  *
  *
  */
+//@formatter:off
 @ApplicationInstanceSingleton
-@ViewAttachment(name = InspectorPanelController.VIEW_NAME, id = InspectorPanelController.VIEW_ID, prefDockId = Dock.RIGHT_DOCK_ID, openOnStart = true, selectOnStart = true,
-    icon = "ViewIconInspector.png", iconX2 = "ViewIconInspector@2x.png")
+@ViewAttachment(
+        name = InspectorPanelController.VIEW_NAME,
+        id = InspectorPanelController.VIEW_ID,
+        prefDockId = Docks.RIGHT_DOCK_ID,
+        openOnStart = true,
+        selectOnStart = true,
+        icon = "ViewIconInspector.png",
+        iconX2 = "ViewIconInspector@2x.png")
+//@formatter:on
 public class InspectorPanelController extends AbstractFxmlViewController implements Inspector {
 
     public final static String VIEW_ID = "68a8c5dd-0b5f-4551-95d1-5b5bdf89ee4b";
@@ -224,40 +231,39 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     private final ApplicationInstanceEvents documentManager;
     private final Drag drag;
-    private final ModifyCacheHintJob.Factory modifyCacheHintJobFactory;
-    private final ModifySelectionJob.Factory modifySelectionJobFactory;
-    private final ModifyFxIdJob.Factory modifyFxIdJobFactory;
-    private final ModifySelectionToggleGroupJob.Factory modifySelectionToggleGroupJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
+    private final SbSelectionJobsFactory sbSelectionJobsFactory;
+    private final SelectionJobsFactory selectionJobsFactory;
+
 
     private PropertyEditorFactorySession session;
 
     private final ViewSearch viewSearch;
-    private final Metadata metadata;
+    private final SbMetadata metadata;
 
     /*
      * Public
      */
  // @formatter:off
     public InspectorPanelController(
+            I18N i18n,
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
             Selection selection,
             InlineEdit inlineEdit,
             JobManager jobManager,
             MessageLogger messageLogger,
-            IMetadata metadata,
+            SbMetadata metadata,
             InspectorSectionIdPreference inspectorSectionIdPreference,
             Drag drag,
             PropertyEditorFactory propertyEditorFactory,
             ViewSearch viewSearch,
-            ModifyCacheHintJob.Factory modifyCacheHintJobFactory,
-            ModifySelectionJob.Factory modifySelectionJobFactory,
-            ModifyFxIdJob.Factory modifyFxIdJobFactory,
-            ModifySelectionToggleGroupJob.Factory modifySelectionToggleGroupJobFactory,
+            FxomJobsFactory fxomJobsFactory,
+            SbSelectionJobsFactory sbSelectionJobsFactory,
+            SelectionJobsFactory selectionJobsFactory,
             ViewMenu viewMenuController) {
      // @formatter:on
-        super(scenebuilderManager, documentManager, viewMenuController, InspectorPanelController.class.getResource(fxmlFile),
-                I18N.getBundle());
+        super(i18n, scenebuilderManager, documentManager, viewMenuController, InspectorPanelController.class.getResource(fxmlFile));
         this.drag = drag;
         this.selection = selection;
         this.inlineEdit = inlineEdit;
@@ -271,10 +277,9 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
         this.inspectorSectionIdPreference = inspectorSectionIdPreference;
 
-        this.modifyCacheHintJobFactory = modifyCacheHintJobFactory;
-        this.modifySelectionJobFactory = modifySelectionJobFactory;
-        this.modifyFxIdJobFactory = modifyFxIdJobFactory;
-        this.modifySelectionToggleGroupJobFactory = modifySelectionToggleGroupJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
+        this.sbSelectionJobsFactory = sbSelectionJobsFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
 
         viewModeProperty.setValue(ViewMode.SECTION);
         viewModeProperty.addListener((obv, previousMode, mode) -> viewModeChanged(previousMode, mode));
@@ -457,7 +462,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     protected void cssRevisionDidChange() {
 //        System.out.println("CSS changed.");
-        SbPlatform.runOnFxThread(() -> {
+        JfxAppPlatform.ensureFxThread(() -> {
             if (!dragOnGoing) {
                 updateInspector();
             }
@@ -525,7 +530,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         // Listen the Scene stylesheets changes
         documentManager.stylesheetConfig().subscribe(s -> updateInspector());
 
-        selectionState = new SelectionStateImpl(selection);
+        selectionState = documentManager.selectionDidChange().get();
+
         viewModeChanged(null, getViewMode());
         expandedSectionChanged();
 
@@ -545,7 +551,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
      */
     private void updateInspector() {
         if (isInspectorLoaded() && hasFxomDocument()) {
-            SelectionState newSelectionState = new SelectionStateImpl(selection);
+            var newSelectionState = documentManager.selectionDidChange().get();
             if (isInspectorStateChanged(newSelectionState) || isEditedMode()) {
                 selectionState = newSelectionState;
                 rebuild();
@@ -676,14 +682,14 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         }
 
         // Get Metadata
-        Set<ValuePropertyMetadata> propMetaAll = getValuePropertyMetadata();
+        var propMetaAll = getValuePropertyMetadata();
 
         SortedMap<InspectorPath, ValuePropertyMetadata> propMetaSection = new TreeMap<>(
                 metadata.INSPECTOR_PATH_COMPARATOR);
         assert propMetaAll != null;
 
-        for (ValuePropertyMetadata valuePropMeta : propMetaAll) {
-            InspectorPath inspectorPath = valuePropMeta.getInspectorPath();
+        for (var valuePropMeta : propMetaAll) {
+            InspectorPath inspectorPath = valuePropMeta.getCustomization().getInspectorPath();
             // Check section
             if (!isSameSection(inspectorPath.getSectionTag(), sectionId)) {
                 continue;
@@ -696,7 +702,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
                     continue;
                 }
             }
-            propMetaSection.put(valuePropMeta.getInspectorPath(), valuePropMeta);
+            propMetaSection.put(valuePropMeta.getCustomization().getInspectorPath(), valuePropMeta);
         }
 
         String currentSubSection = ""; // NOI18N
@@ -807,8 +813,8 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 //        return isAnchorConstraintsEdited(propMetaAll);
 //    }
 
-    private boolean isPropertyEdited(ValuePropertyMetadata valuePropMeta,
-            Collection<ValuePropertyMetadata> propMetadatas) {
+    private boolean isPropertyEdited(ValuePropertyMetadata<ValuePropertyMetadataCustomization> valuePropMeta,
+            Collection<ValuePropertyMetadata<ValuePropertyMetadataCustomization>> propMetadatas) {
         PropertyName propName = valuePropMeta.getName();
         // boolean groupedProperty = isGroupedProperty(propName);
         // if (!groupedProperty && !isPropertyEdited(valuePropMeta)) {
@@ -919,27 +925,29 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             return;
         }
         if (isSearch(gridPane) && !hasSearchPattern()) {
-            addMessage(gridPane, I18N.getString("inspector.message.searchpattern.empty"));
+            addMessage(gridPane, getI18n().getString("inspector.message.searchpattern.empty"));
             return;
         }
         boolean isOrderdByType = getViewMode() == ViewMode.PROPERTY_TYPE;
 
         // Get Metadata
-        Set<ValuePropertyMetadata> propMetadatas = getValuePropertyMetadata();
+        var propMetadatas = getValuePropertyMetadata();
         if (propMetadatas.isEmpty()) {
-            addMessage(gridPane, I18N.getString("inspector.message.no.properties"));
+            addMessage(gridPane, getI18n().getString("inspector.message.no.properties"));
             return;
         }
-        List<ValuePropertyMetadata> propMetadataList = Arrays
-                .asList(propMetadatas.toArray(new ValuePropertyMetadata[propMetadatas.size()]));
+
+        var propMetadataList = new ArrayList<>(propMetadatas);
+
         if (isOrderdByType) {
             Collections.sort(propMetadataList, new ValuePropertyMetadataClassComparator());
         } else {
             Collections.sort(propMetadataList, new ValuePropertyMetadataNameComparator());
         }
 
-        List<ValuePropertyMetadata> orderedPropMetadatas = new ArrayList<>();
-        for (ValuePropertyMetadata valuePropMeta : propMetadataList) {
+        var orderedPropMetadatas = new ArrayList<ValuePropertyMetadata<ValuePropertyMetadataCustomization>>();
+
+        for (var valuePropMeta : propMetadataList) {
             if (isSearch(gridPane) && !isSearchPatternMatch(valuePropMeta)) {
                 continue;
             }
@@ -961,7 +969,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
         int lineIndex = 0;
         Set<PropertyName> groupProperties = new HashSet<>();
-        for (ValuePropertyMetadata propMeta : orderedPropMetadatas) {
+        for (var propMeta : orderedPropMetadatas) {
 //            if (isGroupedProperty(propMeta.getName())) {
 //                if (groupProperties.contains(propMeta.getName())) {
 //                    continue;
@@ -981,15 +989,15 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     private boolean handleSelectionMessage(GridPane gridPane) {
         if (!hasSelectedElement()) {
-            addMessage(gridPane, I18N.getString("inspector.message.no.selected"));
+            addMessage(gridPane, getI18n().getString("inspector.message.no.selected"));
             return true;
         }
         if (hasSelectedElementNothingForInspector() && hasSelectedIntrinsicNothingForInspector()) {
-            addMessage(gridPane, I18N.getString("inspector.message.no.thingforinspector"));
+            addMessage(gridPane, getI18n().getString("inspector.message.no.thingforinspector"));
             return true;
         }
         if (hasUnresolvedInstance()) {
-            addMessage(gridPane, I18N.getString("inspector.message.no.resolved"));
+            addMessage(gridPane, getI18n().getString("inspector.message.no.resolved"));
             return true;
         }
         return false;
@@ -1004,7 +1012,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         } else {
             messKey = "inspector.message.no.properties";
         }
-        addMessage(gridPane, I18N.getString(messKey));
+        addMessage(gridPane, getI18n().getString(messKey));
     }
 
     private boolean isSearchPatternMatch(ValuePropertyMetadata propMeta) {
@@ -1233,7 +1241,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         // Handle a navigate request from an editor
         propertyEditor.addNavigateListener((ov, oldStr, newStr) -> {
             if (newStr != null) {
-                Optional<ValuePropertyMetadata> vpm = getValuePropertyMetadata().stream()
+                var vpm = getValuePropertyMetadata().stream()
                         .filter(v -> v.getName().getName().equalsIgnoreCase(newStr)).findFirst();
                 if (vpm.isPresent()) {
                     setFocusToEditor(vpm.get());
@@ -1244,27 +1252,27 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     private void setSelectedFXOMInstances(ValuePropertyMetadata propMeta, Object value) {
         final PropertyName cacheHintPN = new PropertyName("cacheHint"); // NOI18N
-        final AbstractJob job;
+        final Job job;
         if (cacheHintPN.equals(propMeta.getName())) {
-            job = modifyCacheHintJobFactory.getJob(propMeta, value);
+            job = sbSelectionJobsFactory.modifyCacheHint(propMeta, value);
         } else {
-            job = modifySelectionJobFactory.getJob(propMeta, value);
+            job = selectionJobsFactory.modifySelection(propMeta, value);
         }
 //        System.out.println(job.getDescription());
         pushJob(job);
     }
 
     private void setSelectedFXOMInstanceFxId(FXOMObject fxomObject, String fxId) {
-        final AbstractJob job = modifyFxIdJobFactory.getJob(fxomObject, fxId);
+        final var job = fxomJobsFactory.modifyFxId(fxomObject, fxId);
         pushJob(job);
     }
 
     private void setSelectionToggleGroup(String tgId) {
-        final AbstractJob job = modifySelectionToggleGroupJobFactory.getJob(tgId);
+        final var job = modifySelectionToggleGroupJobFactory.getJob(tgId);
         pushJob(job);
     }
 
-    private void pushJob(AbstractJob job) {
+    private void pushJob(Job job) {
         if (job.isExecutable()) {
             jobManager.push(job);
         } else {
@@ -1394,11 +1402,11 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         }
     }
 
-    private PropertyEditor getPropertyEditor(ValuePropertyMetadata propMeta) {
+    private PropertyEditor getPropertyEditor(ValuePropertyMetadata<ValuePropertyMetadataCustomization> propMeta) {
         PropertyEditor propertyEditor = session.getEditor(propMeta, selectionState);
 
         // Set all the "Code" properties a double line layout
-        if (isSameSection(propMeta.getInspectorPath().getSectionTag(), SectionId.CODE)) {
+        if (isSameSection(propMeta.getCustomization().getInspectorPath().getSectionTag(), SectionId.CODE)) {
             propertyEditor.setLayoutFormat(LayoutFormat.DOUBLE_LINE);
         }
         return propertyEditor;
@@ -1568,10 +1576,10 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         gridPane.add(label, 0, 0, 3, 1);
     }
 
-    private Set<ValuePropertyMetadata> getValuePropertyMetadata() {
-        Set<ValuePropertyMetadata> values = metadata.queryValueProperties(getSelectedClasses());
+    private Set<ValuePropertyMetadata<ValuePropertyMetadataCustomization>> getValuePropertyMetadata() {
+        var values = metadata.queryValueProperties(getSelectedClasses());
+        var disabledProperties = getDisabledPropertiesFromMetadata();
 
-        Set<PropertyName> disabledProperties = getDisabledPropertiesFromMetadata();
         return values.stream().filter(v -> !disabledProperties.contains(v.getName())).collect(Collectors.toSet());
     }
 
@@ -1579,10 +1587,9 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         Set<PropertyName> disabled = new HashSet<>();
         getSelectedInstances().stream().filter(fxi -> fxi.getParentObject() != null && fxi.getParentProperty() != null)
                 .forEach(fxi -> {
-                    FXOMObject parent = fxi.getParentObject();
-                    FXOMProperty property = fxi.getParentProperty();
-                    ComponentPropertyMetadata cpm = metadata
-                            .queryComponentProperty(parent.getMetadataClass(), property.getName());
+                    var parent = fxi.getParentObject();
+                    var property = fxi.getParentProperty();
+                    var cpm = metadata.queryComponentProperty(parent.getMetadataClass(), property.getName());
                     if (cpm != null) {
                         disabled.addAll(cpm.getDisabledProperties());
                     }
@@ -1995,7 +2002,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         final String intrinsicClassName = "FXOMIntrinsic";
         String selClass = ""; // NOI18N
         if (getSelectedClasses().size() > 1) {
-            selClass = I18N.getString("inspector.sectiontitle.multiple");
+            selClass = getI18n().getString("inspector.sectiontitle.multiple");
         } else if (getSelectedClasses().size() == 1) {
             selClass = getSelectedClass().getSimpleName();
             if (intrinsicClassName.equals(selClass)) {
@@ -2067,10 +2074,10 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
      * that it is visible. Typically used by CSS analyzer.
      */
     @Override
-    public void setFocusToEditor(ValuePropertyMetadata propMeta) {
+    public void setFocusToEditor(ValuePropertyMetadata<ValuePropertyMetadataCustomization> propMeta) {
 
         // Expand the inspector section
-        String inspectorSection = propMeta.getInspectorPath().getSectionTag();
+        String inspectorSection = propMeta.getCustomization().getInspectorPath().getSectionTag();
         if (inspectorSection.equalsIgnoreCase("properties")) { // NOI18N
             setExpandedSection(SectionId.PROPERTIES);
         } else if (inspectorSection.equalsIgnoreCase("layout")) {// NOI18N

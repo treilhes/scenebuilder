@@ -42,12 +42,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.css.StylesheetProvider;
-import com.gluonhq.jfxapps.core.api.fxom.FxomDocumentFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
@@ -58,9 +56,9 @@ import com.gluonhq.jfxapps.core.api.ui.controller.AbstractWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.util.FXOMDocumentUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.api.SbEditor;
-import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController.CameraType;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -88,7 +86,7 @@ import javafx.stage.Modality;
 public class PreviewWindowController extends AbstractWindowController implements InitializingBean {
 
     private final I18N i18n;
-    private final FxomDocumentFactory fxomDocumentFactory;
+    private final FXOMDocumentFactory fxomDocumentFactory;
     private final SbEditor editorController;
     private Timer timer = null;
     private final int WIDTH_WHEN_EMPTY = 320;
@@ -123,6 +121,7 @@ public class PreviewWindowController extends AbstractWindowController implements
         PARALLEL, PERSPECTIVE
     }
 
+    //@formatter:off
     public PreviewWindowController(
             I18N i18n,
             JfxAppPlatform jfxAppPlatform,
@@ -131,7 +130,8 @@ public class PreviewWindowController extends AbstractWindowController implements
             SbEditor editorController,
             InstanceWindow document,
             ApplicationInstanceEvents documentManager,
-            FxomDocumentFactory fxomDocumentFactory) {
+            FXOMDocumentFactory fxomDocumentFactory) {
+        //@formatter:on
         super(sceneBuilderManager, iconSetting, document);
         this.editorController = editorController;
         this.documentManager = documentManager;

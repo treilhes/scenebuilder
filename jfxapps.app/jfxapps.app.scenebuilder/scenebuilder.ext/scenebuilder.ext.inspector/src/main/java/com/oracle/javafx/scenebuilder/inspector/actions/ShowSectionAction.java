@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,44 +33,43 @@
  */
 package com.oracle.javafx.scenebuilder.inspector.actions;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.api.Inspector;
 import com.oracle.javafx.scenebuilder.api.Inspector.SectionId;
 
+//@formatter:off
 @ApplicationInstanceSingleton
-@Lazy
 @ActionMeta(
-		nameKey = "action.name.show.edited",
-		descriptionKey = "action.description.show.edited")
+        nameKey = "action.name.show.edited",
+        descriptionKey = "action.description.show.edited")
+//@formatter:on
 public class ShowSectionAction extends AbstractAction {
 
-	private final Inspector inspector;
-	private SectionId sectionId;
+    private final Inspector inspector;
+    private SectionId sectionId;
 
+    //@formatter:off
     public ShowSectionAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             @Lazy Inspector inspector) {
-		super(extensionFactory);
-		this.inspector = inspector;
-	}
-
-
+        //@formatter:on
+        super(i18n, extensionFactory);
+        this.inspector = inspector;
+    }
 
     public SectionId getSectionId() {
         return sectionId;
     }
 
-
-
     public void setSectionId(SectionId sectionId) {
         this.sectionId = sectionId;
     }
-
-
 
     @Override
     public boolean canPerform() {

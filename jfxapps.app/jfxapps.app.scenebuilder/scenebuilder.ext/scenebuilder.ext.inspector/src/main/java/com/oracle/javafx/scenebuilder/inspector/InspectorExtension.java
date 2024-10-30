@@ -52,7 +52,7 @@ import com.oracle.javafx.scenebuilder.inspector.actions.ViewBySectionsAction;
 import com.oracle.javafx.scenebuilder.inspector.actions.ViewInspectorToggle;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.i18n.I18NInspector;
-import com.oracle.javafx.scenebuilder.inspector.preferences.document.InspectorSectionIdPreference;
+import com.oracle.javafx.scenebuilder.inspector.preference.InspectorSectionIdPreference;
 
 public class InspectorExtension implements OpenExtension {
 
