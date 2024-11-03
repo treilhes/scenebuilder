@@ -49,13 +49,14 @@ import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
 import com.gluonhq.jfxapps.core.api.preference.PreferenceScan;
 import com.gluonhq.jfxapps.core.preferences.ScopedPreferenceTest.TestDefaultValueProvider;
 import com.gluonhq.jfxapps.core.preferences.ScopedPreferenceTest.TestValueValidator;
+import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceScanBeanPostProcessor;
 import com.gluonhq.jfxapps.core.preferences.model.PreferenceEntity;
 import com.gluonhq.jfxapps.core.preferences.repository.PreferenceRepository;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 
 @JfxAppsTest
 @ContextConfiguration(classes = { //
-        PreferenceScanBeanDefinitionRegistryPostProcessor.class, //
+        PreferenceScanBeanPostProcessor.class, //
         PreferenceScanBeanDefinitionRegistryPostProcessorTest.Config.class, //
         PreferenceScanBeanDefinitionRegistryPostProcessorTest.TestPreference.class, //
         ExternalTestPreference.class //

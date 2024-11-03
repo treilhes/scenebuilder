@@ -33,6 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.api.theme;
 
+import java.util.UUID;
+
 import com.gluonhq.jfxapps.core.api.css.StylesheetProvider;
 
 /**
@@ -41,4 +43,5 @@ import com.gluonhq.jfxapps.core.api.css.StylesheetProvider;
 public interface Theme extends StylesheetProvider {
     String getName();
     ThemeGroup getGroup();
+    UUID getId();
 }

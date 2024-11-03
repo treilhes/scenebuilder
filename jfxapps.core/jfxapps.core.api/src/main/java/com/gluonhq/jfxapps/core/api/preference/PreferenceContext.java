@@ -50,4 +50,5 @@ public @interface PreferenceContext {
     public interface NoOpDefaultValueProvider extends DefaultValueProvider<Void> {}
     public interface NoOpValueValidator extends ValueValidator<Void> {}
     public interface NoOpJsonMapper extends JsonMapper<Void> {}
+
 }

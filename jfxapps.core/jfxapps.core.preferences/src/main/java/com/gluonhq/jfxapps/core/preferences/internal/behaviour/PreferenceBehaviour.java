@@ -33,7 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.preferences.internal.behaviour;
 
-import com.gluonhq.jfxapps.core.preferences.internal.factory.BasePreference;
+import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceAopContext.BasePreference;
 
 public interface PreferenceBehaviour {
     void read(BasePreference<?> preference);

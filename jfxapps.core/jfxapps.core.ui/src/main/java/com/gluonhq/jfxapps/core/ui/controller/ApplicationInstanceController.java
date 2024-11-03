@@ -43,8 +43,10 @@ import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -92,11 +94,12 @@ import javafx.scene.input.KeyEvent;
  *
  */
 @ApplicationInstanceSingleton
-public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.api.application.ApplicationInstance {
+public class ApplicationInstanceController implements ApplicationInstance {
 
     private static final Logger logger = LoggerFactory.getLogger(ApplicationInstanceController.class);
 
     private final I18N i18n;
+    private final JfxAppContext context;
     private final JfxAppPlatform jfxAppPlatform;
     private final JavafxThreadClassloaderDispatcher dispatcher;
     private final JavafxThreadClassloader fxThreadClassloader;
@@ -115,7 +118,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
     private EventHandler<KeyEvent> mainKeyEventFilter;
 
     //private final Provider<PathPreference> pathPreference;
-    private final ApplicationInstanceEvents documentManager;
+    private final ApplicationInstanceEvents applicationInstanceEvents;
     private final Provider<Optional<List<InitWithDocument>>> initializations;
     private final Provider<Optional<List<DisposeWithDocument>>> finalizations;
 
@@ -141,6 +144,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
     // @formatter:off
     public ApplicationInstanceController(
             I18N i18n,
+            JfxAppContext context,
             JfxAppPlatform jfxAppPlatform,
             JavafxThreadClassloaderDispatcher dispatcher,
             JavafxThreadClassloader fxThreadClassloader,
@@ -177,6 +181,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
      // @formatter:on
         super();
         this.i18n = i18n;
+        this.context = context;
         this.jfxAppPlatform = jfxAppPlatform;
         this.dispatcher = dispatcher;
         this.fxThreadClassloader = fxThreadClassloader;
@@ -194,7 +199,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
         this.messageLogger = messageLogger;
 
         this.viewMenuController = viewMenuController;
-        this.documentManager = documentManager;
+        this.applicationInstanceEvents = documentManager;
         this.preferences = preferences;
         //this.inspectorPanelController = inspectorPanelController;
         //this.libraryPanelController = libraryPanelController;
@@ -296,7 +301,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
 
         fileSystem.startWatcher();
 
-        documentManager.closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> close());
+        applicationInstanceEvents.closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> close());
 
         sceneBuilderManager.closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> close());
 
@@ -304,7 +309,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
             initializeDocumentWindow();
         });
 
-        documentManager.fxomDocument().subscribe(fd -> {
+        applicationInstanceEvents.fxomDocument().subscribe(fd -> {
             boolean firstLoad = fxomDocument == null;
             fxomDocument = fd;
 
@@ -563,7 +568,7 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
 
     @Override
     public boolean isDocumentDirty() {
-        return documentManager.dirty().get();
+        return applicationInstanceEvents.dirty().get();
     }
 
     @Override
@@ -613,18 +618,23 @@ public class ApplicationInstanceController implements com.gluonhq.jfxapps.core.a
 
     @Override
     public URL getLocation() {
-        FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        FXOMDocument fxomDocument = applicationInstanceEvents.fxomDocument().get();
         return fxomDocument == null ? null : fxomDocument.getLocation();
     }
 
     @Override
-    public void loadFromFile(File file) throws IOException {
-        fileSystem.loadFromFile(file);
+    public void loadFromFile(File file, boolean keepTrackOfLocation) throws IOException {
+        fileSystem.loadFromFile(file, keepTrackOfLocation);
     }
 
     @Override
     public void loadBlank() {
         fileSystem.loadDefaultContent();
+    }
+
+    @Override
+    public JfxAppContext getContext() {
+        return context;
     }
 
     private class PreferenceManager {

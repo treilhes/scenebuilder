@@ -33,6 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.core.ui.template;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -85,6 +87,8 @@ import javafx.stage.Stage;
  */
 @ApplicationInstanceSingleton
 public class DocumentWindowController extends AbstractFxmlWindowController implements MainInstanceWindow, InitializingBean {
+
+    private static final Logger logger = LoggerFactory.getLogger(DocumentWindowController.class);
 
     private enum InsertPosition {
         First, Last

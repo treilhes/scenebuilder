@@ -39,9 +39,6 @@ import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.api.SbApiExtension;
-import com.oracle.javafx.scenebuilder.template.action.NewFromTemplateAction;
-import com.oracle.javafx.scenebuilder.template.controller.TemplateController;
-import com.oracle.javafx.scenebuilder.template.controller.TemplatesWindowController;
 import com.oracle.javafx.scenebuilder.template.i18n.I18NTemplate;
 import com.oracle.javafx.scenebuilder.template.templates.DefaultTemplateList;
 
@@ -76,10 +73,7 @@ public class TemplateExtension implements OpenExtension {
                 DefaultTemplateList.OtherGroup.class,
                 DefaultTemplateList.PhoneGroup.class,
                 DefaultTemplateList.TabletGroup.class,
-                I18NTemplate.class,
-                NewFromTemplateAction.class,
-                TemplateController.class,
-                TemplatesWindowController.class
+                I18NTemplate.class
             );
      // @formatter:on
     }

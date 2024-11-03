@@ -48,6 +48,7 @@ import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.fs.RecentItems;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
@@ -55,7 +56,6 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.gluonhq.jfxapps.core.fs.controller.RecentItemsController;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 import javafx.stage.FileChooser;
@@ -71,7 +71,7 @@ public class SaveAsAction extends AbstractAction {
     private final Dialog dialog;
     private final MainInstanceWindow documentWindow;
     private final FileSystem fileSystem;
-    private final RecentItemsController recentItems;
+    private final RecentItems recentItems;
     private final InstancesManager main;
     private final ActionFactory actionFactory;
 
@@ -85,7 +85,7 @@ public class SaveAsAction extends AbstractAction {
             FileSystem fileSystem,
             ActionFactory actionFactory,
             InstancesManager main,
-            RecentItemsController recentItems) {
+            RecentItems recentItems) {
         super(i18n, extensionFactory);
         this.documentManager = documentManager;
         this.inlineEdit = inlineEdit;

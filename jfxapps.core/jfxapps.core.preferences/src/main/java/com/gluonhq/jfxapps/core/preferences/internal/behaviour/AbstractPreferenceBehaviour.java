@@ -39,7 +39,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.gluonhq.jfxapps.core.api.preference.Preference;
-import com.gluonhq.jfxapps.core.preferences.internal.preference.PreferenceMetadata;
+import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceAopContext.PreferenceMetadata;
 import com.gluonhq.jfxapps.core.preferences.repository.PreferenceRepository;
 
 public abstract class AbstractPreferenceBehaviour implements PreferenceBehaviour {

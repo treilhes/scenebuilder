@@ -33,9 +33,12 @@
  */
 package com.oracle.javafx.scenebuilder.api.theme;
 
+import java.util.UUID;
+
 /**
  * Theme group contract supported by Scene Builder Kit.
  */
 public interface ThemeGroup {
+    UUID getId();
     String getName();
 }

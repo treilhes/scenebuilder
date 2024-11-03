@@ -47,8 +47,8 @@ import com.gluonhq.jfxapps.core.preferences.controller.PreferencesController;
 import com.gluonhq.jfxapps.core.preferences.edit.PreferenceEditorFactoryImpl;
 import com.gluonhq.jfxapps.core.preferences.edit.PreferencesWindowController;
 import com.gluonhq.jfxapps.core.preferences.i18n.I18NPreferences;
-import com.gluonhq.jfxapps.core.preferences.internal.preference.PreferenceBeanDefinitionRegistryPostProcessor;
-import com.gluonhq.jfxapps.core.preferences.internal.scan.PreferenceScanBeanDefinitionRegistryPostProcessor;
+import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceBeanPostProcessor;
+import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceScanBeanPostProcessor;
 import com.gluonhq.jfxapps.core.preferences.repository.PreferenceRepository;
 
 @EnableJpaRepositories(basePackageClasses = { PreferenceRepository.class })
@@ -72,9 +72,9 @@ public class PreferencesExtension implements OpenExtension {
         return Arrays.asList(
                 DocumentPreferencesController.class,
                 I18NPreferences.class,
-                PreferenceBeanDefinitionRegistryPostProcessor.class,
+                PreferenceBeanPostProcessor.class,
                 PreferenceEditorFactoryImpl.class,
-                PreferenceScanBeanDefinitionRegistryPostProcessor.class,
+                PreferenceScanBeanPostProcessor.class,
                 PreferencesController.class,
                 PreferencesWindowController.class,
                 ShowPreferencesAction.class,

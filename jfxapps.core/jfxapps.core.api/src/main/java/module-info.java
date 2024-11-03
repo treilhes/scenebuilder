@@ -86,7 +86,6 @@ open module jfxapps.core.api {
     exports com.gluonhq.jfxapps.core.api.shortcut;
     exports com.gluonhq.jfxapps.core.api.shortcut.annotation;
     exports com.gluonhq.jfxapps.core.api.subjects;
-    exports com.gluonhq.jfxapps.core.api.template;
 
     exports com.gluonhq.jfxapps.core.api.tooltheme;
 

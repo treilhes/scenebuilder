@@ -60,10 +60,9 @@ import com.gluonhq.jfxapps.core.api.preference.Preference;
 import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
 import com.gluonhq.jfxapps.core.api.preference.ValueValidator;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
-import com.gluonhq.jfxapps.core.preferences.internal.preference.PreferenceBeanDefinitionRegistryPostProcessor;
-import com.gluonhq.jfxapps.core.preferences.internal.scan.PreferenceScanBeanDefinitionRegistryPostProcessor;
+import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceBeanPostProcessor;
+import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceScanBeanPostProcessor;
 import com.gluonhq.jfxapps.core.preferences.model.PreferenceEntity;
 import com.gluonhq.jfxapps.core.preferences.model.PreferenceEntity.PreferenceEntityId;
 import com.gluonhq.jfxapps.core.preferences.repository.PreferenceRepository;
@@ -78,8 +77,8 @@ import javafx.collections.ObservableMap;
 })
 @ContextConfiguration(classes = { //
         ScopedPreferenceTest.Config.class, //
-        PreferenceBeanDefinitionRegistryPostProcessor.class,
-        PreferenceScanBeanDefinitionRegistryPostProcessor.class,
+        PreferenceBeanPostProcessor.class,
+        PreferenceScanBeanPostProcessor.class,
         ScopedPreferenceTest.TestMapPreference.class,
         ScopedPreferenceTest.TestAppInstancePreference.class,
         ScopedPreferenceTest.TestAppPreference.class,

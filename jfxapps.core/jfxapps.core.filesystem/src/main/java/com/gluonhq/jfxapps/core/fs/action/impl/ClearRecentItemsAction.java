@@ -37,8 +37,8 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceProtot
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.fs.RecentItems;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.fs.controller.RecentItemsController;
 
 @ApplicationInstancePrototype("com.gluonhq.jfxapps.core.fs.action.impl.ClearRecentItemsAction")
 @ActionMeta(
@@ -47,12 +47,12 @@ import com.gluonhq.jfxapps.core.fs.controller.RecentItemsController;
 
 public class ClearRecentItemsAction extends AbstractAction {
 
-    private final RecentItemsController recentItems;
+    private final RecentItems recentItems;
 
     public ClearRecentItemsAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            RecentItemsController recentItems) {
+            RecentItems recentItems) {
         super(i18n, extensionFactory);
         this.recentItems = recentItems;
     }

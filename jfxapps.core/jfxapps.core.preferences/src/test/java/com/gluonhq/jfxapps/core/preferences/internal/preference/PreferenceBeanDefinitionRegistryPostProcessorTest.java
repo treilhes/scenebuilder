@@ -46,13 +46,14 @@ import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 import com.gluonhq.jfxapps.core.api.preference.Preference;
 import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
+import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceBeanPostProcessor;
 import com.gluonhq.jfxapps.core.preferences.model.PreferenceEntity;
 import com.gluonhq.jfxapps.core.preferences.repository.PreferenceRepository;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 
 @JfxAppsTest
 @ContextConfiguration(classes = { //
-        PreferenceBeanDefinitionRegistryPostProcessor.class, //
+        PreferenceBeanPostProcessor.class, //
         PreferenceBeanDefinitionRegistryPostProcessorTest.Config.class, //
         PreferenceBeanDefinitionRegistryPostProcessorTest.TestPreference.class, //
         ExternalTestPreference.class //

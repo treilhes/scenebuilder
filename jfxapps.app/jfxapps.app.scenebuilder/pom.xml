@@ -157,11 +157,6 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>scenebuilder.ext.defaultx</artifactId>
-                <version>${scenebuilder.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.ext.document</artifactId>
                 <version>${scenebuilder.version}</version>
             </dependency>
@@ -200,6 +195,11 @@
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.ext.help.features</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.i18n</artifactId>
                 <version>${scenebuilder.version}</version>
             </dependency>
             <dependency>
@@ -243,6 +243,11 @@
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>scenebuilder.ext.source.view</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>scenebuilder.ext.theme</artifactId>
                 <version>${scenebuilder.version}</version>
             </dependency>
             <dependency>

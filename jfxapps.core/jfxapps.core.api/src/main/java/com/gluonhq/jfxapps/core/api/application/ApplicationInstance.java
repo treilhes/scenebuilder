@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 
 
@@ -55,7 +56,7 @@ public interface ApplicationInstance extends com.gluonhq.jfxapps.boot.api.contex
     void logInfoMessage(String key, Object... args);
 
     //API to be validated
-
+    JfxAppContext getContext();
 
     void openWindow();
     void updatePreferences();
@@ -91,7 +92,10 @@ public interface ApplicationInstance extends com.gluonhq.jfxapps.boot.api.contex
     }
 
     URL getLocation();
-    void loadFromFile(File file) throws IOException;
+    default void loadFromFile(File file) throws IOException {
+        loadFromFile(file, true);
+    }
+    void loadFromFile(File file, boolean keepTrackOfLocation) throws IOException;
     void loadBlank();
 
 }

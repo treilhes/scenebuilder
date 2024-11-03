@@ -53,13 +53,18 @@ import javafx.collections.ObservableList;
 
 public interface FileSystem {
 
+
+    void loadFromFile(File fxmlFile, boolean keepTrackOfLocation) throws IOException;
     /**
      * Load an fxml document from a local file and track his location.
      *
      * @param fxmlFile the fxml file
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    void loadFromFile(File fxmlFile) throws IOException;
+    default void loadFromFile(File fxmlFile) throws IOException {
+        loadFromFile(fxmlFile, true);
+    }
+
 
     /**
      * Load an fxml document from an URL with or without tracking his location.

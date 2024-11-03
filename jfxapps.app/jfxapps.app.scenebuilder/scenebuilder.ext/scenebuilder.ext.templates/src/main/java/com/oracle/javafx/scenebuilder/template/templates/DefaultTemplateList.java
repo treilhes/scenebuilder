@@ -33,169 +33,83 @@
  */
 package com.oracle.javafx.scenebuilder.template.templates;
 
-import java.net.URL;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.core.api.Size;
-import com.gluonhq.jfxapps.core.api.template.Template;
-import com.gluonhq.jfxapps.core.api.template.TemplateGroup;
-import com.gluonhq.jfxapps.core.api.util.Ordered;
+import com.oracle.javafx.scenebuilder.api.template.Template;
+import com.oracle.javafx.scenebuilder.api.template.TemplateContext;
+import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
+import com.oracle.javafx.scenebuilder.api.template.TemplateGroupContext;
 
 public class DefaultTemplateList {
 
     @ApplicationSingleton
-    public static class DefaultGroup extends InnerGroup{
-        public DefaultGroup() {
-            super("0", null);
-        }
+    @TemplateGroupContext(id = "2bce2804-921f-4ddb-81f6-5b9dad69d258", name = "", orderKey = "0")
+    public interface DefaultGroup extends TemplateGroup {
     }
 
     @ApplicationSingleton
-    public static class DesktopGroup extends InnerGroup{
-        public DesktopGroup() {
-            super("A", "template.title.header.desktop");
-        }
+    @TemplateGroupContext(id = "fb2723b6-e647-42a7-95f0-572b3436c1e2", name = "template.title.header.desktop", orderKey = "A")
+    public interface DesktopGroup extends TemplateGroup {
     }
 
     @ApplicationSingleton
-    public static class PhoneGroup extends InnerGroup{
-        public PhoneGroup() {
-            super("B", "template.title.header.phone");
-        }
+    @TemplateGroupContext(id = "dfc1deb6-b2b5-496f-9e13-da8d05255619", name = "template.title.header.phone", orderKey = "B")
+    public interface PhoneGroup extends TemplateGroup {
     }
 
     @ApplicationSingleton
-    public static class TabletGroup extends InnerGroup{
-        public TabletGroup() {
-            super("C", "template.title.header.tablet");
-        }
+    @TemplateGroupContext(id = "bc6580ef-ff66-4a54-b3e3-d2957aef1a37", name = "template.title.header.tablet", orderKey = "C")
+    public interface TabletGroup extends TemplateGroup {
     }
 
     @ApplicationSingleton
-    public static class OtherGroup extends InnerGroup{
-        public OtherGroup() {
-            super("D", "template.title.header.other");
-        }
+    @TemplateGroupContext(id = "5d587dc0-0d5e-4682-b304-0e414cc7fb72", name = "template.title.header.other", orderKey = "D")
+    public interface OtherGroup extends TemplateGroup {
     }
 
+    //@formatter:off
     @ApplicationSingleton
-    public static class EmptyTemplate extends InnerTemplate{
+    @TemplateContext(
+            id = "ef57f18d-0d4b-4754-9d67-bd8b54f27bfd",
+            name = "template.title.new.empty.app",
+            description = "template.description.new.empty.app",
+            orderKey = "A",
+            iconUrl = "empty_desktop.png",
+            iconX2Url = "empty_desktop@2x.png",
+            width = 640,
+            height = 480)
+    //@formatter:on
+    public interface EmptyTemplate extends Template{}
 
-        public EmptyTemplate(@Autowired DefaultGroup group) {
-            //@formatter:off
-            super(UUID.fromString("a4c55174-e299-4dbe-bd0c-ee7f90cf89aa"),
-                    group,
-                    "A",
-                    "template.title.new.empty.app",
-                    Size.SIZE_640x480.getI18nKey(),
-                    null,
-                    null,
-                    null,
-                    null);
-            //@formatter:on
-        }
-
-    }
-
+    //@formatter:off
     @ApplicationSingleton
-    public static class BasicDesktopTemplate extends InnerTemplate{
+    @TemplateContext(
+            id = "ba373a83-0f6a-4025-9041-3a0106b13e41",
+            name = "template.title.new.basic.desktop.app",
+            description = "template.description.new.basic.desktop.app",
+            orderKey = "A",
+            width = 640,
+            height = 480,
+            fxmlUrl = "BasicDesktopApplication.fxml",
+            iconUrl = "basic_desktop.png",
+            iconX2Url = "basic_desktop@2x.png",
+            groupClass = DesktopGroup.class)
+    //@formatter:on
+    public interface BasicDesktopTemplate extends Template {}
 
-        public BasicDesktopTemplate(@Autowired DesktopGroup group) {
-            //@formatter:off
-            super(UUID.fromString("ba373a83-0f6a-4025-9041-3a0106b13e41"),
-                    group,
-                    "A",
-                    "template.title.new.basic.desktop.app",
-                    Size.SIZE_640x480.getI18nKey(),
-                    BasicDesktopTemplate.class.getResource("BasicDesktopApplication.fxml"),
-                    BasicDesktopTemplate.class.getResource("basic_desktop.png"),
-                    BasicDesktopTemplate.class.getResource("basic_desktop@2x.png"),
-                    null);
-            //@formatter:on
-        }
-
-    }
-
+    //@formatter:off
     @ApplicationSingleton
-    public static class ComplexDesktopTemplate extends InnerTemplate{
-        public ComplexDesktopTemplate(@Autowired DesktopGroup group) {
-            //@formatter:off
-            super(UUID.fromString("9f98b594-a9a0-4487-8f31-1964a0cb38e1"),
-                    group,
-                    "B",
-                    "template.title.new.complex.desktop.app",
-                    Size.SIZE_640x480.getI18nKey(),
-                    ComplexDesktopTemplate.class.getResource("ComplexDesktopApplication.fxml"),
-                    ComplexDesktopTemplate.class.getResource("complex_desktop.png"),
-                    ComplexDesktopTemplate.class.getResource("complex_desktop@2x.png"),
-                    null);
-            //@formatter:on
-        }
-    }
+    @TemplateContext(
+            id = "9f98b594-a9a0-4487-8f31-1964a0cb38e1",
+            name = "template.title.new.complex.desktop.app",
+            description = "template.description.new.complex.desktop.app",
+            orderKey = "B",
+            width = 640,
+            height = 480,
+            fxmlUrl = "ComplexDesktopApplication.fxml",
+            iconUrl = "complex_desktop.png",
+            iconX2Url = "complex_desktop@2x.png",
+            groupClass = DesktopGroup.class)
+    //@formatter:on
+    public interface ComplexDesktopTemplate extends Template{}
 
-    private static class InnerGroup extends Ordered implements TemplateGroup {
-        public InnerGroup(String orderKey, String name) {
-            super(orderKey, name);
-        }
-    }
-
-    private static class InnerTemplate extends Ordered implements Template {
-
-        private final UUID id;
-        private final TemplateGroup group;
-        private final String size;
-        private final URL fxmlUrl;
-        private final URL iconUrl;
-        private final URL iconX2Url;
-        private final UUID defaultThemeId;
-
-        public InnerTemplate(UUID id, TemplateGroup group, String orderKey, String name, String size, URL fxmlUrl, URL iconUrl, URL iconX2Url, UUID defaultThemeId) {
-            super(orderKey, name);
-            this.id = id;
-            this.group = group;
-            this.size = size;
-            this.fxmlUrl = fxmlUrl;
-            this.iconUrl = iconUrl;
-            this.iconX2Url = iconX2Url;
-            this.defaultThemeId = defaultThemeId;
-        }
-
-        @Override
-        public TemplateGroup getGroup() {
-            return group;
-        }
-
-        @Override
-        public URL getFxmlUrl() {
-            return fxmlUrl;
-        }
-
-        @Override
-        public URL getIconUrl() {
-            return iconUrl;
-        }
-
-        @Override
-        public URL getIconX2Url() {
-            return iconX2Url;
-        }
-
-        @Override
-        public UUID getId() {
-            return id;
-        }
-
-        public String getSize() {
-            return size;
-        }
-
-        @Override
-        public UUID getDefaultThemeId() {
-            return defaultThemeId;
-        }
-
-}
 }

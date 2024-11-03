@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.template.model;
 
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.core.api.template.TemplateGroup;
+import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Version;

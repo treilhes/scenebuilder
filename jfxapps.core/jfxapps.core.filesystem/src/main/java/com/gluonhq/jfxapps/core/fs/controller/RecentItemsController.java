@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.fs.RecentItems;
 import com.gluonhq.jfxapps.core.fs.preference.RecentItemsPreference;
 import com.gluonhq.jfxapps.core.fs.preference.RecentItemsSizePreference;
 
@@ -50,7 +51,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 
 @ApplicationSingleton
-public class RecentItemsController {
+public class RecentItemsController implements RecentItems {
 
     private static final Logger logger = LoggerFactory.getLogger(RecentItemsController.class);
 
@@ -79,11 +80,13 @@ public class RecentItemsController {
     }
 
 
+    @Override
     public boolean containsRecentItem(File file) {
         final String path = file.getPath();
         return recentItemsPreference.getValue().contains(path);
     }
 
+    @Override
     public boolean containsRecentItem(URL url) {
         final File fxmlFile;
         try {
@@ -95,12 +98,14 @@ public class RecentItemsController {
         }
     }
 
+    @Override
     public void addRecentItem(File file) {
         final List<File> files = new ArrayList<>();
         files.add(file);
         addRecentItems(files);
     }
 
+    @Override
     public void addRecentItem(URL url) {
         final File fxmlFile;
         try {
@@ -111,6 +116,7 @@ public class RecentItemsController {
         }
     }
 
+    @Override
     public void addRecentItems(List<File> files) {
         var list = recentItemsPreference.getValue();
         for (File file : files) {
@@ -129,6 +135,7 @@ public class RecentItemsController {
         recentItemsPreference.save();
     }
 
+    @Override
     public void removeRecentItems(List<String> filePaths) {
         var list = recentItemsPreference.getValue();
         // Remove the specified files from the recent items
@@ -138,12 +145,14 @@ public class RecentItemsController {
         recentItemsPreference.save();
     }
 
+    @Override
     public void clearRecentItems() {
         recentItemsPreference.getValue().clear();
         recentItemsPreference.save();
     }
 
 
+    @Override
     public ObservableList<String> getRecentItems() {
         return recentItemsPreference.getValue();
     }

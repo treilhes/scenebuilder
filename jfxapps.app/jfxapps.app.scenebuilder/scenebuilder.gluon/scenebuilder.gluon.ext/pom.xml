@@ -26,10 +26,6 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>scenebuilder.ext.controls</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>scenebuilder.ext.defaultx</artifactId>
-        </dependency>
         <!-- temp -->
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>

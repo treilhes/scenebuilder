@@ -10,12 +10,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        
+
         <module>scenebuilder.ext.controls.tooling</module>
         <module>scenebuilder.ext.controls</module>
         <module>scenebuilder.ext.css.analyser</module>
         <module>scenebuilder.ext.debug.menu</module>
-        <module>scenebuilder.ext.defaultx</module>
         <module>scenebuilder.ext.document</module>
         <module>scenebuilder.ext.dummy</module>
         <module>scenebuilder.ext.editor.fxml</module>
@@ -36,5 +35,7 @@
         <module>scenebuilder.ext.source.view</module>
         <module>scenebuilder.ext.templates</module>
         <module>scenebuilder.ext.welcome</module>
+        <module>scenebuilder.ext.i18n</module>
+        <module>scenebuilder.ext.theme</module>
     </modules>
 </project>

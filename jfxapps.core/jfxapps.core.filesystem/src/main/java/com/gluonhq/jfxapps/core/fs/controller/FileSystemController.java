@@ -56,6 +56,7 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.fs.RecentItems;
 import com.gluonhq.jfxapps.core.api.i18n.CombinedResourceBundle;
 import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
@@ -80,7 +81,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     private final ApplicationEvents sceneBuilderManager;
     private final ApplicationInstanceEvents documentManager;
     private final FXOMDocumentFactory fxomDocumentFactory;
-    private final RecentItemsController recentItems;
+    private final RecentItems recentItems;
     private final InitialDirectoryPreference initialDirectoryPreference;
     private final FXOMSerializer serializer;
 
@@ -100,7 +101,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
             ApplicationEvents sceneBuilderManager,
             ApplicationInstanceEvents documentManager,
             FXOMDocumentFactory fxomDocumentFactory,
-            RecentItemsController recentItems,
+            RecentItems recentItems,
             InitialDirectoryPreference initialDirectoryPreference,
             FXOMSerializer serializer) {
      // @formatter:on
@@ -267,7 +268,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
     @Override
-    public void loadFromFile(File fxmlFile) throws IOException {
+    public void loadFromFile(File fxmlFile, boolean keepTrackOfLocation) throws IOException {
         final URL fxmlURL = fxmlFile.toURI().toURL();
         loadFromURL(fxmlURL, true);
 

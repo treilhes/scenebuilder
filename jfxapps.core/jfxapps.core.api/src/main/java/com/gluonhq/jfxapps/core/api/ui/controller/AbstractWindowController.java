@@ -52,7 +52,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -64,7 +63,7 @@ import javafx.stage.WindowEvent;
  */
 public abstract class AbstractWindowController implements InstanceWindow {
 
-    public final static Logger logger = LoggerFactory.getLogger(AbstractWindowController.class);
+    private final static Logger logger = LoggerFactory.getLogger(AbstractWindowController.class);
 
     /** The owner window stage. */
     final private InstanceWindow owner;

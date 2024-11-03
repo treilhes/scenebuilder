@@ -10,7 +10,6 @@
     <artifactId>jfxapps.core.starter</artifactId>
 
     <dependencies>
-        
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.loader</artifactId>
@@ -31,7 +30,7 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.javafx.starter</artifactId>
         </dependency>
-        
+
         <!-- https://mvnrepository.com/artifact/org.pdfsam.rxjava3/rxjavafx -->
         <dependency>
             <groupId>org.pdfsam.rxjava3</groupId>

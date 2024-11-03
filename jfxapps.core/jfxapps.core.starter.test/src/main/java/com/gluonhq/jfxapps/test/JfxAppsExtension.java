@@ -61,6 +61,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.test.context.SpringBootTestContextBootstrapper;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockitoPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.MergedAnnotations;
@@ -202,6 +203,8 @@ public class JfxAppsExtension implements BeforeEachCallback, ParameterResolver {
 
             //@formatter:off
             classes.addAll(List.of(
+                    // FIXME MockitoPostProcessor.class generates:NoSuchMethodException: org.springframework.boot.test.mock.mockito.MockitoPostProcessor.<init>()
+                    //MockitoPostProcessor.class,
                     I18NTestConfig.class,
                     LifecyclePostProcessor.class,
                     FxmlControllerBeanPostProcessor.class,

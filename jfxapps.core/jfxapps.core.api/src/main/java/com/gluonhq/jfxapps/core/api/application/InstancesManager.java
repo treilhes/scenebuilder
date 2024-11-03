@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -56,11 +56,14 @@ public interface InstancesManager {
      * @param fxmlFiles
      */
     void open(List<File> fxmlFiles);
+    void open(List<File> fxmlFiles, boolean keepTrackOfLocation);
+    ApplicationInstance open(File fxmlFile, boolean keepTrackOfLocation);
     /**
      *
      */
     void close();
     void logInfoMessage(String key);
     void logInfoMessage(String key, Object... args);
+
 
 }

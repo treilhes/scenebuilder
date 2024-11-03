@@ -42,24 +42,21 @@ import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
-import org.mockito.Mockito;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
-import com.gluonhq.jfxapps.boot.api.context.ContextManager;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 import com.gluonhq.jfxapps.core.api.preference.JsonMapper;
 import com.gluonhq.jfxapps.core.api.preference.Preference;
 import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
-import com.gluonhq.jfxapps.core.preferences.internal.preference.PreferenceBeanDefinitionRegistryPostProcessor;
+import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceBeanPostProcessor;
 import com.gluonhq.jfxapps.core.preferences.model.PreferenceEntity;
 import com.gluonhq.jfxapps.core.preferences.repository.PreferenceRepository;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
@@ -75,7 +72,7 @@ import javafx.scene.paint.Color;
 //@formatter:off
 @ContextConfiguration(classes = {
         PreferenceTypeTest.Config.class,
-        PreferenceBeanDefinitionRegistryPostProcessor.class,
+        PreferenceBeanPostProcessor.class,
         PreferenceTypeTest.ObjectMapPreference.class,
         PreferenceTypeTest.ClassListPreference.class,
         PreferenceTypeTest.NestedMapPreference.class,

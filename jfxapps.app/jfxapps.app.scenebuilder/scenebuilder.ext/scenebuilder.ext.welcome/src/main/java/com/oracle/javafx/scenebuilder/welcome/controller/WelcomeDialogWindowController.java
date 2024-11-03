@@ -35,38 +35,35 @@
 package com.oracle.javafx.scenebuilder.welcome.controller;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.WelcomeDialog;
-import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
+import com.gluonhq.jfxapps.core.api.fs.RecentItems;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.template.Template;
-import com.gluonhq.jfxapps.core.api.template.TemplateGroup;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
-import com.gluonhq.jfxapps.core.fs.action.impl.OpenAction;
-import com.gluonhq.jfxapps.core.fs.action.impl.OpenFilesAction;
-import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsPreference;
-import com.gluonhq.jfxapps.core.fs.preference.global.RecentItemsSizePreference;
-import com.oracle.javafx.scenebuilder.template.controller.TemplateController;
-import com.oracle.javafx.scenebuilder.template.controller.TemplatesBaseWindowController;
+import com.oracle.javafx.scenebuilder.api.template.Template;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 
-@ApplicationSingleton
-public class WelcomeDialogWindowController extends TemplatesBaseWindowController implements WelcomeDialog {
+@ApplicationInstanceSingleton
+public class WelcomeDialogWindowController extends AbstractFxmlWindowController implements WelcomeDialog {
+
+    public final static Logger logger = LoggerFactory.getLogger(WelcomeDialogWindowController.class);
 
     @FXML
     private VBox recentDocuments;
@@ -74,40 +71,37 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
     @FXML
     private Button emptyApp;
 
-    private final I18N i18n;
-    private final InstancesManager sceneBuilderApp;
+    @FXML
+    private ScrollPane scrollPane;
 
-	private final RecentItemsPreference recentItemsPreference;
+    private final InstancesManager instancesManager;
 
-	private final RecentItemsSizePreference recentItemsSizePreference;
+	private final RecentItems recentItems;
+
+	private final TemplatesSelectionController templateSelection;
+	private final TemplateLoader templateLoader;
 
     private final IconSetting windowIconSetting;
 
-    private TemplateController templateController;
-
-    private final ActionFactory actionFactory;
-
+    //@formatter:off
     private WelcomeDialogWindowController(
             I18N i18n,
-            ApplicationEvents sceneBuilderManager,
+            ApplicationEvents applicationEvents,
             IconSetting iconSetting,
-    		@Autowired InstancesManager sceneBuilderApp,
-    		@Autowired ActionFactory actionFactory,
-    		@Autowired IconSetting windowIconSetting,
-    		@Autowired RecentItemsPreference recentItemsPreference,
-    		@Autowired RecentItemsSizePreference recentItemsSizePreference,
-    		@Autowired TemplateController templateController,
-    		@Autowired List<TemplateGroup> templateGroups,
-            @Autowired List<Template> templates) {
-        super(i18n, sceneBuilderManager, iconSetting, WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"),
-                null, templateGroups, templates); // We want it to be a top level window so we're setting the owner to null.
+            InstancesManager instancesManager,
+            IconSetting windowIconSetting,
+            RecentItems recentItems,
+            TemplateLoader templateLoader,
+            TemplatesSelectionController templateSelection) {
+        //@formatter:on
+        super(i18n, applicationEvents, iconSetting, WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"),
+                null); // We want it to be a top level window so we're setting the owner to null.
 
-        this.sceneBuilderApp = sceneBuilderApp;
-        this.actionFactory = actionFactory;
-        this.recentItemsPreference = recentItemsPreference;
-        this.recentItemsSizePreference = recentItemsSizePreference;
+        this.instancesManager = instancesManager;
+        this.recentItems = recentItems;
+        this.templateSelection = templateSelection;
         this.windowIconSetting = windowIconSetting;
-        this.templateController = templateController;
+        this.templateLoader = templateLoader;
     }
 
 
@@ -138,21 +132,20 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
         super.controllerDidLoadFxml();
         assert recentDocuments != null;
 
-        List<String> recentItems = recentItemsPreference.getValue();
-        int recentItemsSize = recentItemsSizePreference.getValue();
+        List<String> items = recentItems.getRecentItems();
 
-        if (recentItems.size() == 0) {
+        if (items.size() == 0) {
             Label noRecentItems = new Label(getI18n().getString("welcome.recent.items.no.recent.items"));
             noRecentItems.getStyleClass().add("no-recent-items-label");
             recentDocuments.getChildren().add(noRecentItems);
         }
-        for (int row = 0; row < recentItemsSize; ++row) {
-            if (recentItems.size() < row + 1) {
+        for (int row = 0; row < items.size(); ++row) {
+            if (items.size() < row + 1) {
                 break;
             }
 
-            String recentItem = recentItems.get(row);
-            File recentItemFile = new File(recentItems.get(row));
+            String recentItem = items.get(row);
+            File recentItemFile = new File(items.get(row));
             String recentItemTitle = recentItemFile.getName();
             Button recentDocument = new Button(recentItemTitle);
             recentDocument.getStyleClass().add("recent-document");
@@ -164,28 +157,37 @@ public class WelcomeDialogWindowController extends TemplatesBaseWindowController
             recentDocument.setTooltip(new Tooltip(recentItem));
         }
 
-        setOnTemplateChosen(templateController::loadTemplateInCurrentWindow);
-        setupTemplateButtonHandlers();
+    }
+
+    @Override
+    public void openWindow() {
+        super.openWindow();
+        templateSelection.clearFromParent();
+        templateSelection.setOnTemplateChosen(this::loadTemplate);
+        scrollPane.setContent(templateSelection.getRoot());
     }
 
     private void fireOpenRecentProject(ActionEvent event, String projectPath) {
-        OpenFilesAction action = actionFactory.create(OpenFilesAction.class);
-        action.setFxmlFile(Arrays.asList(new File(projectPath)));
-        action.checkAndPerform();
+        instancesManager.open(List.of(new File(projectPath)));
         getStage().hide();
     }
 
     @FXML
     private void openDocument() {
-        OpenAction action = actionFactory.create(OpenAction.class);
-        action.checkAndPerform();
+        instancesManager.open(List.of());
         getStage().hide();
     }
 
     @FXML
     private void openEmpty() {
         getStage().hide();
-        templateController.loadTemplateInCurrentWindow(null);
+        //templateController.loadTemplateInCurrentWindow(null);
+        instancesManager.open(List.of());
+    }
+
+    private void loadTemplate(Template template) {
+        getStage().hide();
+        templateLoader.loadTemplate(template);
     }
 }
 

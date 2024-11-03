@@ -34,7 +34,12 @@
 package com.oracle.javafx.scenebuilder.api.theme;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ThemeManager {
-    List<Theme> getAll();
+    Theme getTheme(UUID themeId);
+    List<Theme> getThemes();
+
+    ThemeGroup getGroup(UUID themeGroupId);
+    List<ThemeGroup> getGroups();
 }

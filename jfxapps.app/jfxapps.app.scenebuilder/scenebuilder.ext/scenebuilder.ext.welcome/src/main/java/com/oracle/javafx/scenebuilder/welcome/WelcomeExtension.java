@@ -39,6 +39,9 @@ import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.api.SbApiExtension;
+import com.oracle.javafx.scenebuilder.welcome.action.NewFromTemplateAction;
+import com.oracle.javafx.scenebuilder.welcome.controller.TemplateLoader;
+import com.oracle.javafx.scenebuilder.welcome.controller.TemplatesWindowController;
 import com.oracle.javafx.scenebuilder.welcome.controller.WelcomeDialogInitializer;
 import com.oracle.javafx.scenebuilder.welcome.controller.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.welcome.i18n.I18NWelcome;
@@ -68,7 +71,10 @@ public class WelcomeExtension implements OpenExtension {
         return Arrays.asList(
                 I18NWelcome.class,
                 WelcomeDialogWindowController.class,
-                WelcomeDialogInitializer.class
+                WelcomeDialogInitializer.class,
+                NewFromTemplateAction.class,
+                TemplateLoader.class,
+                TemplatesWindowController.class
             );
      // @formatter:on
     }

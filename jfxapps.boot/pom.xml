@@ -7,7 +7,7 @@
   </parent>
   <artifactId>jfxapps.boot</artifactId>
   <packaging>pom</packaging>
-  
+
   <modules>
     <module>jfxapps.boot.loader</module>
     <module>jfxapps.boot.context</module>
@@ -22,5 +22,6 @@
 
     <module>jfxapps.boot.jpms.patches</module>
     <module>jfxapps.boot.api</module>
+
   </modules>
 </project>

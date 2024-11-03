@@ -35,10 +35,9 @@ import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.template.TemplateExtension;
 
 open module scenebuilder.ext.templates {
-    exports com.oracle.javafx.scenebuilder.template.i18n;
-    exports com.oracle.javafx.scenebuilder.template.controller;
-    exports com.oracle.javafx.scenebuilder.template.templates;
     exports com.oracle.javafx.scenebuilder.template;
+    exports com.oracle.javafx.scenebuilder.template.i18n;
+    exports com.oracle.javafx.scenebuilder.template.templates;
 
     requires scenebuilder.app.starter;
 

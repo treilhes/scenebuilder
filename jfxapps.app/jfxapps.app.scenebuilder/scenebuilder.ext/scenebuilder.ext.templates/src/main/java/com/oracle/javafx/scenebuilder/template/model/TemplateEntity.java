@@ -34,22 +34,21 @@
 package com.oracle.javafx.scenebuilder.template.model;
 
 import java.net.URL;
+import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.gluonhq.jfxapps.core.api.template.Template;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Version;
 
 @Entity
-public class TemplateEntity implements Template{
+public class TemplateEntity{
     @Id
     private UUID id;
 
@@ -63,72 +62,69 @@ public class TemplateEntity implements Template{
     private URL fxmlUrl;
     private URL iconUrl;
     private URL iconX2Url;
-    private UUID defaultThemeId;
+    private int width;
+    private int height;
+    private List<UUID> themeIds;
 
-    @Version
-    private int version;
-
-    @Override
     public UUID getId() {
         return id;
     }
     public void setId(UUID id) {
         this.id = id;
     }
-    @Override
     public String getOrderKey() {
         return orderKey;
     }
     public void setOrderKey(String orderKey) {
         this.orderKey = orderKey;
     }
-    @Override
     public String getName() {
         return name;
     }
     public void setName(String name) {
         this.name = name;
     }
-    @Override
     public TemplateGroupEntity getGroup() {
         return group;
     }
     public void setGroup(TemplateGroupEntity group) {
         this.group = group;
     }
-    @Override
     public URL getFxmlUrl() {
         return fxmlUrl;
     }
     public void setFxmlUrl(URL fxmlUrl) {
         this.fxmlUrl = fxmlUrl;
     }
-    @Override
     public URL getIconUrl() {
         return iconUrl;
     }
     public void setIconUrl(URL iconUrl) {
         this.iconUrl = iconUrl;
     }
-    @Override
     public URL getIconX2Url() {
         return iconX2Url;
     }
     public void setIconX2Url(URL iconX2Url) {
         this.iconX2Url = iconX2Url;
     }
-    @Override
-    public UUID getDefaultThemeId() {
-        return defaultThemeId;
+    public int getWidth() {
+        return width;
     }
-    public void setDefaultThemeId(UUID defaultThemeId) {
-        this.defaultThemeId = defaultThemeId;
+    public void setWidth(int width) {
+        this.width = width;
     }
-    public int getVersion() {
-        return version;
+    public int getHeight() {
+        return height;
     }
-    public void setVersion(int version) {
-        this.version = version;
+    public void setHeight(int height) {
+        this.height = height;
+    }
+    public List<UUID> getThemeIds() {
+        return themeIds;
+    }
+    public void setThemeIds(List<UUID> themeIds) {
+        this.themeIds = themeIds;
     }
 
 }

@@ -37,8 +37,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.gluonhq.jfxapps.core.preferences.internal.factory.BasePreference;
-import com.gluonhq.jfxapps.core.preferences.internal.preference.PreferenceMetadata;
+import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceAopContext.BasePreference;
+import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceAopContext.PreferenceMetadata;
 import com.gluonhq.jfxapps.core.preferences.model.PreferenceEntity;
 import com.gluonhq.jfxapps.core.preferences.model.PreferenceEntity.PreferenceEntityId;
 import com.gluonhq.jfxapps.core.preferences.repository.PreferenceRepository;
