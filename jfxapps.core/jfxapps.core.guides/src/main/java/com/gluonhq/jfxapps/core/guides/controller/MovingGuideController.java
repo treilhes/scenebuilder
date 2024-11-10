@@ -37,6 +37,12 @@ package com.gluonhq.jfxapps.core.guides.controller;
 import java.util.Collections;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.guide.MovingGuide;
+import com.gluonhq.jfxapps.core.guides.preference.AlignmentGuidesColorPreference;
 import com.gluonhq.jfxapps.core.guides.segment.HorizontalLineIndex;
 import com.gluonhq.jfxapps.core.guides.segment.HorizontalSegment;
 import com.gluonhq.jfxapps.core.guides.segment.VerticalLineIndex;
@@ -46,34 +52,61 @@ import com.gluonhq.jfxapps.util.MathUtils;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.paint.Paint;
 
 /**
  *
  */
-public class MovingGuideController {
+@ApplicationInstanceSingleton
+public class MovingGuideController implements MovingGuide {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MovingGuideController.class);
 
     private final double MATCH_DISTANCE = 6.0;
 
+    private final AlignmentGuidesColorPreference alignmentGuidesColorPreference;
     private final HorizontalLineIndex horizontalLineIndex = new HorizontalLineIndex();
     private final VerticalLineIndex verticalLineIndex = new VerticalLineIndex();
-    private final MovingGuideRenderer renderer;
+    private MovingGuideRenderer renderer;
     private double suggestedDX;
     private double suggestedDY;
+    private boolean visible = true;
+    private double matchDistance = MATCH_DISTANCE;
 
-    public MovingGuideController(Paint chromeColor, Bounds scopeInScene) {
-        this.renderer = new MovingGuideRenderer(chromeColor, scopeInScene);
+    public MovingGuideController(AlignmentGuidesColorPreference alignmentGuidesColorPreference) {
+        this.alignmentGuidesColorPreference = alignmentGuidesColorPreference;
+        this.renderer = null;
     }
 
+    @Override
+    public void initializeContainerBounds(Bounds scopeInScene) {
+        this.renderer = new MovingGuideRenderer(alignmentGuidesColorPreference, scopeInScene);
+    }
+
+    @Override
+    public void setMatchDistance(double matchDistance) {
+        this.matchDistance = matchDistance;
+    }
+
+    @Override
+    public void resetMatchDistance() {
+        this.matchDistance = MATCH_DISTANCE;
+    }
+
+    @Override
     public void addSampleBounds(Node node) {
         assert node != null;
         assert node.getScene() != null;
 
-        final Bounds layoutBounds = node.getLayoutBounds();
-        final Bounds boundsInScene = node.localToScene(layoutBounds, true /* rootScene */);
+        final Bounds boundsInScene = boundsInScene(node);
         addSampleBounds(boundsInScene, true /* addMiddle */);
     }
 
+    private Bounds boundsInScene(Node node) {
+        final Bounds layoutBounds = node.getLayoutBounds();
+        return node.localToScene(layoutBounds, true /* rootScene */);
+    }
+
+    @Override
     public void addSampleBounds(Bounds boundsInScene, boolean addMiddle) {
         final double minX = boundsInScene.getMinX();
         final double minY = boundsInScene.getMinY();
@@ -93,20 +126,28 @@ public class MovingGuideController {
         }
     }
 
+    @Override
     public void clearSampleBounds() {
         horizontalLineIndex.clear();
         verticalLineIndex.clear();
         clear();
     }
 
+    @Override
     public boolean hasSampleBounds() {
         return (horizontalLineIndex.isEmpty() == false) || (verticalLineIndex.isEmpty() == false);
     }
 
+    @Override
     public void clear() {
         renderer.setLines(Collections.emptyList(), Collections.emptyList());
     }
 
+    @Override
+    public void match(Node node) {
+        match(boundsInScene(node));
+    }
+    @Override
     public void match(Bounds targetBounds) {
         List<HorizontalSegment> horizontalMatchingLines;
         List<VerticalSegment> verticalMatchingLines;
@@ -115,7 +156,7 @@ public class MovingGuideController {
 
         // Match horizontal center line of targetBounds
         horizontalMatchingLines
-                = horizontalLineIndex.matchCenter(targetBounds, MATCH_DISTANCE);
+                = horizontalLineIndex.matchCenter(targetBounds, matchDistance);
         if (horizontalMatchingLines.isEmpty() == false) {
             matchedHorizontally = true;
             final HorizontalSegment line = horizontalMatchingLines.get(0);
@@ -129,7 +170,7 @@ public class MovingGuideController {
         // Match north boundary of targetBounds
         if (matchedHorizontally == false) {
             horizontalMatchingLines
-                    = horizontalLineIndex.matchNorth(targetBounds, MATCH_DISTANCE);
+                    = horizontalLineIndex.matchNorth(targetBounds, matchDistance);
             if (horizontalMatchingLines.isEmpty() == false) {
                 matchedHorizontally = true;
                 final HorizontalSegment line = horizontalMatchingLines.get(0);
@@ -141,7 +182,7 @@ public class MovingGuideController {
         // Match south boundary of targetBounds
         if (matchedHorizontally == false) {
             horizontalMatchingLines
-                    = horizontalLineIndex.matchSouth(targetBounds, MATCH_DISTANCE);
+                    = horizontalLineIndex.matchSouth(targetBounds, matchDistance);
             if (horizontalMatchingLines.isEmpty() == false) {
                 matchedHorizontally = true;
                 final HorizontalSegment line = horizontalMatchingLines.get(0);
@@ -156,7 +197,7 @@ public class MovingGuideController {
 
         // Match vertical center line of targetBounds
         verticalMatchingLines
-                = verticalLineIndex.matchCenter(targetBounds, MATCH_DISTANCE);
+                = verticalLineIndex.matchCenter(targetBounds, matchDistance);
         if (verticalMatchingLines.isEmpty() == false) {
             matchedVertically = true;
             final VerticalSegment line = verticalMatchingLines.get(0);
@@ -170,7 +211,7 @@ public class MovingGuideController {
         // Match west boundary of targetBounds
         if (matchedVertically == false) {
             verticalMatchingLines
-                    = verticalLineIndex.matchWest(targetBounds, MATCH_DISTANCE);
+                    = verticalLineIndex.matchWest(targetBounds, matchDistance);
             if (verticalMatchingLines.isEmpty() == false) {
                 matchedVertically = true;
                 final VerticalSegment line = verticalMatchingLines.get(0);
@@ -182,7 +223,7 @@ public class MovingGuideController {
         // Match east boundary of targetBounds
         if (matchedVertically == false) {
             verticalMatchingLines
-                    = verticalLineIndex.matchEast(targetBounds, MATCH_DISTANCE);
+                    = verticalLineIndex.matchEast(targetBounds, matchDistance);
             if (verticalMatchingLines.isEmpty() == false) {
                 matchedVertically = true;
                 final VerticalSegment line = verticalMatchingLines.get(0);
@@ -199,16 +240,29 @@ public class MovingGuideController {
     }
 
 
+    @Override
     public double getSuggestedDX() {
         return suggestedDX;
     }
 
 
+    @Override
     public double getSuggestedDY() {
         return suggestedDY;
     }
 
+    @Override
     public Group getGuideGroup() {
         return renderer.getGuideGroup();
+    }
+
+    @Override
+    public boolean isVisible() {
+        return visible;
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

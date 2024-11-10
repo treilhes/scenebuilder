@@ -63,6 +63,7 @@ open module jfxapps.core.api {
     exports com.gluonhq.jfxapps.core.api.factory;
     exports com.gluonhq.jfxapps.core.api.fs;
     exports com.gluonhq.jfxapps.core.api.fxom;
+    exports com.gluonhq.jfxapps.core.api.guide;
     exports com.gluonhq.jfxapps.core.api.i18n;
     exports com.gluonhq.jfxapps.core.api.job;
     exports com.gluonhq.jfxapps.core.api.job.base;

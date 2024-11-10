@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.core.guides.preference.AlignmentGuidesColorPreference;
 import com.gluonhq.jfxapps.core.guides.segment.AbstractSegment;
 import com.gluonhq.jfxapps.core.guides.segment.HorizontalSegment;
 import com.gluonhq.jfxapps.core.guides.segment.VerticalSegment;
@@ -58,14 +59,15 @@ public class MovingGuideRenderer {
 
     private static final String NID_MOVING_GUIDE = "movingGuide"; //NOCHECK
 
+    private final AlignmentGuidesColorPreference alignmentGuidesColorPreference;
+
     private final Group guideGroup = new Group();
     private final Map<AbstractSegment, Line> chromeMap = new HashMap<>();
     private final Set<Line> reusableChromes = new HashSet<>();
-    private final Paint chromeColor;
     private final Bounds scopeInScene;
 
-    public MovingGuideRenderer(Paint chromeColor, Bounds scopeInScene) {
-        this.chromeColor = chromeColor;
+    public MovingGuideRenderer(AlignmentGuidesColorPreference alignmentGuidesColorPreference, Bounds scopeInScene) {
+        this.alignmentGuidesColorPreference = alignmentGuidesColorPreference;
         this.scopeInScene = scopeInScene;
         guideGroup.setMouseTransparent(true);
     }
@@ -101,11 +103,12 @@ public class MovingGuideRenderer {
             if (reusableChromes.isEmpty()) {
                 chrome = new Line();
                 chrome.setId(NID_MOVING_GUIDE);
-                chrome.setStroke(chromeColor);
+                chrome.setStroke(alignmentGuidesColorPreference.getValue());
                 guideGroup.getChildren().add(chrome);
             } else {
                 chrome = reusableChromes.iterator().next();
                 reusableChromes.remove(chrome);
+                chrome.setStroke(alignmentGuidesColorPreference.getValue());
                 chrome.setVisible(true);
             }
             final Point2D p1 = guideGroup.sceneToLocal(s.getX1(), s.getY1(), true /* rootScene */);

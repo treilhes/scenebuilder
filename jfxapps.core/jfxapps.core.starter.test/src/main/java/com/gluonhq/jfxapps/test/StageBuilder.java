@@ -33,7 +33,10 @@
  */
 package com.gluonhq.jfxapps.test;
 
+import java.util.concurrent.TimeoutException;
+
 import org.testfx.api.FxRobot;
+import org.testfx.api.FxToolkit;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
@@ -51,6 +54,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -85,7 +89,13 @@ public class StageBuilder {
     }
 
     protected StageBuilder stage(Stage stage) {
-        this.stage = stage;
+
+        try {
+            this.stage = FxToolkit.registerStage(() -> new Stage(StageStyle.DECORATED));
+        } catch (TimeoutException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return this;
     }
 
@@ -144,8 +154,21 @@ public class StageBuilder {
         if (controllerInstance != null) {
             instance = controllerInstance;
             new FxmlControllerBeanPostProcessor().postProcessAfterInitialization(instance, "controller");
-        } else {
+        } else if (controller != null) {
             instance = context.getBean(controller);
+        } else {
+            instance = new UiController() {
+                private Parent root = new StackPane();
+                @Override
+                public void setRoot(Parent root) {
+                    this.root = root;
+                }
+
+                @Override
+                public Parent getRoot() {
+                    return root;
+                }
+            };
         }
 
         // add default theme class to controller
