@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,6 +39,7 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceProtot
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
 
@@ -59,21 +60,21 @@ public class VBoxTring extends AbstractNodeTring<VBox> {
     private final Line crackLine = new Line();
 
     public VBoxTring(
-            Content contentPanelController,
+            Workspace workspace,
             ApplicationInstanceEvents documentManager) {
-        super(contentPanelController, documentManager, VBox.class);
+        super(workspace, documentManager, VBox.class);
         crackLine.getStyleClass().add(TARGET_CRACK_CLASS);
         crackLine.setMouseTransparent(true);
         getRootNode().getChildren().add(0, crackLine);
     }
 
-    
+
     @Override
     public void defineDropTarget(DropTarget dropTarget) {
-        assert dropTarget instanceof AccessoryDropTarget; 
+        assert dropTarget instanceof AccessoryDropTarget;
         assert dropTarget.getTargetObject() instanceof FXOMInstance;
         assert dropTarget.getTargetObject().getSceneGraphObject().isInstanceOf(VBox.class);
-        
+
         final AccessoryDropTarget zDropTarget = (AccessoryDropTarget) dropTarget;
         final int targetIndex;
         if (zDropTarget.getBeforeChild() == null) {
@@ -85,12 +86,12 @@ public class VBoxTring extends AbstractNodeTring<VBox> {
         this.targetIndex = targetIndex;
     }
 
-    
+
     @Override
     public void initialize() {
         assert targetIndex >= -1;
     }
-    
+
     /*
      * AbstractGenericTring
      */

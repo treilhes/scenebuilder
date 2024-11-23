@@ -78,8 +78,8 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     private final static Logger logger = LoggerFactory.getLogger(FileSystemController.class);
 
     private final JfxAppPlatform jfxAppPlatform;
-    private final ApplicationEvents sceneBuilderManager;
-    private final ApplicationInstanceEvents documentManager;
+    private final ApplicationEvents applicationEvents;
+    private final ApplicationInstanceEvents applicationInstanceEvents;
     private final FXOMDocumentFactory fxomDocumentFactory;
     private final RecentItems recentItems;
     private final InitialDirectoryPreference initialDirectoryPreference;
@@ -98,16 +98,16 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     // @formatter:off
     public FileSystemController(
             JfxAppPlatform jfxAppPlatform,
-            ApplicationEvents sceneBuilderManager,
-            ApplicationInstanceEvents documentManager,
+            ApplicationEvents applicationEvents,
+            ApplicationInstanceEvents applicationInstanceEvents,
             FXOMDocumentFactory fxomDocumentFactory,
             RecentItems recentItems,
             InitialDirectoryPreference initialDirectoryPreference,
             FXOMSerializer serializer) {
      // @formatter:on
         this.jfxAppPlatform = jfxAppPlatform;
-        this.documentManager = documentManager;
-        this.sceneBuilderManager = sceneBuilderManager;
+        this.applicationInstanceEvents = applicationInstanceEvents;
+        this.applicationEvents = applicationEvents;
         this.fxomDocumentFactory = fxomDocumentFactory;
         this.recentItems = recentItems;
         this.initialDirectoryPreference = initialDirectoryPreference;
@@ -308,7 +308,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
     @Override
     public void reload() throws IOException{
-        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        final FXOMDocument fxomDocument = applicationInstanceEvents.fxomDocument().get();
         assert (fxomDocument != null) && (fxomDocument.getLocation() != null);
         final URL fxmlURL = fxomDocument.getLocation();
         final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
@@ -326,13 +326,13 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
     private void updateLoadFileTime() {
 
-        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        final FXOMDocument fxomDocument = applicationInstanceEvents.fxomDocument().get();
         if (fxomDocument == null) {
             loadFileTime = null;
             return;
         }
 
-        final URL fxmlURL = documentManager.fxomDocument().get().getLocation();
+        final URL fxmlURL = applicationInstanceEvents.fxomDocument().get().getLocation();
         if (fxmlURL == null) {
             loadFileTime = null;
         } else {
@@ -353,7 +353,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
     @Override
     public boolean checkLoadFileTime() throws IOException {
-        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        final FXOMDocument fxomDocument = applicationInstanceEvents.fxomDocument().get();
 
         assert fxomDocument != null;
         assert fxomDocument.getLocation() != null;
@@ -405,7 +405,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     //@Override
     private void setFxmlTextAndLocation(String fxmlText, URL fxmlLocation, boolean checkTheme) throws IOException {
 
-        I18nResourceProvider i18nResources = documentManager.i18nResourceConfig().get();
+        I18nResourceProvider i18nResources = applicationInstanceEvents.i18nResourceConfig().get();
 
         updateFxomDocument(fxmlText, fxmlLocation,
                 new CombinedResourceBundle(i18nResources == null ? new ArrayList<>() : i18nResources.getBundles(), false),
@@ -427,13 +427,13 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
         final FXOMDocument newFxomDocument;
 
         if (fxmlText != null) {
-            newFxomDocument = fxomDocumentFactory.newDocument(fxmlText, fxmlLocation, sceneBuilderManager.classloader().get(),
+            newFxomDocument = fxomDocumentFactory.newDocument(fxmlText, fxmlLocation, applicationEvents.classloader().get(),
                     resources);
         } else {
             newFxomDocument = null;
         }
 
-        documentManager.fxomDocument().set(newFxomDocument);
+        applicationInstanceEvents.fxomDocument().set(newFxomDocument);
 
         updateFileWatcher(newFxomDocument);
 
@@ -449,17 +449,17 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
                 @Override
                 public void modified(Path path) {
-                    documentManager.filesystemUpdate().set(Map.of(path, "file.watching.file.modified"));
+                    applicationInstanceEvents.filesystemUpdate().set(Map.of(path, "file.watching.file.modified"));
                 }
 
                 @Override
                 public void deleted(Path path) {
-                    documentManager.filesystemUpdate().set(Map.of(path, "file.watching.file.deleted"));
+                    applicationInstanceEvents.filesystemUpdate().set(Map.of(path, "file.watching.file.deleted"));
                 }
 
                 @Override
                 public void created(Path path) {
-                    documentManager.filesystemUpdate().set(Map.of(path, "file.watching.file.created"));
+                    applicationInstanceEvents.filesystemUpdate().set(Map.of(path, "file.watching.file.created"));
                 }
 
                 @Override
@@ -472,7 +472,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
     @Override
     public void save() throws IOException {
-        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        final FXOMDocument fxomDocument = applicationInstanceEvents.fxomDocument().get();
         assert fxomDocument != null;
         assert fxomDocument.getLocation() != null;
 
@@ -489,7 +489,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
     @Override
     public void saveAs(File target) throws IOException {
-        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        final FXOMDocument fxomDocument = applicationInstanceEvents.fxomDocument().get();
         assert fxomDocument != null;
 
         final Path fxmlPath = Paths.get(target.toURI());
@@ -499,19 +499,28 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
         updateLoadFileTime();
 
-        documentManager.dirty().set(false);
-        documentManager.saved().set(true);
+        applicationInstanceEvents.dirty().set(false);
+        applicationInstanceEvents.saved().set(true);
     }
 
+    /**
+     * {@inheritDoc}
+     * @deprecated use {@link RecentItems#getRecentItems} instead
+     */
+    @Deprecated
     @Override
     public ObservableList<String> getRecentItems() {
         return recentItems.getRecentItems();
     }
 
+    /**
+     * {@inheritDoc}
+     * @deprecated use {@link RecentItems#getRecentItems} instead
+     */
+    @Deprecated
     @Override
     public void cleanupRecentItems() {
-        final List<String> toRemove = getRecentItems().stream().filter(s -> !new File(s).exists()).toList();
-        recentItems.removeRecentItems(toRemove);
+        recentItems.cleanupRecentItems();
     }
 
 }

@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDecoder;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
@@ -64,7 +65,7 @@ import javafx.scene.input.Clipboard;
  * item selected accepted) or into the first accepting accesory of the selected
  * object
  */
-@Prototype
+@ApplicationInstancePrototype
 public final class PasteIntoJob extends BatchSelectionJob {
 
     private static final String I18N_LABEL_ACTION_EDIT_PASTE_INTO_N = "label.action.edit.paste.into.n";

@@ -36,6 +36,7 @@ package com.gluonhq.jfxapps.core.selection.job;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardEncoder;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
@@ -55,7 +56,7 @@ import javafx.scene.input.Clipboard;
  * Store the selected {@link FXOMObject} objects into {@link Clipboard} and
  * remove them from the current {@link FXOMDocument}
  */
-@Prototype
+@ApplicationInstancePrototype
 public final class CutSelectionJob extends InlineSelectionJob {
 
     private final SelectionJobsFactory selectionJobsFactory;

@@ -38,10 +38,10 @@ import java.util.Collections;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
-import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.gesture.AbstractGesture;
+import com.gluonhq.jfxapps.core.api.gesture.DiscardGesture;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.oracle.javafx.scenebuilder.api.control.SbDriver;
@@ -69,16 +69,18 @@ public class GridPaneHandles extends AbstractNodeHandles<GridPane> implements In
     private final ResizeColumnGesture.Factory resizeColumnGestureFactory;
     private final ResizeRowGesture.Factory resizeRowGestureFactory;
 
+    //@formatter:off
     public GridPaneHandles(
             SbDriver driver,
             Workspace workspace,
             ApplicationInstanceEvents documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory,
-    		Selection selection,
-    		SelectAndMoveInGridGesture.Factory selectAndMoveInGridGestureFactory,
-    		ResizeColumnGesture.Factory resizeColumnGestureFactory,
-    		ResizeRowGesture.Factory resizeRowGestureFactory) {
+            Selection selection,
+            SelectAndMoveInGridGesture.Factory selectAndMoveInGridGestureFactory,
+            ResizeColumnGesture.Factory resizeColumnGestureFactory,
+            ResizeRowGesture.Factory resizeRowGestureFactory) {
+        //@formatter:on
         super(driver, workspace, documentManager, discardGestureFactory, resizeGestureFactory,  GridPane.class);
 
         this.selection = selection;

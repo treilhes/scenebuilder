@@ -44,6 +44,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
+import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider.Builder;
 import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
 
@@ -108,5 +110,44 @@ public interface StylesheetProvider {
         }
 
         return classesMap;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private String userAgentStylesheet;
+        private List<String> stylesheets = new ArrayList<>();
+
+        public Builder userAgentStylesheet(String userAgentStylesheet) {
+            this.userAgentStylesheet = userAgentStylesheet;
+            return this;
+        }
+
+        public Builder stylesheets(List<String> stylesheets) {
+            this.stylesheets = stylesheets;
+            return this;
+        }
+
+        public Builder stylesheet(String stylesheet) {
+            this.stylesheets.add(stylesheet);
+            return this;
+        }
+        public StylesheetProvider build() {
+            return new StylesheetProvider() {
+
+                @Override
+                public String getUserAgentStylesheet() {
+                    return userAgentStylesheet;
+                }
+
+                @Override
+                public List<String> getStylesheets() {
+                    return stylesheets;
+                }
+            };
+        }
     }
 }

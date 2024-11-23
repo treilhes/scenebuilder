@@ -40,6 +40,22 @@ import java.util.UUID;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.selection.i18n.I18NSelection;
 import com.gluonhq.jfxapps.core.selection.job.BackupSelectionJob;
+import com.gluonhq.jfxapps.core.selection.job.BringForwardJob;
+import com.gluonhq.jfxapps.core.selection.job.BringToFrontJob;
+import com.gluonhq.jfxapps.core.selection.job.ClearSelectionJob;
+import com.gluonhq.jfxapps.core.selection.job.CutSelectionJob;
+import com.gluonhq.jfxapps.core.selection.job.DeleteObjectJob;
+import com.gluonhq.jfxapps.core.selection.job.DeleteObjectSelectionJob;
+import com.gluonhq.jfxapps.core.selection.job.DeleteSelectionJob;
+import com.gluonhq.jfxapps.core.selection.job.DuplicateSelectionJob;
+import com.gluonhq.jfxapps.core.selection.job.InsertAsAccessoryJob;
+import com.gluonhq.jfxapps.core.selection.job.ModifySelectionJob;
+import com.gluonhq.jfxapps.core.selection.job.PasteIntoJob;
+import com.gluonhq.jfxapps.core.selection.job.SendBackwardJob;
+import com.gluonhq.jfxapps.core.selection.job.SendToBackJob;
+import com.gluonhq.jfxapps.core.selection.job.SetDocumentRootJob;
+import com.gluonhq.jfxapps.core.selection.job.TrimSelectionJob;
+import com.gluonhq.jfxapps.core.selection.job.UpdateSelectionJob;
 
 public class SelectionExtension implements OpenExtension {
     @Override
@@ -62,6 +78,23 @@ public class SelectionExtension implements OpenExtension {
      // @formatter:off
         return Arrays.asList(
                 BackupSelectionJob.class,
+                BringForwardJob.class,
+                BringToFrontJob.class,
+                ClearSelectionJob.class,
+                CutSelectionJob.class,
+                DeleteObjectJob.class,
+                DeleteObjectSelectionJob.class,
+                DeleteSelectionJob.class,
+                DuplicateSelectionJob.class,
+                InsertAsAccessoryJob.class,
+                ModifySelectionJob.class,
+                PasteIntoJob.class,
+                SendBackwardJob.class,
+                SendToBackJob.class,
+                SetDocumentRootJob.class,
+                TrimSelectionJob.class,
+                UpdateSelectionJob.class,
+
                 SelectionJobsFactoryImpl.class,
                 SelectionImpl.class,
                 TargetSelectionImpl.class,

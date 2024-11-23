@@ -38,11 +38,11 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gluonhq.jfxapps.core.api.gesture.Tunable;
+import com.gluonhq.jfxapps.core.api.guide.EditCurveGuide;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
-import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide;
-import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
 
 import javafx.scene.Node;
 

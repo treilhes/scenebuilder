@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,6 +37,7 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceProtot
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
@@ -62,10 +63,11 @@ public class DecreaseRowSpanAction extends AbstractAction {
     private final JobManager jobManager;
 
     public DecreaseRowSpanAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             JobManager jobManager,
             SpanJob.Factory spanJobFactory) {
-        super(extensionFactory);
+        super(i18n, extensionFactory);
         this.jobManager = jobManager;
         this.spanJobFactory = spanJobFactory;
     }

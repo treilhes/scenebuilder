@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,14 +41,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.gesture.Tunable;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.util.MathUtils;
-import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.api.control.curve.AbstractCurveEditor;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.EditCurveGuideController;
 
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Line;
+
 @ApplicationInstancePrototype
 public class LineEditor extends AbstractCurveEditor<Line> {
 
@@ -69,7 +70,7 @@ public class LineEditor extends AbstractCurveEditor<Line> {
         propertyNames.add(endXName);
         propertyNames.add(endYName);
     }
-    
+
     @Override
     public void initialize() {
         originalStartX = sceneGraphObject.getStartX();

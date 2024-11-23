@@ -36,6 +36,7 @@ package com.gluonhq.jfxapps.core.selection.job;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.Size;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
@@ -57,7 +58,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
  * It set the root of a document {@link FXOMDocument} with the provided {@link FXOMObject}<br/>
  * The provided {@link FXOMObject} is cleaned from obsolete properties {@link FXOMProperty}.<br/>
  */
-@Prototype
+@ApplicationInstancePrototype
 public final class SetDocumentRootJob extends BatchSelectionJob {
 
     private FXOMObject newRoot;

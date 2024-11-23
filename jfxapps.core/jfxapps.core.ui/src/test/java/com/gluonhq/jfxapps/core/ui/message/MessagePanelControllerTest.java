@@ -71,7 +71,7 @@ class MessagePanelControllerTest {
 
         Mockito.when(messageLogger.revisionProperty()).thenReturn(revisionProperty);
 
-        var controller = builder.controller(MessagePanelController.class).show();
+        var controller = builder.controller(MessagePanelController.class).show().getController();
         assertNotNull(controller.getRoot());
     }
 

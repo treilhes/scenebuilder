@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,28 +36,31 @@ package com.oracle.javafx.scenebuilder.tools.driver.node;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.dnd.DefaultDropTargetFactory;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetProvider;
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+import com.oracle.javafx.scenebuilder.api.dnd.SbDropTargetFactory;
+
+@ApplicationInstanceSingleton
 public final class NodeDropTargetProvider extends AbstractDropTargetProvider {
 
     private final FXOMObjectMask.Factory maskFactory;
-    private final AccessoryDropTarget.Factory accessoryDropTargetFactory;
-    private final ContainerXYDropTarget.Factory containerXYDropTargetFactory;
+    private final DefaultDropTargetFactory dropTargetFactory;
+    private final SbDropTargetFactory sbDropTargetFactory;
 
     public NodeDropTargetProvider(
             FXOMObjectMask.Factory maskFactory,
-            AccessoryDropTarget.Factory accessoryDropTargetFactory,
-            ContainerXYDropTarget.Factory containerXYDropTargetFactory) {
+            DefaultDropTargetFactory dropTargetFactory,
+            SbDropTargetFactory sbDropTargetFactory) {
         super();
         this.maskFactory = maskFactory;
-        this.accessoryDropTargetFactory = accessoryDropTargetFactory;
-        this.containerXYDropTargetFactory = containerXYDropTargetFactory;
+        this.dropTargetFactory = dropTargetFactory;
+        this.sbDropTargetFactory = sbDropTargetFactory;
     }
 
     @Override
@@ -67,10 +70,10 @@ public final class NodeDropTargetProvider extends AbstractDropTargetProvider {
 
         final DropTarget result;
 
-        final FXOMInstance fxomInstance = (FXOMInstance) fxomObject;
-        final HierarchyMask mask = maskFactory.getMask(fxomObject);
+        final var fxomInstance = (FXOMInstance) fxomObject;
+        final var mask = maskFactory.getMask(fxomObject);
         if (mask.getMainAccessory() != null && mask.getMainAccessory().isFreeChildPositioning()) {
-            result = containerXYDropTargetFactory.getDropTarget(fxomInstance, sceneX, sceneY);
+            result = sbDropTargetFactory.containerXY(fxomInstance, sceneX, sceneY);
         } else {
             // content is a main accessory now
 //            if (mask.isAcceptingAccessory(DesignHierarchyMask.Accessory.CONTENT)) {
@@ -78,7 +81,7 @@ public final class NodeDropTargetProvider extends AbstractDropTargetProvider {
 //            } else {
 //                result = new ContainerZDropTarget(fxomInstance, null);
 //            }
-            result = accessoryDropTargetFactory.getDropTarget(fxomInstance);
+            result = dropTargetFactory.accessory(fxomInstance);
         }
 
         return result;

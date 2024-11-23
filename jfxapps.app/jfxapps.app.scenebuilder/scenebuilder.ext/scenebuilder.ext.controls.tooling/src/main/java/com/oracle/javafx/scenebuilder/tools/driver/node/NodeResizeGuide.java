@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,23 +34,21 @@
 package com.oracle.javafx.scenebuilder.tools.driver.node;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
+import com.gluonhq.jfxapps.core.api.gesture.AbstractGesture;
+import com.gluonhq.jfxapps.core.api.guide.ResizingGuide;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizeGuide;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.ResizingGuideController;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
 
 /**
  *
@@ -59,16 +57,19 @@ import javafx.scene.paint.Color;
 @ApplicationInstancePrototype
 public class NodeResizeGuide extends AbstractResizeGuide<Node> {
 
-    private ResizingGuideController resizingGuideController;
+    private ResizingGuide resizingGuide;
     private FXOMObjectMask.Factory maskFactory;
 
+    //@formatter:off
     public NodeResizeGuide(
+            Workspace contentPanelController,
+            ApplicationInstanceEvents documentManager,
             FXOMObjectMask.Factory maskFactory,
-            Content contentPanelController,
-            ApplicationInstanceEvents documentManager) {
+            ResizingGuide resizingGuideController) {
+        //@formatter:on
         super(contentPanelController, documentManager, Node.class);
         this.maskFactory = maskFactory;
-
+        this.resizingGuide = resizingGuideController;
     }
 
     @Override
@@ -131,20 +132,18 @@ public class NodeResizeGuide extends AbstractResizeGuide<Node> {
             final double candidateHeight = candidateBounds.getHeight();
             final Bounds newLayoutBounds = new BoundingBox(0, 0, Math.round(candidateWidth), Math.round(candidateHeight));
 
-            resizingGuideController.match(newLayoutBounds);
+            resizingGuide.match(newLayoutBounds);
         }
     }
 
     private void setupResizingGuideController(ResizeGesture resizeGesture) {
-        resizingGuideController = new ResizingGuideController(
-                //resizeGesture.isMatchWidth(), resizeGesture.isMatchHeight(), getContentPanelController().getGuidesColor());
-                resizeGesture.isMatchWidth(), resizeGesture.isMatchHeight(), Color.PINK);
+        resizingGuide.initialize(resizeGesture.isMatchWidth(), resizeGesture.isMatchHeight());
 
         addToResizingGuideController(getFxomObject().getFxomDocument().getFxomRoot());
 
         getRootNode().getChildren().clear();
 
-        final Group guideGroup = resizingGuideController.getGuideGroup();
+        final Group guideGroup = resizingGuide.getGuideGroup();
         assert guideGroup.isMouseTransparent();
 
         getRootNode().getChildren().add(guideGroup);
@@ -157,12 +156,12 @@ public class NodeResizeGuide extends AbstractResizeGuide<Node> {
         if (fxomObject != getFxomObject()) {
             if (fxomObject.getSceneGraphObject().isInstanceOf(Node.class)) {
                 final Node sceneGraphNode = fxomObject.getSceneGraphObject().getAs(Node.class);
-                resizingGuideController.addSampleBounds(sceneGraphNode);
+                resizingGuide.addSampleBounds(sceneGraphNode);
             }
 
-            final HierarchyMask m = maskFactory.getMask(fxomObject);
+            final var m = maskFactory.getMask(fxomObject);
             if (m.getMainAccessory() != null) {
-                for (FXOMObject child:m.getAccessories(m.getMainAccessory(), false)) {
+                for (var child:m.getAccessories(m.getMainAccessory(), false)) {
                     addToResizingGuideController(child);
                 }
             }

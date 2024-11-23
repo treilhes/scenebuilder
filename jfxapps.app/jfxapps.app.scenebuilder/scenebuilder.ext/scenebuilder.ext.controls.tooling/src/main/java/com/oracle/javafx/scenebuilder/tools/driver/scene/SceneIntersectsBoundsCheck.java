@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,9 +35,7 @@ package com.oracle.javafx.scenebuilder.tools.driver.scene;
 
 import java.util.List;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -47,8 +45,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+@ApplicationInstanceSingleton
 public class SceneIntersectsBoundsCheck extends AbstractIntersectsBoundsCheck {
 
     private final FXOMObjectMask.Factory maskFactory;
@@ -61,16 +58,16 @@ public class SceneIntersectsBoundsCheck extends AbstractIntersectsBoundsCheck {
     @Override
     public boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds) {
         assert fxomObject.getSceneGraphObject().isInstanceOf(Scene.class);
-        HierarchyMask designHierarchyMask = maskFactory.getMask(fxomObject);
+        var designHierarchyMask = maskFactory.getMask(fxomObject);
 
-        List<FXOMObject> children = designHierarchyMask.getAccessories(designHierarchyMask.getMainAccessory(), false);
+        var children = designHierarchyMask.getAccessories(designHierarchyMask.getMainAccessory(), false);
         assert !children.isEmpty();
-        FXOMObject root = children.get(0);
+        var root = children.get(0);
 
         assert root != null;
         assert root.getSceneGraphObject().isInstanceOf(Node.class);
-        Node rootNode = root.getSceneGraphObject().getAs(Node.class);
-        final Bounds rootNodeBounds = rootNode.localToScene(rootNode.getLayoutBounds(), true /* rootScene */);
+        final var rootNode = root.getSceneGraphObject().getAs(Node.class);
+        final var rootNodeBounds = rootNode.localToScene(rootNode.getLayoutBounds(), true /* rootScene */);
         return rootNodeBounds.intersects(bounds);
     }
 

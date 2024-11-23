@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,16 +39,16 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -66,7 +66,7 @@ public final class DeleteGridSelectionJob extends BatchSelectionJob {
 
     private final DeleteColumnJob.Factory deleteColumnJobFactory;
     private final DeleteRowJob.Factory deleteRowJobFactory;
-    private final DSelectionGroupFactory.Factory objectSelectionGroupFactory;
+    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
 
     private FXOMObject targetGridPane;
 
@@ -77,7 +77,7 @@ public final class DeleteGridSelectionJob extends BatchSelectionJob {
             Selection selection,
             DeleteColumnJob.Factory deleteColumnJobFactory,
             DeleteRowJob.Factory deleteRowJobFactory,
-            DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
+            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
      // @formatter:on
         super(extensionFactory, documentManager, selection);
         this.deleteColumnJobFactory = deleteColumnJobFactory;
@@ -89,9 +89,9 @@ public final class DeleteGridSelectionJob extends BatchSelectionJob {
     }
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
+    protected List<Job> makeSubJobs() {
 
-        final List<AbstractJob> result = new ArrayList<>();
+        final List<Job> result = new ArrayList<>();
         final Selection selection = getSelection();
         assert selection.getGroup() instanceof GridSelectionGroup;
 
@@ -117,18 +117,17 @@ public final class DeleteGridSelectionJob extends BatchSelectionJob {
     }
 
     @Override
-    protected AbstractSelectionGroup getNewSelectionGroup() {
+    protected SelectionGroup getNewSelectionGroup() {
         // Selection goes to the GridPane
         final Set<FXOMObject> newObjects = new HashSet<>();
         newObjects.add(targetGridPane);
         return objectSelectionGroupFactory.getGroup(newObjects, targetGridPane, null);
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     @Lazy
     public final static class Factory extends JobFactory<DeleteGridSelectionJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

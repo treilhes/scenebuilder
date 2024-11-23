@@ -32,7 +32,7 @@
  */
 package com.gluonhq.jfxapps.core.api.ui.controller.misc;
 
-import com.gluonhq.jfxapps.core.api.CardinalPoint;
+import com.gluonhq.jfxapps.core.api.gesture.CardinalPoint;
 
 import javafx.scene.Node;
 

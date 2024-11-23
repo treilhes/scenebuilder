@@ -49,7 +49,7 @@ open module jfxapps.core.api {
 
 
     exports com.gluonhq.jfxapps.core.api.content.decoration;
-    exports com.gluonhq.jfxapps.core.api.content.gesture;
+    exports com.gluonhq.jfxapps.core.api.gesture;
     exports com.gluonhq.jfxapps.core.api.content.mode;
     exports com.gluonhq.jfxapps.core.api.content.mode.annotation;
     exports com.gluonhq.jfxapps.core.api.css;

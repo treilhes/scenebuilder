@@ -33,17 +33,15 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.guide.GuideActionFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.ui.controller.ContentPanelController;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.toggle.guides.visibility", descriptionKey = "action.description.toggle.guides.visibility")
@@ -58,16 +56,18 @@ public class ToggleGuidesVisibilityAction extends AbstractAction {
 
     public final static String MENU_ID = "toggleGuidesMenu"; // NOCHECK
 
-    private final ContentPanelController contentPanelController;
+    private final Action disableAction;
+    private final Action enableAction;
 
     //@formatter:off
     public ToggleGuidesVisibilityAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            @Autowired @Lazy ContentPanelController contentPanelController) {
+            GuideActionFactory guideActionFactory) {
         //@formatter:on
         super(i18n, extensionFactory);
-        this.contentPanelController = contentPanelController;
+        this.disableAction = guideActionFactory.disable();
+        this.enableAction = guideActionFactory.enable();
     }
 
     @Override
@@ -77,13 +77,17 @@ public class ToggleGuidesVisibilityAction extends AbstractAction {
 
     @Override
     public ActionStatus doPerform() {
-        contentPanelController.setGuidesVisible(!contentPanelController.isGuidesVisible());
-        return ActionStatus.DONE;
+        if (disableAction.canPerform()) {
+            return disableAction.perform();
+        } else if (enableAction.canPerform()) {
+            return enableAction.perform();
+        }
+        return ActionStatus.FAILED;
     }
 
 
     public String getToggleTitle() {
-        if (contentPanelController.isGuidesVisible()) {
+        if (disableAction.canPerform()) {
             return "menu.title.disable.guides";
         } else {
             return "menu.title.enable.guides";

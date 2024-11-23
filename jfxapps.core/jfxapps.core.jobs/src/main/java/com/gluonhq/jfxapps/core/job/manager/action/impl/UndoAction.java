@@ -63,20 +63,6 @@ public class UndoAction extends AbstractAction {
     }
 
     /**
-     * Returns null or the description of the action to be undone.
-     *
-     * @return null or the description of the action to be undone.
-     */
-    public String getUndoDescription() {
-        final StringBuilder result = new StringBuilder();
-        result.append(getI18n().getStringOrDefault("menu.title.undo", "menu.title.undo"));
-        if (canPerform()) {
-            result.append(" "); //NOI18N
-            result.append(jobManager.getUndoDescription());
-        }
-        return result.toString();
-    }
-    /**
      * Returns true if the undo action is permitted (ie there is something to be
      * undone).
      *

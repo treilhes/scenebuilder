@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,24 +34,21 @@
 
 package com.oracle.javafx.scenebuilder.tools.driver.imageview;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.dnd.AbstractDropTarget;
 import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.dnd.DropTargetFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.util.DesignImage;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.ImagePropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 import javafx.scene.image.ImageView;
 
@@ -61,27 +58,24 @@ import javafx.scene.image.ImageView;
 @ApplicationInstancePrototype
 public final class ImageViewDropTarget extends AbstractDropTarget {
 
-    private final IMetadata metadata;
-    private final com.gluonhq.jfxapps.core.api.job.base.Factory batchJobFactory;
-    private final BackupSelectionJob.Factory backupSelectionJobFactory;
+    private final SbMetadata metadata;
+    private final BatchJob.Factory batchJobFactory;
+    private final SelectionJobsFactory selectionJobsFactory;
     private final FxomJobsFactory fxomJobsFactory;
-    private final UpdateSelectionJob.Factory updateSelectionJobFactory;
 
     private FXOMInstance targetImageView;
 
     // @formatter:off
     protected ImageViewDropTarget(
-            IMetadata metadata,
+            SbMetadata metadata,
             BatchJob.Factory batchJobFactory,
-            BackupSelectionJob.Factory backupSelectionJobFactory,
-            FxomJobsFactory fxomJobsFactory,
-            UpdateSelectionJob.Factory updateSelectionJobFactory) {
+            SelectionJobsFactory selectionJobsFactory,
+            FxomJobsFactory fxomJobsFactory) {
      // @formatter:on
         this.metadata = metadata;
         this.batchJobFactory = batchJobFactory;
-        this.backupSelectionJobFactory = backupSelectionJobFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
         this.fxomJobsFactory = fxomJobsFactory;
-        this.updateSelectionJobFactory = updateSelectionJobFactory;
     }
 
     protected void setDropTargetParameters(FXOMObject targetImageView) {
@@ -103,28 +97,28 @@ public final class ImageViewDropTarget extends AbstractDropTarget {
     @Override
     public boolean acceptDragSource(DragSource dragSource) {
         assert dragSource != null;
-        return dragSource.isSingleImageViewOnly() && dragSource instanceof ExternalDragSource;
+        return dragSource.isSingle() && dragSource.isSingleType(ImageView.class) && dragSource instanceof ExternalDragSource;
     }
 
     @Override
     public AbstractJob makeDropJob(DragSource dragSource) {
 
         assert dragSource != null;
-        assert dragSource.isSingleImageViewOnly(); // (1)
+        assert dragSource.isSingle() && dragSource.isSingleType(ImageView.class); // (1)
 
-        final FXOMObject draggedObject = dragSource.getDraggedObjects().get(0);
+        final var draggedObject = dragSource.getDraggedObjects().get(0);
         assert draggedObject instanceof FXOMInstance; // because (1)
-        final FXOMInstance draggedInstance = (FXOMInstance) draggedObject;
-        final PropertyName imageName = new PropertyName("image"); // NOCHECK
-        final ValuePropertyMetadata vpm = metadata.queryValueProperty(draggedInstance, imageName);
+        final var draggedInstance = (FXOMInstance) draggedObject;
+        final var imageName = new PropertyName("image"); // NOCHECK
+        final var vpm = metadata.queryValueProperty(draggedInstance, imageName);
         assert vpm instanceof ImagePropertyMetadata;
-        final ImagePropertyMetadata imageVPM = (ImagePropertyMetadata) vpm;
-        final DesignImage image = imageVPM.getValue(draggedInstance);
+        final var imageVPM = (ImagePropertyMetadata<?>) vpm;
+        final var image = imageVPM.getValue(draggedInstance);
 
         final BatchJob result = batchJobFactory.getJob();
-        result.addSubJob(backupSelectionJobFactory.getJob());
-        result.addSubJob(modifyObjectJobFactory.getJob(targetImageView, imageVPM, image));
-        result.addSubJob(updateSelectionJobFactory.getJob(targetImageView));
+        result.addSubJob(selectionJobsFactory.backupSelection());
+        result.addSubJob(fxomJobsFactory.modifyObject(targetImageView, imageVPM, image));
+        result.addSubJob(selectionJobsFactory.updateSelection(targetImageView));
 
         return result;
     }
@@ -139,11 +133,9 @@ public final class ImageViewDropTarget extends AbstractDropTarget {
         return false;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
+    @ApplicationInstanceSingleton
     public static class Factory extends DropTargetFactory<ImageViewDropTarget> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

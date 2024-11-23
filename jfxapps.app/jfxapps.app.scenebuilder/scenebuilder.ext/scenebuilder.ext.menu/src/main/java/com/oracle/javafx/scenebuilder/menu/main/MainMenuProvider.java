@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,15 +33,14 @@
  */
 package com.oracle.javafx.scenebuilder.menu.main;
 
-import static com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest.AsFirstChild;
-import static com.oracle.javafx.scenebuilder.api.ui.menu.PositionRequest.AsNextSibling;
+import static com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest.AsFirstChild;
+import static com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest.AsNextSibling;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
@@ -68,15 +67,15 @@ public class MainMenuProvider implements MenuProvider {
     @Override
     public List<MenuAttachment> menus() {
         return Arrays.asList(
-                newMenu(null, AsFirstChild, DefaultMenu.FILE_MENU_ID, "menu.title.file"),
-                newMenu(DefaultMenu.FILE_MENU_ID, AsNextSibling, DefaultMenu.EDIT_MENU_ID, "menu.title.edit"),
-                newMenu(DefaultMenu.EDIT_MENU_ID, AsNextSibling, DefaultMenu.VIEW_MENU_ID, "menu.title.view"),
+                newMenu(null, AsFirstChild, DefaultMenu.File.ID, "menu.title.file"),
+                newMenu(DefaultMenu.File.ID, AsNextSibling, DefaultMenu.Edit.ID, "menu.title.edit"),
+                newMenu(DefaultMenu.Edit.ID, AsNextSibling, DefaultMenu.View.ID, "menu.title.view"),
                 //newMenu(DefaultMenu.VIEW_MENU_ID, AsNextSibling, DefaultMenu.INSERT_MENU_ID, "menu.title.insert"),
-                newMenu(DefaultMenu.VIEW_MENU_ID, AsNextSibling, DefaultMenu.MODIFY_MENU_ID, "menu.title.modify"),
-                newMenu(DefaultMenu.MODIFY_MENU_ID, AsNextSibling, DefaultMenu.ARRANGE_MENU_ID, "menu.title.arrange"),
-                newMenu(DefaultMenu.ARRANGE_MENU_ID, AsNextSibling, DefaultMenu.PREVIEW_MENU_ID, "menu.title.preview"),
+                newMenu(DefaultMenu.View.ID, AsNextSibling, DefaultMenu.Modify.ID, "menu.title.modify"),
+                newMenu(DefaultMenu.Modify.ID, AsNextSibling, DefaultMenu.Arrange.ID, "menu.title.arrange"),
+                newMenu(DefaultMenu.Arrange.ID, AsNextSibling, DefaultMenu.Preview.ID, "menu.title.preview"),
                 //newMenu(DefaultMenu.PREVIEW_MENU_ID, AsNextSibling, DefaultMenu.WINDOW_MENU_ID, "menu.title.window"),
-                newMenu(DefaultMenu.WINDOW_MENU_ID, AsNextSibling, DefaultMenu.HELP_MENU_ID, "menu.title.help")
+                newMenu(DefaultMenu.Window.ID, AsNextSibling, DefaultMenu.Help.ID, "menu.title.help")
                 );
     }
 

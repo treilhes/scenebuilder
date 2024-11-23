@@ -36,6 +36,7 @@ package com.gluonhq.jfxapps.core.selection.job;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
@@ -55,7 +56,7 @@ import javafx.scene.chart.Axis;
 /**
  *
  */
-@Prototype
+@ApplicationInstancePrototype
 //FIXME This class prevents the deletion of Axis and Scene from their parent object
 public final class DeleteObjectJob extends InlineDocumentJob {
 

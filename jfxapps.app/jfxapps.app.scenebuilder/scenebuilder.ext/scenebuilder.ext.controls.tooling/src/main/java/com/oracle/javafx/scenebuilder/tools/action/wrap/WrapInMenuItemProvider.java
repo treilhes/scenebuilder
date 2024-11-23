@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.tools.action.wrap;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
@@ -78,10 +78,10 @@ public class WrapInMenuItemProvider implements MenuItemProvider, ContextMenuItem
     @Override
     public List<ContextMenuItemAttachment> contextMenuItems() {
         Menu menu = menuBuilder.menu().id(MENU_ID).title(MENU_LABEL).build();
-        ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(menu, DSelectionGroupFactory.class, SendBackwardAction.MENU_ID, PositionRequest.AsNextSibling);
+        ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(menu, ObjectSelectionGroup.class, SendBackwardAction.MENU_ID, PositionRequest.AsNextSibling);
         return List.of(
                 attachment,
-                ContextMenuItemAttachment.create(menuBuilder.separator().build(), DSelectionGroupFactory.class, MENU_ID, PositionRequest.AsPreviousSibling)
+                ContextMenuItemAttachment.create(menuBuilder.separator().build(), ObjectSelectionGroup.class, MENU_ID, PositionRequest.AsPreviousSibling)
                 );
     }
 

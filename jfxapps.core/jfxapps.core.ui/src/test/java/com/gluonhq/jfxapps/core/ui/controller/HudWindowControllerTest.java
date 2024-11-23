@@ -56,15 +56,15 @@ class HudWindowControllerTest {
 
     @Test
     void should_load_the_hud_fxml(StageBuilder stageBuilder) {
-        var controller = stageBuilder.controller(HudWindowController.class).show();
-        assertNotNull(controller.getRoot());
+        var testStage = stageBuilder.controller(HudWindowController.class).show();
+        assertNotNull(testStage.getController().getRoot());
     }
 
     @Test
     void should_create_3_rows_with_only_2_lines_with_values(StageBuilder stageBuilder, FxRobot robot) {
         AtomicReference<Button> b = new AtomicReference<>();
 
-        HudWindowController hud = stageBuilder.controller(HudWindowController.class)
+        var testStage = stageBuilder.controller(HudWindowController.class)
                 .size(800, 600)
                 .css("""
                     #gridPane {
@@ -84,6 +84,8 @@ class HudWindowControllerTest {
 
         final String name2 = "SomeName2";
         final String value2 = "DLKJDK3";
+
+        HudWindowController hud = testStage.getController();
 
         robot.interact(() -> {
             hud.setRowCount(3);

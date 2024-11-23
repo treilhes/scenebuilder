@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,14 +37,13 @@ package com.oracle.javafx.scenebuilder.tools.job.togglegroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -55,9 +54,8 @@ import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.util.JavaLanguage;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.ToggleGroupPropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 /**
  * This job allocate a toggle group id to an {@link FXOMObject}
@@ -65,28 +63,20 @@ import com.gluonhq.jfxapps.core.metadata.property.value.ToggleGroupPropertyMetad
 @ApplicationInstancePrototype
 public final class ModifyToggleGroupJob extends BatchDocumentJob {
 
-    private static final PropertyName toggleGroupName
-            = new PropertyName("toggleGroup"); //NOCHECK
+    private static final PropertyName toggleGroupName = new PropertyName("toggleGroup"); // NOCHECK
 
     private FXOMObject targetObject;
     private String toggleGroupId;
 
-    private final IMetadata metadata;
+    private final SbMetadata metadata;
 
-    private final RemovePropertyJob.Factory removePropertyJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
 
-    private final AddPropertyJob.Factory addPropertyJobFactory;
-
-    public ModifyToggleGroupJob(
-            JobExtensionFactory extensionFactory,
-            ApplicationInstanceEvents documentManager,
-            IMetadata metadata,
-            RemovePropertyJob.Factory removePropertyJobFactory,
-            AddPropertyJob.Factory addPropertyJobFactory) {
+    public ModifyToggleGroupJob(JobExtensionFactory extensionFactory, ApplicationInstanceEvents documentManager,
+            SbMetadata metadata, FxomJobsFactory fxomJobsFactory) {
         super(extensionFactory, documentManager);
         this.metadata = metadata;
-        this.removePropertyJobFactory = removePropertyJobFactory;
-        this.addPropertyJobFactory = addPropertyJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
     }
 
     protected void setJobParameters(FXOMObject fxomObject, String toggleGroupId) {
@@ -102,49 +92,40 @@ public final class ModifyToggleGroupJob extends BatchDocumentJob {
      */
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
-        final List<AbstractJob> result = new ArrayList<>();
+    protected List<Job> makeSubJobs() {
+        final List<Job> result = new ArrayList<>();
 
-        if (targetObject instanceof FXOMInstance) {
-            final FXOMInstance targetInstance = (FXOMInstance) targetObject;
-            final ValuePropertyMetadata vpm
-                    = metadata.queryValueProperty(targetInstance, toggleGroupName);
+        if (targetObject instanceof FXOMInstance targetInstance) {
+            final var vpm = metadata.queryValueProperty(targetInstance, toggleGroupName);
             if (vpm instanceof ToggleGroupPropertyMetadata) {
                 /*
-                 * Case #0 : toggleGroupId is null
-                 *      => removes toggleGroup FXOMProperty if needed
+                 * Case #0 : toggleGroupId is null => removes toggleGroup FXOMProperty if needed
                  *
-                 * Case #1 : targetObject.toggleGroup is undefined
-                 *      => adds FXOMPropertyT for toggleGroup="$toggleGroupId"      //NOCHECK
+                 * Case #1 : targetObject.toggleGroup is undefined => adds FXOMPropertyT for
+                 * toggleGroup="$toggleGroupId" //NOCHECK
                  *
-                 * Case #2 : targetObject defines the ToggleGroup instance
-                 *      => removes toggleGroup FXOMPropertyC
-                 *      => adds FXOMPropertyT for toggleGroup="$toggleGroupId"      //NOCHECK
+                 * Case #2 : targetObject defines the ToggleGroup instance => removes
+                 * toggleGroup FXOMPropertyC => adds FXOMPropertyT for
+                 * toggleGroup="$toggleGroupId" //NOCHECK
                  *
-                 * Case #3 : targetObject refers to a ToggleGroup instance
-                 *      => removes toggleGroup FXOMPropertyT
-                 *      => adds FXOMPropertyT for toggleGroup="$toggleGroupId"      //NOCHECK
+                 * Case #3 : targetObject refers to a ToggleGroup instance => removes
+                 * toggleGroup FXOMPropertyT => adds FXOMPropertyT for
+                 * toggleGroup="$toggleGroupId" //NOCHECK
                  */
 
-                final FXOMDocument fxomDocument
-                        = targetInstance.getFxomDocument();
-                final FXOMProperty fxomProperty
-                        = targetInstance.getProperties().get(toggleGroupName);
+                final FXOMDocument fxomDocument = targetInstance.getFxomDocument();
+                final FXOMProperty fxomProperty = targetInstance.getProperties().get(toggleGroupName);
 
                 if (fxomProperty != null) { // Case #0 #2 or #3
-                    final AbstractJob removePropertyJob
-                            = removePropertyJobFactory.getJob(fxomProperty);
+                    final var removePropertyJob = fxomJobsFactory.removeProperty(fxomProperty);
                     result.add(removePropertyJob);
                 }
 
                 // Case #1, #2 and #3
                 if (toggleGroupId != null) {
-                    final PrefixedValue pv
-                            = new PrefixedValue(PrefixedValue.Type.EXPRESSION, toggleGroupId);
-                    final FXOMPropertyT newProperty
-                            = new FXOMPropertyT(fxomDocument, toggleGroupName, pv.toString());
-                    final AbstractJob addPropertyJob
-                            = addPropertyJobFactory.getJob(newProperty, targetInstance, -1);
+                    final var pv = new PrefixedValue(PrefixedValue.Type.EXPRESSION, toggleGroupId);
+                    final var newProperty = new FXOMPropertyT(fxomDocument, toggleGroupName, pv.toString());
+                    final var addPropertyJob = fxomJobsFactory.addProperty(newProperty, targetInstance, -1);
                     result.add(addPropertyJob);
                 }
             }
@@ -158,18 +139,16 @@ public final class ModifyToggleGroupJob extends BatchDocumentJob {
         return getClass().getSimpleName(); // Should not reach the user
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
+    @ApplicationInstanceSingleton
     public final static class Factory extends JobFactory<ModifyToggleGroupJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 
         /**
          * Create an {@link ModifyToggleGroupJob} job.
          *
-         * @param fxomObject the fxom object
+         * @param fxomObject    the fxom object
          * @param toggleGroupId the toggle group id to allocate.
          * @return the job to execute
          */

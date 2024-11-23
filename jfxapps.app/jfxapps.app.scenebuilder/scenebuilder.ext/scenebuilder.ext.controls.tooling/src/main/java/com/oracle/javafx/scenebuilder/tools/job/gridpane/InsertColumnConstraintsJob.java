@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,10 +38,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
@@ -49,7 +48,6 @@ import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.value.list.ColumnConstraintsListPropertyMetadata;
-import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
 
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -61,12 +59,12 @@ import javafx.scene.layout.GridPane;
 @ApplicationInstancePrototype
 public final class InsertColumnConstraintsJob extends AbstractJob {
 
-    private static final ColumnConstraintsListPropertyMetadata columnContraintsMeta =
-            new ColumnConstraintsListPropertyMetadata.Builder()
+    private static final ColumnConstraintsListPropertyMetadata<?> columnContraintsMeta =
+            new ColumnConstraintsListPropertyMetadata.Builder<>()
                 .name(new PropertyName("columnConstraints")) //NOCHECK
                 .readWrite(true)
                 .defaultValue(Collections.emptyList())
-                .inspectorPath(InspectorPath.UNUSED).build();
+                .build();
 
     private FXOMInstance gridPaneObject;
     private int columnIndex;
@@ -154,10 +152,9 @@ public final class InsertColumnConstraintsJob extends AbstractJob {
         return result;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public final static class Factory extends JobFactory<InsertColumnConstraintsJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

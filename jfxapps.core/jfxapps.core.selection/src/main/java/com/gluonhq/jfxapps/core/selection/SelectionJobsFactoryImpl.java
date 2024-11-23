@@ -33,6 +33,8 @@
  */
 package com.gluonhq.jfxapps.core.selection;
 
+import java.util.List;
+
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
@@ -68,8 +70,11 @@ import com.gluonhq.jfxapps.core.selection.job.UpdateSelectionJob;
 @ApplicationInstanceSingleton
 public class SelectionJobsFactoryImpl extends JobFactory<Job> implements SelectionJobsFactory {
 
-    protected SelectionJobsFactoryImpl(JfxAppContext context) {
+    private ObjectSelectionGroup.Factory objectSelectionGroupFactory;
+
+    protected SelectionJobsFactoryImpl(JfxAppContext context, ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
         super(context);
+        this.objectSelectionGroupFactory = objectSelectionGroupFactory;
     }
 
     /**
@@ -101,7 +106,7 @@ public class SelectionJobsFactoryImpl extends JobFactory<Job> implements Selecti
      */
     @Override
     public Job clearSelection() {
-        return create(ClearSelectionJob.class, j -> j.setJobParameters());
+        return create(ClearSelectionJob.class);
     }
 
     /**
@@ -282,6 +287,18 @@ public class SelectionJobsFactoryImpl extends JobFactory<Job> implements Selecti
      */
     @Override
     public Job updateSelection(SelectionGroup group) {
+        return create(UpdateSelectionJob.class, j -> j.setJobParameters(group));
+    }
+
+    @Override
+    public Job updateSelection(FXOMObject fxomObject) {
+        var group = objectSelectionGroupFactory.getGroup(fxomObject);
+        return create(UpdateSelectionJob.class, j -> j.setJobParameters(group));
+    }
+
+    @Override
+    public Job updateSelection(List<FXOMObject> fxomObjects) {
+        var group = objectSelectionGroupFactory.getGroup(fxomObjects);
         return create(UpdateSelectionJob.class, j -> j.setJobParameters(group));
     }
 

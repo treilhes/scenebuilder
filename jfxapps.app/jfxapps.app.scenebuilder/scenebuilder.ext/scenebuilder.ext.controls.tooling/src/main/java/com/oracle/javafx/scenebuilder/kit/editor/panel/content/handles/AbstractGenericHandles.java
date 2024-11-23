@@ -35,9 +35,9 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.CardinalPoint;
-import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
-import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.gesture.AbstractGesture;
+import com.gluonhq.jfxapps.core.api.gesture.CardinalPoint;
+import com.gluonhq.jfxapps.core.api.gesture.DiscardGesture;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;

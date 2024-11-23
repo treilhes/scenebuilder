@@ -84,7 +84,7 @@ class MessageTest {
                 .setup(StageType.Fill)
                 .size(800, 30)
                 .css(CSS_THEME_PRESET)
-                .show();
+                .show().getController();
 
         assertNotNull(controller.getRoot());
     }
@@ -97,7 +97,7 @@ class MessageTest {
                 .setup(StageType.Fill)
                 .size(800, 30)
                 .css(CSS_THEME_PRESET)
-                .show();
+                .show().getController();
 
         robot.interact(() -> {
             messageLogger.logInfoMessage("sssssssssssssssssssssssss");

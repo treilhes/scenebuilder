@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,6 +38,9 @@ import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.core.guides.controller.EditCurveGuideController;
+import com.gluonhq.jfxapps.core.guides.controller.MovingGuideController;
+import com.gluonhq.jfxapps.core.guides.controller.ResizingGuideController;
 import com.gluonhq.jfxapps.core.guides.i18n.I18NGuides;
 
 public class GuidesExtension implements OpenExtension {
@@ -61,7 +64,10 @@ public class GuidesExtension implements OpenExtension {
     public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
-                I18NGuides.class
+                EditCurveGuideController.class,
+                I18NGuides.class,
+                MovingGuideController.class,
+                ResizingGuideController.class
             );
      // @formatter:on
     }

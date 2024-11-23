@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,18 +36,17 @@ package com.oracle.javafx.scenebuilder.tools.driver.gridpane;
 
 import java.util.List;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.dnd.AbstractDropTarget;
 import com.gluonhq.jfxapps.core.api.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.dnd.DropTargetFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
@@ -75,14 +74,12 @@ public final class GridPaneDropTarget extends AbstractDropTarget {
     }
 
     private final FXOMObjectMask.Factory designMaskFactory;
-    private final com.gluonhq.jfxapps.core.api.job.base.Factory batchJobFactory;
-    private final ClearSelectionJob.Factory clearSelectionJobFactory;
-    private final RemoveObjectJob.Factory removeObjectJobFactory;
+    private final BatchJob.Factory batchJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
+    private final SelectionJobsFactory selectionJobsFactory;
     private final InsertColumnJob.Factory insertColumnJobFactory;
     private final InsertRowJob.Factory insertRowJobFactory;
-    private final InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory;
     private final MoveCellContentJob.Factory moveCellContentJobFactory;
-    private final UpdateSelectionJob.Factory updateSelectionJobFactory;
 
     private FXOMObject targetGridPane;
     private int targetColumnIndex;
@@ -94,23 +91,19 @@ public final class GridPaneDropTarget extends AbstractDropTarget {
     protected GridPaneDropTarget(
             FXOMObjectMask.Factory designMaskFactory,
             BatchJob.Factory batchJobFactory,
-            ClearSelectionJob.Factory clearSelectionJobFactory,
-            RemoveObjectJob.Factory removeObjectJobFactory,
+            FxomJobsFactory fxomJobsFactory,
+            SelectionJobsFactory selectionJobsFactory,
             InsertColumnJob.Factory insertColumnJobFactory,
             InsertRowJob.Factory insertRowJobFactory,
-            InsertAsSubComponentJob.Factory insertAsSubComponentJobFactory,
-            MoveCellContentJob.Factory moveCellContentJobFactory,
-            UpdateSelectionJob.Factory updateSelectionJobFactory) {
+            MoveCellContentJob.Factory moveCellContentJobFactory) {
      // @formatter:on
         this.designMaskFactory = designMaskFactory;
         this.batchJobFactory = batchJobFactory;
-        this.clearSelectionJobFactory = clearSelectionJobFactory;
-        this.removeObjectJobFactory = removeObjectJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
         this.insertColumnJobFactory = insertColumnJobFactory;
         this.insertRowJobFactory = insertRowJobFactory;
-        this.insertAsSubComponentJobFactory = insertAsSubComponentJobFactory;
         this.moveCellContentJobFactory = moveCellContentJobFactory;
-        this.updateSelectionJobFactory = updateSelectionJobFactory;
     }
 
     protected void setDropTargetParameters(FXOMObject targetGridPane, int columnIndex, int rowIndex,
@@ -159,7 +152,7 @@ public final class GridPaneDropTarget extends AbstractDropTarget {
         if (dragSource.getDraggedObjects().isEmpty()) {
             result = false;
         } else {
-            final HierarchyMask m = designMaskFactory.getMask(targetGridPane);
+            final var m = designMaskFactory.getMask(targetGridPane);
             if (m.isAcceptingSubComponent(dragSource.getDraggedObjects())) {
                 final FXOMObject draggedObject0 = dragSource.getDraggedObjects().get(0);
                 assert draggedObject0.getSceneGraphObject().isInstanceOf(Node.class);
@@ -190,11 +183,12 @@ public final class GridPaneDropTarget extends AbstractDropTarget {
         assert acceptDragSource(dragSource); // (1)
 
         final boolean shouldRefreshSceneGraph = true;
-        final BatchJob result = batchJobFactory.getJob(dragSource.makeDropJobDescription(), shouldRefreshSceneGraph);
+        final BatchJob result = batchJobFactory.getJob(shouldRefreshSceneGraph);
+        result.setDescription(dragSource.makeDropJobDescription());
 
-        final List<FXOMObject> draggedObjects = dragSource.getDraggedObjects();
-        final FXOMObject hitObject = dragSource.getHitObject();
-        final FXOMObject currentParent = hitObject.getParentObject();
+        final List<FXOMObject> draggedObjects = (List<FXOMObject>) dragSource.getDraggedObjects();
+        final var hitObject = dragSource.getHitObject();
+        final var currentParent = hitObject.getParentObject();
         final boolean reparenting = (currentParent != targetGridPane);
         final GridPane gridPane = targetGridPane.getSceneGraphObject().getAs(GridPane.class);
 
@@ -222,12 +216,12 @@ public final class GridPaneDropTarget extends AbstractDropTarget {
         if (reparenting) {
 
             // Step #2
-            result.addSubJob(clearSelectionJobFactory.getJob());
+            result.addSubJob(selectionJobsFactory.clearSelection());
 
             // Step #3
             if (currentParent != null) {
                 for (FXOMObject draggedObject : draggedObjects) {
-                    result.addSubJob(removeObjectJobFactory.getJob(draggedObject));
+                    result.addSubJob(fxomJobsFactory.removeObject(draggedObject));
                 }
             }
         }
@@ -289,14 +283,14 @@ public final class GridPaneDropTarget extends AbstractDropTarget {
         if (reparenting) {
 
             // Step #5
-            for (FXOMObject draggedObject : draggedObjects) {
-                final AbstractJob j = insertAsSubComponentJobFactory.getJob(draggedObject, targetGridPane, -1);
+            for (var draggedObject : draggedObjects) {
+                final var j = selectionJobsFactory.insertAsSubComponent(draggedObject, targetGridPane, -1);
                 result.addSubJob(j);
             }
         }
 
         // Step #6
-        for (FXOMObject draggedObject : draggedObjects) {
+        for (var draggedObject : draggedObjects) {
             assert draggedObject instanceof FXOMInstance; // Because (1)
             result.addSubJob(moveCellContentJobFactory.getJob((FXOMInstance) draggedObject, columnDelta, rowDelta));
         }
@@ -304,7 +298,7 @@ public final class GridPaneDropTarget extends AbstractDropTarget {
         if (reparenting) {
 
             // Step #7
-            result.addSubJob(updateSelectionJobFactory.getJob(draggedObjects));
+            result.addSubJob(selectionJobsFactory.updateSelection(draggedObjects));
         }
 
         assert result.isExecutable();
@@ -317,11 +311,9 @@ public final class GridPaneDropTarget extends AbstractDropTarget {
         return true;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
+    @ApplicationInstanceSingleton
     public static class Factory extends DropTargetFactory<GridPaneDropTarget> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,24 +38,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseGesture;
-import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.gesture.AbstractMouseGesture;
+import com.gluonhq.jfxapps.core.api.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.list.ColumnConstraintsListPropertyMetadata;
-import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
 
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyEvent;
@@ -71,11 +68,11 @@ public class ResizeColumnGesture extends AbstractMouseGesture {
     private static final PropertyName columnConstraintsName
             = new PropertyName("columnConstraints"); //NOCHECK
 
-    private static final ValuePropertyMetadata columnConstraintsMeta = new ColumnConstraintsListPropertyMetadata.Builder()
+    private static final ValuePropertyMetadata columnConstraintsMeta = new ColumnConstraintsListPropertyMetadata.Builder<>()
             .name(columnConstraintsName)
             .readWrite(true)
             .defaultValue(Collections.emptyList())
-            .inspectorPath(InspectorPath.UNUSED).build();
+            .build();
 
     private GridPaneHandles gridPaneHandles;
     private FXOMInstance fxomInstance;
@@ -83,14 +80,18 @@ public class ResizeColumnGesture extends AbstractMouseGesture {
     private GridPane gridPane;
     private GridPaneColumnResizer resizer;
 
+    private final I18N i18n;
     private final JobManager jobManager;
     private final FxomJobsFactory fxomJobsFactory;
 
+
 	protected ResizeColumnGesture(
-            Content content,
+	        I18N i18n,
+            Workspace workspace,
             JobManager jobManager,
             FxomJobsFactory fxomJobsFactory) {
-        super(content);
+        super(workspace);
+        this.i18n = i18n;
         this.jobManager = jobManager;
         this.fxomJobsFactory = fxomJobsFactory;
     }
@@ -163,8 +164,9 @@ public class ResizeColumnGesture extends AbstractMouseGesture {
         userDidCancel();
 
         // Step #3
-        final AbstractJob j = modifyObjectJobFactory.getJob(I18N.getString("label.action.edit.resize.column"), fxomInstance, columnConstraintsMeta, newConstraints);
-        jobManager.push(j);
+        final var job = fxomJobsFactory.modifyObject(fxomInstance, columnConstraintsMeta, newConstraints);
+        job.setDescription(i18n.getString("label.action.edit.resize.column"));
+        jobManager.push(job);
 
         gridPaneHandles.layoutDecoration();
         resizer = null; // For sake of symetry...
@@ -217,10 +219,9 @@ public class ResizeColumnGesture extends AbstractMouseGesture {
         return result;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public static class Factory extends GestureFactory<ResizeColumnGesture> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
         public ResizeColumnGesture getGesture(GridPaneHandles gridPaneHandles, int columnIndex) {

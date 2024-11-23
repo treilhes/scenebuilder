@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,16 +35,15 @@ package com.oracle.javafx.scenebuilder.tools.driver.gridpane.gesture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.editor.EditorPlatform;
-import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseDragGesture;
-import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.core.api.gesture.AbstractMouseDragGesture;
+import com.gluonhq.jfxapps.core.api.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
 
@@ -68,10 +67,9 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
 
 
     protected SelectAndMoveInGridGesture(
-            Content content,
             Selection selection,
             GridSelectionGroup.Factory gridSelectionGroupFactory) {
-        super(content);
+        super();
         this.selection = selection;
         this.gridSelectionGroupFactory = gridSelectionGroupFactory;
     }
@@ -133,7 +131,7 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
                 = EditorPlatform.isContinuousSelectKeyDown(e)
                 || EditorPlatform.isNonContinousSelectKeyDown(e);
 
-        //TODO may be simplified
+        //TODO may be simplified, at least must be checked
         if (selection.getGroup() instanceof GridSelectionGroup) {
             if (extendKeyDown) { // Case D.1.* and D.2
                 selection.toggleSelection(gridSelectionGroupFactory.getGroup(gridPaneInstance, feature, featureIndex));
@@ -141,7 +139,7 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
                 selection.select(gridSelectionGroupFactory.getGroup(gridPaneInstance, feature, featureIndex));
             }
         } else { // Cases A and B
-            assert selection.getGroup() instanceof DSelectionGroupFactory;
+            assert selection.getGroup() instanceof ObjectSelectionGroup;
             selection.select(gridSelectionGroupFactory.getGroup(gridPaneInstance, feature, featureIndex));
         }
     }
@@ -209,10 +207,9 @@ public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
 //        assert false;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public static class Factory extends GestureFactory<SelectAndMoveInGridGesture> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
         public SelectAndMoveInGridGesture getGesture(FXOMInstance gridPaneInstance, GridSelectionGroup.Type feature,int featureIndex) {

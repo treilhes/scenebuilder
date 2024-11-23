@@ -75,7 +75,7 @@ class LogViewerControllerTest {
             .controller(LogViewerController.class)
             .setup(StageType.Fill)
             .size(800, 600)
-            .show();
+            .show().getController();
 
         System.out.println();
     }

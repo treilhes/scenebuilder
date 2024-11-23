@@ -36,29 +36,26 @@ package com.oracle.javafx.scenebuilder.tools.job.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -75,41 +72,26 @@ public final class UnwrapJob extends BatchSelectionJob {
     private FXOMInstance oldContainer, newContainer;
     private List<FXOMObject> oldContainerChildren;
     private final FXOMObjectMask.Factory designMaskFactory;
-    private final RemovePropertyJob.Factory removePropertyJobFactory;
-    private final RemovePropertyValueJob.Factory removePropertyValueJobFactory;
-    private final ToggleFxRootJob.Factory toggleFxRootJobFactory;
-    private final SetDocumentRootJob.Factory setDocumentRootJobFactory;
-    private final ModifyFxControllerJob.Factory modifyFxControllerJobFactory;
-    private final AddPropertyValueJob.Factory addPropertyValueJobFactory;
-    private final IMetadata metadata;
+    private final SbMetadata metadata;
     private final FxomJobsFactory fxomJobsFactory;
+    private final SelectionJobsFactory selectionJobsFactory;
     private final WrapInJobFactory wrapInJobFactory;
-    private final DSelectionGroupFactory.Factory objectSelectionGroupFactory;
+    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
 
  // @formatter:off
     protected UnwrapJob(
             JobExtensionFactory extensionFactory,
             ApplicationInstanceEvents documentManager,
             Selection selection,
-            RemovePropertyJob.Factory removePropertyJobFactory,
-            RemovePropertyValueJob.Factory removePropertyValueJobFactory,
-            ToggleFxRootJob.Factory toggleFxRootJobFactory,
-            SetDocumentRootJob.Factory setDocumentRootJobFactory,
-            ModifyFxControllerJob.Factory modifyFxControllerJobFactory,
-            AddPropertyValueJob.Factory addPropertyValueJobFactory,
-            FxomJobsFactory fxomJobsFactory,
+            SbMetadata metadata,
             FXOMObjectMask.Factory designMaskFactory,
-            IMetadata metadata,
+            FxomJobsFactory fxomJobsFactory,
+            SelectionJobsFactory selectionJobsFactory,
             WrapInJobFactory wrapInJobFactory,
-            DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
+            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);
-        this.removePropertyJobFactory = removePropertyJobFactory;
-        this.removePropertyValueJobFactory = removePropertyValueJobFactory;
-        this.toggleFxRootJobFactory = toggleFxRootJobFactory;
-        this.setDocumentRootJobFactory = setDocumentRootJobFactory;
-        this.modifyFxControllerJobFactory = modifyFxControllerJobFactory;
-        this.addPropertyValueJobFactory = addPropertyValueJobFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
         this.designMaskFactory = designMaskFactory;
         this.metadata = metadata;
         this.fxomJobsFactory = fxomJobsFactory;
@@ -125,11 +107,11 @@ public final class UnwrapJob extends BatchSelectionJob {
         if (selection.isEmpty()) {
             return false;
         }
-        final AbstractSelectionGroup asg = selection.getGroup();
-        if ((asg instanceof DSelectionGroupFactory) == false) {
+        final SelectionGroup asg = selection.getGroup();
+        if ((asg instanceof ObjectSelectionGroup) == false) {
             return false;
         }
-        final DSelectionGroupFactory osg = (DSelectionGroupFactory) asg;
+        final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
         if (osg.getItems().size() != 1) {
             return false;
         }
@@ -169,7 +151,7 @@ public final class UnwrapJob extends BatchSelectionJob {
             return childrenCount == 1;
         } else {
             // Check that the num and type of children can be added to the parent container
-            final HierarchyMask parentContainerMask = designMaskFactory.getMask(parentContainer);
+            final var parentContainerMask = designMaskFactory.getMask(parentContainer);
 
             if (parentContainerMask.hasMainAccessory()) {
                 if (parentContainerMask.getMainAccessory().isCollection()) {
@@ -200,15 +182,15 @@ public final class UnwrapJob extends BatchSelectionJob {
     }
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
-        final List<AbstractJob> result = new ArrayList<>();
+    protected List<Job> makeSubJobs() {
+        final List<Job> result = new ArrayList<>();
 
         if (canUnwrap()) { // (1)
 
             final Selection selection = getSelection();
-            final AbstractSelectionGroup asg = selection.getGroup();
-            assert asg instanceof DSelectionGroupFactory; // Because of (1)
-            final DSelectionGroupFactory osg = (DSelectionGroupFactory) asg;
+            final SelectionGroup asg = selection.getGroup();
+            assert asg instanceof ObjectSelectionGroup; // Because of (1)
+            final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
             assert osg.getItems().size() == 1; // Because of (1)
 
             // Retrieve the old container (container to unwrap)
@@ -228,12 +210,11 @@ public final class UnwrapJob extends BatchSelectionJob {
             newContainer = (FXOMInstance) oldContainer.getParentObject();
 
             // Remove the old container property from the old container instance
-            final AbstractJob removePropertyJob = removePropertyJobFactory.getJob(oldContainerProperty);
+            final Job removePropertyJob = fxomJobsFactory.removeProperty(oldContainerProperty);
             result.add(removePropertyJob);
 
             // Remove the children from the old container property
-            final List<AbstractJob> removeChildrenJobs
-                    = removeChildrenJobs(oldContainerProperty, oldContainerChildren);
+            final List<Job> removeChildrenJobs = removeChildrenJobs(oldContainerProperty, oldContainerChildren);
             result.addAll(removeChildrenJobs);
 
             //------------------------------------------------------------------
@@ -259,12 +240,11 @@ public final class UnwrapJob extends BatchSelectionJob {
 
                 // Add the children to the new container
                 int index = oldContainer.getIndexInParentProperty();
-                final List<AbstractJob> addChildrenJobs
-                        = addChildrenJobs(newContainerProperty, index, oldContainerChildren);
+                final var addChildrenJobs = addChildrenJobs(newContainerProperty, index, oldContainerChildren);
                 result.addAll(addChildrenJobs);
 
                 // Remove the old container from the new container property
-                final AbstractJob removeValueJob = removePropertyValueJobFactory.getJob(oldContainer);
+                final var removeValueJob = fxomJobsFactory.removePropertyValue(oldContainer);
                 result.add(removeValueJob);
             } //
             //------------------------------------------------------------------
@@ -277,24 +257,24 @@ public final class UnwrapJob extends BatchSelectionJob {
                 final String fxController = oldContainer.getFxController();
                 // First remove the fx:controller/fx:root from the old root object
                 if (isFxRoot) {
-                    final AbstractJob fxRootJob = toggleFxRootJobFactory.getJob();
+                    final var fxRootJob = fxomJobsFactory.toggleFxRoot();
                     result.add(fxRootJob);
                 }
                 if (fxController != null) {
-                    final AbstractJob fxControllerJob = modifyFxControllerJobFactory.getJob(oldContainer, null);
+                    final var fxControllerJob = fxomJobsFactory.modifyFxController(oldContainer, null);
                     result.add(fxControllerJob);
                 }
                 // Then set the new container as root object
                 final FXOMObject child = oldContainerChildren.iterator().next();
-                final AbstractJob setDocumentRoot = setDocumentRootJobFactory.getJob(child);
+                final var setDocumentRoot = selectionJobsFactory.setDocumentRoot(child);
                 result.add(setDocumentRoot);
                 // Finally add the fx:controller/fx:root to the new root object
                 if (isFxRoot) {
-                    final AbstractJob fxRootJob = toggleFxRootJobFactory.getJob();
+                    final var fxRootJob = fxomJobsFactory.toggleFxRoot();
                     result.add(fxRootJob);
                 }
                 if (fxController != null) {
-                    final AbstractJob fxControllerJob = modifyFxControllerJobFactory.getJob(child, fxController);
+                    final var fxControllerJob = fxomJobsFactory.modifyFxController(child, fxController);
                     result.add(fxControllerJob);
                 }
             }
@@ -308,33 +288,33 @@ public final class UnwrapJob extends BatchSelectionJob {
     }
 
     @Override
-    protected AbstractSelectionGroup getNewSelectionGroup() {
+    protected SelectionGroup getNewSelectionGroup() {
         return objectSelectionGroupFactory.getGroup(oldContainerChildren, oldContainerChildren.iterator().next(), null);
     }
 
-    protected List<AbstractJob> addChildrenJobs(
+    protected List<Job> addChildrenJobs(
             final FXOMPropertyC containerProperty,
             final int start,
             final List<FXOMObject> children) {
 
-        final List<AbstractJob> jobs = new ArrayList<>();
+        final List<Job> jobs = new ArrayList<>();
         int index = start;
         for (FXOMObject child : children) {
             assert child instanceof FXOMInstance;
-            final AbstractJob addValueJob = addPropertyValueJobFactory.getJob(child, containerProperty, index++);
+            final var addValueJob = fxomJobsFactory.addPropertyValue(child, containerProperty, index++);
             jobs.add(addValueJob);
         }
         return jobs;
     }
 
-    protected List<AbstractJob> removeChildrenJobs(
+    protected List<Job> removeChildrenJobs(
             final FXOMPropertyC containerProperty,
             final List<FXOMObject> children) {
 
-        final List<AbstractJob> jobs = new ArrayList<>();
+        final List<Job> jobs = new ArrayList<>();
         for (FXOMObject child : children) {
             assert child instanceof FXOMInstance;
-            final AbstractJob removeValueJob = removePropertyValueJobFactory.getJob(child);
+            final var removeValueJob = fxomJobsFactory.removePropertyValue(child);
             jobs.add(removeValueJob);
         }
         return jobs;
@@ -346,10 +326,10 @@ public final class UnwrapJob extends BatchSelectionJob {
      * @param children The children to be modified.
      * @return A list of jobs.
      */
-    protected List<AbstractJob> modifyChildrenJobs(final List<FXOMObject> children) {
+    protected List<Job> modifyChildrenJobs(final List<FXOMObject> children) {
 
-        final List<AbstractJob> jobs = new ArrayList<>();
-        final HierarchyMask newContainerMask = designMaskFactory.getMask(newContainer);
+        final List<Job> jobs = new ArrayList<>();
+        final var newContainerMask = designMaskFactory.getMask(newContainer);
 
         assert oldContainer.getSceneGraphObject().isInstanceOf(Node.class);
         final Node oldContainerNode = oldContainer.getSceneGraphObject().getAs(Node.class);
@@ -361,21 +341,21 @@ public final class UnwrapJob extends BatchSelectionJob {
             final double currentLayoutX = childNode.getLayoutX();
             final double currentLayoutY = childNode.getLayoutY();
 
-            ValuePropertyMetadata layoutXmeta = metadata.queryValueProperty((FXOMInstance) child, new PropertyName("layoutX", null));
-            ValuePropertyMetadata layoutYmeta = metadata.queryValueProperty((FXOMInstance) child, new PropertyName("layoutY", null));
+            var layoutXmeta = metadata.queryValueProperty((FXOMInstance) child, new PropertyName("layoutX", null));
+            var layoutYmeta = metadata.queryValueProperty((FXOMInstance) child, new PropertyName("layoutY", null));
 
             // Modify child LAYOUT bounds
             if (newContainerMask.getMainAccessory() != null && newContainerMask.getMainAccessory().isFreeChildPositioning()) {
                 final Point2D nextLayoutXY = oldContainerNode.localToParent(currentLayoutX, currentLayoutY);
 
-                final AbstractJob modifyLayoutX = modifyObjectJobFactory.getJob((FXOMInstance) child, layoutXmeta, nextLayoutXY.getX());
+                final var modifyLayoutX = fxomJobsFactory.modifyObject((FXOMInstance) child, layoutXmeta, nextLayoutXY.getX());
                 jobs.add(modifyLayoutX);
-                final AbstractJob modifyLayoutY = modifyObjectJobFactory.getJob((FXOMInstance) child, layoutYmeta, nextLayoutXY.getY());
+                final var modifyLayoutY = fxomJobsFactory.modifyObject((FXOMInstance) child, layoutYmeta, nextLayoutXY.getY());
                 jobs.add(modifyLayoutY);
             } else {
-                final AbstractJob modifyLayoutX = modifyObjectJobFactory.getJob((FXOMInstance) child, layoutXmeta, 0.0);
+                final var modifyLayoutX = fxomJobsFactory.modifyObject((FXOMInstance) child, layoutXmeta, 0.0);
                 jobs.add(modifyLayoutX);
-                final AbstractJob modifyLayoutY = modifyObjectJobFactory.getJob((FXOMInstance) child, layoutYmeta, 0.0);
+                final var modifyLayoutY = fxomJobsFactory.modifyObject((FXOMInstance) child, layoutYmeta, 0.0);
                 jobs.add(modifyLayoutY);
             }
 
@@ -384,9 +364,9 @@ public final class UnwrapJob extends BatchSelectionJob {
                 final FXOMInstance fxomInstance = (FXOMInstance) child;
                 for (FXOMProperty p : fxomInstance.getProperties().values()) {
                     final Class<?> residentClass = p.getName().getResidenceClass();
-                    if (residentClass != null
-                            && residentClass != newContainer.getDeclaredClass()) {
-                        jobs.add(removePropertyJobFactory.getJob(p));
+                    if (residentClass != null && residentClass != newContainer.getDeclaredClass()) {
+                        var job = fxomJobsFactory.removeProperty(p);
+                        jobs.add(job);
                     }
                 }
             }
@@ -395,15 +375,15 @@ public final class UnwrapJob extends BatchSelectionJob {
     }
 
     private List<FXOMObject> getChildren(final FXOMInstance container) {
-        final HierarchyMask mask = designMaskFactory.getMask(container);
+        final var mask = designMaskFactory.getMask(container);
         final List<FXOMObject> result = new ArrayList<>();
         if (mask.getMainAccessory() != null) {
             // TabPane => unwrap first Tab CONTENT
             if (TabPane.class.isAssignableFrom(container.getDeclaredClass())) {
                 final List<FXOMObject> tabs = mask.getAccessories(mask.getMainAccessory(), false);
                 if (tabs.size() >= 1) {
-                    final FXOMObject tab = tabs.get(0);
-                    final HierarchyMask tabMask = designMaskFactory.getMask(tab);
+                    final var tab = tabs.get(0);
+                    final var tabMask = designMaskFactory.getMask(tab);
                     assert tabMask.isAcceptingAccessory(tabMask.getMainAccessory());
                     List<FXOMObject> content = tabMask.getAccessories(tabMask.getMainAccessory(), true);
                     if (!content.isEmpty()) {
@@ -417,11 +397,9 @@ public final class UnwrapJob extends BatchSelectionJob {
         return result;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
+    @ApplicationInstanceSingleton
     public final static class Factory extends JobFactory<UnwrapJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

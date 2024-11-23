@@ -38,10 +38,9 @@ import java.util.List;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
-import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.gesture.AbstractGesture;
+import com.gluonhq.jfxapps.core.api.gesture.DiscardGesture;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -123,7 +122,7 @@ public class TreeTableViewHandles extends AbstractNodeHandles<Node> implements I
 
         final int gripIndex = grips.getChildren().indexOf(node);
         if (gripIndex != -1) {
-            final HierarchyMask m = maskFactory.getMask(getFxomInstance());
+            final var m = maskFactory.getMask(getFxomInstance());
             final FXOMObject columnObject = m.getSubComponentAtIndex(m.getMainAccessory(), gripIndex, false);
             assert columnObject instanceof FXOMInstance;
             result = resizeTreeTableColumnGestureFactory.getGesture((FXOMInstance) columnObject);

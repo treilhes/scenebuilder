@@ -37,12 +37,10 @@ package com.oracle.javafx.scenebuilder.tools.job.togglegroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.Job;
@@ -55,7 +53,6 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
 
 import javafx.scene.control.ToggleGroup;
 
@@ -65,17 +62,21 @@ import javafx.scene.control.ToggleGroup;
 @ApplicationInstancePrototype
 public final class ModifySelectionToggleGroupJob extends BatchDocumentJob {
 
-    private String toggleGroupId;
+    private final I18N i18n;
+    private final Selection selection;
     private final FXOMDocument fxomDocument;
-    private Selection selection;
-    private ModifyToggleGroupJob.Factory modifyToggleGroupJobFactory;
+    private final ModifyToggleGroupJob.Factory modifyToggleGroupJobFactory;
+    private String toggleGroupId;
+
 
     protected ModifySelectionToggleGroupJob(
+            I18N i18n,
             JobExtensionFactory extensionFactory,
             ApplicationInstanceEvents documentManager,
             Selection selection,
             ModifyToggleGroupJob.Factory modifyToggleGroupJobFactory) {
         super(extensionFactory, documentManager);
+        this.i18n = i18n;
         this.fxomDocument = documentManager.fxomDocument().get();
 
         assert fxomDocument != null;
@@ -93,7 +94,7 @@ public final class ModifySelectionToggleGroupJob extends BatchDocumentJob {
 
     @Override
     protected List<Job> makeSubJobs() {
-        final List<AbstractJob> result = new ArrayList<>();
+        final List<Job> result = new ArrayList<>();
 
         /*
          * Checks that toggleGroupId is:
@@ -125,8 +126,7 @@ public final class ModifySelectionToggleGroupJob extends BatchDocumentJob {
          * Creates some ModifyToggleGroupJob instances
          */
         if (executable) {
-            if (selection.getGroup() instanceof DSelectionGroupFactory) {
-                final DSelectionGroupFactory osg = (DSelectionGroupFactory) selection.getGroup();
+            if (selection.getGroup() instanceof ObjectSelectionGroup osg) {
                 for (FXOMObject fxomObject : osg.getItems()) {
                     final AbstractJob subJob = modifyToggleGroupJobFactory.getJob(fxomObject, toggleGroupId);
                     if (subJob.isExecutable()) {
@@ -141,14 +141,12 @@ public final class ModifySelectionToggleGroupJob extends BatchDocumentJob {
 
     @Override
     protected String makeDescription() {
-        return I18N.getString("job.set.toggle.group");
+        return i18n.getString("job.set.toggle.group");
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
+    @ApplicationInstanceSingleton
     public final static class Factory extends JobFactory<ModifySelectionToggleGroupJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
         /**

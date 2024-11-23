@@ -46,7 +46,7 @@ public interface DockActionFactory {
 
     Action toggleMinimized(Dock dock);
 
-    Action toggleViewVisibility(View view);
+    Action toggleViewVisibility(Class<? extends View> view);
 
     Action changeDockType(DockType<?> dockType);
 

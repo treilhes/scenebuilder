@@ -39,24 +39,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseGesture;
-import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.gesture.AbstractMouseGesture;
+import com.gluonhq.jfxapps.core.api.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
+import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 import javafx.geometry.Point2D;
 import javafx.scene.control.TreeTableColumn;
@@ -71,18 +71,21 @@ public class ResizeTreeTableColumnGesture extends AbstractMouseGesture {
 
     private FXOMInstance columnInstance;
     private TreeTableColumnResizer resizer;
-	private final com.gluonhq.jfxapps.core.api.job.base.Factory batchJobFactory;
+    private final I18N i18n;
+	private final BatchJob.Factory batchJobFactory;
     private final JobManager jobManager;
     private final FxomJobsFactory fxomJobsFactory;
-    private final IMetadata metadata;
+    private final SbMetadata metadata;
 
     protected ResizeTreeTableColumnGesture(
-            Content content,
+            I18N i18n,
+            Workspace workspace,
             JobManager jobManager,
-            IMetadata metadata,
+            SbMetadata metadata,
             BatchJob.Factory batchJobFactory,
             FxomJobsFactory fxomJobsFactory) {
-        super(content);
+        super(workspace);
+        this.i18n = i18n;
         this.jobManager = jobManager;
         this.metadata = metadata;
         this.batchJobFactory = batchJobFactory;
@@ -156,8 +159,8 @@ public class ResizeTreeTableColumnGesture extends AbstractMouseGesture {
 
         // Step #3
 
-        final BatchJob batchJob
-                = batchJobFactory.getJob(I18N.getString("label.action.edit.resize.column"), true);
+        final BatchJob batchJob = batchJobFactory.getJob(true);
+        batchJob.setDescription(i18n.getString("label.action.edit.resize.column"));
         if (changeMap.isEmpty() == false) {
             batchJob.addSubJobs(makeResizeJob(columnInstance, changeMap));
         }
@@ -192,30 +195,29 @@ public class ResizeTreeTableColumnGesture extends AbstractMouseGesture {
      * Private
      */
 
-    private List<AbstractJob> makeResizeJob(FXOMObject columnObject, Map<PropertyName, Object> changeMap) {
+    private List<Job> makeResizeJob(FXOMObject columnObject, Map<PropertyName, Object> changeMap) {
         assert columnObject.getSceneGraphObject().isInstanceOf(TreeTableColumn.class);
         assert columnObject instanceof FXOMInstance;
 
-        final List<AbstractJob> result = new ArrayList<>();
+        final List<Job> result = new ArrayList<>();
 
-        final Map<ValuePropertyMetadata, Object> metaValueMap = new HashMap<>();
-        for (Map.Entry<PropertyName,Object> e : changeMap.entrySet()) {
-            final ValuePropertyMetadata vpm = metadata.queryValueProperty(columnInstance, e.getKey());
+        final Map<ValuePropertyMetadata<?>, Object> metaValueMap = new HashMap<>();
+        for (var e : changeMap.entrySet()) {
+            final var vpm = metadata.queryValueProperty(columnInstance, e.getKey());
             assert vpm != null;
             metaValueMap.put(vpm, e.getValue());
         }
 
-        for (Map.Entry<ValuePropertyMetadata, Object> e : metaValueMap.entrySet()) {
-            final AbstractJob job = modifyObjectJobFactory.getJob((FXOMInstance) columnObject,e.getKey(),e.getValue());
+        for (var e : metaValueMap.entrySet()) {
+            final var job = fxomJobsFactory.modifyObject((FXOMElement) columnObject,e.getKey(),e.getValue());
             result.add(job);
         }
         return result;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public static class Factory extends GestureFactory<ResizeTreeTableColumnGesture> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
         public ResizeTreeTableColumnGesture getGesture(FXOMInstance fxomInstance) {

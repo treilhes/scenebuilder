@@ -75,7 +75,7 @@ class MessagePopupControllerTest {
 
         Mockito.when(messageLogger.revisionProperty()).thenReturn(revisionProperty);
 
-        var controller = builder.controller(MessagePopupController.class).show();
+        var controller = builder.controller(MessagePopupController.class).show().getController();
         assertNotNull(controller.getRoot());
     }
 

@@ -34,6 +34,7 @@
 package com.gluonhq.jfxapps.core.clipboard.controller;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardEncoder;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardHandler;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
@@ -62,7 +63,7 @@ public class ClipboardController implements com.gluonhq.jfxapps.core.api.clipboa
 
     //@formatter:off
     public ClipboardController(
-            MainInstanceWindow documentWindow,
+            @Lazy MainInstanceWindow documentWindow,
             InlineEdit inlineEdit,
             ApplicationInstanceEvents documentManager,
             Selection selection,

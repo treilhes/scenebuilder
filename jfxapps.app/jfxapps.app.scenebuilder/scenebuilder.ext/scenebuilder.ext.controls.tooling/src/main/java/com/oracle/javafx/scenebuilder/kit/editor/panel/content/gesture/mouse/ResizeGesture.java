@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,21 +37,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.CardinalPoint;
-import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
-import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseGesture;
-import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.content.mode.Layer;
 import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.gesture.AbstractGesture;
+import com.gluonhq.jfxapps.core.api.gesture.AbstractMouseGesture;
+import com.gluonhq.jfxapps.core.api.gesture.CardinalPoint;
+import com.gluonhq.jfxapps.core.api.gesture.GestureFactory;
+import com.gluonhq.jfxapps.core.api.guide.ResizingGuide;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.HudWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
@@ -59,7 +57,6 @@ import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.Relocater;
@@ -69,7 +66,7 @@ import com.oracle.javafx.scenebuilder.api.control.Resizer.Feature;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.api.control.Shadow;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.ResizingGuideController;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 import javafx.event.EventType;
 import javafx.geometry.Bounds;
@@ -94,14 +91,14 @@ public class ResizeGesture extends AbstractMouseGesture {
 
     private Resizer<?> resizer;
     private Relocater<?> relocater;
-    private ResizingGuideController resizingGuideController;
+
     //private RegionRectangle shadow;
     private boolean snapEnabled;
-    private boolean guidesDisabled;
 	private final SbDriver driver;
-    private final IMetadata metadata;
+    private final SbMetadata metadata;
     private final FXOMObjectMask.Factory designMaskFactory;
     private final FxomJobsFactory fxomJobsFactory;
+    private final ResizingGuide resizingGuide;
 
     @SuppressWarnings("rawtypes")
     private Layer<Rudder> rudderLayer;
@@ -124,12 +121,13 @@ public class ResizeGesture extends AbstractMouseGesture {
             Workspace workspace,
             HudWindow hud,
             Content contentPanelController,
-            IMetadata metadata,
+            SbMetadata metadata,
             SbDriver driver,
             JobManager jobManager,
             FXOMObjectMask.Factory designMaskFactory,
             ModeManager modeManager,
-            FxomJobsFactory fxomJobsFactory) {
+            FxomJobsFactory fxomJobsFactory,
+            ResizingGuide resizingGuide) {
         super(workspace);
         this.metadata = metadata;
         this.driver = driver;
@@ -137,6 +135,7 @@ public class ResizeGesture extends AbstractMouseGesture {
         this.hud = hud;
         this.designMaskFactory = designMaskFactory;
         this.fxomJobsFactory = fxomJobsFactory;
+        this.resizingGuide = resizingGuide;
 
         if (modeManager.hasModeEnabled()) {
             rudderLayer = modeManager.getEnabledMode().getLayer(Rudder.class);
@@ -165,7 +164,7 @@ public class ResizeGesture extends AbstractMouseGesture {
     @Override
     public void start(InputEvent e, Observer observer) {
         AbstractGesture.attachGesture(fxomInstance.getSceneGraphObject().getAs(Node.class), this);
-        super.startApplication(e, observer);
+        super.start(e, observer);
     }
 
 
@@ -191,9 +190,8 @@ public class ResizeGesture extends AbstractMouseGesture {
 
         relocater = driver.makeRelocater(resizer.getFxomObject());
 
-        if (relocater != null && contentPanelController.isGuidesVisible()) {
+        if (relocater != null && resizingGuide.isEnabled()) {
             setupResizingGuideController();
-            assert resizingGuideController != null;
         }
 
         snapEnabled = getMousePressedEvent().isShiftDown();
@@ -246,14 +244,17 @@ public class ResizeGesture extends AbstractMouseGesture {
 
         // Step #3
         final Map<ValuePropertyMetadata, Object> metaValueMap = new HashMap<>();
-        for (Map.Entry<PropertyName,Object> e : changeMap.entrySet()) {
-            final ValuePropertyMetadata vpm = metadata.queryValueProperty(fxomInstance, e.getKey());
+        for (var e : changeMap.entrySet()) {
+            final var vpm = metadata.queryValueProperty(fxomInstance, e.getKey());
             assert vpm != null;
             metaValueMap.put(vpm, e.getValue());
         }
         if (changeMap.isEmpty() == false) {
-            for (Map.Entry<ValuePropertyMetadata, Object> e : metaValueMap.entrySet()) {
-                final AbstractJob job = modifyObjectJobFactory.getJob("Resize",fxomInstance,e.getKey(),e.getValue());
+            for (var e : metaValueMap.entrySet()) {
+                final var job = fxomJobsFactory.modifyObject(fxomInstance,e.getKey(),e.getValue());
+
+                job.setDescription("Resize");
+
                 if (job.isExecutable()) {
                     jobManager.push(job);
                 }
@@ -282,9 +283,9 @@ public class ResizeGesture extends AbstractMouseGesture {
         } else if (ke.getCode() == KeyCode.ALT) {
             final EventType<KeyEvent> eventType = ke.getEventType();
             if (eventType == KeyEvent.KEY_PRESSED) {
-                guidesDisabled = true;
+                resizingGuide.enable();
             } else if (eventType == KeyEvent.KEY_RELEASED) {
-                guidesDisabled = false;
+                resizingGuide.disable();
             }
             if (isMouseDidDrag()) {
                 mouseDragged();
@@ -298,9 +299,8 @@ public class ResizeGesture extends AbstractMouseGesture {
         if (relocater != null) {
             relocater.revertToOriginalLocation();
         }
-        if (resizingGuideController != null) {
+        if (resizingGuide != null) {
             dismantleResizingGuideController();
-            assert resizingGuideController == null;
         }
         setRudderVisible(false);
         //hideShadow();
@@ -331,7 +331,7 @@ public class ResizeGesture extends AbstractMouseGesture {
             relocater.revertToOriginalLocation();
         }
 
-        final Node sceneGraphObject = resizer.getSceneGraphObject().get();
+        final Node sceneGraphObject = resizer.getSceneGraphObject();
         Parent parentToLayout = resizer.getFxomObject().getClosestMainGraphNode().getClosestParent()
                 .getSceneGraphObject().getAs(Parent.class);
 
@@ -378,15 +378,12 @@ public class ResizeGesture extends AbstractMouseGesture {
         final Bounds newLayoutBounds = resizer.computeBounds(candidateWidth, candidateHeight);
 
         final Bounds guidedLayoutBounds;
-        if (resizingGuideController == null) {
-            guidedLayoutBounds = newLayoutBounds;
-        } else if (guidesDisabled) {
-            resizingGuideController.clear();
+        if (!resizingGuide.isEnabled()) {
             guidedLayoutBounds = newLayoutBounds;
         } else {
-            resizingGuideController.match(newLayoutBounds);
-            final double suggestedWidth  = resizingGuideController.getSuggestedWidth();
-            final double suggestedHeight = resizingGuideController.getSuggestedHeight();
+            resizingGuide.match(newLayoutBounds);
+            final double suggestedWidth  = resizingGuide.getSuggestedWidth();
+            final double suggestedHeight = resizingGuide.getSuggestedHeight();
             guidedLayoutBounds = resizer.computeBounds(suggestedWidth, suggestedHeight);
         }
 
@@ -552,12 +549,11 @@ public class ResizeGesture extends AbstractMouseGesture {
                 matchHeight = true;
                 break;
         }
-        resizingGuideController = new ResizingGuideController(
-                matchWidth, matchHeight, contentPanelController.getGuidesColor());
+        resizingGuide.initialize(matchWidth, matchHeight);
 
         addToResizingGuideController(fxomInstance.getFxomDocument().getFxomRoot());
 
-        final Group guideGroup = resizingGuideController.getGuideGroup();
+        final Group guideGroup = resizingGuide.getGuideGroup();
         assert guideGroup.isMouseTransparent();
         rudderLayer.getLayerUI().getChildren().add(guideGroup);
     }
@@ -569,9 +565,9 @@ public class ResizeGesture extends AbstractMouseGesture {
         if (fxomObject != fxomInstance) {
 
             fxomObject.getSceneGraphObject().getOptionalAs(Node.class)
-                .ifPresent(resizingGuideController::addSampleBounds);
+                .ifPresent(resizingGuide::addSampleBounds);
 
-            final HierarchyMask m = designMaskFactory.getMask(fxomObject);
+            final var m = designMaskFactory.getMask(fxomObject);
             if (m.hasMainAccessory()) {
                 for (FXOMObject child:m.getAccessories(m.getMainAccessory(), false)) {
                     addToResizingGuideController(child);
@@ -582,11 +578,10 @@ public class ResizeGesture extends AbstractMouseGesture {
 
 
     private void dismantleResizingGuideController() {
-        assert resizingGuideController != null;
-        final Group guideGroup = resizingGuideController.getGuideGroup();
+        assert resizingGuide != null;
+        final Group guideGroup = resizingGuide.getGuideGroup();
         assert rudderLayer.getLayerUI().getChildren().contains(guideGroup);
         rudderLayer.getLayerUI().getChildren().remove(guideGroup);
-        resizingGuideController = null;
     }
 
 
@@ -615,10 +610,9 @@ public class ResizeGesture extends AbstractMouseGesture {
         return matchHeight;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public static class Factory extends GestureFactory<ResizeGesture> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
         public ResizeGesture getGesture(FXOMInstance fxomInstance, CardinalPoint tunable) {

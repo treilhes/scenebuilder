@@ -33,22 +33,18 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.selection.job.SendBackwardJob;
 
 @ApplicationInstancePrototype
 @ActionMeta(
@@ -61,7 +57,7 @@ import com.gluonhq.jfxapps.core.selection.job.SendBackwardJob;
         label = SendBackwardAction.TITLE,
         positionRequest = PositionRequest.AsNextSibling)
 @ContextMenuItemAttachment(
-        selectionGroup = DSelectionGroupFactory.class,
+        selectionGroup = ObjectSelectionGroup.class,
         id = SendBackwardAction.MENU_ID,
         targetMenuId = BringForwardAction.MENU_ID,
         label = SendBackwardAction.TITLE,
@@ -72,29 +68,29 @@ public class SendBackwardAction extends AbstractAction {
     public final static String MENU_ID = "sendBackwardMenuItem"; //NOCHECK
     public final static String TITLE = "menu.title.backward";
 
-    private final SendBackwardJob.Factory sendBackwardJobFactory;
+    private final SelectionJobsFactory selectionJobsFactory;
     private final JobManager jobManager;
     // @formatter:off
     public SendBackwardAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
             JobManager jobManager,
-            SendBackwardJob.Factory sendBackwardJobFactory) {
+            SelectionJobsFactory selectionJobsFactory) {
         // @formatter:on
         super(i18n, extensionFactory);
         this.jobManager = jobManager;
-        this.sendBackwardJobFactory = sendBackwardJobFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
     }
 
     @Override
     public boolean canPerform() {
-        final AbstractJob job = sendBackwardJobFactory.getJob();
+        final var job = selectionJobsFactory.sendBackward();
         return job.isExecutable();
     }
 
     @Override
     public ActionStatus doPerform() {
-        final AbstractJob job = sendBackwardJobFactory.getJob();
+        final var job = selectionJobsFactory.sendBackward();
         jobManager.push(job);
         return ActionStatus.DONE;
     }

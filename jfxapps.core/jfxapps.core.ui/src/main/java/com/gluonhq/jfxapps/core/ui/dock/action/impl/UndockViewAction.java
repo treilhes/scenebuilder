@@ -41,7 +41,7 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 
-@ApplicationInstancePrototype
+@ApplicationInstancePrototype("com.gluonhq.jfxapps.core.ui.dock.action.impl.UndockViewAction")
 @ActionMeta(
         nameKey = "action.name.save",
         descriptionKey = "action.description.save")

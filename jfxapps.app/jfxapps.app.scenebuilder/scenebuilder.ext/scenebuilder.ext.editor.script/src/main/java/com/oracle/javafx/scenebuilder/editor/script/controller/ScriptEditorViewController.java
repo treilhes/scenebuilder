@@ -144,7 +144,7 @@ public class ScriptEditorViewController extends AbstractFxmlViewController {
         assert fxomDocument != null;
 
         // No need to eat CPU if the skeleton window isn't opened
-        if (isVisible()) {
+        if (isEnabled()) {
             updateTitle();
 //            final SkeletonBuffer buf = new SkeletonBuffer(fxomDocument, documentName);
 //

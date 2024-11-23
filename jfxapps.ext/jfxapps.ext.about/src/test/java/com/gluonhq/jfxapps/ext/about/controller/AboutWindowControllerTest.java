@@ -71,7 +71,7 @@ class AboutWindowControllerTest {
             .controller(AboutWindowController.class)
             .setup(StageType.None)
             .size(600, 800)
-            .show();
+            .show().getController();
 
         robot.interact(controller::openWindow);
 

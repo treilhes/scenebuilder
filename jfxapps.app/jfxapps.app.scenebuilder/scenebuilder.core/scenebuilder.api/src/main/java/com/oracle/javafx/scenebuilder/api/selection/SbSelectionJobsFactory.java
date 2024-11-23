@@ -33,6 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.api.selection;
 
+import java.io.File;
+
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
@@ -89,5 +91,9 @@ public interface SbSelectionJobsFactory {
      * @return the job to execute
      */
     Job setDocumentRoot(FXOMObject newRoot, boolean usePredefinedSize);
+
+    Job importFile(File file);
+
+    Job includeFile(File file);
 
 }

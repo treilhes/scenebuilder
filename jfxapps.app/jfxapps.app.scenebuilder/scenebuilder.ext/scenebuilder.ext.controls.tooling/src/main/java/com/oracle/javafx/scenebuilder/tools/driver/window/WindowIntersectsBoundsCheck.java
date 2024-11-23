@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,6 +38,7 @@ import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -49,8 +50,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Window;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+@ApplicationInstanceSingleton
 public class WindowIntersectsBoundsCheck extends AbstractIntersectsBoundsCheck {
 
     private final FXOMObjectMask.Factory maskFactory;
@@ -63,25 +63,25 @@ public class WindowIntersectsBoundsCheck extends AbstractIntersectsBoundsCheck {
     @Override
     public boolean intersectsBounds(FXOMObject fxomObject, Bounds bounds) {
         assert fxomObject.getSceneGraphObject().isInstanceOf(Window.class);
-        HierarchyMask windowDesignHierarchyMask = maskFactory.getMask(fxomObject);
-        List<FXOMObject> sceneContent = windowDesignHierarchyMask.getAccessories(windowDesignHierarchyMask.getMainAccessory(), false);
+        var windowDesignHierarchyMask = maskFactory.getMask(fxomObject);
+        var sceneContent = windowDesignHierarchyMask.getAccessories(windowDesignHierarchyMask.getMainAccessory(), false);
         if (sceneContent.isEmpty()) {
             return false;
         }
-        FXOMObject scene = sceneContent.get(0);
+        var scene = sceneContent.get(0);
         assert scene.getSceneGraphObject().isInstanceOf(Scene.class);
         assert scene instanceof FXOMInstance;
-        HierarchyMask sceneDesignHierarchyMask = maskFactory.getMask(scene);
-        List<FXOMObject> rootContent = sceneDesignHierarchyMask.getAccessories(sceneDesignHierarchyMask.getMainAccessory(), false);
+        var sceneDesignHierarchyMask = maskFactory.getMask(scene);
+        var rootContent = sceneDesignHierarchyMask.getAccessories(sceneDesignHierarchyMask.getMainAccessory(), false);
 
         assert !rootContent.isEmpty();
 
-        FXOMObject root = rootContent.get(0);
+        var root = rootContent.get(0);
 
         assert root != null;
         assert root.getSceneGraphObject().isInstanceOf(Node.class);
-        Node rootNode = root.getSceneGraphObject().getAs(Node.class);
-        Bounds rootNodeBounds = rootNode.localToScene(rootNode.getLayoutBounds(), true /* rootScene */);
+        var rootNode = root.getSceneGraphObject().getAs(Node.class);
+        var rootNodeBounds = rootNode.localToScene(rootNode.getLayoutBounds(), true /* rootScene */);
         return rootNodeBounds.intersects(bounds);
     }
 

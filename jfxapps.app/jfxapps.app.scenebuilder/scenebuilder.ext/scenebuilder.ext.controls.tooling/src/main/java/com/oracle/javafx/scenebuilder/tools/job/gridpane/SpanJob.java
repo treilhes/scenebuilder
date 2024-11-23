@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,25 +37,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.oracle.javafx.scenebuilder.tools.mask.GridPaneHierarchyMask;
 
 import javafx.scene.layout.GridPane;
@@ -76,21 +76,24 @@ public final class SpanJob extends BatchDocumentJob {
     }
 
     private SpanAction spanAction;
+    private final I18N i18n;
     private final Selection selection;
-    private final IMetadata metadata;
+    private final SbMetadata metadata;
     private final FxomJobsFactory fxomJobsFactory;
     private final GridPaneHierarchyMask.Factory maskFactory;
 
  // @formatter:off
     protected SpanJob(
+            I18N i18n,
             JobExtensionFactory extensionFactory,
             ApplicationInstanceEvents documentManager,
             Selection selection,
-            IMetadata metadata,
+            SbMetadata metadata,
             FxomJobsFactory fxomJobsFactory,
             GridPaneHierarchyMask.Factory maskFactory) {
     // @formatter:on
         super(extensionFactory, documentManager);
+        this.i18n = i18n;
         this.selection = selection;
         this.metadata = metadata;
         this.fxomJobsFactory = fxomJobsFactory;
@@ -102,26 +105,26 @@ public final class SpanJob extends BatchDocumentJob {
     }
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
-        final List<AbstractJob> jobList = new ArrayList<>();
-        final AbstractSelectionGroup selectionGroup = selection.getGroup();
+    protected List<Job> makeSubJobs() {
+        final List<Job> jobList = new ArrayList<>();
+        final SelectionGroup selectionGroup = selection.getGroup();
 
         // Do we have an asset selected which is a standard one (not a grid) ?
-        if (selectionGroup instanceof DSelectionGroupFactory) {
+        if (selectionGroup instanceof ObjectSelectionGroup) {
             // Is that asset enclosed in a grid ?
             if (selectionGroup.getAncestor() != null
                     && selectionGroup.getAncestor().getSceneGraphObject().isInstanceOf(GridPane.class)) {
                 GridPaneHierarchyMask gridDHM = maskFactory.getMask(selectionGroup.getAncestor());
                 int columnCount = gridDHM.getColumnsSize();
                 int rowCount = gridDHM.getRowsSize();
-                List<FXOMObject> items = ((DSelectionGroupFactory)selectionGroup).getSortedItems();
+                List<FXOMObject> items = ((ObjectSelectionGroup)selectionGroup).getSortedItems();
 
                 // Create a job for all items then check each is executable.
                 // As soon as one is not executable the job list is made empty
                 // so that no change will be performed by the job, eventually.
                 for (FXOMObject fxomObject : items) {
                     if (fxomObject instanceof FXOMInstance) {
-                        AbstractJob job = createJob((FXOMInstance)fxomObject, columnCount, rowCount);
+                        Job job = createJob((FXOMInstance)fxomObject, columnCount, rowCount);
 
                         if (job.isExecutable()) {
                             jobList.add(job);
@@ -144,16 +147,16 @@ public final class SpanJob extends BatchDocumentJob {
         switch (spanAction) {
             default:
             case DECREASE_COLUMN_SPAN:
-                description = I18N.getString("job.decrease.column.span");
+                description = i18n.getString("job.decrease.column.span");
                 break;
             case INCREASE_COLUMN_SPAN:
-                description = I18N.getString("job.increase.column.span");
+                description = i18n.getString("job.increase.column.span");
                 break;
             case DECREASE_ROW_SPAN:
-                description = I18N.getString("job.decrease.row.span");
+                description = i18n.getString("job.decrease.row.span");
                 break;
             case INCREASE_ROW_SPAN:
-                description = I18N.getString("job.increase.row.span");
+                description = i18n.getString("job.increase.row.span");
                 break;
         }
 
@@ -161,7 +164,7 @@ public final class SpanJob extends BatchDocumentJob {
         return description;
     }
 
-    private AbstractJob createJob(FXOMInstance candidate, int columnCount, int rowCount) {
+    private Job createJob(FXOMInstance candidate, int columnCount, int rowCount) {
         PropertyName propName = null;
         int newSpan = 1;
 
@@ -193,8 +196,8 @@ public final class SpanJob extends BatchDocumentJob {
                 break;
         }
 
-        final ValuePropertyMetadata vpm = metadata.queryValueProperty(candidate, propName);
-        final AbstractJob columnSpanJob = modifyObjectJobFactory.getJob(candidate, vpm, newSpan);
+        final var vpm = metadata.queryValueProperty(candidate, propName);
+        final Job columnSpanJob = fxomJobsFactory.modifyObject(candidate, vpm, newSpan);
 
         return columnSpanJob;
     }
@@ -258,11 +261,10 @@ public final class SpanJob extends BatchDocumentJob {
         return propertyName;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     @Lazy
     public final static class Factory extends JobFactory<SpanJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

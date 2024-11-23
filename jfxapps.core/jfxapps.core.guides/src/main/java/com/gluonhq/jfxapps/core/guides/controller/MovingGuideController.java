@@ -43,12 +43,14 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.guide.MovingGuide;
 import com.gluonhq.jfxapps.core.guides.preference.AlignmentGuidesColorPreference;
+import com.gluonhq.jfxapps.core.guides.preference.GuidesEnabledPreference;
 import com.gluonhq.jfxapps.core.guides.segment.HorizontalLineIndex;
 import com.gluonhq.jfxapps.core.guides.segment.HorizontalSegment;
 import com.gluonhq.jfxapps.core.guides.segment.VerticalLineIndex;
 import com.gluonhq.jfxapps.core.guides.segment.VerticalSegment;
 import com.gluonhq.jfxapps.util.MathUtils;
 
+import jakarta.annotation.PostConstruct;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -64,21 +66,36 @@ public class MovingGuideController implements MovingGuide {
     private final double MATCH_DISTANCE = 6.0;
 
     private final AlignmentGuidesColorPreference alignmentGuidesColorPreference;
+    private final GuidesEnabledPreference guidesEnabledPreference;
     private final HorizontalLineIndex horizontalLineIndex = new HorizontalLineIndex();
     private final VerticalLineIndex verticalLineIndex = new VerticalLineIndex();
     private MovingGuideRenderer renderer;
     private double suggestedDX;
     private double suggestedDY;
-    private boolean visible = true;
     private double matchDistance = MATCH_DISTANCE;
 
-    public MovingGuideController(AlignmentGuidesColorPreference alignmentGuidesColorPreference) {
+    public MovingGuideController(
+            AlignmentGuidesColorPreference alignmentGuidesColorPreference,
+            GuidesEnabledPreference guidesEnabledPreference) {
         this.alignmentGuidesColorPreference = alignmentGuidesColorPreference;
+        this.guidesEnabledPreference = guidesEnabledPreference;
         this.renderer = null;
+    }
+
+    @PostConstruct
+    public void init() {
+        guidesEnabledPreference.getObservableValue().subscribe(b -> {
+            if (!b && this.renderer != null) {
+                clear();
+            }
+        });
     }
 
     @Override
     public void initializeContainerBounds(Bounds scopeInScene) {
+        if (this.renderer != null) {
+            clear();
+        }
         this.renderer = new MovingGuideRenderer(alignmentGuidesColorPreference, scopeInScene);
     }
 
@@ -147,8 +164,14 @@ public class MovingGuideController implements MovingGuide {
     public void match(Node node) {
         match(boundsInScene(node));
     }
+
     @Override
     public void match(Bounds targetBounds) {
+
+        if (!isEnabled()) {
+            return;
+        }
+
         List<HorizontalSegment> horizontalMatchingLines;
         List<VerticalSegment> verticalMatchingLines;
         boolean matchedHorizontally = false;
@@ -257,12 +280,8 @@ public class MovingGuideController implements MovingGuide {
     }
 
     @Override
-    public boolean isVisible() {
-        return visible;
+    public boolean isEnabled() {
+        return guidesEnabledPreference.getValue();
     }
 
-    @Override
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
 }

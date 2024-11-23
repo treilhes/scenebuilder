@@ -38,6 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
@@ -65,7 +66,7 @@ import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
  * Job used to insert new FXOM objects into an accessory location.
  * Insert newObject into accessory of targetObject at index targetindex
  */
-@Prototype
+@ApplicationInstancePrototype
 public final class InsertAsAccessoryJob extends BatchSelectionJob {
 
     private final FxomJobsFactory fxomJobsFactory;

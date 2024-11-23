@@ -34,56 +34,66 @@
 
 package com.gluonhq.jfxapps.core.selection.job;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
-import com.gluonhq.jfxapps.core.api.job.Job;
+import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 /**
  * Clear the currently scoped {@link FXOMDocument} selection.
  */
-@Prototype
+@ApplicationInstancePrototype
 public final class ClearSelectionJob extends AbstractJob {
 
-    private Job subJob;
+    private SelectionGroup oldSelectionGroup;
 
-    private final SelectionJobsFactory selectionJobsFactory;
+    private final FXOMDocument fxomDocument;
+    private final Selection selection;
 
     protected ClearSelectionJob(
             JobExtensionFactory extensionFactory,
-            SelectionJobsFactory selectionJobsFactory) {
+            ApplicationInstanceEvents documentManager,
+            Selection selection) {
         super(extensionFactory);
-        this.selectionJobsFactory = selectionJobsFactory;
+        this.fxomDocument = documentManager.fxomDocument().get();
+        this.selection = selection;
     }
-
-    public void setJobParameters() {
-        subJob = selectionJobsFactory.updateSelection(null);
-    }
-
-    /*
-     * Job
-     */
 
     @Override
     public boolean isExecutable() {
-        return subJob.isExecutable();
+        return true;
     }
 
     @Override
     public void doExecute() {
-        subJob.execute();
+        // Saves the current selection
+        try {
+            if (selection.getGroup() == null) {
+                this.oldSelectionGroup = null;
+            } else {
+                this.oldSelectionGroup = selection.getGroup().clone();
+            }
+        } catch(CloneNotSupportedException x) {
+            throw new RuntimeException("Bug", x);
+        }
+
+        // Now same as redo()
+        redo();
     }
 
     @Override
     public void doUndo() {
-        subJob.undo();
+        selection.select(oldSelectionGroup);
+        assert selection.isValid(fxomDocument);
     }
 
     @Override
     public void doRedo() {
-        subJob.redo();
+        selection.clear();
     }
 
 }

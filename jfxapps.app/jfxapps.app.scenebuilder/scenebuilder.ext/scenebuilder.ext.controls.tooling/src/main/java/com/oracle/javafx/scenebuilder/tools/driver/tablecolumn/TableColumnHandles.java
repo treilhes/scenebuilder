@@ -35,9 +35,9 @@ package com.oracle.javafx.scenebuilder.tools.driver.tablecolumn;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
-import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.gesture.AbstractGesture;
+import com.gluonhq.jfxapps.core.api.gesture.DiscardGesture;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
@@ -64,7 +64,7 @@ import javafx.scene.shape.Line;
  *
  *
  */
-@Prototype
+@ApplicationInstancePrototype
 public class TableColumnHandles extends AbstractResilientHandles<Object> {
 
     /*
@@ -206,7 +206,7 @@ public class TableColumnHandles extends AbstractResilientHandles<Object> {
      */
 
     private TableColumn<?,?> getTableColumn() {
-        assert getSceneGraphObject().isInstanceOf(TableColumn.class);
+        assert getSceneGraphObject() instanceof TableColumn;
         return (TableColumn<?,?>) getSceneGraphObject();
     }
 

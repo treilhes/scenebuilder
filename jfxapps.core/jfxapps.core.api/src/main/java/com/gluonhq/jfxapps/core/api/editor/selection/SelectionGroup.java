@@ -95,7 +95,7 @@ public interface SelectionGroup extends Cloneable {
 
     boolean isSelected(SelectionGroup group);
 
-    Set<Object> getInnerItems();
+    Set<? extends FXOMObject> getInnerItems();
 
     /**
      * Collect items in the selection content

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,21 +38,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.value.list.ColumnConstraintsListPropertyMetadata;
-import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
 
 import javafx.scene.layout.GridPane;
@@ -64,10 +62,9 @@ import javafx.scene.layout.GridPane;
  */
 public final class InsertColumnJob extends BatchSelectionJob {
 
-    private static final ColumnConstraintsListPropertyMetadata columnContraintsMeta = new ColumnConstraintsListPropertyMetadata.Builder()
+    private static final ColumnConstraintsListPropertyMetadata<?> columnContraintsMeta = new ColumnConstraintsListPropertyMetadata.Builder<>()
             .name(new PropertyName("columnConstraints")) // NOCHECK
-            .readWrite(true).defaultValue(Collections.emptyList()).inspectorPath(InspectorPath.UNUSED)
-            .build();
+            .readWrite(true).defaultValue(Collections.emptyList()).build();
 
     private FXOMInstance gridPaneObject;
     private int columnIndex;
@@ -75,7 +72,7 @@ public final class InsertColumnJob extends BatchSelectionJob {
 
     private final InsertColumnConstraintsJob.Factory insertColumnConstraintsJobFactory;
     private final MoveColumnContentJob.Factory moveColumnContentJobFactory;
-    private final GridSelectionGroup.Factory gridSelectionGroupFactory;
+    private final GridSelectionGroup.Factory griObjectSelectionGroup;
 
     // @formatter:off
     protected InsertColumnJob(
@@ -84,12 +81,12 @@ public final class InsertColumnJob extends BatchSelectionJob {
             Selection selection,
             InsertColumnConstraintsJob.Factory insertColumnConstraintsJobFactory,
             MoveColumnContentJob.Factory moveColumnContentJobFactory,
-            GridSelectionGroup.Factory gridSelectionGroupFactory) {
+            GridSelectionGroup.Factory griObjectSelectionGroup) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);
         this.insertColumnConstraintsJobFactory = insertColumnConstraintsJobFactory;
         this.moveColumnContentJobFactory = moveColumnContentJobFactory;
-        this.gridSelectionGroupFactory = gridSelectionGroupFactory;
+        this.griObjectSelectionGroup = griObjectSelectionGroup;
     }
 
     protected void setJobParameters(FXOMObject gridPaneObject, int columnIndex, int insertCount) {
@@ -109,16 +106,15 @@ public final class InsertColumnJob extends BatchSelectionJob {
      */
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
-        final List<AbstractJob> result = new ArrayList<>();
+    protected List<Job> makeSubJobs() {
+        final List<Job> result = new ArrayList<>();
 
-        final AbstractJob insertJob = insertColumnConstraintsJobFactory.getJob(gridPaneObject, columnIndex,
-                insertCount);
+        final Job insertJob = insertColumnConstraintsJobFactory.getJob(gridPaneObject, columnIndex, insertCount);
         result.add(insertJob);
 
         final int lastColumnIndex = columnContraintsMeta.getValue(gridPaneObject).size() - 1;
         for (int c = lastColumnIndex; c >= columnIndex; c--) {
-            final AbstractJob moveJob = moveColumnContentJobFactory.getJob(gridPaneObject, c, insertCount);
+            final Job moveJob = moveColumnContentJobFactory.getJob(gridPaneObject, c, insertCount);
             if (moveJob.isExecutable()) {
                 result.add(moveJob);
             } // else column is empty : no children to move
@@ -133,14 +129,13 @@ public final class InsertColumnJob extends BatchSelectionJob {
     }
 
     @Override
-    protected AbstractSelectionGroup getNewSelectionGroup() {
-        return gridSelectionGroupFactory.getGroup(gridPaneObject, GridSelectionGroup.Type.COLUMN, columnIndex);
+    protected SelectionGroup getNewSelectionGroup() {
+        return griObjectSelectionGroup.getGroup(gridPaneObject, GridSelectionGroup.Type.COLUMN, columnIndex);
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public final static class Factory extends JobFactory<InsertColumnJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

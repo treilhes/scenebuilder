@@ -40,26 +40,12 @@ import java.util.UUID;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.ext.prefedit.api.PrefEditApi;
 import com.oracle.javafx.scenebuilder.api.SbApiExtension;
-import com.oracle.javafx.scenebuilder.app.action.CloseFileAction;
-import com.oracle.javafx.scenebuilder.app.action.NewAction;
-import com.oracle.javafx.scenebuilder.app.action.OpenAction;
-import com.oracle.javafx.scenebuilder.app.action.OpenRecentProvider;
-import com.oracle.javafx.scenebuilder.app.action.QuitScenebuilderAction;
-import com.oracle.javafx.scenebuilder.app.action.RedoAction;
-import com.oracle.javafx.scenebuilder.app.action.RevertAction;
-import com.oracle.javafx.scenebuilder.app.action.SaveAsAction;
-import com.oracle.javafx.scenebuilder.app.action.SaveOrSaveAsAction;
-import com.oracle.javafx.scenebuilder.app.action.ShowDocumentationAction;
-import com.oracle.javafx.scenebuilder.app.action.ShowPreferencesAction;
-import com.oracle.javafx.scenebuilder.app.action.UndoAction;
 import com.oracle.javafx.scenebuilder.app.doc.DocumentationImpl;
 import com.oracle.javafx.scenebuilder.app.editors.ControllerClassEditor;
 import com.oracle.javafx.scenebuilder.app.editors.CoreEditors;
 import com.oracle.javafx.scenebuilder.app.editors.FxIdEditor;
 import com.oracle.javafx.scenebuilder.app.editors.PropertyEditorFactoryImpl;
 import com.oracle.javafx.scenebuilder.app.i18n.I18NFxmlCoreExtension;
-import com.oracle.javafx.scenebuilder.app.job.fs.ImportFileJob;
-import com.oracle.javafx.scenebuilder.app.job.fs.IncludeFileJob;
 
 public class ScenebuilderAppExtension implements OpenExtension {
 
@@ -79,30 +65,16 @@ public class ScenebuilderAppExtension implements OpenExtension {
     public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
-                CloseFileAction.class,
-                NewAction.class,
-                OpenAction.class,
-                OpenRecentProvider.class,
-                QuitScenebuilderAction.class,
-                RedoAction.class,
-                RevertAction.class,
-                SaveAsAction.class,
-                SaveOrSaveAsAction.class,
-                ShowDocumentationAction.class,
-                ShowPreferencesAction.class,
-                UndoAction.class,
 
-                ImportFileJob.class,
-                ImportFileJob.Factory.class,
-                IncludeFileJob.class,
-                IncludeFileJob.Factory.class,
+
+
 
                 I18NFxmlCoreExtension.class,
                 ControllerClassEditor.class,
                 CoreEditors.class,
 
                 DocumentationImpl.class,
-                ShowDocumentationAction.class,
+
 
                 FxIdEditor.class,
 

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,22 +38,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.value.IntegerPropertyMetadata;
-import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
 
 import javafx.scene.layout.GridPane;
 
@@ -64,12 +62,12 @@ import javafx.scene.layout.GridPane;
 @ApplicationInstancePrototype
 public final class MoveColumnContentJob extends BatchDocumentJob {
 
-    private final IntegerPropertyMetadata columnIndexMeta =
-            new IntegerPropertyMetadata.Builder()
+    private final IntegerPropertyMetadata<?> columnIndexMeta =
+            new IntegerPropertyMetadata.Builder<>()
                 .name(new PropertyName("columnIndex", GridPane.class)) //NOCHECK
                 .readWrite(true)
                 .defaultValue(0)
-                .inspectorPath(InspectorPath.UNUSED).build();
+                .build();
 
     private FXOMInstance gridPaneObject;
     private int movingColumnIndex;
@@ -106,10 +104,10 @@ public final class MoveColumnContentJob extends BatchDocumentJob {
      */
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
-        final List<AbstractJob> result = new ArrayList<>();
+    protected List<Job> makeSubJobs() {
+        final List<Job> result = new ArrayList<>();
 
-        final HierarchyMask m = GridPaneHierarchyMask.getMask(gridPaneObject);
+        final var m = GridPaneHierarchyMask.getMask(gridPaneObject);
         assert m.hasMainAccessory();
 
         for (FXOMObject childObject:m.getAccessories(m.getMainAccessory(), false)) {
@@ -117,7 +115,7 @@ public final class MoveColumnContentJob extends BatchDocumentJob {
             final FXOMInstance child = (FXOMInstance) childObject;
             if (columnIndexMeta.getValue(child) == movingColumnIndex) {
                 // child belongs to column at movingColumnIndex
-                final AbstractJob subJob = moveCellContentJobFactory.getJob(child, columnIndexDelta, 0);
+                final Job subJob = moveCellContentJobFactory.getJob(child, columnIndexDelta, 0);
                 result.add(subJob);
             }
         }
@@ -130,11 +128,10 @@ public final class MoveColumnContentJob extends BatchDocumentJob {
         return getClass().getSimpleName();
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     @Lazy
     public final static class Factory extends JobFactory<MoveColumnContentJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

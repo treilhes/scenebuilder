@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,9 +38,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup.Type;
@@ -65,20 +65,18 @@ public class GridPaneJobUtils {
      */
     static List<FXOMObject> getTargetGridPanes(final Selection selection) {
 
-        final AbstractSelectionGroup asg = selection.getGroup();
-        assert asg instanceof DSelectionGroupFactory
+        final SelectionGroup asg = selection.getGroup();
+        assert asg instanceof ObjectSelectionGroup
                 || asg instanceof GridSelectionGroup;
 
         final List<FXOMObject> result = new ArrayList<>();
 
         // Selection == GridPanes
-        if (asg instanceof DSelectionGroupFactory) {
-            final DSelectionGroupFactory osg = (DSelectionGroupFactory) asg;
+        if (asg instanceof ObjectSelectionGroup osg) {
             result.addAll(osg.getItems());
         } //
         // Selection == GridPane rows or columns
-        else if (asg instanceof GridSelectionGroup) {
-            final GridSelectionGroup gsg = (GridSelectionGroup) asg;
+        else if (asg instanceof GridSelectionGroup gsg) {
             result.add(gsg.getHitItem());
         }
 
@@ -137,10 +135,9 @@ public class GridPaneJobUtils {
     static boolean canPerformAdd(final Selection selection) {
 
         boolean result;
-        final AbstractSelectionGroup asg = selection.getGroup();
+        final SelectionGroup asg = selection.getGroup();
 
-        if (asg instanceof DSelectionGroupFactory) {
-            final DSelectionGroupFactory osg = (DSelectionGroupFactory) asg;
+        if (asg instanceof ObjectSelectionGroup osg) {
             result = true;
             for (FXOMObject obj : osg.getItems()) {
                 if ((obj.getSceneGraphObject().isInstanceOf(GridPane.class)) == false) {
@@ -163,7 +160,7 @@ public class GridPaneJobUtils {
      */
     static boolean canPerformRemove(final Selection selection) {
 
-        final AbstractSelectionGroup asg = selection.getGroup();
+        final SelectionGroup asg = selection.getGroup();
 
         return asg instanceof GridSelectionGroup;
     }
@@ -181,10 +178,9 @@ public class GridPaneJobUtils {
             final GridPaneHierarchyMask.Factory maskFactory) {
 
         boolean result;
-        final AbstractSelectionGroup asg = selection.getGroup();
+        final SelectionGroup asg = selection.getGroup();
 
-        if (asg instanceof GridSelectionGroup) {
-            final GridSelectionGroup gsg = (GridSelectionGroup) asg;
+        if (asg instanceof GridSelectionGroup gsg) {
             final FXOMObject gridPane = gsg.getHitItem();
             final Type type = gsg.getType();
             final GridPaneHierarchyMask mask = maskFactory.getMask(gridPane);

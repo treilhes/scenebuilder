@@ -41,6 +41,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
@@ -60,7 +61,7 @@ import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
  * with the provided "value" on each object selected if the property is
  * available for the object
  */
-@Prototype
+@ApplicationInstancePrototype
 public final class ModifySelectionJob extends BatchDocumentJob {
 
     private static final String I18N_LABEL_ACTION_EDIT_SET_N = "label.action.edit.set.n";

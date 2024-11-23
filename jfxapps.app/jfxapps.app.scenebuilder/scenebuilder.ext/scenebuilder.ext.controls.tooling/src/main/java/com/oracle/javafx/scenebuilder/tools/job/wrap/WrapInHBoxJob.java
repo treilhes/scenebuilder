@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,20 +38,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.oracle.javafx.scenebuilder.tools.job.wrap.FXOMObjectCourseComparator.UnidimensionalComparator;
 
 import javafx.geometry.Orientation;
@@ -63,20 +62,19 @@ import javafx.scene.layout.HBox;
 @ApplicationInstancePrototype
 public final class WrapInHBoxJob extends AbstractWrapInSubComponentJob {
 
-    protected WrapInHBoxJob(JobExtensionFactory extensionFactory, ApplicationInstanceEvents documentManager,
-            Selection selection, FXOMObjectMask.Factory designMaskFactory, IMetadata metadata,
-            AddPropertyValueJob.Factory addPropertyValueJobFactory,
-            ToggleFxRootJob.Factory toggleFxRootJobFactory,
-            ModifyFxControllerJob.Factory modifyFxControllerJobFactory,
-            SetDocumentRootJob.Factory setDocumentRootJobFactory,
-            RemovePropertyValueJob.Factory removePropertyValueJobFactory,
-            RemovePropertyJob.Factory removePropertyJobFactory,
+    //@formatter:offs
+    protected WrapInHBoxJob(
+            JobExtensionFactory extensionFactory,
+            ApplicationInstanceEvents documentManager,
+            Selection selection,
+            SbMetadata metadata,
+            FXOMObjectMask.Factory designMaskFactory,
             FxomJobsFactory fxomJobsFactory,
-            AddPropertyJob.Factory addPropertyJobFactory,
-            DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
-        super(extensionFactory, documentManager, selection, designMaskFactory, metadata, addPropertyValueJobFactory,
-                toggleFxRootJobFactory, modifyFxControllerJobFactory, setDocumentRootJobFactory, removePropertyValueJobFactory,
-                removePropertyJobFactory, modifyObjectJobFactory, addPropertyJobFactory, objectSelectionGroupFactory);
+            SelectionJobsFactory selectionJobsFactory,
+            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+        //@formatter:on
+        super(extensionFactory, documentManager, selection, designMaskFactory, metadata, fxomJobsFactory,
+                selectionJobsFactory, objectSelectionGroupFactory);
         newContainerClass = HBox.class;
     }
 
@@ -87,11 +85,9 @@ public final class WrapInHBoxJob extends AbstractWrapInSubComponentJob {
         return sorted;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
+    @ApplicationInstanceSingleton
     public final static class Factory extends JobFactory<WrapInHBoxJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

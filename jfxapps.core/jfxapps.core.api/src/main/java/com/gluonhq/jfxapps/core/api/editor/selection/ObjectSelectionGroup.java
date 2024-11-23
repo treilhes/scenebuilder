@@ -538,7 +538,7 @@ public class ObjectSelectionGroup implements SelectionGroup {
     }
 
     @Override
-    public Set<Object> getInnerItems() {
+    public Set<? extends FXOMObject> getInnerItems() {
         return Collections.emptySet();
     }
 
@@ -619,8 +619,8 @@ public class ObjectSelectionGroup implements SelectionGroup {
          * @param fxomInstance the fxom instance
          * @return the group
          */
-        public ObjectSelectionGroup getGroup(FXOMInstance fxomInstance) {
-            return create(ObjectSelectionGroup.class, j -> j.setGroupParameters(fxomInstance, null));
+        public ObjectSelectionGroup getGroup(FXOMObject fxomObject) {
+            return create(ObjectSelectionGroup.class, j -> j.setGroupParameters(fxomObject, null));
         }
 
         public ObjectSelectionGroup empty() {

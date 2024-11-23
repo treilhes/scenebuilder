@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDecoder;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
@@ -61,7 +61,7 @@ import com.oracle.javafx.scenebuilder.api.selection.SbTargetSelection;
 import javafx.scene.Node;
 import javafx.scene.input.Clipboard;
 
-@Prototype
+@ApplicationInstancePrototype("com.oracle.javafx.scenebuilder.selection.extension.PasteIntoJob")
 public class PasteIntoJob extends BatchSelectionJob {
 
     private final I18N i18n;

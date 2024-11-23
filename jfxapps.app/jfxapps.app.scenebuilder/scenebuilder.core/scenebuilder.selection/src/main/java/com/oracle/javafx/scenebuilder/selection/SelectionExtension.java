@@ -39,7 +39,17 @@ import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.api.SbApiExtension;
+import com.oracle.javafx.scenebuilder.selection.extension.DuplicateSelectionJob;
+import com.oracle.javafx.scenebuilder.selection.extension.PasteIntoJob;
+import com.oracle.javafx.scenebuilder.selection.extension.SelectionJobsFactoryOverrides;
+import com.oracle.javafx.scenebuilder.selection.extension.SetDocumentRootJob;
 import com.oracle.javafx.scenebuilder.selection.i18n.I18NSelection;
+import com.oracle.javafx.scenebuilder.selection.job.FitToParentSelectionJob;
+import com.oracle.javafx.scenebuilder.selection.job.ImportFileJob;
+import com.oracle.javafx.scenebuilder.selection.job.IncludeFileJob;
+import com.oracle.javafx.scenebuilder.selection.job.ModifyCacheHintJob;
+import com.oracle.javafx.scenebuilder.selection.job.SbSelectionJobsFactoryImpl;
+import com.oracle.javafx.scenebuilder.selection.job.UseComputedSizesSelectionJob;
 
 public class SelectionExtension implements OpenExtension {
 
@@ -64,7 +74,17 @@ public class SelectionExtension implements OpenExtension {
     public List<Class<?>> exportedContextClasses() {
         // @formatter:off
         return Arrays.asList(
+                DuplicateSelectionJob.class,
+                PasteIntoJob.class,
+                SelectionJobsFactoryOverrides.class,
+                SetDocumentRootJob.class,
+                FitToParentSelectionJob.class,
+                ModifyCacheHintJob.class,
+                UseComputedSizesSelectionJob.class,
+                SbTargetSelectionImpl.class,
                 SbSelectionJobsFactoryImpl.class,
+                ImportFileJob.class,
+                IncludeFileJob.class,
                 I18NSelection.class
         );
         // @formatter:on

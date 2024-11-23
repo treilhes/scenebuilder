@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,8 +37,8 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceProtot
 import com.gluonhq.jfxapps.core.api.action.AbstractJobAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.tools.job.wrap.WrapInTilePaneJob;
@@ -56,17 +56,18 @@ import com.oracle.javafx.scenebuilder.tools.job.wrap.WrapInTilePaneJob;
         targetMenuId = WrapInTextFlowAction.MENU_ID,
         label = "TilePane",
         positionRequest = PositionRequest.AsNextSibling)
-public class WrapInTilePaneAction extends AbstractJobAction<WrapInTilePaneJob.Factory> {
+public class WrapInTilePaneAction extends AbstractJobAction {
 
     public final static String MENU_ID = "WrapInTilePaneMenu";
 
-    public WrapInTilePaneAction(ActionExtensionFactory extensionFactory, WrapInTilePaneJob.Factory factory, JobManager jobManager) {
-        super(extensionFactory, factory, jobManager);
-    }
-
-    @Override
-    protected AbstractJob createJob(WrapInTilePaneJob.Factory factory) {
-        return factory.getJob();
+    //@formatter:off
+    public WrapInTilePaneAction(
+            I18N i18n,
+            ActionExtensionFactory extensionFactory,
+            JobManager jobManager,
+            WrapInTilePaneJob.Factory factory) {
+        //@formatter:on
+        super(i18n, extensionFactory, jobManager, () -> factory.getJob());
     }
 
 }

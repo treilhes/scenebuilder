@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,9 +37,8 @@ import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
@@ -55,11 +54,11 @@ public class WindowPring extends AbstractNodePring<Node> {
     private final FXOMObjectMask.Factory maskFactory;
 
     public WindowPring(
-            Content contentPanelController,
+            Workspace workspace,
             ApplicationInstanceEvents documentManager,
-            SelectWithPringGesture.Factory selectWithPringGestureFactory,
-            FXOMObjectMask.Factory maskFactory) {
-        super(contentPanelController, documentManager, selectWithPringGestureFactory, Node.class);
+            FXOMObjectMask.Factory maskFactory,
+            SelectWithPringGesture.Factory selectWithPringGestureFactory) {
+        super(workspace, documentManager, selectWithPringGestureFactory, Node.class);
         this.maskFactory = maskFactory;
     }
 
@@ -70,8 +69,8 @@ public class WindowPring extends AbstractNodePring<Node> {
     @Override
     public void setFxomObject(FXOMObject fxomObject) {
         assert fxomObject.getSceneGraphObject().isInstanceOf(Window.class);
-        HierarchyMask windowDesignHierarchyMask = maskFactory.getMask(fxomObject);
-        List<FXOMObject> sceneContent = windowDesignHierarchyMask.getAccessories(windowDesignHierarchyMask.getMainAccessory(), false);
+        var windowMask = maskFactory.getMask(fxomObject);
+        var sceneContent = windowMask.getAccessories(windowMask.getMainAccessory(), false);
 
         assert !sceneContent.isEmpty();
 
@@ -79,8 +78,8 @@ public class WindowPring extends AbstractNodePring<Node> {
         assert scene != null : "makePring should have only been called if the Window has a scene";
         assert scene.getSceneGraphObject().isInstanceOf(Scene.class);
         assert scene instanceof FXOMInstance;
-        HierarchyMask sceneDesignHierarchyMask = maskFactory.getMask(scene);
-        List<FXOMObject> rootContent = sceneDesignHierarchyMask.getAccessories(sceneDesignHierarchyMask.getMainAccessory(), false);
+        var sceneMask = maskFactory.getMask(scene);
+        List<FXOMObject> rootContent = sceneMask.getAccessories(sceneMask.getMainAccessory(), false);
 
         assert !rootContent.isEmpty();
 

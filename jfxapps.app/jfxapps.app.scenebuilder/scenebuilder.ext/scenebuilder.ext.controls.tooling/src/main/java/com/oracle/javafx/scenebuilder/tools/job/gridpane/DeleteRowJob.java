@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,15 +37,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -90,15 +89,15 @@ public final class DeleteRowJob extends BatchSelectionJob {
     }
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
+    protected List<Job> makeSubJobs() {
 
-        final List<AbstractJob> result = new ArrayList<>();
+        final List<Job> result = new ArrayList<>();
 
         if (GridPaneJobUtils.canPerformRemove(getSelection())) { // (1)
 
             // Retrieve the target GridPane
             final Selection selection = getSelection();
-            final AbstractSelectionGroup asg = selection.getGroup();
+            final SelectionGroup asg = selection.getGroup();
             assert asg instanceof GridSelectionGroup; // Because of (1)
             final GridSelectionGroup gsg = (GridSelectionGroup) asg;
 
@@ -107,10 +106,10 @@ public final class DeleteRowJob extends BatchSelectionJob {
 
             // Add sub jobs
             // First remove the row constraints
-            final AbstractJob removeConstraints = removeRowConstraintsJobFactory.getJob(targetGridPane, targetIndexes);
+            final Job removeConstraints = removeRowConstraintsJobFactory.getJob(targetGridPane, targetIndexes);
             result.add(removeConstraints);
             // Then remove the row content
-            final AbstractJob removeContent = removeRowContentJobFactory.getJob(targetGridPane, targetIndexes);
+            final Job removeContent = removeRowContentJobFactory.getJob(targetGridPane, targetIndexes);
             result.add(removeContent);
             // Finally shift the row content
             result.addAll(moveRowContent());
@@ -136,14 +135,14 @@ public final class DeleteRowJob extends BatchSelectionJob {
     }
 
     @Override
-    protected AbstractSelectionGroup getNewSelectionGroup() {
+    protected SelectionGroup getNewSelectionGroup() {
         // Selection emptied
         return null;
     }
 
-    private List<AbstractJob> moveRowContent() {
+    private List<Job> moveRowContent() {
 
-        final List<AbstractJob> result = new ArrayList<>();
+        final List<Job> result = new ArrayList<>();
 
         final GridPaneHierarchyMask targetGridPaneMask = maskFactory.getMask(targetGridPane);
         final int rowsSize = targetGridPaneMask.getRowsSize();
@@ -178,7 +177,7 @@ public final class DeleteRowJob extends BatchSelectionJob {
                 final int offset = -1 + shiftIndex;
                 final List<Integer> indexes
                         = GridPaneJobUtils.getIndexes(fromIndex, toIndex);
-                final AbstractJob reIndexJob = reIndexRowContentJobFactory.getJob(offset, targetGridPane, indexes);
+                final Job reIndexJob = reIndexRowContentJobFactory.getJob(offset, targetGridPane, indexes);
                 result.add(reIndexJob);
             }
 
@@ -198,10 +197,9 @@ public final class DeleteRowJob extends BatchSelectionJob {
         return result.toString();
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public final static class Factory extends JobFactory<DeleteRowJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

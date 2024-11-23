@@ -38,6 +38,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
@@ -60,7 +61,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
  * Duplicate all object in the current selection See
  * {@link InsertAsSubComponentJob} See {@link RelocateNodeJob}
  */
-@Prototype
+@ApplicationInstancePrototype
 public final class DuplicateSelectionJob extends BatchSelectionJob {
 
     private static final String I18N_LABEL_ACTION_EDIT_DUPLICATE_N = "label.action.edit.duplicate.n";

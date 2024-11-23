@@ -47,9 +47,10 @@ import com.gluonhq.jfxapps.core.fs.action.impl.LoadFileAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.LoadUrlAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.NewAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.OpenAction;
+import com.gluonhq.jfxapps.core.fs.action.impl.OpenFileWithSystemDefaultAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.OpenFilesAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.ReloadFileAction;
-import com.gluonhq.jfxapps.core.fs.action.impl.RevertAction;
+import com.gluonhq.jfxapps.core.fs.action.impl.RevealFileAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.SaveAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.SaveAsAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.SaveOrSaveAsAction;
@@ -108,11 +109,6 @@ public class FileSystemActionFactoryImpl implements FileSystemActionFactory{
     }
 
     @Override
-    public Action revert() {
-        return actionFactory.create(RevertAction.class);
-    }
-
-    @Override
     public Action save() {
         return actionFactory.create(SaveAction.class);
     }
@@ -127,4 +123,13 @@ public class FileSystemActionFactoryImpl implements FileSystemActionFactory{
         return actionFactory.create(SaveOrSaveAsAction.class);
     }
 
+    @Override
+    public Action reveal(File file) {
+        return actionFactory.create(RevealFileAction.class, a -> a.setFile(file));
+    }
+
+    @Override
+    public Action openWithSystemDefault(File file) {
+        return actionFactory.create(OpenFileWithSystemDefaultAction.class, a -> a.setFile(file));
+    }
 }

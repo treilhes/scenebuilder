@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,22 +37,19 @@ package com.oracle.javafx.scenebuilder.tools.job.gridpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.value.IntegerPropertyMetadata;
-import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
 
 import javafx.scene.layout.GridPane;
 
@@ -63,18 +60,18 @@ import javafx.scene.layout.GridPane;
 @ApplicationInstancePrototype
 public final  class MoveRowContentJob extends BatchDocumentJob {
 
-    private final IntegerPropertyMetadata rowIndexMeta =
-            new IntegerPropertyMetadata.Builder()
+    private final IntegerPropertyMetadata<?> rowIndexMeta =
+            new IntegerPropertyMetadata.Builder<>()
                 .name(new PropertyName("rowIndex", GridPane.class)) //NOCHECK
                 .readWrite(true)
                 .defaultValue(0)
-                .inspectorPath(InspectorPath.UNUSED).build();
+                .build();
 
     private FXOMInstance gridPaneObject;
     private int movingRowIndex;
     private int rowIndexDelta;
 
-    private final FXOMObjectMask.Factory GridPaneHierarchyMask;
+    private final FXOMObjectMask.Factory fxomObjectMaskFactory;
 
     private final MoveCellContentJob.Factory moveCellContentJobFactory;
 
@@ -83,11 +80,11 @@ public final  class MoveRowContentJob extends BatchDocumentJob {
             JobExtensionFactory extensionFactory,
             ApplicationInstanceEvents documentManager,
             MoveCellContentJob.Factory moveCellContentJobFactory,
-            FXOMObjectMask.Factory GridPaneHierarchyMask) {
+            FXOMObjectMask.Factory fxomObjectMaskFactory) {
     // @formatter:on
         super(extensionFactory, documentManager);
         this.moveCellContentJobFactory = moveCellContentJobFactory;
-        this.GridPaneHierarchyMask = GridPaneHierarchyMask;
+        this.fxomObjectMaskFactory = fxomObjectMaskFactory;
     }
 
     protected void setJobParameters(FXOMObject gridPaneObject, int movingRowIndex, int rowIndexDelta) {
@@ -106,10 +103,10 @@ public final  class MoveRowContentJob extends BatchDocumentJob {
      */
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
-        final List<AbstractJob> result = new ArrayList<>();
+    protected List<Job> makeSubJobs() {
+        final List<Job> result = new ArrayList<>();
 
-        final HierarchyMask m = GridPaneHierarchyMask.getMask(gridPaneObject);
+        final var m = fxomObjectMaskFactory.getMask(gridPaneObject);
         assert m.hasMainAccessory();
 
         for (FXOMObject childObject:m.getAccessories(m.getMainAccessory(), false)) {
@@ -117,7 +114,7 @@ public final  class MoveRowContentJob extends BatchDocumentJob {
             final FXOMInstance child = (FXOMInstance) childObject;
             if (rowIndexMeta.getValue(child) == movingRowIndex) {
                 // child belongs to column at movingRowIndex
-                final AbstractJob subJob = moveCellContentJobFactory.getJob(child, 0, rowIndexDelta);
+                final Job subJob = moveCellContentJobFactory.getJob(child, 0, rowIndexDelta);
                 result.add(subJob);
             }
         }
@@ -130,10 +127,9 @@ public final  class MoveRowContentJob extends BatchDocumentJob {
         return getClass().getSimpleName();
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public final static class Factory extends JobFactory<MoveRowContentJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

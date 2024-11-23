@@ -37,7 +37,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.core.api.CardinalPoint;
+import com.gluonhq.jfxapps.core.api.gesture.CardinalPoint;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
 import com.gluonhq.jfxapps.core.metadata.util.ColorEncoder;
 import com.oracle.javafx.scenebuilder.tools.driver.quadcurve.Quad;

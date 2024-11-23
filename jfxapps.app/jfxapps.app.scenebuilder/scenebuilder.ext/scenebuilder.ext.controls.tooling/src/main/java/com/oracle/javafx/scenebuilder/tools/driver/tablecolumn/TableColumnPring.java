@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,9 +34,9 @@
 package com.oracle.javafx.scenebuilder.tools.driver.tablecolumn;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
+import com.gluonhq.jfxapps.core.api.gesture.AbstractGesture;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractGenericPring;
@@ -61,11 +61,11 @@ public class TableColumnPring extends AbstractGenericPring<Object> {
     private final Factory selectWithPringGestureFactory;
 
     public TableColumnPring(
-            Content contentPanelController,
+            Workspace workspace,
             ApplicationInstanceEvents documentManager,
             SelectWithPringGesture.Factory selectWithPringGestureFactory
             ) {
-        super(contentPanelController, documentManager, Object.class);
+        super(workspace, documentManager, Object.class);
         this.selectWithPringGestureFactory = selectWithPringGestureFactory;
     }
 
@@ -131,7 +131,7 @@ public class TableColumnPring extends AbstractGenericPring<Object> {
      */
 
     private TableColumn<?,?> getTableColumn() {
-        assert getSceneGraphObject().isInstanceOf(TableColumn.class);
+        assert getSceneGraphObject() instanceof TableColumn;
         return (TableColumn<?,?>) getSceneGraphObject();
     }
 }

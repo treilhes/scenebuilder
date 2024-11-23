@@ -35,26 +35,15 @@ package com.gluonhq.jfxapps.test;
 
 import java.util.concurrent.TimeoutException;
 
-import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.UiController;
-import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
-import com.gluonhq.jfxapps.util.URLUtils;
 
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -65,19 +54,7 @@ public class StageBuilder {
     private final JavafxThreadClassloader classloader;
     private final ApplicationEvents events;
     private final ApplicationInstanceEvents instanceEvents;
-    private final FxRobot robot;;
-
-    private Class<? extends UiController> controller;
-    private UiController controllerInstance;
-    private String css;
     private Stage stage;
-    private int width;
-    private int height;
-
-    private StageSetup stageSetup;
-    private String fxml;
-    private FXOMDocument document;
-    private ToolStylesheetProvider toolStylesheetProvider;
 
 
     protected StageBuilder(JfxAppContext context, JavafxThreadClassloader classloader, ApplicationEvents events, ApplicationInstanceEvents instanceEvents) {
@@ -85,7 +62,20 @@ public class StageBuilder {
         this.classloader = classloader;
         this.events = events;
         this.instanceEvents = instanceEvents;
-        this.robot = new FxRobot();
+    }
+
+    public WorkspaceBuilder workspace() {
+        return new WorkspaceBuilder(context, classloader, events, instanceEvents).stage(stage);
+    }
+
+    public <T extends UiController> UiControllerBuilder<T> controller(Class<T> controller) {
+        return new UiControllerBuilder<T>(context, classloader, events, instanceEvents)
+                .stage(stage).controller(controller);
+    }
+
+    public <T extends UiController> UiControllerBuilder<T> controller(T controllerInstance) {
+        return new UiControllerBuilder<T>(context, classloader, events, instanceEvents)
+                .stage(stage).controller(controllerInstance);
     }
 
     protected StageBuilder stage(Stage stage) {
@@ -97,146 +87,6 @@ public class StageBuilder {
             e.printStackTrace();
         }
         return this;
-    }
-
-    public StageBuilder controller(Class<? extends UiController> controller) {
-        this.controller = controller;
-        this.controllerInstance = null;
-        return this;
-    }
-
-    public StageBuilder controller(UiController controllerInstance) {
-        this.controllerInstance = controllerInstance;
-        this.controller = controllerInstance.getClass();
-        return this;
-    }
-
-    public StageBuilder size(int width, int height) {
-        this.width = width;
-        this.height = height;
-        return this;
-    }
-
-    public StageBuilder document(String fxml) {
-        this.fxml = fxml;
-        return this;
-    }
-
-    public StageBuilder document(FXOMDocument document) {
-        this.document = document;
-        return this;
-    }
-
-    public StageBuilder css(String css) {
-        this.css = css;
-        return this;
-    }
-
-    public StageBuilder css(ToolStylesheetProvider toolStylesheetProvider) {
-        this.toolStylesheetProvider = toolStylesheetProvider;
-        return this;
-    }
-
-    public StageBuilder setup(StageSetup stageSetup) {
-        this.stageSetup = stageSetup;
-        return this;
-    }
-
-    public <T extends UiController> T show() {
-
-        robot.interact(() -> {
-            classloader.addClassLoader(Thread.currentThread().getContextClassLoader());
-            Thread.currentThread().setContextClassLoader(classloader);
-        });
-
-        UiController instance;
-
-        if (controllerInstance != null) {
-            instance = controllerInstance;
-            new FxmlControllerBeanPostProcessor().postProcessAfterInitialization(instance, "controller");
-        } else if (controller != null) {
-            instance = context.getBean(controller);
-        } else {
-            instance = new UiController() {
-                private Parent root = new StackPane();
-                @Override
-                public void setRoot(Parent root) {
-                    this.root = root;
-                }
-
-                @Override
-                public Parent getRoot() {
-                    return root;
-                }
-            };
-        }
-
-        // add default theme class to controller
-        instance.getRoot().getStyleClass().add("theme-presets");
-
-        if (controller != null) {
-            classloader.addClassLoader(controller.getClassLoader());
-        }
-
-        robot.interact(() -> {
-
-            if (stageSetup != null) {
-                int w = width == 0 ? 800 : width;
-                int h = height == 0 ? 600 : height;
-                Parent c = instance.getRoot() == null ? new Pane() : instance.getRoot();
-                stageSetup.setup(stage, w, h, c);
-            }
-
-            var builder = ToolStylesheetProvider.builder();
-            if (toolStylesheetProvider != null) {
-                builder.userAgentStylesheet(toolStylesheetProvider.getUserAgentStylesheet());
-                builder.stylesheets(toolStylesheetProvider.getStylesheets());
-            }
-            if (css != null) {
-                String dataUri = URLUtils.toDataURI(css).toString();
-                builder.stylesheet(dataUri);
-            }
-
-            var provider = builder.build();
-            if (controller != null) {
-                //use events
-                events.stylesheetConfig().set(provider);
-            } else {
-                // use stage
-                if (provider.getUserAgentStylesheet() != null) {
-                    stage.getScene().getStylesheets().add(provider.getUserAgentStylesheet());
-                }
-                stage.getScene().getStylesheets().addAll(provider.getStylesheets());
-            }
-
-            FXOMDocument doc = null;
-            if (document != null) {
-                doc = document;
-            } else if (fxml != null) {
-                try {
-                    doc = FXOMDocumentFactory.DEFAULT.newDocument(fxml);
-                } catch (Exception e) {
-                    throw new IllegalArgumentException("Invalid fxml document", e);
-                }
-            }
-            // create an hidden stage for the document scene graph if it is a node (needed for css handling)
-            if (doc != null) {
-                var sceneGraphObject = doc.getFxomRoot().getSceneGraphObject();
-
-                if (sceneGraphObject.isInstanceOf(Node.class)) {
-                    var node = sceneGraphObject.getAs(Node.class);
-                    var hiddenStage = new Stage();
-                    var pane = new Pane(node);
-                    hiddenStage.hide();
-                    hiddenStage.setScene(new Scene(pane));
-                }
-
-                instanceEvents.fxomDocument().set(doc);
-            }
-
-        });
-
-        return (T) instance;
     }
 
 }

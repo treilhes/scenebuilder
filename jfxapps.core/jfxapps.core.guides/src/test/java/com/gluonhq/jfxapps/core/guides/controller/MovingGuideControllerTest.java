@@ -42,6 +42,7 @@ import java.util.function.Predicate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.scenicview.ScenicView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,17 +52,18 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
 import com.gluonhq.jfxapps.core.api.guide.MovingGuide;
-import com.gluonhq.jfxapps.core.api.javafx.UiController;
 import com.gluonhq.jfxapps.core.guides.preference.AlignmentGuidesColorPreference;
+import com.gluonhq.jfxapps.core.guides.preference.GuidesEnabledPreference;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 import com.gluonhq.jfxapps.test.StageBuilder;
 import com.gluonhq.jfxapps.test.StageType;
 
-import javafx.geometry.Pos;
-import javafx.scene.Node;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
+import javafx.scene.SubScene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -72,31 +74,10 @@ class MovingGuideControllerTest {
 
     private final static Logger logger = LoggerFactory.getLogger(MovingGuideControllerTest.class);
 
-    private static final double EQUALS_DELTA = 0.1;
-    private static final double EXPECTED_DELTA = 2.0;
+    private static final double EQ_DELTA = 0.1;
+    private static final double DELTA = 2.0;
 
-    private static final int CENTER_MINY = 250;
-    private static final int CENTER_MINX = 350;
-
-    private static final int BOTTOMRIGHT_MINY = 375;
-    private static final int BOTTOMRIGHT_MINX = 575;
-    private static final int BOTTOMLEFT_MINY = 350;
-    private static final int BOTTOMLEFT_MINX = 125;
-    private static final int TOPRIGHT_MINY = 125;
-    private static final int TOPRIGHT_MINX = 550;
-    private static final int TOPLEFT_MINY = 100;
-    private static final int TOPLEFT_MINX = 100;
-
-    private static final int SIDE = 100;
-    private static final int DRAGGED_SIDE = 40;
-
-    private static List<Node> CENTERED_SQUARE = List.of(new Rectangle(CENTER_MINX, CENTER_MINY, SIDE, SIDE));
-    private static List<Node> FOUR_SQUARES = List.of(new Rectangle(TOPLEFT_MINX, TOPLEFT_MINY, SIDE, SIDE),
-            new Rectangle(TOPRIGHT_MINX, TOPRIGHT_MINY, SIDE, SIDE),
-            new Rectangle(BOTTOMRIGHT_MINX, BOTTOMRIGHT_MINY, SIDE, SIDE),
-            new Rectangle(BOTTOMLEFT_MINX, BOTTOMLEFT_MINY, SIDE, SIDE));
-
-    final double proxymityLimit = 6;
+    private static final double PROXYMITY_LIMIT = 6; // -fx-border-insets: -6
 
     @TestConfiguration
     static class Config {
@@ -104,160 +85,171 @@ class MovingGuideControllerTest {
         AlignmentGuidesColorPreference alignmentGuidesColorPreference() {
             return Mockito.mock(AlignmentGuidesColorPreference.class);
         }
+
+        @Bean
+        GuidesEnabledPreference guidesEnabledPreference() {
+            GuidesEnabledPreference guidesEnabledPreference = Mockito.mock(GuidesEnabledPreference.class);
+
+            SimpleBooleanProperty guidesEnabled = new SimpleBooleanProperty(true);
+            Mockito.when(guidesEnabledPreference.getValue()).thenReturn(guidesEnabled.getValue());
+            Mockito.when(guidesEnabledPreference.getObservableValue()).thenReturn(guidesEnabled);
+
+            return guidesEnabledPreference;
+        }
     }
 
-    private Label draggedObject;
-    private Rectangle proxymityLimitBounds;
-    private MoveAndMatch moveAndMatch;
+    private MoveAndMatch moveAndMatch = (n, x, y, movingGuide) -> {
+        n.setLayoutX(x - n.getWidth() / 2);
+        n.setLayoutY(y - n.getHeight() / 2);
+        movingGuide.match(n);
+    };;
 
     @Autowired
     private AlignmentGuidesColorPreference alignmentGuidesColorPreference;
 
     @Autowired
-    private MovingGuide movingGuideController;
+    private GuidesEnabledPreference guidesEnabledPreference;
+
+    @Autowired
+    private MovingGuide guide;
 
     @BeforeEach
     public void setup() {
         Mockito.when(alignmentGuidesColorPreference.getValue()).thenReturn(Color.RED);
 
-        movingGuideController.setMatchDistance(proxymityLimit);
+        guide.setMatchDistance(PROXYMITY_LIMIT);
     }
 
     @Test
     void must_show_the_expected_guides(StageBuilder builder, FxRobot robot) throws Exception {
 
-        Predicate<Line> isLeftGuide = line -> line.getStartX() == CENTER_MINX && line.getEndX() == CENTER_MINX;
-        Predicate<Line> isRightGuide = line -> line.getStartX() == CENTER_MINX + SIDE
-                && line.getEndX() == CENTER_MINX + SIDE;
-        Predicate<Line> isTopGuide = line -> line.getStartY() == CENTER_MINY && line.getEndY() == CENTER_MINY;
-        Predicate<Line> isBottomGuide = line -> line.getStartY() == CENTER_MINY + SIDE
-                && line.getEndY() == CENTER_MINY + SIDE;
-        Predicate<Line> isVerticalMiddleGuide = line -> line.getStartX() == CENTER_MINX + SIDE / 2
-                && line.getEndX() == CENTER_MINX + SIDE / 2;
-        Predicate<Line> isHorizontalMiddleGuide = line -> line.getStartY() == CENTER_MINY + SIDE / 2
-                && line.getEndY() == CENTER_MINY + SIDE / 2;
+        //@formatter:off
+        var testStage = builder.workspace()
+                .size(800, 600)
+                .document("""
+                        <?xml version="1.0" encoding="UTF-8"?>
 
-        var uiController = builder.size(800, 600).setup(StageType.Fill).show();
+                        <?import javafx.scene.control.Label?>
+                        <?import javafx.scene.layout.Pane?>
+                        <?import javafx.scene.shape.Rectangle?>
 
-        movingGuideController.initializeContainerBounds(uiController.getRoot().getLayoutBounds());
 
-        setupTestUi(robot, uiController, movingGuideController, CENTERED_SQUARE);
-        // setupTestUi(robot, uiController, movingGuideController, FOUR_SQUARES);
+                        <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+                           <children>
+                              <Rectangle fx:id="square" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" layoutX="250.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="100.0" />
+                              <Label fx:id="dragme" alignment="CENTER" layoutX="32.0" layoutY="34.0" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: grey; -fx-border-color: blue; -fx-border-style: segments(5, 5, 5, 5)  line-cap round; -fx-border-insets: -6; -fx-text-fill: white;" text="drag&#10;me" textAlignment="CENTER" />
+                           </children>
+                        </Pane>
+                        """)
+                .setup(StageType.Fill).show();
+        //@formatter:on
 
-        CENTERED_SQUARE.forEach(node -> movingGuideController.addSampleBounds(node));
-        // FOUR_SQUARES.forEach(node -> movingGuideController.addSampleBounds(node));
+        var uiController = testStage.getController();
+        var scene = uiController.getRoot().getScene();
+        var subScene = uiController.getSubScene();
 
-        // robot.interact(() -> ScenicView.show(uiController.getRoot()));
+
+        Label dragme = robot.from(uiController.getSubSceneRoot()).lookup("#dragme").query();
+        assertEquals("Must be a square", dragme.getWidth(), dragme.getHeight(), EQ_DELTA);
+        double drag_side = dragme.getWidth();
+
+        Rectangle square = robot.from(uiController.getSubSceneRoot()).lookup("#square").query();
+        assertEquals("Must be a square", square.getWidth(), square.getHeight(), EQ_DELTA);
+
+        double minx = square.getLayoutX();
+        double miny = square.getLayoutY();
+        double side = square.getWidth();
+
+        Predicate<Line> isLeftGuide = (line) -> {
+            var local = lineToLocal(subScene, line);
+            return local.getMinX() == minx && local.getMaxX() == minx;
+        };
+        Predicate<Line> isRightGuide = line -> {
+            var local = lineToLocal(subScene, line);
+            return local.getMinX() == minx + side && local.getMaxX() == minx + side;
+        };
+        Predicate<Line> isTopGuide = line -> {
+            var local = lineToLocal(subScene, line);
+            return local.getMinY() == miny && local.getMaxY() == miny;
+        };
+        Predicate<Line> isBottomGuide = line -> {
+            var local = lineToLocal(subScene, line);
+            return local.getMinY() == miny + side && local.getMaxY() == miny + side;
+        };
+        Predicate<Line> isVerticalMiddleGuide = line -> {
+            var local = lineToLocal(subScene, line);
+            return local.getMinX() == minx + side / 2 && local.getMaxX() == minx + side / 2;
+        };
+        Predicate<Line> isHorizontalMiddleGuide = line -> {
+            var local = lineToLocal(subScene, line);
+            return local.getMinY() == miny + side / 2 && local.getMaxY() == miny + side / 2;
+        };
+
+
+        // if you want to play: add a breakpoint and uncomment this
+        dragme.onMouseDraggedProperty().set(event -> {
+            // events originate from the top scene so we need to convert them to the subscene coordinate
+            var localEvt = subScene.sceneToLocal(event.getSceneX(), event.getSceneY());
+            moveAndMatch.moveAndMatch(dragme, localEvt.getX(), localEvt.getY(), guide);
+        });
+
+        guide.initializeContainerBounds(scene.getRoot().getLayoutBounds());
+
+        robot.interact(() -> uiController.getLayer().getChildren().add(guide.getGuideGroup()));
+
+        guide.addSampleBounds(square);
+
+        //robot.interact(() -> ScenicView.show(uiController.getRoot().getScene()));
 
         // dragged : outside off the reference top left
-        robot.interact(() -> moveAndMatch.moveAndMatch(CENTER_MINX - DRAGGED_SIDE / 2 - EXPECTED_DELTA,
-                CENTER_MINY - DRAGGED_SIDE / 2 - EXPECTED_DELTA, movingGuideController));
+        robot.interact(() -> moveAndMatch.moveAndMatch(dragme, minx - drag_side / 2 - DELTA,
+                miny - drag_side / 2 - DELTA, guide));
         var lines = lookupLines(robot);
-        assertEquals("Expected two guides", lines.size(), 2);
+        assertEquals("Expected two guides", 2, lines.size());
         assertTrue("Expected a left guide", lines.stream().anyMatch(isLeftGuide));
         assertTrue("Expected a top guide", lines.stream().anyMatch(isTopGuide));
-        assertEquals("Expected suggestedX", movingGuideController.getSuggestedDX(), EXPECTED_DELTA, EQUALS_DELTA);
-        assertEquals("Expected suggestedY", movingGuideController.getSuggestedDY(), EXPECTED_DELTA, EQUALS_DELTA);
+        assertEquals("Expected suggestedX", DELTA, guide.getSuggestedDX(), EQ_DELTA);
+        assertEquals("Expected suggestedY", DELTA, guide.getSuggestedDY(), EQ_DELTA);
 
         // dragged : outside off the reference top right
-        robot.interact(() -> moveAndMatch.moveAndMatch(CENTER_MINX + SIDE + DRAGGED_SIDE / 2 + EXPECTED_DELTA,
-                CENTER_MINY - DRAGGED_SIDE / 2 - EXPECTED_DELTA, movingGuideController));
+        robot.interact(() -> moveAndMatch.moveAndMatch(dragme, minx + side + drag_side / 2 + DELTA,
+                miny - drag_side / 2 - DELTA, guide));
         lines = lookupLines(robot);
-        assertEquals("Expected two guides", lines.size(), 2);
+        assertEquals("Expected two guides", 2, lines.size());
         assertTrue("Expected a right guide", lines.stream().anyMatch(isRightGuide));
         assertTrue("Expected a top guide", lines.stream().anyMatch(isTopGuide));
-        assertEquals("Expected suggestedX", movingGuideController.getSuggestedDX(), -EXPECTED_DELTA, EQUALS_DELTA);
-        assertEquals("Expected suggestedY", movingGuideController.getSuggestedDY(), EXPECTED_DELTA, EQUALS_DELTA);
+        assertEquals("Expected suggestedX", -DELTA, guide.getSuggestedDX(), EQ_DELTA);
+        assertEquals("Expected suggestedY", DELTA, guide.getSuggestedDY(), EQ_DELTA);
 
         // dragged : outside off the reference bottom right
-        robot.interact(() -> moveAndMatch.moveAndMatch(CENTER_MINX + SIDE + DRAGGED_SIDE / 2 + EXPECTED_DELTA,
-                CENTER_MINY + SIDE + DRAGGED_SIDE / 2 + EXPECTED_DELTA, movingGuideController));
+        robot.interact(() -> moveAndMatch.moveAndMatch(dragme, minx + side + drag_side / 2 + DELTA,
+                miny + side + drag_side / 2 + DELTA, guide));
         lines = lookupLines(robot);
-        assertEquals("Expected two guides", lines.size(), 2);
+        assertEquals("Expected two guides", 2, lines.size());
         assertTrue("Expected a right guide", lines.stream().anyMatch(isRightGuide));
         assertTrue("Expected a bottom guide", lines.stream().anyMatch(isBottomGuide));
-        assertEquals("Expected suggestedX", movingGuideController.getSuggestedDX(), -EXPECTED_DELTA, EQUALS_DELTA);
-        assertEquals("Expected suggestedY", movingGuideController.getSuggestedDY(), -EXPECTED_DELTA, EQUALS_DELTA);
+        assertEquals("Expected suggestedX", -DELTA, guide.getSuggestedDX(), EQ_DELTA);
+        assertEquals("Expected suggestedY", -DELTA, guide.getSuggestedDY(), EQ_DELTA);
 
         // dragged : outside off the reference bottom left
-        robot.interact(() -> moveAndMatch.moveAndMatch(CENTER_MINX - DRAGGED_SIDE / 2 - EXPECTED_DELTA,
-                CENTER_MINY + SIDE + DRAGGED_SIDE / 2 + EXPECTED_DELTA, movingGuideController));
+        robot.interact(() -> moveAndMatch.moveAndMatch(dragme, minx - drag_side / 2 - DELTA,
+                miny + side + drag_side / 2 + DELTA, guide));
         lines = lookupLines(robot);
-        assertEquals("Expected two guides", lines.size(), 2);
+        assertEquals("Expected two guides", 2, lines.size());
         assertTrue("Expected a left guide", lines.stream().anyMatch(isLeftGuide));
         assertTrue("Expected a bottom guide", lines.stream().anyMatch(isBottomGuide));
-        assertEquals("Expected suggestedX", movingGuideController.getSuggestedDX(), EXPECTED_DELTA, EQUALS_DELTA);
-        assertEquals("Expected suggestedY", movingGuideController.getSuggestedDY(), -EXPECTED_DELTA, EQUALS_DELTA);
+        assertEquals("Expected suggestedX", DELTA, guide.getSuggestedDX(), EQ_DELTA);
+        assertEquals("Expected suggestedY", -DELTA, guide.getSuggestedDY(), EQ_DELTA);
 
         // dragged : inside at center off the reference
-        robot.interact(() -> moveAndMatch.moveAndMatch(
-                CENTER_MINX + SIDE/2 - EXPECTED_DELTA,
-                CENTER_MINY + SIDE/2 - EXPECTED_DELTA,
-                movingGuideController));
+        robot.interact(
+                () -> moveAndMatch.moveAndMatch(dragme, minx + side / 2 - DELTA, miny + side / 2 - DELTA, guide));
         lines = lookupLines(robot);
-        assertEquals("Expected two guides", lines.size(), 2);
+        assertEquals("Expected two guides", 2, lines.size());
         assertTrue("Expected a middle vertical guide", lines.stream().anyMatch(isVerticalMiddleGuide));
         assertTrue("Expected a middle horizontal guide", lines.stream().anyMatch(isHorizontalMiddleGuide));
-        assertEquals("Expected suggestedX", movingGuideController.getSuggestedDX(), EXPECTED_DELTA, EQUALS_DELTA);
-        assertEquals("Expected suggestedY", movingGuideController.getSuggestedDY(), EXPECTED_DELTA, EQUALS_DELTA);
-    }
-
-    private void setupTestUi(FxRobot robot, UiController uiController, MovingGuide movingGuideController,
-            List<Node> contents) {
-        setupProximity();
-
-        var objectsInScene = new Pane();
-
-        setupDraggedObject();
-
-        // stack.setAlignment(Pos.TOP_LEFT);
-        draggedObject.onMouseDraggedProperty().set(event -> {
-            moveAndMatch.moveAndMatch(event.getSceneX(), event.getSceneY(), movingGuideController);
-        });
-
-        // without controller root is a StackPane
-        StackPane stack = (StackPane) uiController.getRoot();
-
-        robot.interact(() -> {
-            stack.getChildren().add(objectsInScene);
-            contents.forEach(node -> objectsInScene.getChildren().add(node));
-            objectsInScene.getChildren().add(proxymityLimitBounds);
-            objectsInScene.getChildren().add(draggedObject);
-            objectsInScene.getChildren().add(movingGuideController.getGuideGroup());
-        });
-
-    }
-
-    private void setupDraggedObject() {
-        draggedObject = new Label("drag\nme");
-        draggedObject.setMinWidth(DRAGGED_SIDE);
-        draggedObject.setMinHeight(DRAGGED_SIDE);
-        draggedObject.setMaxWidth(DRAGGED_SIDE);
-        draggedObject.setMaxHeight(DRAGGED_SIDE);
-        draggedObject.setAlignment(Pos.CENTER);
-        // draggedObject.setTextAlignment(TextAlignment.CENTER);
-        draggedObject.setStyle("-fx-background-color: beige;");
-
-        moveAndMatch = (x, y, movingGuide) -> {
-            draggedObject.setLayoutX(x - DRAGGED_SIDE / 2);
-            draggedObject.setLayoutY(y - DRAGGED_SIDE / 2);
-            reconciliateLimits(proxymityLimitBounds, draggedObject);
-            movingGuide.match(draggedObject);
-        };
-    }
-
-    private void setupProximity() {
-        proxymityLimitBounds = new Rectangle(0, 0, proxymityLimit, proxymityLimit);
-        proxymityLimitBounds.setFill(Color.TRANSPARENT);
-        proxymityLimitBounds.setStroke(Color.BLUE);
-        proxymityLimitBounds.getStrokeDashArray().addAll(4.0, 4.0);
-    }
-
-    private void reconciliateLimits(Rectangle proxymityLimitBounds, Label draggedObject) {
-        proxymityLimitBounds.setLayoutX(draggedObject.getLayoutX() - proxymityLimit);
-        proxymityLimitBounds.setLayoutY(draggedObject.getLayoutY() - proxymityLimit);
-        proxymityLimitBounds.setWidth(2 * proxymityLimit + draggedObject.getWidth());
-        proxymityLimitBounds.setHeight(2 * proxymityLimit + draggedObject.getHeight());
+        assertEquals("Expected suggestedX", DELTA, guide.getSuggestedDX(), EQ_DELTA);
+        assertEquals("Expected suggestedY", DELTA, guide.getSuggestedDY(), EQ_DELTA);
     }
 
     private List<Line> lookupLines(FxRobot robot) {
@@ -265,7 +257,10 @@ class MovingGuideControllerTest {
                 .map(node -> (Line) node).toList();
     }
 
+    private Bounds lineToLocal(SubScene subScene, Line line) {
+        return subScene.sceneToLocal(new BoundingBox(line.getStartX(), line.getStartY(), line.getEndX() - line.getStartX(), line.getEndY() - line.getStartY()));
+    }
     private interface MoveAndMatch {
-        void moveAndMatch(double x, double y, MovingGuide movingGuide);
+        void moveAndMatch(Region n, double x, double y, MovingGuide movingGuide);
     }
 }

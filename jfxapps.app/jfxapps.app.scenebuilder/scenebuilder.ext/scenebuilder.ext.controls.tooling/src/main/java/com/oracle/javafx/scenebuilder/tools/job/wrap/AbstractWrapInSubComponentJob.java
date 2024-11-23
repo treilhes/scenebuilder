@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,18 +37,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 /**
  * Main class used for the wrap jobs using the new container SUB COMPONENT
@@ -57,32 +57,31 @@ import com.gluonhq.jfxapps.core.metadata.IMetadata;
 public abstract class AbstractWrapInSubComponentJob extends AbstractWrapInJob {
 
     private final FXOMObjectMask.Factory designMaskFactory;
-    private final AddPropertyJob.Factory addPropertyJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
 
-    public AbstractWrapInSubComponentJob(JobExtensionFactory extensionFactory, ApplicationInstanceEvents documentManager,
-            Selection selection, FXOMObjectMask.Factory designMaskFactory, IMetadata metadata,
-            AddPropertyValueJob.Factory addPropertyValueJobFactory,
-            ToggleFxRootJob.Factory toggleFxRootJobFactory,
-            ModifyFxControllerJob.Factory modifyFxControllerJobFactory,
-            SetDocumentRootJob.Factory setDocumentRootJobFactory,
-            RemovePropertyValueJob.Factory removePropertyValueJobFactory,
-            RemovePropertyJob.Factory removePropertyJobFactory,
+    //@formatter:off
+    public AbstractWrapInSubComponentJob(
+            JobExtensionFactory extensionFactory,
+            ApplicationInstanceEvents documentManager,
+            Selection selection,
+            FXOMObjectMask.Factory designMaskFactory,
+            SbMetadata metadata,
             FxomJobsFactory fxomJobsFactory,
-            AddPropertyJob.Factory addPropertyJobFactory,
-            DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
-        super(extensionFactory, documentManager, selection, designMaskFactory, metadata, addPropertyValueJobFactory,
-                toggleFxRootJobFactory, modifyFxControllerJobFactory, setDocumentRootJobFactory, removePropertyValueJobFactory,
-                removePropertyJobFactory, modifyObjectJobFactory, objectSelectionGroupFactory);
+            SelectionJobsFactory selectionJobsFactory,
+            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+        //@formatter:on
+        super(extensionFactory, documentManager, selection, designMaskFactory, metadata, fxomJobsFactory,
+                selectionJobsFactory, objectSelectionGroupFactory);
         this.designMaskFactory = designMaskFactory;
-        this.addPropertyJobFactory = addPropertyJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
     }
 
     @Override
-    protected List<AbstractJob> wrapChildrenJobs(final List<FXOMObject> children) {
+    protected List<Job> wrapChildrenJobs(final List<FXOMObject> children) {
 
-        final List<AbstractJob> jobs = new ArrayList<>();
+        final List<Job> jobs = new ArrayList<>();
 
-        final HierarchyMask newContainerMask = designMaskFactory.getMask(newContainer);
+        final var newContainerMask = designMaskFactory.getMask(newContainer);
         assert newContainerMask.hasMainAccessory();
 
         // Retrieve the new container property name to be used
@@ -102,7 +101,7 @@ public abstract class AbstractWrapInSubComponentJob extends AbstractWrapInJob {
 
         // Add the new container property to the new container instance
         assert newContainerProperty.getParentInstance() == null;
-        final AbstractJob addPropertyJob = addPropertyJobFactory.getJob(newContainerProperty,newContainer,-1);
+        final Job addPropertyJob = fxomJobsFactory.addProperty(newContainerProperty,newContainer,-1);
         jobs.add(addPropertyJob);
 
         return jobs;

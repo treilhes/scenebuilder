@@ -41,21 +41,19 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Lazy;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.Gesture;
 import com.gluonhq.jfxapps.core.api.content.mode.AbstractModeController;
 import com.gluonhq.jfxapps.core.api.content.mode.Layer;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.gesture.Gesture;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
@@ -67,11 +65,11 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.Pring;
 import com.oracle.javafx.scenebuilder.api.control.ResizeGuide;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
+import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.api.control.Shadow;
 import com.oracle.javafx.scenebuilder.api.control.Tring;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
@@ -126,8 +124,6 @@ public class EditModeController extends AbstractModeController implements Gestur
     private Gesture glassGesture;
     private FXOMInstance inlineEditedObject;
 
-    private final Content content;
-
     private final JobManager jobManager;
 
     private final SbFXOMObjectMask.Factory maskFactory;
@@ -164,7 +160,6 @@ public class EditModeController extends AbstractModeController implements Gestur
             ContextMenu contextMenu,
             MessageLogger messageLogger,
             InlineEdit inlineEdit,
-            @Lazy Content content,
             JobManager jobManager,
             SbFXOMObjectMask.Factory maskFactory,
             ApplicationInstanceEvents documentManager,
@@ -176,7 +171,6 @@ public class EditModeController extends AbstractModeController implements Gestur
             ) {
      // @formatter:on
         super(workspace);
-        this.content = content;
         this.selection = selection;
         this.contextMenu = contextMenu;
         this.messageLogger = messageLogger;
@@ -403,7 +397,7 @@ public class EditModeController extends AbstractModeController implements Gestur
     private void mouseMovedOnGlassLayer(MouseEvent e) {
         assert activeGesture == null : "activeGesture=" + activeGesture;
 
-        final FXOMObject hitObject = content.pick(e.getSceneX(), e.getSceneY());
+        final FXOMObject hitObject = workspace.pick(e.getSceneX(), e.getSceneY());
         final FXOMObject selectionAncestor = selection.getAncestor();
 
         // The code below handles selction of detached graph objects
@@ -695,7 +689,7 @@ public class EditModeController extends AbstractModeController implements Gestur
          * cleanly. If not, we do not activate the gesture.
          */
 
-        if (content.isDisplayable() && inlineEdit.canGetFxmlText()) {
+        if (workspace.isContentDisplayable() && inlineEdit.canGetFxmlText()) {
 
             getWorkspace().beginInteraction();
 

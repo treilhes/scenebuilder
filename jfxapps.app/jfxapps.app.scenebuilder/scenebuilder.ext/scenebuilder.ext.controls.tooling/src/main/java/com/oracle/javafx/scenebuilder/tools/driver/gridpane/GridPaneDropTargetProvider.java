@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,9 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.gridpane;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.dnd.AbstractDropTarget;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
@@ -50,8 +48,8 @@ import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridPaneDropTarget.R
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.GridPane;
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+
+@ApplicationInstanceSingleton
 public final class GridPaneDropTargetProvider extends AbstractDropTargetProvider {
 
     private static final double MATCH_DIST = 4;

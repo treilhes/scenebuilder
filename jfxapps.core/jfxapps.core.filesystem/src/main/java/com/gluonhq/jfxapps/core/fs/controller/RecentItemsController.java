@@ -156,4 +156,11 @@ public class RecentItemsController implements RecentItems {
     public ObservableList<String> getRecentItems() {
         return recentItemsPreference.getValue();
     }
+
+
+    @Override
+    public void cleanupRecentItems() {
+        final List<String> toRemove = getRecentItems().stream().filter(s -> !new File(s).exists()).toList();
+        removeRecentItems(toRemove);
+    }
 }

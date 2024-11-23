@@ -34,6 +34,7 @@
 
 package com.gluonhq.jfxapps.core.selection.job;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
@@ -47,7 +48,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 /**
  * Update the currently scoped document selection {@link Selection} with the provided list of {@link FXOMObject}
  */
-@Prototype
+@ApplicationInstancePrototype
 public final class UpdateSelectionJob extends AbstractJob {
 
     private SelectionGroup oldSelectionGroup;

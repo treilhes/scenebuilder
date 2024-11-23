@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,12 +38,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
@@ -54,8 +55,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -75,40 +75,27 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
     protected FXOMInstance oldContainer, newContainer;
     private final FXOMDocument fxomDocument;
     private final FXOMObjectMask.Factory designMaskFactory;
-    private final IMetadata metadata;
-    private final AddPropertyValueJob.Factory addPropertyValueJobFactory;
-    private final ToggleFxRootJob.Factory toggleFxRootJobFactory;
-    private final ModifyFxControllerJob.Factory modifyFxControllerJobFactory;
-    private final SetDocumentRootJob.Factory setDocumentRootJobFactory;
-    private final RemovePropertyValueJob.Factory removePropertyValueJobFactory;
-    private final RemovePropertyJob.Factory removePropertyJobFactory;
+    private final SbMetadata metadata;
+    private final SelectionJobsFactory selectionJobFactory;
     private final FxomJobsFactory fxomJobsFactory;
-    private final DSelectionGroupFactory.Factory objectSelectionGroupFactory;
+    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
 
+    //@formatter:off
     public AbstractWrapInJob(
             JobExtensionFactory extensionFactory,
             ApplicationInstanceEvents documentManager,
             Selection selection,
             FXOMObjectMask.Factory designMaskFactory,
-            IMetadata metadata,
-            AddPropertyValueJob.Factory addPropertyValueJobFactory,
-            ToggleFxRootJob.Factory toggleFxRootJobFactory,
-            ModifyFxControllerJob.Factory modifyFxControllerJobFactory,
-            SetDocumentRootJob.Factory setDocumentRootJobFactory,
-            RemovePropertyValueJob.Factory removePropertyValueJobFactory,
-            RemovePropertyJob.Factory removePropertyJobFactory,
+            SbMetadata metadata,
             FxomJobsFactory fxomJobsFactory,
-            DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
+            SelectionJobsFactory selectionJobFactory,
+            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+        //@formatter:on
         super(extensionFactory, documentManager, selection);
         this.fxomDocument = documentManager.fxomDocument().get();
         this.designMaskFactory = designMaskFactory;
         this.metadata = metadata;
-        this.addPropertyValueJobFactory = addPropertyValueJobFactory;
-        this.toggleFxRootJobFactory = toggleFxRootJobFactory;
-        this.modifyFxControllerJobFactory = modifyFxControllerJobFactory;
-        this.setDocumentRootJobFactory = setDocumentRootJobFactory;
-        this.removePropertyValueJobFactory = removePropertyValueJobFactory;
-        this.removePropertyJobFactory = removePropertyJobFactory;
+        this.selectionJobFactory = selectionJobFactory;
         this.fxomJobsFactory = fxomJobsFactory;
         this.objectSelectionGroupFactory = objectSelectionGroupFactory;
     }
@@ -120,11 +107,11 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
         if (selection.isEmpty()) {
             return false;
         }
-        final AbstractSelectionGroup asg = selection.getGroup();
-        if ((asg instanceof DSelectionGroupFactory) == false) {
+        final SelectionGroup asg = selection.getGroup();
+        if ((asg instanceof ObjectSelectionGroup) == false) {
             return false;
         }
-        final DSelectionGroupFactory osg = (DSelectionGroupFactory) asg;
+        final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
         if (osg.hasSingleParent() == false) {
             return false;
         }
@@ -151,15 +138,15 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
     }
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
-        final List<AbstractJob> result = new ArrayList<>();
+    protected List<Job> makeSubJobs() {
+        final List<Job> result = new ArrayList<>();
 
         if (canWrapIn()) { // (1)
 
             final Selection selection = getSelection();
-            final AbstractSelectionGroup asg = selection.getGroup();
-            assert asg instanceof DSelectionGroupFactory; // Because of (1)
-            final DSelectionGroupFactory osg = (DSelectionGroupFactory) asg;
+            final SelectionGroup asg = selection.getGroup();
+            assert asg instanceof ObjectSelectionGroup; // Because of (1)
+            final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
 
             // Retrieve the old container
             oldContainer = (FXOMInstance) osg.getAncestor();
@@ -192,14 +179,14 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
 
                 // Add the new container to the old container
                 final int newContainerIndex = getIndex(oldContainer, children);
-                final AbstractJob newContainerAddValueJob = addPropertyValueJobFactory.getJob(
+                final Job newContainerAddValueJob = fxomJobsFactory.addPropertyValue(
                         newContainer,
                         oldContainerProperty,
                         newContainerIndex);
                 result.add(newContainerAddValueJob);
 
                 // Remove children from the old container
-                final List<AbstractJob> removeChildrenJobs = removeChildrenJobs(oldContainerProperty, children);
+                final List<Job> removeChildrenJobs = removeChildrenJobs(oldContainerProperty, children);
                 result.addAll(removeChildrenJobs);
             } //
             //------------------------------------------------------------------
@@ -214,25 +201,23 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
                 final String fxController = rootObject.getFxController();
                 // First remove the fx:controller/fx:root from the old root object
                 if (isFxRoot) {
-                    final AbstractJob fxRootJob = toggleFxRootJobFactory.getJob();
+                    final Job fxRootJob = fxomJobsFactory.toggleFxRoot();
                     result.add(fxRootJob);
                 }
                 if (fxController != null) {
-                    final AbstractJob fxControllerJob
-                            = modifyFxControllerJobFactory.getJob(rootObject, null);
+                    final Job fxControllerJob = fxomJobsFactory.modifyFxController(rootObject, null);
                     result.add(fxControllerJob);
                 }
                 // Then set the new container as root object
-                final AbstractJob setDocumentRoot = setDocumentRootJobFactory.getJob(newContainer);
+                final Job setDocumentRoot = selectionJobFactory.setDocumentRoot(newContainer);
                 result.add(setDocumentRoot);
                 // Finally add the fx:controller/fx:root to the new root object
                 if (isFxRoot) {
-                    final AbstractJob fxRootJob = toggleFxRootJobFactory.getJob();
+                    final Job fxRootJob = fxomJobsFactory.toggleFxRoot();
                     result.add(fxRootJob);
                 }
                 if (fxController != null) {
-                    final AbstractJob fxControllerJob
-                            = modifyFxControllerJobFactory.getJob(newContainer, fxController);
+                    final Job fxControllerJob = fxomJobsFactory.modifyFxController(newContainer, fxController);
                     result.add(fxControllerJob);
                 }
             }
@@ -255,7 +240,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
     }
 
     @Override
-    protected AbstractSelectionGroup getNewSelectionGroup() {
+    protected SelectionGroup getNewSelectionGroup() {
         List<FXOMObject> newObjects = new ArrayList<>();
         newObjects.add(newContainer);
         return objectSelectionGroupFactory.getGroup(newObjects, newObjects.iterator().next(), null);
@@ -268,17 +253,17 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
      * @param children The children to be wrapped.
      * @return A list of jobs.
      */
-    protected abstract List<AbstractJob> wrapChildrenJobs(final List<FXOMObject> children);
+    protected abstract List<Job> wrapChildrenJobs(final List<FXOMObject> children);
 
-    protected List<AbstractJob> addChildrenJobs(
+    protected List<Job> addChildrenJobs(
             final FXOMPropertyC containerProperty,
             final Collection<FXOMObject> children) {
 
-        final List<AbstractJob> jobs = new ArrayList<>();
+        final List<Job> jobs = new ArrayList<>();
         int index = 0;
         for (FXOMObject child : children) {
             assert child instanceof FXOMInstance;
-            final AbstractJob addValueJob = addPropertyValueJobFactory.getJob(
+            final Job addValueJob = fxomJobsFactory.addPropertyValue(
                     child,
                     containerProperty,
                     index++);
@@ -287,14 +272,14 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
         return jobs;
     }
 
-    protected List<AbstractJob> removeChildrenJobs(
+    protected List<Job> removeChildrenJobs(
             final FXOMPropertyC containerProperty,
             final List<FXOMObject> children) {
 
-        final List<AbstractJob> jobs = new ArrayList<>();
+        final List<Job> jobs = new ArrayList<>();
         for (FXOMObject child : children) {
             assert child instanceof FXOMInstance;
-            final AbstractJob removeValueJob = removePropertyValueJobFactory.getJob(child);
+            final Job removeValueJob = fxomJobsFactory.removePropertyValue(child);
             jobs.add(removeValueJob);
         }
         return jobs;
@@ -306,16 +291,16 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
      * @param children The children to be modified.
      * @return A list of jobs.
      */
-    protected List<AbstractJob> modifyChildrenJobs(final List<FXOMObject> children) {
+    protected List<Job> modifyChildrenJobs(final List<FXOMObject> children) {
 
-        final List<AbstractJob> jobs = new ArrayList<>();
-        final HierarchyMask newContainerMask = designMaskFactory.getMask(newContainer);
-        final Bounds unionOfBounds = WrapJobUtils.getUnionOfBounds(children);
+        final List<Job> jobs = new ArrayList<>();
+        final var newContainerMask = designMaskFactory.getMask(newContainer);
+        final var unionOfBounds = WrapJobUtils.getUnionOfBounds(children);
 
         for (FXOMObject child : children) {
 
-            ValuePropertyMetadata layoutXmeta = metadata.queryValueProperty((FXOMInstance) child, new PropertyName("layoutX", null));
-            ValuePropertyMetadata layoutYmeta = metadata.queryValueProperty((FXOMInstance) child, new PropertyName("layoutY", null));
+            var layoutXmeta = metadata.queryValueProperty((FXOMInstance) child, new PropertyName("layoutX", null));
+            var layoutYmeta = metadata.queryValueProperty((FXOMInstance) child, new PropertyName("layoutY", null));
 
             // Modify child LAYOUT bounds
             if (newContainerMask.getMainAccessory() != null && newContainerMask.getMainAccessory().isFreeChildPositioning()) {
@@ -328,16 +313,16 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
                 double layoutX = point.getX() - unionOfBounds.getMinX();
                 double layoutY = point.getY() - unionOfBounds.getMinY();
 
-                final AbstractJob modifyLayoutX = modifyObjectJobFactory.getJob((FXOMInstance) child, layoutXmeta, layoutX);
+                final Job modifyLayoutX = fxomJobsFactory.modifyObject((FXOMInstance) child, layoutXmeta, layoutX);
                 jobs.add(modifyLayoutX);
-                final AbstractJob modifyLayoutY = modifyObjectJobFactory.getJob((FXOMInstance) child, layoutYmeta, layoutY);
+                final Job modifyLayoutY = fxomJobsFactory.modifyObject((FXOMInstance) child, layoutYmeta, layoutY);
                 jobs.add(modifyLayoutY);
             } else {
                 assert child.getSceneGraphObject().isInstanceOf(Node.class);
 
-                final AbstractJob modifyLayoutX = modifyObjectJobFactory.getJob((FXOMInstance) child, layoutXmeta, 0.0);
+                final Job modifyLayoutX = fxomJobsFactory.modifyObject((FXOMInstance) child, layoutXmeta, 0.0);
                 jobs.add(modifyLayoutX);
-                final AbstractJob modifyLayoutY = modifyObjectJobFactory.getJob((FXOMInstance) child, layoutYmeta, 0.0);
+                final Job modifyLayoutY = fxomJobsFactory.modifyObject((FXOMInstance) child, layoutYmeta, 0.0);
                 jobs.add(modifyLayoutY);
             }
 
@@ -347,7 +332,8 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
                 for (FXOMProperty p : fxomInstance.getProperties().values()) {
                     final Class<?> residentClass = p.getName().getResidenceClass();
                     if (residentClass != null) {
-                        jobs.add(removePropertyJobFactory.getJob(p));
+                        var job = fxomJobsFactory.removeProperty(p);
+                        jobs.add(job);
                     }
                 }
             }
@@ -366,7 +352,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
      */
     protected void modifyNewContainer(final List<FXOMObject> children) {
         if (oldContainer != null) {
-            final HierarchyMask oldContainerMask = designMaskFactory.getMask(oldContainer);
+            final var oldContainerMask = designMaskFactory.getMask(oldContainer);
             if (oldContainerMask.getMainAccessory() != null && oldContainerMask.getMainAccessory().isFreeChildPositioning()) {
                 final Bounds unionOfBounds = WrapJobUtils.getUnionOfBounds(children);
                 NodeMetadata.layoutXPropertyMetadata.setValue(newContainer, unionOfBounds.getMinX());
@@ -386,8 +372,8 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
                 for (FXOMProperty p : fxomInstance.getProperties().values()) {
                     final Class<?> residentClass = p.getName().getResidenceClass();
                     if (residentClass != null) {
-                        final ValuePropertyMetadata vpm = metadata.queryValueProperty(fxomInstance, p.getName());
-                        final Object value = vpm.getValueObject(fxomInstance);
+                        final var vpm = metadata.queryValueProperty(fxomInstance, p.getName());
+                        final var value = vpm.getValueObject(fxomInstance);
                         vpm.setValueObject(newContainer, value);
                     }
                 }
@@ -397,7 +383,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
 
     protected FXOMInstance makeNewContainerInstance(final Class<?> containerClass) {
         // Create new container instance
-        final FXOMDocument newDocument = new FXOMDocument();
+        final FXOMDocument newDocument = fxomDocument.getFactory().newDocument();
         final FXOMInstance result = new FXOMInstance(newDocument, containerClass);
         newDocument.setFxomRoot(result);
         result.moveToFxomDocument(fxomDocument);

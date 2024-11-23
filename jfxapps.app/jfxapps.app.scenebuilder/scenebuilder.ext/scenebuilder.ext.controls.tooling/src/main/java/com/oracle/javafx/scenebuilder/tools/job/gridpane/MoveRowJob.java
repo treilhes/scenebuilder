@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,15 +39,16 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -73,30 +74,27 @@ public final class MoveRowJob extends BatchSelectionJob {
     private Position position;
     private FXOMDocument fxomDocument;
 
-    private final RemoveObjectJob.Factory removeObjectJobFactory;
-    private final AddPropertyValueJob.Factory addPropertyValueJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
     private final ReIndexRowContentJob.Factory reIndexRowContentJobFactory;
     private final GridPaneHierarchyMask.Factory maskFactory;
-    private final GridSelectionGroup.Factory gridSelectionGroupFactory;
+    private final GridSelectionGroup.Factory griObjectSelectionGroup;
 
     // @formatter:off
     protected MoveRowJob(
             JobExtensionFactory extensionFactory,
             ApplicationInstanceEvents documentManager,
             Selection selection,
-            RemoveObjectJob.Factory removeObjectJobFactory,
-            AddPropertyValueJob.Factory addPropertyValueJobFactory,
+            FxomJobsFactory fxomJobsFactory,
             ReIndexRowContentJob.Factory reIndexRowContentJobFactory,
             GridPaneHierarchyMask.Factory maskFactory,
-            GridSelectionGroup.Factory gridSelectionGroupFactory) {
+            GridSelectionGroup.Factory griObjectSelectionGroup) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);
         this.fxomDocument = documentManager.fxomDocument().get();
-        this.removeObjectJobFactory = removeObjectJobFactory;
-        this.addPropertyValueJobFactory = addPropertyValueJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
         this.reIndexRowContentJobFactory = reIndexRowContentJobFactory;
         this.maskFactory = maskFactory;
-        this.gridSelectionGroupFactory = gridSelectionGroupFactory;
+        this.griObjectSelectionGroup = griObjectSelectionGroup;
     }
 
     protected void setJobParameters(Position position) {
@@ -105,15 +103,15 @@ public final class MoveRowJob extends BatchSelectionJob {
     }
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
+    protected List<Job> makeSubJobs() {
 
-        final List<AbstractJob> result = new ArrayList<>();
+        final List<Job> result = new ArrayList<>();
 
         if (GridPaneJobUtils.canPerformMove(getSelection(), position, maskFactory)) {
 
             // Retrieve the target GridPane
             final Selection selection = getSelection();
-            final AbstractSelectionGroup asg = selection.getGroup();
+            final SelectionGroup asg = selection.getGroup();
             assert asg instanceof GridSelectionGroup; // Because of (1)
             final GridSelectionGroup gsg = (GridSelectionGroup) asg;
 
@@ -131,29 +129,27 @@ public final class MoveRowJob extends BatchSelectionJob {
 
     @Override
     protected String makeDescription() {
-        return "Move Row " + position.name(); //NOCHECK
+        return "Move Row " + position.name(); // NOCHECK
     }
 
     @Override
-    protected AbstractSelectionGroup getNewSelectionGroup() {
+    protected SelectionGroup getNewSelectionGroup() {
         final Set<Integer> movedIndexes = new HashSet<>();
         for (int targetIndex : targetIndexes) {
-            int movedIndex = position == Position.ABOVE
-                    ? targetIndex - 1 : targetIndex + 1;
+            int movedIndex = position == Position.ABOVE ? targetIndex - 1 : targetIndex + 1;
             movedIndexes.add(movedIndex);
         }
-        return gridSelectionGroupFactory.getGroup(targetGridPane, GridSelectionGroup.Type.ROW, movedIndexes);
+        return griObjectSelectionGroup.getGroup(targetGridPane, GridSelectionGroup.Type.ROW, movedIndexes);
     }
 
-    private List<AbstractJob> moveRowConstraints() {
+    private List<Job> moveRowConstraints() {
 
-        final List<AbstractJob> result = new ArrayList<>();
+        final List<Job> result = new ArrayList<>();
 
         // Retrieve the constraints property for the specified target GridPane
-        final PropertyName propertyName = new PropertyName("rowConstraints"); //NOCHECK
+        final PropertyName propertyName = new PropertyName("rowConstraints"); // NOCHECK
         assert targetGridPane instanceof FXOMInstance;
-        FXOMProperty constraintsProperty
-                = ((FXOMInstance) targetGridPane).getProperties().get(propertyName);
+        FXOMProperty constraintsProperty = ((FXOMInstance) targetGridPane).getProperties().get(propertyName);
         // GridPane has no constraints property => no constraints to move
         if (constraintsProperty == null) {
             return result;
@@ -165,20 +161,19 @@ public final class MoveRowJob extends BatchSelectionJob {
 
             final int positionIndex;
             switch (position) {
-                case ABOVE:
-                    positionIndex = targetIndex - 1;
-                    break;
-                case BELOW:
-                    positionIndex = targetIndex + 1;
-                    break;
-                default:
-                    assert false;
-                    return result;
+            case ABOVE:
+                positionIndex = targetIndex - 1;
+                break;
+            case BELOW:
+                positionIndex = targetIndex + 1;
+                break;
+            default:
+                assert false;
+                return result;
             }
 
             // Retrieve the target constraints
-            final FXOMObject targetConstraints
-                    = mask.getRowConstraintsAtIndex(targetIndex);
+            final FXOMObject targetConstraints = mask.getRowConstraintsAtIndex(targetIndex);
 
             // If the target index is associated to an existing constraints value :
             // we remove the target constraints and add it back at new position
@@ -186,26 +181,27 @@ public final class MoveRowJob extends BatchSelectionJob {
             // indeed, they are automatically shifted while updating the target ones
             if (targetConstraints != null) {
                 // First remove current target constraints
-                final AbstractJob removeValueJob = removeObjectJobFactory.getJob(targetConstraints);
+                final Job removeValueJob = fxomJobsFactory.removeObject(targetConstraints);
                 result.add(removeValueJob);
 
                 // Then add the target constraints at new positionIndex
-                final AbstractJob addValueJob = addPropertyValueJobFactory.getJob(targetConstraints,(FXOMPropertyC) constraintsProperty, positionIndex);
+                final Job addValueJob = fxomJobsFactory.addPropertyValue(targetConstraints,
+                        (FXOMPropertyC) constraintsProperty, positionIndex);
                 result.add(addValueJob);
-            }//
-            // The target index is not associated to an existing constraints value :
-            // we may need to move the constraints above the target one if any
+            } //
+              // The target index is not associated to an existing constraints value :
+              // we may need to move the constraints above the target one if any
             else if (position == Position.ABOVE) {
                 // Retrieve the constraints above the target one
-                final FXOMObject aboveConstraints
-                        = mask.getRowConstraintsAtIndex(targetIndex - 1);
+                final FXOMObject aboveConstraints = mask.getRowConstraintsAtIndex(targetIndex - 1);
 
                 // The index above is associated to an existing constraints value :
                 // we insert a new constraints with default values at the position index
                 if (aboveConstraints != null) {
                     // Create new empty constraints for the target row
                     final FXOMInstance addedConstraints = makeRowConstraintsInstance();
-                    final AbstractJob addValueJob = addPropertyValueJobFactory.getJob(addedConstraints, (FXOMPropertyC) constraintsProperty, positionIndex);
+                    final Job addValueJob = fxomJobsFactory.addPropertyValue(addedConstraints,
+                            (FXOMPropertyC) constraintsProperty, positionIndex);
                     result.add(addValueJob);
                 }
             }
@@ -213,45 +209,45 @@ public final class MoveRowJob extends BatchSelectionJob {
         return result;
     }
 
-    private List<AbstractJob> moveRowContent() {
+    private List<Job> moveRowContent() {
 
-        final List<AbstractJob> result = new ArrayList<>();
+        final List<Job> result = new ArrayList<>();
 
         for (int targetIndex : targetIndexes) {
 
             switch (position) {
-                case ABOVE:
-                    // First move the target row content
-                    result.add(reIndexRowContentJobFactory.getJob(-1, targetGridPane, targetIndex));
-                    int aboveIndex = targetIndex - 1;
-                    // Then move the content of the row above the target one
-                    // If the index above is not part of the target indexes (selected indexes),
-                    // we move the row content as many times as consecutive target indexes
-                    if (targetIndexes.contains(aboveIndex) == false) {
-                        int shiftIndex = 1;
-                        while (targetIndexes.contains(targetIndex + shiftIndex)) {
-                            shiftIndex++;
-                        }
-                        result.add(reIndexRowContentJobFactory.getJob(shiftIndex, targetGridPane, aboveIndex));
+            case ABOVE:
+                // First move the target row content
+                result.add(reIndexRowContentJobFactory.getJob(-1, targetGridPane, targetIndex));
+                int aboveIndex = targetIndex - 1;
+                // Then move the content of the row above the target one
+                // If the index above is not part of the target indexes (selected indexes),
+                // we move the row content as many times as consecutive target indexes
+                if (targetIndexes.contains(aboveIndex) == false) {
+                    int shiftIndex = 1;
+                    while (targetIndexes.contains(targetIndex + shiftIndex)) {
+                        shiftIndex++;
                     }
-                    break;
-                case BELOW:
-                    // First move the target row content
-                    result.add(reIndexRowContentJobFactory.getJob(+1, targetGridPane, targetIndex));
-                    int belowIndex = targetIndex + 1;
-                    // Then move the content of the row below the target one
-                    // If the index below is not part of the target indexes (selected indexes),
-                    // we move the row content as many times as consecutive target indexes
-                    if (targetIndexes.contains(belowIndex) == false) {
-                        int shiftIndex = -1;
-                        while (targetIndexes.contains(targetIndex + shiftIndex)) {
-                            shiftIndex--;
-                        }
-                        result.add(reIndexRowContentJobFactory.getJob(shiftIndex, targetGridPane, belowIndex));
+                    result.add(reIndexRowContentJobFactory.getJob(shiftIndex, targetGridPane, aboveIndex));
+                }
+                break;
+            case BELOW:
+                // First move the target row content
+                result.add(reIndexRowContentJobFactory.getJob(+1, targetGridPane, targetIndex));
+                int belowIndex = targetIndex + 1;
+                // Then move the content of the row below the target one
+                // If the index below is not part of the target indexes (selected indexes),
+                // we move the row content as many times as consecutive target indexes
+                if (targetIndexes.contains(belowIndex) == false) {
+                    int shiftIndex = -1;
+                    while (targetIndexes.contains(targetIndex + shiftIndex)) {
+                        shiftIndex--;
                     }
-                    break;
-                default:
-                    assert false;
+                    result.add(reIndexRowContentJobFactory.getJob(shiftIndex, targetGridPane, belowIndex));
+                }
+                break;
+            default:
+                assert false;
             }
         }
         return result;
@@ -260,20 +256,18 @@ public final class MoveRowJob extends BatchSelectionJob {
     private FXOMInstance makeRowConstraintsInstance() {
 
         // Create new constraints instance
-        final FXOMDocument newDocument = new FXOMDocument();
-        final FXOMInstance result
-                = new FXOMInstance(newDocument, RowConstraints.class);
+        final FXOMDocument newDocument = fxomDocument.getFactory().newDocument();
+        final FXOMInstance result = new FXOMInstance(newDocument, RowConstraints.class);
         newDocument.setFxomRoot(result);
         result.moveToFxomDocument(fxomDocument);
 
         return result;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     @Lazy
     public final static class Factory extends JobFactory<MoveRowJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

@@ -65,8 +65,6 @@ public interface MovingGuide {
 
     void initializeContainerBounds(Bounds scopeInScene);
 
-    boolean isVisible();
-
-    void setVisible(boolean visible);
+    boolean isEnabled();
 
 }

@@ -36,6 +36,7 @@ package com.gluonhq.jfxapps.core.selection.job;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
@@ -49,7 +50,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 /**
  * This job push the selected {@link FXOMObject} objects at the bottom in the parent collection (maxindex)
  */
-@Prototype
+@ApplicationInstancePrototype
 public final class BringToFrontJob extends InlineDocumentJob {
 
     private final Selection selection;

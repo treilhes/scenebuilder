@@ -36,6 +36,7 @@ package com.gluonhq.jfxapps.core.selection.job;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
@@ -53,7 +54,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
  * If one object can't be deleted then none are
  * Delegate to {@link DeleteObjectJob}
  */
-@Prototype
+@ApplicationInstancePrototype
 public final class DeleteObjectSelectionJob extends BatchSelectionJob {
 
     private static final String I18N_LABEL_ACTION_EDIT_DELETE_N = "label.action.edit.delete.n";

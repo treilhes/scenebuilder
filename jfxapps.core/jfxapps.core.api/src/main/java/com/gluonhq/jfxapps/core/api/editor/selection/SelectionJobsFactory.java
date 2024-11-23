@@ -33,10 +33,13 @@
  */
 package com.gluonhq.jfxapps.core.api.editor.selection;
 
+import java.util.List;
+
 import com.gluonhq.jfxapps.core.api.clipboard.Clipboard;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.mask.Accessory;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
@@ -217,8 +220,11 @@ public interface SelectionJobsFactory {
      */
     Job updateSelection(SelectionGroup group);
 
+    Job updateSelection(FXOMObject fxomObject);
+
+    Job updateSelection(List<FXOMObject> fxomObjects);
+
     @Deprecated
     Job insertAsSubComponent(FXOMObject newObject, FXOMObject targetObject, int targetIndex);
-
 
 }

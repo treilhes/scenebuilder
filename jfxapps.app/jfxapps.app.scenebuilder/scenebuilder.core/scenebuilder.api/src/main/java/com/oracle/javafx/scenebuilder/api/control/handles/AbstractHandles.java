@@ -35,11 +35,11 @@ package com.oracle.javafx.scenebuilder.api.control.handles;
 
 import java.net.URL;
 
-import com.gluonhq.jfxapps.core.api.Gesture;
 import com.gluonhq.jfxapps.core.api.content.decoration.AbstractDecoration;
-import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
-import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture.Factory;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.gesture.Gesture;
+import com.gluonhq.jfxapps.core.api.gesture.DiscardGesture.Factory;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.oracle.javafx.scenebuilder.api.control.Handles;

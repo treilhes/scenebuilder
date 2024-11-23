@@ -33,9 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.tablecolumn;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.inlineedit.AbstractInlineEditorBounds;
 import com.oracle.javafx.scenebuilder.tools.driver.tableview.TableViewDesignInfoX;
@@ -43,8 +41,7 @@ import com.oracle.javafx.scenebuilder.tools.driver.tableview.TableViewDesignInfo
 import javafx.scene.Node;
 import javafx.scene.control.TableColumn;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+@ApplicationInstanceSingleton
 public class TableColumnInlineEditorBounds extends AbstractInlineEditorBounds {
 
     @Override

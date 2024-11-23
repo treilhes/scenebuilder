@@ -140,6 +140,15 @@ public abstract class AbstractDecoration<T> implements Decoration<T> {
         // always enabled by default
     }
 
+    /**
+     * Converts the coordinates from the scene graph object subscene to the decoration layer coordinates.
+     * Optionally snaps the coordinates to the nearest pixel.
+     *
+     * @param x the x-coordinate in the scene graph object
+     * @param y the y-coordinate in the scene graph object
+     * @param snapToPixel if true, the coordinates will be snapped to the nearest pixel
+     * @return the converted coordinates in the decoration
+     */
     public Point2D sceneGraphObjectToDecoration(double x, double y, boolean snapToPixel) {
         Point2D result = sceneGraphObjectToDecoration(x, y);
         if (snapToPixel) {

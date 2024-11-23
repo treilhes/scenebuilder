@@ -228,6 +228,12 @@ public class ContentPanelController //extends AbstractFxmlController
     }
 
 
+    @Override
+    public boolean hasContent() {
+        return fxomDocument != null;
+    }
+
+
 //    /**
 //     * Return the scaling factor used by this content panel.
 //     *
@@ -477,11 +483,6 @@ public class ContentPanelController //extends AbstractFxmlController
     @Override
     public Object getRoot() {
         return isDisplayable() ? fxomDocument.getDisplayNodeOrSceneGraphRoot() : null;
-    }
-
-    @Override
-    public boolean hasContent() {
-        return documentManager.fxomDocument().get() != null;
     }
 
     @Override

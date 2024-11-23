@@ -50,7 +50,7 @@ import com.oracle.javafx.scenebuilder.controls.fxom.SplitPaneRefresher;
 import com.oracle.javafx.scenebuilder.controls.fxom.TabPaneStateBackup;
 
 open module scenebuilder.ext.controls {
-    exports com.oracle.javafx.scenebuilder.controls.contextmenu;
+
     exports com.oracle.javafx.scenebuilder.controls;
 
     requires scenebuilder.app.starter;

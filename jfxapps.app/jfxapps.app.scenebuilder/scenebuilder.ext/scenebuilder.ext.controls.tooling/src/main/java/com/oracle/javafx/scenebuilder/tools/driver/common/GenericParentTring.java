@@ -38,7 +38,7 @@ import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.util.MathUtils;
@@ -66,10 +66,10 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
     private final Line crackLine = new Line();
 
     public GenericParentTring(
+            Workspace workspace,
             FXOMObjectMask.Factory maskFactory,
-            Content contentPanelController,
             ApplicationInstanceEvents documentManager) {
-        super(contentPanelController, documentManager, Parent.class);
+        super(workspace, documentManager, Parent.class);
         this.maskFactory = maskFactory;
 
         crackLine.getStyleClass().add(TARGET_CRACK_CLASS);
@@ -96,7 +96,7 @@ public class GenericParentTring extends AbstractNodeTring<Parent> {
         assert targetIndex >= -1;
     }
 
-    public static int lookupCrackIndex(HierarchyMask fxomObjectMask, double sceneX, double sceneY) {
+    public static int lookupCrackIndex(FXOMObjectMask fxomObjectMask, double sceneX, double sceneY) {
         assert fxomObjectMask != null;
         FXOMObject fxomObject = fxomObjectMask.getFxomObject();
 

@@ -63,7 +63,24 @@
                                         </dependency>
                                     </extension>
 
+                                    <extension>
+                                        <uuid>b07bac44-1093-4fb0-a489-6d1233930e62</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>scenebuilder.selection</artifactId>
+                                            <version>${scenebuilder.version}</version>
+                                        </dependency>
+                                    </extension>
+
                                     <!--temp-->
+                                    <extension>
+                                        <uuid>1efa32d5-0673-4f6e-bb0b-7a57514e9cba</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>scenebuilder.ext.menu</artifactId>
+                                            <version>${scenebuilder.version}</version>
+                                        </dependency>
+                                    </extension>
                                     <extension>
                                         <uuid>f38264b5-aaea-444d-8ca8-f6d8ab910b2b</uuid>
                                         <dependency>

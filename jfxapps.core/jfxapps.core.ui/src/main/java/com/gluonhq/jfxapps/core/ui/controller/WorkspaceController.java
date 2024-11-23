@@ -149,8 +149,6 @@ public class WorkspaceController extends AbstractFxmlController implements Works
 
     private StylesheetProvider stylesheetConfig = null;
 
-    //private FXOMDocument fxomDocument;
-
     private final ApplicationInstanceEvents documentManager;
     private final ContextMenu contextMenu;
     private final BackgroundImagePreference backgroundImagePreference;
@@ -158,9 +156,6 @@ public class WorkspaceController extends AbstractFxmlController implements Works
     private final FXOMObjectMask.Factory maskFactory;
     private final Content content;
     private final ModeManager modeManager;
-
-    private boolean guidesVisible = true;
-    private Paint guidesColor = Color.RED;
 
     private final JfxAppPlatform jfxAppPlatform;
     private final Driver driver;
@@ -475,6 +470,7 @@ public class WorkspaceController extends AbstractFxmlController implements Works
                 }
             }
 
+            System.out.println("thread statusMessageText: " + statusMessageText);
             backgroundPane.setText(statusMessageText);
             backgroundPane.getStyleClass().clear();
             backgroundPane.getStyleClass().add(statusStyleClass);

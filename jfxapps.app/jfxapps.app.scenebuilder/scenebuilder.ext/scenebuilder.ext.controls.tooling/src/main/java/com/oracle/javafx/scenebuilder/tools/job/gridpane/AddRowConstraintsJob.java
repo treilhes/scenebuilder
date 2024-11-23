@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,13 +40,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -81,8 +81,7 @@ public final class AddRowConstraintsJob extends BatchDocumentJob {
     private static final double defaultPrefHeight = 30.0;
 
     private final FXOMDocument fxomDocument;
-    private final AddPropertyValueJob.Factory addPropertyValueJobFactory;
-    private final AddPropertyJob.Factory addPropertyJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
     private final GridPaneHierarchyMask.Factory maskFactory;
 
     /**
@@ -93,16 +92,14 @@ public final class AddRowConstraintsJob extends BatchDocumentJob {
     private Position position;
 
 
-    protected AddRowConstraintsJob(SceneBuilderBeanFactory context,
+    protected AddRowConstraintsJob(JfxAppContext context,
             JobExtensionFactory extensionFactory,
             ApplicationInstanceEvents documentManager,
-            AddPropertyValueJob.Factory addPropertyValueJobFactory,
-            AddPropertyJob.Factory addPropertyJobFactory,
+            FxomJobsFactory fxomJobsFactory,
             GridPaneHierarchyMask.Factory maskFactory) {
         super(extensionFactory, documentManager);
         this.fxomDocument = documentManager.fxomDocument().get();
-        this.addPropertyValueJobFactory = addPropertyValueJobFactory;
-        this.addPropertyJobFactory = addPropertyJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
         this.maskFactory = maskFactory;
     }
 
@@ -112,9 +109,9 @@ public final class AddRowConstraintsJob extends BatchDocumentJob {
     }
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
+    protected List<Job> makeSubJobs() {
 
-        final List<AbstractJob> result = new ArrayList<>();
+        final List<Job> result = new ArrayList<>();
 
         // Add column constraints job
         assert targetGridPanes.isEmpty() == false;
@@ -132,11 +129,11 @@ public final class AddRowConstraintsJob extends BatchDocumentJob {
         return "Add Row Constraints"; //NOCHECK
     }
 
-    private Set<AbstractJob> addRowConstraints(
+    private Set<Job> addRowConstraints(
             final FXOMInstance targetGridPane,
             final Set<Integer> targetIndexes) {
 
-        final Set<AbstractJob> result = new LinkedHashSet<>();
+        final Set<Job> result = new LinkedHashSet<>();
 
         // Retrieve the constraints property for the specified target GridPane
         final PropertyName propertyName = new PropertyName("rowConstraints"); //NOCHECK
@@ -168,7 +165,7 @@ public final class AddRowConstraintsJob extends BatchDocumentJob {
                 final FXOMInstance addedConstraints = makeRowConstraintsInstance(
                         (FXOMInstance) targetConstraints);
 
-                final AbstractJob addValueJob = addPropertyValueJobFactory.getJob(addedConstraints,
+                final Job addValueJob = fxomJobsFactory.addPropertyValue(addedConstraints,
                         (FXOMPropertyC) constraintsProperty, addedIndex);
                 result.add(addValueJob);
             } //
@@ -179,7 +176,7 @@ public final class AddRowConstraintsJob extends BatchDocumentJob {
                 for (int index = constraintsSize; index < addedIndex; index++) {
                     // Create new empty constraints for the exisiting rows
                     final FXOMInstance addedConstraints = makeRowConstraintsInstance();
-                    final AbstractJob addValueJob = addPropertyValueJobFactory.getJob(addedConstraints,
+                    final Job addValueJob = fxomJobsFactory.addPropertyValue(addedConstraints,
                             (FXOMPropertyC) constraintsProperty, index);
                     result.add(addValueJob);
                 }
@@ -189,7 +186,7 @@ public final class AddRowConstraintsJob extends BatchDocumentJob {
                 RowConstraintsMetadata.minHeightPropertyMetadata.setValue(addedConstraints, defaultMinHeight);
                 RowConstraintsMetadata.prefHeightPropertyMetadata.setValue(addedConstraints, defaultPrefHeight);
 
-                final AbstractJob addValueJob = addPropertyValueJobFactory.getJob(addedConstraints,
+                final Job addValueJob = fxomJobsFactory.addPropertyValue(addedConstraints,
                         (FXOMPropertyC) constraintsProperty, addedIndex);
                 result.add(addValueJob);
                 constraintsSize = addedIndex + 1;
@@ -201,7 +198,7 @@ public final class AddRowConstraintsJob extends BatchDocumentJob {
         // IMPORTANT :
         // Note that the AddPropertyJob must be called after the AddPropertyValueJob.
         if (constraintsProperty.getParentInstance() == null) {
-            final AbstractJob addPropertyJob = addPropertyJobFactory.getJob(constraintsProperty, targetGridPane, -1);
+            final Job addPropertyJob = fxomJobsFactory.addProperty(constraintsProperty, targetGridPane, -1);
             result.add(addPropertyJob);
         }
 
@@ -211,7 +208,7 @@ public final class AddRowConstraintsJob extends BatchDocumentJob {
     private FXOMInstance makeRowConstraintsInstance() {
 
         // Create new constraints instance
-        final FXOMDocument newDocument = new FXOMDocument();
+        final FXOMDocument newDocument = fxomDocument.getFactory().newDocument();
         final FXOMInstance result
                 = new FXOMInstance(newDocument, RowConstraints.class);
         newDocument.setFxomRoot(result);
@@ -250,10 +247,9 @@ public final class AddRowConstraintsJob extends BatchDocumentJob {
         return result;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public static class Factory extends JobFactory<AddRowConstraintsJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
         /**

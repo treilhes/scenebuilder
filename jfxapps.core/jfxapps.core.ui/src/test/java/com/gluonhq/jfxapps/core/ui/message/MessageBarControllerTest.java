@@ -81,7 +81,7 @@ class MessageBarControllerTest {
         Mockito.when(messageLogger.revisionProperty()).thenReturn(revisionProperty);
         Mockito.when(messageLogger.numOfWarningMessagesProperty()).thenReturn(numOfWarningMessagesProperty);
 
-        var controller = builder.controller(MessageBarController.class).show();
+        var controller = builder.controller(MessageBarController.class).show().getController();
         assertNotNull(controller.getRoot());
     }
 
@@ -97,7 +97,7 @@ class MessageBarControllerTest {
         MessageBarController controller = builder.controller(MessageBarController.class)
                 .setup(StageType.Fill)
                 .size(800, 600)
-                .show();
+                .show().getController();
 
 
         robot.interact(() -> {

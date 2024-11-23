@@ -36,10 +36,10 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseDragGesture;
-import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.gesture.AbstractMouseDragGesture;
+import com.gluonhq.jfxapps.core.api.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 
 import javafx.scene.input.MouseEvent;

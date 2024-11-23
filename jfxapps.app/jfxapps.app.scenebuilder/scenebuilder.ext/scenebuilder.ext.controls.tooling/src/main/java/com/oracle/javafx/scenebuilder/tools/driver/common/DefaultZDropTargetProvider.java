@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,30 +33,28 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.common;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.dnd.DefaultDropTargetFactory;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetProvider;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+@ApplicationInstanceSingleton
 public final class DefaultZDropTargetProvider extends AbstractDropTargetProvider {
 
-    private final AccessoryDropTarget.Factory accessoryDropTargetFactory;
+    private final DefaultDropTargetFactory dropTargetFactory;
 
-    public DefaultZDropTargetProvider(AccessoryDropTarget.Factory accessoryDropTargetFactory) {
+    public DefaultZDropTargetProvider(DefaultDropTargetFactory dropTargetFactory) {
         super();
-        this.accessoryDropTargetFactory = accessoryDropTargetFactory;
+        this.dropTargetFactory = dropTargetFactory;
     }
 
     @Override
     public DropTarget makeDropTarget(FXOMObject fxomObject, double sceneX, double sceneY) {
         // TODO(elp) : temporary implementation
         assert fxomObject instanceof FXOMInstance;
-        return accessoryDropTargetFactory.getDropTarget((FXOMInstance)fxomObject);
+        return dropTargetFactory.accessory((FXOMInstance)fxomObject);
     }
 
 }

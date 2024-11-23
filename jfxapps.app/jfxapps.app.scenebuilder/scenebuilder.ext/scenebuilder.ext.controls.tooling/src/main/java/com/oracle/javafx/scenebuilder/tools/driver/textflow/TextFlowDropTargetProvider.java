@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,12 +33,10 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.textflow;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.dnd.DefaultDropTargetFactory;
 import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetProvider;
@@ -46,19 +44,18 @@ import com.oracle.javafx.scenebuilder.tools.driver.common.GenericParentTring;
 
 import javafx.scene.text.TextFlow;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+@ApplicationInstanceSingleton
 public final class TextFlowDropTargetProvider extends AbstractDropTargetProvider {
 
     private final FXOMObjectMask.Factory maskFactory;
-    private final AccessoryDropTarget.Factory accessoryDropTargetFactory;
+    private final DefaultDropTargetFactory dropTargetFactory;
 
     public TextFlowDropTargetProvider(
             FXOMObjectMask.Factory maskFactory,
-            AccessoryDropTarget.Factory accessoryDropTargetFactory) {
+            DefaultDropTargetFactory dropTargetFactory) {
         super();
         this.maskFactory = maskFactory;
-        this.accessoryDropTargetFactory = accessoryDropTargetFactory;
+        this.dropTargetFactory = dropTargetFactory;
     }
 
     @Override
@@ -66,7 +63,7 @@ public final class TextFlowDropTargetProvider extends AbstractDropTargetProvider
         assert fxomObject instanceof FXOMInstance;
         assert fxomObject.getSceneGraphObject().isInstanceOf(TextFlow.class);
 
-        HierarchyMask m = maskFactory.getMask(fxomObject);
+        var m = maskFactory.getMask(fxomObject);
 
         final int targetIndex = GenericParentTring.lookupCrackIndex(m, sceneX, sceneY);
 
@@ -81,7 +78,7 @@ public final class TextFlowDropTargetProvider extends AbstractDropTargetProvider
             }
         }
 
-        return accessoryDropTargetFactory.getDropTarget((FXOMInstance)fxomObject, beforeChild);
+        return dropTargetFactory.accessory((FXOMInstance)fxomObject, beforeChild);
     }
 
 }

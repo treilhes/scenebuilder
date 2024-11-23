@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,10 +36,9 @@ package com.oracle.javafx.scenebuilder.tools.job.gridpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
@@ -50,8 +49,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.oracle.javafx.scenebuilder.tools.mask.GridPaneHierarchyMask;
 
 /**
@@ -70,8 +68,8 @@ public final class ReIndexRowContentJob extends AbstractJob {
     private final List<Integer> targetIndexes = new ArrayList<>();
 
     private final FXOMDocument fxomDocument;
-    private final IMetadata metadata;
-    private final com.gluonhq.jfxapps.core.api.job.base.Factory batchJobFactory;
+    private final SbMetadata metadata;
+    private final BatchJob.Factory batchJobFactory;
     private final FxomJobsFactory fxomJobsFactory;
     private final GridPaneHierarchyMask.Factory maskFactory;
 
@@ -79,7 +77,7 @@ public final class ReIndexRowContentJob extends AbstractJob {
     protected ReIndexRowContentJob(
             JobExtensionFactory extensionFactory,
             ApplicationInstanceEvents documentManager,
-            IMetadata metadata,
+            SbMetadata metadata,
             BatchJob.Factory batchJobFactory,
             FxomJobsFactory fxomJobsFactory,
             GridPaneHierarchyMask.Factory maskFactory) {
@@ -149,9 +147,9 @@ public final class ReIndexRowContentJob extends AbstractJob {
             for (FXOMObject child : children) {
                 assert child instanceof FXOMInstance;
                 final FXOMInstance childInstance = (FXOMInstance) child;
-                final ValuePropertyMetadata vpm = metadata.queryValueProperty(childInstance, propertyName);
+                final var vpm = metadata.queryValueProperty(childInstance, propertyName);
                 int newIndexValue = targetIndex + offset;
-                final AbstractJob modifyJob = modifyObjectJobFactory.getJob(null, childInstance, vpm, newIndexValue);
+                final var modifyJob = fxomJobsFactory.modifyObject(childInstance, vpm, newIndexValue);
                 batchJob.addSubJob(modifyJob);
             }
         }
@@ -159,10 +157,9 @@ public final class ReIndexRowContentJob extends AbstractJob {
         subJob = batchJob;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public static class Factory extends JobFactory<ReIndexRowContentJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

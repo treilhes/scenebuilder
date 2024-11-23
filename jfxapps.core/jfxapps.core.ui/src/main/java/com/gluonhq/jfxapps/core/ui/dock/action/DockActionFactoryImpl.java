@@ -86,7 +86,7 @@ public class DockActionFactoryImpl implements DockActionFactory{
     }
 
     @Override
-    public Action toggleViewVisibility(View view) {
+    public Action toggleViewVisibility(Class<? extends View> view) {
         return actionFactory.create(ToggleViewVisibilityAction.class, a -> a.setView(view));
     }
 

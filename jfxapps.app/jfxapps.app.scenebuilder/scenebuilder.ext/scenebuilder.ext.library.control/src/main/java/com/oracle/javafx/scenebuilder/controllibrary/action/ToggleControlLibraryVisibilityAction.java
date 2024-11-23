@@ -75,7 +75,7 @@ public class ToggleControlLibraryVisibilityAction extends AbstractToggleViewVisi
 
     public String getTitle() {
         final String title;
-        if (getView().isVisible() && !getView().getParentDock().isMinimized()) {
+        if (getView().isEnabled() && !getView().getParentDock().isMinimized()) {
             title = "menu.title.hide.library.panel";
         } else {
             title = "menu.title.show.library.panel";

@@ -63,20 +63,6 @@ public class RedoAction extends AbstractAction {
     }
 
     /**
-     * Returns null or the description of the action to be redone.
-     *
-     * @return null or the description of the action to be redone.
-     */
-    public String getRedoDescription() {
-        final StringBuilder result = new StringBuilder();
-        result.append(getI18n().getStringOrDefault("menu.title.redo", "menu.title.redo"));
-        if (canPerform()) {
-            result.append(" "); //NOI18N
-            result.append(jobManager.getRedoDescription());
-        }
-        return result.toString();
-    }
-    /**
      * Returns true if the redo action is permitted (ie there is something to be
      * undone).
      *

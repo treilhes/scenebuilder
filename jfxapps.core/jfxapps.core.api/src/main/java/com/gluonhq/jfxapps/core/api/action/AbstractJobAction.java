@@ -33,40 +33,41 @@
  */
 package com.gluonhq.jfxapps.core.api.action;
 
+import java.util.function.Supplier;
+
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 
 /**
  *
  */
-public abstract class AbstractJobAction<T extends JobFactory<? extends AbstractJob>> extends AbstractAction{
+public abstract class AbstractJobAction extends AbstractAction{
 
-    private final T factory;
+    private final Supplier<Job> supplier;
     private final JobManager jobManager;
 
+    //@formatter:off
     public AbstractJobAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            T factory,
-            JobManager jobManager) {
+            JobManager jobManager,
+            Supplier<Job> supplier) {
+        //@formatter:on
         super(i18n, extensionFactory);
-        this.factory = factory;
+        this.supplier = supplier;
         this.jobManager = jobManager;
     }
 
-    protected abstract AbstractJob createJob(T factory);
-
     @Override
     public boolean canPerform() {
-        final AbstractJob job = createJob(factory);
+        final var job = supplier.get();
         return job.isExecutable();
     }
 
     @Override
     public ActionStatus doPerform() {
-        final AbstractJob job = createJob(factory);
+        final var job = supplier.get();
         jobManager.push(job);
         return ActionStatus.DONE;
     }

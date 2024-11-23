@@ -42,18 +42,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.CardinalPoint;
-import com.gluonhq.jfxapps.core.api.content.gesture.AbstractMouseGesture;
-import com.gluonhq.jfxapps.core.api.content.gesture.GestureFactory;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.gesture.AbstractMouseGesture;
+import com.gluonhq.jfxapps.core.api.gesture.CardinalPoint;
+import com.gluonhq.jfxapps.core.api.gesture.GestureFactory;
+import com.gluonhq.jfxapps.core.api.gesture.Tunable;
+import com.gluonhq.jfxapps.core.api.guide.EditCurveGuide;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.HudWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
@@ -64,8 +63,6 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
-import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide;
-import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
@@ -94,30 +91,32 @@ public class EditCurveGesture extends AbstractMouseGesture {
 
     private boolean straightAnglesMode = false;
 
-    private static final PropertyName POINTS_NAME = new PropertyName("points"); //NOCHECK
+    private static final PropertyName POINTS_NAME = new PropertyName("points"); // NOCHECK
     private static final int MAX_POINTS_HUD = 24;
 
     private final EnumMap<Tunable, Integer> tunableMap = new EnumMap<>(Tunable.class);
 
-	private final SbMetadata metadata;
-	private final FXOMObjectMask.Factory designMaskFactory;
-	private final JobManager jobManager;
-	private final SbDriver driver;
-	private final HudWindow hudWindow;
-	private final ApplicationInstanceEvents documentManager;
-	private final FxomJobsFactory fxomJobsFactory;
+    private final SbMetadata metadata;
+    private final FXOMObjectMask.Factory designMaskFactory;
+    private final JobManager jobManager;
+    private final SbDriver driver;
+    private final HudWindow hudWindow;
+    private final ApplicationInstanceEvents documentManager;
+    private final FxomJobsFactory fxomJobsFactory;
 
-	private Parent closestParent;
+    private Parent closestParent;
 
-	protected EditCurveGesture(
-	        Workspace workspace,
-	        SbMetadata metadata,
-	        SbDriver driver,
-	        FXOMObjectMask.Factory designMaskFactory,
-	        JobManager jobManager,
-	        ApplicationInstanceEvents documentManager,
-	        HudWindow hudWindow,
-	        FxomJobsFactory fxomJobsFactory) {
+    //@formatter:off
+    protected EditCurveGesture(
+            Workspace workspace,
+            SbMetadata metadata,
+            SbDriver driver,
+            FXOMObjectMask.Factory designMaskFactory,
+            JobManager jobManager,
+            ApplicationInstanceEvents documentManager,
+            HudWindow hudWindow,
+            FxomJobsFactory fxomJobsFactory) {
+        //@formatter:on
         super(workspace);
         this.metadata = metadata;
         this.designMaskFactory = designMaskFactory;
@@ -128,7 +127,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
         this.fxomJobsFactory = fxomJobsFactory;
     }
 
-	protected void setupGestureParameters(FXOMInstance fxomInstance, Tunable tunable) {
+    protected void setupGestureParameters(FXOMInstance fxomInstance, Tunable tunable) {
         assert fxomInstance.getSceneGraphObject().isInstanceOf(Node.class);
         this.fxomInstance = fxomInstance;
         this.editor = driver.makeCurveEditor(fxomInstance);
@@ -182,7 +181,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
         final Set<FXOMObject> pickExcludes = new HashSet<>();
         pickExcludes.add(fxomInstance);
 
-        FXOMObject hitParent = contentPanelController.pick(hitX, hitY, pickExcludes);
+        FXOMObject hitParent = getWorkspace().pick(hitX, hitY, pickExcludes);
         if (hitParent == null) {
             final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
             hitParent = fxomDocument.getFxomRoot();
@@ -190,12 +189,13 @@ public class EditCurveGesture extends AbstractMouseGesture {
 
         assert hitParent != null;
 
-        HierarchyMask hitParentMask = designMaskFactory.getMask(hitParent);
+        var hitParentMask = designMaskFactory.getMask(hitParent);
 
         // no free child positioning is not needed here
-        //assert hitParentMask.getMainAccessory() != null && hitParentMask.getMainAccessory().isFreeChildPositioning();
+        // assert hitParentMask.getMainAccessory() != null &&
+        // hitParentMask.getMainAccessory().isFreeChildPositioning();
 
-        for (final FXOMObject child:hitParentMask.getAccessories(hitParentMask.getMainAccessory(), false)) {
+        for (final FXOMObject child : hitParentMask.getAccessories(hitParentMask.getMainAccessory(), false)) {
             final boolean isNode = child.getSceneGraphObject().isInstanceOf(Node.class);
             if (isNode && child != fxomInstance) {
                 final Node childNode = child.getSceneGraphObject().getAs(Node.class);
@@ -220,22 +220,23 @@ public class EditCurveGesture extends AbstractMouseGesture {
 
     @Override
     protected void mouseDragEnded() {
-        final Map<PropertyName, Object> changeMap = editor.getChangeMap();
+        final var changeMap = editor.getChangeMap();
         List<Double> points = null;
         if (editor.getPoints() != null) {
             points = new ArrayList<>(editor.getPoints());
         }
         userDidCancel();
 
-        final Map<ValuePropertyMetadata, Object> metaValueMap = new HashMap<>();
-        for (Map.Entry<PropertyName,Object> e : changeMap.entrySet()) {
-            final ValuePropertyMetadata vpm = metadata.queryValueProperty(fxomInstance, e.getKey());
+        final Map<ValuePropertyMetadata<?>, Object> metaValueMap = new HashMap<>();
+        for (Map.Entry<PropertyName, Object> e : changeMap.entrySet()) {
+            final var vpm = metadata.queryValueProperty(fxomInstance, e.getKey());
             assert vpm != null;
             metaValueMap.put(vpm, e.getValue());
         }
         if (!changeMap.isEmpty()) {
-            for (Map.Entry<ValuePropertyMetadata, Object> e : metaValueMap.entrySet()) {
-                final AbstractJob job = modifyObjectJobFactory.getJob("Edit",fxomInstance,e.getKey(),e.getValue());
+            for (var e : metaValueMap.entrySet()) {
+                final var job = fxomJobsFactory.modifyObject(fxomInstance, e.getKey(), e.getValue());
+                job.setDescription("Edit");
                 if (job.isExecutable()) {
                     jobManager.push(job);
                 }
@@ -243,9 +244,8 @@ public class EditCurveGesture extends AbstractMouseGesture {
         }
 
         if (points != null) {
-            final ValuePropertyMetadata pointsMeta
-                = metadata.queryValueProperty(fxomInstance, POINTS_NAME);
-            final AbstractJob job = modifyObjectJobFactory.getJob(fxomInstance,pointsMeta,points);
+            final var pointsMeta = metadata.queryValueProperty(fxomInstance, POINTS_NAME);
+            final var job = fxomJobsFactory.modifyObject(fxomInstance, pointsMeta, points);
             if (job.isExecutable()) {
                 jobManager.push(job);
             }
@@ -269,8 +269,8 @@ public class EditCurveGesture extends AbstractMouseGesture {
             userDidCancel();
 
             if (points != null) {
-                final ValuePropertyMetadata pointsMeta = metadata.queryValueProperty(fxomInstance, POINTS_NAME);
-                final AbstractJob job = modifyObjectJobFactory.getJob(fxomInstance,pointsMeta,points);
+                final var pointsMeta = metadata.queryValueProperty(fxomInstance, POINTS_NAME);
+                final var job = fxomJobsFactory.modifyObject(fxomInstance, pointsMeta, points);
                 if (job.isExecutable()) {
                     jobManager.push(job);
                 }
@@ -288,7 +288,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
             }
             mouseDragged();
         }
-   }
+    }
 
     @Override
     protected void userDidCancel() {
@@ -301,7 +301,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
         if (editor == null || controller == null) {
             return;
         }
-        //final Node sceneGraphObject = editor.getSceneGraphObject().get();
+        // final Node sceneGraphObject = editor.getSceneGraphObject().get();
         closestParent.layout();
 
         final double currentSceneX = getLastMouseEvent().getSceneX();
@@ -381,12 +381,12 @@ public class EditCurveGesture extends AbstractMouseGesture {
 
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public static class Factory extends GestureFactory<EditCurveGesture> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
+
         public EditCurveGesture getGesture(FXOMInstance fxomInstance, Tunable tunable) {
             return create(EditCurveGesture.class, g -> g.setupGestureParameters(fxomInstance, tunable));
         }

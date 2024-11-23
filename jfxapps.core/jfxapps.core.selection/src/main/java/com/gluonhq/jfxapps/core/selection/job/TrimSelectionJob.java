@@ -36,6 +36,7 @@ package com.gluonhq.jfxapps.core.selection.job;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
@@ -67,7 +68,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
  * => {@link SetDocumentRootJob}<br/>
  * 4) Add fx:controller/fx:root (if defined) to the new root object<br/>
  */
-@Prototype
+@ApplicationInstancePrototype
 public final class TrimSelectionJob extends BatchSelectionJob {
 
     private static final String I18N_LABEL_ACTION_EDIT_TRIM = "label.action.edit.trim";

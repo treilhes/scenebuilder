@@ -37,9 +37,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.InitializingBean;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
-import com.gluonhq.jfxapps.core.api.content.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.gesture.AbstractGesture;
+import com.gluonhq.jfxapps.core.api.gesture.DiscardGesture;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
@@ -66,7 +66,7 @@ import javafx.scene.shape.Line;
  *
  *
  */
-@Prototype
+@ApplicationInstancePrototype
 public class TreeTableColumnHandles extends AbstractResilientHandles<Object> implements InitializingBean {
 
     /*
@@ -193,9 +193,9 @@ public class TreeTableColumnHandles extends AbstractResilientHandles<Object> imp
 
         final int gripIndex = grips.getChildren().indexOf(node);
         if (gripIndex != -1) {
-            final FXOMObject parentObject = getFxomInstance().getParentObject();
-            final HierarchyMask m = maskFactory.getMask(parentObject);
-            final FXOMObject columnObject = m.getSubComponentAtIndex(m.getMainAccessory(), gripIndex, false);
+            final var parentObject = getFxomInstance().getParentObject();
+            final var m = maskFactory.getMask(parentObject);
+            final var columnObject = m.getSubComponentAtIndex(m.getMainAccessory(), gripIndex, false);
             assert columnObject instanceof FXOMInstance;
             result = resizeTreeTableColumnGestureFactory.getGesture((FXOMInstance)columnObject);
         } else {
@@ -211,7 +211,7 @@ public class TreeTableColumnHandles extends AbstractResilientHandles<Object> imp
      */
 
     private TreeTableColumn<?,?> getTreeTableColumn() {
-        assert getSceneGraphObject().isInstanceOf(TreeTableColumn.class);
+        assert getSceneGraphObject() instanceof TreeTableColumn;
         return (TreeTableColumn<?,?>) getSceneGraphObject();
     }
 

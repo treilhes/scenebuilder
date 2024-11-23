@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,17 +41,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -60,8 +59,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.oracle.javafx.scenebuilder.tools.job.wrap.FXOMObjectCourseComparator.BidimensionalComparator;
 import com.oracle.javafx.scenebuilder.tools.job.wrap.FXOMObjectCourseComparator.GridCourse;
 
@@ -84,23 +82,22 @@ public final class WrapInGridPaneJob extends AbstractWrapInSubComponentJob {
     // Value = 2 dimensions integer array for the COLUMN and ROW index
     private final Map<FXOMObject, int[]> indices = new HashMap<>();
     private final FXOMDocument fxomDocument;
-    private final IMetadata metadata;
+    private final SbMetadata metadata;
     private final FxomJobsFactory fxomJobsFactory;
 
-    protected WrapInGridPaneJob(JobExtensionFactory extensionFactory, ApplicationInstanceEvents documentManager,
-            Selection selection, FXOMObjectMask.Factory designMaskFactory, IMetadata metadata,
-            AddPropertyValueJob.Factory addPropertyValueJobFactory,
-            ToggleFxRootJob.Factory toggleFxRootJobFactory,
-            ModifyFxControllerJob.Factory modifyFxControllerJobFactory,
-            SetDocumentRootJob.Factory setDocumentRootJobFactory,
-            RemovePropertyValueJob.Factory removePropertyValueJobFactory,
-            RemovePropertyJob.Factory removePropertyJobFactory,
+    // @formatter:off
+    protected WrapInGridPaneJob(
+            JobExtensionFactory extensionFactory,
+            ApplicationInstanceEvents documentManager,
+            Selection selection,
+            SbMetadata metadata,
+            FXOMObjectMask.Factory designMaskFactory,
             FxomJobsFactory fxomJobsFactory,
-            AddPropertyJob.Factory addPropertyJobFactory,
-            DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
-        super(extensionFactory, documentManager, selection, designMaskFactory, metadata, addPropertyValueJobFactory,
-                toggleFxRootJobFactory, modifyFxControllerJobFactory, setDocumentRootJobFactory, removePropertyValueJobFactory,
-                removePropertyJobFactory, modifyObjectJobFactory, addPropertyJobFactory, objectSelectionGroupFactory);
+            SelectionJobsFactory selectionJobsFactory,
+            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+        //@formatter:on
+        super(extensionFactory, documentManager, selection, designMaskFactory, metadata, fxomJobsFactory,
+                selectionJobsFactory, objectSelectionGroupFactory);
         this.metadata = metadata;
         this.fxomJobsFactory = fxomJobsFactory;
         this.fxomDocument = documentManager.fxomDocument().get();
@@ -108,25 +105,25 @@ public final class WrapInGridPaneJob extends AbstractWrapInSubComponentJob {
     }
 
     @Override
-    protected List<AbstractJob> modifyChildrenJobs(final List<FXOMObject> children) {
-        final List<AbstractJob> jobs = super.modifyChildrenJobs(children);
+    protected List<Job> modifyChildrenJobs(final List<FXOMObject> children) {
+        final List<Job> jobs = super.modifyChildrenJobs(children);
 
 
         for (FXOMObject child : children) {
 
-            ValuePropertyMetadata columnIndexMeta = metadata.queryValueProperty((FXOMInstance) child,
+            var columnIndexMeta = metadata.queryValueProperty((FXOMInstance) child,
                     new PropertyName("columnIndex", GridPane.class));
-            ValuePropertyMetadata rowIndexMeta = metadata.queryValueProperty((FXOMInstance) child,
+            var rowIndexMeta = metadata.queryValueProperty((FXOMInstance) child,
                     new PropertyName("rowIndex", GridPane.class));
             int[] childIndices = indices.get(child);
 
             // Modify child column index
-            final AbstractJob modifyColumnIndex = modifyObjectJobFactory.getJob((FXOMInstance) child, columnIndexMeta,
+            final var modifyColumnIndex = fxomJobsFactory.modifyObject((FXOMInstance) child, columnIndexMeta,
                     childIndices[GridCourse.COL_BY_COL.index()]);
             jobs.add(modifyColumnIndex);
 
             // Modify child row index
-            final AbstractJob modifyRowIndex = modifyObjectJobFactory.getJob((FXOMInstance) child, rowIndexMeta,
+            final var modifyRowIndex = fxomJobsFactory.modifyObject((FXOMInstance) child, rowIndexMeta,
                     childIndices[GridCourse.ROW_BY_ROW.index()]);
 
             jobs.add(modifyRowIndex);
@@ -249,7 +246,7 @@ public final class WrapInGridPaneJob extends AbstractWrapInSubComponentJob {
     private FXOMInstance makeConstraintsInstance(final Class<?> constraintsClass) {
 
         // Create new constraints instance
-        final FXOMDocument newDocument = new FXOMDocument();
+        final FXOMDocument newDocument = fxomDocument.getFactory().newDocument();
         final FXOMInstance result
                 = new FXOMInstance(newDocument, constraintsClass);
         newDocument.setFxomRoot(result);
@@ -290,11 +287,9 @@ public final class WrapInGridPaneJob extends AbstractWrapInSubComponentJob {
         constraints.addToParentProperty(index, property);
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
+    @ApplicationInstanceSingleton
     public final static class Factory extends JobFactory<WrapInGridPaneJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

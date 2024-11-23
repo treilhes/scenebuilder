@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,13 +36,13 @@ package com.oracle.javafx.scenebuilder.tools.job.gridpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -58,7 +58,7 @@ import javafx.scene.layout.GridPane;
 public final class RemoveColumnContentJob extends BatchDocumentJob {
 
     private final GridPaneHierarchyMask.Factory maskFactory;
-    private final DeleteObjectJob.Factory deleteObjectJobFactory;
+    private final SelectionJobsFactory selectionJobsFactory;
 
     private FXOMObject targetGridPane;
     private List<Integer> targetIndexes;
@@ -67,12 +67,12 @@ public final class RemoveColumnContentJob extends BatchDocumentJob {
     public RemoveColumnContentJob(
             JobExtensionFactory extensionFactory,
             ApplicationInstanceEvents documentManager,
-            DeleteObjectJob.Factory deleteObjectJobFactory,
+            SelectionJobsFactory selectionJobsFactory,
             GridPaneHierarchyMask.Factory maskFactory) {
     // @formatter:on
         super(extensionFactory, documentManager);
         this.maskFactory = maskFactory;
-        this.deleteObjectJobFactory = deleteObjectJobFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
     }
 
     protected void setJobParameters(final FXOMObject targetGridPane, final List<Integer> targetIndexes) {
@@ -83,9 +83,9 @@ public final class RemoveColumnContentJob extends BatchDocumentJob {
     }
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
+    protected List<Job> makeSubJobs() {
 
-        final List<AbstractJob> result = new ArrayList<>();
+        final List<Job> result = new ArrayList<>();
 
         assert targetGridPane instanceof FXOMInstance;
         assert targetIndexes.isEmpty() == false;
@@ -94,7 +94,7 @@ public final class RemoveColumnContentJob extends BatchDocumentJob {
         for (int targetIndex : targetIndexes) {
             final List<FXOMObject> children = targetGridPaneMask.getColumnContentAtIndex(targetIndex);
             for (FXOMObject child : children) {
-                final AbstractJob removeChildJob = deleteObjectJobFactory.getJob(child);
+                final Job removeChildJob = selectionJobsFactory.deleteObject(child);
                 result.add(removeChildJob);
             }
         }
@@ -107,10 +107,9 @@ public final class RemoveColumnContentJob extends BatchDocumentJob {
         return "Remove Column Content"; // NOCHECK
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public final static class Factory extends JobFactory<RemoveColumnContentJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.ui.dock.action.impl;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
@@ -49,22 +50,25 @@ import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 public class ToggleViewVisibilityAction extends AbstractAction {
 
     private final DockViewController dockViewController;
+    private final JfxAppContext context;
 
-    private View view;
+    private Class<? extends View> view;
 
     public ToggleViewVisibilityAction(
             I18N i18n,
+            JfxAppContext context,
             ActionExtensionFactory extensionFactory,
             DockViewController dockViewController) {
         super(i18n, extensionFactory);
+        this.context = context;
         this.dockViewController = dockViewController;
     }
 
-    public View getView() {
+    public Class<? extends View> getView() {
         return view;
     }
 
-    public void setView(View view) {
+    public void setView(Class<? extends View> view) {
         this.view = view;
     }
 
@@ -76,7 +80,7 @@ public class ToggleViewVisibilityAction extends AbstractAction {
     @Override
     public ActionStatus doPerform() {
 
-        View view  = getView();
+        View view  = context.getBean(getView());
         if (!view.isVisible()) {
 
             dockViewController.performOpenView(view);

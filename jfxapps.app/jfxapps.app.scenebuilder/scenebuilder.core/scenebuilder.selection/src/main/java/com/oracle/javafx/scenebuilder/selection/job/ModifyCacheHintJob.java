@@ -38,6 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
@@ -61,7 +62,7 @@ import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
  * If the new value is not DEFAULT it sets cache to true<br/>
  * FLAW: currently the modification of the cache property is not reflected in the inspector until you deselect adn reselect the object
  */
-@Prototype
+@ApplicationInstancePrototype
 public final class ModifyCacheHintJob extends BatchDocumentJob {
 
     private static final PropertyName cachePN = new PropertyName("cache"); //NOCHECK

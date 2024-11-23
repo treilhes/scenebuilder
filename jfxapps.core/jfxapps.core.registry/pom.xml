@@ -48,7 +48,7 @@
                                             <version>${project.version}</version>
                                         </dependency>
                                     </extension>
-                                    
+
                                     <!-- secondary boot -->
                                     <extension>
                                         <uuid>0f456500-a6d0-4438-8186-4d3de840b81b</uuid>
@@ -99,6 +99,14 @@
                                         </dependency>
                                     </extension>
                                     <extension>
+                                        <uuid>898396ea-fac4-4ca2-8915-72501f2d5f10</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>jfxapps.core.clipboard</artifactId>
+                                            <version>${project.version}</version>
+                                        </dependency>
+                                    </extension>
+                                    <extension>
                                         <uuid>285f16bb-9af8-4c60-9ca9-5098a9d6e920</uuid>
                                         <dependency>
                                             <groupId>com.gluonhq.jfxapps</groupId>
@@ -106,7 +114,7 @@
                                             <version>${project.version}</version>
                                         </dependency>
                                     </extension>
-                                    
+
                                     <!-- temp -->
                                     <extension>
                                         <uuid>be3f6ad5-2591-485a-b2e8-8d714cbd6b2a</uuid>

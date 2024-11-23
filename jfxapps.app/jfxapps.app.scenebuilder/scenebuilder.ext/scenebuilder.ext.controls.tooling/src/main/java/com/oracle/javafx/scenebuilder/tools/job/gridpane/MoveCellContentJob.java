@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,10 +34,9 @@
 
 package com.oracle.javafx.scenebuilder.tools.job.gridpane;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
@@ -47,7 +46,6 @@ import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.value.IntegerPropertyMetadata;
-import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
 
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
@@ -59,19 +57,19 @@ import javafx.scene.layout.GridPane;
 @ApplicationInstancePrototype
 public final class MoveCellContentJob extends AbstractJob {
 
-    private static final IntegerPropertyMetadata columnIndexMeta =
-            new IntegerPropertyMetadata.Builder()
+    private static final IntegerPropertyMetadata<?> columnIndexMeta =
+            new IntegerPropertyMetadata.Builder<>()
                 .name(new PropertyName("columnIndex", GridPane.class)) //NOCHECK
                 .readWrite(true)
                 .defaultValue(0)
-                .inspectorPath(InspectorPath.UNUSED).build();
+                .build();
 
-    private static final IntegerPropertyMetadata rowIndexMeta =
-            new IntegerPropertyMetadata.Builder()
+    private static final IntegerPropertyMetadata<?> rowIndexMeta =
+            new IntegerPropertyMetadata.Builder<>()
                 .name(new PropertyName("rowIndex", GridPane.class)) //NOCHECK
                 .readWrite(true)
                 .defaultValue(0)
-                .inspectorPath(InspectorPath.UNUSED).build();
+                .build();
 
     private FXOMInstance fxomObject;
     private int columnIndexDelta;
@@ -142,10 +140,9 @@ public final class MoveCellContentJob extends AbstractJob {
         return getClass().getSimpleName();
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public final static class Factory extends JobFactory<MoveCellContentJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

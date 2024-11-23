@@ -39,7 +39,6 @@ import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.api.SbApiExtension;
-import com.oracle.javafx.scenebuilder.controls.contextmenu.ContextMenuMenuProvider;
 
 public class BaseControlsExtension implements OpenExtension {
 
@@ -63,8 +62,7 @@ public class BaseControlsExtension implements OpenExtension {
     @Override
     public List<Class<?>> exportedContextClasses() {
         return Arrays.asList(
-                BaseDocumentationUrlBuilder.class,
-                ContextMenuMenuProvider.class
+                BaseDocumentationUrlBuilder.class
                 );
     }
 

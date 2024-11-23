@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -47,9 +47,6 @@ public class DockNameHelper {
 
     public DockNameHelper() {
         super();
-//        dockNames.put(Dock.LEFT_DOCK_UUID, I18N.getString("dock.name.left"));
-//        dockNames.put(Dock.RIGHT_DOCK_UUID, I18N.getString("dock.name.right"));
-//        dockNames.put(Dock.BOTTOM_DOCK_UUID, I18N.getString("dock.name.bottom"));
     }
 
     public String getName(Dock dock) {
@@ -60,14 +57,19 @@ public class DockNameHelper {
         }
 
         UUID uuid = dock.getId();
-        name = dockNames.get(uuid);
+        return getName(uuid);
+    }
+
+    public String getName(UUID dockId) {
+
+        String name = dockNames.get(dockId);
 
         if (name != null) {
             return name;
         }
 
         name = "Window " + windowNumber++;
-        dockNames.put(uuid, name);
+        dockNames.put(dockId, name);
 
         return name;
     }

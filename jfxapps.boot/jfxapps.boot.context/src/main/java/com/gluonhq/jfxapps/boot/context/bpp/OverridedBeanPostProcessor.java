@@ -92,8 +92,7 @@ public class OverridedBeanPostProcessor implements BeanPostProcessor {
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         // Initialize the list of override classes if not already done
         if (classes == null) {
-            classes = context.getBeansWithAnnotation(OverrideBean.class).values().stream().map(Object::getClass)
-                    .collect(Collectors.toList());
+            classes = context.getBeanClassesForAnnotation(OverrideBean.class);
         }
 
         var beanClass = bean.getClass();
@@ -116,7 +115,7 @@ public class OverridedBeanPostProcessor implements BeanPostProcessor {
 
         ProxyFactory proxyFactory = createMappedProxy(bean, methodMap);
 
-        return proxyFactory.getProxy();
+        return proxyFactory.getProxy(bean.getClass().getClassLoader());
     }
 
     /**

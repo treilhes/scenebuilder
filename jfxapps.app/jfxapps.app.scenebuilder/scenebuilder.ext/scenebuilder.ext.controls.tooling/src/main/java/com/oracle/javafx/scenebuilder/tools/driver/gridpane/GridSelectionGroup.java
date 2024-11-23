@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.gridpane;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,31 +44,25 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroupFactoryRegistry;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
-import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
-import com.gluonhq.jfxapps.core.fxom.collector.FxIdCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.value.IntegerPropertyMetadata;
-import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.DeleteGridSelectionJob;
 
 import javafx.scene.Node;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 
 /**
  *
@@ -80,6 +74,14 @@ public final class GridSelectionGroup implements SelectionGroup {
     static private final PropertyName rowConstraintsName = new PropertyName("rowConstraints");
     static private final PropertyName columnConstraintsName = new PropertyName("columnConstraints");
 
+    private static final IntegerPropertyMetadata columnIndexMeta = new IntegerPropertyMetadata.Builder<Void>()
+            .name(new PropertyName("columnIndex", GridPane.class)) // NOCHECK
+            .readWrite(true).defaultValue(0).build();
+
+    private static final IntegerPropertyMetadata rowIndexMeta = new IntegerPropertyMetadata.Builder<Void>()
+            .name(new PropertyName("rowIndex", GridPane.class)) // NOCHECK
+            .readWrite(true).defaultValue(0).build();
+
     public enum Type {
         ROW, COLUMN
     };
@@ -87,17 +89,18 @@ public final class GridSelectionGroup implements SelectionGroup {
     private final FXOMObjectMask.Factory designHierarchyMaskFactory;
     private final DeleteGridSelectionJob.Factory deleteGridSelectionJobFactory;
     private final GridSelectionGroup.Factory gridSelectionGroupFactory;
-    private final DSelectionGroupFactory.Factory objectSelectionGroupFactory;
+    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
     private FXOMObject parentObject;
     private Type type;
     private final Set<Integer> indexes = new HashSet<>();
+    protected final Set<FXOMObject> items = new HashSet<>();
     protected final Set<FXOMObject> innerItems = new HashSet<>();
     // @formatter:off
     protected GridSelectionGroup(
             FXOMObjectMask.Factory designHierarchyMaskFactory,
             DeleteGridSelectionJob.Factory deleteGridSelectionJobFactory,
             GridSelectionGroup.Factory gridSelectionGroupFactory,
-            DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
+            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
      // @formatter:on
         this.designHierarchyMaskFactory = designHierarchyMaskFactory;
         this.gridSelectionGroupFactory = gridSelectionGroupFactory;
@@ -115,7 +118,7 @@ public final class GridSelectionGroup implements SelectionGroup {
         this.type = type;
         this.indexes.addAll(indexes);
         this.items.add(parentObject);
-        this.innerItems.addAll(collectConstraintInstances());
+        this.innerItems.addAll(parentObject.collect(GridCollector.constraints(type, indexes)));
     }
 
     @Override
@@ -131,55 +134,8 @@ public final class GridSelectionGroup implements SelectionGroup {
         return Collections.unmodifiableSet(indexes);
     }
 
-    private List<FXOMInstance> collectSiblingConstraintInstances() {
-        final List<FXOMInstance> result;
-
-        switch (type) {
-        case ROW:
-            result = collect(rowConstraintsName, RowConstraints.class, null);
-            break;
-        case COLUMN:
-            result = collect(columnConstraintsName, ColumnConstraints.class, null);
-            break;
-        default:
-            throw new RuntimeException("Bug");
-        }
-
-        return result;
-    }
-
-    private List<FXOMInstance> collectConstraintInstances() {
-        final List<FXOMInstance> result;
-
-        switch (type) {
-        case ROW:
-            result = collectRowConstraintsInstances();
-            break;
-        case COLUMN:
-            result = collectColumnConstraintsInstances();
-            break;
-        default:
-            throw new RuntimeException("Bug");
-        }
-
-        return result;
-    }
-
     public List<FXOMObject> collectSelectedObjects() {
-        final List<FXOMObject> result;
-
-        switch (type) {
-        case ROW:
-            result = collectSelectedObjectsInRow();
-            break;
-        case COLUMN:
-            result = collectSelectedObjectsInColumn();
-            break;
-        default:
-            throw new RuntimeException("Bug");
-        }
-
-        return result;
+        return parentObject.collect(GridCollector.fxomObjects(type, indexes));
     }
 
     /*
@@ -247,154 +203,8 @@ public final class GridSelectionGroup implements SelectionGroup {
         return true;
     }
 
-    /*
-     * Private
-     */
-
-    private List<FXOMInstance> collectRowConstraintsInstances() {
-        return collect(rowConstraintsName, RowConstraints.class, indexes);
-//        final List<FXOMInstance> result = new ArrayList<>();
-//        final FXOMInstance gridPaneInstance = (FXOMInstance) parentObject;
-//        final FXOMProperty fxomProperty = gridPaneInstance.getProperties().get(rowConstraintsName);
-//
-//        if (fxomProperty != null) {
-//            assert fxomProperty instanceof FXOMPropertyC;
-//            final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
-//            int index = 0;
-//            for (FXOMObject v : fxomPropertyC.getChildren()) {
-//                assert v.getSceneGraphObject().isInstanceOf(RowConstraints.class);
-//                assert v instanceof FXOMInstance;
-//                if (indexes.contains(index++)) {
-//                    result.add((FXOMInstance) v);
-//                }
-//            }
-//        }
-//
-//        return result;
-    }
-
-    private List<FXOMInstance> collectColumnConstraintsInstances() {
-        return collect(columnConstraintsName, ColumnConstraints.class, indexes);
-//
-//        final List<FXOMInstance> result = new ArrayList<>();
-//
-//        final FXOMInstance gridPaneInstance
-//                = (FXOMInstance) parentObject;
-//        final FXOMProperty fxomProperty
-//                = gridPaneInstance.getProperties().get(columnConstraintsName);
-//        if (fxomProperty != null) {
-//            assert fxomProperty instanceof FXOMPropertyC;
-//            final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
-//            int index = 0;
-//            for (FXOMObject v : fxomPropertyC.getChildren()) {
-//                assert v.getSceneGraphObject().isInstanceOf(ColumnConstraints.class);
-//                assert v instanceof FXOMInstance;
-//                if (indexes.contains(index++)) {
-//                    result.add((FXOMInstance)v);
-//                }
-//            }
-//        }
-//
-//        return result;
-    }
-
-    /**
-     * Collect all {@link FXOMInstance} which have a scenegraph object of the
-     * specified expected class
-     *
-     * @param name
-     * @param extepectedClass
-     * @param selected
-     * @return
-     */
-    private List<FXOMInstance> collect(PropertyName name, Class<?> expectedClass, Set<Integer> selected) {
-        final List<FXOMInstance> result = new ArrayList<>();
-
-        final FXOMInstance gridPaneInstance = (FXOMInstance) parentObject;
-        final FXOMProperty fxomProperty = gridPaneInstance.getProperties().get(name);
-        if (fxomProperty != null) {
-            assert fxomProperty instanceof FXOMPropertyC;
-            final FXOMPropertyC fxomPropertyC = (FXOMPropertyC) fxomProperty;
-            int index = 0;
-            for (FXOMObject v : fxomPropertyC.getChildren()) {
-                if (v.getSceneGraphObject().get() != null
-                        && expectedClass.isAssignableFrom(v.getSceneGraphObject().getObjectClass())) {
-                    assert v instanceof FXOMInstance;
-                    if (selected == null || selected.contains(index++)) {
-                        result.add((FXOMInstance) v);
-                    }
-                }
-            }
-        }
-
-        return result;
-    }
-
-    private static final IntegerPropertyMetadata columnIndexMeta = new IntegerPropertyMetadata.Builder()
-            .name(new PropertyName("columnIndex", GridPane.class)) // NOCHECK
-            .readWrite(true).defaultValue(0).inspectorPath(InspectorPath.UNUSED).build();
-
-    private List<FXOMObject> collectSelectedObjectsInColumn() {
-        final List<FXOMObject> result = new ArrayList<>();
-
-        final FXOMObjectMask m = designHierarchyMaskFactory.getMask(parentObject);
-        assert m.getMainAccessory() != null;
-
-        for (FXOMObject childObject:m.getSubComponents(m.getMainAccessory(), false)) {
-            if (childObject instanceof FXOMInstance) {
-                final FXOMInstance childInstance = (FXOMInstance) childObject;
-                if (indexes.contains(columnIndexMeta.getValue(childInstance))) {
-                    // child belongs to a selected column
-                    result.add(childInstance);
-                }
-            }
-        }
-
-        return result;
-    }
-
-    private static final IntegerPropertyMetadata rowIndexMeta = new IntegerPropertyMetadata.Builder()
-            .name(new PropertyName("rowIndex", GridPane.class)) // NOCHECK
-            .readWrite(true).defaultValue(0).inspectorPath(InspectorPath.UNUSED).build();
-
-    private List<FXOMObject> collectSelectedObjectsInRow() {
-        final List<FXOMObject> result = new ArrayList<>();
-
-        final FXOMObjectMask m = designHierarchyMaskFactory.getMask(parentObject);
-        assert m.getMainAccessory() != null;
-
-        for (FXOMObject childObject:m.getSubComponents(m.getMainAccessory(), false)) {
-            if (childObject instanceof FXOMInstance) {
-                final FXOMInstance childInstance = (FXOMInstance) childObject;
-                if (indexes.contains(rowIndexMeta.getValue(childInstance))) {
-                    // child belongs to a selected column
-                    result.add(childInstance);
-                }
-            }
-        }
-
-        return result;
-    }
-
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
-    public static class Factory extends DefaultSelectionGroupFactory<GridSelectionGroup> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
-            super(sbContext);
-        }
-
-        public GridSelectionGroup getGroup(FXOMObject parentObject, Type type, Set<Integer> indexes) {
-            return create(GridSelectionGroup.class, j -> j.setGroupParameters(parentObject, type, indexes));
-        }
-
-        public GridSelectionGroup getGroup(FXOMObject parentObject, Type type, int index) {
-            return create(GridSelectionGroup.class, j -> j.setGroupParameters(parentObject, type, Set.of(index)));
-        }
-    }
-
     @Override
-    protected Job makeDeleteJob() {
+    public Job makeDeleteJob() {
         return deleteGridSelectionJobFactory.getJob();
     }
 
@@ -405,7 +215,7 @@ public final class GridSelectionGroup implements SelectionGroup {
      * @return the abstract selection group
      */
     @Override
-    protected AbstractSelectionGroup toggle(AbstractSelectionGroup toggleGroup) {
+    public SelectionGroup toggle(SelectionGroup toggleGroup) {
         if (toggleGroup.getClass() == getClass()) {
             GridSelectionGroup gridToggleGroup = (GridSelectionGroup) toggleGroup;
 
@@ -449,7 +259,7 @@ public final class GridSelectionGroup implements SelectionGroup {
      * @return true if this foxm object is selected.
      */
     @Override
-    protected boolean isSelected(AbstractSelectionGroup group) {
+    public boolean isSelected(SelectionGroup group) {
         final boolean result;
         if (group instanceof GridSelectionGroup) {
             final GridSelectionGroup gsg = (GridSelectionGroup) group;
@@ -461,17 +271,17 @@ public final class GridSelectionGroup implements SelectionGroup {
     }
 
     @Override
-    protected Node getCheckedHitNode() {
+    public Node getCheckedHitNode() {
         return null;
     }
 
     @Override
     public List<FXOMObject> getSiblings() {
-        return Collections.unmodifiableList((List<FXOMObject>)(List)collectSiblingConstraintInstances());
+        return parentObject.collect(GridCollector.constraints(type));
     }
 
     @Override
-    public AbstractSelectionGroup selectAll() {
+    public SelectionGroup selectAll() {
         List<FXOMObject> siblings = this.getSiblings();
         if (siblings.size() <= 1) {
             return this;
@@ -481,7 +291,7 @@ public final class GridSelectionGroup implements SelectionGroup {
     }
 
     @Override
-    public AbstractSelectionGroup selectNext() {
+    public SelectionGroup selectNext() {
         Set<? extends FXOMObject> localIitems = this.getInnerItems();
 
         if (localIitems.size() != 1) {
@@ -505,7 +315,7 @@ public final class GridSelectionGroup implements SelectionGroup {
     }
 
     @Override
-    public AbstractSelectionGroup selectPrevious() {
+    public SelectionGroup selectPrevious() {
         Set<? extends FXOMObject> localIitems = this.getInnerItems();
 
         if (localIitems.size() != 1) {
@@ -533,14 +343,55 @@ public final class GridSelectionGroup implements SelectionGroup {
         return innerItems;
     }
 
-    @Override
     public Map<String, FXOMObject> collectSelectedFxIds() {
         // Collects fx:ids in selected objects and their descendants.
         final Map<String, FXOMObject> fxIdMap = new HashMap<>();
         for (FXOMObject selectedObject : collectSelectedObjects()) {
-            fxIdMap.putAll(selectedObject.collect(FxIdCollector.fxIdsMap()));
+            fxIdMap.putAll(selectedObject.collect(FxCollector.fxIdsUniqueMap()));
         }
         return fxIdMap;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <T> T collect(FXOMCollector<T> collector) {
+        return parentObject.collect(collector);
+    }
+
+    @Override
+    public Set<FXOMObject> getItems() {
+        return items;
+    }
+
+    @ApplicationInstanceSingleton
+    public static class Factory extends SelectionGroupFactory<GridSelectionGroup> {
+
+        public Factory(JfxAppContext sbContext, SelectionGroupFactoryRegistry registry) {
+            super(sbContext, registry);
+            // we register the ObjectSelectionGroup factory for Object
+            // it will be the default factory
+            registry.registerImplementationClass(Object.class, Factory.class);
+        }
+
+        public GridSelectionGroup getGroup(FXOMObject parentObject, Type type, Set<Integer> indexes) {
+            return create(GridSelectionGroup.class, j -> j.setGroupParameters(parentObject, type, indexes));
+        }
+
+        public GridSelectionGroup getGroup(FXOMObject parentObject, Type type, int index) {
+            return create(GridSelectionGroup.class, j -> j.setGroupParameters(parentObject, type, Set.of(index)));
+        }
+
+        //FIXME implement me
+        @Override
+        public GridSelectionGroup getGroup(Collection<? extends FXOMObject> fxomObjects, FXOMObject hitItem,
+                Node hitNode) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+    }
+
+
 
 }

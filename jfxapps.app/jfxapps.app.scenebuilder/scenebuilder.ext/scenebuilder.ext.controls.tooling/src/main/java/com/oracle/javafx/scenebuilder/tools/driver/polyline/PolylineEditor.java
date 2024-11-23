@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,13 +42,13 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.gesture.Tunable;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.api.control.EditCurveGuide.Tunable;
 import com.oracle.javafx.scenebuilder.api.control.curve.AbstractCurveEditor;
-import com.oracle.javafx.scenebuilder.kit.editor.panel.content.guides.EditCurveGuideController;
 
 import javafx.collections.ObservableList;
 import javafx.scene.shape.Polyline;
+
 @ApplicationInstancePrototype
 public class PolylineEditor extends AbstractCurveEditor<Polyline> {
 
@@ -60,7 +61,7 @@ public class PolylineEditor extends AbstractCurveEditor<Polyline> {
     public PolylineEditor() {
         super();
     }
-    
+
     @Override
     public void initialize() {
         originalPoints = new ArrayList<>(sceneGraphObject.getPoints());

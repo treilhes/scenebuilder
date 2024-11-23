@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,9 +37,8 @@ import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
@@ -54,11 +53,11 @@ public class ScenePring extends AbstractNodePring<Node> {
     private final FXOMObjectMask.Factory maskFactory;
 
     public ScenePring(
-            SelectWithPringGesture.Factory selectWithPringGestureFactory,
-            Content contentPanelController,
+            Workspace workspace,
             ApplicationInstanceEvents documentManager,
-            FXOMObjectMask.Factory maskFactory) {
-        super( contentPanelController, documentManager, selectWithPringGestureFactory, Node.class);
+            FXOMObjectMask.Factory maskFactory,
+            SelectWithPringGesture.Factory selectWithPringGestureFactory) {
+        super(workspace , documentManager, selectWithPringGestureFactory, Node.class);
         this.maskFactory = maskFactory;
     }
 
@@ -70,7 +69,7 @@ public class ScenePring extends AbstractNodePring<Node> {
     public void setFxomObject(FXOMObject fxomObject) {
 
         assert fxomObject.getSceneGraphObject().isInstanceOf(Scene.class);
-        HierarchyMask designHierarchyMask = maskFactory.getMask(fxomObject);
+        var designHierarchyMask = maskFactory.getMask(fxomObject);
 
         List<FXOMObject> children = designHierarchyMask.getAccessories(designHierarchyMask.getMainAccessory(), false);
         assert !children.isEmpty();
@@ -82,6 +81,5 @@ public class ScenePring extends AbstractNodePring<Node> {
 
         super.setFxomObject(root);
     }
-
 
 }

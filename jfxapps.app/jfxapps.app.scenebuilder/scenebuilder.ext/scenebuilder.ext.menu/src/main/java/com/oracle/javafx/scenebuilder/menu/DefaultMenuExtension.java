@@ -39,61 +39,53 @@ import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.api.SbApiExtension;
-import com.oracle.javafx.scenebuilder.menu.action.LoadBlankAction;
-import com.oracle.javafx.scenebuilder.menu.action.LoadFileAction;
-import com.oracle.javafx.scenebuilder.menu.action.LoadUrlAction;
-import com.oracle.javafx.scenebuilder.menu.action.OpenFilesAction;
-import com.oracle.javafx.scenebuilder.menu.action.SaveAction;
-import com.oracle.javafx.scenebuilder.menu.action.edit.CopyAction;
-import com.oracle.javafx.scenebuilder.menu.action.edit.CutAction;
-import com.oracle.javafx.scenebuilder.menu.action.edit.DeleteAction;
-import com.oracle.javafx.scenebuilder.menu.action.edit.DuplicateAction;
-import com.oracle.javafx.scenebuilder.menu.action.edit.PasteAction;
-import com.oracle.javafx.scenebuilder.menu.action.edit.PasteIntoAction;
-import com.oracle.javafx.scenebuilder.menu.action.edit.RedoAction;
-import com.oracle.javafx.scenebuilder.menu.action.edit.SelectAllAction;
-import com.oracle.javafx.scenebuilder.menu.action.edit.SelectNextAction;
-import com.oracle.javafx.scenebuilder.menu.action.edit.SelectNoneAction;
-import com.oracle.javafx.scenebuilder.menu.action.edit.SelectParentAction;
-import com.oracle.javafx.scenebuilder.menu.action.edit.SelectPreviousAction;
-import com.oracle.javafx.scenebuilder.menu.action.edit.TrimAction;
-import com.oracle.javafx.scenebuilder.menu.action.edit.UndoAction;
-import com.oracle.javafx.scenebuilder.menu.action.file.ClearRecentItemsAction;
-import com.oracle.javafx.scenebuilder.menu.action.file.CloseFileAction;
-import com.oracle.javafx.scenebuilder.menu.action.file.EditIncludedFxmlAction;
-import com.oracle.javafx.scenebuilder.menu.action.file.ImportFxmlAction;
-import com.oracle.javafx.scenebuilder.menu.action.file.ImportMediaAction;
-import com.oracle.javafx.scenebuilder.menu.action.file.ImportProvider;
-import com.oracle.javafx.scenebuilder.menu.action.file.IncludeFxmlAction;
-import com.oracle.javafx.scenebuilder.menu.action.file.IncludeProvider;
-import com.oracle.javafx.scenebuilder.menu.action.file.NewAction;
-import com.oracle.javafx.scenebuilder.menu.action.file.OpenAction;
-import com.oracle.javafx.scenebuilder.menu.action.file.OpenRecentProvider;
-import com.oracle.javafx.scenebuilder.menu.action.file.QuitScenebuilderAction;
-import com.oracle.javafx.scenebuilder.menu.action.file.ReloadFileAction;
-import com.oracle.javafx.scenebuilder.menu.action.file.RevealFxmlFileAction;
-import com.oracle.javafx.scenebuilder.menu.action.file.RevealIncludedFxmlAction;
-import com.oracle.javafx.scenebuilder.menu.action.file.RevertAction;
-import com.oracle.javafx.scenebuilder.menu.action.file.SaveAsAction;
-import com.oracle.javafx.scenebuilder.menu.action.file.SaveOrSaveAsAction;
-import com.oracle.javafx.scenebuilder.menu.action.modify.AddContextMenuAction;
-import com.oracle.javafx.scenebuilder.menu.action.modify.AddPopupControlMenuProvider;
-import com.oracle.javafx.scenebuilder.menu.action.modify.AddTooltipAction;
-import com.oracle.javafx.scenebuilder.menu.action.modify.FitToParentAction;
-import com.oracle.javafx.scenebuilder.menu.action.modify.UseComputedSizeAction;
-import com.oracle.javafx.scenebuilder.menu.action.view.CloseBottomDockAction;
-import com.oracle.javafx.scenebuilder.menu.action.view.CloseLeftDockAction;
-import com.oracle.javafx.scenebuilder.menu.action.view.CloseRightDockAction;
-import com.oracle.javafx.scenebuilder.menu.action.view.ToggleMinimizeBottomDockAction;
-import com.oracle.javafx.scenebuilder.menu.action.view.ToggleMinimizeLeftDockAction;
-import com.oracle.javafx.scenebuilder.menu.action.view.ToggleMinimizeRightDockAction;
-import com.oracle.javafx.scenebuilder.menu.action.view.ToggleViewVisibilityAction;
 import com.oracle.javafx.scenebuilder.menu.i18n.I18NDefaultMenu;
 import com.oracle.javafx.scenebuilder.menu.main.MainMenuProvider;
-import com.oracle.javafx.scenebuilder.menu.viewmenu.ChangeDockTypeAction;
-import com.oracle.javafx.scenebuilder.menu.viewmenu.CloseViewAction;
-import com.oracle.javafx.scenebuilder.menu.viewmenu.MoveToDockAction;
-import com.oracle.javafx.scenebuilder.menu.viewmenu.UndockViewAction;
+import com.oracle.javafx.scenebuilder.menu.main.edit.CopyAction;
+import com.oracle.javafx.scenebuilder.menu.main.edit.CutAction;
+import com.oracle.javafx.scenebuilder.menu.main.edit.DeleteAction;
+import com.oracle.javafx.scenebuilder.menu.main.edit.DuplicateAction;
+import com.oracle.javafx.scenebuilder.menu.main.edit.PasteAction;
+import com.oracle.javafx.scenebuilder.menu.main.edit.PasteIntoAction;
+import com.oracle.javafx.scenebuilder.menu.main.edit.RedoAction;
+import com.oracle.javafx.scenebuilder.menu.main.edit.SelectAllAction;
+import com.oracle.javafx.scenebuilder.menu.main.edit.SelectNextAction;
+import com.oracle.javafx.scenebuilder.menu.main.edit.SelectNoneAction;
+import com.oracle.javafx.scenebuilder.menu.main.edit.SelectParentAction;
+import com.oracle.javafx.scenebuilder.menu.main.edit.SelectPreviousAction;
+import com.oracle.javafx.scenebuilder.menu.main.edit.TrimAction;
+import com.oracle.javafx.scenebuilder.menu.main.edit.UndoAction;
+import com.oracle.javafx.scenebuilder.menu.main.file.CloseFileAction;
+import com.oracle.javafx.scenebuilder.menu.main.file.ImportFxmlAction;
+import com.oracle.javafx.scenebuilder.menu.main.file.ImportMediaAction;
+import com.oracle.javafx.scenebuilder.menu.main.file.ImportProvider;
+import com.oracle.javafx.scenebuilder.menu.main.file.IncludeFxmlAction;
+import com.oracle.javafx.scenebuilder.menu.main.file.IncludeProvider;
+import com.oracle.javafx.scenebuilder.menu.main.file.IncludedEditFxmlAction;
+import com.oracle.javafx.scenebuilder.menu.main.file.IncludedRevealFxmlAction;
+import com.oracle.javafx.scenebuilder.menu.main.file.NewAction;
+import com.oracle.javafx.scenebuilder.menu.main.file.OpenAction;
+import com.oracle.javafx.scenebuilder.menu.main.file.OpenRecentProvider;
+import com.oracle.javafx.scenebuilder.menu.main.file.QuitScenebuilderAction;
+import com.oracle.javafx.scenebuilder.menu.main.file.RevealFxmlFileAction;
+import com.oracle.javafx.scenebuilder.menu.main.file.RevertAction;
+import com.oracle.javafx.scenebuilder.menu.main.file.SaveAsAction;
+import com.oracle.javafx.scenebuilder.menu.main.file.SaveOrSaveAsAction;
+import com.oracle.javafx.scenebuilder.menu.main.file.ShowPreferencesAction;
+import com.oracle.javafx.scenebuilder.menu.main.help.ShowDocumentationAction;
+import com.oracle.javafx.scenebuilder.menu.main.modify.FitToParentAction;
+import com.oracle.javafx.scenebuilder.menu.main.modify.UseComputedSizeAction;
+import com.oracle.javafx.scenebuilder.menu.main.view.ToggleMinimizeBottomDockAction;
+import com.oracle.javafx.scenebuilder.menu.main.view.ToggleMinimizeLeftDockAction;
+import com.oracle.javafx.scenebuilder.menu.main.view.ToggleMinimizeRightDockAction;
+import com.oracle.javafx.scenebuilder.menu.main.view.ViewMenuProvider;
+import com.oracle.javafx.scenebuilder.menu.unbound.CloseBottomDockAction;
+import com.oracle.javafx.scenebuilder.menu.unbound.CloseLeftDockAction;
+import com.oracle.javafx.scenebuilder.menu.unbound.CloseRightDockAction;
+import com.oracle.javafx.scenebuilder.menu.view.CloseViewAction;
+import com.oracle.javafx.scenebuilder.menu.view.DockTypeMenuProvider;
+import com.oracle.javafx.scenebuilder.menu.view.MoveToDockMenuProvider;
+import com.oracle.javafx.scenebuilder.menu.view.UndockViewAction;
 
 public class DefaultMenuExtension implements OpenExtension {
 
@@ -118,64 +110,60 @@ public class DefaultMenuExtension implements OpenExtension {
     public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
-                AddPopupControlMenuProvider.class,
-                AddContextMenuAction.class,
-                AddTooltipAction.class,
-                ChangeDockTypeAction.class,
-                ChangeDockTypeAction.MenuProvider.class,
-                ClearRecentItemsAction.class,
+
+                // TODO
+                MainMenuProvider.class,
                 CloseBottomDockAction.class,
-                CloseFileAction.class,
                 CloseLeftDockAction.class,
                 CloseRightDockAction.class,
+
+                ToggleMinimizeBottomDockAction.class,
+                ToggleMinimizeLeftDockAction.class,
+                ToggleMinimizeRightDockAction.class,
+                ViewMenuProvider.class,
+
+                // END TODO
+                CloseFileAction.class,
                 CloseViewAction.class,
                 CopyAction.class,
                 CutAction.class,
                 DeleteAction.class,
+                DockTypeMenuProvider.class,
                 DuplicateAction.class,
-                EditIncludedFxmlAction.class,
                 FitToParentAction.class,
                 I18NDefaultMenu.class,
-                ImportProvider.class,
                 ImportFxmlAction.class,
                 ImportMediaAction.class,
-                IncludeProvider.class,
+                ImportProvider.class,
                 IncludeFxmlAction.class,
-                LoadBlankAction.class,
-                NewAction.class,
-                LoadFileAction.class,
-                LoadUrlAction.class,
+                IncludeProvider.class,
+                IncludedEditFxmlAction.class,
+                IncludedRevealFxmlAction.class,
                 MainMenuProvider.class,
-                MoveToDockAction.class,
-                MoveToDockAction.MenuProvider.class,
-                OpenFilesAction.class,
+                MoveToDockMenuProvider.class,
+                NewAction.class,
+                OpenAction.class,
+                OpenRecentProvider.class,
                 PasteAction.class,
                 PasteIntoAction.class,
                 QuitScenebuilderAction.class,
                 RedoAction.class,
-                ReloadFileAction.class,
                 RevealFxmlFileAction.class,
-                RevealIncludedFxmlAction.class,
                 RevertAction.class,
-                SaveAction.class,
                 SaveAsAction.class,
                 SaveOrSaveAsAction.class,
                 SelectAllAction.class,
                 SelectNextAction.class,
-                SelectParentAction.class,
                 SelectNoneAction.class,
+                SelectParentAction.class,
                 SelectPreviousAction.class,
-                ToggleMinimizeBottomDockAction.class,
-                ToggleMinimizeLeftDockAction.class,
-                ToggleMinimizeRightDockAction.class,
-                ToggleViewVisibilityAction.class,
-                ToggleViewVisibilityAction.ViewMenuProvider.class,
+                ShowDocumentationAction.class,
+                ShowPreferencesAction.class,
                 TrimAction.class,
-                OpenAction.class,
-                OpenRecentProvider.class,
                 UndoAction.class,
                 UndockViewAction.class,
-                UseComputedSizeAction.class
+                UseComputedSizeAction.class,
+                ViewMenuProvider.class
             );
      // @formatter:on
     }

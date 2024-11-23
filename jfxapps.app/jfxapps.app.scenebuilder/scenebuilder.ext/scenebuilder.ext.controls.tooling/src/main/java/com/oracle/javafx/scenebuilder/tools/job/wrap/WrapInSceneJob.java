@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,26 +36,24 @@ package com.oracle.javafx.scenebuilder.tools.job.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 /**
  * Job used to wrap selection in a Scene using its ROOT property.
@@ -64,25 +62,23 @@ import com.gluonhq.jfxapps.core.metadata.IMetadata;
 public final class WrapInSceneJob extends AbstractWrapInJob {
 
     private final FXOMDocument fxomDocument;
-    private final ReplaceObjectJob.Factory replaceObjectJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
     private final FXOMObjectMask.Factory designMaskFactory;
 
-    protected WrapInSceneJob(JobExtensionFactory extensionFactory, ApplicationInstanceEvents documentManager,
-            Selection selection, FXOMObjectMask.Factory designMaskFactory, IMetadata metadata,
-            AddPropertyValueJob.Factory addPropertyValueJobFactory,
-            ToggleFxRootJob.Factory toggleFxRootJobFactory,
-            ModifyFxControllerJob.Factory modifyFxControllerJobFactory,
-            SetDocumentRootJob.Factory setDocumentRootJobFactory,
-            RemovePropertyValueJob.Factory removePropertyValueJobFactory,
-            RemovePropertyJob.Factory removePropertyJobFactory,
+    //@formatter:off
+    protected WrapInSceneJob(
+            JobExtensionFactory extensionFactory,
+            ApplicationInstanceEvents documentManager,
+            Selection selection,
+            SbMetadata metadata,
+            FXOMObjectMask.Factory designMaskFactory,
             FxomJobsFactory fxomJobsFactory,
-            AddPropertyJob.Factory addPropertyJobFactory,
-            ReplaceObjectJob.Factory replaceObjectJobFactory,
-            DSelectionGroupFactory.Factory objectSelectionGroupFactory) {
-        super(extensionFactory, documentManager, selection, designMaskFactory, metadata, addPropertyValueJobFactory,
-                toggleFxRootJobFactory, modifyFxControllerJobFactory, setDocumentRootJobFactory, removePropertyValueJobFactory,
-                removePropertyJobFactory, modifyObjectJobFactory, objectSelectionGroupFactory);
-        this.replaceObjectJobFactory = replaceObjectJobFactory;
+            SelectionJobsFactory selectionJobsFactory,
+            ObjectSelectionGroup.Factory objectSelectionGroupFactory) {
+        //@formatter:on
+        super(extensionFactory, documentManager, selection, designMaskFactory, metadata, fxomJobsFactory,
+                selectionJobsFactory, objectSelectionGroupFactory);
+        this.fxomJobsFactory = fxomJobsFactory;
         this.designMaskFactory = designMaskFactory;
         this.fxomDocument = documentManager.fxomDocument().get();
         newContainerClass = javafx.scene.Scene.class;
@@ -96,8 +92,8 @@ public final class WrapInSceneJob extends AbstractWrapInJob {
 
         // Can wrap in ROOT property single selection only
         final Selection selection = getSelection();
-        assert selection.getGroup() instanceof DSelectionGroupFactory; // Because of (1)
-        final DSelectionGroupFactory osg = (DSelectionGroupFactory) selection.getGroup();
+        assert selection.getGroup() instanceof ObjectSelectionGroup; // Because of (1)
+        final ObjectSelectionGroup osg = (ObjectSelectionGroup) selection.getGroup();
         if (osg.getItems().size() != 1) {
             return false;
         }
@@ -112,17 +108,17 @@ public final class WrapInSceneJob extends AbstractWrapInJob {
     }
 
     @Override
-    protected List<AbstractJob> wrapChildrenJobs(final List<FXOMObject> children) {
-        final List<AbstractJob> jobs = new ArrayList<>();
+    protected List<Job> wrapChildrenJobs(final List<FXOMObject> children) {
+        final List<Job> jobs = new ArrayList<>();
 
-        final HierarchyMask newContainerMask = designMaskFactory.getMask(newContainer);
+        final var newContainerMask = designMaskFactory.getMask(newContainer);
         assert newContainerMask.isAcceptingAccessory(newContainerMask.getMainAccessory());
 
-        final List<FXOMObject> containerContent = newContainerMask.getAccessories(newContainerMask.getMainAccessory(), false);
+        final var containerContent = newContainerMask.getAccessories(newContainerMask.getMainAccessory(), false);
 
         assert !containerContent.isEmpty();
 
-        final FXOMObject dummyPane = containerContent.get(0);
+        final var dummyPane = containerContent.get(0);
         assert dummyPane != null;
 
         // Update children before adding them to the new container
@@ -130,8 +126,9 @@ public final class WrapInSceneJob extends AbstractWrapInJob {
 
         // Replace the dummyPane with the new child
         assert children.size() == 1;
-        final FXOMObject child = children.iterator().next();
-        jobs.add(replaceObjectJobFactory.getJob(dummyPane, child));
+        final var child = children.iterator().next();
+        final var job = fxomJobsFactory.replaceObject(dummyPane, child);
+        jobs.add(job);
 
         return jobs;
     }
@@ -139,7 +136,7 @@ public final class WrapInSceneJob extends AbstractWrapInJob {
     @Override
     protected FXOMInstance makeNewContainerInstance(final Class<?> containerClass) {
         assert containerClass == javafx.scene.Scene.class;
-        final FXOMDocument newDocument = new FXOMDocument();
+        final FXOMDocument newDocument = fxomDocument.getFactory().newDocument();
         final FXOMInstance result = new FXOMInstance(newDocument, containerClass);
         // Scenes must have a root -- add a dummy one for now
         final FXOMInstance dummyPane = new FXOMInstance(newDocument, javafx.scene.layout.Pane.class);
@@ -155,11 +152,9 @@ public final class WrapInSceneJob extends AbstractWrapInJob {
         return result;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
+    @ApplicationInstanceSingleton
     public final static class Factory extends JobFactory<WrapInSceneJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

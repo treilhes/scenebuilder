@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,17 +41,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.editor.selection.AbstractSelectionGroup;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -79,8 +77,8 @@ public final class AddColumnJob extends BatchSelectionJob {
     private final AddColumnConstraintsJob.Factory addColumnConstraintsJobFactory;
     private final ReIndexColumnContentJob.Factory reIndexColumnContentJobFactory;
     private final GridPaneHierarchyMask.Factory GridPaneHierarchyMask;
-    private final DSelectionGroupFactory.Factory objectSelectionGroupFactory;
-    private final GridSelectionGroup.Factory gridSelectionGroupFactory;
+    private final ObjectSelectionGroup.Factory objectSelectionGroupFactory;
+    private final GridSelectionGroup.Factory griObjectSelectionGroup;
     /**
      * Key = target GridPane instance<br/>
      * Value = set of target column indexes for this GridPane
@@ -97,15 +95,15 @@ public final class AddColumnJob extends BatchSelectionJob {
             AddColumnConstraintsJob.Factory addColumnConstraintsJobFactory,
             ReIndexColumnContentJob.Factory reIndexColumnContentJobFactory,
             GridPaneHierarchyMask.Factory GridPaneHierarchyMask,
-            DSelectionGroupFactory.Factory objectSelectionGroupFactory,
-            GridSelectionGroup.Factory gridSelectionGroupFactory) {
+            ObjectSelectionGroup.Factory objectSelectionGroupFactory,
+            GridSelectionGroup.Factory griObjectSelectionGroup) {
     // @formatter:on
         super(extensionFactory, documentManager, selection);
         this.addColumnConstraintsJobFactory = addColumnConstraintsJobFactory;
         this.reIndexColumnContentJobFactory = reIndexColumnContentJobFactory;
         this.GridPaneHierarchyMask = GridPaneHierarchyMask;
         this.objectSelectionGroupFactory = objectSelectionGroupFactory;
-        this.gridSelectionGroupFactory = gridSelectionGroupFactory;
+        this.griObjectSelectionGroup = griObjectSelectionGroup;
     }
 
     protected void setJobParameters(Position position) {
@@ -114,8 +112,8 @@ public final class AddColumnJob extends BatchSelectionJob {
     }
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
-        final List<AbstractJob> result = new ArrayList<>();
+    protected List<Job> makeSubJobs() {
+        final List<Job> result = new ArrayList<>();
 
         if (GridPaneJobUtils.canPerformAdd(getSelection())) {
 
@@ -130,7 +128,7 @@ public final class AddColumnJob extends BatchSelectionJob {
 
             // Add sub jobs
             // First add the new column constraints
-            final AbstractJob addConstraints = addColumnConstraintsJobFactory.getJob(position, targetGridPanes);
+            final Job addConstraints = addColumnConstraintsJobFactory.getJob(position, targetGridPanes);
             result.add(addConstraints);
             // Then move the column content
             result.addAll(moveColumnContent());
@@ -144,8 +142,8 @@ public final class AddColumnJob extends BatchSelectionJob {
     }
 
     @Override
-    protected AbstractSelectionGroup getNewSelectionGroup() {
-        final AbstractSelectionGroup asg;
+    protected SelectionGroup getNewSelectionGroup() {
+        final SelectionGroup asg;
         // Update new selection :
         // - if there is more than 1 GridPane, we select the GridPane instances
         // - if there is a single GridPane, we select the added columns
@@ -159,14 +157,14 @@ public final class AddColumnJob extends BatchSelectionJob {
             assert targetIndexes.size() >= 1;
             final Set<Integer> addedIndexes = GridPaneJobUtils.getAddedIndexes(targetIndexes, position);
 
-            asg = gridSelectionGroupFactory.getGroup(targetGridPane, Type.COLUMN, addedIndexes);
+            asg = griObjectSelectionGroup.getGroup(targetGridPane, Type.COLUMN, addedIndexes);
         }
         return asg;
     }
 
-    private List<AbstractJob> moveColumnContent() {
+    private List<Job> moveColumnContent() {
 
-        final List<AbstractJob> result = new ArrayList<>();
+        final List<Job> result = new ArrayList<>();
 
         for (FXOMObject targetGridPane : targetGridPanes.keySet()) {
 
@@ -219,7 +217,7 @@ public final class AddColumnJob extends BatchSelectionJob {
                 if (fromIndex < columnsSize) {
                     final int offset = 1 + shiftIndex;
                     final List<Integer> indexes = GridPaneJobUtils.getIndexes(fromIndex, toIndex);
-                    final AbstractJob reIndexJob = reIndexColumnContentJobFactory.getJob(offset, targetGridPane,
+                    final Job reIndexJob = reIndexColumnContentJobFactory.getJob(offset, targetGridPane,
                             indexes);
                     result.add(reIndexJob);
                 }
@@ -238,14 +236,13 @@ public final class AddColumnJob extends BatchSelectionJob {
      */
     private Set<Integer> getTargetColumnIndexes(final Selection selection, final FXOMObject targetGridPane) {
 
-        final AbstractSelectionGroup asg = selection.getGroup();
+        final SelectionGroup asg = selection.getGroup();
 
         final Set<Integer> result = new LinkedHashSet<>();
 
         // Selection == GridPane columns
         // => return the list of selected columns
-        if (asg instanceof GridSelectionGroup && ((GridSelectionGroup) asg).getType() == Type.COLUMN) {
-            final GridSelectionGroup gsg = (GridSelectionGroup) asg;
+        if (asg instanceof GridSelectionGroup gsg && gsg.getType() == Type.COLUMN) {
             result.addAll(gsg.getIndexes());
         } //
           // Selection == GridPanes or Selection == GridPane rows
@@ -269,11 +266,9 @@ public final class AddColumnJob extends BatchSelectionJob {
         return result;
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
+    @ApplicationInstanceSingleton
     public final static class Factory extends JobFactory<AddColumnJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

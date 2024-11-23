@@ -33,22 +33,18 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.editor.selection.DSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.selection.job.SendToBackJob;
 
 @ApplicationInstancePrototype
 @ActionMeta(
@@ -61,7 +57,7 @@ import com.gluonhq.jfxapps.core.selection.job.SendToBackJob;
         label = SendToBackAction.TITLE,
         positionRequest = PositionRequest.AsNextSibling)
 @ContextMenuItemAttachment(
-        selectionGroup = DSelectionGroupFactory.class,
+        selectionGroup = ObjectSelectionGroup.class,
         id = SendToBackAction.MENU_ID,
         targetMenuId = BringToFrontAction.MENU_ID,
         label = SendToBackAction.TITLE,
@@ -72,7 +68,7 @@ public class SendToBackAction extends AbstractAction {
     public final static String MENU_ID = "sendToBackMenuItem"; //NOCHECK
     public final static String TITLE = "menu.title.back";
 
-    private final SendToBackJob.Factory sendToBackJobFactory;
+    private final SelectionJobsFactory selectionJobsFactory;
     private final JobManager jobManager;
 
     // @formatter:off
@@ -80,22 +76,22 @@ public class SendToBackAction extends AbstractAction {
             I18N i18n,
             ActionExtensionFactory extensionFactory,
             JobManager jobManager,
-            SendToBackJob.Factory sendToBackJobFactory) {
+            SelectionJobsFactory selectionJobsFactory) {
         // @formatter:on
         super(i18n, extensionFactory);
         this.jobManager = jobManager;
-        this.sendToBackJobFactory = sendToBackJobFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
     }
 
     @Override
     public boolean canPerform() {
-        final AbstractJob job = sendToBackJobFactory.getJob();
+        final var job = selectionJobsFactory.sendToBack();
         return job.isExecutable();
     }
 
     @Override
     public ActionStatus doPerform() {
-        final AbstractJob job = sendToBackJobFactory.getJob();
+        final var job = selectionJobsFactory.sendToBack();
         jobManager.push(job);
         return ActionStatus.DONE;
     }

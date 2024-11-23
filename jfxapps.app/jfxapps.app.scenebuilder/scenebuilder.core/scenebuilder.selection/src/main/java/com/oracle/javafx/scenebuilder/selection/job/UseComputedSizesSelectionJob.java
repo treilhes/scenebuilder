@@ -41,6 +41,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.job.Job;
@@ -55,7 +56,7 @@ import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
  * This job apply the constant USE_COMPUTED_SIZE on width and height on the
  * currently selected objects
  */
-@Prototype
+@ApplicationInstancePrototype
 public final class UseComputedSizesSelectionJob extends BatchDocumentJob {
 
     private static Logger logger = LoggerFactory.getLogger(UseComputedSizesSelectionJob.class);

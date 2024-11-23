@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,13 +36,13 @@ package com.oracle.javafx.scenebuilder.tools.job.gridpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -58,7 +58,7 @@ import javafx.scene.layout.GridPane;
 @ApplicationInstancePrototype
 public final class RemoveRowConstraintsJob extends BatchDocumentJob {
 
-    private final DeleteObjectJob.Factory deleteObjectJobFactory;
+    private final SelectionJobsFactory selectionJobsFactory;
     private final GridPaneHierarchyMask.Factory maskFactory;
 
     private FXOMObject targetGridPane;
@@ -68,11 +68,11 @@ public final class RemoveRowConstraintsJob extends BatchDocumentJob {
     protected RemoveRowConstraintsJob(
             JobExtensionFactory extensionFactory,
             ApplicationInstanceEvents documentManager,
-            DeleteObjectJob.Factory deleteObjectJobFactory,
+            SelectionJobsFactory selectionJobsFactory,
             GridPaneHierarchyMask.Factory maskFactory) {
     // @formatter:on
         super(extensionFactory, documentManager);
-        this.deleteObjectJobFactory = deleteObjectJobFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
         this.maskFactory = maskFactory;
 
     }
@@ -85,9 +85,9 @@ public final class RemoveRowConstraintsJob extends BatchDocumentJob {
     }
 
     @Override
-    protected List<AbstractJob> makeSubJobs() {
+    protected List<Job> makeSubJobs() {
 
-        final List<AbstractJob> result = new ArrayList<>();
+        final List<Job> result = new ArrayList<>();
 
         // Remove row constraints job
         assert targetGridPane instanceof FXOMInstance;
@@ -100,7 +100,7 @@ public final class RemoveRowConstraintsJob extends BatchDocumentJob {
             // The target index is associated to an existing constraints value :
             // => we remove the constraints value
             if (targetConstraints != null) {
-                final AbstractJob removeValueJob = deleteObjectJobFactory.getJob(targetConstraints);
+                final Job removeValueJob = selectionJobsFactory.deleteObject(targetConstraints);
                 result.add(removeValueJob);
             }
         }
@@ -112,10 +112,9 @@ public final class RemoveRowConstraintsJob extends BatchDocumentJob {
         return "Remove Row Constraints"; //NOCHECK
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+    @ApplicationInstanceSingleton
     public final static class Factory extends JobFactory<RemoveRowConstraintsJob> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
+        public Factory(JfxAppContext sbContext) {
             super(sbContext);
         }
 

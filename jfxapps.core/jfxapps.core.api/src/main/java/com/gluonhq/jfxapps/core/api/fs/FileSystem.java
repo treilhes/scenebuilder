@@ -44,6 +44,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
@@ -270,8 +271,20 @@ public interface FileSystem {
     */
     boolean checkLoadFileTime() throws IOException;
 
+    /**
+     * Returns the list of recent items.
+     *
+     * @return the list of recent items
+     * @deprecated use {@link RecentItems#getRecentItems} instead
+     */
+    @Deprecated
     ObservableList<String> getRecentItems();
 
+    /**
+     * Cleanup the recent items list.
+     * @deprecated use {@link RecentItems#cleanupRecentItems} instead
+     */
+    @Deprecated
     void cleanupRecentItems();
 
 }

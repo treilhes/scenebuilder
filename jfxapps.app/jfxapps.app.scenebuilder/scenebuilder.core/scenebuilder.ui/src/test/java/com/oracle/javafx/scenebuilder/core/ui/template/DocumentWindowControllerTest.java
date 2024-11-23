@@ -216,7 +216,7 @@ class DocumentWindowControllerTest {
         Mockito.when(bottomDividerVPos.getValue()).thenReturn(bottomDivider.doubleValue());
         Mockito.when(bottomDividerVPos.getObservableValue()).thenReturn((ObservableValue)bottomDivider);
 
-        var controller = builder.controller(getInstance()).show();
+        var controller = builder.controller(getInstance()).show().getController();
         assertNotNull(controller.getRoot());
     }
 

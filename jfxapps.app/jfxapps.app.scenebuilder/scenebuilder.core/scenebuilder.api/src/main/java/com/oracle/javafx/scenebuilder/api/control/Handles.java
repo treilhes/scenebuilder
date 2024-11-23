@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.api.control;
 
-import com.gluonhq.jfxapps.core.api.Gesture;
 import com.gluonhq.jfxapps.core.api.content.decoration.Decoration;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.gesture.Gesture;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.scene.Node;

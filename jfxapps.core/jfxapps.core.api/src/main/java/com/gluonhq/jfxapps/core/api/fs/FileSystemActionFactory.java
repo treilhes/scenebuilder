@@ -57,12 +57,13 @@ public interface FileSystemActionFactory {
 
     Action reload();
 
-    Action revert();
-
     Action save();
 
     Action saveAs();
 
     Action saveOrSaveAs();
 
+    Action reveal(File file);
+
+    Action openWithSystemDefault(File file);
 }

@@ -34,7 +34,7 @@
 package com.oracle.javafx.scenebuilder.api.control.pring;
 
 import com.gluonhq.jfxapps.core.api.content.decoration.AbstractDecoration;
-import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
+import com.gluonhq.jfxapps.core.api.gesture.AbstractGesture;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.oracle.javafx.scenebuilder.api.control.Pring;

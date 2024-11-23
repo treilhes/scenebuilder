@@ -41,6 +41,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
@@ -59,7 +60,7 @@ import javafx.scene.layout.AnchorPane;
  * Force the selected objects {@link FXOMObject} to the same size of the parent {@link AnchorPane}
  * Subjob {@link SbJobsFactory#fitToParentObject(FXOMInstance)}
  */
-@Prototype
+@ApplicationInstancePrototype
 public final class FitToParentSelectionJob extends BatchDocumentJob {
 
     private static Logger logger = LoggerFactory.getLogger(FitToParentSelectionJob.class);

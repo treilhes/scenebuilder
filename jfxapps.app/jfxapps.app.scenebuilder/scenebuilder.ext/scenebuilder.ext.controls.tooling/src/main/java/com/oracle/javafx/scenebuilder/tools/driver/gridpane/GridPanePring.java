@@ -37,9 +37,9 @@ package com.oracle.javafx.scenebuilder.tools.driver.gridpane;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.content.gesture.AbstractGesture;
+import com.gluonhq.jfxapps.core.api.gesture.AbstractGesture;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractPring;
@@ -64,11 +64,13 @@ public class GridPanePring extends AbstractPring<GridPane> implements Initializi
                     false /* shouldCreateSensors */ );
     private final Factory selectAndMoveInGridGestureFactory;
 
+    //@formatter:off
     public GridPanePring(
-            Content contentPanelController,
+            Workspace workspace,
             ApplicationInstanceEvents documentManager,
             SelectAndMoveInGridGesture.Factory selectAndMoveInGridGestureFactory) {
-        super(contentPanelController, documentManager, GridPane.class);
+        //@formatter:on
+        super(workspace, documentManager, GridPane.class);
         this.selectAndMoveInGridGestureFactory = selectAndMoveInGridGestureFactory;
 
     }
