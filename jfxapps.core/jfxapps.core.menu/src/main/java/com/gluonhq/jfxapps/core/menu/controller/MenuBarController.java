@@ -431,11 +431,13 @@ public class MenuBarController implements com.gluonhq.jfxapps.core.api.ui.contro
                                     break;
                                 }
                                 default:
-                                    throw new RuntimeException("Invalid position request for menuItem");
+                                    throw new RuntimeException(String.format(
+                                            "Invalid position request for menuItem %s targeting %s at %s", ma.getMenuItem(), ma.getTargetId(), ma.getPositionRequest()));
 
                                 }
                             } catch (Exception e) {
-                                logger.error("Unable to add the provided menuItem in the menuBar", e);
+                                logger.error("Unable to add the menuItem {} targeting {} at {}", ma.getMenuItem(), ma.getTargetId(), ma.getPositionRequest(),
+                                        e);
                             }
 
                             if (inserted) {

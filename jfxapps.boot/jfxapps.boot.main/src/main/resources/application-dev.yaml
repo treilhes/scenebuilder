@@ -68,6 +68,10 @@ jfxapps:
         artifactId: scenebuilder.selection
         path: ../../jfxapps.app/jfxapps.app.scenebuilder/scenebuilder.core/scenebuilder.selection/target/classes
 
+      - groupId: com.gluonhq.jfxapps
+        artifactId: scenebuilder.ext.menu
+        path: ../../jfxapps.app/jfxapps.app.scenebuilder/scenebuilder.ext/scenebuilder.ext.menu/target/classes
+
 server:
   port: 8080
   tomcat:

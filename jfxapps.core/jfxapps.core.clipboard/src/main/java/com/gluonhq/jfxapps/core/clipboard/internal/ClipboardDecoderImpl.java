@@ -41,7 +41,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
 import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDecoder;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -51,7 +51,7 @@ import javafx.scene.input.Clipboard;
 /**
  *
  */
-@Prototype
+@ApplicationInstanceSingleton
 public class ClipboardDecoderImpl implements ClipboardDecoder {
 
     private final Optional<List<ClipboardDataFormat>> dataFormats;

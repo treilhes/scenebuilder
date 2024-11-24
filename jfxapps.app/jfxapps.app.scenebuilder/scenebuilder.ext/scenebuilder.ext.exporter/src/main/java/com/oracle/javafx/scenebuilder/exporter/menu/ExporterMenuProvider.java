@@ -54,7 +54,7 @@ import javafx.scene.control.MenuItem;
 @ApplicationInstanceSingleton
 public class ExporterMenuProvider implements MenuItemProvider {
 
-    private final static String IMPORT_MENU_ID = "importMenu";
+    private final static String TARGET_MENU_ID = DefaultMenu.File.INCLUDE_ID;
     private final static String EXPORT_MENU_ID = "exportMenu";
     private final static String SELECTION_EXPORT_MENU_ID = "selectionExportMenu";
     private final static String SCENE_EXPORT_MENU_ID = "sceneExportMenu";
@@ -87,14 +87,12 @@ public class ExporterMenuProvider implements MenuItemProvider {
 
         @Override
         public String getTargetId() {
-            return DefaultMenu.FILE_MENU_ID;
-            //return IMPORT_MENU_ID;
+            return TARGET_MENU_ID;
         }
 
         @Override
         public PositionRequest getPositionRequest() {
-            return PositionRequest.AsLastChild;
-            //return PositionRequest.AsNextSibling;
+            return PositionRequest.AsNextSibling;
         }
 
         @Override

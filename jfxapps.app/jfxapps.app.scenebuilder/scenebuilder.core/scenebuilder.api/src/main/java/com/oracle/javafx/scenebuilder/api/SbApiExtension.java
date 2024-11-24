@@ -44,6 +44,7 @@ import com.oracle.javafx.scenebuilder.api.control.driver.SbDriverImpl;
 import com.oracle.javafx.scenebuilder.api.control.inlineedit.SimilarInlineEditorBounds;
 import com.oracle.javafx.scenebuilder.api.i18n.I18NSceneBuilderApi;
 import com.oracle.javafx.scenebuilder.api.preference.ParentRingColorPreference;
+import com.oracle.javafx.scenebuilder.api.util.FileHelper;
 
 @EditorDescriptor(
             label = "scenebuilder.app.label",
@@ -75,6 +76,7 @@ public class SbApiExtension implements ApplicationExtension  {
      // @formatter:off
         return Arrays.asList(
                 ParentRingColorPreference.class,
+                FileHelper.class,
                 FXOMObjectMask.class,
                 FXOMObjectMask.Factory.class,
 

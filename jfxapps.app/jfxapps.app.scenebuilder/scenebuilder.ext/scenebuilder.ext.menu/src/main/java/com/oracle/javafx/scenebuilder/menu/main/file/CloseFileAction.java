@@ -51,7 +51,7 @@ import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 @MenuItemAttachment(
         id = CloseFileAction.MENU_ID,
-        targetMenuId = RevertAction.MENU_ID,
+        targetMenuId = IncludeProvider.MENU_ID,
         label = "menu.title.close",
         positionRequest = PositionRequest.AsNextSibling)
 @Accelerator(accelerator = "CTRL+W")

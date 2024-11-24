@@ -349,26 +349,26 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
             applicationInstanceHolders.forEach(h -> JfxAppContextImpl.applicationInstanceScope.removeScope(h.getScopedObject()));
         }
 
-        @Override
-        protected Object createBean(String beanName, RootBeanDefinition mbd, Object[] args)
-                throws BeanCreationException {
-            Class<?> rawClass = mbd.getResolvableType().getRawClass();
-            try {
-                return super.createBean(beanName, mbd, args);
-            } catch (Exception e) {
-                if (e instanceof BeanCreationException) {
-                    try {
-                        rawClass.getModule().addOpens(rawClass.getPackage().getName(), BeanUtils.class.getModule());
-                    } catch (Exception e1) {
-                        throw e;
-                    }
-                    return super.createBean(beanName, mbd, args);
-
-                } else {
-                    throw e;
-                }
-            }
-        }
+//        @Override
+//        protected Object createBean(String beanName, RootBeanDefinition mbd, Object[] args)
+//                throws BeanCreationException {
+//            Class<?> rawClass = mbd.getResolvableType().getRawClass();
+//            try {
+//                return super.createBean(beanName, mbd, args);
+//            } catch (Exception e) {
+//                if (e instanceof BeanCreationException) {
+//                    try {
+//                        rawClass.getModule().addOpens(rawClass.getPackage().getName(), BeanUtils.class.getModule());
+//                    } catch (Exception e1) {
+//                        throw e;
+//                    }
+//                    return super.createBean(beanName, mbd, args);
+//
+//                } else {
+//                    throw e;
+//                }
+//            }
+//        }
 
 //        @Override
 //        public BeanFactory getParentBeanFactory() {

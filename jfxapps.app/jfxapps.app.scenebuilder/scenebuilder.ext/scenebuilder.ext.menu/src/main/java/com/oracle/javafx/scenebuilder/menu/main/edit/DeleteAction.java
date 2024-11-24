@@ -56,7 +56,6 @@ import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.SbEditor;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 import javafx.scene.Node;
@@ -88,7 +87,6 @@ public class DeleteAction extends AbstractAction {
     private final MainInstanceWindow documentWindow;
     private final InlineEdit inlineEdit;
     private final Dialog dialog;
-    private final SbEditor editor;
     private final JobManager jobManager;
     private final Selection selection;
     private final SelectionJobsFactory selectionJobsFactory;
@@ -98,7 +96,6 @@ public class DeleteAction extends AbstractAction {
             ActionExtensionFactory extensionFactory,
             @Lazy MainInstanceWindow documentWindow,
             InlineEdit inlineEdit,
-            SbEditor editor,
             JobManager jobManager,
             Selection selection,
             Dialog dialog,
@@ -106,7 +103,6 @@ public class DeleteAction extends AbstractAction {
         super(i18n, extensionFactory);
         this.documentWindow = documentWindow;
         this.inlineEdit = inlineEdit;
-        this.editor = editor;
         this.jobManager = jobManager;
         this.dialog = dialog;
         this.selection = selection;

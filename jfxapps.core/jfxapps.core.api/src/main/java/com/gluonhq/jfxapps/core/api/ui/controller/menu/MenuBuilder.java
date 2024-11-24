@@ -211,7 +211,7 @@ public class MenuBuilder {
                 }
                 item.setMnemonicParsing(item.getText().contains("_"));
             });
-            item.setDisable(!action.canPerform());
+            //item.setDisable(!action.canPerform());
 
             EventHandler<Event> updateMenuHandler = ev -> {
                 item.setDisable(!action.canPerform());

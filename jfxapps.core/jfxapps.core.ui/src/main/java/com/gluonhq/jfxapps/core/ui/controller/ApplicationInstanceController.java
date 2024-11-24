@@ -106,18 +106,10 @@ public class ApplicationInstanceController implements ApplicationInstance {
     private final MainInstanceWindow documentWindow;
     private final FileSystem fileSystem;
 
-    //private final MenuBar menuBarController;
-    //private final Content contentPanelController;
-    //private final Workspace workspace;
-    //private final RecentItemsPreference recentItemsPreference;
     private final Preferences preferences;
-    //private final LastDockUuidPreference lastDockUuidPreference;
-    // PREFERENCES
-    //private FileTime loadFileTime;
 
     private EventHandler<KeyEvent> mainKeyEventFilter;
 
-    //private final Provider<PathPreference> pathPreference;
     private final ApplicationInstanceEvents applicationInstanceEvents;
     private final Provider<Optional<List<InitWithDocument>>> initializations;
     private final Provider<Optional<List<DisposeWithDocument>>> finalizations;
@@ -125,7 +117,6 @@ public class ApplicationInstanceController implements ApplicationInstance {
     private final InstancesManager main;
     private final ApplicationEvents sceneBuilderManager;
 
-    //private final SelectionBarController selectionBarController;
     private FXOMDocument fxomDocument;
     private final InlineEdit inlineEdit;
     private final MessageLogger messageLogger;
@@ -133,10 +124,6 @@ public class ApplicationInstanceController implements ApplicationInstance {
     private final PreferenceManager preferenceManager;
     private final DockViewController viewMenuController;
     private final WindowPreferenceTracker tracker;
-
-
-
-
 
     /*
      * DocumentWindowController
@@ -149,30 +136,16 @@ public class ApplicationInstanceController implements ApplicationInstance {
             JavafxThreadClassloaderDispatcher dispatcher,
             JavafxThreadClassloader fxThreadClassloader,
             FileSystem fileSystem,
-            //RecentItemsPreference recentItemsPreference,
-            //WildcardImportsPreference wildcardImportsPreference,
             Preferences preferences,
-            //Workspace workspace,
-//            @Autowired(required = false) Content contentPanelController,
-//            @Autowired Editor editorController,
             InlineEdit inlineEdit,
             MessageLogger messageLogger,
             MainInstanceWindow documentWindow,
-            //MenuBarController menuBarController,
-//            Provider<MessageBarController> messageBarController,
-//            SelectionBarController selectionBarController,
             ApplicationInstanceEvents documentManager,
-            //@Autowired DocumentPanelController documentPanelController,
-            //@Autowired InspectorPanelController inspectorPanelController,
-            //@Autowired LibraryPanel libraryPanelController,
-            //@Autowired @Lazy CssPanelController cssPanelController,
             DockManager dockManager,
             DockViewController viewMenuController,
             InstancesManager main,
             ApplicationEvents sceneBuilderManager,
             WindowPreferenceTracker tracker,
-            //Provider<PathPreference> pathPreference,
-            //Provider<LastDockUuidPreference> lastDockUuidPreference,
             Provider<Optional<List<InitWithDocument>>> initializations,
             Provider<Optional<List<DisposeWithDocument>>> finalizations,
             List<Class<? extends View>> classViews
@@ -297,7 +270,8 @@ public class ApplicationInstanceController implements ApplicationInstance {
     @PostConstruct
     public void init() throws Exception {
         initializations.get().ifPresent(l -> l.forEach(a -> a.initWithDocument()));
-        //editorController.initialize();
+
+        documentWindow.composeWindow();
 
         fileSystem.startWatcher();
 
@@ -324,57 +298,6 @@ public class ApplicationInstanceController implements ApplicationInstance {
             }
         });
     }
-
-
-
-//    @Override
-//    public void loadFromURL(URL fxmlURL, boolean keepTrackOfLocation) {
-//        assert fxmlURL != null;
-//        try {
-//            final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
-//            editorController.setFxmlTextAndLocation(fxmlText, keepTrackOfLocation ? fxmlURL : null, false);
-//            updateLoadFileTime();
-//            documentWindow.updateStageTitle(); // No-op if fxml has not been loaded yet
-//
-//
-//            documentWindow.untrack();
-//            documentPreferencesController.readFromJavaPreferences();
-//
-//            SbPlatform.runForDocumentLater(() -> {
-//                documentWindow.apply();
-//                documentWindow.track();
-//            });
-//            // TODO remove after checking the new watching system is operational in
-//            // EditorController or in filesystem
-//            // watchingController.update();
-//        } catch (IOException x) {
-//            throw new IllegalStateException(x);
-//        }
-//    }
-//
-//    @Override
-//    public void updateWithDefaultContent() {
-//        try {
-//            editorController.setFxmlTextAndLocation("", null, true); // NOI18N
-//            updateLoadFileTime();
-//            documentWindow.updateStageTitle(); // No-op if fxml has not been loaded yet
-//            // TODO remove after checking the new watching system is operational in
-//            // EditorController or in filesystem
-//            // watchingController.update();
-//        } catch (IOException x) {
-//            throw new IllegalStateException(x);
-//        }
-//    }
-//
-//    public void reload() throws IOException {
-//        assert (fxomDocument != null) && (fxomDocument.getLocation() != null);
-//        final URL fxmlURL = fxomDocument.getLocation();
-//        final String fxmlText = FXOMDocument.readContentFromURL(fxmlURL);
-//        editorController.setFxmlTextAndLocation(fxmlText, fxmlURL, true);
-//        updateLoadFileTime();
-//        // Here we do not invoke updateStageTitleAndPreferences() neither
-//        // watchingController.update()
-//    }
 
     @Override
     public boolean isUnused() {
@@ -412,8 +335,7 @@ public class ApplicationInstanceController implements ApplicationInstance {
         return name;
     }
 
-    @Override
-    public void updatePreferences() {
+    private void updatePreferences() {
         if (fxomDocument == null) {
             return;
         }
@@ -481,90 +403,6 @@ public class ApplicationInstanceController implements ApplicationInstance {
         jfxAppPlatform.setCurrentScope(this);
         sceneBuilderManager.documentScoped().set(this);
     }
-
-
-//    /**
-//     * Returns true if the specified node is part of the main scene and is either a
-//     * TextInputControl or a ComboBox.
-//     *
-//     * @param node the focused node of the main scene
-//     * @return
-//     */
-//    private boolean isTextInputControlEditing(Node node) {
-//        return (node instanceof TextInputControl || node instanceof ComboBox);
-//    }
-//
-//    private TextInputControl getTextInputControl(Node node) {
-//        assert isTextInputControlEditing(node);
-//        final TextInputControl tic;
-//        if (node instanceof TextInputControl) {
-//            tic = (TextInputControl) node;
-//        } else {
-//            assert node instanceof ComboBox;
-//            final ComboBox<?> cb = (ComboBox<?>) node;
-//            tic = cb.getEditor();
-//        }
-//        return tic;
-//    }
-
-
-//    @Override
-//    public void updateLoadFileTime() {
-//
-//        final URL fxmlURL = fxomDocument.getLocation();
-//        if (fxmlURL == null) {
-//            loadFileTime = null;
-//        } else {
-//            try {
-//                final Path fxmlPath = Paths.get(fxmlURL.toURI());
-//                if (Files.exists(fxmlPath)) {
-//                    loadFileTime = Files.getLastModifiedTime(fxmlPath);
-//                } else {
-//                    loadFileTime = null;
-//                }
-//            } catch (URISyntaxException x) {
-//                throw new RuntimeException("Bug", x); // NOI18N
-//            } catch (IOException x) {
-//                loadFileTime = null;
-//            }
-//        }
-//    }
-//
-//    private boolean checkLoadFileTime() throws IOException {
-//        assert fxomDocument.getLocation() != null;
-//
-//        /*
-//         * loadFileTime == null => fxml file does not exist => TRUE
-//         *
-//         * loadFileTime != null => fxml file does/did exist
-//         *
-//         * currentFileTime == null => fxml file no longer exists => TRUE
-//         *
-//         * currentFileTime != null => fxml file still exists =>
-//         * loadFileTime.compare(currentFileTime) == 0
-//         */
-//
-//        boolean result;
-//        if (loadFileTime == null) {
-//            // editorController.getFxmlLocation() does not exist yet
-//            result = true;
-//        } else {
-//            try {
-//                // editorController.getFxmlLocation() still exists
-//                // Check if its file time matches loadFileTime
-//                Path fxmlPath = Paths.get(fxomDocument.getLocation().toURI());
-//                FileTime currentFileTime = Files.getLastModifiedTime(fxmlPath);
-//                result = loadFileTime.compareTo(currentFileTime) == 0;
-//            } catch (NoSuchFileException x) {
-//                // editorController.getFxmlLocation() no longer exists
-//                result = true;
-//            } catch (URISyntaxException x) {
-//                throw new RuntimeException("Bug", x); // NOI18N
-//            }
-//        }
-//
-//        return result;
-//    }
 
     @Override
     public boolean isDocumentDirty() {

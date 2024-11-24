@@ -44,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.DockActionFactory;
@@ -73,13 +72,11 @@ public class ViewMenuProvider implements MenuItemProvider {
     private final DockViewController dockViewController;
     private final MenuBuilder menuBuiler;
 
-    private final JfxAppContext context;
     private final I18N i18n;
     private final DockActionFactory dockActionFactory;
 
     public ViewMenuProvider(
             I18N i18n,
-            JfxAppContext context,
             @Lazy DockViewController dockViewController,
             MenuBuilder menuBuiler,
             DockActionFactory dockActionFactory
@@ -87,7 +84,6 @@ public class ViewMenuProvider implements MenuItemProvider {
         this.i18n = i18n;
         this.dockViewController = dockViewController;
         this.menuBuiler = menuBuiler;
-        this.context = context;
         this.dockActionFactory = dockActionFactory;
     }
 

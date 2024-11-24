@@ -47,12 +47,12 @@ import org.testfx.api.FxRobot;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBar;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageBar;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.SelectionBar;
@@ -70,9 +70,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.layout.Pane;
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 @JfxAppsTest
-@ContextConfiguration(classes = { DocumentWindowControllerTest.Config.class, DocumentWindowController.class })
+@ContextConfiguration(classes = { DocumentWindowControllerTest.Config.class, ScenebuilderWindowController.class })
 class DocumentWindowControllerTest {
 
         @TestConfiguration
@@ -109,10 +108,6 @@ class DocumentWindowControllerTest {
             @Bean
             MenuBar menuBar() {
                 return Mockito.mock(MenuBar.class);
-            }
-            @Bean
-            Content content() {
-                return Mockito.mock(Content.class);
             }
             @Bean
             MessageBar messageBar() {
@@ -157,8 +152,6 @@ class DocumentWindowControllerTest {
         @Autowired
         MenuBar menuBar;
         @Autowired
-        Content content;
-        @Autowired
         MessageBar messageBar;
         @Autowired
         SelectionBar selectionBar;
@@ -167,8 +160,8 @@ class DocumentWindowControllerTest {
 
 
     // @formatter:off
-    private DocumentWindowController getInstance() {
-        DocumentWindowController dwc = new DocumentWindowController(
+    private ScenebuilderWindowController getInstance() {
+        ScenebuilderWindowController dwc = new ScenebuilderWindowController(
                 i18n,
                 jfxAppPlatform,
                 sceneBuilderManager,
@@ -185,7 +178,6 @@ class DocumentWindowControllerTest {
                 viewMenuController,
 
                 menuBar,
-                content,
                 messageBar,
                 selectionBar,
                 workspace

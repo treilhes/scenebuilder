@@ -42,8 +42,8 @@ import java.util.Map;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.Action;
-import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fs.FileSystemActionFactory;
+import com.gluonhq.jfxapps.core.api.fs.RecentItems;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
@@ -64,18 +64,18 @@ public class OpenRecentProvider implements MenuItemProvider {
 
     private I18N i18n;
     private final MenuBuilder builder;
-    private final FileSystem fileSystem;
+    private final RecentItems recentitems;
     private final FileSystemActionFactory fileSystemActionFactory;
 
     public OpenRecentProvider(
             I18N i18n,
             MenuBuilder menuBuilder,
-            FileSystem fileSystem,
+            RecentItems recentitems,
             FileSystemActionFactory fileSystemActionFactory
             ) {
         this.i18n = i18n;
         this.builder = menuBuilder;
-        this.fileSystem = fileSystem;
+        this.recentitems = recentitems;
         this.fileSystemActionFactory = fileSystemActionFactory;
     }
 
@@ -127,8 +127,8 @@ public class OpenRecentProvider implements MenuItemProvider {
 
             final List<MenuItem> menuItems = new ArrayList<>();
 
-            fileSystem.cleanupRecentItems();
-            final List<String> recentItems = fileSystem.getRecentItems();
+            recentitems.cleanupRecentItems();
+            final List<String> recentItems = recentitems.getRecentItems();
 
             final MenuItem clearMenuItem = builder.menuItem()
                     .title(CLEAR_RECENT_TITLE)

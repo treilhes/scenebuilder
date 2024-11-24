@@ -37,7 +37,6 @@ import org.springframework.context.annotation.Lazy;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.Action.ActionStatus;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.clipboard.Clipboard;
@@ -57,7 +56,7 @@ import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 @MenuItemAttachment(
         id = CutAction.MENU_ID,
-        targetMenuId = UndoAction.MENU_ID,
+        targetMenuId = RedoAction.MENU_ID,
         label = "menu.title.cut",
         positionRequest = PositionRequest.AsNextSibling,
         separatorBefore = true)

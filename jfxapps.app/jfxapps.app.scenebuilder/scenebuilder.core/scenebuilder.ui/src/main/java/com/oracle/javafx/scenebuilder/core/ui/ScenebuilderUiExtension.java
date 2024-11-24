@@ -44,7 +44,7 @@ import com.oracle.javafx.scenebuilder.core.ui.preference.BottomDividerVPosPrefer
 import com.oracle.javafx.scenebuilder.core.ui.preference.LeftDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.core.ui.preference.RightDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.core.ui.settings.WindowIconSetting;
-import com.oracle.javafx.scenebuilder.core.ui.template.DocumentWindowController;
+import com.oracle.javafx.scenebuilder.core.ui.template.ScenebuilderWindowController;
 
 public class ScenebuilderUiExtension implements OpenExtension {
 
@@ -65,7 +65,7 @@ public class ScenebuilderUiExtension implements OpenExtension {
      // @formatter:off
         return Arrays.asList(
                 BottomDividerVPosPreference.class,
-                DocumentWindowController.class,
+                ScenebuilderWindowController.class,
                 I18NScenebuilderUiExtension.class,
                 LeftDividerHPosPreference.class,
                 RightDividerHPosPreference.class,

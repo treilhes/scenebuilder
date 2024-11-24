@@ -59,7 +59,7 @@ public interface ApplicationInstance extends com.gluonhq.jfxapps.boot.api.contex
     JfxAppContext getContext();
 
     void openWindow();
-    void updatePreferences();
+    //void updatePreferences();
 
     void close();
     void onFocus();

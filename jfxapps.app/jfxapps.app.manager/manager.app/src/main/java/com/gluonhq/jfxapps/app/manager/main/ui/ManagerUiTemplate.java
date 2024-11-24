@@ -40,7 +40,6 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingle
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
-import com.gluonhq.jfxapps.core.api.ui.WindowPreferenceTracker;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock.Orientation;
@@ -69,7 +68,6 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements M
 
     private final MenuBar menuBar;
     private final MainContent mainContent;
-    private final WindowPreferenceTracker tracker;
     private final Provider<BottomDividerVPosPreference> bottomDividerVPos;
 
     // @formatter:off
@@ -80,8 +78,7 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements M
             Provider<BottomDividerVPosPreference> bottomDividerVPos,
             Dock bottomDockController,
             MenuBar menuBar,
-            MainContent mainContent,
-            WindowPreferenceTracker tracker) {
+            MainContent mainContent) {
         super(i18n, sceneBuilderManager, iconSetting, ManagerUiTemplate.class.getResource("ManagerUiTemplate.fxml"), false);
         // @formatter:on
 
@@ -96,7 +93,7 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements M
 
         this.menuBar = menuBar;
         this.mainContent = mainContent;
-        this.tracker = tracker;
+
     }
 
     @FXML
@@ -108,10 +105,13 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements M
     public void controllerDidLoadFxml() {
         super.controllerDidLoadFxml();
         assert getRoot() instanceof VBox;
+    }
+
+    @Override
+    public void composeWindow() {
         final VBox rootVBox = (VBox) getRoot();
         rootVBox.getChildren().add(0, menuBar.getMenuBar());
         contentPanelHost.getChildren().add(mainContent.getRoot());
-        tracker.initialize(this);;
     }
 
     @Override

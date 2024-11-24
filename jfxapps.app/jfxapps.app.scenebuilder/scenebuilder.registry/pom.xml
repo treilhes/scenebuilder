@@ -72,6 +72,15 @@
                                         </dependency>
                                     </extension>
 
+                                    <extension>
+                                        <uuid>9ba90ad0-95d1-4872-b13a-daa8c1289655</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>scenebuilder.jobs</artifactId>
+                                            <version>${scenebuilder.version}</version>
+                                        </dependency>
+                                    </extension>
+
                                     <!--temp-->
                                     <extension>
                                         <uuid>1efa32d5-0673-4f6e-bb0b-7a57514e9cba</uuid>

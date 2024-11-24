@@ -38,7 +38,6 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingle
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
-import com.gluonhq.jfxapps.core.api.ui.WindowPreferenceTracker;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBar;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
@@ -59,7 +58,6 @@ public class DevtoolsUiTemplate extends AbstractFxmlWindowController implements 
 
     private final MenuBar menuBar;
     private final MainContent mainContent;
-    private final WindowPreferenceTracker tracker;
 
     // @formatter:off
     public DevtoolsUiTemplate(
@@ -67,14 +65,12 @@ public class DevtoolsUiTemplate extends AbstractFxmlWindowController implements 
             ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             MenuBar menuBar,
-            MainContent mainContent,
-            WindowPreferenceTracker tracker) {
+            MainContent mainContent) {
         super(i18n, sceneBuilderManager, iconSetting, DevtoolsUiTemplate.class.getResource("DevtoolsUiTemplate.fxml"), false);
         // @formatter:on
 
         this.menuBar = menuBar;
         this.mainContent = mainContent;
-        this.tracker = tracker;
     }
 
     @FXML
@@ -86,10 +82,14 @@ public class DevtoolsUiTemplate extends AbstractFxmlWindowController implements 
     public void controllerDidLoadFxml() {
         super.controllerDidLoadFxml();
         assert getRoot() instanceof VBox;
+    }
+
+
+    @Override
+    public void composeWindow() {
         final VBox rootVBox = (VBox) getRoot();
         rootVBox.getChildren().add(0, menuBar.getMenuBar());
         contentPanelHost.getChildren().add(mainContent.getRoot());
-        tracker.initialize(this);
     }
 
     @Override

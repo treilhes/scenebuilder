@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,6 +40,12 @@ import java.util.UUID;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.clipboard.controller.ClipboardController;
 import com.gluonhq.jfxapps.core.clipboard.i18n.I18NClipboard;
+import com.gluonhq.jfxapps.core.clipboard.internal.ClipboardDecoderImpl;
+import com.gluonhq.jfxapps.core.clipboard.internal.ClipboardEncoderImpl;
+import com.gluonhq.jfxapps.core.clipboard.internal.format.FXOMArchiveDataFormat;
+import com.gluonhq.jfxapps.core.clipboard.internal.format.FileDataFormat;
+import com.gluonhq.jfxapps.core.clipboard.internal.format.FxmlDataFormat;
+import com.gluonhq.jfxapps.core.clipboard.internal.format.ImageDataFormat;
 
 public class ClipboardExtension implements OpenExtension {
     @Override
@@ -62,6 +68,12 @@ public class ClipboardExtension implements OpenExtension {
      // @formatter:off
         return Arrays.asList(
                 ClipboardController.class,
+                ClipboardDecoderImpl.class,
+                ClipboardEncoderImpl.class,
+                FileDataFormat.class,
+                FxmlDataFormat.class,
+                FXOMArchiveDataFormat.class,
+                ImageDataFormat.class,
                 I18NClipboard.class
             );
      // @formatter:on

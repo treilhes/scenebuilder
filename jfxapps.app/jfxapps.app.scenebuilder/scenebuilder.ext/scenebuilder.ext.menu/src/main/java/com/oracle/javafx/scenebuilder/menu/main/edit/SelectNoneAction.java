@@ -69,8 +69,9 @@ public class SelectNoneAction extends AbstractAction {
     public final static String MENU_ID = DefaultMenu.Edit.SELECT_NONE_ID;
 
     private final MainInstanceWindow documentWindow;
-    private final InlineEdit inlineEdit;
     private final ApplicationInstanceEvents documentManager;
+    private final Selection selection;
+    private final InlineEdit inlineEdit;
 
     public SelectNoneAction(
             I18N i18n,
@@ -81,10 +82,12 @@ public class SelectNoneAction extends AbstractAction {
             // Solving this will allow faster boot time
             @Lazy MainInstanceWindow documentWindow,
             ApplicationInstanceEvents documentManager,
+            Selection selection,
             InlineEdit inlineEdit) {
         super(i18n, extensionFactory);
         this.documentWindow = documentWindow;
         this.documentManager = documentManager;
+        this.selection = selection;
         this.inlineEdit = inlineEdit;
     }
 
@@ -103,7 +106,6 @@ public class SelectNoneAction extends AbstractAction {
             final TextInputControl tic = inlineEdit.getTextInputControl(focusOwner);
             result = tic.getSelectedText() != null && !tic.getSelectedText().isEmpty();
         } else {
-            Selection selection = documentManager.selectionDidChange().get().getSelection();
             result = selection.isEmpty() == false;
         }
         return result;

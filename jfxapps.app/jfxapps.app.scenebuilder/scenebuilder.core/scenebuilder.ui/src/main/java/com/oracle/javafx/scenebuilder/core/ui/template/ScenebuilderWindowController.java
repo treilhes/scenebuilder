@@ -36,7 +36,6 @@ package com.oracle.javafx.scenebuilder.core.ui.template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
@@ -50,7 +49,6 @@ import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock.Orientation;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBar;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageBar;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.SelectionBar;
@@ -86,9 +84,9 @@ import javafx.stage.Stage;
  *
  */
 @ApplicationInstanceSingleton
-public class DocumentWindowController extends AbstractFxmlWindowController implements MainInstanceWindow, InitializingBean {
+public class ScenebuilderWindowController extends AbstractFxmlWindowController implements MainInstanceWindow, InitializingBean {
 
-    private static final Logger logger = LoggerFactory.getLogger(DocumentWindowController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ScenebuilderWindowController.class);
 
     private enum InsertPosition {
         First, Last
@@ -120,34 +118,20 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
     private final Dock rightDockController;
     private final Dock bottomDockController;
 
-//    private SplitPositionController topBottonController;
-//    private SplitPositionController leftRightController;
-
-
-    //private PreferenceManager preferenceManager;
-    //private MenuBarController menuBarController;
-    //private Content contentPanelController;
-    //private MessageBarController messageBarController;
-    //private SelectionBarController selectionBarController;
-
     private InnerDockManager leftDockManager;
     private InnerDockManager rightDockManager;
     private InnerDockManager bottomDockManager;
     private final ApplicationInstanceEvents documentManager;
 
     private final MenuBar menuBar;
-    private final Content content;
+
     private final MessageBar messageBar;
     private final SelectionBar selectionBar;
     private final Workspace workspace;
     private final JfxAppPlatform jfxAppPlatform;
 
-    /*
-     * DocumentWindowController
-     */
-
     // @formatter:off
-    public DocumentWindowController(
+    public ScenebuilderWindowController(
             I18N i18n,
             JfxAppPlatform jfxAppPlatform,
             ApplicationEvents sceneBuilderManager,
@@ -165,12 +149,11 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             DockViewController viewMenuController,
 
             MenuBar menuBar,
-            @Autowired(required = false) Content content,
             MessageBar messageBar,
             SelectionBar selectionBar,
             Workspace workspace
             ) {
-        super(i18n, sceneBuilderManager, iconSetting, DocumentWindowController.class.getResource("DocumentWindow.fxml"), false);
+        super(i18n, sceneBuilderManager, iconSetting, ScenebuilderWindowController.class.getResource("DocumentWindow.fxml"), false);
         // @formatter:on
         this.jfxAppPlatform = jfxAppPlatform;
         this.documentManager = documentManager;
@@ -199,7 +182,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         this.bottomDividerVPos = bottomDividerVPos;
 
         this.menuBar = menuBar;
-        this.content = content;
         this.messageBar = messageBar;
         this.selectionBar = selectionBar;
         this.workspace = workspace;
@@ -255,13 +237,6 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         assert mainSplitPane != null;
         assert leftRightSplitPane != null;
 
-        messageBar.setSelectionBar(selectionBar.getRoot());
-
-        setMenuBar(menuBar);
-        //setContentPane(content.getRoot());
-        setMessageBar(messageBar);
-        setContentPane(workspace);
-
         // Add a border to the Windows app, because of the specific window decoration on
         // Windows.
         if (JfxAppsPlatform.IS_WINDOWS) {
@@ -287,6 +262,18 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
             contentPanelHost.setPadding(new Insets(h, 0.0, 0.0, 0.0));
         });
 
+    }
+
+    @Override
+    public void composeWindow() {
+        setSelectionBar(selectionBar);
+        setMenuBar(menuBar);
+        setMessageBar(messageBar);
+        setWorkspace(workspace);
+    }
+
+    public void setSelectionBar(SelectionBar selectionBar) {
+        messageBar.setSelectionBar(selectionBar.getRoot());
     }
 
 
@@ -455,7 +442,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         mainSplitPane.addEventFilter(KeyEvent.KEY_PRESSED, mainKeyEventFilter);
     }
 
-    private void setMenuBar(MenuBar menuBar) {
+    public void setMenuBar(MenuBar menuBar) {
         assert getRoot() instanceof VBox;
         final VBox rootVBox = (VBox) getRoot();
 
@@ -467,7 +454,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         rootVBox.getChildren().add(0, menuBar.getMenuBar());
     }
 
-    private void setContentPane(Workspace workspace) {
+    public void setWorkspace(Workspace workspace) {
         Parent root = workspace != null ? workspace.getRoot() : null;
         if (root == null) {
             logger.warn("ContentPane can't be set to null");
@@ -476,7 +463,7 @@ public class DocumentWindowController extends AbstractFxmlWindowController imple
         contentPanelHost.getChildren().add(root);
     }
 
-    private void setMessageBar(MessageBar messageBar) {
+    public void setMessageBar(MessageBar messageBar) {
         Parent root = messageBar != null ? messageBar.getRoot() : null;
         if (root == null) {
             logger.warn("MessageBar can't be set to null");
