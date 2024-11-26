@@ -118,7 +118,7 @@ public abstract class AbstractMetadata<
         Set<PropertyName> shadowed = new HashSet<>();
         while (classMetadata != null) {
             for (PropertyMetadata<?> pm : classMetadata.getProperties()) {
-                if (result.containsKey(pm.getName()) == false) {
+                if (!result.containsKey(pm.getName())) {
                     result.put(pm.getName(), pm);
                 }
             }

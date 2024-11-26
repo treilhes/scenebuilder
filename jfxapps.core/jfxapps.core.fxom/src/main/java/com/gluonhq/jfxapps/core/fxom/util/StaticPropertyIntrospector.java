@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,34 +33,64 @@
  */
 package com.gluonhq.jfxapps.core.fxom.util;
 
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  */
 
 class StaticPropertyIntrospector {
-    final private Object targetObject;
-    final private Class<?> residenceClass;
-    
-    public StaticPropertyIntrospector(Object targetObject, Class<?> residenceClass) {
-        this.targetObject = targetObject;
+    private Object object;
+    private Class<?> residenceClass;
+    private Map<String, StaticPropertyDescriptor> propertyDescriptors;
+
+    public StaticPropertyIntrospector(Object object, Class<?> residenceClass) {
+        assert object != null;
+        this.object = object;
         this.residenceClass = residenceClass;
+        this.propertyDescriptors = new HashMap<>();
     }
 
     public Object getTargetObject() {
-        return targetObject;
+        return object;
     }
 
     public Class<?> getResidenceClass() {
         return residenceClass;
     }
-    
+
     public Object getValue(String propertyName) {
-        // So far we have no use for this : we'll implement when needed.
-        throw new UnsupportedOperationException("Not yet implemented"); //NOCHECK
+        final StaticPropertyDescriptor d = propertyDescriptors.computeIfAbsent(propertyName, k -> findDescriptor(propertyName));
+        final Object result;
+
+        if (d != null) {
+            try {
+                result = d.getReadMethod().invoke(null, object);
+            } catch(InvocationTargetException|IllegalAccessException x) {
+                throw new RuntimeException(x);
+            }
+        } else {
+            throw new RuntimeException(propertyName + " not found"); //NOCHECK
+        }
+
+        return result;
     }
-    
+
     public void setValue(String propertyName, Object value) {
         // So far we have no use for this : we'll implement when needed.
         throw new UnsupportedOperationException("Not yet implemented"); //NOCHECK
     }
+
+    private StaticPropertyDescriptor findDescriptor(String propertyName) {
+        assert propertyDescriptors != null;
+        try {
+            return new StaticPropertyDescriptor(propertyName, residenceClass);
+        } catch (IntrospectionException e) {
+            return null;
+        }
+    }
+
 }

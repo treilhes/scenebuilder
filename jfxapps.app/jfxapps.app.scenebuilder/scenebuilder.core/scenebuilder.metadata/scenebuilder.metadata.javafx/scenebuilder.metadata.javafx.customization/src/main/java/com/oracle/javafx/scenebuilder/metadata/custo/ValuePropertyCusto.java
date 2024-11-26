@@ -38,8 +38,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 public class ValuePropertyCusto {
     private int order;
-    @JsonInclude(Include.NON_NULL)
-    private String nullEquivalent;
+    //@JsonInclude(Include.NON_NULL)
+    //private String nullEquivalent;
     @JsonInclude(Include.NON_NULL)
     private String section;
     @JsonInclude(Include.NON_NULL)
@@ -48,9 +48,9 @@ public class ValuePropertyCusto {
     public int getOrder() {
         return order;
     }
-    public String getNullEquivalent() {
-        return nullEquivalent;
-    }
+//    public String getNullEquivalent() {
+//        return nullEquivalent;
+//    }
     public String getSection() {
         return section;
     }

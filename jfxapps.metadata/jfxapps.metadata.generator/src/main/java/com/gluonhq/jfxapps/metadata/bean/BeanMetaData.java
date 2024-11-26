@@ -666,7 +666,7 @@ public final class BeanMetaData<T> extends AbstractMetaData {
         return null;
     }
 
-    protected static class Interceptor {
+    public static class Interceptor {
         @RuntimeType
         public static Object intercept(@This Object self,
                                        @Origin Method method,

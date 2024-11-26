@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,13 +37,13 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.oracle.javafx.scenebuilder.core.metadata.AbstractMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
+import com.gluonhq.jfxapps.core.metadata.AbstractMetadata;
+import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
 
 @Component
 public class Metadata extends AbstractMetadata {
 
-    protected Metadata(List<ComponentClassMetadata<?>> componentClassMetadatas) {
+    protected Metadata(List<ComponentClassMetadata> componentClassMetadatas) {
         super(componentClassMetadatas);
     }
 

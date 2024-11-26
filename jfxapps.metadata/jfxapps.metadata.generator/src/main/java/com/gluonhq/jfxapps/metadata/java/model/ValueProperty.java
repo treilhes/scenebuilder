@@ -40,30 +40,32 @@ import com.gluonhq.jfxapps.metadata.properties.model.ValuePropertyBase;
 public class ValueProperty<VPC> extends ValuePropertyBase<VPC> implements Comparable<ValueProperty<VPC>> {
 
     private String memberName;
-    private String defaultValue;
-    private String nullEquivalent;
+    //private String defaultValue;
+    //private String nullEquivalent;
 
     public ValueProperty() {
         super();
     }
 
-    @Override
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
-    @Override
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    public String getNullEquivalent() {
-        return nullEquivalent;
-    }
-
-    public void setNullEquivalent(String nullEquivalent) {
-        this.nullEquivalent = nullEquivalent;
-    }
+//    @Override
+//    public String getDefaultValue() {
+//        return defaultValue;
+//    }
+//
+//    @Override
+//    public void setDefaultValue(String defaultValue) {
+//        this.defaultValue = defaultValue;
+//    }
+//
+//    @Override
+//    public String getNullEquivalent() {
+//        return nullEquivalent;
+//    }
+//
+//    @Override
+//    public void setNullEquivalent(String nullEquivalent) {
+//        this.nullEquivalent = nullEquivalent;
+//    }
 
     public String getMemberName() {
         return memberName;

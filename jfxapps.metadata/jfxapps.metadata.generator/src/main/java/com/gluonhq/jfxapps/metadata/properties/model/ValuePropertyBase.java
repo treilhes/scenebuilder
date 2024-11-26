@@ -50,7 +50,12 @@ public class ValuePropertyBase<VPC> {
     private Class<?> metadataClass;
 
     @JsonInclude(Include.NON_NULL)
+    @JsonProperty("defaultValue")
     private String defaultValue;
+
+    @JsonInclude(Include.NON_NULL)
+    @JsonProperty("nullEquivalent")
+    private String nullEquivalent;
 
     @JsonInclude(Include.NON_NULL)
     @JsonProperty("custo")
@@ -77,6 +82,15 @@ public class ValuePropertyBase<VPC> {
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
     }
+
+    public String getNullEquivalent() {
+        return nullEquivalent;
+    }
+
+    public void setNullEquivalent(String nullEquivalent) {
+        this.nullEquivalent = nullEquivalent;
+    }
+
     public VPC getCustomization() {
         return customization;
     }
@@ -88,6 +102,7 @@ public class ValuePropertyBase<VPC> {
         private Class<CTB> classToBuild;
         private Class<?> metadataClass;
         private String defaultValue;
+        private String nullEquivalent;
         private VPC customization;
 
         public BuilderBase(Class<CTB> classToBuild) {
@@ -105,6 +120,11 @@ public class ValuePropertyBase<VPC> {
             return this;
         }
 
+        public BuilderBase<VPC, CTB> nullEquivalent(String nullEquivalent) {
+            this.nullEquivalent = nullEquivalent;
+            return this;
+        }
+
         public BuilderBase<VPC, CTB> customization(VPC customization) {
             this.customization = customization;
             return this;
@@ -119,6 +139,7 @@ public class ValuePropertyBase<VPC> {
             }
             valueProperty.setMetadataClass(metadataClass);
             valueProperty.setDefaultValue(defaultValue);
+            valueProperty.setNullEquivalent(nullEquivalent);
             valueProperty.setCustomization(customization);
             return valueProperty;
         }

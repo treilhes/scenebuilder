@@ -22,7 +22,7 @@ public class ${component.metadataClassSimpleName} extends ${componentSuperClassN
     <#assign genericCusto = context.valuePropertyCustomizationClassName!"Void">
     <#assign contentClass = property.metadata.type.name?replace("$", ".")>
 
-    public static final ${propertyMetadataClassName}<${genericCusto}> 
+    public static final ${propertyMetadataClassName}<${genericCusto}>
         ${property.memberName}PropertyMetadata =
     <#if property.metadata.type.enum == true>
             new ${propertyMetadataClassName}.Builder<${contentClass}, ${genericCusto}>(${contentClass}.class)
@@ -31,7 +31,7 @@ public class ${component.metadataClassSimpleName} extends ${componentSuperClassN
     </#if>
                 .name(PropertyNames.${property.memberName}Name)
                 .readWrite(${property.metadata.readWrite})
-    <#if !property.defaultValue?? && property.nullEquivalent??>
+    <#if property.nullEquivalent??>
                 .nullEquivalent("${property.nullEquivalent}")
     </#if>
     <#if !property.nullEquivalent?? && property.defaultValue??>
@@ -41,7 +41,7 @@ public class ${component.metadataClassSimpleName} extends ${componentSuperClassN
                 .build();
 </#macro>
 
-        // local properties 
+        // local properties
 <#list component.valueProperties as key, property>
     <#if property.metadataClass??>
         ${logger.info("Processing value property " + component.metadata.type + "." + property.metadata.name + " : " + property.metadata.contentType)}
@@ -103,7 +103,7 @@ public class ${component.metadataClassSimpleName} extends ${componentSuperClassN
         super(${componentClassName}.class, <#if component.parent??>parent<#else>null</#if>, ${customization.customizeComponent(context, component)!"null"});
 
         var ${component.metadata.type.simpleName?uncap_first}Metadata = this;
-        
+
         <#list component.componentProperties as key, property>
             <#if property.metadataClass??>
             ${logger.info("Processing 2 " + component.metadata.name + "." + property.metadata.name + " : " + property.metadata.contentType)}
@@ -116,7 +116,7 @@ public class ${component.metadataClassSimpleName} extends ${componentSuperClassN
                     <#if property.metadata.main??>.isMain(${property.metadata.main})<#else>.isMain(<#if component.metadata.defaultProperty?? && component.metadata.defaultProperty.name == property.metadata.name>true<#else>false</#if>)</#if>
                     .customization(${customization.customizeComponentProperty(context, component, property)!"null"})
                     .build();
-                    
+
             getProperties().add(${property.memberName}PropertyMetadata);
             <#else>
                 <#assign errMsg = "MetadataClass not set! Discard component property " + component.metadata.type + "." + property.metadata.name + " : " + property.metadata.contentType>
@@ -131,8 +131,15 @@ public class ${component.metadataClassSimpleName} extends ${componentSuperClassN
                 ${property.metadata.applicability.simpleName?uncap_first}Metadata.getProperties().add(${property.memberName}PropertyMetadata);
             </#if>
         </#list>
-        
+
         <#list component.valueProperties as key, property>
+            <#if property.metadataClass??>
+                ${logger.info("Processing 2 " + component.metadata.name + "." + property.metadata.name + " : " + property.metadata.contentType)}
+                getProperties().add(${property.memberName}PropertyMetadata);
+            </#if>
+        </#list>
+
+        <#list component.updatedValueProperties as key, property>
             <#if property.metadataClass??>
                 ${logger.info("Processing 2 " + component.metadata.name + "." + property.metadata.name + " : " + property.metadata.contentType)}
                 getProperties().add(${property.memberName}PropertyMetadata);

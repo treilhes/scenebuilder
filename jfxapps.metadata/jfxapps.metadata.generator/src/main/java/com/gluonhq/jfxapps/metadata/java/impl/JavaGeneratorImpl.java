@@ -252,8 +252,12 @@ public class JavaGeneratorImpl implements ClassCustomization {
             nullEquivalent = def.toString();
         }
 
-        p.setDefaultValue(defaultValue);
-        p.setNullEquivalent(nullEquivalent);
+        if (p.getDefaultValue() == null) { // value from user has precedence
+            p.setDefaultValue(defaultValue);
+        }
+        if (p.getNullEquivalent() == null) { // value from user has precedence
+            p.setNullEquivalent(nullEquivalent);
+        }
     }
 
     private void populateUpdatedProperties(Component<?, ?, ?> c, Object instance,
@@ -422,10 +426,10 @@ public class JavaGeneratorImpl implements ClassCustomization {
     protected String computeStringValue(BeanMetaData<?> beanMetadata, PropertyMetaData propertyMetadata) {
 
         if (propertyMetadata.getPropertyType() == Type.CALLBACK) {
-            return "null";
+            return null;
         }
         if (propertyMetadata.getPropertyType() == Type.EVENT) {
-            return "null";
+            return null;
         }
 
         Object def = propertyMetadata.getDefaultValue();
@@ -515,7 +519,7 @@ public class JavaGeneratorImpl implements ClassCustomization {
         }
 
         if (defaultValue == null && nullEquivalent == null) {
-            defaultValue = "null";
+            defaultValue = null;
         }
 
         return defaultValue;

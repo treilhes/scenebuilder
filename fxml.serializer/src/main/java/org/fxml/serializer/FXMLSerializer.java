@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,25 +35,29 @@ package org.fxml.serializer;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import com.gluonhq.jfxapps.core.fxom.FXOMCollection;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMInstance;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMNodes;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMProperty;
-import com.oracle.javafx.scenebuilder.core.fxom.FXOMPropertyT;
-import com.oracle.javafx.scenebuilder.core.fxom.glue.GlueDocument;
-import com.oracle.javafx.scenebuilder.core.fxom.util.PropertyName;
-import com.oracle.javafx.scenebuilder.core.metadata.klass.ComponentClassMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.ComponentPropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.PropertyMetadata;
-import com.oracle.javafx.scenebuilder.core.metadata.property.ValuePropertyMetadata;
+import com.gluonhq.jfxapps.core.fxom.FXOMElement;
+import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
+import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
+import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
+import com.gluonhq.jfxapps.core.fxom.transform.DefaultFxmlSerializer;
+import com.gluonhq.jfxapps.core.fxom.transform.FXOMSerializer;
+import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.PropertyGroupMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.metadata.javafx.JavafxMetadataExtension;
 
 public class FXMLSerializer{
@@ -65,36 +69,71 @@ public class FXMLSerializer{
     }
     public String serialize(Object object) {
         FXOMDocument document = FXOMDocumentFactory.DEFAULT.newDocument();
-
+        FXOMInstance instance = createInstance(object, document);
+        document.setFxomRoot(instance);
+        DefaultFxmlSerializer serializer = new DefaultFxmlSerializer();
+        return serializer.serialize(document);
+    }
+    private FXOMInstance createInstance(Object object, FXOMDocument document) {
 
         Class<?> declaredClass = object.getClass();
 
-        ComponentClassMetadata<?> cmp = metadata.queryComponentMetadata(declaredClass);
+        var cmp = metadata.queryProperties(declaredClass);
         Set<PropertyMetadata> properties = metadata.queryProperties(declaredClass);
 
         FXOMInstance instance = new FXOMInstance(document, declaredClass);
         instance.setSceneGraphObject(object);
 
-        for (PropertyMetadata property : properties) {
+        for (PropertyMetadata<?> property : properties) {
+            if (property instanceof ValuePropertyMetadata<?> vpm) {
 
-            if (property instanceof ValuePropertyMetadata p) {
-                FXOMPropertyT fxProperty = new FXOMPropertyT(document, null, null);
+                if (!vpm.isReadWrite() || vpm.isTransient()) {
+                    continue;
+                }
 
-                PropertyName name = p.getName();
-                Object value = p.getValueInSceneGraphObject(instance);
-                Object defaultValue = p.getDefaultValueObject();
+                if (vpm.isGroup() && vpm instanceof PropertyGroupMetadata<?> pgm) {
+                    pgm.getPropertiesMap().values().forEach(p -> attachPropertyT(document, instance, p));
+                } else {
+                    attachPropertyT(document, instance, vpm);
+                }
 
-                p.setValueObject(instance, object);
-                //new FXOMPropertyT(document, name, value);
+            } else if (property instanceof ComponentPropertyMetadata cpm) {
 
-            } else if (property instanceof ComponentPropertyMetadata p) {
+                if (cpm.isCollection()) {
+                    final Collection<?> values = (Collection<?>)cpm.getName().getValue(object);
 
+                    if (values.isEmpty()) {
+                        continue;
+                    }
+
+                    var children = values.stream().map(o -> createInstance(o, document))
+                            .map(FXOMObject.class::cast)
+                            .toList();
+                    final FXOMPropertyC collection = new FXOMPropertyC(document, cpm.getName(), children);
+                    collection.addToParentInstance(-1, instance);
+                } else {
+                    final Object value = cpm.getName().getValue(object);
+
+                    if (value == null) {
+                        continue;
+                    }
+
+                    var fxomObject = createInstance(value, document);
+                    final FXOMPropertyC collection = new FXOMPropertyC(document, cpm.getName(), fxomObject);
+                    collection.addToParentInstance(-1, instance);
+                }
             }
 
 
         }
-
-        return "NOTGOOD";
+        return instance;
+    }
+    private void attachPropertyT(FXOMDocument document, FXOMInstance instance, PropertyMetadata<?> property) {
+        ValuePropertyMetadata<?> vpm = (ValuePropertyMetadata<?>)property;
+        Object value = vpm.getValueInSceneGraphObject(instance);
+        if (value != null) {
+            vpm.setValueObject(instance, value);
+        }
     }
 
 
@@ -102,12 +141,11 @@ public class FXMLSerializer{
     private static Metadata loadMetadata() {
         JavafxMetadataExtension ext = new JavafxMetadataExtension();
 
-        List<Class<?>> classes = new ArrayList<>(ext.explicitClassToRegister());
+        List<Class<?>> classes = new ArrayList<>(ext.exportedContextClasses());
         classes.add(Metadata.class);
 
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(classes.toArray(new Class<?>[0]));
-        context.refresh();
-        context.start();
+
         return context.getBean(Metadata.class);
     }
 }
