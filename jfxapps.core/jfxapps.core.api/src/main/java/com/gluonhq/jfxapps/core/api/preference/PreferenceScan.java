@@ -39,9 +39,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.annotation.ComponentScan.Filter;
-import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 
 
 @Target(ElementType.TYPE)

@@ -40,7 +40,6 @@ import java.util.Collection;
 
 import com.gluonhq.jfxapps.metadata.util.ReflectionUtils;
 import com.gluonhq.jfxapps.metadata.util.Report;
-import com.gluonhq.jfxapps.metadata.util.Resources;
 import com.gluonhq.jfxapps.metadata.util.StringUtils;
 
 /**

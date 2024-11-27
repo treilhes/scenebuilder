@@ -47,8 +47,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mockito;
 
-import com.gluonhq.jfxapps.core.fs.util.FileWatcher;
-
 class FileWatcherTest {
 
     private static long TEST_TIMEOUT = 1000L;

@@ -37,7 +37,6 @@ import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Set;
 import java.util.function.Function;
 
 public final class ClassUtils {

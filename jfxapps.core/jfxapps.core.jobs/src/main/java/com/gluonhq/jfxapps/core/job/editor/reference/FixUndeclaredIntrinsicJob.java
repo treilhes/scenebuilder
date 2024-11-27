@@ -53,15 +53,11 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPath;
-import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.collector.CompositeCollector;
-import com.gluonhq.jfxapps.core.fxom.collector.ExpressionCollector;
-import com.gluonhq.jfxapps.core.fxom.collector.ExpressionCollector.ExpressionReference;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector.FxCopyBySource;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector.FxIdsMap;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector.FxReferenceBySource;
-import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 
 /**
  * This job look for all intrinsic (fx:reference/fx:copy) in an {@link FXOMDocument} and for each

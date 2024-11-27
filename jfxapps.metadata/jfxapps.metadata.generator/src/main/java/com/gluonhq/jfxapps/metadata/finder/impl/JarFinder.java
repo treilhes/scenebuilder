@@ -34,18 +34,11 @@
 package com.gluonhq.jfxapps.metadata.finder.impl;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.gluonhq.jfxapps.metadata.finder.api.Descriptor;
 
 public class JarFinder {
 

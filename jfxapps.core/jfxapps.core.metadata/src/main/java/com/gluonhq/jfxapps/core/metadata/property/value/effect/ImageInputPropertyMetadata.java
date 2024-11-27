@@ -39,8 +39,8 @@ import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.util.DesignImage;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.value.ComplexPropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.value.ImagePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.value.ImagePropertyMetadata;
 
 import javafx.scene.effect.ImageInput;
 

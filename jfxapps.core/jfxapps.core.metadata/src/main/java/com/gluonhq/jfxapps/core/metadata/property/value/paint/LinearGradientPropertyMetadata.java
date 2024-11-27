@@ -40,8 +40,8 @@ import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.value.BooleanPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.ComplexPropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.list.StopListPropertyMetadata;
 
 import javafx.scene.paint.CycleMethod;

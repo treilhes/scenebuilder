@@ -35,7 +35,6 @@ package com.gluonhq.jfxapps.app.devtools.ext.strchk.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,8 +47,8 @@ import com.gluonhq.jfxapps.app.devtools.ext.strchk.loader.ProjectLoader;
 import com.gluonhq.jfxapps.app.devtools.ext.strchk.model.Project;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 
 import javafx.collections.FXCollections;

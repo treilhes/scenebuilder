@@ -36,10 +36,8 @@ package com.gluonhq.jfxapps.metadata.finder.impl;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.AfterEach;
@@ -48,16 +46,12 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.metadata.finder.api.Descriptor;
 import com.gluonhq.jfxapps.metadata.finder.api.IClassCrawler;
 import com.gluonhq.jfxapps.metadata.finder.api.SearchContext;
 import com.gluonhq.jfxapps.metadata.util.FxThreadinitializer;
 import com.gluonhq.jfxapps.metadata.util.Report;
 
-import javafx.application.Platform;
 import javafx.scene.control.Cell;
-import javafx.scene.layout.Pane;
-import javafx.scene.web.WebView;
 
 class ClassCrawlerTestIT {
     private static final Logger logger = LoggerFactory.getLogger(ClassCrawlerTestIT.class);

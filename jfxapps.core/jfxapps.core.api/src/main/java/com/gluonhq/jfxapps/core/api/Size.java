@@ -33,8 +33,6 @@
  */
 package com.gluonhq.jfxapps.core.api;
 
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-
 /**
  * Predefined sizes (width x height).
  * Preferred one refers to the one explicitly set by the user: it is for

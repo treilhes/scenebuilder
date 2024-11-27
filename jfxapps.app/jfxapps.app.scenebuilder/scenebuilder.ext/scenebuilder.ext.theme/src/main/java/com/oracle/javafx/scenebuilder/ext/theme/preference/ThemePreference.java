@@ -33,8 +33,6 @@
  */
 package com.oracle.javafx.scenebuilder.ext.theme.preference;
 
-import java.util.List;
-
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups;
 import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;

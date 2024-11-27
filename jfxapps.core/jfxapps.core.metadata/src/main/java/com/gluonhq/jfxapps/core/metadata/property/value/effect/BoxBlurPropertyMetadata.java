@@ -38,8 +38,8 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.value.ComplexPropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.value.IntegerPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata.EffectSizeDoublePropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.value.IntegerPropertyMetadata;
 
 import javafx.scene.effect.BoxBlur;
 

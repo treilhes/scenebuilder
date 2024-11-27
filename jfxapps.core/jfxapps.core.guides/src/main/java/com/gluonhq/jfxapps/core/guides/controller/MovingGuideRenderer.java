@@ -49,7 +49,6 @@ import com.gluonhq.jfxapps.util.MathUtils;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
 /**

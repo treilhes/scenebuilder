@@ -39,9 +39,9 @@ import com.gluonhq.jfxapps.core.fxom.util.DesignImage;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.value.BooleanPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.ComplexPropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.value.ImagePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata.CoordinateDoublePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata.SizeDoublePropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.property.value.ImagePropertyMetadata;
 
 import javafx.scene.paint.ImagePattern;
 

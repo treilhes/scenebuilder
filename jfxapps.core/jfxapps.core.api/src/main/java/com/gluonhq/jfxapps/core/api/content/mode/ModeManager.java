@@ -33,8 +33,6 @@
  */
 package com.gluonhq.jfxapps.core.api.content.mode;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-
 public interface ModeManager {
 
     void enableDefaultMode();

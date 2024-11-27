@@ -36,7 +36,6 @@ package com.oracle.javafx.scenebuilder.template.aop;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,7 +62,6 @@ import com.oracle.javafx.scenebuilder.api.template.TemplateContext;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
 import com.oracle.javafx.scenebuilder.api.template.TemplateManager;
 import com.oracle.javafx.scenebuilder.api.template.TemplateScan;
-import com.oracle.javafx.scenebuilder.api.template.TemplateContext.NoTemplateGroup;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeManager;
 

@@ -54,8 +54,6 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
-import com.gluonhq.jfxapps.core.fxom.testutil.FxmlUtil;
 
 import javafx.stage.Stage;
 

@@ -44,7 +44,6 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;

@@ -49,8 +49,6 @@ import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockType;
-import com.gluonhq.jfxapps.core.ui.dock.DockPanelController;
-import com.gluonhq.jfxapps.core.ui.dock.DockTypeSplitH;
 import com.gluonhq.jfxapps.core.ui.dock.preference.DockMinimizedPreference;
 import com.gluonhq.jfxapps.core.ui.dock.preference.LastDockDockTypePreference;
 import com.gluonhq.jfxapps.core.ui.dock.preference.LastDockUuidPreference;

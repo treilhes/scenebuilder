@@ -47,9 +47,9 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;

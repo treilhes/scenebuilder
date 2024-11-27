@@ -50,8 +50,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.gluonhq.jfxapps.registry.mapper.impl.JsonMapper;
-import com.gluonhq.jfxapps.registry.mapper.impl.XmlMapper;
 import com.gluonhq.jfxapps.registry.model.Application;
 import com.gluonhq.jfxapps.registry.model.Dependency;
 import com.gluonhq.jfxapps.registry.model.Description;

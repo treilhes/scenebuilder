@@ -33,7 +33,6 @@
  */
 package com.oracle.javafx.scenebuilder.ext.theme.aop;
 
-import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

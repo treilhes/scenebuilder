@@ -44,10 +44,6 @@ import java.nio.file.Paths;
 import org.junit.Test;
 
 import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
-import com.gluonhq.jfxapps.core.library.manager.ArtifactDialogListItem;
-import com.gluonhq.jfxapps.core.library.manager.DialogListItem;
-import com.gluonhq.jfxapps.core.library.manager.DialogListItemComparator;
-import com.gluonhq.jfxapps.core.library.manager.LibraryDialogListItem;
 
 public class DialogListItemComparatorTest {
 

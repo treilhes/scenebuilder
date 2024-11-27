@@ -33,29 +33,9 @@
  */
 package com.gluonhq.jfxapps.core.fxom.util;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.io.TempDir;
 import org.junitpioneer.jupiter.SetSystemProperty;
 import org.testfx.framework.junit5.ApplicationExtension;
-import org.testfx.framework.junit5.Start;
-
-import com.gluonhq.jfxapps.core.fxom.FXOMComment;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
-import com.gluonhq.jfxapps.core.fxom.FXOMNode;
-import com.gluonhq.jfxapps.core.fxom.collector.ExpressionCollector;
-import com.gluonhq.jfxapps.core.fxom.testutil.FilenameProvider;
-import com.gluonhq.jfxapps.core.fxom.testutil.FxmlUtil;
-
-import javafx.stage.Stage;
 
 @ExtendWith(ApplicationExtension.class)
 @SetSystemProperty(key = "javafx.allowjs", value = "true")

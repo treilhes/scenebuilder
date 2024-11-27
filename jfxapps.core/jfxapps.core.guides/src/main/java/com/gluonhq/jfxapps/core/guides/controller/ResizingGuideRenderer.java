@@ -45,7 +45,6 @@ import com.gluonhq.jfxapps.core.guides.segment.AbstractSegment;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
-import javafx.scene.paint.Paint;
 
 /**
  *

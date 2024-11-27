@@ -34,7 +34,6 @@
 
 package com.gluonhq.jfxapps.core.library.manager;
 
-import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
 import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
 
 /**

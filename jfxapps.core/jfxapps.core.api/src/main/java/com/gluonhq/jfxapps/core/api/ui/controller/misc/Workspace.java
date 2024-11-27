@@ -35,8 +35,6 @@ package com.gluonhq.jfxapps.core.api.ui.controller.misc;
 
 import java.util.Set;
 
-import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
-import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.beans.property.DoubleProperty;

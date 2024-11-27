@@ -33,15 +33,9 @@
  */
 package com.gluonhq.jfxapps.core.api.ui.controller.misc;
 
-import java.util.Set;
-
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import io.reactivex.rxjava3.subjects.Subject;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.paint.Paint;
 
 public interface Content extends FXOMDocument.SceneGraphHolder {
 

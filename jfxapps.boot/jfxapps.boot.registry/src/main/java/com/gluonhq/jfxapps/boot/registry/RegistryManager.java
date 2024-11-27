@@ -38,6 +38,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
+import com.gluonhq.jfxapps.boot.registry.RegistryManager.RegistryType;
 import com.gluonhq.jfxapps.registry.model.Application;
 import com.gluonhq.jfxapps.registry.model.Extension;
 import com.gluonhq.jfxapps.registry.model.Registry;

@@ -36,8 +36,8 @@ package com.gluonhq.jfxapps.registry.mapper;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.gluonhq.jfxapps.registry.mapper.impl.XmlMapper;
 import com.gluonhq.jfxapps.registry.mapper.impl.JsonMapper;
+import com.gluonhq.jfxapps.registry.mapper.impl.XmlMapper;
 import com.gluonhq.jfxapps.registry.model.Registry;
 
 public interface Mapper {

@@ -33,16 +33,8 @@
  */
 package com.gluonhq.jfxapps.core.fxom;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.junitpioneer.jupiter.SetSystemProperty;
-
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMInclude;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 
 /**
  * Unit test for {@link FXOMIntrinsic#createFxomInstanceFromIntrinsic()}

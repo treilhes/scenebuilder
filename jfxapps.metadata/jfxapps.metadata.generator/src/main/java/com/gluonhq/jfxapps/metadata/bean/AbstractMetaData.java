@@ -34,8 +34,6 @@
 
 package com.gluonhq.jfxapps.metadata.bean;
 
-import com.gluonhq.jfxapps.metadata.util.Resources;
-
 /**
  * The base class for all meta-data used for describing JavaBeans, properties,
  * and events.

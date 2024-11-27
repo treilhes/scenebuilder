@@ -33,8 +33,8 @@
  */
 package com.gluonhq.jfxapps.core.api.ui.controller;
 
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;

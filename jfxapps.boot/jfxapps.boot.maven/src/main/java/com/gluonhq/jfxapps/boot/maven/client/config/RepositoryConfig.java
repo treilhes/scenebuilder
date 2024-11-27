@@ -34,7 +34,6 @@
 package com.gluonhq.jfxapps.boot.maven.client.config;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.List;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;

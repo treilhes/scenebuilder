@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.boot.context.scope;
 
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,10 +48,10 @@ import org.slf4j.MDC;
 
 import com.gluonhq.jfxapps.boot.api.context.Application;
 import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.context.impl.JfxAppContextImpl;
+
 
 class ApplicationInstanceScopeTestIT {
 

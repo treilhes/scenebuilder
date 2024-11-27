@@ -36,7 +36,6 @@ package com.gluonhq.jfxapps.core.api.editor.selection;
 import java.util.Collection;
 import java.util.Map;
 
-import com.gluonhq.jfxapps.core.api.mask.Accessory;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 

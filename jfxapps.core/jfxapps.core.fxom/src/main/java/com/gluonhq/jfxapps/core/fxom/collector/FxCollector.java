@@ -47,6 +47,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.FXOMScript;
+import com.gluonhq.jfxapps.core.fxom.collector.FxCollector.FxIdUniqueMap;
 
 public class FxCollector {
 

@@ -36,7 +36,9 @@ package com.oracle.javafx.scenebuilder.api.selection;
 import java.io.File;
 
 import com.gluonhq.jfxapps.core.api.job.Job;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 
 import javafx.scene.layout.AnchorPane;

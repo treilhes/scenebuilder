@@ -93,11 +93,13 @@ class MessageTest {
     @DirtiesContext
     void should_show_two_warnings_are_available(StageBuilder builder, FxRobot robot) {
 
-        MessageBarController controller = builder.controller(MessageBarController.class)
+        var testStage = builder.controller(MessageBarController.class)
                 .setup(StageType.Fill)
                 .size(800, 30)
                 .css(CSS_THEME_PRESET)
-                .show().getController();
+                .show();
+
+        var controller = testStage.getController();
 
         robot.interact(() -> {
             messageLogger.logInfoMessage("sssssssssssssssssssssssss");
@@ -106,7 +108,7 @@ class MessageTest {
             messageLogger.logWarningMessage("wwwwwwwwwwwwwwwwwwwwwwwwwwwww");
         });
 
-        Button messageButton = robot.lookup("#messageButton").query();
+        Button messageButton = robot.from(controller.getRoot()).lookup("#messageButton").query();
 
         assertEquals(4, messageLogger.getEntryCount());
         assertEquals("2", messageButton.getText());

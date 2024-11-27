@@ -32,7 +32,5 @@
  */
 package com.gluonhq.jfxapps.core.api.preference;
 
-import com.gluonhq.jfxapps.core.api.preference.ManagedPreference;
-
 public interface ManagedGlobalPreference extends ManagedPreference {
 }

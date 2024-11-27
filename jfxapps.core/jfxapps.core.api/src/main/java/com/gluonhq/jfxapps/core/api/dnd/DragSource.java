@@ -34,7 +34,6 @@
 package com.gluonhq.jfxapps.core.api.dnd;
 
 import java.util.List;
-import java.util.Set;
 
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 

@@ -39,8 +39,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.core.controls.paintpicker.PaintPickerController;
 import com.gluonhq.jfxapps.core.controls.paintpicker.PaintPicker.Mode;
+import com.gluonhq.jfxapps.core.controls.paintpicker.PaintPickerController;
 import com.gluonhq.jfxapps.core.controls.paintpicker.rotator.RotatorControl;
 import com.gluonhq.jfxapps.core.controls.paintpicker.slider.SliderControl;
 

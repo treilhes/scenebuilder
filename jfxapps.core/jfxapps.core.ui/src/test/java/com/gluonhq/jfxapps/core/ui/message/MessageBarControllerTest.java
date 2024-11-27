@@ -50,7 +50,6 @@ import com.gluonhq.jfxapps.test.StageBuilder;
 import com.gluonhq.jfxapps.test.StageType;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.stage.StageStyle;
 
 @JfxAppsTest
 @ContextConfiguration(classes = {MessageBarControllerTest.Config.class, MessageBarController.class })

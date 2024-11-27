@@ -33,10 +33,8 @@
  */
 package com.gluonhq.jfxapps.core.api.javafx.internal;
 
-import java.io.IOException;
 import java.util.concurrent.FutureTask;
 
-import org.aspectj.weaver.ast.Var;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -46,7 +44,6 @@ import org.springframework.core.PriorityOrdered;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.DeportedSingleton;
 import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.javafx.LoadInFxThread;
 
 import javafx.application.Platform;

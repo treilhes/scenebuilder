@@ -33,10 +33,6 @@
  */
 package com.gluonhq.jfxapps.core.api.job.base;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
