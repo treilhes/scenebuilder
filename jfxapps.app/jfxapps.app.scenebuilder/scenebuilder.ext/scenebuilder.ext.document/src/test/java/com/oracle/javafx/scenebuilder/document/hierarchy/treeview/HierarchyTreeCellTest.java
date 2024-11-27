@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.document.hierarchy.treeview;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.net.URL;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -48,11 +49,14 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.error.ErrorReport;
 import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
+import com.gluonhq.jfxapps.core.api.error.ErrorType;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMInclude;
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
@@ -90,7 +94,7 @@ class HierarchyTreeCellTest {
     @Mock
     private DisplayOption displayOption;
     @Mock
-    private SceneBuilderBeanFactory context;
+    private JfxAppContext context;
     @Mock
     private HierarchyController panelController;
     @InjectMocks
@@ -98,7 +102,7 @@ class HierarchyTreeCellTest {
     @InjectMocks
     private HierarchyTreeCell<HierarchyItem> cell;
 
-    private FXOMDocument document = new FXOMDocument();
+    private FXOMDocument document = FXOMDocumentFactory.DEFAULT.newDocument();
     /**
      * Will be called with {@code @Before} semantics, i. e. before each test method.
      *
@@ -156,12 +160,17 @@ class HierarchyTreeCellTest {
             }
 
             @Override
-            public Type getType() {
+            public ErrorType getType() {
                 return null;
             }
 
             @Override
-            public CSSParsingReport getCssParsingReport() {
+            public URL getLinkedResource() {
+                return null;
+            }
+
+            @Override
+            public String getText() {
                 return null;
             }
 

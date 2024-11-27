@@ -159,7 +159,7 @@ class CssPanelControllerTest {
         when(editor.pickModeEnabledProperty()).thenReturn(new SimpleBooleanProperty(false));
         when(drag.dragSourceProperty()).thenReturn(new SimpleObjectProperty<DragSource>(null));
 
-        CssPanelController controller = builder
+        var testStage = builder
                 .controller(CssPanelController.class)
                 .css(ToolStylesheetProvider.builder()
                         //.stylesheet(CssPanelController.class.getResource("css/ThemeDark_common.css").toExternalForm())
@@ -167,6 +167,8 @@ class CssPanelControllerTest {
                         .build())
                 .setup(StageType.Fill)
                 .size(800, 600).show();
+
+        var controller = testStage.getController();
 
         assertNotNull("Controller must load successfully", controller);
     }
@@ -188,14 +190,15 @@ class CssPanelControllerTest {
         when(group.getItems()).thenReturn(Set.of(document.getFxomRoot()));
         when(selection.getGroup()).thenReturn(group);
 
-        CssPanelController controller = builder
-                .document(document)
+        var testStage = builder
                 .controller(CssPanelController.class)
+                .document(document)
                 .setup(StageType.Fill)
                 .size(1024, 600).show();
 
+        var controller = testStage.getController();
 
-        var items = robot.lookup("#table").queryTableView().getItems();
+        var items = robot.from(controller.getRoot()).lookup("#table").queryTableView().getItems();
 
         //get the -fx-background-color property
         var fxBackgroundColor = items.stream().filter(Objects::nonNull)

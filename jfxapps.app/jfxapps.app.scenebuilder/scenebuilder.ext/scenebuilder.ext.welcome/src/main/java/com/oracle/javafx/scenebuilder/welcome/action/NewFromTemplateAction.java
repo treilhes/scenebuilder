@@ -50,10 +50,9 @@ import com.oracle.javafx.scenebuilder.welcome.controller.TemplatesWindowControll
 @ActionMeta(
         nameKey = "action.name.save",
         descriptionKey = "action.description.save")
-//FIXME need to attach this menu below the "new file" menu
 @MenuItemAttachment(
         id = NewFromTemplateAction.NEW_FROM_TEMPLATE_ID,
-        targetMenuId = DefaultMenu.FILE_MENU_ID,//NewAction.NEWFILE_MENU_ID,
+        targetMenuId = DefaultMenu.File.NEW_ID,
         label = "menu.title.new.template",
         positionRequest = PositionRequest.AsNextSibling)
 @Accelerator(accelerator = "CTRL+SHIFT+N")

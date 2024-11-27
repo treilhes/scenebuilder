@@ -78,10 +78,10 @@ public class ToggleDocumentVisibilityAction  extends AbstractAction {
             DockActionFactory dockActionFactory,
             DockViewController dockViewController,
             DocumentPanel documentPanel) {
-      //@formatter:on
+        //@formatter:on
         super(i18n, extensionFactory);
         this.view = documentPanel;
-        this.toggleAction = dockActionFactory.toggleViewVisibility(view);
+        this.toggleAction = dockActionFactory.toggleViewVisibility(view.getClass());
     }
 
     @Override

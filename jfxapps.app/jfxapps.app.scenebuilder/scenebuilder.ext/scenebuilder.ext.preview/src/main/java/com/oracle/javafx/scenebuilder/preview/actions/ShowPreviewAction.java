@@ -50,7 +50,7 @@ import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController
 @ActionMeta(nameKey = "action.name.show.preview.dialog", descriptionKey = "action.description.show.preview.dialog")
 @MenuItemAttachment(
         id = ShowPreviewAction.SHOW_PREVIEW_IN_WINDOW_ID,
-        targetMenuId = DefaultMenu.PREVIEW_MENU_ID,
+        targetMenuId = DefaultMenu.Preview.ID,
         label = "menu.title.show.preview.in.window",
         positionRequest = PositionRequest.AsFirstChild)
 @Accelerator(accelerator = "CTRL+P")

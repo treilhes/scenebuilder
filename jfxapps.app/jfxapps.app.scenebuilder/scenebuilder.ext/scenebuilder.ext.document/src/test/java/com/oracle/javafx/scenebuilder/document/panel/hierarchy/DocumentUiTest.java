@@ -62,6 +62,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.dnd.source.DocumentDragSource;
 import com.gluonhq.jfxapps.core.dnd.source.ExternalDragSource;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.job.editor.reference.UpdateReferencesJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
@@ -178,7 +179,7 @@ class DocumentUiTest {
                 documentDragSourceFactory, externalDragSourceFactory, designHierarchyMaskFactory,
                 hierarchyTreeCellFactory, hierarchyDNDControllerFactory, metadataInfoDisplayOption);
 
-        FXOMDocument doc = new FXOMDocument();
+        FXOMDocument doc = FXOMDocumentFactory.DEFAULT.newDocument();
         FXOMInstance inst = new FXOMInstance(doc, Pane.class);
         doc.setFxomRoot(inst);
         documentManager.fxomDocument().set(doc);

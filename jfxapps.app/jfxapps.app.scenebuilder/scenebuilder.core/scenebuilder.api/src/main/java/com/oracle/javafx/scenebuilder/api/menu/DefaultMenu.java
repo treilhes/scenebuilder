@@ -38,7 +38,7 @@ public interface DefaultMenu {
     public interface File {
         public final static String ID = "fileMenu";
         public final static String NEW_ID = ID + "-new";
-        public final static String NEW_FROM_TEMPLATE_ID = ID + "-newfromtemplate";
+        //public final static String NEW_FROM_TEMPLATE_ID = ID + "-newfromtemplate";
         public final static String OPEN_ID = ID + "-open";
         public final static String OPEN_RECENT_ID = ID + "-openrecent";
         public final static String SAVE_ID = ID + "-save";
