@@ -31,18 +31,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.oracle.javafx.scenebuilder.extension.Extension;
-import com.oracle.javafx.scenebuilder.launcher.LauncherExtension;
 
-open module jfxapps.core.launcher {
-    exports com.oracle.javafx.scenebuilder.launcher;
-    exports com.oracle.javafx.scenebuilder.launcher.i18n;
-    exports com.oracle.javafx.scenebuilder.launcher.splash;
-    exports com.oracle.javafx.scenebuilder.launcher.app;
+open module jfxapps.core.splash {
+    exports com.gluonhq.jfxapps.core.splash;
+    exports com.gluonhq.jfxapps.core.splash.i18n;
+    exports com.gluonhq.jfxapps.core.splash.splash;
+    exports com.gluonhq.jfxapps.core.splash.app;
 
-    requires jfxapps.starter;
+    requires jfxapps.core.starter;
     requires transitive jfxapps.core.api;
-    requires jfxapps.core.filesystem;
 
-    provides Extension with LauncherExtension;
 }

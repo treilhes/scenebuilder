@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,6 +34,7 @@
 package com.gluonhq.jfxapps.boot.main.config;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,12 +63,17 @@ public class BootHandler {
         long start = System.currentTimeMillis();
 
         try {
+            System.out.println(">>>>>>>>>>>>>>>>>>>>  Staring AppManager at " + LocalDateTime.now());
             appManager.start();
+            System.out.println(">>>>>>>>>>>>>>>>>>>>  Started AppManager at " + LocalDateTime.now());
 
             if (application != null) {
+                System.out.println(">>>>>>>>>>>>>>>>>>>>  Staring application at " + LocalDateTime.now());
                 appManager.startApplication(application);
+                System.out.println(">>>>>>>>>>>>>>>>>>>>  Started application at " + LocalDateTime.now());
             }
 
+            System.out.println(">>>>>>>>>>>>>>>>>>>>  Staring commands at " + LocalDateTime.now());
             if (files != null && !files.isEmpty()) {
                 for (File file : files) {
                     appManager.send(new OpenCommandEvent(application, file));
@@ -75,6 +81,7 @@ public class BootHandler {
             } else {
                 appManager.send(new OpenCommandEvent(application, null));
             }
+            System.out.println(">>>>>>>>>>>>>>>>>>>>  Started commands at " + LocalDateTime.now());
         } catch (BootException e) {
             logger.error("Unable to boot application", e);
 

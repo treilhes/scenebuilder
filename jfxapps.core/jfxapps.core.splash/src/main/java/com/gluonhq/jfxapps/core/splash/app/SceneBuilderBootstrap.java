@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.launcher.app;
+package com.gluonhq.jfxapps.core.splash.app;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,8 +43,8 @@ import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.aop.target.LazyInitTargetSource;
 import org.springframework.context.annotation.Bean;
 
+import com.gluonhq.jfxapps.core.splash.splash.SplashScreenPreloader;
 import com.oracle.javafx.scenebuilder.api.launcher.SceneBuilderLoadingProgress;
-import com.oracle.javafx.scenebuilder.launcher.splash.SplashScreenPreloader;
 
 import javafx.application.Application;
 import javafx.application.Platform;

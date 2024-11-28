@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
+import org.springframework.core.metrics.jfr.FlightRecorderApplicationStartup;
 
 import com.gluonhq.jfxapps.boot.main.config.BootConfig;
 import com.gluonhq.jfxapps.boot.main.config.BootHandler;
@@ -86,7 +87,12 @@ public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMes
             logger.error("Unable to initialize the message box", e);
         }
 
-        var ctx = SpringApplication.run(BootConfig.class, new String[0]);
+        //var ctx = SpringApplication.run(BootConfig.class, new String[0]);
+
+        SpringApplication application = new SpringApplication(BootConfig.class);
+        application.setApplicationStartup(new FlightRecorderApplicationStartup());
+        var ctx = application.run(new String[0]);
+
         bootHandler = ctx.getBean(BootHandler.class);
         bootHandler.boot(targetApplication, files, new String[0]);
 

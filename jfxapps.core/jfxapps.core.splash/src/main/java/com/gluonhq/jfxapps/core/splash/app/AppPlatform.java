@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.launcher.app;
+package com.gluonhq.jfxapps.core.splash.app;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -39,10 +39,10 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gluonhq.jfxapps.core.splash.util.MessageBox;
 import com.oracle.javafx.scenebuilder.api.action.editor.EditorPlatform;
 import com.oracle.javafx.scenebuilder.api.di.SbPlatform;
 import com.oracle.javafx.scenebuilder.api.fs.FileSystem;
-import com.oracle.javafx.scenebuilder.launcher.util.MessageBox;
 
 import javafx.application.Application;
 import javafx.application.Platform;

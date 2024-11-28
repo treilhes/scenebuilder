@@ -13,12 +13,12 @@
 
     <modules>
         <module>jfxapps.core.fxom</module>
-        
+
         <module>jfxapps.core.api</module>
         <module>jfxapps.core.metadata</module>
         <module>jfxapps.core.ui</module>
         <module>jfxapps.core.preferences</module>
-        
+
         <module>jfxapps.core.clipboard</module>
         <module>jfxapps.core.drag.and.drop</module>
         <module>jfxapps.core.error</module>
@@ -27,7 +27,7 @@
         <module>jfxapps.core.jobs</module>
         <module>jfxapps.core.library</module>
         <module>jfxapps.core.selection</module>
-        
+        <module>jfxapps.core.splash</module>
         <module>jfxapps.core.utils</module>
         <module>jfxapps.core.accelerators</module>
         <module>jfxapps.core.menu</module>

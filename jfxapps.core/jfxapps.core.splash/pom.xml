@@ -9,7 +9,7 @@
         <version>${jfxapps.version}</version>
     </parent>
 
-    <artifactId>jfxapps.core.launcher</artifactId>
+    <artifactId>jfxapps.core.splash</artifactId>
 
     <dependencies>
         <dependency>
@@ -18,11 +18,7 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.filesystem</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.starter</artifactId>
+            <artifactId>jfxapps.core.starter</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>

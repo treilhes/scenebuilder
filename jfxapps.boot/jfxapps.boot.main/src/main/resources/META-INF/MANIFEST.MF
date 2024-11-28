@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+SplashScreen-Image: BOOT-INF/classes/splash.png
+Application-Name: JfxApps

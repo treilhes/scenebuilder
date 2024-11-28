@@ -31,15 +31,15 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.oracle.javafx.scenebuilder.launcher;
+package com.gluonhq.jfxapps.core.splash;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.core.splash.app.LaunchController;
+import com.gluonhq.jfxapps.core.splash.i18n.I18NLauncher;
 import com.oracle.javafx.scenebuilder.extension.AbstractExtension;
-import com.oracle.javafx.scenebuilder.launcher.app.LaunchController;
-import com.oracle.javafx.scenebuilder.launcher.i18n.I18NLauncher;
 
 public class LauncherExtension extends AbstractExtension {
     @Override

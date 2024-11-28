@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,11 +33,13 @@
  */
 package com.gluonhq.jfxapps.boot.main;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.boot.main.command.StartCommand;
+import com.gluonhq.jfxapps.boot.main.splashscreen.BootSplashScreen;
 
 import picocli.CommandLine;
 
@@ -46,6 +48,8 @@ public class Main {
     private static Pattern PSN_PATTERN = Pattern.compile("-psn(_.*)?");
 
     public static void main(String[] args) {
+        System.out.println(">>>>>>>>>>>>>>>>>>>>  Staring JfxApps at " + LocalDateTime.now());
+        BootSplashScreen.getInstance().start();
 
         // Fix Start: Github Issue #301
         if (JfxAppsPlatform.IS_MAC) {
