@@ -33,9 +33,10 @@
  */
 package com.gluonhq.jfxapps.test;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.scenicview.ScenicView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -65,7 +66,7 @@ class WorkspaceBuilderTest {
     }
 
     @Test
-    void must_show_the_expected_guides(StageBuilder builder, FxRobot robot) throws Exception {
+    void must_create_fake_workspace_components_and_layout(StageBuilder builder, FxRobot robot) throws Exception {
 
         //@formatter:off
         var testStage = builder.workspace()
@@ -79,7 +80,7 @@ class WorkspaceBuilderTest {
                         <?import javafx.scene.shape.Rectangle?>
 
 
-                        <Label layoutX="0.0" layoutY="0.0" minHeight="40.0" minWidth="40.0" maxHeight="40.0" maxWidth="40.0" prefHeight="40.0" prefWidth="40.0" text="drag" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" />
+                        <Label fx:id="theLabel" layoutX="0.0" layoutY="0.0" minHeight="40.0" minWidth="40.0" maxHeight="40.0" maxWidth="40.0" prefHeight="40.0" prefWidth="40.0" text="drag" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" />
                         <!--<ComboBox layoutX="40.0" layoutY="274.0" prefWidth="150.0"  xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" />-->
                         <!--<Rectangle fx:id="square" layoutX="0.0" layoutY="0.0" width="100.0" height="100.0" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" stroke="BLACK" strokeType="INSIDE" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"/>-->
                         """)
@@ -87,27 +88,15 @@ class WorkspaceBuilderTest {
         //@formatter:on
 
         var uiController = testStage.getController();
+        var root = uiController.getRoot();
         var scene = uiController.getRoot().getScene();
         var subScene = uiController.getSubScene();
-        //uiController.getRoot().layout();
-        //uiController.getSubSceneRoot().layout();
-        robot.interact(() -> ScenicView.show(uiController.getRoot().getScene()));
 
-        var b1 = uiController.getSubSceneRoot().getBoundsInParent();
-        var b2 = uiController.getSubSceneRoot().getBoundsInLocal();
-        var b3 = uiController.getSubSceneRoot().getLayoutBounds();
-
-        robot.interact(() -> uiController.getSubScene().applyCss());
-        robot.interact(() -> uiController.getSubScene().autosize());
-        robot.interact(() -> uiController.getSubSceneRoot().layout());
-
-        var b4 = uiController.getSubSceneRoot().getBoundsInParent();
-        var b5 = uiController.getSubSceneRoot().getBoundsInLocal();
-        var b6 = uiController.getSubSceneRoot().getLayoutBounds();
-
-//        subScene.setWidth(400.0);
-//        subScene.setHeight(250.0);
-        System.out.println();
+        assertEquals("subScene's container must be root first child", root.getChildren().get(0),
+                uiController.getSubSceneHolder());
+        assertEquals("glass layer must be root second child", root.getChildren().get(1), uiController.getGlassLayer());
+        assertEquals("layer must be glass layer child", uiController.getGlassLayer().getChildren().get(0),
+                uiController.getLayer());
     }
 
 }

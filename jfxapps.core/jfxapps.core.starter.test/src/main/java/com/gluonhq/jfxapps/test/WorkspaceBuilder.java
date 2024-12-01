@@ -238,6 +238,11 @@ public class WorkspaceBuilder {
             return layer;
         }
 
+
+        public Pane getGlassLayer() {
+            return glassLayer;
+        }
+
         @Override
         public Pane getRoot() {
             return root;
@@ -249,7 +254,10 @@ public class WorkspaceBuilder {
 
         public Group getSubSceneRoot() {
             return contentGroup;
-            //return sceneGroup;
+        }
+
+        public Group getSubSceneHolder() {
+            return sceneGroup;
         }
 
         public void applyStylesheetConfig(ToolStylesheetProvider stylesheetConfig) {

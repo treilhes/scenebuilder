@@ -100,8 +100,9 @@ import com.gluonhq.jfxapps.boot.registry.RegistryManager;
  */
 @ExtendWith({ MockitoExtension.class, SpringExtension.class })
 @SpringBootTest(classes = { BootConfig.class,
-        AvailableFeaturesTestIT.Configuration.class }, webEnvironment = WebEnvironment.DEFINED_PORT, properties = {
-                "spring.mvc.servlet.path=/app", "server.servlet.context-path=/jfx", "debug=false" })
+        AvailableFeaturesTestIT.Configuration.class },
+        webEnvironment = WebEnvironment.DEFINED_PORT,
+        properties = {"spring.mvc.servlet.path=/app", "server.servlet.context-path=/jfx", "debug=false" })
 
 //@AutoConfigureCache
 //@AutoConfigureDataJpa
