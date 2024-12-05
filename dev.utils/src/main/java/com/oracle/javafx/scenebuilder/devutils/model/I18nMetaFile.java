@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,12 +36,27 @@ package com.oracle.javafx.scenebuilder.devutils.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 public class I18nMetaFile {
-    private final @Getter String name;
-    private final @Getter String packageName;
-    private final @Getter List<I18nFile> i18nFiles = new ArrayList<>();
+    private final String name;
+    private final String packageName;
+    private final List<I18nFile> i18nFiles = new ArrayList<>();
+
+    public I18nMetaFile(String name, String packageName) {
+        this.name = name;
+        this.packageName = packageName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public List<I18nFile> getI18nFiles() {
+        return i18nFiles;
+    }
+
+
 }

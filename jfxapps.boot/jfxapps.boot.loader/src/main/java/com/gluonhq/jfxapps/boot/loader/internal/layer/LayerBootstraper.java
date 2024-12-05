@@ -40,6 +40,7 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.metrics.ApplicationStartup;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.context.MultipleProgressListener;
@@ -66,15 +67,19 @@ public class LayerBootstraper {
     /** The root. */
     private final Path root;
 
+    private final ApplicationStartup startup;
+
     /**
      * Instantiates a new layer bootstraper.
      *
      * @param root the root
      * @param layerManager the layer manager
      */
-    public LayerBootstraper(JfxAppsPlatform platform, ModuleLayerManager layerManager) {
+    public LayerBootstraper(JfxAppsPlatform platform, ModuleLayerManager layerManager, ApplicationStartup startup) {
         super();
+
         this.layerManager = layerManager;
+        this.startup = startup;
         this.root = platform.rootPath();
     }
 
@@ -128,13 +133,23 @@ public class LayerBootstraper {
                 }
 
                 logger.info("Checking layer files are up to date {}", extension.getId());
+                var updateSTep = startup.start("update.layer");
+                updateSTep.tag("extension", extension.getId().toString());
+
                 if (!contentProvider.isUpToDate(path)) {
                     logger.info("Updating layer files {}", extension.getId());
                     contentProvider.update(path);
                 }
+                updateSTep.end();
+
                 logger.info("Layer files are up to date {}", extension.getId());
 
+                var createStep = startup.start("create.layer");
+                createStep.tag("extension", extension.getId().toString());
+
                 layer = layerManager.create(parent, extension.getId(), null, path);
+                createStep.end();
+
                 if (layer != null) {
                     extension.setLoadState(LoadState.Loaded);
                 }

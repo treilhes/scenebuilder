@@ -146,7 +146,6 @@ public class ScenebuilderWindowController extends AbstractFxmlWindowController i
             Dock leftDockController,
             Dock rightDockController,
             Dock bottomDockController,
-            DockViewController viewMenuController,
 
             MenuBar menuBar,
             MessageBar messageBar,

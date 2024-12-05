@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,15 +35,13 @@ package com.oracle.javafx.scenebuilder.devutils.model;
 
 import java.io.File;
 
-import lombok.Getter;
-
 public class ClassFile extends ProjectFile {
 
-    private final @Getter boolean isComponent;
-    private final @Getter boolean hasInnerComponent;
-    private final @Getter long declaredComponents;
-    private final @Getter boolean innerClass;
-    private final @Getter String innerClassName;
+    private final boolean isComponent;
+    private final boolean hasInnerComponent;
+    private final long declaredComponents;
+    private final boolean innerClass;
+    private final String innerClassName;
 
     public ClassFile(File source, String packageName, boolean hasComponent, boolean hasInnerComponent,
             long declaredComponents) {
@@ -59,6 +57,26 @@ public class ClassFile extends ProjectFile {
         this.innerClass = innerClassName != null;
         this.innerClassName = innerClassName;
 
+    }
+
+    public boolean isComponent() {
+        return isComponent;
+    }
+
+    public boolean isHasInnerComponent() {
+        return hasInnerComponent;
+    }
+
+    public long getDeclaredComponents() {
+        return declaredComponents;
+    }
+
+    public boolean isInnerClass() {
+        return innerClass;
+    }
+
+    public String getInnerClassName() {
+        return innerClassName;
     }
 
 

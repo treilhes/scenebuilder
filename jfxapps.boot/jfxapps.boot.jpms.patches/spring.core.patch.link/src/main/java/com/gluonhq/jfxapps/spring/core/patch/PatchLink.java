@@ -37,7 +37,6 @@ package com.gluonhq.jfxapps.spring.core.patch;
 public class PatchLink {
 
     public static void addRead(Module module) {
-        System.out.println("PatchLink.addRead");
         try {
             PatchLink.class.getClassLoader().loadClass("org.springframework.core.Patch");
         } catch (ClassNotFoundException e) {

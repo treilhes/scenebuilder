@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
 import org.springframework.core.metrics.jfr.FlightRecorderApplicationStartup;
 
 import com.gluonhq.jfxapps.boot.main.config.BootConfig;
@@ -87,11 +88,16 @@ public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMes
             logger.error("Unable to initialize the message box", e);
         }
 
-        //var ctx = SpringApplication.run(BootConfig.class, new String[0]);
+        var startup = new BufferingApplicationStartup(10000);
+        //var startup = new FlightRecorderApplicationStartup();
 
-        SpringApplication application = new SpringApplication(BootConfig.class);
-        application.setApplicationStartup(new FlightRecorderApplicationStartup());
+
+        var step = startup.start("Initializing voot context");
+        SpringApplication application = new SpringApplication(BootConfig.exportedClasses.toArray(Class[]::new));
+        application.setApplicationStartup(startup);
         var ctx = application.run(new String[0]);
+
+        step.end();
 
         bootHandler = ctx.getBean(BootHandler.class);
         bootHandler.boot(targetApplication, files, new String[0]);

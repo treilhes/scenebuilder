@@ -33,15 +33,20 @@
  */
 package com.gluonhq.jfxapps.boot.main.config;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.gluonhq.jfxapps.boot.api.context.StartupMetricsLogger;
 import com.gluonhq.jfxapps.boot.context.config.ContextConfig;
 import com.gluonhq.jfxapps.boot.layer.config.LayerConfig;
 import com.gluonhq.jfxapps.boot.loader.config.LoaderConfig;
@@ -60,6 +65,11 @@ import io.swagger.v3.oas.models.info.License;
 @Import({RegistryConfig.class, ContextConfig.class, LoaderConfig.class, LayerConfig.class, PlatformConfig.class, RepositoryConfig.class})
 public class BootConfig {
 
+    public static List<Class<?>> exportedClasses = new ArrayList<>();
+    static {
+        exportedClasses.add(BootConfig.class);
+        exportedClasses.addAll(RepositoryConfig.exportedClasses);
+    }
 
     @Bean
     OpenAPI myOpenAPI() {

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,21 +36,31 @@ package com.oracle.javafx.scenebuilder.devutils.model;
 import java.io.File;
 import java.util.Properties;
 
-import lombok.Getter;
-
 
 public class I18nFile extends ProjectFile {
-    private final @Getter String baseName;
-    private final @Getter String locale;
-    private final @Getter Properties properties;
+    private final String baseName;
+    private final String locale;
+    private final Properties properties;
 
     public I18nFile(File source, String packageName, String locale, Properties properties) {
         super(source, packageName);
         this.locale = locale;
         this.properties = properties;
-        
+
         boolean localized = getName().contains("_");
         String baseName = getName().substring(0, localized ? getName().indexOf("_") : getName().indexOf("."));
         this.baseName = baseName;
+    }
+
+    public String getBaseName() {
+        return baseName;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public Properties getProperties() {
+        return properties;
     }
 }

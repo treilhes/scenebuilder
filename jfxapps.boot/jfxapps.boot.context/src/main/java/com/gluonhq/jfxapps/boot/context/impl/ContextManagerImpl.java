@@ -43,12 +43,14 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.context.ContextConfiguration;
 import com.gluonhq.jfxapps.boot.api.context.ContextCustomizer;
 import com.gluonhq.jfxapps.boot.api.context.ContextManager;
+import com.gluonhq.jfxapps.boot.api.context.ExtensionReadyEvent;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.MultipleProgressListener;
 import com.gluonhq.jfxapps.boot.api.layer.Layer;
@@ -111,8 +113,15 @@ public class ContextManagerImpl implements ContextManager {
             moduleLayer = null;
         }
 
-        JfxAppContextImpl context = new JfxAppContextImpl(uuid, loader);
+        var startup = new BufferingApplicationStartup(10000);
+        var step = startup.start("Context " + uuid);
+        step.tag("classes", String.valueOf(classes.size()));
+        step.tag("deportedClasses", String.valueOf(deportedClasses.size()));
+        step.tag("singletonInstances", String.valueOf(singletonInstances.size()));
+        step.tag("modules", layer.allModules().toString());
 
+        JfxAppContextImpl context = new JfxAppContextImpl(uuid, loader);
+        context.setApplicationStartup(startup);
         uuidToContexts.put(uuid, context);
 
         if (moduleLayer != null) {
@@ -158,6 +167,12 @@ public class ContextManagerImpl implements ContextManager {
 
         context.refresh();
         context.start();
+
+        step.end();
+
+        if (context.isRunning()) {
+            context.publishEvent(new ExtensionReadyEvent(context));
+        }
 
         logger.info("Context {} has started successfully (active: {}, running: {}, beans: {})", context.getId(),
                 context.isActive(), context.isRunning(), context.getBeanDefinitionCount());

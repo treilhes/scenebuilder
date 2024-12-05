@@ -60,6 +60,7 @@ import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.subjects.LifecyclePostProcessor;
 import com.gluonhq.jfxapps.core.api.subjects.NetworkManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockNameHelper;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.SearchController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewController;
@@ -102,6 +103,7 @@ public class ApiExtension implements RootExtension {
                 DefaultSelectionGroupFactory.class,
                 DiscardGesture.Factory.class,
                 DiscardGesture.class,
+                DockFactory.class,
                 DockManager.DockManagerImpl.class,
                 DockNameHelper.class,
                 FxmlControllerBeanPostProcessor.class,

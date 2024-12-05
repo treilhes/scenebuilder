@@ -12,10 +12,14 @@
       <module>devtools.api</module>
       <module>devtools.app</module>
       <module>devtools.model</module>
-      <module>devtools.metadata</module>
+      <!--<module>devtools.metadata</module>-->
       <module>devtools.i18n</module>
+      <module>devtools.startup</module>
+      <module>devtools.cmpchek</module>
+      <module>devtools.registry</module>
+      <module>devtools.openapi</module>
   </modules>
-  
+
   <dependencyManagement>
         <dependencies>
             <dependency>

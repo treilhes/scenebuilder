@@ -71,9 +71,9 @@ public abstract class AbstractPanelController extends AbstractCommonUiController
      * @param api the api object
      */
     protected AbstractPanelController(
-            ApplicationEvents scenebuilderManager,
-            ApplicationInstanceEvents documentManager) {
-        super(scenebuilderManager, documentManager);
+            ApplicationEvents applicationEvents,
+            ApplicationInstanceEvents applicationInstanceEvents) {
+        super(applicationEvents, applicationInstanceEvents);
     }
 
 //    public void startListeners() {

@@ -42,5 +42,6 @@
         <module>jfxapps.core.controls</module>
 
         <module>jfxapps.core.jpms.patches</module>
+        <module>jfxapps.core.metadata.default</module>
     </modules>
 </project>

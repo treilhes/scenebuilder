@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,13 +37,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
-
 public class ModuleFile extends ProjectFile {
-    
-    private final @Getter List<String> extensions = new ArrayList<>();
-    
+
+    private final List<String> extensions = new ArrayList<>();
+
     public ModuleFile(File source) {
         super(source, "");
+    }
+
+    public List<String> getExtensions() {
+        return extensions;
     }
 }

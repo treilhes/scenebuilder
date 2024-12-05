@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import com.gluonhq.jfxapps.app.devtools.api.ui.Docks;
 import com.gluonhq.jfxapps.app.devtools.ext.strchk.config.CommonConfig;
 import com.gluonhq.jfxapps.app.devtools.ext.strchk.config.Config;
 import com.gluonhq.jfxapps.app.devtools.ext.strchk.loader.ProjectLoader;
@@ -49,7 +50,9 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingle
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -71,7 +74,17 @@ import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
 
 @ApplicationInstanceSingleton
-public class ResourceLocationsController extends AbstractFxmlController {
+@ViewAttachment(
+        name = "Resource Locations",
+        id = "6b999162-bce3-455e-8898-fd759f986369",
+        prefDockId = Docks.CENTER_DOCK_ID,
+        openOnStart = false,
+        selectOnStart = false,
+        order = 3000,
+        icon = "i18n_tool.png",
+        iconX2 = "i18n_tool@2x.png"
+        )
+public class ResourceLocationsController extends AbstractFxmlViewController {
 
     @FXML
     private Label numberOfValues;
@@ -131,8 +144,9 @@ public class ResourceLocationsController extends AbstractFxmlController {
     protected ResourceLocationsController(
             I18N i18n,
             ApplicationEvents scenebuilderManager,
-            ApplicationInstanceEvents documentManager) {
-        super(i18n, scenebuilderManager, documentManager, ResourceLocationsController.class.getResource("ResourceLocations.fxml"));
+            ApplicationInstanceEvents documentManager,
+            ViewMenu viewMenu) {
+        super(i18n, scenebuilderManager, documentManager, viewMenu, ResourceLocationsController.class.getResource("ResourceLocations.fxml"));
     }
 
     @FXML
@@ -169,6 +183,7 @@ public class ResourceLocationsController extends AbstractFxmlController {
 
     @Override
     public void controllerDidLoadFxml() {
+        getRoot().setId(ResourceLocationsController.class.getSimpleName());
         getRoot().minWidth(400.0);
         getRoot().minHeight(400.0);
     }
@@ -309,6 +324,18 @@ public class ResourceLocationsController extends AbstractFxmlController {
                 numberOfMatch.setText("" + indices.size());
             }
         }
+    }
+
+    @Override
+    public void onShow() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onHidden() {
+        // TODO Auto-generated method stub
+
     }
 
 }

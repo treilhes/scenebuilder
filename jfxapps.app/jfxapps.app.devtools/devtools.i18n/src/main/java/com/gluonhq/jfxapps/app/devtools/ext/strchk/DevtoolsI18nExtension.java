@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.app.devtools.ext.strchk.action.ShowI18nToolAction;
 import com.gluonhq.jfxapps.app.devtools.ext.strchk.controller.ResourceLocationsController;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 
@@ -59,7 +58,7 @@ public class DevtoolsI18nExtension implements OpenExtension  {
     @Override
     public List<Class<?>> exportedContextClasses() {
         return List.of(
-                ShowI18nToolAction.class,
+
                 ResourceLocationsController.class
                 );
     }

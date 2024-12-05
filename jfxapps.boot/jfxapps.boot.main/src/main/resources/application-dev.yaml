@@ -54,6 +54,15 @@ jfxapps:
       - groupId: com.gluonhq.jfxapps
         artifactId: devtools.i18n
         path: ../../jfxapps.app/jfxapps.app.devtools/devtools.i18n/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: devtools.startup
+        path: ../../jfxapps.app/jfxapps.app.devtools/devtools.startup/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: devtools.cmpcheck
+        path: ../../jfxapps.app/jfxapps.app.devtools/devtools.cmpcheck/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: devtools.openapi
+        path: ../../jfxapps.app/jfxapps.app.devtools/devtools.openapi/target/classes
 
       - groupId: com.gluonhq.jfxapps
         artifactId: scenebuilder.api

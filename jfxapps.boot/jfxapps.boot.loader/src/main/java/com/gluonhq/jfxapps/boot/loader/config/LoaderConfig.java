@@ -33,19 +33,36 @@
  */
 package com.gluonhq.jfxapps.boot.loader.config;
 
+import java.util.UUID;
+
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 
 import com.gluonhq.jfxapps.boot.loader.internal._Component;
+import com.gluonhq.jfxapps.boot.loader.internal.model.Application;
+import com.gluonhq.jfxapps.boot.loader.internal.model.Extension;
 import com.gluonhq.jfxapps.boot.loader.internal.model._Model;
-import com.gluonhq.jfxapps.boot.loader.internal.repository._Repository;
+import com.gluonhq.jfxapps.boot.loader.internal.repository.ApplicationRepository;
+import com.gluonhq.jfxapps.boot.loader.internal.repository.ExtensionRepository;
 
 @Configuration
 @EntityScan(basePackageClasses = _Model.class)
-@EnableJpaRepositories(basePackageClasses = _Repository.class)
+//@EnableJpaRepositories(basePackageClasses = _Repository.class)
 @ComponentScan(basePackageClasses = _Component.class)
 public class LoaderConfig {
 
+    @Bean
+    public JpaRepositoryFactoryBean<ApplicationRepository, Application, UUID> applicationRepository() {
+        JpaRepositoryFactoryBean factory = new JpaRepositoryFactoryBean(ApplicationRepository.class);
+        return factory;
+      }
+
+    @Bean
+    public JpaRepositoryFactoryBean<ExtensionRepository, Extension, UUID> extensionRepository() {
+        JpaRepositoryFactoryBean factory = new JpaRepositoryFactoryBean(ExtensionRepository.class);
+        return factory;
+      }
 }

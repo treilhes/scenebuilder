@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,14 +37,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
-
 public class ProjectFile {
-    private final @Getter File source;
-    private final @Getter String name;
-    private final @Getter String packageName;
-    
-    private final @Getter List<StringOccurence> stringOccurences = new ArrayList<>();
+    private final File source;
+    private final String name;
+    private final String packageName;
+
+    private final List<StringOccurence> stringOccurences = new ArrayList<>();
 
     public ProjectFile(File source, String packageName) {
         super();
@@ -51,6 +50,22 @@ public class ProjectFile {
         this.name = source.getName();
         this.packageName = packageName;
     }
-    
-    
+
+    public File getSource() {
+        return source;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public List<StringOccurence> getStringOccurences() {
+        return stringOccurences;
+    }
+
+
 }

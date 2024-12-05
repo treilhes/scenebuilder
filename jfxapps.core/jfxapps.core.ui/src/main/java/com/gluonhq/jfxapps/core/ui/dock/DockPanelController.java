@@ -132,6 +132,7 @@ public class DockPanelController implements Dock {
         this.dockMinimizedPreference = dockMinimizedPreference;
         this.dockTypes = dockTypes;
         this.content = new VBox();
+        this.content.setId("dock-content");
 
         VBox.setVgrow(this.content, Priority.ALWAYS);
 

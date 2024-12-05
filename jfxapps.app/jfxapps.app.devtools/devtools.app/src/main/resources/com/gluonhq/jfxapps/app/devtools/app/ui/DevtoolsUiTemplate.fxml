@@ -33,14 +33,14 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="DocumentWindow" prefHeight="800.0" prefWidth="1240.0" spacing="0.0" styleClass="theme-presets" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox id="devtools-template" maxHeight="Infinity" maxWidth="Infinity" prefHeight="800.0" prefWidth="1200.0" spacing="0.0" styleClass="theme-presets" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
-      <Label text="Label" />
-    <StackPane fx:id="contentPanelHost" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="" VBox.vgrow="ALWAYS" />
-      
+      <HBox fx:id="hBox" maxHeight="Infinity" maxWidth="Infinity" VBox.vgrow="ALWAYS">
+        <AnchorPane fx:id="contentHost" maxHeight="Infinity" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+      </HBox>
   </children>
 </VBox>

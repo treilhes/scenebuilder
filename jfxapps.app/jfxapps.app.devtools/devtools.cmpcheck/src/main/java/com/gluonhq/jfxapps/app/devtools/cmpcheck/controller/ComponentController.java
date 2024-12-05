@@ -31,30 +31,64 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.app.ui;
+package com.gluonhq.jfxapps.app.devtools.cmpcheck.controller;
 
-import com.gluonhq.jfxapps.app.devtools.api.ui.MainContent;
+import com.gluonhq.jfxapps.app.devtools.api.ui.Docks;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
+
+import javafx.fxml.FXML;
 
 @ApplicationInstanceSingleton
-public class MainContentController extends AbstractFxmlController implements MainContent{
+@ViewAttachment(
+        name = "Component Checks",
+        id = "93301219-2d4d-4333-ae80-157e09bcc685",
+        prefDockId = Docks.CENTER_DOCK_ID,
+        openOnStart = false,
+        selectOnStart = false,
+        order = 2000,
+        icon = "cmpcheck_tool.png",
+        iconX2 = "cmpcheck_tool@2x.png"
+        )
+public class ComponentController extends AbstractFxmlViewController {
 
-    // @formatter:off
-    public MainContentController(
+
+    protected ComponentController(
             I18N i18n,
             ApplicationEvents scenebuilderManager,
-            ApplicationInstanceEvents documentManager
-            ) {
-     // @formatter:on
-        super(i18n, scenebuilderManager, documentManager, MainContentController.class.getResource("MainContent.fxml"));
+            ApplicationInstanceEvents documentManager,
+            ViewMenu viewMenu) {
+        super(i18n, scenebuilderManager, documentManager, viewMenu, ComponentController.class.getResource("CmpCheck.fxml"));
     }
+
+    @FXML
+    public void initialize() {
+
+    }
+
 
     @Override
     public void controllerDidLoadFxml() {
+        getRoot().setId(ComponentController.class.getSimpleName());
+        getRoot().minWidth(400.0);
+        getRoot().minHeight(400.0);
+    }
+
+    @Override
+    public void onShow() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onHidden() {
+        // TODO Auto-generated method stub
+
     }
 
 }

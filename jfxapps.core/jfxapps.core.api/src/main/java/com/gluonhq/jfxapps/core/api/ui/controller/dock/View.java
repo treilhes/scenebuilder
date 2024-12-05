@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -82,7 +82,7 @@ public interface View {
 	public static ViewAttachment viewDescriptorAnnotation(Class<? extends View> cls) {
         ViewAttachment viewDescriptor = cls.getAnnotation(ViewAttachment.class);
         if (viewDescriptor == null) {
-            throw new RuntimeException("Class implementing View interface must be annotated with @ViewDescriptor");
+            throw new RuntimeException("Class implementing View interface must be annotated with @ViewAttachment");
         }
         return viewDescriptor;
     }

@@ -36,7 +36,6 @@ package com.oracle.javafx.scenebuilder.devutils.cmpchk;
 import com.oracle.javafx.scenebuilder.devutils.Loader;
 import com.oracle.javafx.scenebuilder.devutils.cmpchk.controller.ComponentDeclarationsController;
 
-
 import javafx.scene.Node;
 
 public class ComponentCheckerApp {

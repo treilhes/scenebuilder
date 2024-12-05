@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,23 +39,49 @@ import com.oracle.javafx.scenebuilder.devutils.model.ProjectFile;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
-@RequiredArgsConstructor
+
 public class ComponentItem {
-    private final @Getter Project project;
-    private final @Getter ClassFile classFile;
+    private final Project project;
+    private final ClassFile classFile;
 
-    private @Getter @Setter Project matchProject;
-    private @Getter @Setter ProjectFile matchProjectFile;
+    private Project matchProject;
+    private ProjectFile matchProjectFile;
 
     private StringProperty matchProjectName = new SimpleStringProperty();
     private StringProperty matchPackageName = new SimpleStringProperty();
     private StringProperty matchFileName = new SimpleStringProperty();
     private StringProperty matchError = new SimpleStringProperty("");
     private StringProperty matchSolution = new SimpleStringProperty("");
+
+    public ComponentItem(Project project, ClassFile classFile) {
+        this.project = project;
+        this.classFile = classFile;
+    }
+
+    public Project getMatchProject() {
+        return matchProject;
+    }
+
+    public void setMatchProject(Project matchProject) {
+        this.matchProject = matchProject;
+    }
+
+    public ProjectFile getMatchProjectFile() {
+        return matchProjectFile;
+    }
+
+    public void setMatchProjectFile(ProjectFile matchProjectFile) {
+        this.matchProjectFile = matchProjectFile;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public ClassFile getClassFile() {
+        return classFile;
+    }
 
     public String getProjectName() {
         return project.getName();

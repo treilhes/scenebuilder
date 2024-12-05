@@ -1,11 +1,13 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.gluonhq.jfxapps</groupId>
-    <artifactId>jfxapps.app.scenebuilder</artifactId>
-    <version>${scenebuilder.version}</version>
-  </parent>
-  <artifactId>scenebuilder.registry</artifactId>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.gluonhq.jfxapps</groupId>
+        <artifactId>jfxapps.app.scenebuilder</artifactId>
+        <version>${scenebuilder.version}</version>
+    </parent>
+    <artifactId>scenebuilder.registry</artifactId>
 
     <build>
         <plugins>
@@ -39,7 +41,8 @@
                                 </description>
                                 <extensions>
                                     <extension>
-                                        <uuid>86de1209-5c5e-41a5-941b-1484fadccdd6</uuid>
+                                        <uuid>
+                                            86de1209-5c5e-41a5-941b-1484fadccdd6</uuid>
                                         <dependency>
                                             <groupId>com.gluonhq.jfxapps</groupId>
                                             <artifactId>scenebuilder.ui</artifactId>
@@ -47,7 +50,8 @@
                                         </dependency>
                                     </extension>
                                     <extension>
-                                        <uuid>26cd6a45-7750-4b3e-bbd2-018187df0c49</uuid>
+                                        <uuid>
+                                            26cd6a45-7750-4b3e-bbd2-018187df0c49</uuid>
                                         <dependency>
                                             <groupId>com.gluonhq.jfxapps</groupId>
                                             <artifactId>scenebuilder.app</artifactId>
@@ -55,7 +59,8 @@
                                         </dependency>
                                     </extension>
                                     <extension>
-                                        <uuid>3d5e0c86-fda2-4a8a-b7b2-85394f2eb9de</uuid>
+                                        <uuid>
+                                            3d5e0c86-fda2-4a8a-b7b2-85394f2eb9de</uuid>
                                         <dependency>
                                             <groupId>com.gluonhq.jfxapps</groupId>
                                             <artifactId>scenebuilder.main</artifactId>
@@ -64,7 +69,8 @@
                                     </extension>
 
                                     <extension>
-                                        <uuid>b07bac44-1093-4fb0-a489-6d1233930e62</uuid>
+                                        <uuid>
+                                            b07bac44-1093-4fb0-a489-6d1233930e62</uuid>
                                         <dependency>
                                             <groupId>com.gluonhq.jfxapps</groupId>
                                             <artifactId>scenebuilder.selection</artifactId>
@@ -73,7 +79,8 @@
                                     </extension>
 
                                     <extension>
-                                        <uuid>9ba90ad0-95d1-4872-b13a-daa8c1289655</uuid>
+                                        <uuid>
+                                            9ba90ad0-95d1-4872-b13a-daa8c1289655</uuid>
                                         <dependency>
                                             <groupId>com.gluonhq.jfxapps</groupId>
                                             <artifactId>scenebuilder.jobs</artifactId>
@@ -83,7 +90,8 @@
 
                                     <!--temp-->
                                     <extension>
-                                        <uuid>1efa32d5-0673-4f6e-bb0b-7a57514e9cba</uuid>
+                                        <uuid>
+                                            1efa32d5-0673-4f6e-bb0b-7a57514e9cba</uuid>
                                         <dependency>
                                             <groupId>com.gluonhq.jfxapps</groupId>
                                             <artifactId>scenebuilder.ext.menu</artifactId>
@@ -91,26 +99,32 @@
                                         </dependency>
                                     </extension>
                                     <extension>
-                                        <uuid>f38264b5-aaea-444d-8ca8-f6d8ab910b2b</uuid>
+                                        <uuid>
+                                            f38264b5-aaea-444d-8ca8-f6d8ab910b2b</uuid>
                                         <dependency>
                                             <groupId>com.gluonhq.jfxapps</groupId>
-                                            <artifactId>scenebuilder.ext.exporter</artifactId>
+                                            <artifactId>
+                                                scenebuilder.ext.exporter</artifactId>
                                             <version>${scenebuilder.version}</version>
                                         </dependency>
                                     </extension>
                                     <extension>
-                                        <uuid>de080267-dca0-41ac-afda-9f9a5223a9cc</uuid>
+                                        <uuid>
+                                            de080267-dca0-41ac-afda-9f9a5223a9cc</uuid>
                                         <dependency>
                                             <groupId>com.gluonhq.jfxapps</groupId>
-                                            <artifactId>scenebuilder.ext.source.view</artifactId>
+                                            <artifactId>
+                                                scenebuilder.ext.source.view</artifactId>
                                             <version>${scenebuilder.version}</version>
                                         </dependency>
                                     </extension>
                                     <extension>
-                                        <uuid>ead87e42-0619-4d9c-8671-87d7a27e3277</uuid>
+                                        <uuid>
+                                            ead87e42-0619-4d9c-8671-87d7a27e3277</uuid>
                                         <dependency>
                                             <groupId>com.gluonhq.jfxapps</groupId>
-                                            <artifactId>scenebuilder.ext.source.gen</artifactId>
+                                            <artifactId>
+                                                scenebuilder.ext.source.gen</artifactId>
                                             <version>${scenebuilder.version}</version>
                                         </dependency>
                                     </extension>

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,18 +39,46 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-
-@RequiredArgsConstructor
 public class Project {
-    private final @Getter File root;
-    private final @Getter String name;
-    private final @Getter List<Project> subProjects = new ArrayList<>();
-    private final @Getter Map<String, List<ClassFile>> classes = new HashMap<>();
-    private final @Getter Map<String, ProjectFile> resources = new HashMap<>();
-    private @Getter @Setter ModuleFile moduleDescriptor;
+    private final File root;
+    private final String name;
+    private final List<Project> subProjects = new ArrayList<>();
+    private final Map<String, List<ClassFile>> classes = new HashMap<>();
+    private final Map<String, ProjectFile> resources = new HashMap<>();
+    private ModuleFile moduleDescriptor;
+
+    public Project(File root, String name) {
+        this.root = root;
+        this.name = name;
+    }
+
+    public File getRoot() {
+        return root;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Project> getSubProjects() {
+        return subProjects;
+    }
+
+    public Map<String, List<ClassFile>> getClasses() {
+        return classes;
+    }
+
+    public Map<String, ProjectFile> getResources() {
+        return resources;
+    }
+
+    public ModuleFile getModuleDescriptor() {
+        return moduleDescriptor;
+    }
+
+    public void setModuleDescriptor(ModuleFile moduleDescriptor) {
+        this.moduleDescriptor = moduleDescriptor;
+    }
 
     @Override
     public String toString() {

@@ -167,4 +167,18 @@ public class StringListPropertyMetadata<VC> extends ListValuePropertyMetadata<St
         }
     }
 
+    public static class ResourcesStringListPropertyMetadata<VC> extends StringListPropertyMetadata<VC> {
+
+      protected ResourcesStringListPropertyMetadata(AbstractBuilder<?,?, VC> builder) {
+          super(builder);
+      }
+
+      public static final class Builder<VC> extends AbstractBuilder<Builder<VC>, ResourcesStringListPropertyMetadata<VC>, VC> {
+          @Override
+          public ResourcesStringListPropertyMetadata<VC> build() {
+              return new ResourcesStringListPropertyMetadata<VC>(this);
+          }
+      }
+  }
+
 }
