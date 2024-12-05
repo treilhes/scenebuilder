@@ -31,19 +31,19 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.ext.strchk.controller;
+package com.gluonhq.jfxapps.app.devtools.cmpcheck.controller;
 
+import com.gluonhq.jfxapps.app.devtools.model.ClassFile;
 import com.gluonhq.jfxapps.app.devtools.model.Project;
 import com.gluonhq.jfxapps.app.devtools.model.ProjectFile;
-import com.gluonhq.jfxapps.app.devtools.model.StringOccurence;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class ResourceLocationItem {
+
+public class ComponentItem {
     private final Project project;
-    private final ProjectFile projectFile;
-    private final StringOccurence occurence;
+    private final ClassFile classFile;
 
     private Project matchProject;
     private ProjectFile matchProjectFile;
@@ -54,22 +54,33 @@ public class ResourceLocationItem {
     private StringProperty matchError = new SimpleStringProperty("");
     private StringProperty matchSolution = new SimpleStringProperty("");
 
-    public ResourceLocationItem(Project project, ProjectFile projectFile, StringOccurence occurence) {
+    public ComponentItem(Project project, ClassFile classFile) {
         this.project = project;
-        this.projectFile = projectFile;
-        this.occurence = occurence;
+        this.classFile = classFile;
+    }
+
+    public Project getMatchProject() {
+        return matchProject;
+    }
+
+    public void setMatchProject(Project matchProject) {
+        this.matchProject = matchProject;
+    }
+
+    public ProjectFile getMatchProjectFile() {
+        return matchProjectFile;
+    }
+
+    public void setMatchProjectFile(ProjectFile matchProjectFile) {
+        this.matchProjectFile = matchProjectFile;
     }
 
     public Project getProject() {
         return project;
     }
 
-    public ProjectFile getProjectFile() {
-        return projectFile;
-    }
-
-    public StringOccurence getOccurence() {
-        return occurence;
+    public ClassFile getClassFile() {
+        return classFile;
     }
 
     public String getProjectName() {
@@ -77,21 +88,20 @@ public class ResourceLocationItem {
     }
 
     public String getPackageName() {
-        return projectFile.getPackageName();
+        return classFile.getPackageName();
     }
 
     public String getFileName() {
-        return projectFile.getName();
+        return classFile.getName();
     }
 
-    public String getValue() {
-        return occurence.getValue();
+    public String getClassName() {
+        return classFile.getInnerClassName() == null ? classFile.getName().replace(".java", "") : classFile.getInnerClassName();
     }
 
     public final StringProperty matchProjectNameProperty() {
         return this.matchProjectName;
     }
-
 
     public final String getMatchProjectName() {
         return this.matchProjectNameProperty().get();
@@ -150,29 +160,12 @@ public class ResourceLocationItem {
         return this.matchSolution;
     }
 
-
     public final String getMatchSolution() {
         return this.matchSolutionProperty().get();
     }
 
     public final void setMatchSolution(final String matchSolution) {
         this.matchSolutionProperty().set(matchSolution);
-    }
-
-    public Project getMatchProject() {
-        return matchProject;
-    }
-
-    public void setMatchProject(Project matchProject) {
-        this.matchProject = matchProject;
-    }
-
-    public ProjectFile getMatchProjectFile() {
-        return matchProjectFile;
-    }
-
-    public void setMatchProjectFile(ProjectFile matchProjectFile) {
-        this.matchProjectFile = matchProjectFile;
     }
 
     public void updateMatch(Project matchProject, ProjectFile matchfile, String name, String error) {
@@ -187,8 +180,8 @@ public class ResourceLocationItem {
 
     @Override
     public String toString() {
-        return String.format("%s %s %s %s %s %s %s %s %s",
-                getProjectName(), getPackageName(), getFileName(), getValue(),
+        return String.format("%s %s %s %s %s %s %s %s",
+                getProjectName(), getPackageName(), getFileName(),
                 getMatchProjectName(), getMatchPackageName(), getMatchFileName(),
                 getMatchError(), getMatchSolution());
     }

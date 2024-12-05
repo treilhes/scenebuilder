@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,72 +31,70 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.ext.strchk.loader;
+package com.oracle.javafx.scenebuilder.devutils.cmpchk.loader;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
-import com.gluonhq.jfxapps.app.devtools.ext.strchk.config.Config;
-import com.gluonhq.jfxapps.app.devtools.ext.strchk.utils.Patterns;
-import com.gluonhq.jfxapps.app.devtools.ext.strchk.utils.StringValue;
 import com.gluonhq.jfxapps.app.devtools.model.ClassFile;
 import com.gluonhq.jfxapps.app.devtools.model.ModuleFile;
 import com.gluonhq.jfxapps.app.devtools.model.StringOccurence;
+import com.oracle.javafx.scenebuilder.devutils.cmpchk.config.utils.Patterns;
 
 public class ClassFileLoader {
 
-    public static ClassFile loadClassFile(File file) {
-        String name = file.getName().replace(".java", "");
+    public static List<ClassFile> loadClassFiles(File file) {
+        List<ClassFile> result = new ArrayList<>();
+
+        final String name = file.getName().replace(".java", "");
         try {
             List<String> lines = Files.readAllLines(file.toPath());
             String content = String.join("\n", lines);
             String packageName = Patterns.PACKAGE.matcher(content).results().findFirst().get().group(1);
-//            long numComponents = Patterns.COMPONENT.matcher(content).results().count();
-//            boolean hasComponent = numComponents > 0;
-//            boolean hasInnerComponent = Patterns.INNER_COMPONENT.matcher(content).results().findFirst().isPresent();
-//
-//            ClassFile cls = new ClassFile(file, packageName, hasComponent, hasInnerComponent, numComponents);
-            ClassFile cls = new ClassFile(file, packageName, false, false, -1);
 
-            for (String line:lines) {
-                String trimmed = line.trim();
+            final AtomicLong numComponents = new AtomicLong();
+            final AtomicBoolean isComponent = new AtomicBoolean();
+            final AtomicBoolean hasComponent = new AtomicBoolean();
 
-                if (!Config.DISABLE_ALL_FILTERS) {
-                    boolean prefixFound = Config.EXCLUDE_LINES_WITH_PREFIX.stream().anyMatch(trimmed::startsWith);
-                    if (prefixFound) {
-                        continue;
-                    }
+            Patterns.COMPONENT.matcher(content).results().forEach(r -> {
+                String cmpName = r.group(1);
 
-                    boolean suffixFound = Config.EXCLUDE_LINES_WITH_SUFFIX.stream().anyMatch(trimmed::endsWith);
-                    if (suffixFound) {
-                        continue;
-                    }
-
-    //                if (line.contains("@SuppressWarnings")) {
-    //                    System.out.println();
-    //                }
-
-                    boolean patternFound = Config.EXCLUDE_LINES_WITH_PATTERN.stream().anyMatch(p -> p.matcher(trimmed).matches());
-                    if (patternFound) {
-                        patternFound = Config.INCLUDE_LINES_WITH_PATTERN.stream().anyMatch(p -> p.matcher(trimmed).matches());
-                        if (!patternFound) {
-                            continue;
-                        }
-                    }
+                numComponents.incrementAndGet();
+                if (cmpName.equals(name)) {
+                    isComponent.set(true);
+                } else {
+                    ClassFile inner = new ClassFile(name + "." + cmpName, file, packageName, true, false, 1);
+                    result.add(inner);
+                    hasComponent.set(true);
                 }
-                Patterns.STRING.matcher(line).results().forEach(r -> {
-                    if (StringValue.isValidCandidate(r.group(1))) {
-                        cls.getStringOccurences().add(new StringOccurence(r.group(1)));
-                    }
+            });
+
+            ClassFile cls = new ClassFile(file, packageName, isComponent.get(), hasComponent.get(), numComponents.get());
+
+            if (Patterns.EXTENSION_CLASS_CHECK.matcher(content).results().count() > 0) {
+                Patterns.EXTENSION_CLASS_REGISTER_CONTENT.matcher(content).results().forEach(r -> {
+
+                    String registerContent = r.group(2);
+                    Patterns.REGISTER_CONTENT_CLASSES.matcher(registerContent).results().forEach(c -> {
+
+                        String className = c.group(1);
+                        cls.getStringOccurences().add(new StringOccurence(className));
+                    });
                 });
             }
 
 
-            return cls;
+            result.add(cls);
+
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
-            return new ClassFile(file, null, false, false, -1);
+            return Collections.emptyList();
         }
     }
 

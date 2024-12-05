@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,16 +31,35 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+package com.oracle.javafx.scenebuilder.devutils.cmpchk.config;
 
-open module devtools.api {
-    exports com.gluonhq.jfxapps.app.devtools.api;
-    exports com.gluonhq.jfxapps.app.devtools.api.menu;
-    exports com.gluonhq.jfxapps.app.devtools.api.ui;
+import java.util.List;
+import java.util.regex.Pattern;
 
-    requires transitive jfxapps.core.api;
-    requires transitive devtools.model;
+public class Config {
 
-    provides Extension with DevtoolsApiExtension;
+    public static boolean DISABLE_ALL_FILTERS = false;
+
+    public static final List<String> EXCLUDE_LINES_WITH_PREFIX = List.of();
+    public static final List<String> EXCLUDE_LINES_WITH_SUFFIX = List.of(
+            "//NOCHECK", "//NOCHECK", "// NOI18N", "// NOCHECK");
+
+    public static final List<Pattern> EXCLUDE_LINES_WITH_PATTERN = List.of(
+                Pattern.compile(".*@SuppressWarnings\\(\".*?\"\\).*"),
+                Pattern.compile(".*Exception\\(\".*?\"\\);.*"),
+                Pattern.compile(".*logger\\..*?\\(\".*?\".*"),
+                Pattern.compile(".*\\*.*")
+            );
+
+    public static final List<Pattern> INCLUDE_LINES_WITH_PATTERN = List.of(
+            Pattern.compile(".*\\*.*src=\"doc-files/.*")
+        );
+    public static final List<String> EXCLUDED_VALUES = List.of("AS IS", "UNSET", "true", "false", "null", "\\n", "\\n\\n");
+    public static final List<String> EXCLUDE_VALUES_STARTING_WITH = List.of("http://", "https://","-");
+    public static final List<String> EXCLUDE_VALUES_CONTAINING = List.of("*"," ");
+    public static final List<Pattern> EXCLUDE_VALUES_WITH_PATTERN = List.of(
+            Pattern.compile("fx:.*"),
+            Pattern.compile("[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}")
+            );
+
 }

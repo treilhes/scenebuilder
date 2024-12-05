@@ -18,6 +18,7 @@
       <module>devtools.cmpchek</module>
       <module>devtools.registry</module>
       <module>devtools.openapi</module>
+      <module>devtools.jpms</module>
   </modules>
 
   <dependencyManagement>

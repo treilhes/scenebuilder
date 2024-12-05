@@ -31,11 +31,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.ext.strchk.loader;
+package com.oracle.javafx.scenebuilder.devutils.cmpchk.loader;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
+import com.gluonhq.jfxapps.app.devtools.model.ClassFile;
 import com.gluonhq.jfxapps.app.devtools.model.Project;
 import com.gluonhq.jfxapps.app.devtools.model.config.CommonConfig;
 import com.gluonhq.jfxapps.app.devtools.model.utils.ModelUtils;
@@ -60,31 +62,7 @@ public class ProjectLoader {
             loadJavaSources(project, javaSources);
         }
 
-        File javaResources = new File(root, CommonConfig.PROJECT_RESOURCE_FOLDER);
-        if (javaResources.exists() && javaResources.isDirectory()) {
-            loadJavaResources(project, javaResources);
-        }
-
         return project;
-    }
-
-    private static void loadJavaResources(Project project, File javaResources) {
-        for (var file:javaResources.listFiles()) {
-            if (file.isDirectory()) {
-                loadJavaResources(project, file);
-            } else {
-                String relativePath = ModelUtils.relativePath(project, file);
-                if (file.getName().toLowerCase().endsWith(".properties")) {
-                    project.getResources().put(relativePath, ResourceLoader.loadI18nFile(file));
-                } else if (file.getName().toLowerCase().endsWith(".fxml")) {
-                    project.getResources().put(relativePath, ResourceLoader.loadFxmlFile(file));
-                } else if (file.getName().toLowerCase().endsWith(".css")) {
-                    project.getResources().put(relativePath, ResourceLoader.loadCssFile(file));
-                } else {
-                    project.getResources().put(relativePath, ResourceLoader.loadResourceFile(file));
-                }
-            }
-        }
     }
 
     private static void loadJavaSources(Project project, File javaSources) {
@@ -96,11 +74,12 @@ public class ProjectLoader {
                 if (file.getName().toLowerCase().equals("module-info.java")) {
                     project.setModuleDescriptor(ClassFileLoader.loadModuleFile(file));
                 } else if (file.getName().toLowerCase().endsWith(".java")) {
-                    project.getClasses().computeIfAbsent(relativePath, (k) -> new ArrayList<>()).add(ClassFileLoader.loadClassFile(file));
+                    List<ClassFile> clsFiles = ClassFileLoader.loadClassFiles(file);
+
+                    for (ClassFile c : clsFiles) {
+                        project.getClasses().computeIfAbsent(relativePath, (k) -> new ArrayList<>()).add(c);
+                    }
                 }
-//                else  {
-//                    project.getResources().add(ResourceLoader.loadResourceFile(file));
-//                }
             }
         }
     }

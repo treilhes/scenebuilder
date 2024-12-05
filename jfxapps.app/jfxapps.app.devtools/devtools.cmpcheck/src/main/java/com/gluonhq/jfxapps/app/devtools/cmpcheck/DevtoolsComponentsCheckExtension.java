@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.app.devtools.cmpcheck.controller.ComponentController;
+import com.gluonhq.jfxapps.app.devtools.cmpcheck.controller.ComponentDeclarationsController;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 
 public class DevtoolsComponentsCheckExtension implements OpenExtension  {
@@ -58,8 +58,7 @@ public class DevtoolsComponentsCheckExtension implements OpenExtension  {
     @Override
     public List<Class<?>> exportedContextClasses() {
         return List.of(
-
-                ComponentController.class
+                ComponentDeclarationsController.class
                 );
     }
 

@@ -31,16 +31,23 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+package com.oracle.javafx.scenebuilder.devutils.cmpchk.config.utils;
 
-open module devtools.api {
-    exports com.gluonhq.jfxapps.app.devtools.api;
-    exports com.gluonhq.jfxapps.app.devtools.api.menu;
-    exports com.gluonhq.jfxapps.app.devtools.api.ui;
+import java.util.regex.Pattern;
 
-    requires transitive jfxapps.core.api;
-    requires transitive devtools.model;
+public interface Patterns {
 
-    provides Extension with DevtoolsApiExtension;
+    //public static Pattern STRING = Pattern.compile("\"(.*?)\"");
+
+    //public static Pattern STRING_IN_FXML = Pattern.compile("(?:source|url|stylesheets|resources)=\"(.*?)\"");
+    //public static Pattern I18N_STRING_IN_FXML = Pattern.compile("=\"%(.*?)\"");
+
+    public static Pattern PACKAGE = Pattern.compile("package (.*);");
+
+    public static Pattern COMPONENT = Pattern.compile("@Component[^;\\{]*? class (\\S*?)[ \\{<]+(.*?)\\R");
+
+    public static Pattern EXTENSION_CLASS_CHECK = Pattern.compile("extends AbstractExtension");
+
+    public static Pattern EXTENSION_CLASS_REGISTER_CONTENT = Pattern.compile("(?s)explicitClassToRegister\\(\\)(.*?)\\{(.*?)}");
+    public static Pattern REGISTER_CONTENT_CLASSES = Pattern.compile("([\\.1-9a-zA-Z_]*)\\.class");
 }

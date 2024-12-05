@@ -31,16 +31,53 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+package com.gluonhq.jfxapps.app.devtools.model;
 
-open module devtools.api {
-    exports com.gluonhq.jfxapps.app.devtools.api;
-    exports com.gluonhq.jfxapps.app.devtools.api.menu;
-    exports com.gluonhq.jfxapps.app.devtools.api.ui;
+import java.io.File;
 
-    requires transitive jfxapps.core.api;
-    requires transitive devtools.model;
+public class ClassFile extends ProjectFile {
 
-    provides Extension with DevtoolsApiExtension;
+    private final boolean isComponent;
+    private final boolean hasInnerComponent;
+    private final long declaredComponents;
+    private final boolean innerClass;
+    private final String innerClassName;
+
+    public ClassFile(File source, String packageName, boolean hasComponent, boolean hasInnerComponent,
+            long declaredComponents) {
+        this(null, source, packageName, hasComponent, hasInnerComponent, declaredComponents);
+    }
+
+    public ClassFile(String innerClassName, File source, String packageName, boolean isComponent, boolean hasInnerComponent,
+            long declaredComponents) {
+        super(source, packageName);
+        this.isComponent = isComponent;
+        this.hasInnerComponent = hasInnerComponent;
+        this.declaredComponents = declaredComponents;
+        this.innerClass = innerClassName != null;
+        this.innerClassName = innerClassName;
+
+    }
+
+    public boolean isComponent() {
+        return isComponent;
+    }
+
+    public boolean isHasInnerComponent() {
+        return hasInnerComponent;
+    }
+
+    public long getDeclaredComponents() {
+        return declaredComponents;
+    }
+
+    public boolean isInnerClass() {
+        return innerClass;
+    }
+
+    public String getInnerClassName() {
+        return innerClassName;
+    }
+
+
 }

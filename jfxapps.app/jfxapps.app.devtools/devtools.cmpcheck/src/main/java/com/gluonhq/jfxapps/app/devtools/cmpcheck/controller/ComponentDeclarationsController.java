@@ -31,10 +31,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.ext.strchk.controller;
+package com.gluonhq.jfxapps.app.devtools.cmpcheck.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,8 +44,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.gluonhq.jfxapps.app.devtools.api.ui.Docks;
-import com.gluonhq.jfxapps.app.devtools.ext.strchk.config.Config;
-import com.gluonhq.jfxapps.app.devtools.ext.strchk.loader.ProjectLoader;
 import com.gluonhq.jfxapps.app.devtools.model.Project;
 import com.gluonhq.jfxapps.app.devtools.model.config.CommonConfig;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
@@ -53,6 +53,7 @@ import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
+import com.oracle.javafx.scenebuilder.devutils.cmpchk.loader.ProjectLoader;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -75,16 +76,16 @@ import javafx.util.Callback;
 
 @ApplicationInstanceSingleton
 @ViewAttachment(
-        name = "Resource Locations",
-        id = "6b999162-bce3-455e-8898-fd759f986369",
+        name = "Component Checks",
+        id = "93301219-2d4d-4333-ae80-157e09bcc685",
         prefDockId = Docks.CENTER_DOCK_ID,
         openOnStart = false,
         selectOnStart = false,
-        order = 3000,
-        icon = "i18n_tool.png",
-        iconX2 = "i18n_tool@2x.png"
+        order = 2000,
+        icon = "cmpcheck_tool.png",
+        iconX2 = "cmpcheck_tool@2x.png"
         )
-public class ResourceLocationsController extends AbstractFxmlViewController {
+public class ComponentDeclarationsController extends AbstractFxmlViewController {
 
     @FXML
     private Label numberOfValues;
@@ -99,34 +100,34 @@ public class ResourceLocationsController extends AbstractFxmlViewController {
     private Label numberOfUndefined;
 
     @FXML
-    private TableView<ResourceLocationItem> valuesTable;
+    private TableView<ComponentItem> valuesTable;
 
     @FXML
-    private TableColumn<ResourceLocationItem, String> projectColumn;
+    private TableColumn<ComponentItem, String> projectColumn;
 
     @FXML
-    private TableColumn<ResourceLocationItem, String> packageColumn;
+    private TableColumn<ComponentItem, String> packageColumn;
 
     @FXML
-    private TableColumn<ResourceLocationItem, String> fileColumn;
+    private TableColumn<ComponentItem, String> fileColumn;
 
     @FXML
-    private TableColumn<ResourceLocationItem, String> valueColumn;
+    private TableColumn<ComponentItem, String> classColumn;
 
     @FXML
-    private TableColumn<ResourceLocationItem, String> matchProjectColumn;
+    private TableColumn<ComponentItem, String> matchProjectColumn;
 
     @FXML
-    private TableColumn<ResourceLocationItem, String> matchPackageColumn;
+    private TableColumn<ComponentItem, String> matchPackageColumn;
 
     @FXML
-    private TableColumn<ResourceLocationItem, String> matchFileColumn;
+    private TableColumn<ComponentItem, String> matchFileColumn;
 
     @FXML
-    private TableColumn<ResourceLocationItem, String> matchErrorColumn;
+    private TableColumn<ComponentItem, String> matchErrorColumn;
 
     @FXML
-    private TableColumn<ResourceLocationItem, String> matchSolutionColumn;
+    private TableColumn<ComponentItem, String> matchSolutionColumn;
 
     @FXML
     private TextField searchField;
@@ -141,12 +142,12 @@ public class ResourceLocationsController extends AbstractFxmlViewController {
 
     private int lastIndex;
 
-    protected ResourceLocationsController(
+    protected ComponentDeclarationsController(
             I18N i18n,
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
             ViewMenu viewMenu) {
-        super(i18n, scenebuilderManager, documentManager, viewMenu, ResourceLocationsController.class.getResource("ResourceLocations.fxml"));
+        super(i18n, scenebuilderManager, documentManager, viewMenu, ComponentDeclarationsController.class.getResource("ComponentDeclarations.fxml"));
     }
 
     @FXML
@@ -156,7 +157,7 @@ public class ResourceLocationsController extends AbstractFxmlViewController {
         projectColumn.setCellValueFactory(new PropertyValueFactory<>("projectName"));
         packageColumn.setCellValueFactory(new PropertyValueFactory<>("packageName"));
         fileColumn.setCellValueFactory(new PropertyValueFactory<>("fileName"));
-        valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
+        classColumn.setCellValueFactory(new PropertyValueFactory<>("className"));
 
         matchProjectColumn.setCellValueFactory(new PropertyValueFactory<>("matchProjectName"));
         matchPackageColumn.setCellValueFactory(new PropertyValueFactory<>("matchPackageName"));
@@ -167,7 +168,7 @@ public class ResourceLocationsController extends AbstractFxmlViewController {
         addTooltipToColumnCells(projectColumn);
         addTooltipToColumnCells(packageColumn);
         addTooltipToColumnCells(fileColumn);
-        addTooltipToColumnCells(valueColumn);
+        addTooltipToColumnCells(classColumn);
         addTooltipToColumnCells(matchProjectColumn);
         addTooltipToColumnCells(matchPackageColumn);
         addTooltipToColumnCells(matchFileColumn);
@@ -180,21 +181,30 @@ public class ResourceLocationsController extends AbstractFxmlViewController {
         applyFilterCheckbox.selectedProperty().addListener((ob, o , n) -> Config.DISABLE_ALL_FILTERS = !n);
     }
 
+    private <T> void addTooltipToColumnCells(TableColumn<ComponentItem,T> column) {
 
-    @Override
-    public void controllerDidLoadFxml() {
-        getRoot().setId(ResourceLocationsController.class.getSimpleName());
-        getRoot().minWidth(400.0);
-        getRoot().minHeight(400.0);
+        Callback<TableColumn<ComponentItem, T>, TableCell<ComponentItem,T>> existingCellFactory
+            = column.getCellFactory();
+
+        column.setCellFactory(c -> {
+            TableCell<ComponentItem, T> cell = existingCellFactory.call(c);
+
+            Tooltip tooltip = new Tooltip();
+            // can use arbitrary binding here to make text depend on cell
+            // in any way you need:
+            tooltip.textProperty().bind(cell.itemProperty().asString());
+
+            cell.setTooltip(tooltip);
+            return cell ;
+        });
     }
-
 
     public void initialize(Project project) {
         System.out.println(new Date());
 
         long start = System.currentTimeMillis();
 
-        ObservableList<ResourceLocationItem> items = accumulateData(project);
+        ObservableList<ComponentItem> items = accumulateData(project);
 
         long accumul = System.currentTimeMillis();
 
@@ -203,8 +213,14 @@ public class ResourceLocationsController extends AbstractFxmlViewController {
             long mstart = System.currentTimeMillis();
             MatchFinder.findMatch(project, it);
             long mend = System.currentTimeMillis();
-            System.out.println(String.format("Match %s time %s ms : %s", idx.incrementAndGet() ,(mend - mstart), it.getValue()));
+            System.out.println(String.format("Match %s time %s ms", idx.incrementAndGet() ,(mend - mstart)));
         });
+
+        Comparator<ComponentItem> comparator = Comparator
+                .comparing(ComponentItem::getProjectName)
+                .thenComparing(ComponentItem::getClassName);
+
+        Collections.sort(items, comparator);
 
         long match = System.currentTimeMillis();
 
@@ -227,35 +243,15 @@ public class ResourceLocationsController extends AbstractFxmlViewController {
         valuesTable.setItems(items);
     }
 
-    private <T> void addTooltipToColumnCells(TableColumn<ResourceLocationItem,T> column) {
+    private ObservableList<ComponentItem> accumulateData(Project project) {
+        final ObservableList<ComponentItem> datas = FXCollections.observableArrayList();
 
-        Callback<TableColumn<ResourceLocationItem, T>, TableCell<ResourceLocationItem,T>> existingCellFactory
-            = column.getCellFactory();
+        project.getClasses().values().stream()
+        .filter(v -> v != null)
+        .flatMap(v -> v.stream())
+        .filter(cls -> cls.isComponent())
+        .forEach(cls -> datas.add(new ComponentItem(project, cls)));
 
-        column.setCellFactory(c -> {
-            TableCell<ResourceLocationItem, T> cell = existingCellFactory.call(c);
-
-            Tooltip tooltip = new Tooltip();
-            // can use arbitrary binding here to make text depend on cell
-            // in any way you need:
-            tooltip.textProperty().bind(cell.itemProperty().asString());
-
-            cell.setTooltip(tooltip);
-            return cell ;
-        });
-    }
-
-
-    private ObservableList<ResourceLocationItem> accumulateData(Project project) {
-        final ObservableList<ResourceLocationItem> datas = FXCollections.observableArrayList();
-
-        project.getClasses().values().stream().filter(v -> v != null)
-            .flatMap(v -> v.stream()).forEach(cls -> cls.getStringOccurences().forEach(str -> {
-            datas.add(new ResourceLocationItem(project, cls, str));
-        }));
-        project.getResources().values().forEach(cls -> cls.getStringOccurences().forEach(str -> {
-            datas.add(new ResourceLocationItem(project, cls, str));
-        }));
 
         project.getSubProjects().forEach(sp -> {
             datas.addAll(accumulateData(sp));
@@ -290,6 +286,22 @@ public class ResourceLocationsController extends AbstractFxmlViewController {
             content.put(DataFormat.PLAIN_TEXT,
                     valuesTable.getSelectionModel().getSelectedItems().stream()
                     .map(i -> i.toString()).collect(Collectors.joining("\n")));
+        }
+
+        Clipboard.getSystemClipboard().setContent(content);
+    }
+
+    @FXML
+    private void copyToPaste(ActionEvent event) {
+        final Map<DataFormat, Object> content = new HashMap<>();
+
+        if (valuesTable.getSelectionModel().isEmpty()) {
+            content.put(DataFormat.PLAIN_TEXT, valuesTable.getItems().stream()
+                    .map(i -> i.getClassName() + ".class").collect(Collectors.joining(",\n")));
+        } else {
+            content.put(DataFormat.PLAIN_TEXT,
+                    valuesTable.getSelectionModel().getSelectedItems().stream()
+                    .map(i -> i.getClassName() + ".class").collect(Collectors.joining(",\n")));
         }
 
         Clipboard.getSystemClipboard().setContent(content);
@@ -337,5 +349,4 @@ public class ResourceLocationsController extends AbstractFxmlViewController {
         // TODO Auto-generated method stub
 
     }
-
 }

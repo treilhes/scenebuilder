@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -43,11 +43,11 @@ public interface Patterns {
     public static Pattern I18N_STRING_IN_FXML = Pattern.compile("=\"%(.*?)\"");
 
     public static Pattern PACKAGE = Pattern.compile("package (.*);");
-    //public static Pattern COMPONENT = Pattern.compile("\\R[ \\t]*@Component(?:\\(.*?\\))?(\\R[ \\t]*@.*)*\\R[ \\t]*(.*?)class (\\S*?)[ \\{]+(.*?)\\R");
-    public static Pattern COMPONENT = Pattern.compile("@Component[^;\\{]*? class (\\S*?)[ \\{<]+(.*?)\\R");
 
-    public static Pattern EXTENSION_CLASS_CHECK = Pattern.compile("extends AbstractExtension");
+    //public static Pattern COMPONENT = Pattern.compile("@Component[^;\\{]*? class (\\S*?)[ \\{<]+(.*?)\\R");
 
-    public static Pattern EXTENSION_CLASS_REGISTER_CONTENT = Pattern.compile("(?s)explicitClassToRegister\\(\\)(.*?)\\{(.*?)}");
-    public static Pattern REGISTER_CONTENT_CLASSES = Pattern.compile("([\\.1-9a-zA-Z_]*)\\.class");
+    //public static Pattern EXTENSION_CLASS_CHECK = Pattern.compile("extends AbstractExtension");
+
+    //public static Pattern EXTENSION_CLASS_REGISTER_CONTENT = Pattern.compile("(?s)explicitClassToRegister\\(\\)(.*?)\\{(.*?)}");
+    //public static Pattern REGISTER_CONTENT_CLASSES = Pattern.compile("([\\.1-9a-zA-Z_]*)\\.class");
 }

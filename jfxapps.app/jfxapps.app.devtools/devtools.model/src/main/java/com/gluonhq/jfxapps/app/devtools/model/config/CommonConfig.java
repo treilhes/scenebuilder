@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,16 +31,18 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+package com.gluonhq.jfxapps.app.devtools.model.config;
 
-open module devtools.api {
-    exports com.gluonhq.jfxapps.app.devtools.api;
-    exports com.gluonhq.jfxapps.app.devtools.api.menu;
-    exports com.gluonhq.jfxapps.app.devtools.api.ui;
+import java.util.List;
 
-    requires transitive jfxapps.core.api;
-    requires transitive devtools.model;
+public class CommonConfig {
 
-    provides Extension with DevtoolsApiExtension;
+    public static final String ROOT_PROJECT = "../";
+
+    public static final String PROJECT_JAVA_FOLDER = "src/main/java";
+    public static final String PROJECT_RESOURCE_FOLDER = "src/main/resources";
+
+
+    public static final List<String> EXCLUDED_PROJECTS = List.of("dev.utils", "docs");
+
 }

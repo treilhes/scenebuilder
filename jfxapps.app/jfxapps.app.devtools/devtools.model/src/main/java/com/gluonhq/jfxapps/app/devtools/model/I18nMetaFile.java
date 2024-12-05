@@ -31,16 +31,32 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+package com.gluonhq.jfxapps.app.devtools.model;
 
-open module devtools.api {
-    exports com.gluonhq.jfxapps.app.devtools.api;
-    exports com.gluonhq.jfxapps.app.devtools.api.menu;
-    exports com.gluonhq.jfxapps.app.devtools.api.ui;
+import java.util.ArrayList;
+import java.util.List;
 
-    requires transitive jfxapps.core.api;
-    requires transitive devtools.model;
+public class I18nMetaFile {
+    private final String name;
+    private final String packageName;
+    private final List<I18nFile> i18nFiles = new ArrayList<>();
 
-    provides Extension with DevtoolsApiExtension;
+    public I18nMetaFile(String name, String packageName) {
+        this.name = name;
+        this.packageName = packageName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public List<I18nFile> getI18nFiles() {
+        return i18nFiles;
+    }
+
+
 }

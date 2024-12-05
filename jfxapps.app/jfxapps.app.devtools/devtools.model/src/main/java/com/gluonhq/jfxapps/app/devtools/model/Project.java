@@ -33,51 +33,58 @@
  */
 package com.gluonhq.jfxapps.app.devtools.model;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.scene.Node;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Project {
+    private final File root;
+    private final String name;
+    private final List<Project> subProjects = new ArrayList<>();
+    private final Map<String, List<ClassFile>> classes = new HashMap<>();
+    private final Map<String, ProjectFile> resources = new HashMap<>();
+    private ModuleFile moduleDescriptor;
 
-    private StringProperty rootPath = new SimpleStringProperty();
-    private StringProperty name = new SimpleStringProperty();
-    private ObjectProperty<Node> content = new SimpleObjectProperty<>();
+    public Project(File root, String name) {
+        super();
+        this.root = root;
+        this.name = name;
+    }
+
+    public ModuleFile getModuleDescriptor() {
+        return moduleDescriptor;
+    }
+
+    public void setModuleDescriptor(ModuleFile moduleDescriptor) {
+        this.moduleDescriptor = moduleDescriptor;
+    }
+
+    public File getRoot() {
+        return root;
+    }
 
     public String getName() {
-        return name.get();
-    }
-
-    public void setName(String name) {
-        this.name.set(name);
-    }
-
-    public StringProperty nameProperty() {
         return name;
     }
 
-    public String getRootPath() {
-        return rootPath.get();
+    public List<Project> getSubProjects() {
+        return subProjects;
     }
 
-    public void setRootPath(String rootPath) {
-        this.rootPath.set(rootPath);
+    public Map<String, List<ClassFile>> getClasses() {
+        return classes;
     }
 
-    public StringProperty rootPathProperty() {
-        return rootPath;
+    public Map<String, ProjectFile> getResources() {
+        return resources;
     }
 
-    public Node getContent() {
-        return content.get();
+    @Override
+    public String toString() {
+        return "Project [name=" + name + ", subProjects=" + subProjects.size() + ", classes=" + classes.size()
+                + ", resources=" + resources.size() + "]";
     }
 
-    public void setContent(Node content) {
-        this.content.set(content);
-    }
-
-    public ObjectProperty<Node> contentProperty() {
-        return content;
-    }
 }

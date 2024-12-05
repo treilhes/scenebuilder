@@ -39,14 +39,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Properties;
 
-import com.gluonhq.jfxapps.app.devtools.ext.strchk.config.CommonConfig;
-import com.gluonhq.jfxapps.app.devtools.ext.strchk.model.CssFile;
-import com.gluonhq.jfxapps.app.devtools.ext.strchk.model.FxmlFile;
-import com.gluonhq.jfxapps.app.devtools.ext.strchk.model.I18nFile;
-import com.gluonhq.jfxapps.app.devtools.ext.strchk.model.ResourceFile;
-import com.gluonhq.jfxapps.app.devtools.ext.strchk.model.StringOccurence;
 import com.gluonhq.jfxapps.app.devtools.ext.strchk.utils.Patterns;
 import com.gluonhq.jfxapps.app.devtools.ext.strchk.utils.StringValue;
+import com.gluonhq.jfxapps.app.devtools.model.CssFile;
+import com.gluonhq.jfxapps.app.devtools.model.FxmlFile;
+import com.gluonhq.jfxapps.app.devtools.model.I18nFile;
+import com.gluonhq.jfxapps.app.devtools.model.ResourceFile;
+import com.gluonhq.jfxapps.app.devtools.model.StringOccurence;
+import com.gluonhq.jfxapps.app.devtools.model.config.CommonConfig;
 
 public class ResourceLoader {
 

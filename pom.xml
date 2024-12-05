@@ -14,7 +14,7 @@
     <url>https://github.com/gluonhq/scenebuilder</url>
 
     <modules>
-        <!--<module>dev.utils</module>-->
+
         <module>fxml.serializer</module>
         <module>jfxapps.app</module>
         <module>jfxapps.boot</module>

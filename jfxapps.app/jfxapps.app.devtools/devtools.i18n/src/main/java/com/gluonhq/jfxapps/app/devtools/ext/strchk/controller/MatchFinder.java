@@ -39,11 +39,11 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
-import com.gluonhq.jfxapps.app.devtools.ext.strchk.config.CommonConfig;
-import com.gluonhq.jfxapps.app.devtools.ext.strchk.model.I18nFile;
-import com.gluonhq.jfxapps.app.devtools.ext.strchk.model.Project;
-import com.gluonhq.jfxapps.app.devtools.ext.strchk.model.ProjectFile;
-import com.gluonhq.jfxapps.app.devtools.ext.strchk.utils.ModelUtils;
+import com.gluonhq.jfxapps.app.devtools.model.I18nFile;
+import com.gluonhq.jfxapps.app.devtools.model.Project;
+import com.gluonhq.jfxapps.app.devtools.model.ProjectFile;
+import com.gluonhq.jfxapps.app.devtools.model.config.CommonConfig;
+import com.gluonhq.jfxapps.app.devtools.model.utils.ModelUtils;
 
 public class MatchFinder {
 

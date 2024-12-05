@@ -31,16 +31,36 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+package com.gluonhq.jfxapps.app.devtools.model;
 
-open module devtools.api {
-    exports com.gluonhq.jfxapps.app.devtools.api;
-    exports com.gluonhq.jfxapps.app.devtools.api.menu;
-    exports com.gluonhq.jfxapps.app.devtools.api.ui;
+import java.io.File;
+import java.util.Properties;
 
-    requires transitive jfxapps.core.api;
-    requires transitive devtools.model;
 
-    provides Extension with DevtoolsApiExtension;
+public class I18nFile extends ProjectFile {
+    private final String baseName;
+    private final String locale;
+    private final Properties properties;
+
+    public I18nFile(File source, String packageName, String locale, Properties properties) {
+        super(source, packageName);
+        this.locale = locale;
+        this.properties = properties;
+
+        boolean localized = getName().contains("_");
+        String baseName = getName().substring(0, localized ? getName().indexOf("_") : getName().indexOf("."));
+        this.baseName = baseName;
+    }
+
+    public String getBaseName() {
+        return baseName;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
 }
