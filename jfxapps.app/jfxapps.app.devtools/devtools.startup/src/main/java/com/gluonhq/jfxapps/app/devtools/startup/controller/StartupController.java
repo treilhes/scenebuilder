@@ -33,17 +33,24 @@
  */
 package com.gluonhq.jfxapps.app.devtools.startup.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
 import org.springframework.boot.context.metrics.buffering.StartupTimeline;
 import org.springframework.boot.context.metrics.buffering.StartupTimeline.TimelineEvent;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.metrics.ApplicationStartup;
 
 import com.gluonhq.jfxapps.app.devtools.api.ui.Docks;
 import com.gluonhq.jfxapps.boot.api.context.ContextManager;
@@ -59,11 +66,13 @@ import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.VBox;
 
@@ -73,46 +82,80 @@ public class StartupController extends AbstractFxmlViewController {
 
     private final ModuleLayerManager moduleLayerManager;
     private final ContextManager contextManager;
+    private final Optional<ApplicationStartup> startup;
 
     @FXML
     ScrollPane scrollPane;
 
-    protected StartupController(I18N i18n, ApplicationEvents scenebuilderManager,
-            ApplicationInstanceEvents documentManager, ViewMenu viewMenu, ModuleLayerManager moduleLayerManager,
-            ContextManager contextManager) {
+    @FXML
+    VBox result;
+
+    @FXML
+    TextField filterText;
+
+    @FXML
+    Label globalSums;
+
+    private Pattern filterPattern;
+    private List<EventTree> trees;
+
+
+    //@formatter:off
+    protected StartupController(
+            I18N i18n,
+            ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager,
+            ViewMenu viewMenu,
+            ModuleLayerManager moduleLayerManager,
+            ContextManager contextManager,
+            Optional<ApplicationStartup> startup) {
+        //@formatter:on
         super(i18n, scenebuilderManager, documentManager, viewMenu,
                 StartupController.class.getResource("Startup.fxml"));
         this.moduleLayerManager = moduleLayerManager;
         this.contextManager = contextManager;
+        this.startup = startup;
     }
 
     @FXML
     public void initialize() {
-
+        scrollPane.setMaxHeight(Double.MAX_VALUE);
+        scrollPane.setMaxWidth(Double.MAX_VALUE);
     }
 
     @Override
     public void controllerDidLoadFxml() {
         getRoot().setId(StartupController.class.getSimpleName());
-        // getRoot().minWidth(400.0);
-        // getRoot().minHeight(400.0);
     }
 
     public void cleanAndPopulate() {
 
-        var trees = getTrees();
+        var createStep = startup.map(s -> s.start("startup.create.tree"));
+        trees = getTrees();
+        createStep.ifPresent(s -> s.end());
 
-        var vBox = new VBox();
+        var updateStep = startup.map(s -> s.start("startup.update.ui"));
+        result.getChildren().clear();
+
+        long bootAll = 0;
+        long runtimeAll = 0;
 
         for (var tree : trees) {
             var accordion = createAccordion(tree);
             accordion.setPadding(new Insets(5));
-            vBox.getChildren().add(accordion);
+            result.getChildren().add(accordion);
+
+            bootAll += tree.getBootDuration();
+            runtimeAll += tree.getRuntimeDuration();
         }
 
-        scrollPane.setMaxHeight(Double.MAX_VALUE);
-        scrollPane.setMaxWidth(Double.MAX_VALUE);
-        scrollPane.setContent(vBox);
+        String global = String.format("Boots: %s ms, Runtimes %s ms, Global: %s ms", bootAll, runtimeAll, bootAll + runtimeAll);
+        globalSums.setText(global);
+
+        updateStep.ifPresent(s -> s.end());
+
+
+
 
     }
 
@@ -127,11 +170,69 @@ public class StartupController extends AbstractFxmlViewController {
 
     }
 
+    @FXML
+    void applyFilter(ActionEvent event) {
+        try {
+            filterPattern = Pattern.compile(filterText.getText());
+            cleanAndPopulate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void clearFilter(ActionEvent event) {
+        if (filterPattern != null) {
+            filterPattern = null;
+            cleanAndPopulate();
+        }
+    }
+
+    @FXML
+    void exportToFile(ActionEvent event) {
+        if (trees != null) {
+            StringBuilder builder = new StringBuilder();
+            trees.stream().forEach(t -> exportTree(t, builder));
+            try {
+                Files.writeString(Path.of("export.txt"), builder, StandardOpenOption.CREATE);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void exportTree(EventTree tree, StringBuilder builder) {
+        var boot = tree.getBoot();
+        if (boot != null) {
+            toString(tree, boot, builder);
+        }
+
+        if (!tree.getChildrenContext().isEmpty()) {
+            for (var child : tree.getChildrenContext()) {
+                exportTree(child, builder);
+            }
+            var bootDuration = tree.getChildrenContextBootDurationn();
+            var runtimeDuration = tree.getChildrenContextRuntimeDurationn();
+            var title = String.format("Child contexts - Boot: %s ms - Runtime %s ms", bootDuration, runtimeDuration);
+            builder.append(title).append("\n");
+        }
+
+        var runtime = tree.getRuntime();
+        if (!runtime.isEmpty()) {
+            for (var child : runtime) {
+                toString(tree, child, builder);
+            }
+            var runtimeDuration = tree.getRuntimeDuration();
+            var title = String.format("Runtime - %s ms", runtimeDuration);
+            builder.append(title).append("\n");
+        }
+    }
+
     private Accordion createAccordion(EventTree tree) {
 
-
         var boot = tree.getBoot();
-        var accordion = toAccordion(tree, boot);
+        var accordion = boot == null ? new Accordion() : toAccordion(tree, boot);
 
         if (!tree.getChildrenContext().isEmpty()) {
             var vBox = new VBox();
@@ -208,12 +309,35 @@ public class StartupController extends AbstractFxmlViewController {
         return accordion;
     }
 
+    private static void toString(EventTree tree, TimelineEvent event, StringBuilder builder) {
+
+        String id = String.valueOf(event.getStartupStep().getId());
+        String name = event.getStartupStep().getName();
+        long duration = event.getDuration().toMillis();
+        String title = String.format("%s %s - %s ms", id, name, duration);
+
+        builder.append(title).append(" ");
+
+        event.getStartupStep().getTags().forEach((tag) -> {
+            String labelValue = String.format("%s : %s", tag.getKey(), tag.getValue());
+            builder.append(labelValue);
+        });
+        builder.append("\n");
+
+        // Log child events
+        List<TimelineEvent> children = tree.getChildrenOf(event);
+        for (TimelineEvent child : children) {
+            toString(tree, child, builder);
+        }
+
+    }
+
     private List<EventTree> getTrees() {
-        var list = new ArrayList<EventTree>();
+        var trees = new ArrayList<EventTree>();
 
         var bootContext = getBootContext();
         var bootTree = eventsToEventTree(bootContext);
-        list.add(bootTree);
+        trees.add(bootTree);
 
         var rootLayer = moduleLayerManager.get(Extension.ROOT_ID);
         var applications = listApplications(rootLayer);
@@ -223,17 +347,26 @@ public class StartupController extends AbstractFxmlViewController {
 
         populateChildLayers(rootLayer, rootTree, applications);
 
-        list.add(rootTree);
+        trees.add(rootTree);
 
         for (UUID applicationId : applications) {
             var applicationLayer = moduleLayerManager.get(applicationId);
             var applicationContext = contextManager.get(applicationId);
             var applicationTree = eventsToEventTree(applicationContext);
             populateChildLayers(applicationLayer, applicationTree, List.of());
-            list.add(applicationTree);
+            trees.add(applicationTree);
         }
 
-        return list;
+        var step = startup.map(s -> s.start("startup.filter.tree"));
+        if (filterPattern != null) {
+            var filtered = new ArrayList<EventTree>();
+            for(var item:trees) {
+                filtered.add(filterTree(item, filterPattern));
+            }
+            trees = filtered;
+        }
+        step.ifPresent(s -> s.end());
+        return trees;
     }
 
     private void populateChildLayers(Layer layer, EventTree tree, List<UUID> excluded) {
@@ -247,7 +380,7 @@ public class StartupController extends AbstractFxmlViewController {
         }
     }
 
-    private static EventTree eventsToEventTree(ApplicationContext context) {
+    private EventTree eventsToEventTree(ApplicationContext context) {
 
         var startup = context.getBean(BufferingApplicationStartup.class);
 
@@ -260,7 +393,62 @@ public class StartupController extends AbstractFxmlViewController {
         return eventTree;
     }
 
+    private EventTree filterTree(EventTree source, Pattern pattern) {
+        EventTree filtered = new EventTree();
+
+        var values = new ArrayList<>(source.idToEventMap.values());
+
+        for (var value:values) {
+            String id = String.valueOf(value.getStartupStep().getId());
+
+            if (value != null && pattern.matcher(value.getStartupStep().getName()).matches()) {
+                var event = source.idToEventMap.remove(id);
+
+                if (event == null) {
+                    continue;
+                }
+
+                filtered.addEvent(event);
+
+                // get nodes upper in the tree
+                var current = value;
+                while (current != null && current.getStartupStep().getParentId() != null) {
+                    String pId = String.valueOf(current.getStartupStep().getParentId());
+                    var parent = source.idToEventMap.remove(pId);
+
+                    if (parent != null) {
+                        filtered.addEvent(parent);
+                    }
+                    current = parent;
+                }
+
+                //get nodes lower in tree
+                List<TimelineEvent> children = source.parentToChildrenMap.remove(id);
+                if (children != null) {
+                    moveChildren(source, filtered, children);
+                }
+            }
+        }
+
+        return filtered;
+    }
+
+    private void moveChildren(EventTree source, EventTree target, List<TimelineEvent> children) {
+        for (var child:children) {
+            String id = String.valueOf(child.getStartupStep().getId());
+            var event = source.idToEventMap.remove(id);
+            if (event != null) {
+                target.addEvent(child);
+                var subChildren = source.parentToChildrenMap.remove(id);
+                if (subChildren != null) {
+                    moveChildren(source, target, subChildren);
+                }
+            }
+        }
+    }
+
     private static class EventTree {
+        private static final String BOOT = "BOOT";
         private static final String ROOT = "ROOT";
         Map<String, List<TimelineEvent>> parentToChildrenMap = new HashMap<>();
         Map<String, TimelineEvent> idToEventMap = new HashMap<>();
@@ -270,7 +458,7 @@ public class StartupController extends AbstractFxmlViewController {
             String id = String.valueOf(event.getStartupStep().getId());
             String parentId = event.getStartupStep().getParentId() != null
                     ? String.valueOf(event.getStartupStep().getParentId())
-                    : ROOT;
+                    : (event.getStartupStep().getId() == 0 ? BOOT : ROOT);
             idToEventMap.put(id, event);
             parentToChildrenMap.computeIfAbsent(parentId, k -> new ArrayList<>()).add(event);
         }
@@ -280,17 +468,16 @@ public class StartupController extends AbstractFxmlViewController {
         }
 
         TimelineEvent getBoot() {
-            var roots = parentToChildrenMap.getOrDefault(ROOT, new ArrayList<>());
-            return roots.get(0);
+            var boot = parentToChildrenMap.getOrDefault(BOOT, new ArrayList<>());
+            return boot.isEmpty() ? null : boot.get(0);
         }
 
         long getBootDuration() {
-            return getBoot().getDuration().toMillis();
+            return getBoot() == null ? 0 : getBoot().getDuration().toMillis();
         }
 
         List<TimelineEvent> getRuntime() {
-            var roots = parentToChildrenMap.getOrDefault(ROOT, new ArrayList<>());
-            return roots.subList(1, roots.size());
+            return parentToChildrenMap.getOrDefault(ROOT, new ArrayList<>());
         }
 
         long getRuntimeDuration() {

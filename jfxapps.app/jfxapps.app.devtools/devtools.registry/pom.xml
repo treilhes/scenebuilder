@@ -78,7 +78,14 @@
                                             <version>${devtools.version}</version>
                                         </dependency>
                                     </extension>
-
+                                    <extension>
+                                        <uuid>5aadfc19-93f1-4d0b-b21a-c5d7ad5a2b05</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>devtools.db</artifactId>
+                                            <version>${devtools.version}</version>
+                                        </dependency>
+                                    </extension>
                                 </extensions>
                             </application>
                         </applications>

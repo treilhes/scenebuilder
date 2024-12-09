@@ -33,8 +33,25 @@
  */
 package com.gluonhq.jfxapps.app.devtools.openapi.controller;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.gluonhq.jfxapps.app.devtools.api.ui.Docks;
+import com.gluonhq.jfxapps.boot.api.context.ContextManager;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.layer.Layer;
+import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
+import com.gluonhq.jfxapps.boot.api.loader.extension.ApplicationExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.platform.InternalRestClient;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
@@ -43,7 +60,9 @@ import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebView;
 
 @ApplicationInstanceSingleton
 @ViewAttachment(
@@ -58,15 +77,37 @@ import javafx.scene.layout.VBox;
         )
 public class OpenApiController extends AbstractFxmlViewController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(OpenApiController.class);
+    private static final String OPENAPI_UI_PATH = "swagger-ui.html";
+
     @FXML
     VBox rootVbox;
 
+    @FXML
+    ChoiceBox<Api> extensionList;
+
+    @FXML
+    WebView webView;
+
+    private final InternalRestClient restClient;
+    private final ModuleLayerManager moduleLayerManager;
+    private final ContextManager contextManager;
+
+    //@formatter:off
     protected OpenApiController(
             I18N i18n,
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
-            ViewMenu viewMenu) {
+            ViewMenu viewMenu,
+            InternalRestClient restClient,
+            ModuleLayerManager moduleLayerManager,
+            ContextManager contextManager) {
+        //@formatter:on
         super(i18n, scenebuilderManager, documentManager, viewMenu, OpenApiController.class.getResource("OpenApi.fxml"));
+
+        this.restClient = restClient;
+        this.moduleLayerManager = moduleLayerManager;
+        this.contextManager = contextManager;
     }
 
     @FXML
@@ -84,14 +125,143 @@ public class OpenApiController extends AbstractFxmlViewController {
 
     @Override
     public void onShow() {
-        // TODO Auto-generated method stub
+        List<Api> apis = getApis();
 
+        extensionList.setOnAction(null);
+
+        extensionList.getItems().clear();
+        populateChoiceBox(apis);
+
+     // Bind the action to showApi(Api) on selection
+        extensionList.setOnAction(event -> {
+            Api selectedApi = extensionList.getSelectionModel().getSelectedItem();
+            if (selectedApi != null) {
+                showApi(selectedApi);
+            }
+        });
     }
 
     @Override
     public void onHidden() {
         // TODO Auto-generated method stub
 
+    }
+
+    private void populateChoiceBox(List<Api> apis) {
+        apis.forEach(api -> {
+            extensionList.getItems().add(api);
+            populateChoiceBox(api.getChildren());
+        });
+    }
+
+    private void showApi(Api selectedApi) {
+        webView.getEngine().load(selectedApi.getUrl());
+    }
+
+    private List<Api> getApis() {
+        var list = new ArrayList<Api>();
+
+        var bootApiUri = getUri(null);
+        var bootName = "BOOT - " + bootApiUri.toString();
+        var bootApi = new Api(bootName, bootApiUri.toString());
+        list.add(bootApi);
+
+        var rootLayer = moduleLayerManager.get(Extension.ROOT_ID);
+        var rootContext = contextManager.get(Extension.ROOT_ID);
+        var rootApiUri = getUri(Extension.ROOT_ID);
+        var name = createDisplayName(rootContext, rootApiUri);
+        var rootApi = new Api(name, rootApiUri.toString());
+        list.add(rootApi);
+
+        var applications = listApplications(rootLayer);
+
+        populateChildLayers(rootLayer, rootApi, applications, 1);
+
+
+        for (UUID applicationId : applications) {
+            var appLayer = moduleLayerManager.get(applicationId);
+            var appContext = contextManager.get(applicationId);
+            var appUri = getUri(applicationId);
+            var appName = createDisplayName(appContext, appUri);
+            var appApi = new Api(appName, appUri.toString());
+            list.add(appApi);
+
+            populateChildLayers(appLayer, appApi, List.of(), 1);
+        }
+
+        return list;
+    }
+
+    private String createDisplayName(JfxAppContext context, URI uri) {
+        return context.getLocalBean(Extension.class).getClass().getModule().getName() + " - " + uri.toString();
+    }
+
+    private URI getUri(UUID layerId) {
+        try {
+            return restClient.get(layerId, OPENAPI_UI_PATH).getUri();
+        } catch (URISyntaxException | IOException e) {
+            LOGGER.error("Error while fetching OpenAPI UI URI of " + layerId, e);
+            return null;
+        }
+    }
+
+    private void populateChildLayers(Layer layer, Api rootApi, List<UUID> excluded, int depth) {
+        for (var childLayer : layer.getChildren()) {
+            if (!excluded.contains(childLayer.getId())) {
+                final var context = contextManager.get(childLayer.getId());
+                final URI extApiUri = getUri(childLayer.getId());
+                final String name = "   ".repeat(depth) + createDisplayName(context, extApiUri);
+                var childApi = new Api(name, extApiUri.toString());
+                rootApi.addChild(childApi);
+                populateChildLayers(childLayer, childApi, List.of(), depth + 1);
+            }
+        }
+    }
+
+    private List<UUID> listApplications(Layer rootLayer) {
+        var list = new ArrayList<UUID>();
+        for (var layer : rootLayer.getChildren()) {
+            var context = contextManager.get(layer.getId());
+            var extension = context.getLocalBean(Extension.class);
+
+            if (extension instanceof ApplicationExtension) {
+                list.add(layer.getId());
+            }
+        }
+        return list;
+    }
+
+    private static class Api {
+        private final String name;;
+        private final String url;
+        private final List<Api> children;
+
+        public Api(String name, String url) {
+            this.name = name;
+            this.url = url;
+            this.children = new ArrayList<>();
+        }
+
+        public void addChild(Api api) {
+            children.add(api);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public List<Api> getChildren() {
+            return children;
+        }
+
+        @Override
+        public String toString() {
+            return getName();
+        }
     }
 
 }

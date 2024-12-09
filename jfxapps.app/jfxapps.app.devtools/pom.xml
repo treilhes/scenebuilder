@@ -19,6 +19,7 @@
       <module>devtools.registry</module>
       <module>devtools.openapi</module>
       <module>devtools.jpms</module>
+      <module>devtools.db</module>
   </modules>
 
   <dependencyManagement>
