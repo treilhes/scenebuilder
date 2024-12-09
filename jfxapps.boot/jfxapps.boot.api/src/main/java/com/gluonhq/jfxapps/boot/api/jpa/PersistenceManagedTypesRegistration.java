@@ -31,15 +31,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.layer.config;
+package com.gluonhq.jfxapps.boot.api.jpa;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import java.util.List;
 
-import com.gluonhq.jfxapps.boot.layer.internal.ModuleLayerManagerImpl;
+public class PersistenceManagedTypesRegistration {
+    final List<Class<?>> managedTypes;
 
-//@Configuration
-//@ComponentScan(basePackageClasses = ModuleLayerManagerImpl.class)
-public class LayerConfig {
+    public PersistenceManagedTypesRegistration(List<Class<?>> managedTypes) {
+        super();
+        this.managedTypes = managedTypes;
+    }
+
+    public List<Class<?>> getManagedTypes() {
+        return managedTypes;
+    }
 
 }

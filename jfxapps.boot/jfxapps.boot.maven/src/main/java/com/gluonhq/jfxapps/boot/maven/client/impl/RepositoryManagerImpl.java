@@ -36,6 +36,8 @@ package com.gluonhq.jfxapps.boot.maven.client.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.core.metrics.ApplicationStartup;
+import org.springframework.core.metrics.StartupStep;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.maven.Repository;
@@ -50,19 +52,22 @@ public class RepositoryManagerImpl implements RepositoryManager {
 
     private final RepositoryRepository jpaRepository;
     private final RepositoryMapper mapper;
+    private final Optional<ApplicationStartup> startup;
 
-    public RepositoryManagerImpl(RepositoryRepository jpaRepository, RepositoryMapper mapper) {
+    public RepositoryManagerImpl(RepositoryRepository jpaRepository, RepositoryMapper mapper, Optional<ApplicationStartup> startup) {
         super();
         this.jpaRepository = jpaRepository;
         this.mapper = mapper;
+        this.startup = startup;
     }
 
     @PostConstruct
     protected void init() {
-        // init if empty
+        var step = startup.map(s -> s.start("repository.manager.init"));
         if (jpaRepository.count() == 0) {
             jpaRepository.saveAll(mapper.mapApi(MavenPresets.getPresetRepositories()));
         }
+        step.ifPresent(StartupStep::end);
     }
 
     @Override

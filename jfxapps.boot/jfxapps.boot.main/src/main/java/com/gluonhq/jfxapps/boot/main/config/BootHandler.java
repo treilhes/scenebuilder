@@ -34,12 +34,13 @@
 package com.gluonhq.jfxapps.boot.main.config;
 
 import java.io.File;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.metrics.ApplicationStartup;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.loader.ApplicationManager;
@@ -53,27 +54,24 @@ public class BootHandler {
 
     private final ApplicationManager appManager;
 
-    public BootHandler(ApplicationManager appManager) {
+    private final Optional<ApplicationStartup> startup;
+
+    public BootHandler(ApplicationManager appManager, Optional<ApplicationStartup> startup) {
         super();
         this.appManager = appManager;
+        this.startup = startup;
     }
 
     public void boot(UUID application, List<File> files, String[] args) {
-        logger.info("Booting jfxapps core");
-        long start = System.currentTimeMillis();
+        var bootStep = startup.map(s -> s.start("boot.handler"));
 
         try {
-            System.out.println(">>>>>>>>>>>>>>>>>>>>  Staring AppManager at " + LocalDateTime.now());
             appManager.start();
-            System.out.println(">>>>>>>>>>>>>>>>>>>>  Started AppManager at " + LocalDateTime.now());
 
             if (application != null) {
-                System.out.println(">>>>>>>>>>>>>>>>>>>>  Staring application at " + LocalDateTime.now());
                 appManager.startApplication(application);
-                System.out.println(">>>>>>>>>>>>>>>>>>>>  Started application at " + LocalDateTime.now());
             }
 
-            System.out.println(">>>>>>>>>>>>>>>>>>>>  Staring commands at " + LocalDateTime.now());
             if (files != null && !files.isEmpty()) {
                 for (File file : files) {
                     appManager.send(new OpenCommandEvent(application, file));
@@ -81,13 +79,11 @@ public class BootHandler {
             } else {
                 appManager.send(new OpenCommandEvent(application, null));
             }
-            System.out.println(">>>>>>>>>>>>>>>>>>>>  Started commands at " + LocalDateTime.now());
         } catch (BootException e) {
             logger.error("Unable to boot application", e);
 
         }
 
-        long end = System.currentTimeMillis();
-        logger.info("Booted Core in {} seconds", (end - start) / 1000.0 );
+        bootStep.ifPresent(s -> s.end());
     }
 }

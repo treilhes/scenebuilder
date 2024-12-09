@@ -45,6 +45,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.metrics.ApplicationStartup;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.maven.Artifact;
@@ -67,6 +68,7 @@ public class MavenRepositoryClientImpl implements RepositoryClient {
     private final RepositoryManager repositoryManager;
     private final RepositoryConfig config;
     private final SearchService searchService;
+    private final Optional<ApplicationStartup> startup;
 
     private MavenRepositorySystem maven;
     private File repositoryFolder;
@@ -75,15 +77,18 @@ public class MavenRepositoryClientImpl implements RepositoryClient {
 
 
     @Autowired
-    protected MavenRepositoryClientImpl(JfxAppsPlatform platform, RepositoryManager repositoryManager, RepositoryConfig config) {
+    protected MavenRepositoryClientImpl(JfxAppsPlatform platform, RepositoryManager repositoryManager, RepositoryConfig config, Optional<ApplicationStartup> startup) {
         this.config = config;
         this.repositoryFolder = config.getDirectory() != null ? config.getDirectory() : platform.defaultUserM2Repository();
         this.repositoryManager = repositoryManager;
+        this.startup = startup == null ? Optional.empty() : startup;
         this.searchService = new SearchService();
         // FIXME: offline mode should be set to true when no connection is available
         // when no connection is available, the client wait for some timeouts which cause an extremely slow startup
         // i think it must be some automatic detection of the connection status and the status must be periodicaly checked
         // to switch back to online mode asap
+
+        var step = startup.map(s -> s.start("maven.repository.online.ugly.test"));
         try {
             InetAddress address = InetAddress.getByName("8.8.8.8"); // Google's public DNS server
             this.offline = !address.isReachable(2000); // Timeout in milliseconds
@@ -94,8 +99,9 @@ public class MavenRepositoryClientImpl implements RepositoryClient {
                 log.info("Unable to reach google dns fallback to Offline mode");
             }
         }
+        step.ifPresent(s -> s.end());
 
-        this.maven = new MavenRepositorySystem(repositoryFolder, repositoryManager, this.offline);
+        this.maven = new MavenRepositorySystem(repositoryFolder, repositoryManager, this.offline, this.startup);
     }
 
     private MavenRepositoryClientImpl(MavenRepositoryClientImpl client, RepositoryManager repositoryManager, File storage, boolean offline) {
@@ -104,7 +110,8 @@ public class MavenRepositoryClientImpl implements RepositoryClient {
         this.repositoryFolder = storage != null ? storage : client.repositoryFolder;
         this.repositoryManager = repositoryManager;
         this.searchService = client.searchService;
-        this.maven = new MavenRepositorySystem(repositoryFolder, repositoryManager, offline);
+        this.startup = client.startup == null ? Optional.empty() : client.startup;
+        this.maven = new MavenRepositorySystem(repositoryFolder, repositoryManager, offline, this.startup);
     }
 
     @Override

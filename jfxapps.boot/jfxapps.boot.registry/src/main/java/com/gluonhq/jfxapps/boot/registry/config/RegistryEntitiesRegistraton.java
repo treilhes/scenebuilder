@@ -31,15 +31,25 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.layer.config;
+package com.gluonhq.jfxapps.boot.registry.config;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import java.util.List;
 
-import com.gluonhq.jfxapps.boot.layer.internal.ModuleLayerManagerImpl;
+import com.gluonhq.jfxapps.boot.api.jpa.PersistenceManagedTypesRegistration;
+import com.gluonhq.jfxapps.boot.registry.model.Application;
+import com.gluonhq.jfxapps.boot.registry.model.Extension;
+import com.gluonhq.jfxapps.boot.registry.model.Registry;
+import com.gluonhq.jfxapps.boot.registry.model.RegistrySource;
 
-//@Configuration
-//@ComponentScan(basePackageClasses = ModuleLayerManagerImpl.class)
-public class LayerConfig {
+public class RegistryEntitiesRegistraton extends PersistenceManagedTypesRegistration {
+
+    public RegistryEntitiesRegistraton() {
+        super(List.of(
+                Application.class,
+                Extension.class,
+                Registry.class,
+                RegistrySource.class
+                ));
+    }
 
 }

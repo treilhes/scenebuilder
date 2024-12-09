@@ -31,15 +31,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.layer.config;
+package com.gluonhq.jfxapps.boot.api.loader;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import java.util.List;
 
-import com.gluonhq.jfxapps.boot.layer.internal.ModuleLayerManagerImpl;
-
-//@Configuration
-//@ComponentScan(basePackageClasses = ModuleLayerManagerImpl.class)
-public class LayerConfig {
-
+public interface BootClasses {
+    List<Class<?>> bootClasses();
 }

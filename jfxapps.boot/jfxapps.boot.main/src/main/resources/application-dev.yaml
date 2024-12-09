@@ -63,6 +63,9 @@ jfxapps:
       - groupId: com.gluonhq.jfxapps
         artifactId: devtools.openapi
         path: ../../jfxapps.app/jfxapps.app.devtools/devtools.openapi/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: devtools.db
+        path: ../../jfxapps.app/jfxapps.app.devtools/devtools.db/target/classes
 
       - groupId: com.gluonhq.jfxapps
         artifactId: scenebuilder.api

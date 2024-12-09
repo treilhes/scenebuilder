@@ -87,6 +87,7 @@ import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.version.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.metrics.ApplicationStartup;
 
 import com.gluonhq.jfxapps.boot.api.maven.Artifact;
 import com.gluonhq.jfxapps.boot.api.maven.Classifier;
@@ -117,17 +118,24 @@ public class MavenRepositorySystem {
 
     private boolean offline = false;
 
-    public MavenRepositorySystem(File repositoryFolder, RepositoryManager repositoryManager, boolean offline) {
+    private final Optional<ApplicationStartup> startup;
+
+    public MavenRepositorySystem(File repositoryFolder, RepositoryManager repositoryManager, boolean offline,
+            Optional<ApplicationStartup> startup) {
 
         this.userM2Repository = repositoryFolder;
         this.localRepo = new LocalRepository(userM2Repository);
         this.repositoryManager = repositoryManager;
         this.offline = repositoryManager == null ? true : offline;
+        this.startup = startup == null ? Optional.empty() : startup;
+
+        var step = this.startup.map(s -> s.start("maven.repository.system.init"));
         initRepositorySystem();
+        step.ifPresent(s -> s.end());
     }
 
-    public MavenRepositorySystem(File repositoryFolder) {
-        this(repositoryFolder, null, true);
+    public MavenRepositorySystem(File repositoryFolder, Optional<ApplicationStartup> startup) {
+        this(repositoryFolder, null, true, startup);
     }
 
     private void initRepositorySystem() {
@@ -203,44 +211,68 @@ public class MavenRepositorySystem {
     }
 
     public List<UniqueArtifact> findVersions(Artifact artifact) {
-        VersionRangeResult result = findVersionRangeResult(artifact);
+        var step = this.startup.map(s -> s.start("maven.repository.system.findVersions"));
+        try {
+            VersionRangeResult result = findVersionRangeResult(artifact);
 
-        return (result == null) ? new ArrayList<>()
-                : result.getVersions().stream().map(v -> toLocalizedArtifact(result, artifact, v))
-                        .collect(Collectors.toList());
+            return (result == null) ? new ArrayList<>()
+                    : result.getVersions().stream().map(v -> toLocalizedArtifact(result, artifact, v))
+                            .collect(Collectors.toList());
+        } finally {
+            step.ifPresent(s -> s.end());
+        }
     }
 
     public List<UniqueArtifact> findReleases(Artifact artifact) {
-        VersionRangeResult result = findVersionRangeResult(artifact);
+        var step = this.startup.map(s -> s.start("maven.repository.system.findReleases"));
+        try {
+            VersionRangeResult result = findVersionRangeResult(artifact);
 
-        return (result == null) ? new ArrayList<>()
-                : result.getVersions().stream()
-                        .filter(v -> !v.toString().toLowerCase(Locale.ROOT).contains(SNAPSHOT_SUFFIX))
-                        .map(v -> toLocalizedArtifact(result, artifact, v)).collect(Collectors.toList());
+            return (result == null) ? new ArrayList<>()
+                    : result.getVersions().stream()
+                            .filter(v -> !v.toString().toLowerCase(Locale.ROOT).contains(SNAPSHOT_SUFFIX))
+                            .map(v -> toLocalizedArtifact(result, artifact, v)).collect(Collectors.toList());
+        } finally {
+            step.ifPresent(s -> s.end());
+        }
+
     }
 
     public Optional<UniqueArtifact> findLatestVersion(Artifact artifact) {
-        VersionRangeResult result = findVersionRangeResult(artifact);
-        Version version = result.getHighestVersion();
+        var step = this.startup.map(s -> s.start("maven.repository.system.findLatestVersion"));
+        try {
+            VersionRangeResult result = findVersionRangeResult(artifact);
+            Version version = result.getHighestVersion();
 
-        if (version == null) {
-            return Optional.empty();
+            if (version == null) {
+                return Optional.empty();
+            }
+
+            return Optional.of(toLocalizedArtifact(result, artifact, version));
+        } finally {
+            step.ifPresent(s -> s.end());
         }
 
-        return Optional.of(toLocalizedArtifact(result, artifact, version));
     }
 
     public Optional<UniqueArtifact> findLatestRelease(Artifact artifact) {
-        VersionRangeResult result = findVersionRangeResult(artifact);
+        var step = this.startup.map(s -> s.start("maven.repository.system.findLatestRelease"));
 
-        if (result != null) {
-            return result.getVersions().stream()
-                    .filter(v -> !v.toString().toLowerCase(Locale.ROOT).contains(SNAPSHOT_SUFFIX))
-                    .sorted((v1, v2) -> v2.compareTo(v1)).findFirst()
-                    .map(v -> toLocalizedArtifact(result, artifact, v));
-        } else {
-            return Optional.empty();
+        try {
+            VersionRangeResult result = findVersionRangeResult(artifact);
+
+            if (result != null) {
+                return result.getVersions().stream()
+                        .filter(v -> !v.toString().toLowerCase(Locale.ROOT).contains(SNAPSHOT_SUFFIX))
+                        .sorted((v1, v2) -> v2.compareTo(v1)).findFirst()
+                        .map(v -> toLocalizedArtifact(result, artifact, v));
+            } else {
+                return Optional.empty();
+            }
+        } finally {
+            step.ifPresent(s -> s.end());
         }
+
     }
 
     private void filterLocalresultOnly(VersionRangeResult result, DefaultArtifact artifact) {
@@ -259,26 +291,37 @@ public class MavenRepositorySystem {
     }
 
     public Optional<ResolvedArtifact> resolveArtifact(UniqueArtifact artifact) {
-        final RemoteRepository remoteRepository = toRemoteRepository(artifact.getRepository()).orElse(null);
-        return resolveArtifact(remoteRepository, artifact);
+        var step = this.startup.map(s -> s.start("maven.repository.system.resolveArtifact"));
+        try {
+            final RemoteRepository remoteRepository = toRemoteRepository(artifact.getRepository()).orElse(null);
+            return resolveArtifact(remoteRepository, artifact);
+        } finally {
+            step.ifPresent(s -> s.end());
+        }
+
     }
 
     public Map<Classifier, Optional<ResolvedArtifact>> resolveArtifacts(UniqueArtifact artifact,
             List<Classifier> classifiers) {
 
-        final RemoteRepository remoteRepository = toRemoteRepository(artifact.getRepository()).orElse(null);
+        var step = this.startup.map(s -> s.start("maven.repository.system.resolveArtifacts"));
+        try {
+            final RemoteRepository remoteRepository = toRemoteRepository(artifact.getRepository()).orElse(null);
 
-        Map<Classifier, Optional<ResolvedArtifact>> result = new HashMap<>();
+            Map<Classifier, Optional<ResolvedArtifact>> result = new HashMap<>();
 
-        classifiers.forEach(c -> {
+            classifiers.forEach(c -> {
 
-            UniqueArtifact a = UniqueArtifact.builder().artifact(artifact.getArtifact()).classifier(c)
-                    .version(artifact.getVersion()).repository(artifact.getRepository()).build();
+                UniqueArtifact a = UniqueArtifact.builder().artifact(artifact.getArtifact()).classifier(c)
+                        .version(artifact.getVersion()).repository(artifact.getRepository()).build();
 
-            result.put(c, resolveArtifact(remoteRepository, a));
-        });
+                result.put(c, resolveArtifact(remoteRepository, a));
+            });
 
-        return result;
+            return result;
+        } finally {
+            step.ifPresent(s -> s.end());
+        }
 
     }
 
@@ -317,67 +360,71 @@ public class MavenRepositorySystem {
 
     public Optional<ResolvedArtifact> resolveWithDependencies(UniqueArtifact artifact) {
 
-        String groupId = artifact.getArtifact().getGroupId();
-        String artefactId = artifact.getArtifact().getArtifactId();
-        String version = artifact.getVersion();
-        Classifier def = artifact.getClassifier();
-
-        DefaultArtifact localArtifact = new DefaultArtifact(groupId, artefactId, def.getClassifier(),
-                def.getExtension(), version);
-
-        DependencyFilter classpathFlter = DependencyFilterUtils.classpathFilter(JavaScopes.COMPILE);
-        CollectRequest collectRequest = new CollectRequest();
-        collectRequest.setRoot(new Dependency(localArtifact, JavaScopes.COMPILE));
-        collectRequest.setRepositories(getRepositories());
-
-        DependencyRequest dependencyRequest = new DependencyRequest(collectRequest, classpathFlter);
+        var step = this.startup.map(s -> s.start("maven.repository.system.resolveWithDependencies"));
         try {
-            List<ArtifactResult> artifactResults = system.resolveDependencies(session, dependencyRequest)
-                    .getArtifactResults();
+            String groupId = artifact.getArtifact().getGroupId();
+            String artefactId = artifact.getArtifact().getArtifactId();
+            String version = artifact.getVersion();
+            Classifier def = artifact.getClassifier();
 
-            ArtifactResult main = artifactResults.get(0);
+            DefaultArtifact localArtifact = new DefaultArtifact(groupId, artefactId, def.getClassifier(),
+                    def.getExtension(), version);
 
-            if (artifactResults.size() == 1 && offline) {
-                // ensure pom is present to allow dependencies resolution or return empty
-                var pom = UniqueArtifact.builder()
-                        .artifact(artifact.getGroupId(), artifact.getArtifactId())
-                        .version(artifact.getVersion())
-                        .repository(artifact.getRepository())
-                        .classifier(Classifier.POM).build();
-                if (resolveArtifact(pom).isEmpty()) {
-                    return Optional.empty();
+            DependencyFilter classpathFlter = DependencyFilterUtils.classpathFilter(JavaScopes.COMPILE);
+            CollectRequest collectRequest = new CollectRequest();
+            collectRequest.setRoot(new Dependency(localArtifact, JavaScopes.COMPILE));
+            collectRequest.setRepositories(getRepositories());
+
+            DependencyRequest dependencyRequest = new DependencyRequest(collectRequest, classpathFlter);
+            try {
+                List<ArtifactResult> artifactResults = system.resolveDependencies(session, dependencyRequest)
+                        .getArtifactResults();
+
+                ArtifactResult main = artifactResults.get(0);
+
+                if (artifactResults.size() == 1 && offline) {
+                    // ensure pom is present to allow dependencies resolution or return empty
+                    var pom = UniqueArtifact.builder().artifact(artifact.getGroupId(), artifact.getArtifactId())
+                            .version(artifact.getVersion()).repository(artifact.getRepository())
+                            .classifier(Classifier.POM).build();
+                    if (resolveArtifact(pom).isEmpty()) {
+                        return Optional.empty();
+                    }
                 }
+
+                List<ResolvedArtifact> dependencies = new ArrayList<>();
+
+                artifactResults.stream().skip(1) // exclude jar itself
+                        .forEach(a -> {
+                            var lArtifact = a.getArtifact();
+
+                            var classifier = Classifier.builder().classifier(lArtifact.getClassifier())
+                                    .extension(lArtifact.getExtension()).build();
+
+                            var id = Artifact.builder().groupId(lArtifact.getGroupId())
+                                    .artifactId(lArtifact.getArtifactId()).build();
+
+                            var unique = UniqueArtifact.builder().artifact(id).classifier(classifier)
+                                    .version(lArtifact.getVersion()).build();
+
+                            ResolvedArtifact mArtefact = ResolvedArtifact.builder().artifact(unique)
+                                    .path(lArtifact.getFile().toPath()).build();
+
+                            dependencies.add(mArtefact);
+                        });
+
+                ResolvedArtifact mainArtifact = ResolvedArtifact.builder().artifact(artifact)
+                        .path(main.getArtifact().getFile().toPath()).dependencies(dependencies).build();
+
+                return Optional.of(mainArtifact);
+            } catch (Exception ex) {
+                logger.error("", ex);
             }
-
-            List<ResolvedArtifact> dependencies = new ArrayList<>();
-
-            artifactResults.stream().skip(1) // exclude jar itself
-                    .forEach(a -> {
-                        var lArtifact = a.getArtifact();
-
-                        var classifier = Classifier.builder().classifier(lArtifact.getClassifier())
-                                .extension(lArtifact.getExtension()).build();
-
-                        var id = Artifact.builder().groupId(lArtifact.getGroupId())
-                                .artifactId(lArtifact.getArtifactId()).build();
-
-                        var unique = UniqueArtifact.builder().artifact(id).classifier(classifier)
-                                .version(lArtifact.getVersion()).build();
-
-                        ResolvedArtifact mArtefact = ResolvedArtifact.builder().artifact(unique)
-                                .path(lArtifact.getFile().toPath()).build();
-
-                        dependencies.add(mArtefact);
-                    });
-
-            ResolvedArtifact mainArtifact = ResolvedArtifact.builder().artifact(artifact)
-                    .path(main.getArtifact().getFile().toPath()).dependencies(dependencies).build();
-
-            return Optional.of(mainArtifact);
-        } catch (Exception ex) {
-            logger.error("", ex);
+            return Optional.empty();
+        } finally {
+            step.ifPresent(s -> s.end());
         }
-        return Optional.empty();
+
     }
 
     private Optional<RemoteRepository> toRemoteRepository(Repository repository) {
@@ -404,21 +451,27 @@ public class MavenRepositorySystem {
     }
 
     public String validateRepository(Repository repository) {
-        RemoteRepository remoteRepository = toRemoteRepository(repository).orElse(null);
-
-        ArtifactRequest artifactRequest = new ArtifactRequest();
-        artifactRequest.setArtifact(new DefaultArtifact("test:test:1.0"));
-        artifactRequest.setRepositories(Arrays.asList(remoteRepository));
+        var step = this.startup.map(s -> s.start("maven.repository.system.validateRepository"));
         try {
-            system.resolveArtifact(session, artifactRequest);
-        } catch (ArtifactResolutionException ex) {
-            final String rootCauseMessage = ExceptionUtils.getRootCauseMessage(ex);
-            if (rootCauseMessage != null && !rootCauseMessage.contains("ArtifactNotFoundException")) {
-                return rootCauseMessage;
+            RemoteRepository remoteRepository = toRemoteRepository(repository).orElse(null);
+
+            ArtifactRequest artifactRequest = new ArtifactRequest();
+            artifactRequest.setArtifact(new DefaultArtifact("test:test:1.0"));
+            artifactRequest.setRepositories(Arrays.asList(remoteRepository));
+            try {
+                system.resolveArtifact(session, artifactRequest);
+            } catch (ArtifactResolutionException ex) {
+                final String rootCauseMessage = ExceptionUtils.getRootCauseMessage(ex);
+                if (rootCauseMessage != null && !rootCauseMessage.contains("ArtifactNotFoundException")) {
+                    return rootCauseMessage;
+                }
             }
+
+            return "";
+        } finally {
+            step.ifPresent(s -> s.end());
         }
 
-        return "";
     }
 
     private UniqueArtifact toLocalizedArtifact(VersionRangeResult result, Artifact artifact, Version version) {
@@ -426,36 +479,41 @@ public class MavenRepositorySystem {
 
         Repository repository = repositoryManager.get(repo.getId()).orElse(null);
 
-        return UniqueArtifact.builder().repository(repository).artifact(artifact)
-                .version(version.toString()).build();
+        return UniqueArtifact.builder().repository(repository).artifact(artifact).version(version.toString()).build();
     }
 
     public boolean install(ResolvedArtifact artifact) {
-
-        var ua = artifact.getUniqueArtifact();
-        var a = ua.getArtifact();
-
-        String groupId = a.getGroupId();
-        String artefactId = a.getArtifactId();
-        String version = ua.getVersion();
-        File file = artifact.getPath().toFile();
-
-        Classifier classifier = ua.getClassifier();
-        String ext = classifier.getExtension();
-        String classif = classifier.getClassifier();
-
-        var mArtifact = new DefaultArtifact(groupId, artefactId, classif, ext, version, Collections.emptyMap(), file);
-
-        var request = new InstallRequest();
-        request.addArtifact(mArtifact);
-
+        var step = this.startup.map(s -> s.start("maven.repository.system.install"));
         try {
-            system.install(session, request);
-        } catch (InstallationException e) {
-            logger.error("Unable to push artifact to local repository", e);
-            return false;
+            var ua = artifact.getUniqueArtifact();
+            var a = ua.getArtifact();
+
+            String groupId = a.getGroupId();
+            String artefactId = a.getArtifactId();
+            String version = ua.getVersion();
+            File file = artifact.getPath().toFile();
+
+            Classifier classifier = ua.getClassifier();
+            String ext = classifier.getExtension();
+            String classif = classifier.getClassifier();
+
+            var mArtifact = new DefaultArtifact(groupId, artefactId, classif, ext, version, Collections.emptyMap(),
+                    file);
+
+            var request = new InstallRequest();
+            request.addArtifact(mArtifact);
+
+            try {
+                system.install(session, request);
+            } catch (InstallationException e) {
+                logger.error("Unable to push artifact to local repository", e);
+                return false;
+            }
+            return true;
+        } finally {
+            step.ifPresent(s -> s.end());
         }
-        return true;
+
     }
 
 }

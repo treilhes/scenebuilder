@@ -34,6 +34,7 @@
 package com.gluonhq.jfxapps.boot.maven.client.config;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -44,24 +45,29 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
+import org.springframework.lang.Nullable;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager;
+import org.springframework.orm.jpa.persistenceunit.PersistenceManagedTypes;
 
+import com.gluonhq.jfxapps.boot.api.jpa.PersistenceManagedTypesRegistration;
 import com.gluonhq.jfxapps.boot.maven.client.impl._Component;
 import com.gluonhq.jfxapps.boot.maven.client.model.Repository;
 import com.gluonhq.jfxapps.boot.maven.client.model._Model;
 import com.gluonhq.jfxapps.boot.maven.client.repository.RepositoryRepository;
 import com.gluonhq.jfxapps.boot.maven.client.repository._Repository;
 
+import jakarta.persistence.EntityManager;
+
 @Configuration
 @ConfigurationProperties(prefix = RepositoryConfig.PREFIX)
-@EntityScan(basePackageClasses = _Model.class)
+//@EntityScan(basePackageClasses = _Model.class)
 //@EnableJpaRepositories(basePackageClasses = _Repository.class)
-@ComponentScan(basePackageClasses = _Component.class)
+//@ComponentScan(basePackageClasses = _Component.class)
 @Profile("!it")
 public class RepositoryConfig {
 
     public static final String PREFIX = "jfxapps.repository";
-
-    public static List<Class<?>> exportedClasses = List.of();
 
     public static record Redirect(String groupId, String artifactId, File path) {
     }
@@ -97,8 +103,8 @@ public class RepositoryConfig {
     }
 
     @Bean
-    public JpaRepositoryFactoryBean<RepositoryRepository, Repository, String> repositoryRepository() {
+    JpaRepositoryFactoryBean<RepositoryRepository, Repository, String> repositoryRepository() {
         JpaRepositoryFactoryBean factory = new JpaRepositoryFactoryBean(RepositoryRepository.class);
         return factory;
-      }
+    }
 }

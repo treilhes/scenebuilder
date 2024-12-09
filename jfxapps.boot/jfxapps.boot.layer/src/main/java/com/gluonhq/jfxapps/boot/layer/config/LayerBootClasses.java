@@ -33,13 +33,16 @@
  */
 package com.gluonhq.jfxapps.boot.layer.config;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import java.util.List;
 
+import com.gluonhq.jfxapps.boot.api.loader.BootClasses;
 import com.gluonhq.jfxapps.boot.layer.internal.ModuleLayerManagerImpl;
 
-//@Configuration
-//@ComponentScan(basePackageClasses = ModuleLayerManagerImpl.class)
-public class LayerConfig {
+public class LayerBootClasses implements BootClasses {
+
+    @Override
+    public List<Class<?>> bootClasses() {
+        return List.of(ModuleLayerManagerImpl.class);
+    }
 
 }

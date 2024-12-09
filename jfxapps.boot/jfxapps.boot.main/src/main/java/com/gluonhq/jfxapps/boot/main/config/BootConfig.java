@@ -33,43 +33,37 @@
  */
 package com.gluonhq.jfxapps.boot.main.config;
 
-import java.util.ArrayList;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
+import org.springframework.lang.Nullable;
+import org.springframework.orm.jpa.persistenceunit.PersistenceManagedTypes;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import com.gluonhq.jfxapps.boot.api.context.StartupMetricsLogger;
-import com.gluonhq.jfxapps.boot.context.config.ContextConfig;
+import com.gluonhq.jfxapps.boot.api.jpa.PersistenceManagedTypesRegistration;
 import com.gluonhq.jfxapps.boot.layer.config.LayerConfig;
 import com.gluonhq.jfxapps.boot.loader.config.LoaderConfig;
-import com.gluonhq.jfxapps.boot.maven.client.config.RepositoryConfig;
-import com.gluonhq.jfxapps.boot.platform.config.PlatformConfig;
-import com.gluonhq.jfxapps.boot.registry.config.RegistryConfig;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 
-@SpringBootApplication
+//@SpringBootApplication
+@SpringBootConfiguration
+@EnableAutoConfiguration
+
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableWebMvc
-@Import({RegistryConfig.class, ContextConfig.class, LoaderConfig.class, LayerConfig.class, PlatformConfig.class, RepositoryConfig.class})
+//@Import({RegistryConfig.class, ContextConfig.class, LoaderConfig.class, LayerConfig.class, PlatformConfig.class})
 public class BootConfig {
-
-    public static List<Class<?>> exportedClasses = new ArrayList<>();
-    static {
-        exportedClasses.add(BootConfig.class);
-        exportedClasses.addAll(RepositoryConfig.exportedClasses);
-    }
 
     @Bean
     OpenAPI myOpenAPI() {
@@ -110,5 +104,34 @@ public class BootConfig {
       executor.initialize();
       return executor;
 
+    }
+
+    @Bean
+    PersistenceManagedTypes persistenceManagedTypes(List<PersistenceManagedTypesRegistration> types) {
+
+        final List<String> stringTypes = types.stream()
+                .map(r -> r.getManagedTypes())
+                .flatMap(l -> l.stream())
+                .map(c -> c.getName())
+                .toList();
+
+        return new PersistenceManagedTypes() {
+
+            @Override
+            @Nullable
+            public URL getPersistenceUnitRootUrl() {
+                return null;
+            }
+
+            @Override
+            public List<String> getManagedPackages() {
+                return List.of();
+            }
+
+            @Override
+            public List<String> getManagedClassNames() {
+                return stringTypes;
+            }
+        };
     }
 }

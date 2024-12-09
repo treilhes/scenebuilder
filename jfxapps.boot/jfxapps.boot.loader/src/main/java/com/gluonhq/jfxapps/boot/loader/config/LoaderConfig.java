@@ -49,9 +49,9 @@ import com.gluonhq.jfxapps.boot.loader.internal.repository.ApplicationRepository
 import com.gluonhq.jfxapps.boot.loader.internal.repository.ExtensionRepository;
 
 @Configuration
-@EntityScan(basePackageClasses = _Model.class)
+//@EntityScan(basePackageClasses = _Model.class)
 //@EnableJpaRepositories(basePackageClasses = _Repository.class)
-@ComponentScan(basePackageClasses = _Component.class)
+//@ComponentScan(basePackageClasses = _Component.class)
 public class LoaderConfig {
 
     @Bean

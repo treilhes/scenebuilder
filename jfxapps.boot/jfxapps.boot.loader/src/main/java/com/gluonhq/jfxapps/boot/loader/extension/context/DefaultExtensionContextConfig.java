@@ -176,28 +176,22 @@ import jakarta.servlet.ServletException;
 @EnableWebMvc
 //@EnableAsync
 @PropertySource(value = "classpath:/application.properties", ignoreResourceNotFound = true)
-public class DefaultExtensionContextConfig { //  implements WebMvcConfigurer {
+public class DefaultExtensionContextConfig { // implements WebMvcConfigurer {
 
     private final static Logger logger = LoggerFactory.getLogger(DefaultExtensionContextConfig.class);
 
+    public final static List<Class<?>> classesToRegister = List.of(DefaultExtensionContextConfig.class,
+            // DefaultExtensionContextConfig.AopConfig.class,
+            // DefaultExtensionContextConfig.JpaConfig.class,
+            // DefaultExtensionContextConfig.MvcConfig.class,
+            // DefaultExtensionContextConfig.SpringDocConfig.class,
+            // DefaultExtensionContextConfig.WebConfig.class,
 
-    public final static List<Class<?>> classesToRegister = List.of(
-            DefaultExtensionContextConfig.class,
-            //DefaultExtensionContextConfig.AopConfig.class,
-            //DefaultExtensionContextConfig.JpaConfig.class,
-            //DefaultExtensionContextConfig.MvcConfig.class,
-            //DefaultExtensionContextConfig.SpringDocConfig.class,
-            //DefaultExtensionContextConfig.WebConfig.class,
-
-            //other beans
+            // other beans
             // allow @Value resolution
-            PropertyPlaceholderAutoConfiguration.class,
-            OverridedBeanPostProcessor.class,
-            JfxAppsExtensionRestController.class,
-            SpringDocConfig.class,
-            SpringDocWebMvcConfiguration.class,
-            MultipleOpenApiSupportConfiguration.class,
-            JacksonAutoConfiguration.class);
+            PropertyPlaceholderAutoConfiguration.class, OverridedBeanPostProcessor.class,
+            JfxAppsExtensionRestController.class, SpringDocConfig.class, SpringDocWebMvcConfiguration.class,
+            MultipleOpenApiSupportConfiguration.class, JacksonAutoConfiguration.class);
 
     public DefaultExtensionContextConfig() {
         super();
@@ -213,7 +207,8 @@ public class DefaultExtensionContextConfig { //  implements WebMvcConfigurer {
      * @param context
      * @return
      */
-    // this method is here instead of WebConfig because in web config the bean isn't created (don't know why)
+    // this method is here instead of WebConfig because in web config the bean isn't
+    // created (don't know why)
     @Bean
     RequestMappingHandlerMapping requestMappingHandlerMapping(ExtensionWebContext extContext) {
         var handler = new RequestMappingHandlerMapping();
@@ -224,7 +219,6 @@ public class DefaultExtensionContextConfig { //  implements WebMvcConfigurer {
 
     @Bean
     public ExtensionWebContext extensionWebContext(JfxAppContext context,
-            @Value("${server.port:}") String xxx,
             @Value(InternalRestClient.CONTEXT_PATH_PROP) String contextPath,
             @Value(InternalRestClient.SERVLET_PATH_PROP) String servletPath) {
         return new ExtensionWebContext(context, contextPath, servletPath);
@@ -597,25 +591,19 @@ public class DefaultExtensionContextConfig { //  implements WebMvcConfigurer {
             this.extContext = extContext;
         }
 
+        @Bean("org.springdoc.core.properties.SwaggerUiConfigProperties")
+        SwaggerUiConfigProperties swaggerUiConfigProperties(JfxAppContext context) {
+            var config = new SwaggerUiConfigProperties();
+            String path = String.format("/%s/%s/swagger-ui.html", JfxAppsPlatform.EXTENSION_REST_PATH_PREFIX,
+                    context.getId());
+            config.setPath(path);
+            return config;
+        }
+
         @Bean("org.springdoc.core.properties.SwaggerUiConfigParameters")
         SwaggerUiConfigParameters swaggerUiConfigParameters(
-                @LocalContextOnly SwaggerUiConfigProperties swaggerUiConfigProperties,
-                ServerProperties serverProperties, @Value(InternalRestClient.CONTEXT_PATH_PROP) String contextPath,
-                @Value(InternalRestClient.SERVLET_PATH_PROP) String servletPath) {
-
-            String path = String.format("/%s/%s/swagger-ui.html", JfxAppsPlatform.EXTENSION_REST_PATH_PREFIX,
-                    extContext.getContext().getId());
-            swaggerUiConfigProperties.setPath(path);
-
-            var param = new SwaggerUiConfigParameters(swaggerUiConfigProperties);
-
-            param.setPath(path);
-
-            String url = String.format("http://localhost:%s%s%s", serverProperties.getPort(), extContext.getBasePath(),
-                    path);
-            logger.info("Documentation url : " + url);
-
-            return param;
+                @LocalContextOnly SwaggerUiConfigProperties swaggerUiConfigProperties) {
+            return new SwaggerUiConfigParameters(swaggerUiConfigProperties);
         }
 
         @Bean("org.springdoc.core.properties.SpringDocConfigProperties")
@@ -704,15 +692,6 @@ public class DefaultExtensionContextConfig { //  implements WebMvcConfigurer {
             return new SwaggerUiHome();
         }
 
-        @Bean("org.springdoc.core.properties.SwaggerUiConfigProperties")
-        SwaggerUiConfigProperties swaggerUiConfigProperties(JfxAppContext context) {
-            var config = new SwaggerUiConfigProperties();
-            String path = String.format("/%s/%s/swagger-ui.html", JfxAppsPlatform.EXTENSION_REST_PATH_PREFIX,
-                    context.getId());
-            config.setPath(path);
-            return config;
-        }
-
         // SwaggerUiConfigParameters swaggerUiConfigParameters,
         @Bean
         SwaggerIndexTransformer indexPageTransformer(@LocalContextOnly SwaggerUiConfigProperties swaggerUiConfig,
@@ -740,9 +719,7 @@ public class DefaultExtensionContextConfig { //  implements WebMvcConfigurer {
             return new ServerBaseUrlCustomizer() {
                 @Override
                 public String customize(String serverBaseUrl, HttpRequest request) {
-
-                    // return server == null ? null : server.replace(internalContextPath, "");
-                    return request.getURI().toString().replace(serverBaseUrl, "");
+                    return "";
                 }
             };
         }

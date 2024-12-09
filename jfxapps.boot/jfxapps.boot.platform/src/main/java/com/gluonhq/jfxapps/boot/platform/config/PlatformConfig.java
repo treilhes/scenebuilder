@@ -43,7 +43,7 @@ import com.gluonhq.jfxapps.boot.platform.internal._Internal;
 
 @Configuration
 @ConfigurationProperties(prefix = "jfxapps.platform")
-@ComponentScan(basePackageClasses = {_Internal.class})
+//@ComponentScan(basePackageClasses = {_Internal.class})
 public class PlatformConfig {
 
     private Path rootPath;

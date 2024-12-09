@@ -80,6 +80,12 @@ public class InternalRestClientImpl implements InternalRestClient {
                 + (StringUtils.hasText(servletPath) ? "/" + servletPath : "")).replaceAll("/+", "/");
     }
 
+    @Override
+    public String rootUri() {
+        int serverPort = serverProperties.getPort();
+        return String.format("http://localhost:%s", serverPort);
+    }
+
     private String createUri(UUID uuid, String path) {
         int serverPort = serverProperties.getPort();
         return String.format("http://localhost:%s%s/%s/%s", serverPort, basePath,
@@ -100,13 +106,13 @@ public class InternalRestClientImpl implements InternalRestClient {
     }
 
     @Override
-    public ResponseBuilder get(UUID uuid, String path) throws URISyntaxException, IOException, InterruptedException {
+    public ResponseBuilder get(UUID uuid, String path) throws URISyntaxException {
         return request(uuid, path, null);
     }
 
     @Override
     public ResponseBuilder get(UUID uuid, String path, RequestConfig customization)
-            throws URISyntaxException, IOException, InterruptedException {
+            throws URISyntaxException, IOException {
 
         RequestConfig finalCustomization = getCustomization(customization);
 
@@ -121,19 +127,18 @@ public class InternalRestClientImpl implements InternalRestClient {
     }
 
     @Override
-    public ResponseBuilder post(UUID uuid, String path) throws URISyntaxException, IOException, InterruptedException {
+    public ResponseBuilder post(UUID uuid, String path) throws URISyntaxException, IOException {
         return post(uuid, path, null, null);
     }
 
     @Override
-    public ResponseBuilder post(UUID uuid, String path, Object posted)
-            throws URISyntaxException, IOException, InterruptedException {
+    public ResponseBuilder post(UUID uuid, String path, Object posted) throws URISyntaxException, IOException {
         return post(uuid, path, null, posted);
     }
 
     @Override
     public ResponseBuilder post(UUID uuid, String path, RequestConfig customization, Object posted)
-            throws URISyntaxException, IOException, InterruptedException {
+            throws URISyntaxException, IOException {
 
         RequestConfig finalCustomization = postCustomization(customization, posted);
 
@@ -159,19 +164,18 @@ public class InternalRestClientImpl implements InternalRestClient {
     }
 
     @Override
-    public ResponseBuilder put(UUID uuid, String path) throws URISyntaxException, IOException, InterruptedException {
+    public ResponseBuilder put(UUID uuid, String path) throws URISyntaxException, IOException {
         return put(uuid, path, null, null);
     }
 
     @Override
-    public ResponseBuilder put(UUID uuid, String path, Object posted)
-            throws URISyntaxException, IOException, InterruptedException {
+    public ResponseBuilder put(UUID uuid, String path, Object posted) throws URISyntaxException, IOException {
         return put(uuid, path, null, posted);
     }
 
     @Override
     public ResponseBuilder put(UUID uuid, String path, RequestConfig customization, Object posted)
-            throws URISyntaxException, IOException, InterruptedException {
+            throws URISyntaxException, IOException {
 
         RequestConfig finalCustomization = putCustomization(customization, posted);
 
@@ -198,13 +202,13 @@ public class InternalRestClientImpl implements InternalRestClient {
     }
 
     @Override
-    public ResponseBuilder delete(UUID uuid, String path) throws URISyntaxException, IOException, InterruptedException {
+    public ResponseBuilder delete(UUID uuid, String path) throws URISyntaxException, IOException {
         return delete(uuid, path, null);
     }
 
     @Override
     public ResponseBuilder delete(UUID uuid, String path, RequestConfig customization)
-            throws URISyntaxException, IOException, InterruptedException {
+            throws URISyntaxException, IOException {
 
         RequestConfig finalCustomization = deleteCustomization(customization);
 
@@ -234,8 +238,7 @@ public class InternalRestClientImpl implements InternalRestClient {
 //    }
 
     @Override
-    public ResponseBuilder request(UUID uuid, String path, RequestConfig customization)
-            throws URISyntaxException, IOException, InterruptedException {
+    public ResponseBuilder request(UUID uuid, String path, RequestConfig customization) throws URISyntaxException {
 
         String uri = createUri(uuid, path);
 
@@ -292,7 +295,8 @@ public class InternalRestClientImpl implements InternalRestClient {
         }
 
         @Override
-        public <T> ResponseBuilder on(int status, BodyHandler<T> expected, ThrowableConsumer<HttpResponse<T>> consumer) {
+        public <T> ResponseBuilder on(int status, BodyHandler<T> expected,
+                ThrowableConsumer<HttpResponse<T>> consumer) {
             expectedsx.put(status, new Expected(status, expected, consumer));
             return this;
         }
@@ -356,7 +360,7 @@ public class InternalRestClientImpl implements InternalRestClient {
                     noneMatch.accept((HttpResponse<String>) response);
                 }
 
-                return (T)response.body();
+                return (T) response.body();
             } catch (Exception e) {
                 if (onException != null) {
                     onException.accept(e);
@@ -365,6 +369,11 @@ public class InternalRestClientImpl implements InternalRestClient {
                     throw new RuntimeException(e.getMessage(), e);
                 }
             }
+        }
+
+        @Override
+        public URI getUri() {
+            return request.uri();
         }
     }
 }

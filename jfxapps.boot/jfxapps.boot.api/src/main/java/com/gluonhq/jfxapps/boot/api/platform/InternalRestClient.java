@@ -33,7 +33,6 @@
  */
 package com.gluonhq.jfxapps.boot.api.platform;
 
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URISyntaxException;
@@ -91,35 +90,29 @@ public interface InternalRestClient {
         return Stream.of(path).map(Object::toString).collect(Collectors.joining("/"));
     }
 
-    ResponseBuilder get(UUID uuid, String path) throws URISyntaxException, IOException, InterruptedException;
+    ResponseBuilder get(UUID uuid, String path) throws URISyntaxException, IOException;
 
-    ResponseBuilder get(UUID uuid, String path, RequestConfig customization)
-            throws URISyntaxException, IOException, InterruptedException;
+    ResponseBuilder get(UUID uuid, String path, RequestConfig customization) throws URISyntaxException, IOException;
 
-    ResponseBuilder post(UUID uuid, String path) throws URISyntaxException, IOException, InterruptedException;
+    ResponseBuilder post(UUID uuid, String path) throws URISyntaxException, IOException;
 
-    ResponseBuilder post(UUID uuid, String path, Object posted)
-            throws URISyntaxException, IOException, InterruptedException;
+    ResponseBuilder post(UUID uuid, String path, Object posted) throws URISyntaxException, IOException;
 
     ResponseBuilder post(UUID uuid, String path, RequestConfig customization, Object posted)
-            throws URISyntaxException, IOException, InterruptedException;
+            throws URISyntaxException, IOException;
 
-    ResponseBuilder put(UUID uuid, String path) throws URISyntaxException, IOException, InterruptedException;
+    ResponseBuilder put(UUID uuid, String path) throws URISyntaxException, IOException;
 
-    ResponseBuilder put(UUID uuid, String path, Object posted)
-            throws URISyntaxException, IOException, InterruptedException;
+    ResponseBuilder put(UUID uuid, String path, Object posted) throws URISyntaxException, IOException;
 
     ResponseBuilder put(UUID uuid, String path, RequestConfig customization, Object posted)
-            throws URISyntaxException, IOException, InterruptedException;
+            throws URISyntaxException, IOException;
 
-    ResponseBuilder delete(UUID uuid, String path)
-            throws URISyntaxException, IOException, InterruptedException;
+    ResponseBuilder delete(UUID uuid, String path) throws URISyntaxException, IOException;
 
-    ResponseBuilder delete(UUID uuid, String path, RequestConfig customization)
-            throws URISyntaxException, IOException, InterruptedException;
+    ResponseBuilder delete(UUID uuid, String path, RequestConfig customization) throws URISyntaxException, IOException;
 
-    ResponseBuilder request(UUID uuid, String path, RequestConfig customization)
-            throws URISyntaxException, IOException, InterruptedException;
+    ResponseBuilder request(UUID uuid, String path, RequestConfig customization) throws URISyntaxException, IOException;
 
     public static class JsonResponseException extends RuntimeException {
         /**
@@ -170,7 +163,6 @@ public interface InternalRestClient {
 
     }
 
-
     public class JsonBodyHandler {
 
         private static final ObjectMapper mapper = new ObjectMapper();
@@ -202,11 +194,13 @@ public interface InternalRestClient {
             return of(type);
         }
 
-        public static <K,V> BodyHandler<Map<K,V>> mapOf(Class<K> keyClass, Class<K> valueClass) throws JsonResponseException {
+        public static <K, V> BodyHandler<Map<K, V>> mapOf(Class<K> keyClass, Class<K> valueClass)
+                throws JsonResponseException {
             JavaType type = mapper.getTypeFactory().constructMapType(Map.class, keyClass, valueClass);
             return of(type);
         }
     }
 
+    String rootUri();
 
 }

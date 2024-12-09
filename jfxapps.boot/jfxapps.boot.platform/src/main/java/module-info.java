@@ -33,6 +33,8 @@
  */
 import java.net.spi.URLStreamHandlerProvider;
 
+import com.gluonhq.jfxapps.boot.api.loader.BootClasses;
+import com.gluonhq.jfxapps.boot.platform.PlatformBootClasses;
 import com.gluonhq.jfxapps.ext.container.spi.InMemoryFileURLStreamHandlerProvider;
 
 open module jfxapps.boot.platform {
@@ -54,5 +56,6 @@ open module jfxapps.boot.platform {
     requires com.fasterxml.jackson.databind;
     requires org.slf4j;
 
+    provides BootClasses with PlatformBootClasses;
     provides URLStreamHandlerProvider with InMemoryFileURLStreamHandlerProvider;
 }

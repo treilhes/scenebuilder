@@ -3,6 +3,7 @@ module jfxapps.boot.api {
     exports com.gluonhq.jfxapps.boot.api.aop;
     exports com.gluonhq.jfxapps.boot.api.context;
     exports com.gluonhq.jfxapps.boot.api.context.annotation;
+    exports com.gluonhq.jfxapps.boot.api.jpa;
     exports com.gluonhq.jfxapps.boot.api.layer;
     exports com.gluonhq.jfxapps.boot.api.loader;
     exports com.gluonhq.jfxapps.boot.api.loader.extension;

@@ -58,9 +58,9 @@ import com.gluonhq.jfxapps.boot.registry.repository._Repository;
 
 @Configuration
 @ConfigurationProperties(prefix = "jfxapps.registry")
-@EntityScan(basePackageClasses = _Model.class)
+//@EntityScan(basePackageClasses = _Model.class)
 //@EnableJpaRepositories(basePackageClasses = _Repository.class)
-@ComponentScan(basePackageClasses = _Component.class)
+//@ComponentScan(basePackageClasses = _Component.class)
 @Profile("!it")
 public class RegistryConfig {
 

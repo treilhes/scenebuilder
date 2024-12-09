@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.boot.api.platform;
 
+import java.net.URI;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandler;
 import java.util.function.Consumer;
@@ -51,10 +52,11 @@ public interface ResponseBuilder {
 
     <T> T execute();
 
+    URI getUri();
+
     @FunctionalInterface
     public interface ThrowableConsumer<T> {
         void accept(T t) throws Exception;
     }
-
 
 }

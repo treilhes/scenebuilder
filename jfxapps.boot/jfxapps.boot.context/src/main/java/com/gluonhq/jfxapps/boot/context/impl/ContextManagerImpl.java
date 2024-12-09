@@ -114,7 +114,8 @@ public class ContextManagerImpl implements ContextManager {
         }
 
         var startup = new BufferingApplicationStartup(10000);
-        var step = startup.start("Context " + uuid);
+        var step = startup.start("Boot Context " + uuid);
+
         step.tag("classes", String.valueOf(classes.size()));
         step.tag("deportedClasses", String.valueOf(deportedClasses.size()));
         step.tag("singletonInstances", String.valueOf(singletonInstances.size()));

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,6 +32,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.gluonhq.jfxapps.boot.api.loader.BootClasses;
+import com.gluonhq.jfxapps.boot.layer.config.LayerBootClasses;
+
 open module jfxapps.boot.layer {
     exports com.gluonhq.jfxapps.boot.layer;
     exports com.gluonhq.jfxapps.boot.layer.config;
@@ -43,4 +46,5 @@ open module jfxapps.boot.layer {
     requires jfxapps.hibernate.core.patch.link;
     requires java.base.patch.link;
 
+    provides BootClasses with LayerBootClasses;
 }

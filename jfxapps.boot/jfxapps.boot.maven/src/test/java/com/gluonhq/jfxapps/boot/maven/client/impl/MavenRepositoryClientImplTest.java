@@ -94,7 +94,7 @@ class MavenRepositoryClientImplTest {
         Mockito.when(platform.defaultUserM2Repository()).thenReturn(tempRepoDir);
         System.out.println(tempRepoDir.getAbsolutePath());
 
-        client = new MavenRepositoryClientImpl(platform, RepositoryManager.readOnlyManager(MavenPresets.getPresetRepositories()), config);
+        client = new MavenRepositoryClientImpl(platform, RepositoryManager.readOnlyManager(MavenPresets.getPresetRepositories()), config, Optional.empty());
         // client = new MavenClientImpl(MavenClient.getDefaultUserM2Repository(),
         // MavenPresets.getPresetRepositories());
         // client.favorizeLocalResolution();

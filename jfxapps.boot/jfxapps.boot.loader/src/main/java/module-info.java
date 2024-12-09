@@ -33,7 +33,9 @@
  */
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 
+import com.gluonhq.jfxapps.boot.api.loader.BootClasses;
 import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.loader.config.LoaderBootClasses;
 
 
 open module jfxapps.boot.loader {
@@ -54,6 +56,8 @@ open module jfxapps.boot.loader {
     requires jfxapps.boot.starter;
 
     requires java.compiler;
+
+    provides BootClasses with LoaderBootClasses;
 
     uses Extension;
     uses ImportBeanDefinitionRegistrar;

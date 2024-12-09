@@ -40,6 +40,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -49,6 +50,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
 import org.springframework.core.metrics.jfr.FlightRecorderApplicationStartup;
 
+import com.gluonhq.jfxapps.boot.api.loader.BootClasses;
 import com.gluonhq.jfxapps.boot.main.config.BootConfig;
 import com.gluonhq.jfxapps.boot.main.config.BootHandler;
 import com.gluonhq.jfxapps.boot.main.util.MessageBox;
@@ -92,8 +94,15 @@ public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMes
         //var startup = new FlightRecorderApplicationStartup();
 
 
-        var step = startup.start("Initializing voot context");
-        SpringApplication application = new SpringApplication(BootConfig.exportedClasses.toArray(Class[]::new));
+        var step = startup.start("Initializing Boot context");
+
+        var bootClasses = ServiceLoader.load(BootClasses.class).stream()
+                .map(p -> p.get())
+                .map(bc -> bc.bootClasses())
+                .flatMap(l -> l.stream())
+                .toList();
+        SpringApplication application = new SpringApplication(bootClasses.toArray(Class[]::new));
+
         application.setApplicationStartup(startup);
         var ctx = application.run(new String[0]);
 
