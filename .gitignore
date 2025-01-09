@@ -25,7 +25,6 @@ bin/
 .DS_Store
 lib/
 scenicView.properties
-*.patch
 *.class
 *.log
 dist/
