@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -43,8 +43,11 @@ import static org.mockito.Mockito.when;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
@@ -61,26 +64,35 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationContextFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.boot.test.context.SpringBootContextLoader;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.MergedContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.gluonhq.jfxapps.boot.api.context.ContextManager;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Primary;
-import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.api.loader.ApplicationManager;
+import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
 import com.gluonhq.jfxapps.boot.api.loader.BootException;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
-import com.gluonhq.jfxapps.boot.api.platform.InternalRestClient;
-import com.gluonhq.jfxapps.boot.api.platform.InternalRestClient.JsonBodyHandler;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.boot.api.web.client.InternalRestClient;
+import com.gluonhq.jfxapps.boot.api.web.client.InternalRestClient.JsonBodyHandler;
+import com.gluonhq.jfxapps.boot.context.boot.BootContextFactory;
+import com.gluonhq.jfxapps.boot.context.boot.BootContextInitializer;
 import com.gluonhq.jfxapps.boot.loader.StateProvider;
 import com.gluonhq.jfxapps.boot.loader.content.FileExtensionProvider;
 import com.gluonhq.jfxapps.boot.loader.model.Application;
@@ -88,7 +100,6 @@ import com.gluonhq.jfxapps.boot.loader.model.ApplicationExtension;
 import com.gluonhq.jfxapps.boot.loader.model.Extension;
 import com.gluonhq.jfxapps.boot.loader.model.JfxApps;
 import com.gluonhq.jfxapps.boot.loader.model.JfxAppsExtension;
-import com.gluonhq.jfxapps.boot.main.config.BootConfig;
 import com.gluonhq.jfxapps.boot.registry.RegistryManager;
 
 /**
@@ -98,17 +109,11 @@ import com.gluonhq.jfxapps.boot.registry.RegistryManager;
  *
  * - Jpa - Validation - Aspect
  */
-@ExtendWith({ MockitoExtension.class, SpringExtension.class })
-@SpringBootTest(classes = { BootConfig.class,
-        AvailableFeaturesTestIT.Configuration.class },
-        webEnvironment = WebEnvironment.DEFINED_PORT,
-        properties = {"spring.mvc.servlet.path=/app", "server.servlet.context-path=/jfx", "debug=false" })
-
-//@AutoConfigureCache
-//@AutoConfigureDataJpa
-//@AutoConfigureTestDatabase
-//@AutoConfigureTestEntityManager
-//@EnableJpaRepositories
+@ExtendWith({ SpringExtension.class, MockitoExtension.class })
+@SpringBootTest(classes = { AvailableFeaturesTestIT.Configuration.class }, webEnvironment = WebEnvironment.DEFINED_PORT, properties = {
+                "spring.mvc.servlet.path=/app", "server.servlet.context-path=/jfx",
+                "jfxapps.repository.directory=./target/it", "debug=true" })
+@ContextConfiguration(loader = AvailableFeaturesTestIT.TestContextLoader.class)
 @ActiveProfiles({ "it", "dev" })
 @TestInstance(Lifecycle.PER_CLASS)
 public class AvailableFeaturesTestIT {
@@ -118,14 +123,38 @@ public class AvailableFeaturesTestIT {
 
     private static final String RES_IT = "./src/test/resources-its/common-loader";
 
-    private static final UUID ROOT_ID = com.gluonhq.jfxapps.boot.api.loader.extension.Extension.ROOT_ID;
-    private static final UUID ROOT_EXT1_ID = UUID.fromString("00000000-0000-0000-0000-000000000001");
-    private static final UUID ROOT_EXT1_EXT1_ID = UUID.fromString("00000000-0000-0000-0000-000000000011");
-    private static final UUID APP1_ID = UUID.fromString("00000000-0000-0000-0001-000000000000");
-    private static final UUID APP1_EXT1_ID = UUID.fromString("00000000-0000-0000-0001-000000000001");
-    private static final UUID APP1_EXT1_EXT1_ID = UUID.fromString("00000000-0000-0000-0001-000000000011");
+    private static final UUID ROOT_ID = OpenExtension.ROOT_ID;
+    private static final UUID ROOT_EXT1_ID = UUID.fromString("00000000-0000-0000-0000-000000000011");
+    private static final UUID ROOT_EXT1_EXT1_ID = UUID.fromString("00000000-0000-0000-0000-000000000111");
+    private static final UUID APP1_ID = UUID.fromString("00000000-0000-0000-0000-000000000002");
+    private static final UUID APP1_EXT1_ID = UUID.fromString("00000000-0000-0000-0000-000000000012");
+    private static final UUID APP1_EXT1_EXT1_ID = UUID.fromString("00000000-0000-0000-0000-000000000112");
+
+    public static class TestContextLoader extends SpringBootContextLoader {
+
+        @Override
+        protected SpringApplication getSpringApplication() {
+
+            var application = super.getSpringApplication();
+            application.setApplicationContextFactory(new BootContextFactory());
+
+            var filteredClasses = List.of(JfxAppsPlatform.class, StateProvider.class);
+            application.addInitializers(new BootContextInitializer(List.of(), filteredClasses));
+
+            return application;
+        }
+
+        @Override
+        protected ApplicationContextFactory getApplicationContextFactory(MergedContextConfiguration mergedConfig) {
+            return new BootContextFactory();
+            //return super.getApplicationContextFactory(mergedConfig);
+        }
+
+
+    }
 
     @TestConfiguration
+    @SpringBootConfiguration
     static class Configuration {
 
         /*
@@ -151,20 +180,6 @@ public class AvailableFeaturesTestIT {
             when(stateProvider.bootState()).thenReturn(testApp());
             return stateProvider;
         }
-
-//        @Bean
-//        @Primary
-//        RegistryManager registryManager() {
-//            RegistryManager registryManager = Mockito.mock(RegistryManager.class);
-//            return registryManager;
-//        }
-
-//        @Bean
-//        @Primary
-//        RepositoryClient repositoryClient() {
-//            RepositoryClient repositoryClient = Mockito.mock(RepositoryClient.class);
-//            return repositoryClient;
-//        }
 
         /*
          * This is the test application and extensions
@@ -199,24 +214,14 @@ public class AvailableFeaturesTestIT {
     }
 
     @Inject
-    ModuleLayerManager layerManager;
-
-    @Inject
-    ContextManager contextManager;
-
-    @Inject
-    ApplicationManager appManager;
-
-    @Inject
     ApplicationContext boot;
 
-    @Inject
     InternalRestClient internalClient;
 
-    @MockBean
+    @MockitoBean
     RegistryManager registryManager;
 
-    @MockBean
+    @MockitoBean
     RepositoryClient repositoryClient;
 
     /**
@@ -224,7 +229,7 @@ public class AvailableFeaturesTestIT {
      * in the server properties. RANDOM_PORT does not work as expected so we give it
      * a little help
      */
-    @SpyBean
+    @MockitoSpyBean
     ServerProperties serverProperties;
 
     /**
@@ -236,8 +241,11 @@ public class AvailableFeaturesTestIT {
 
     @BeforeAll
     public void initLaunchApp() throws BootException {
+        var appManager = boot.getBean(ApplicationManager.class);
         appManager.start();
         appManager.startApplication(APP1_ID);
+
+        internalClient = boot.getBean(InternalRestClient.class);
     }
 
     @BeforeEach
@@ -272,7 +280,7 @@ public class AvailableFeaturesTestIT {
     @ParameterizedTest
     @MethodSource("allContextIds")
     public void context_must_be_created_and_accessible(UUID contextId) throws Exception {
-        assertNotNull(contextManager.get(contextId));
+        assertNotNull(boot.getBean(ContextManager.class).get(contextId));
     }
 
     /**
@@ -351,7 +359,7 @@ public class AvailableFeaturesTestIT {
         String trRemoved = "transaction_rollback_in_service";
         TestModel posted = new TestModel();
         posted.setData(trRemoved);
-
+        posted.setOther("objectIsValid");
         internalClient.post(contextId, "models/transaction_rollback_in_service", jsonHeaderNew, posted)
                 .on(500, JsonBodyHandler.of(Error.class),
                         r -> assertEquals(ROLLBACK_TRIGGERED_MARKER, r.body().getMessage()))
@@ -371,7 +379,7 @@ public class AvailableFeaturesTestIT {
         String trRemoved = "transaction_rollback_in_repository";
         TestModel posted = new TestModel();
         posted.setData(trRemoved);
-
+        posted.setOther("objectIsValid");
         internalClient.post(contextId, "models/transaction_rollback_in_repository", jsonHeaderNew, posted)
                 .on(500, JsonBodyHandler.of(Error.class),
                         r -> assertEquals(ROLLBACK_TRIGGERED_MARKER, r.body().getMessage()))
@@ -446,12 +454,14 @@ public class AvailableFeaturesTestIT {
     /**
      * This test ensure that the application scoped bean JfxAppsRootExportedService
      * loaded in the application context APP1 did successfully resolve the
-     * dependency to the local service from its source extension ROOT_EXT1_ID context due to the annotation
-     * {@literal @}LayerContext <br/>
+     * dependency to the local service from its source extension ROOT_EXT1_ID
+     * context due to the annotation {@literal @}LayerContext <br/>
      *
-     * @ApplicationSingleton<br/> public class JfxAppsRootExportedService implements
-     * RootExportedService {<br/> public JfxAppsRootExportedService(@LayerContext
-     * JfxAppsService local) {}}<br/>
+     * @ApplicationSingleton<br/>
+     *                            public class JfxAppsRootExportedService implements
+     *                            RootExportedService {<br/>
+     *                            public JfxAppsRootExportedService(@LayerContext
+     *                            JfxAppsService local) {}}<br/>
      */
     @Test
     public void root_service_load_bean_in_source_context() throws Exception {

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -51,6 +51,7 @@ import org.springframework.boot.context.metrics.buffering.StartupTimeline;
 import org.springframework.boot.context.metrics.buffering.StartupTimeline.TimelineEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.metrics.ApplicationStartup;
+import org.springframework.core.metrics.StartupStep;
 
 import com.gluonhq.jfxapps.app.devtools.api.ui.Docks;
 import com.gluonhq.jfxapps.boot.api.context.ContextManager;
@@ -401,7 +402,7 @@ public class StartupController extends AbstractFxmlViewController {
         for (var value:values) {
             String id = String.valueOf(value.getStartupStep().getId());
 
-            if (value != null && pattern.matcher(value.getStartupStep().getName()).matches()) {
+            if (value != null && isFilterMatching(value.getStartupStep())) {
                 var event = source.idToEventMap.remove(id);
 
                 if (event == null) {
@@ -445,6 +446,20 @@ public class StartupController extends AbstractFxmlViewController {
                 }
             }
         }
+    }
+
+    private boolean isFilterMatching(StartupStep step) {
+
+        if (filterPattern.matcher(step.getName()).matches()) {
+            return true;
+        }
+
+        for (var tag : step.getTags()) {
+            if (filterPattern.matcher(tag.getKey()).matches() || filterPattern.matcher(tag.getValue()).matches()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static class EventTree {

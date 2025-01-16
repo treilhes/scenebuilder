@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -59,6 +59,7 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.api.layer.InvalidLayerException;
 import com.gluonhq.jfxapps.boot.api.layer.Layer;
 import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.java.base.patch.PatchLink;
 
 /**
@@ -424,7 +425,7 @@ public class ModuleLayerManagerImpl implements ModuleLayerManager {
         ModuleLayer.boot().modules().stream().sorted(Comparator.comparing(Module::getName)).forEach(m -> builder.append(m.getName()).append("\n"));
 
         builder.append("ROOT").append("\n");
-        var root = get(Layer.ROOT_ID);
+        var root = get(Extension.ROOT_ID);
         logLayer(root, 0, builder);
 
         logger.info("Layers created and module tree \n {}", builder);

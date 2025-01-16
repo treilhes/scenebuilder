@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,33 +35,15 @@ package com.gluonhq.jfxapps.boot.registry.config;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 
 import com.gluonhq.jfxapps.boot.registry.RegistryArtifact;
-import com.gluonhq.jfxapps.boot.registry.internal._Component;
-import com.gluonhq.jfxapps.boot.registry.model.Registry;
-import com.gluonhq.jfxapps.boot.registry.model.RegistrySource;
-import com.gluonhq.jfxapps.boot.registry.model.RegistrySource.RegistrySourceId;
-import com.gluonhq.jfxapps.boot.registry.model._Model;
-import com.gluonhq.jfxapps.boot.registry.repository.RegistryRepository;
-import com.gluonhq.jfxapps.boot.registry.repository.RegistrySourceRepository;
-import com.gluonhq.jfxapps.boot.registry.repository._Repository;
 
 @Configuration
 @ConfigurationProperties(prefix = "jfxapps.registry")
-//@EntityScan(basePackageClasses = _Model.class)
-//@EnableJpaRepositories(basePackageClasses = _Repository.class)
-//@ComponentScan(basePackageClasses = _Component.class)
-@Profile("!it")
+//@Profile("!it")
 public class RegistryConfig {
 
     private RegistryArtifact boot;
@@ -92,15 +74,4 @@ public class RegistryConfig {
         this.snapshotsAllowed = snapshotsAllowed;
     }
 
-    @Bean
-    public JpaRepositoryFactoryBean<RegistryRepository, Registry, UUID> registryRepository() {
-        JpaRepositoryFactoryBean factory = new JpaRepositoryFactoryBean(RegistryRepository.class);
-        return factory;
-      }
-
-    @Bean
-    public JpaRepositoryFactoryBean<RegistrySourceRepository, RegistrySource, RegistrySourceId> registrySourceRepository() {
-        JpaRepositoryFactoryBean factory = new JpaRepositoryFactoryBean(RegistrySourceRepository.class);
-        return factory;
-      }
 }

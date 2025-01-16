@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.boot.api.loader.BootClasses;
+import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
 import com.gluonhq.jfxapps.boot.maven.MavenBootClasses;
 
 open module jfxapps.boot.maven {
@@ -55,5 +55,5 @@ open module jfxapps.boot.maven {
     requires org.apache.maven.resolver.util;
     requires java.compiler;
 
-    provides BootClasses with MavenBootClasses;
+    provides BootContextConfigClasses with MavenBootClasses;
 }

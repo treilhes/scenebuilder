@@ -33,6 +33,8 @@
  */
 package com.gluonhq.jfxapps.boot.api.context;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -42,9 +44,9 @@ import com.gluonhq.jfxapps.boot.api.layer.Layer;
 public class ContextConfiguration {
     UUID parentContextId;
     Layer layer;
-    Set<Class<?>> classes;
-    Set<Class<?>> deportedClasses;
-    List<Object> singletonInstances;
+    Set<Class<?>> classes = new HashSet<>();
+    Set<Class<?>> deportedClasses = new HashSet<>();
+    List<Object> singletonInstances = new ArrayList<>();
     MultipleProgressListener progressListener;
 
     public UUID getParentContextId() {
@@ -62,20 +64,20 @@ public class ContextConfiguration {
     public Set<Class<?>> getClasses() {
         return classes;
     }
-    public void setClasses(Set<Class<?>> classes) {
-        this.classes = classes;
+    public void addClasses(Set<Class<?>> classes) {
+        this.classes.addAll(classes);
     }
     public Set<Class<?>> getDeportedClasses() {
         return deportedClasses;
     }
-    public void setDeportedClasses(Set<Class<?>> deportedClasses) {
-        this.deportedClasses = deportedClasses;
+    public void addDeportedClasses(Set<Class<?>> deportedClasses) {
+        this.deportedClasses.addAll(deportedClasses);
     }
     public List<Object> getSingletonInstances() {
         return singletonInstances;
     }
-    public void setSingletonInstances(List<Object> singletonInstances) {
-        this.singletonInstances = singletonInstances;
+    public void addSingletonInstances(List<Object> singletonInstances) {
+        this.singletonInstances.addAll(singletonInstances);
     }
     public MultipleProgressListener getProgressListener() {
         return progressListener;

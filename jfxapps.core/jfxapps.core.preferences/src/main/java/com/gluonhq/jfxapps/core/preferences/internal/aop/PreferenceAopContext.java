@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,28 +34,18 @@
 package com.gluonhq.jfxapps.core.preferences.internal.aop;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.context.annotation.ComponentScan.Filter;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.core.type.filter.AnnotationTypeFilter;
-import org.springframework.core.type.filter.AssignableTypeFilter;
-import org.springframework.core.type.filter.TypeFilter;
-import org.springframework.data.util.TypeInformation;
-import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
+import com.gluonhq.jfxapps.boot.api.aop.AopContext;
 import com.gluonhq.jfxapps.boot.api.aop.AopFactoryBean;
 import com.gluonhq.jfxapps.boot.api.aop.AopMetadata;
-import com.gluonhq.jfxapps.boot.api.aop.AopScanContext;
-import com.gluonhq.jfxapps.boot.api.aop.ScanMetadata;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
@@ -67,7 +57,6 @@ import com.gluonhq.jfxapps.core.api.preference.NoPreferenceBean;
 import com.gluonhq.jfxapps.core.api.preference.Preference;
 import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
 import com.gluonhq.jfxapps.core.api.preference.PreferenceEditorFactory;
-import com.gluonhq.jfxapps.core.api.preference.PreferenceScan;
 import com.gluonhq.jfxapps.core.api.preference.UserPreference;
 import com.gluonhq.jfxapps.core.api.preference.ValueValidator;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
@@ -84,10 +73,10 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 
 
-public class PreferenceAopContext extends AopScanContext<PreferenceScan, Preference, PreferenceContext, PreferenceAopContext.PreferenceMetadata> {
+public class PreferenceAopContext extends AopContext<Preference, PreferenceContext, PreferenceAopContext.PreferenceMetadata> {
 
     public PreferenceAopContext() {
-        super(PreferenceScan.class, Preference.class, PreferenceContext.class);
+        super(Preference.class, PreferenceContext.class);
     }
 
     @Override
@@ -105,7 +94,7 @@ public class PreferenceAopContext extends AopScanContext<PreferenceScan, Prefere
         var jfxAppContext = context;
         var i18n = jfxAppContext.getBean(I18N.class);
 
-        var preferenceRepository = jfxAppContext.getLayerBean(this.getClass(), PreferenceRepository.class);
+        var preferenceRepository = jfxAppContext.getBean(PreferenceRepository.class);
 
         var defaultEditorFactory = isEditable ? jfxAppContext.getBean(PreferenceEditorFactory.class) : null;
 
@@ -191,27 +180,8 @@ public class PreferenceAopContext extends AopScanContext<PreferenceScan, Prefere
     }
 
     @Override
-    public ScanMetadata loadScanMetadata(Class<?> clazz) {
-        return new PreferenceScanMetadata(clazz);
-    }
-
-    @Override
-    public boolean isScanCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
-        boolean isConfiguration = beanDefinition.getMetadata().isAnnotated(Configuration.class.getName());
-        boolean hasScanAnnotation = beanDefinition.getMetadata().isAnnotated(PreferenceScan.class.getName());
-
-        return isConfiguration && hasScanAnnotation;
-    }
-
-    @Override
     public Class<? extends NoPreferenceBean> getExclusionAnnotation() {
         return NoPreferenceBean.class;
-    }
-
-    @Override
-    public List<TypeFilter> getTypeFilter() {
-        return List.of((mr, mrf) -> mr.getClassMetadata().isInterface(), new AssignableTypeFilter(getMarkerClass()),
-                new AnnotationTypeFilter(getContexAnnotationClass(), true, true));
     }
 
     public class BasePreference<T> implements Preference<T>, UserPreference<T> {
@@ -356,100 +326,6 @@ public class PreferenceAopContext extends AopScanContext<PreferenceScan, Prefere
         @Override
         public I18N getI18n() {
             return i18n;
-        }
-
-    }
-
-    /**
-     * Inspect generic types of {@link Preference} and {@link PreferenceContext}
-     * annotation.}
-     */
-    public class PreferenceScanMetadata implements ScanMetadata {
-
-        private static final String MUST_BE_A_CONFIGURATION = String.format("Type must be annoted with %s",
-                Configuration.class);
-
-        private final Class<?> classHolder;
-        private final TypeInformation<?> typeInformation;
-
-        private final boolean themeScanAnnotation;
-
-        private String[] value;
-        private Class<?>[] basePackageClasses;
-        private String[] basePackages;
-        private Filter[] excludeFilters;
-        private Filter[] includeFilters;
-
-        /**
-         * Creates a new {@link PreferenceScanMetadata} for the given class.
-         *
-         * @param holdingClass must not be {@literal null}.
-         */
-        public PreferenceScanMetadata(Class<?> holdingClass) {
-
-            Assert.notNull(holdingClass, "Given type must not be null");
-
-            this.classHolder = holdingClass;
-            this.typeInformation = TypeInformation.of(holdingClass);
-
-            var scanAnnotation = AnnotationUtils.findAnnotation(holdingClass, PreferenceScan.class);
-
-            this.themeScanAnnotation = scanAnnotation != null;
-
-            if (this.themeScanAnnotation) {
-                this.value = scanAnnotation.value();
-                this.basePackageClasses = scanAnnotation.basePackageClasses();
-                this.basePackages = scanAnnotation.basePackages();
-                this.excludeFilters = scanAnnotation.excludeFilters();
-                this.includeFilters = scanAnnotation.includeFilters();
-            } else {
-                this.value = new String[0];
-                this.basePackageClasses = new Class<?>[0];
-                this.basePackages = new String[0];
-                this.excludeFilters = new Filter[0];
-                this.includeFilters = new Filter[0];
-            }
-
-        }
-
-        @Override
-        public TypeInformation<?> getTypeInformation() {
-            return typeInformation;
-        }
-
-        @Override
-        public Class<?> getClassHolder() {
-            return classHolder;
-        }
-
-        @Override
-        public boolean hasScanAnnotation() {
-            return themeScanAnnotation;
-        }
-
-        @Override
-        public String[] getValue() {
-            return value;
-        }
-
-        @Override
-        public Class<?>[] getBasePackageClasses() {
-            return basePackageClasses;
-        }
-
-        @Override
-        public String[] getBasePackages() {
-            return basePackages;
-        }
-
-        @Override
-        public Filter[] getExcludeFilters() {
-            return excludeFilters;
-        }
-
-        @Override
-        public Filter[] getIncludeFilters() {
-            return includeFilters;
         }
 
     }

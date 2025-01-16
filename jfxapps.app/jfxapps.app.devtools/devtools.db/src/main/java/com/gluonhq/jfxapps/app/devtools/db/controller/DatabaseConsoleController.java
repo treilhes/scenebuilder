@@ -40,7 +40,7 @@ import com.gluonhq.jfxapps.app.devtools.api.ui.Docks;
 import com.gluonhq.jfxapps.boot.api.context.ContextManager;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
-import com.gluonhq.jfxapps.boot.api.platform.InternalRestClient;
+import com.gluonhq.jfxapps.boot.api.web.client.InternalRestClient;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;

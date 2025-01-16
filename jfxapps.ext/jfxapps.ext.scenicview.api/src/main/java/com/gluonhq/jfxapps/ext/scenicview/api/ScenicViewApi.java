@@ -41,7 +41,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.platform.InternalRestClient;
+import com.gluonhq.jfxapps.boot.api.web.client.InternalRestClient;
 import com.gluonhq.jfxapps.spring.core.patch.PatchLink;
 
 @Component

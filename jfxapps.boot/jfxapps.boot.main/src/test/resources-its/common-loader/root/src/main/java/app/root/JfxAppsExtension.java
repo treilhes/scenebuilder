@@ -49,6 +49,7 @@ import app.root.controller.ExtensionController;
 import app.root.internal.JfxAppsLocalService;
 import app.root.model.JfxAppsModel;
 import app.root.repository.JfxAppsRepository;
+import app.root.repository.JfxAppsRepositoryCustomImpl;
 import app.root.rest.JfxAppsRestController;
 import app.root.rest.RestExceptionHandler;
 import app.root.service.JfxAppsDataService;
@@ -59,8 +60,8 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 
 @Configuration
-@EntityScan(basePackageClasses = {JfxAppsModel.class})
-@EnableJpaRepositories(basePackageClasses = {JfxAppsRepository.class})
+//@EntityScan(basePackageClasses = {JfxAppsModel.class})
+//@EnableJpaRepositories(basePackageClasses = {JfxAppsRepository.class})
 public class JfxAppsExtension implements SealedExtension {
 
     private static final UUID PARENT_ID = UUID.fromString(TestConfig.PARENT_ID);
@@ -86,7 +87,11 @@ public class JfxAppsExtension implements SealedExtension {
                 JfxAppsRestController.class,
                 JfxAppsDataService.class,
                 RestExceptionHandler.class,
-                ExtensionController.class);
+                ExtensionController.class,
+                JfxAppsModel.class,
+                JfxAppsRepository.class,
+                JfxAppsRepositoryCustomImpl.class
+                );
     }
 
     @Bean

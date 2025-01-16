@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -46,19 +46,21 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
-import org.springframework.core.metrics.jfr.FlightRecorderApplicationStartup;
+import org.springframework.boot.WebApplicationType;
 
-import com.gluonhq.jfxapps.boot.api.loader.BootClasses;
-import com.gluonhq.jfxapps.boot.main.config.BootConfig;
+import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
+import com.gluonhq.jfxapps.boot.context.boot.BootContext;
 import com.gluonhq.jfxapps.boot.main.config.BootHandler;
 import com.gluonhq.jfxapps.boot.main.util.MessageBox;
 import com.gluonhq.jfxapps.boot.main.util.MessageBoxMessage;
 import com.gluonhq.jfxapps.boot.platform.internal.DefaultFolders;
 
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
+import picocli.CommandLine.Spec;
 
 @Command(subcommands = {RunFxmlCommand.class})
 public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMessage> {
@@ -78,6 +80,9 @@ public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMes
 
     private BootHandler bootHandler;
 
+    @Spec
+    private CommandSpec spec;
+
     @Override
     public void run() {
 
@@ -90,30 +95,14 @@ public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMes
             logger.error("Unable to initialize the message box", e);
         }
 
-        var startup = new BufferingApplicationStartup(10000);
-        //var startup = new FlightRecorderApplicationStartup();
+        String[] originalArgs = spec.commandLine().getParseResult().originalArgs().toArray(new String[0]);
 
+        var context = BootContext.create(null, WebApplicationType.SERVLET , originalArgs, null);
 
-        var step = startup.start("Initializing Boot context");
-
-        var bootClasses = ServiceLoader.load(BootClasses.class).stream()
-                .map(p -> p.get())
-                .map(bc -> bc.bootClasses())
-                .flatMap(l -> l.stream())
-                .toList();
-        SpringApplication application = new SpringApplication(bootClasses.toArray(Class[]::new));
-
-        application.setApplicationStartup(startup);
-        var ctx = application.run(new String[0]);
-
-        step.end();
-
-        bootHandler = ctx.getBean(BootHandler.class);
+        bootHandler = context.getBean(BootHandler.class);
         bootHandler.boot(targetApplication, files, new String[0]);
 
     }
-
-
 
     /*
      * Private (requestStartGeneric)

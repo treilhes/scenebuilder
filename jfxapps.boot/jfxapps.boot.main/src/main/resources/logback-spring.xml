@@ -20,7 +20,10 @@
         <logger name="org.springframework.orm.jpa" level="ERROR"/>
          -->
 
-        <root level="ERROR">
+        <logger name="org.apache.catalina" level="TRACE"/>
+
+
+        <root level="INFO">
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>

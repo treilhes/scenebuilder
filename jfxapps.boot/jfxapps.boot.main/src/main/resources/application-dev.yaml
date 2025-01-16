@@ -5,7 +5,7 @@ jfxapps:
     snapshotsAllowed: true
   repository:
     directory: ${user.home}/.m2/repository
-    redirectionsEnabled: true
+    redirectionsEnabled: false
     redirect:
       - groupId: com.gluonhq.jfxapps
         artifactId: jfxapps.core.api
@@ -88,6 +88,15 @@ server:
   port: 8080
   tomcat:
     basedir: ./target
+    threads:
+      max: 5
+      min-spare: 2
+    accesslog:
+      enabled: true
+      directory: logs
+      prefix: access_log
+      suffix: .log
+      pattern: '%h %l %u %t "%r" %s %b'
 spring:
   h2:
     console:

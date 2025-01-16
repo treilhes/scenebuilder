@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,14 +35,16 @@ package com.gluonhq.jfxapps.boot.context;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.api.loader.BootClasses;
+import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
 import com.gluonhq.jfxapps.boot.context.impl.ContextManagerImpl;
 
-public class ContextBootClasses implements BootClasses {
+public class ContextBootClasses implements BootContextConfigClasses {
 
     @Override
-    public List<Class<?>> bootClasses() {
+    public List<Class<?>> classes() {
         return List.of(
+                org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration.class,
+
                 ContextManagerImpl.class
                 );
     }

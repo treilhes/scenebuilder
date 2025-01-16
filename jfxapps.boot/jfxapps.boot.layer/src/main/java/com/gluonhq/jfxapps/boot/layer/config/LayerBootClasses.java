@@ -35,13 +35,13 @@ package com.gluonhq.jfxapps.boot.layer.config;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.api.loader.BootClasses;
+import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
 import com.gluonhq.jfxapps.boot.layer.internal.ModuleLayerManagerImpl;
 
-public class LayerBootClasses implements BootClasses {
+public class LayerBootClasses implements BootContextConfigClasses {
 
     @Override
-    public List<Class<?>> bootClasses() {
+    public List<Class<?>> classes() {
         return List.of(ModuleLayerManagerImpl.class);
     }
 

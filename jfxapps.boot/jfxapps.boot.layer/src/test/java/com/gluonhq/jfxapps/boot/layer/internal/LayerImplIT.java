@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -69,7 +69,7 @@ import com.gluonhq.jfxapps.boot.layer.Constants;
 class LayerImplIT {
 
     /** The Constant ROOT_ID. */
-    private final static UUID ROOT_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+    private final static UUID ROOT_ID = UUID.fromString("00000000-0000-0000-0000-000000000001");
 
     /** The root dir. */
     @TempDir

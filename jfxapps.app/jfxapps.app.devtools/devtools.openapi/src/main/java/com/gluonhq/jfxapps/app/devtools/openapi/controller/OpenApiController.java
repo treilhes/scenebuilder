@@ -51,7 +51,7 @@ import com.gluonhq.jfxapps.boot.api.layer.Layer;
 import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.api.loader.extension.ApplicationExtension;
 import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
-import com.gluonhq.jfxapps.boot.api.platform.InternalRestClient;
+import com.gluonhq.jfxapps.boot.api.web.client.InternalRestClient;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;

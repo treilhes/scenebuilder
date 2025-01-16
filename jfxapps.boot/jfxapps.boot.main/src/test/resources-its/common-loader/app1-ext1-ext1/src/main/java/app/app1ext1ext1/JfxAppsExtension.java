@@ -43,6 +43,9 @@ import app.app1ext1ext1.aspect.JfxAppsAspect;
 import app.app1ext1ext1.config.JfxAppsConfig;
 import app.app1ext1ext1.controller.ExtensionController;
 import app.app1ext1ext1.internal.JfxAppsLocalService;
+import app.app1ext1ext1.model.JfxAppsModel;
+import app.app1ext1ext1.repository.JfxAppsRepository;
+import app.app1ext1ext1.repository.JfxAppsRepositoryCustomImpl;
 import app.app1ext1ext1.rest.JfxAppsRestController;
 import app.app1ext1ext1.rest.RestExceptionHandler;
 import app.app1ext1ext1.service.JfxAppsDataService;
@@ -74,7 +77,10 @@ public class JfxAppsExtension implements SealedExtension {
                 JfxAppsRestController.class,
                 JfxAppsDataService.class,
                 RestExceptionHandler.class,
-                ExtensionController.class);
+                ExtensionController.class,
+                JfxAppsModel.class,
+                JfxAppsRepository.class,
+                JfxAppsRepositoryCustomImpl.class);
     }
 
 }

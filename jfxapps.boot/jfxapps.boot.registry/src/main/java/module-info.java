@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.boot.api.loader.BootClasses;
+import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
 import com.gluonhq.jfxapps.boot.registry.RegistryBootClasses;
 
 open module jfxapps.boot.registry {
@@ -62,5 +62,5 @@ open module jfxapps.boot.registry {
 
     requires org.slf4j;
 
-    provides BootClasses with RegistryBootClasses;
+    provides BootContextConfigClasses with RegistryBootClasses;
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,20 +38,24 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.GenericWebApplicationContext;
 
 import com.gluonhq.jfxapps.boot.api.context.ContextConfiguration;
 import com.gluonhq.jfxapps.boot.api.context.ContextCustomizer;
 import com.gluonhq.jfxapps.boot.api.context.ContextManager;
 import com.gluonhq.jfxapps.boot.api.context.ExtensionReadyEvent;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppsBeanNameGenerator;
 import com.gluonhq.jfxapps.boot.api.context.MultipleProgressListener;
 import com.gluonhq.jfxapps.boot.api.layer.Layer;
 
@@ -63,9 +67,9 @@ public class ContextManagerImpl implements ContextManager {
     private final Map<UUID, JfxAppContextImpl> uuidToContexts;
     private final Map<ModuleLayer, JfxAppContextImpl> layerToContexts;
 
-    private final ApplicationContext bootContext;
+    private final GenericWebApplicationContext bootContext;
 
-    public ContextManagerImpl(ApplicationContext bootContext) {
+    public ContextManagerImpl(GenericWebApplicationContext bootContext) {
         super();
         this.bootContext = bootContext;
         this.uuidToContexts = new HashMap<>();
@@ -119,9 +123,11 @@ public class ContextManagerImpl implements ContextManager {
         step.tag("classes", String.valueOf(classes.size()));
         step.tag("deportedClasses", String.valueOf(deportedClasses.size()));
         step.tag("singletonInstances", String.valueOf(singletonInstances.size()));
-        step.tag("modules", layer.allModules().toString());
+        if (layer != null) {
+            step.tag("modules", layer.allModules().toString());
+        }
 
-        JfxAppContextImpl context = new JfxAppContextImpl(uuid, loader);
+        JfxAppContextImpl context = new JfxAppContextImpl(uuid, loader, WebApplicationType.NONE);
         context.setApplicationStartup(startup);
         uuidToContexts.put(uuid, context);
 

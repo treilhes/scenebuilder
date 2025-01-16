@@ -1,4 +1,4 @@
-module jfxapps.boot.api {
+open module jfxapps.boot.api {
 
     exports com.gluonhq.jfxapps.boot.api.aop;
     exports com.gluonhq.jfxapps.boot.api.context;
@@ -9,6 +9,8 @@ module jfxapps.boot.api {
     exports com.gluonhq.jfxapps.boot.api.loader.extension;
     exports com.gluonhq.jfxapps.boot.api.maven;
     exports com.gluonhq.jfxapps.boot.api.platform;
+    exports com.gluonhq.jfxapps.boot.api.utils;
+    exports com.gluonhq.jfxapps.boot.api.web.client;
 
     requires jfxapps.boot.starter;
 

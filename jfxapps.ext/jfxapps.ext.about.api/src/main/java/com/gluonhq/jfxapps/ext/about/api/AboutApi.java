@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.platform.InternalRestClient;
+import com.gluonhq.jfxapps.boot.api.web.client.InternalRestClient;
 
 @Component
 public class AboutApi {

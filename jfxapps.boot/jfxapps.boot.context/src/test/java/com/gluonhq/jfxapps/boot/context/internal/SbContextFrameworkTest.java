@@ -42,7 +42,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.GenericWebApplicationContext;
 
 import com.gluonhq.jfxapps.boot.api.context.ContextConfiguration;
 import com.gluonhq.jfxapps.boot.api.context.ContextManager;
@@ -63,14 +63,15 @@ import jakarta.inject.Provider;
  */
 class SbContextFrameworkTest {
 
-    private ApplicationContext bootContext = null;
+    private GenericWebApplicationContext bootContext = null;
 
     private ContextConfiguration newContextConfiguration(Set<Class<?>> classes) {
         ContextConfiguration config = new ContextConfiguration();
-        config.setDeportedClasses(Set.of());
-        config.setClasses(classes);
+        config.addDeportedClasses(Set.of());
+        config.addClasses(classes);
         return config;
     }
+
     @Test
     void test_injection_feature_optional() {
         ContextManager mng = new ContextManagerImpl(bootContext);

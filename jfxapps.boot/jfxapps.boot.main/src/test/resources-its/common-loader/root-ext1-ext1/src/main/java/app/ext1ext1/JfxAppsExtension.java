@@ -36,10 +36,8 @@ package app.ext1ext1;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
 
@@ -49,6 +47,7 @@ import app.ext1ext1.controller.ExtensionController;
 import app.ext1ext1.internal.JfxAppsLocalService;
 import app.ext1ext1.model.JfxAppsModel;
 import app.ext1ext1.repository.JfxAppsRepository;
+import app.ext1ext1.repository.JfxAppsRepositoryCustomImpl;
 import app.ext1ext1.rest.JfxAppsRestController;
 import app.ext1ext1.rest.RestExceptionHandler;
 import app.ext1ext1.service.JfxAppsDataService;
@@ -59,8 +58,6 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 
 @Configuration
-@EntityScan(basePackageClasses = {JfxAppsModel.class})
-@EnableJpaRepositories(basePackageClasses = {JfxAppsRepository.class})
 public class JfxAppsExtension implements SealedExtension {
 
     private static final UUID PARENT_ID = UUID.fromString(TestConfig.PARENT_ID);
@@ -86,7 +83,10 @@ public class JfxAppsExtension implements SealedExtension {
                 JfxAppsRestController.class,
                 JfxAppsDataService.class,
                 RestExceptionHandler.class,
-                ExtensionController.class);
+                ExtensionController.class,
+                JfxAppsModel.class,
+                JfxAppsRepository.class,
+                JfxAppsRepositoryCustomImpl.class);
     }
 
     @Bean

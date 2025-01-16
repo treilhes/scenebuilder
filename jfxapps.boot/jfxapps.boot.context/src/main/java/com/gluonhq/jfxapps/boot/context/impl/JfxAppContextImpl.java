@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.boot.context.impl;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collection;
@@ -44,25 +45,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.ProxyFactory;
+import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.DependencyDescriptor;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ContextAnnotationAutowireCandidateResolver;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.env.MapPropertySource;
+import org.springframework.core.io.Resource;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
@@ -72,7 +79,9 @@ import org.springframework.web.context.support.GenericWebApplicationContext;
 import com.gluonhq.jfxapps.boot.api.context.Application;
 import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
 import com.gluonhq.jfxapps.boot.api.context.ContextManager;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppBeanFactory;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppsBeanNameGenerator;
 import com.gluonhq.jfxapps.boot.api.context.MultipleProgressListener;
 import com.gluonhq.jfxapps.boot.api.context.ScopedExecutor;
 import com.gluonhq.jfxapps.boot.api.context.annotation.LayerContext;
@@ -91,14 +100,16 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
     /** The scope holder */
     public static final ApplicationInstanceScopeHolder applicationInstanceScope = new ApplicationInstanceScopeHolder(applicationScope);
 
-    // private final AnnotationConfigServletWebApplicationContext context;
     private final SbBeanFactoryImpl beanFactory;
     private final UUID id;
-    private final Map<String, Class<?>> registeredClasses = new HashMap<>();
     private final Set<Class<?>> deportedClasses = new HashSet<>();
 
 
     public static JfxAppContext fromScratch(String[] propertySourceProperties, Class<?>[] array) {
+        return fromScratch(propertySourceProperties, array, WebApplicationType.NONE);
+    }
+
+    public static JfxAppContext fromScratch(String[] propertySourceProperties, Class<?>[] array, WebApplicationType webApplicationType) {
 
         JfxAppContextImpl ctx = new JfxAppContextImpl(UUID.randomUUID());
 
@@ -111,8 +122,13 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
         ctx.start();
         return ctx;
     }
+
     public static JfxAppContext fromScratch(Class<?>... array) {
         return fromScratch(new String[0], array);
+    }
+
+    public static JfxAppContext fromScratch(WebApplicationType webApplicationType, Class<?>... array) {
+        return fromScratch(new String[0], array, webApplicationType);
     }
 
     private static MapPropertySource toMapSource(String[] array) {
@@ -130,15 +146,19 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
         return new MapPropertySource("customMapProperties", propertyMap);
     }
     public JfxAppContextImpl(UUID id) {
-        this(id, null);
+        this(id, null, WebApplicationType.NONE);
     }
 
-    public JfxAppContextImpl(UUID contextId, ClassLoader loader) {
-        super(new SbBeanFactoryImpl());
+    public JfxAppContextImpl(UUID id, WebApplicationType webApplicationType) {
+        this(id, null, webApplicationType);
+    }
+
+    public JfxAppContextImpl(UUID contextId, ClassLoader loader, WebApplicationType webApplicationType) {
+        super(new SbBeanFactoryImpl(), webApplicationType);
 
         this.id = contextId;
         this.beanFactory = (SbBeanFactoryImpl) getBeanFactory();
-
+        this.setBeanNameGenerator(JfxAppsBeanNameGenerator.getInstance());
         this.setClassLoader(loader);
         this.setAllowBeanDefinitionOverriding(true);
         this.setId(contextId.toString());
@@ -155,7 +175,10 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
     public void setParent(ApplicationContext parent) {
         if (parent != null) {
             super.setParent(parent);
-            this.setServletContext(((GenericWebApplicationContext) parent).getServletContext());
+            if (parent instanceof JfxAppContextImpl swc) {
+                this.setServletContext(swc.getServletContext());
+                this.setParentWebServer(swc.getWebServer() == null ? swc.getParentWebServer() : swc.getWebServer() );
+            }
         }
     }
 
@@ -172,14 +195,6 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
         ContextProgressHandler progressHandler = new ContextProgressHandler(UUID.fromString(getId()), progressListener);
         addApplicationListener(progressHandler);
         addBeanFactoryPostProcessor(progressHandler);
-    }
-
-    @Override
-    public void register(Class<?>... classes) {
-        for (Class<?> cls : classes) {
-            registeredClasses.put(cls.getName(), cls);
-        }
-        super.register(classes);
     }
 
     /**
@@ -278,16 +293,6 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
     }
 
     @Override
-    public Set<Class<?>> getRegisteredClasses() {
-        return new HashSet<>(registeredClasses.values());
-    }
-
-    @Override
-    public Class<?> getRegisteredClass(String name) {
-        return registeredClasses.get(name);
-    }
-
-    @Override
     public <T, G, U> Map<String, U> getBeansOfTypeWithGeneric(Class<T> cls, Class<G> generic) {
         String[] beanNamesForType = getBeanNamesForType(cls, generic);
         Map<String, U> map = new HashMap<>();
@@ -318,7 +323,7 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
         super.close();
     }
 
-    public static class SbBeanFactoryImpl extends DefaultListableBeanFactory {
+    public static class SbBeanFactoryImpl extends DefaultListableBeanFactory implements JfxAppBeanFactory {
 
         private final ApplicationScope applicationScope;
         private final ApplicationInstanceScope applicationInstanceScope;
@@ -384,23 +389,30 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
         @Override
         protected Map<String, Object> findAutowireCandidates(@Nullable String beanName, Class<?> requiredType,
                 DependencyDescriptor descriptor) {
+            return findAutowireCandidates(beanName, requiredType, descriptor, true);
+        }
 
-            var layerContext = descriptor.getAnnotation(LayerContext.class);
 
-            if (layerContext != null) {
-                var resolvable = descriptor.getResolvableType();
-                var beanClass = resolvable.getRawClass();
+        private Map<String, Object> findAutowireCandidates(@Nullable String beanName, Class<?> requiredType,
+                DependencyDescriptor descriptor, boolean checkLayerContext) {
 
-                if (beanClass.getClassLoader() != getBeanClassLoader()) {
+            if (checkLayerContext) {
+                var layerContext = descriptor.getAnnotation(LayerContext.class);
+
+                if (layerContext != null) {
+                    var resolvable = descriptor.getResolvableType();
+                    var beanClass = resolvable.getRawClass();
+
                     var moduleLayer = beanClass.getModule().getLayer();
                     var contextManager = getBean(ContextManager.class);
                     var targetContext = contextManager.get(moduleLayer);
 
                     if (targetContext != null && targetContext.getBeanFactory() instanceof JfxAppContextImpl.SbBeanFactoryImpl beanFactory) {
-                        return beanFactory.findAutowireCandidates(beanName, requiredType, descriptor);
+                        return beanFactory.findAutowireCandidates(beanName, requiredType, descriptor, false);
                     }
                 }
             }
+
             return super.findAutowireCandidates(beanName, requiredType, descriptor);
         }
 
@@ -422,6 +434,18 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
             }
 
             return super.isAutowireCandidate(beanName, descriptor, resolver);
+        }
+
+
+        @Override
+        public boolean hasAnyBeanMatching(Predicate<BeanDefinition> predicate) {
+            for (var name:this.getBeanDefinitionNames()) {
+                var bd = this.getBeanDefinition(name);
+                if (predicate.test(bd)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private class SbContextAnnotationAutowireCandidateResolver extends ContextAnnotationAutowireCandidateResolver {
@@ -519,6 +543,5 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
     public ScopedExecutor<ApplicationInstance> getApplicationInstanceExecutor() {
         return JfxAppContextImpl.applicationInstanceScope;
     }
-
 
 }

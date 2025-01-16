@@ -37,11 +37,11 @@ spring:
     properties:
       hibernate:
         id:
-          db_structure_naming_strategy: com.gluonhq.jfxapps.boot.jpa.ModuleAwareImplicitDatabaseObjectNamingStrategyImpl
+          db_structure_naming_strategy: com.gluonhq.jfxapps.boot.jpa.naming.ModuleAwareImplicitDatabaseObjectNamingStrategyImpl
     hibernate:
-      naming: 
-        physical-strategy: com.gluonhq.jfxapps.boot.jpa.ModuleAwarePhysicalNamingStrategyStandardImpl
-        implicit-strategy: com.gluonhq.jfxapps.boot.jpa.ModuleAwareImplicitNamingStrategyLegacyJpaImpl
+      naming:
+        physical-strategy: com.gluonhq.jfxapps.boot.jpa.naming.ModuleAwarePhysicalNamingStrategyStandardImpl
+        implicit-strategy: com.gluonhq.jfxapps.boot.jpa.naming.ModuleAwareImplicitNamingStrategyLegacyJpaImpl
       ddl-auto: update
 #    open-in-view: false
   datasource:

@@ -32,7 +32,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.gluonhq.jfxapps.boot.api.loader.BootClasses;
+import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
 import com.gluonhq.jfxapps.boot.layer.config.LayerBootClasses;
 
 open module jfxapps.boot.layer {
@@ -46,5 +46,5 @@ open module jfxapps.boot.layer {
     requires jfxapps.hibernate.core.patch.link;
     requires java.base.patch.link;
 
-    provides BootClasses with LayerBootClasses;
+    provides BootContextConfigClasses with LayerBootClasses;
 }

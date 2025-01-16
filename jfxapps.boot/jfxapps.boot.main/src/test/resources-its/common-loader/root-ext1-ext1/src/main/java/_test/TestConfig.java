@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,8 +34,8 @@
 package _test;
 
 public interface TestConfig {
-    public static final String PARENT_ID = "00000000-0000-0000-0000-000000000001";
-    public static final String ID = "00000000-0000-0000-0000-000000000011";
+    public static final String PARENT_ID = "00000000-0000-0000-0000-000000000011";
+    public static final String ID = "00000000-0000-0000-0000-000000000111";
     public static final String ASPECT_NAME = "app.ext1ext1.aspect.JfxAppsAspect";
     public static final String ASPECT_POINTCUT = "@annotation(app.ext1ext1.api.JfxAppsAspectTarget)";
 }

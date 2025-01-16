@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,19 +35,13 @@ package com.gluonhq.jfxapps.boot.main.config;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.api.loader.BootClasses;
+import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
 
-public class MainBootClasses implements BootClasses {
+public class MainBootClasses implements BootContextConfigClasses {
 
     @Override
-    public List<Class<?>> bootClasses() {
-        return List.of(
-                BootConfig.class,
-                BootController.class,
-                BootHandler.class,
-                BootRestController.class,
-                DispatcherRestController.class
-                );
+    public List<Class<?>> classes() {
+        return List.of(BootHandler.class);
     }
 
 }

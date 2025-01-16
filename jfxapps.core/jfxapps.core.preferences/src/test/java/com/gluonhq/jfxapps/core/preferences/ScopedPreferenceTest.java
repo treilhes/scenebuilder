@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -62,7 +62,6 @@ import com.gluonhq.jfxapps.core.api.preference.ValueValidator;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceBeanPostProcessor;
-import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceScanBeanPostProcessor;
 import com.gluonhq.jfxapps.core.preferences.model.PreferenceEntity;
 import com.gluonhq.jfxapps.core.preferences.model.PreferenceEntity.PreferenceEntityId;
 import com.gluonhq.jfxapps.core.preferences.repository.PreferenceRepository;
@@ -78,7 +77,6 @@ import javafx.collections.ObservableMap;
 @ContextConfiguration(classes = { //
         ScopedPreferenceTest.Config.class, //
         PreferenceBeanPostProcessor.class,
-        PreferenceScanBeanPostProcessor.class,
         ScopedPreferenceTest.TestMapPreference.class,
         ScopedPreferenceTest.TestAppInstancePreference.class,
         ScopedPreferenceTest.TestAppPreference.class,

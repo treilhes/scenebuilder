@@ -23,5 +23,7 @@
     <module>jfxapps.boot.jpms.patches</module>
     <module>jfxapps.boot.api</module>
 
+    <module>jfxapps.boot.web</module>
+    <module>jfxapps.boot.aop</module>
   </modules>
 </project>

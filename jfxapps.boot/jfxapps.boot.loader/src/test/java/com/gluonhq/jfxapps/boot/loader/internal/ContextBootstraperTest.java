@@ -38,6 +38,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -54,6 +55,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.gluonhq.jfxapps.boot.api.context.ContextConfiguration;
 import com.gluonhq.jfxapps.boot.api.context.ContextManager;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.MultipleProgressListener;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
@@ -72,6 +74,10 @@ import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper.Servi
  */
 @ExtendWith(MockitoExtension.class)
 class ContextBootstraperTest {
+
+    private static final MultipleProgressListener NO_PROGRESS = null;
+
+    private static final List<Object> NO_SINGLETONS = Collections.emptyList();
 
     /** The root dir. */
     @TempDir
@@ -133,7 +139,7 @@ class ContextBootstraperTest {
     void must_throw_if_module_layer_parentLayer_does_not_exists() {
         Assertions.assertThrows(LayerNotFoundException.class, () -> {
             ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
-            ctxBoot.create(null, parentExtensionModel, null, null, loader);
+            ctxBoot.create(null, parentExtensionModel, NO_SINGLETONS, NO_PROGRESS, loader);
         });
     }
 
@@ -146,7 +152,7 @@ class ContextBootstraperTest {
 
         Assertions.assertThrows(LayerNotFoundException.class, () -> {
             ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
-            ctxBoot.create(null, parentExtensionModel, null, null, loader);
+            ctxBoot.create(null, parentExtensionModel, NO_SINGLETONS, NO_PROGRESS, loader);
         });
     }
 
@@ -180,7 +186,7 @@ class ContextBootstraperTest {
 
         ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
 
-        ctxBoot.create(null, parentExtensionModel, null, null, loader);
+        ctxBoot.create(null, parentExtensionModel, NO_SINGLETONS, NO_PROGRESS, loader);
 
         verify(contextManager).create(contextConfigCaptor.capture());
 
@@ -225,7 +231,7 @@ class ContextBootstraperTest {
 
         ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
 
-        ctxBoot.create(ctx, childExtensionModel, null, null, loader);
+        ctxBoot.create(ctx, childExtensionModel, NO_SINGLETONS, NO_PROGRESS, loader);
 
         verify(contextManager).create(contextConfigCaptor.capture());
 
@@ -266,7 +272,7 @@ class ContextBootstraperTest {
 
         ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
 
-        ctxBoot.create(ctx, childExtensionModel, null, null, loader);
+        ctxBoot.create(ctx, childExtensionModel, NO_SINGLETONS, NO_PROGRESS, loader);
 
         verify(contextManager).create(contextConfigCaptor.capture());
 
@@ -307,7 +313,7 @@ class ContextBootstraperTest {
 
         ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
 
-        ctxBoot.create(ctx, childExtensionModel, null, null, loader);
+        ctxBoot.create(ctx, childExtensionModel, NO_SINGLETONS, NO_PROGRESS, loader);
 
         verify(contextManager).create(contextConfigCaptor.capture());
 
@@ -371,7 +377,7 @@ class ContextBootstraperTest {
 
         ContextBootstraper ctxBoot = new ContextBootstraper(layerManager, contextManager);
 
-        ctxBoot.create(null, parentExtensionModel, null, null, loader);
+        ctxBoot.create(null, parentExtensionModel, NO_SINGLETONS, NO_PROGRESS, loader);
 
         verify(contextManager).create(contextConfigCaptor.capture());
 

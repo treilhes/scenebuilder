@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -53,9 +53,11 @@ import com.gluonhq.jfxapps.boot.api.layer.Layer;
  */
 public sealed interface Extension permits OpenExtension, SealedExtension, RootExtension {
 
-    final static Logger logger = LoggerFactory.getLogger(Extension.class);
+    public final static UUID BOOT_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+    public final static UUID ROOT_ID = UUID.fromString("00000000-0000-0000-0000-000000000001");
+    public final static UUID MANAGER_APP_ID = UUID.fromString("00000000-0000-0000-0000-000000000002");
 
-    final static UUID ROOT_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+    final static Logger logger = LoggerFactory.getLogger(Extension.class);
 
     UUID getId();
 
@@ -94,6 +96,10 @@ public sealed interface Extension permits OpenExtension, SealedExtension, RootEx
   //FIXME this method isn't called yet
     public default void finalizeLayer(Layer layer) {
         throw new UnsupportedOperationException("Never called yet");
+    }
+
+    public default int getOrder() {
+        return 0;
     }
 //    InputStream getLicense();
 //

@@ -16,7 +16,7 @@
     <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.gluonhq.jfxapps.boot.main.Main"/>
     <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="jfxapps.boot.main"/>
-    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-a 00000000-0000-0000-0000-000000000001"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-a 00000000-0000-0000-0000-000000000002"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="jfxapps.boot.main"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
     <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-ea&#13;&#10;-Dspring.profiles.active=dev&#13;&#10;@${workspace_loc:/jfxapps.boot.main}/log.config&#13;&#10;@${workspace_loc:/jfxapps.boot.main}/options.config&#13;&#10;@${workspace_loc:/jfxapps.boot.main}/module.config"/>

@@ -40,6 +40,7 @@ import org.springframework.core.metrics.ApplicationStartup;
 import org.springframework.core.metrics.StartupStep;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.api.maven.Repository;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryManager;
 import com.gluonhq.jfxapps.boot.maven.client.preset.MavenPresets;
@@ -48,6 +49,7 @@ import com.gluonhq.jfxapps.boot.maven.client.repository.RepositoryRepository;
 import jakarta.annotation.PostConstruct;
 
 @Component
+@Lazy
 public class RepositoryManagerImpl implements RepositoryManager {
 
     private final RepositoryRepository jpaRepository;

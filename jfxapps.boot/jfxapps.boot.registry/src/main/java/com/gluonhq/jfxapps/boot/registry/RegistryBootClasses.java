@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,23 +35,37 @@ package com.gluonhq.jfxapps.boot.registry;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.api.loader.BootClasses;
+import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
 import com.gluonhq.jfxapps.boot.registry.config.RegistryConfig;
-import com.gluonhq.jfxapps.boot.registry.config.RegistryEntitiesRegistraton;
 import com.gluonhq.jfxapps.boot.registry.internal.RegistryManagerImpl;
 import com.gluonhq.jfxapps.boot.registry.internal.RegistryMappersImpl;
 import com.gluonhq.jfxapps.boot.registry.internal.RegistrySourceManagerImpl;
+import com.gluonhq.jfxapps.boot.registry.model.Application;
+import com.gluonhq.jfxapps.boot.registry.model.Extension;
+import com.gluonhq.jfxapps.boot.registry.model.Registry;
+import com.gluonhq.jfxapps.boot.registry.model.RegistrySource;
+import com.gluonhq.jfxapps.boot.registry.repository.RegistryRepository;
+import com.gluonhq.jfxapps.boot.registry.repository.RegistrySourceRepository;
 
-public class RegistryBootClasses implements BootClasses {
+public class RegistryBootClasses implements BootContextConfigClasses {
 
     @Override
-    public List<Class<?>> bootClasses() {
+    public List<Class<?>> classes() {
         return List.of(
                 RegistryConfig.class,
                 RegistryManagerImpl.class,
                 RegistryMappersImpl.class,
                 RegistrySourceManagerImpl.class,
-                RegistryEntitiesRegistraton.class
+
+                //jpa repositories
+                RegistryRepository.class,
+                RegistrySourceRepository.class,
+
+                //model
+                Application.class,
+                Extension.class,
+                Registry.class,
+                RegistrySource.class
                 );
     }
 

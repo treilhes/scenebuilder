@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,27 +35,31 @@ package com.gluonhq.jfxapps.boot.maven;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.api.loader.BootClasses;
+import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
 import com.gluonhq.jfxapps.boot.maven.client.config.RepositoryConfig;
-import com.gluonhq.jfxapps.boot.maven.client.config.MavenEntitiesRegistration;
 import com.gluonhq.jfxapps.boot.maven.client.impl.MavenRepositoryClientImpl;
 import com.gluonhq.jfxapps.boot.maven.client.impl.RedirectedRepositoryBeanPostProcessor;
 import com.gluonhq.jfxapps.boot.maven.client.impl.RepositoryManagerImpl;
 import com.gluonhq.jfxapps.boot.maven.client.impl.RepositoryMapperImpl;
 import com.gluonhq.jfxapps.boot.maven.client.model.Repository;
+import com.gluonhq.jfxapps.boot.maven.client.repository.RepositoryRepository;
 
-public class MavenBootClasses implements BootClasses {
+public class MavenBootClasses implements BootContextConfigClasses {
 
     @Override
-    public List<Class<?>> bootClasses() {
+    public List<Class<?>> classes() {
         return List.of(
                 RepositoryConfig.class,
                 MavenRepositoryClientImpl.class,
                 RedirectedRepositoryBeanPostProcessor.class,
                 RepositoryManagerImpl.class,
                 RepositoryMapperImpl.class,
+
+                //model
                 Repository.class,
-                MavenEntitiesRegistration.class
+
+                //repository
+                RepositoryRepository.class
                 );
     }
 

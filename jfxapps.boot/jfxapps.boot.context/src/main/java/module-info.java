@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,8 +31,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.boot.api.loader.BootClasses;
+import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
+import com.gluonhq.jfxapps.boot.api.loader.ExtensionContextConfigClasses;
 import com.gluonhq.jfxapps.boot.context.ContextBootClasses;
+import com.gluonhq.jfxapps.boot.context.ContextExtensionClasses;
 
 open module jfxapps.boot.context {
 
@@ -41,9 +43,13 @@ open module jfxapps.boot.context {
     exports com.gluonhq.jfxapps.boot.context.scope;
 
     exports com.gluonhq.jfxapps.boot.context.impl to spring.beans;
+    exports com.gluonhq.jfxapps.boot.context.boot;
 
     requires jfxapps.boot.api;
     requires jfxapps.boot.starter;
 
-    provides BootClasses with ContextBootClasses;
+    provides BootContextConfigClasses with ContextBootClasses;
+    provides ExtensionContextConfigClasses with ContextExtensionClasses;
+
+    uses BootContextConfigClasses;
 }

@@ -21,6 +21,10 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.boot.aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.jpa</artifactId>
         </dependency>
         <dependency>
@@ -35,6 +39,11 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.registry</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.boot.web</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.registry.model</artifactId>
@@ -178,7 +187,8 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
-                        <manifestFile>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+                        <manifestFile>
+                            ${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
                 </configuration>
             </plugin>

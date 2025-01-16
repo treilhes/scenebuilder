@@ -33,16 +33,9 @@
  */
 package app.app1ext1ext1.config;
 
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
-import app.app1ext1ext1.model.JfxAppsModel;
-import app.app1ext1ext1.repository.JfxAppsRepository;
 
 @Configuration
-@EntityScan(basePackageClasses = {JfxAppsModel.class})
-@EnableJpaRepositories(basePackageClasses = {JfxAppsRepository.class})
 public class JfxAppsConfig {
 
 }

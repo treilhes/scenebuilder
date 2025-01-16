@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,18 +33,20 @@
  */
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 
-import com.gluonhq.jfxapps.boot.api.loader.BootClasses;
+import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
+import com.gluonhq.jfxapps.boot.api.loader.ExtensionContextConfigClasses;
 import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
-import com.gluonhq.jfxapps.boot.loader.config.LoaderBootClasses;
+import com.gluonhq.jfxapps.boot.loader.LoaderBootClasses;
+import com.gluonhq.jfxapps.boot.loader.LoaderExtensionClasses;
 
 
 open module jfxapps.boot.loader {
 
     exports com.gluonhq.jfxapps.boot.loader;
-    exports com.gluonhq.jfxapps.boot.loader.config;
     exports com.gluonhq.jfxapps.boot.loader.content;
     exports com.gluonhq.jfxapps.boot.loader.extension;
     exports com.gluonhq.jfxapps.boot.loader.model;
+    exports com.gluonhq.jfxapps.boot.loader.internal.model;
 
     requires jfxapps.boot.api;
     requires transitive jfxapps.boot.context;
@@ -52,13 +54,16 @@ open module jfxapps.boot.loader {
     requires jfxapps.boot.maven;
     requires jfxapps.boot.platform;
     requires jfxapps.boot.registry;
+    requires jfxapps.boot.jpa;
 
     requires jfxapps.boot.starter;
 
     requires java.compiler;
 
-    provides BootClasses with LoaderBootClasses;
+    provides BootContextConfigClasses with LoaderBootClasses;
+    provides ExtensionContextConfigClasses with LoaderExtensionClasses;
 
     uses Extension;
+    uses ExtensionContextConfigClasses;
     uses ImportBeanDefinitionRegistrar;
 }

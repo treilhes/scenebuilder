@@ -28,7 +28,7 @@
                     <registry>
                         <applications>
                             <application>
-                                <uuid>00000000-0000-0000-0000-000000000001</uuid>
+                                <uuid>00000000-0000-0000-0000-000000000002</uuid>
                                 <dependency>
                                     <groupId>com.gluonhq.jfxapps</groupId>
                                     <artifactId>manager.api</artifactId>

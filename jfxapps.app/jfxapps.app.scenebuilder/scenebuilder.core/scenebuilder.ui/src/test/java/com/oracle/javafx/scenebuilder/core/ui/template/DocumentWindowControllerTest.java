@@ -148,8 +148,6 @@ class DocumentWindowControllerTest {
         @Autowired
         Dock bottomDockController;
         @Autowired
-        DockViewController viewMenuController;
-        @Autowired
         MenuBar menuBar;
         @Autowired
         MessageBar messageBar;
@@ -175,7 +173,6 @@ class DocumentWindowControllerTest {
                 leftDockController,
                 rightDockController,
                 bottomDockController,
-                viewMenuController,
 
                 menuBar,
                 messageBar,

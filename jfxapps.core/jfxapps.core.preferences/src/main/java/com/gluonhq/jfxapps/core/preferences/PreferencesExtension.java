@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,8 +37,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.preferences.action.PreferencesActionFactoryImpl;
 import com.gluonhq.jfxapps.core.preferences.action.ShowPreferencesAction;
@@ -48,10 +46,10 @@ import com.gluonhq.jfxapps.core.preferences.edit.PreferenceEditorFactoryImpl;
 import com.gluonhq.jfxapps.core.preferences.edit.PreferencesWindowController;
 import com.gluonhq.jfxapps.core.preferences.i18n.I18NPreferences;
 import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceBeanPostProcessor;
-import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceScanBeanPostProcessor;
+import com.gluonhq.jfxapps.core.preferences.model.PreferenceEntity;
 import com.gluonhq.jfxapps.core.preferences.repository.PreferenceRepository;
 
-@EnableJpaRepositories(basePackageClasses = { PreferenceRepository.class })
+//@EnableJpaRepositories(basePackageClasses = { PreferenceRepository.class })
 public class PreferencesExtension implements OpenExtension {
 
     public final static UUID ID = UUID.fromString("d82c47c7-e3a7-483c-bb49-f1d3b086c2bf");
@@ -74,11 +72,13 @@ public class PreferencesExtension implements OpenExtension {
                 I18NPreferences.class,
                 PreferenceBeanPostProcessor.class,
                 PreferenceEditorFactoryImpl.class,
-                PreferenceScanBeanPostProcessor.class,
                 PreferencesController.class,
                 PreferencesWindowController.class,
                 ShowPreferencesAction.class,
-                PreferencesActionFactoryImpl.class
+                PreferencesActionFactoryImpl.class,
+
+                PreferenceRepository.class,
+                PreferenceEntity.class
             );
      // @formatter:on
     }

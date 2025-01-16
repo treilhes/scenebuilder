@@ -37,6 +37,8 @@ import com.gluonhq.jfxapps.core.preferences.PreferencesExtension;
 open module jfxapps.core.preferences {
     exports com.gluonhq.jfxapps.core.preferences;
     exports com.gluonhq.jfxapps.core.preferences.i18n;
+    exports com.gluonhq.jfxapps.core.preferences.model;
+    exports com.gluonhq.jfxapps.core.preferences.repository;
 
     requires jfxapps.core.api;
     requires jfxapps.core.starter;

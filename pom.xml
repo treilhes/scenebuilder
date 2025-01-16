@@ -63,6 +63,11 @@
             <!-- jfxapps.boot -->
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.boot.aop</artifactId>
+                <version>${jfxapps.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.boot.api</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
@@ -144,6 +149,11 @@
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.boot.starter.test</artifactId>
+                <version>${jfxapps.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.boot.web</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
 

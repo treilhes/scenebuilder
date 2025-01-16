@@ -15,7 +15,7 @@
       <!--<module>devtools.metadata</module>-->
       <module>devtools.i18n</module>
       <module>devtools.startup</module>
-      <module>devtools.cmpchek</module>
+      <module>devtools.cmpcheck</module>
       <module>devtools.registry</module>
       <module>devtools.openapi</module>
       <module>devtools.jpms</module>

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -58,12 +58,12 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.api.context.annotation.DeportedSingleton;
 import com.gluonhq.jfxapps.boot.api.layer.Layer;
 import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
+import com.gluonhq.jfxapps.boot.api.loader.ExtensionContextConfigClasses;
 import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
 import com.gluonhq.jfxapps.boot.layer.LayerNotFoundException;
 import com.gluonhq.jfxapps.boot.loader.extension.ExtensionValidator;
-import com.gluonhq.jfxapps.boot.loader.extension.context.DefaultExtensionContextConfig;
 import com.gluonhq.jfxapps.boot.loader.model.AbstractExtension;
 
 // TODO: Auto-generated Javadoc
@@ -189,7 +189,14 @@ public class ContextBootstraper {
         extensionLocalClasses.addAll(findLocalClasses(loader, parentContextId, currentLayer));
 
         classes.addAll(childrenExportedClasses);
-        classes.addAll(DefaultExtensionContextConfig.classesToRegister);
+
+        var extensionClasses = java.util.ServiceLoader.load(ExtensionContextConfigClasses.class).stream()
+                .map(p -> p.get())
+                .map(bc -> bc.classes())
+                .flatMap(l -> l.stream())
+                .toList();
+
+        classes.addAll(extensionClasses);
 
         boolean isSealed = loader.loadService(currentLayer, Extension.class).stream()
                 .anyMatch(SealedExtension.class::isInstance);
@@ -207,7 +214,7 @@ public class ContextBootstraper {
 //            childrenDeportedClasses.addAll(parent.getDeportedClasses());
 //        }
 
-        if (parent != null) {
+        if (!Extension.BOOT_ID.equals(parentContextId)) {
             classes.addAll(extensionLocalClasses);
         } else {
             // root extension is the only one to deport local classes
@@ -221,9 +228,9 @@ public class ContextBootstraper {
         ContextConfiguration configuration = new ContextConfiguration();
         configuration.setParentContextId(parentContextId);
         configuration.setLayer(currentLayer);
-        configuration.setClasses(classes);
-        configuration.setDeportedClasses(childrenDeportedClasses);
-        configuration.setSingletonInstances(singletonInstances);
+        configuration.addClasses(classes);
+        configuration.addDeportedClasses(childrenDeportedClasses);
+        configuration.addSingletonInstances(singletonInstances);
         configuration.setProgressListener(progressListener);
 
         JfxAppContext context = contextManager.create(configuration);

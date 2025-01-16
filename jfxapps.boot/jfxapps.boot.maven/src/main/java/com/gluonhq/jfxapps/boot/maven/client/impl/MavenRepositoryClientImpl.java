@@ -48,6 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.metrics.ApplicationStartup;
 import org.springframework.stereotype.Component;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.api.maven.Artifact;
 import com.gluonhq.jfxapps.boot.api.maven.Classifier;
 import com.gluonhq.jfxapps.boot.api.maven.Repository;
@@ -62,6 +63,7 @@ import com.gluonhq.jfxapps.boot.maven.client.type.Maven;
 import com.gluonhq.jfxapps.boot.maven.client.type.Nexus;
 
 @Component
+@Lazy
 public class MavenRepositoryClientImpl implements RepositoryClient {
 
     private static final Logger log = LoggerFactory.getLogger(MavenRepositoryClientImpl.class);
@@ -73,6 +75,7 @@ public class MavenRepositoryClientImpl implements RepositoryClient {
     private MavenRepositorySystem maven;
     private File repositoryFolder;
     private boolean offline;
+    private MavenRepositoryClientImpl localOnly;
 
 
 
@@ -116,7 +119,10 @@ public class MavenRepositoryClientImpl implements RepositoryClient {
 
     @Override
     public RepositoryClient localOnly() {
-        return new MavenRepositoryClientImpl(this, this.repositoryManager,  this.repositoryFolder, true);
+        if (this.localOnly == null) {
+            this.localOnly = new MavenRepositoryClientImpl(this, this.repositoryManager,  this.repositoryFolder, true);
+        }
+        return this.localOnly;
     }
 
     @Override

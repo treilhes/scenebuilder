@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,8 +36,6 @@ package com.gluonhq.jfxapps.boot.api.loader.extension;
 import java.util.UUID;
 
 public interface ApplicationExtension extends SealedExtension {
-    public final static UUID MANAGER_APP_ID = UUID.fromString("00000000-0000-0000-0000-000000000001");
-
     @Override
     default UUID getParentId() {
         return ROOT_ID;

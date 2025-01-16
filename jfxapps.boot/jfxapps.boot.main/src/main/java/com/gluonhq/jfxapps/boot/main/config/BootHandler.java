@@ -41,6 +41,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.metrics.ApplicationStartup;
+import org.springframework.core.metrics.StartupStep;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.loader.ApplicationManager;
@@ -66,12 +67,18 @@ public class BootHandler {
         var bootStep = startup.map(s -> s.start("boot.handler"));
 
         try {
+            var defaultStart = startup.map(s -> s.start("boot.start.default"));
             appManager.start();
+            defaultStart.ifPresent(StartupStep::end);
+
 
             if (application != null) {
+                var appStart = startup.map(s -> s.start("boot.start.application"));
                 appManager.startApplication(application);
+                appStart.ifPresent(StartupStep::end);
             }
 
+            var commandStart = startup.map(s -> s.start("boot.start.command"));
             if (files != null && !files.isEmpty()) {
                 for (File file : files) {
                     appManager.send(new OpenCommandEvent(application, file));
@@ -79,11 +86,12 @@ public class BootHandler {
             } else {
                 appManager.send(new OpenCommandEvent(application, null));
             }
+            commandStart.ifPresent(StartupStep::end);
         } catch (BootException e) {
             logger.error("Unable to boot application", e);
 
         }
 
-        bootStep.ifPresent(s -> s.end());
+        bootStep.ifPresent(StartupStep::end);
     }
 }
