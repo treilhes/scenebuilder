@@ -45,10 +45,11 @@ open module jfxapps.boot.main {
     requires jfxapps.boot.layer;
     requires jfxapps.boot.maven;
     requires jfxapps.boot.jpa;
+    requires jfxapps.boot.context;
+
     requires jfxapps.boot.starter;
 
     requires info.picocli;
-    requires jfxapps.boot.context;
 
     provides BootContextConfigClasses with MainBootClasses;
 }

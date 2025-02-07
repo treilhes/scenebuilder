@@ -73,6 +73,7 @@
                             <argLine>
                                 --patch-module java.base=${com.gluonhq.jfxapps:java.base.patch:jar}
                                 --add-exports java.base/javapatch.lang.module=java.base.patch.link
+                                --add-exports java.base/javapatch.lang.module=ALL-UNNAMED
                             </argLine>
                         </configuration>
                         <goals>

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -59,10 +59,13 @@ public class FileExtensionProvider implements ExtensionContentProvider {
 
     @Override
     public boolean update(Path targetFolder) throws IOException {
-        Path target = targetFolder.resolve(file.getName());
-        if (!Utils.isFileUpToDate(file, target.toFile())) {
-            Files.copy(file.toPath(), target, StandardCopyOption.REPLACE_EXISTING);
+        if (!isUpToDate(targetFolder)) {
+            Path target = targetFolder.resolve(file.getName());
+            if (!Utils.isFileUpToDate(file, target.toFile())) {
+                Files.copy(file.toPath(), target, StandardCopyOption.REPLACE_EXISTING);
+            }
         }
+
         return true;
     }
 

@@ -36,7 +36,7 @@
         <maven.compiler.target>21</maven.compiler.target>
 
         <maven-dependency-plugin.version>3.6.1</maven-dependency-plugin.version>
-        <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
+        <maven-failsafe-plugin.version>3.5.2</maven-failsafe-plugin.version>
         <maven-surefire-plugin.version>${maven-failsafe-plugin.version}</maven-surefire-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -620,8 +620,6 @@
                         <systemPropertyVariables>
                             <javafx.allowjs>true</javafx.allowjs>
                         </systemPropertyVariables>
-                        <useModulePath>false</useModulePath>
-                        <argLine></argLine>
                     </configuration>
                 </plugin>
                 <plugin>

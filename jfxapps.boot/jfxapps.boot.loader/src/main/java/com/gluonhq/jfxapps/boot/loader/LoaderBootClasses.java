@@ -40,10 +40,8 @@ import com.gluonhq.jfxapps.boot.loader.internal.ApplicationManagerImpl;
 import com.gluonhq.jfxapps.boot.loader.internal.LoaderMappersImpl;
 import com.gluonhq.jfxapps.boot.loader.internal.StateProviderImpl;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
+import com.gluonhq.jfxapps.boot.loader.internal.jpa.model.Extension;
 import com.gluonhq.jfxapps.boot.loader.internal.layer.LayerBootstraper;
-import com.gluonhq.jfxapps.boot.loader.internal.model.Application;
-import com.gluonhq.jfxapps.boot.loader.internal.model.Extension;
-import com.gluonhq.jfxapps.boot.loader.internal.repository.ApplicationRepository;
 import com.gluonhq.jfxapps.boot.loader.internal.repository.ExtensionRepository;
 
 public class LoaderBootClasses implements BootContextConfigClasses {
@@ -59,11 +57,9 @@ public class LoaderBootClasses implements BootContextConfigClasses {
                 LayerBootstraper.class,
 
                 //repository
-                ApplicationRepository.class,
                 ExtensionRepository.class,
 
                 //model
-                Application.class,
                 Extension.class
                 );
     }

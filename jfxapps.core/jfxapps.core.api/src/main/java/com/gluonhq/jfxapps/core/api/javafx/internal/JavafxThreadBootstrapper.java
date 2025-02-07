@@ -45,6 +45,7 @@ import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadHolder;
 import jakarta.annotation.PostConstruct;
 import javafx.application.Application;
 import javafx.application.HostServices;
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener.Change;
 import javafx.event.Event;
 import javafx.event.EventDispatchChain;
@@ -67,15 +68,11 @@ public class JavafxThreadBootstrapper implements ApplicationListener<StageReadyE
 
     private static Application javafxApplication;
 
-
-
     private boolean started;
 
     private Runnable whenStarted;
 
     private Stage primaryStage;
-
-
 
     // @formatter:off
     public JavafxThreadBootstrapper(
@@ -94,6 +91,9 @@ public class JavafxThreadBootstrapper implements ApplicationListener<StageReadyE
 
     @Override
     public void onApplicationEvent(@NonNull StageReadyEvent stageReadyEvent) {
+
+    	Platform.setImplicitExit(false);
+
         started = stageReadyEvent.getStage() != null;
         primaryStage = stageReadyEvent.getStage();
 

@@ -46,21 +46,23 @@ open module jfxapps.boot.registry {
     requires jfxapps.boot.layer;
     requires jfxapps.boot.platform;
 
-    requires jakarta.persistence;
-    requires com.fasterxml.jackson.annotation;
-    requires org.hibernate.validator;
-    requires jakarta.validation;
-    requires jakarta.annotation;
-    requires spring.context;
-    requires spring.data.jpa;
-    requires spring.data.commons;
-    requires spring.boot.autoconfigure;
-    requires org.mapstruct;
-    requires java.compiler;
-    requires spring.boot;
-    requires org.hibernate.orm.core;
+    requires jfxapps.boot.starter;
 
-    requires org.slf4j;
+//    requires jakarta.persistence;
+//    requires com.fasterxml.jackson.annotation;
+//    requires org.hibernate.validator;
+//    requires jakarta.validation;
+//    requires jakarta.annotation;
+//    requires spring.context;
+//    requires spring.data.jpa;
+//    requires spring.data.commons;
+//    requires spring.boot.autoconfigure;
+//    requires org.mapstruct;
+//    requires java.compiler;
+//    requires spring.boot;
+//    requires org.hibernate.orm.core;
+//
+//    requires org.slf4j;
 
     provides BootContextConfigClasses with RegistryBootClasses;
 }

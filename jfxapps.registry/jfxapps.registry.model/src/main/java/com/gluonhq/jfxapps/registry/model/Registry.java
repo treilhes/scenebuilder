@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -47,14 +47,14 @@ public class Registry {
     private UUID uuid;
     private Dependency dependency;
     private Set<Application> applications = new HashSet<>();
-    private Set<Extension> extensions = new HashSet<>();
+    private Set<Plugin> plugins = new HashSet<>();
     private Set<Registry> registries = new HashSet<>();
 
-    public Registry(UUID uuid, Dependency dependency, Set<Application> applications, Set<Extension> extensions, Set<Registry> registries) {
+    public Registry(UUID uuid, Dependency dependency, Set<Application> applications, Set<Plugin> plugins, Set<Registry> registries) {
         this.uuid = uuid;
         this.dependency = dependency;
         this.applications = Set.copyOf(applications);
-        this.extensions = Set.copyOf(extensions);
+        this.plugins = Set.copyOf(plugins);
         this.registries = Set.copyOf(registries);
     }
 
@@ -85,12 +85,12 @@ public class Registry {
         this.applications = applications;
     }
 
-    public Set<Extension> getExtensions() {
-        return extensions;
+    public Set<Plugin> getPlugins() {
+        return plugins;
     }
 
-    public void setExtensions(Set<Extension> extensions) {
-        this.extensions = extensions;
+    public void setPlugins(Set<Plugin> plugins) {
+        this.plugins = plugins;
     }
 
     public Set<Registry> getRegistries() {
@@ -103,7 +103,7 @@ public class Registry {
 
     @Override
     public int hashCode() {
-        return Objects.hash(applications, dependency, extensions, registries, uuid);
+        return Objects.hash(applications, dependency, plugins, registries, uuid);
     }
 
     @Override
@@ -116,14 +116,14 @@ public class Registry {
             return false;
         Registry other = (Registry) obj;
         return Objects.equals(applications, other.applications) && Objects.equals(dependency, other.dependency)
-                && Objects.equals(extensions, other.extensions) && Objects.equals(registries, other.registries)
+                && Objects.equals(plugins, other.plugins) && Objects.equals(registries, other.registries)
                 && Objects.equals(uuid, other.uuid);
     }
 
     @Override
     public String toString() {
         return "Registry [uuid=" + uuid + ", dependency=" + dependency + ", applications=" + applications
-                + ", extensions=" + extensions + ", registries=" + registries + "]";
+                + ", extensions=" + plugins + ", registries=" + registries + "]";
     }
 
 }

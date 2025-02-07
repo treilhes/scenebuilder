@@ -9,6 +9,8 @@ open module jfxapps.boot.api {
     exports com.gluonhq.jfxapps.boot.api.loader.extension;
     exports com.gluonhq.jfxapps.boot.api.maven;
     exports com.gluonhq.jfxapps.boot.api.platform;
+    exports com.gluonhq.jfxapps.boot.api.registry;
+    exports com.gluonhq.jfxapps.boot.api.registry.model;
     exports com.gluonhq.jfxapps.boot.api.utils;
     exports com.gluonhq.jfxapps.boot.api.web.client;
 

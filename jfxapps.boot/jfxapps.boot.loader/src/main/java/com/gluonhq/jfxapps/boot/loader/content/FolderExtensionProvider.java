@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -72,16 +72,10 @@ public class FolderExtensionProvider implements ExtensionContentProvider {
 
     @Override
     public boolean update(Path targetFolder) throws IOException {
-//        for (File f:sourceFolder.listFiles()) {
-//            Path target = targetFolder.resolve(f.getName());
-//            if (!Utils.isFileUpToDate(f, target.toFile())) {
-//                Files.copy(f.toPath(), target, StandardCopyOption.REPLACE_EXISTING);
-//            }
-//        }
-        targetFolder.toFile().mkdirs();
-        FolderSync.syncDirectories(sourceFolder.toPath(), targetFolder);
-
-        //Files.delete(targetFolder.resolve("module-info.class"));
+        if (!isUpToDate(targetFolder)) {
+            targetFolder.toFile().mkdirs();
+            FolderSync.syncDirectories(sourceFolder.toPath(), targetFolder);
+        }
 
         return true;
     }

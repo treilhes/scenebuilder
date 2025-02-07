@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -54,6 +54,8 @@ import com.gluonhq.jfxapps.registry.model.Application;
 import com.gluonhq.jfxapps.registry.model.Dependency;
 import com.gluonhq.jfxapps.registry.model.Description;
 import com.gluonhq.jfxapps.registry.model.Extension;
+import com.gluonhq.jfxapps.registry.model.Feature;
+import com.gluonhq.jfxapps.registry.model.Plugin;
 import com.gluonhq.jfxapps.registry.model.Registry;
 
 class MapperTest {
@@ -125,6 +127,7 @@ class MapperTest {
                     new Description(new URI("/test"), "app1", "app1 text"),
                     Set.of(ext1));
 
+
             // single extension
             Extension singleExt1 = new Extension(
                     UUID.randomUUID(),
@@ -132,11 +135,23 @@ class MapperTest {
                     new Description(null , "singleExt1", "singleExt1 text"),
                     Set.of());
 
+            Feature feature1 = new Feature(
+                    ext1.getUuid(),
+                    UUID.randomUUID(),
+                    new Description(null , "feature1", "feature1 text"),
+                    Set.of(singleExt1));
+
+            Plugin plugin1 = new Plugin(
+                    app1.getUuid(),
+                    UUID.randomUUID(),
+                    new Description(null, "plugin1", "plugin1 text"),
+                    Set.of(feature1));
+
             return new Registry(
                     UUID.randomUUID(),
                     new Dependency("registry.groupId", "registry.artifactId", "registry.version"),
                     Set.of(app1),
-                    Set.of(singleExt1),
+                    Set.of(plugin1),
                     Set.of());
 
         } catch (Exception e) {

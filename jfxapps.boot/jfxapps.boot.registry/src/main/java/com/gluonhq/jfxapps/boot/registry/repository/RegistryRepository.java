@@ -38,9 +38,9 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.gluonhq.jfxapps.boot.registry.model.Registry;
+import com.gluonhq.jfxapps.boot.registry.model.RegistryEntity;
 
 @Repository
-public interface RegistryRepository extends JpaRepository<Registry, UUID> {
+public interface RegistryRepository extends JpaRepository<RegistryEntity, UUID> {
 
 }

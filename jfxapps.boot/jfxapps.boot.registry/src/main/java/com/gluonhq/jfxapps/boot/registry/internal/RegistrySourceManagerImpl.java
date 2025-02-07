@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,48 +37,46 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.registry.RegistryArtifact;
-import com.gluonhq.jfxapps.boot.registry.RegistrySourceManager;
+import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifact;
+import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifactManager;
 import com.gluonhq.jfxapps.boot.registry.config.RegistryConfig;
-import com.gluonhq.jfxapps.boot.registry.repository.RegistrySourceRepository;
+import com.gluonhq.jfxapps.boot.registry.service.RegistrySourceService;
 
 import jakarta.annotation.PostConstruct;
 
 @Component
-public class RegistrySourceManagerImpl implements RegistrySourceManager {
+public class RegistrySourceManagerImpl implements RegistryArtifactManager {
 
     private final RegistryConfig config;
-    private final RegistrySourceRepository repository;
-    private final RegistryMappers mappers;
+    private final RegistrySourceService service;
+    private final RegistryEntityMappers mappers;
 
-    public RegistrySourceManagerImpl(RegistryConfig config, RegistrySourceRepository repository, RegistryMappers mappers) {
+    public RegistrySourceManagerImpl(
+    		RegistryConfig config,
+    		RegistrySourceService service,
+    		RegistryEntityMappers mappers) {
         super();
         this.config = config;
-        this.repository = repository;
+        this.service = service;
         this.mappers = mappers;
-    }
-
-    @PostConstruct
-    protected void init() {
-        // init if empty
-        if (repository.count() == 0) {
-            config.getDefaults().values().forEach(v -> repository.save(mappers.map(v)));
-        }
     }
 
     @Override
     public void add(RegistryArtifact source) {
-        repository.save(mappers.map(source));
+        var artifact = mappers.map(source);
+        service.save(artifact);
     }
 
     @Override
     public void remove(RegistryArtifact source) {
-        repository.delete(mappers.map(source));
+        var artifact = mappers.map(source);
+        service.delete(artifact);
     }
 
     @Override
     public List<RegistryArtifact> list() {
-        return mappers.map(repository.findAll());
+        var artifacts = service.findAll();
+        return artifacts.stream().map(mappers::map).toList();
     }
 
 }

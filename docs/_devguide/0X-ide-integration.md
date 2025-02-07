@@ -30,9 +30,13 @@ Maven compiler arguments like `patch-module` are not synchronized with the eclip
 
 In order to work properly spring.core was patched to allow aspect to properly function in a multi ModuleLayer architecture. Those patch aren't correctly handled in Eclipse and prevent successfull compilation.
 
-To run the application from inside Eclipse projects "jfxapps.boot.jpms.patches" and nested projects must be removed from the workspace.
+To run the application from inside Eclipse projects
+- "jfxapps.boot.jpms.patches" and nested projects must be removed from the workspace.
+- "jfxapps.core.jpms.patches" and nested projects must be removed from the workspace.
 
-#### Provided launchers 
+
+
+#### Provided launchers
 
 Some Eclipse launchers are provided in "dev.utils\ide\eclipse\launchers"
 

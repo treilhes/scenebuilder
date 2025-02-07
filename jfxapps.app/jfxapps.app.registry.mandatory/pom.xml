@@ -26,6 +26,7 @@
                 <configuration>
                     <format>json</format>
                     <registry>
+                    	<uuid>6180b14e-4d4b-47c6-9288-72d86cde3b85</uuid>
                         <applications>
                             <application>
                                 <uuid>00000000-0000-0000-0000-000000000002</uuid>
@@ -68,7 +69,6 @@
                             </registry>
                         </registries>
                     </registry>
-
                 </configuration>
             </plugin>
         </plugins>

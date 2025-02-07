@@ -97,10 +97,12 @@ public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMes
 
         String[] originalArgs = spec.commandLine().getParseResult().originalArgs().toArray(new String[0]);
 
-        var context = BootContext.create(null, WebApplicationType.SERVLET , originalArgs, null);
+		if (bootHandler == null) {
+			var context = BootContext.create(null, WebApplicationType.SERVLET, originalArgs, null);
+			bootHandler = context.getBean(BootHandler.class);
+		}
 
-        bootHandler = context.getBean(BootHandler.class);
-        bootHandler.boot(targetApplication, files, new String[0]);
+        bootHandler.boot(targetApplication, files, originalArgs);
 
     }
 

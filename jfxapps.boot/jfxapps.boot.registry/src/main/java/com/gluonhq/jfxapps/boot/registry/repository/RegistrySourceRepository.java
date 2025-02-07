@@ -36,9 +36,9 @@ package com.gluonhq.jfxapps.boot.registry.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.gluonhq.jfxapps.boot.registry.model.RegistrySource;
-import com.gluonhq.jfxapps.boot.registry.model.RegistrySource.RegistrySourceId;
+import com.gluonhq.jfxapps.boot.registry.model.RegistrySourceEntity;
+import com.gluonhq.jfxapps.boot.registry.model.RegistrySourceEntity.RegistrySourceId;
 
 @Repository
-public interface RegistrySourceRepository extends JpaRepository<RegistrySource, RegistrySourceId> {
+public interface RegistrySourceRepository extends JpaRepository<RegistrySourceEntity, RegistrySourceId> {
 }

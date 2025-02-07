@@ -55,81 +55,90 @@ import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadHolder;
 
 @ApplicationSingleton
-public class CommandHandlerImpl implements CommandHandler, Application{
+public class CommandHandlerImpl implements CommandHandler, Application {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommandHandlerImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(CommandHandlerImpl.class);
 
-    private final InstancesManager instancesManager;
-    private final JavafxThreadHolder fxThreadHolder;
-    private final Set<ApplicationExtension> applications;
-    private final List<OpenCommandEvent> waitingCommands = new ArrayList<>();
+	private final InstancesManager instancesManager;
+	private final JavafxThreadHolder fxThreadHolder;
+	private final Set<ApplicationExtension> applications;
+	private final List<OpenCommandEvent> waitingCommands = new ArrayList<>();
 
-    private final JfxAppContext context;
+	private final JfxAppContext context;
 
-    //@formatter:off
+	//@formatter:off
     public CommandHandlerImpl(
             JfxAppContext context,
             InstancesManager instancesManager,
             JavafxThreadHolder fxThreadHolder,
             Set<ApplicationExtension> applications) {
         //@formatter:on
-        super();
-        this.context = context;
-        this.instancesManager = instancesManager;
-        this.fxThreadHolder = fxThreadHolder;
-        this.applications = applications;
-        this.fxThreadHolder.whenStarted(this::executeStoredCommands);
-    }
+		super();
+		this.context = context;
+		this.instancesManager = instancesManager;
+		this.fxThreadHolder = fxThreadHolder;
+		this.applications = applications;
+		this.fxThreadHolder.whenStarted(this::executeStoredCommands);
+	}
 
-    @Override
-    public void onApplicationEvent(OpenCommandEvent event) {
-        logger.info("CMD received " + event.toString());
+	@Override
+	public void onApplicationEvent(OpenCommandEvent event) {
+		logger.info("CMD received " + event.toString());
 
-        if (!fxThreadHolder.hasStarted()) {
-            waitingCommands.add(event);
-        } else {
-            execute(event);
-        }
-    }
+		if (!fxThreadHolder.hasStarted()) {
+			waitingCommands.add(event);
+		} else {
+			execute(event);
+		}
+	}
 
-    private void executeStoredCommands() {
-        while (!waitingCommands.isEmpty()) {
-            OpenCommandEvent currentArgs = waitingCommands.remove(0);
-            execute(currentArgs);
-        }
-    }
+	private void executeStoredCommands() {
+		while (!waitingCommands.isEmpty()) {
+			OpenCommandEvent currentArgs = waitingCommands.remove(0);
+			execute(currentArgs);
+		}
+	}
 
-    private void execute(OpenCommandEvent args) {
-        logger.info("CMD executed " + args.toString());
+//	private void execute(OpenCommandEvent args) {
+//		logger.info("CMD executed " + args.toString());
+//
+//		UUID targetApplication = args.getTarget();
+//		File file = args.getFile();
+//
+//		if (file != null) {
+//
+//			try {
+//				ApplicationInstance instance = instancesManager.lookupInstance(file.toURL());
+//				if (instance == null) {
+//					instance = instancesManager.newInstance();
+//				}
+//				instance.openWindow();
+//				instance.loadFromFile(file);
+//			} catch (MalformedURLException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//		} else {
+//
+//			ApplicationInstance instance = instancesManager.lookupUnusedInstance();
+//			if (instance == null) {
+//				instance = instancesManager.newInstance();
+//			}
+//			instance.openWindow();
+//			instance.loadBlank();
+//		}
+//	}
 
-        UUID targetApplication = args.getTarget();
-        File file = args.getFile();
+	private void execute(OpenCommandEvent args) {
+		logger.info("CMD executed " + args.toString());
+		context.getApplicationExecutor().setCurrentScope(this);
+		UUID targetApplication = args.getTarget();
+		File file = args.getFile();
 
+		instancesManager.open(file, true);
 
-        if (file != null) {
-
-            try {
-                ApplicationInstance instance = instancesManager.lookupInstance(file.toURL());
-                if (instance == null) {
-                    instance = instancesManager.newInstance();
-                    instance.loadFromFile(file);
-                }
-                instance.openWindow();
-            } catch (MalformedURLException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
-        } else {
-
-            ApplicationInstance instance = instancesManager.lookupUnusedInstance();
-            if (instance == null) {
-                instance = instancesManager.newInstance();
-                instance.loadBlank();
-            }
-            instance.openWindow();
-        }
-    }
+	}
 }

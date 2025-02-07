@@ -8,6 +8,10 @@ toc: true
 
 ## Maven Builds
 
+### Project ennvironment
+
+Maven musn't use an embedded 
+
 ### Project build
 
 Building the project is pretty straightforward, a simple `mvn clean install` will build the project.

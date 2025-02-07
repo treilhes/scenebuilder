@@ -137,39 +137,42 @@ public class MavenExtensionProvider implements ExtensionContentProvider {
 
     @Override
     public boolean update(Path targetFolder) throws IOException {
-        resolveArtefactDependencies();
+        if (!isUpToDate(targetFolder)) {
+            resolveArtefactDependencies();
 
-        List<Path> obsoleteContent = Files.list(targetFolder).collect(Collectors.toList());
+            List<Path> obsoleteContent = Files.list(targetFolder).collect(Collectors.toList());
 
-        for (var entry : aggregate.entrySet()) {
-            var artifactId = entry.getKey().getUniqueArtifact().getArtifact().getArtifactId();
-            var provider = entry.getValue();
+            for (var entry : aggregate.entrySet()) {
+                var artifactId = entry.getKey().getUniqueArtifact().getArtifact().getArtifactId();
+                var provider = entry.getValue();
 
-            switch (provider) {
-            case FileExtensionProvider file -> {
-                file.update(targetFolder);
-                obsoleteContent.remove(targetFolder.resolve(file.getFile().getName()));
+                switch (provider) {
+                case FileExtensionProvider file -> {
+                    file.update(targetFolder);
+                    obsoleteContent.remove(targetFolder.resolve(file.getFile().getName()));
+                }
+                case FolderExtensionProvider folder -> {
+                    Path path = targetFolder.resolve(artifactId);
+                    folder.update(path);
+                    obsoleteContent.remove(path);
+                }
+                default -> throw new IllegalArgumentException("Unexpected value: " + provider);
+                }
+                ;
             }
-            case FolderExtensionProvider folder -> {
-                Path path = targetFolder.resolve(artifactId);
-                folder.update(path);
-                obsoleteContent.remove(path);
-            }
-            default -> throw new IllegalArgumentException("Unexpected value: " + provider);
-            }
-            ;
+
+            obsoleteContent.forEach(p -> {
+                try {
+                    logger.debug("Cleaning obsolete dependency {}", p);
+                    if (!deleteDirectory(p.toFile())) {
+                        throw new IOException();
+                    }
+                } catch (IOException e) {
+                    logger.error("Unable to delete obsolete dependency {}", p, e);
+                }
+            });
         }
 
-        obsoleteContent.forEach(p -> {
-            try {
-                logger.debug("Cleaning obsolete dependency {}", p);
-                if (!deleteDirectory(p.toFile())) {
-                    throw new IOException();
-                }
-            } catch (IOException e) {
-                logger.error("Unable to delete obsolete dependency {}", p, e);
-            }
-        });
         return true;
     }
 

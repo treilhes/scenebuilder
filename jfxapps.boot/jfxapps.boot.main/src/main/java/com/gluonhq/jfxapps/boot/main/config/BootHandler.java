@@ -46,6 +46,7 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.loader.ApplicationManager;
 import com.gluonhq.jfxapps.boot.api.loader.BootException;
+import com.gluonhq.jfxapps.boot.api.loader.LoadType;
 import com.gluonhq.jfxapps.boot.api.loader.OpenCommandEvent;
 
 @Component
@@ -68,13 +69,13 @@ public class BootHandler {
 
         try {
             var defaultStart = startup.map(s -> s.start("boot.start.default"));
-            appManager.start();
+            appManager.start(LoadType.LastSuccessfull);
             defaultStart.ifPresent(StartupStep::end);
 
 
             if (application != null) {
                 var appStart = startup.map(s -> s.start("boot.start.application"));
-                appManager.startApplication(application);
+                appManager.startApplication(application, LoadType.LastSuccessfull);
                 appStart.ifPresent(StartupStep::end);
             }
 

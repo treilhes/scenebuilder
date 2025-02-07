@@ -62,9 +62,7 @@ import com.gluonhq.jfxapps.boot.api.loader.ExtensionContextConfigClasses;
 import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
-import com.gluonhq.jfxapps.boot.layer.LayerNotFoundException;
 import com.gluonhq.jfxapps.boot.loader.extension.ExtensionValidator;
-import com.gluonhq.jfxapps.boot.loader.model.AbstractExtension;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -112,7 +110,7 @@ public class ContextBootstraper {
      * @param extension the extension
      * @return the sb context
      */
-    public JfxAppContext get(AbstractExtension<?> extension) {
+    public JfxAppContext get(com.gluonhq.jfxapps.boot.loader.model.LoadableContent extension) {
         return contextManager.get(extension.getId());
     }
 
@@ -132,11 +130,11 @@ public class ContextBootstraper {
      * @param extension the extension
      * @return true, if successful
      */
-    public boolean exists(AbstractExtension<?> extension) {
+    public boolean exists(com.gluonhq.jfxapps.boot.loader.model.LoadableContent extension) {
         return contextManager.exists(extension.getId());
     }
 
-    public JfxAppContext create(JfxAppContext parent, AbstractExtension<?> extension, List<Object> singletonInstances,
+    public JfxAppContext create(JfxAppContext parent, com.gluonhq.jfxapps.boot.loader.model.LoadableContent extension, List<Object> singletonInstances,
             MultipleProgressListener progressListener) throws InvalidExtensionException, LayerNotFoundException {
         return create(parent, extension, singletonInstances, progressListener, DEFAULT_LOADER);
     }
@@ -152,7 +150,7 @@ public class ContextBootstraper {
      * @throws InvalidExtensionException the invalid extension exception
      * @throws LayerNotFoundException    the layer not found exception
      */
-    public JfxAppContext create(JfxAppContext parent, AbstractExtension<?> extension, List<Object> singletonInstances,
+    public JfxAppContext create(JfxAppContext parent, com.gluonhq.jfxapps.boot.loader.model.LoadableContent extension, List<Object> singletonInstances,
             MultipleProgressListener progressListener, ServiceLoader loader)
             throws InvalidExtensionException, LayerNotFoundException {
         UUID layerId = extension.getId();
@@ -364,7 +362,7 @@ public class ContextBootstraper {
      *
      * @param extension the extension
      */
-    public void close(AbstractExtension<?> extension) {
+    public void close(com.gluonhq.jfxapps.boot.loader.model.LoadableContent extension) {
         contextManager.close(extension.getId());
     }
 

@@ -105,7 +105,9 @@ public final class JfxAppPlatformImpl implements JfxAppPlatform {
         if (Platform.isFxApplicationThread()) {
             executor.executeRunnable(task, scopedDocument);
         } else {
-            Platform.runLater(() -> executor.executeRunnable(task, scopedDocument));
+            Platform.runLater(() -> {
+            	executor.executeRunnable(task, scopedDocument);
+            });
         }
 
         return task;

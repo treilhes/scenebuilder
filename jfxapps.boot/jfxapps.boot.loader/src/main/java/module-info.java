@@ -46,15 +46,15 @@ open module jfxapps.boot.loader {
     exports com.gluonhq.jfxapps.boot.loader.content;
     exports com.gluonhq.jfxapps.boot.loader.extension;
     exports com.gluonhq.jfxapps.boot.loader.model;
-    exports com.gluonhq.jfxapps.boot.loader.internal.model;
+    exports com.gluonhq.jfxapps.boot.loader.internal.jpa.model;
 
-    requires jfxapps.boot.api;
-    requires transitive jfxapps.boot.context;
-    requires transitive jfxapps.boot.layer;
-    requires jfxapps.boot.maven;
-    requires jfxapps.boot.platform;
-    requires jfxapps.boot.registry;
-    requires jfxapps.boot.jpa;
+    requires transitive jfxapps.boot.api;
+    //requires transitive jfxapps.boot.context;
+    //requires transitive jfxapps.boot.layer;
+    //requires jfxapps.boot.maven;
+    //requires jfxapps.boot.platform;
+    //requires jfxapps.boot.registry;
+    //requires jfxapps.boot.jpa;
 
     requires jfxapps.boot.starter;
 

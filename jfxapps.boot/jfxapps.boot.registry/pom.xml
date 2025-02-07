@@ -12,7 +12,7 @@
     <properties>
         <skip.integration.test>false</skip.integration.test>
     </properties>
-    
+
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
@@ -30,7 +30,7 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.platform</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.starter</artifactId>
@@ -42,7 +42,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -61,7 +61,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-invoker-plugin</artifactId>
-                <version>3.2.2</version>
                 <configuration>
                     <!--<projectsDirectory>${basedir}/src/test/resources-its/com/oracle/javafx/scenebuilder/core</projectsDirectory>-->
                     <projectsDirectory>${basedir}/src/test/resources-its</projectsDirectory>

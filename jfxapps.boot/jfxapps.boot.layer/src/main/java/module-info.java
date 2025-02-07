@@ -33,7 +33,7 @@
  */
 
 import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
-import com.gluonhq.jfxapps.boot.layer.config.LayerBootClasses;
+import com.gluonhq.jfxapps.boot.layer.LayerBootClasses;
 
 open module jfxapps.boot.layer {
     exports com.gluonhq.jfxapps.boot.layer;

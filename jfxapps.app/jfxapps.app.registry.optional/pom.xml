@@ -26,6 +26,7 @@
                 <configuration>
                     <format>json</format>
                     <registry>
+                        <uuid>874c70a3-d6d1-439c-8cfb-2a7dfd6d55ed</uuid>
                         <applications>
                             <application>
                                 <uuid>feda298c-4a63-450d-8c59-8cb43241ba3d</uuid>

@@ -43,11 +43,8 @@ import static org.mockito.Mockito.when;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.ServiceLoader;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
@@ -84,23 +81,20 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.gluonhq.jfxapps.boot.api.context.ContextManager;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Primary;
 import com.gluonhq.jfxapps.boot.api.loader.ApplicationManager;
-import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
 import com.gluonhq.jfxapps.boot.api.loader.BootException;
+import com.gluonhq.jfxapps.boot.api.loader.LoadType;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.boot.api.registry.RegistryManager;
 import com.gluonhq.jfxapps.boot.api.web.client.InternalRestClient;
 import com.gluonhq.jfxapps.boot.api.web.client.InternalRestClient.JsonBodyHandler;
 import com.gluonhq.jfxapps.boot.context.boot.BootContextFactory;
 import com.gluonhq.jfxapps.boot.context.boot.BootContextInitializer;
 import com.gluonhq.jfxapps.boot.loader.StateProvider;
 import com.gluonhq.jfxapps.boot.loader.content.FileExtensionProvider;
-import com.gluonhq.jfxapps.boot.loader.model.Application;
-import com.gluonhq.jfxapps.boot.loader.model.ApplicationExtension;
-import com.gluonhq.jfxapps.boot.loader.model.Extension;
-import com.gluonhq.jfxapps.boot.loader.model.JfxApps;
-import com.gluonhq.jfxapps.boot.loader.model.JfxAppsExtension;
-import com.gluonhq.jfxapps.boot.registry.RegistryManager;
+import com.gluonhq.jfxapps.boot.loader.internal.jpa.model.Extension;
+import com.gluonhq.jfxapps.boot.loader.model.LoadableContent;
 
 /**
  * Those integration test ensure the following features are available. Impacted
@@ -126,6 +120,7 @@ public class AvailableFeaturesTestIT {
     private static final UUID ROOT_ID = OpenExtension.ROOT_ID;
     private static final UUID ROOT_EXT1_ID = UUID.fromString("00000000-0000-0000-0000-000000000011");
     private static final UUID ROOT_EXT1_EXT1_ID = UUID.fromString("00000000-0000-0000-0000-000000000111");
+
     private static final UUID APP1_ID = UUID.fromString("00000000-0000-0000-0000-000000000002");
     private static final UUID APP1_EXT1_ID = UUID.fromString("00000000-0000-0000-0000-000000000012");
     private static final UUID APP1_EXT1_EXT1_ID = UUID.fromString("00000000-0000-0000-0000-000000000112");
@@ -177,39 +172,83 @@ public class AvailableFeaturesTestIT {
         @Primary
         StateProvider stateProvider() {
             StateProvider stateProvider = Mockito.mock(StateProvider.class);
-            when(stateProvider.bootState()).thenReturn(testApp());
+            when(stateProvider.applicationState(Mockito.eq(ROOT_ID) , Mockito.any())).thenReturn(rootApp());
+            when(stateProvider.applicationState(Mockito.eq(APP1_ID) , Mockito.any())).thenReturn(testApp());
             return stateProvider;
         }
 
         /*
          * This is the test application and extensions
          */
-        private JfxApps testApp() {
+        private LoadableContent rootApp() {
             Path p_root = Path.of(RES_IT, "root/target/root-1.0.0-SNAPSHOT.jar");
             Path p_root_ext1 = Path.of(RES_IT, "root-ext1/target/root-ext1-1.0.0-SNAPSHOT.jar");
             Path p_root_ext1_ext1 = Path.of(RES_IT, "root-ext1-ext1/target/root-ext1-ext1-1.0.0-SNAPSHOT.jar");
+
+            LoadableContent root = new LoadableContent();
+            Extension rootExt = new Extension();
+            rootExt.setId(ROOT_ID);
+            root.setExtension(rootExt);
+            root.setContentProvider(new FileExtensionProvider(p_root));
+
+            LoadableContent root_ext1 = new LoadableContent();
+            Extension rootExt_ext1 = new Extension();
+            rootExt_ext1.setId(ROOT_EXT1_ID);
+            root_ext1.setExtension(rootExt_ext1);
+            root_ext1.setContentProvider(new FileExtensionProvider(p_root_ext1));
+
+            rootExt.getExtensions().add(rootExt_ext1);
+            root.addExtension(root_ext1);
+            rootExt_ext1.setParentExtension(rootExt);
+
+            LoadableContent root_ext1_ext1 = new LoadableContent();
+            Extension rootExt_ext1_ext1 = new Extension();
+            rootExt_ext1_ext1.setId(ROOT_EXT1_EXT1_ID);
+            root_ext1_ext1.setExtension(rootExt_ext1_ext1);
+            root_ext1_ext1.setContentProvider(new FileExtensionProvider(p_root_ext1_ext1));
+
+            rootExt_ext1.getExtensions().add(rootExt_ext1_ext1);
+            root_ext1.addExtension(root_ext1_ext1);
+            rootExt_ext1_ext1.setParentExtension(rootExt_ext1);
+
+            return root;
+        }
+
+        /*
+         * This is the test application and extensions
+         */
+        private LoadableContent testApp() {
             Path p_app1 = Path.of(RES_IT, "app1/target/app1-1.0.0-SNAPSHOT.jar");
             Path p_app1_ext1 = Path.of(RES_IT, "app1-ext1/target/app1-ext1-1.0.0-SNAPSHOT.jar");
             Path p_app1_ext1_ext1 = Path.of(RES_IT, "app1-ext1-ext1/target/app1-ext1-ext1-1.0.0-SNAPSHOT.jar");
 
-            JfxApps apps = new JfxApps(ROOT_ID, new FileExtensionProvider(p_root));
+            LoadableContent app1 = new LoadableContent();
+            Extension app1Ext = new Extension();
+            app1Ext.setId(APP1_ID);
+            app1.setExtension(app1Ext);
+            app1.setContentProvider(new FileExtensionProvider(p_app1));
 
-            JfxAppsExtension ext1 = new JfxAppsExtension(ROOT_EXT1_ID, new FileExtensionProvider(p_root_ext1));
-            Extension ext1_ext1 = new Extension(ROOT_EXT1_EXT1_ID, new FileExtensionProvider(p_root_ext1_ext1));
+            LoadableContent app1_ext1 = new LoadableContent();
+            Extension app1Ext_ext1 = new Extension();
+            app1Ext_ext1.setId(APP1_EXT1_ID);
+            app1_ext1.setExtension(app1Ext_ext1);
+            app1_ext1.setContentProvider(new FileExtensionProvider(p_app1_ext1));
 
-            Application app1 = new Application(APP1_ID, new FileExtensionProvider(p_app1));
-            ApplicationExtension app1_ext1 = new ApplicationExtension(APP1_EXT1_ID,
-                    new FileExtensionProvider(p_app1_ext1));
-            Extension app1_ext1_ext1 = new Extension(APP1_EXT1_EXT1_ID, new FileExtensionProvider(p_app1_ext1_ext1));
-
-            apps.addExtension(ext1);
-            ext1.addExtension(ext1_ext1);
-
-            apps.addApplication(app1);
+            app1Ext.getExtensions().add(app1Ext_ext1);
             app1.addExtension(app1_ext1);
-            app1_ext1.addExtension(app1_ext1_ext1);
+            app1Ext_ext1.setParentExtension(app1Ext);
 
-            return apps;
+            LoadableContent app1_ext1_ext1 = new LoadableContent();
+            Extension app1Ext_ext1_ext1 = new Extension();
+            app1Ext_ext1_ext1.setId(APP1_EXT1_EXT1_ID);
+            app1_ext1_ext1.setExtension(app1Ext_ext1_ext1);
+            app1_ext1_ext1.setContentProvider(new FileExtensionProvider(p_app1_ext1_ext1));
+
+            app1Ext_ext1.getExtensions().add(app1Ext_ext1_ext1);
+            app1_ext1.addExtension(app1_ext1_ext1);
+            app1Ext_ext1_ext1.setParentExtension(app1Ext_ext1);
+
+            return app1;
         }
     }
 
@@ -242,8 +281,8 @@ public class AvailableFeaturesTestIT {
     @BeforeAll
     public void initLaunchApp() throws BootException {
         var appManager = boot.getBean(ApplicationManager.class);
-        appManager.start();
-        appManager.startApplication(APP1_ID);
+        appManager.start(LoadType.FullUpdate);
+        appManager.startApplication(APP1_ID, LoadType.FullUpdate);
 
         internalClient = boot.getBean(InternalRestClient.class);
     }

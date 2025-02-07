@@ -64,9 +64,9 @@ import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
-import com.gluonhq.jfxapps.boot.layer.LayerNotFoundException;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper.ServiceLoader;
+import com.gluonhq.jfxapps.boot.loader.internal.context.LayerNotFoundException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -95,7 +95,7 @@ class ContextBootstraperTest {
 
     /** The parent model extension. */
     @Mock
-    com.gluonhq.jfxapps.boot.loader.model.Extension parentExtensionModel;
+    com.gluonhq.jfxapps.boot.loader.model.LoadableContent parentExtensionModel;
 
     /** The parent layer. */
     @Mock
@@ -110,7 +110,7 @@ class ContextBootstraperTest {
 
     /** The child model extension. */
     @Mock
-    com.gluonhq.jfxapps.boot.loader.model.Extension childExtensionModel;
+    com.gluonhq.jfxapps.boot.loader.model.LoadableContent childExtensionModel;
 
     /** The ext layer. */
     @Mock

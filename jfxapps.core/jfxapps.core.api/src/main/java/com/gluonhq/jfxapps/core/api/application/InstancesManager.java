@@ -40,9 +40,29 @@ import java.util.List;
 
 public interface InstancesManager {
 
+	/**
+	 * @return
+	 * @deprecated must be removed and set to private in immplementor
+	 */
+	@Deprecated
     ApplicationInstance newInstance();
+	/**
+	 * @return
+	 * @deprecated must be removed and set to private in immplementor
+	 */
+	@Deprecated
     ApplicationInstance lookupInstance(URL newLocation);
+	/**
+	 * @return
+	 * @deprecated must be removed and set to private in immplementor
+	 */
+	@Deprecated
     ApplicationInstance lookupUnusedInstance();
+	/**
+	 * @return
+	 * @deprecated must be removed and set to private in immplementor
+	 */
+	@Deprecated
     ApplicationInstance lookupUnusedInstance(Collection<ApplicationInstance> ignored);
     ApplicationInstance getFrontInstance();
 

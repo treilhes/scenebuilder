@@ -40,26 +40,26 @@ import java.util.UUID;
  */
 public interface ApplicationManager {
 
-    void start() throws BootException;
+    void start(LoadType loadType) throws BootException;
+
+    /**
+     * Stop core components
+     */
+    void stop();
 
     /**
      * Start the sub application
      * @param editorId
      */
-    void startApplication(UUID editorId);
+    void startApplication(UUID editorId, LoadType loadType);
+
+    void stopApplication(UUID editorId);
 
     /**
      * Send a command to the core dispatcher
      * @param parameters
      */
     void send(OpenCommandEvent parameters);
-
-    void stopApplication(UUID editorId);
-
-    /**
-     * Stop core components
-     */
-    void stop();
 
     /**
      * Gets the report.

@@ -37,15 +37,25 @@ import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
 import com.gluonhq.jfxapps.boot.registry.config.RegistryConfig;
+import com.gluonhq.jfxapps.boot.registry.internal.RegistryEntityMappersImpl;
+import com.gluonhq.jfxapps.boot.registry.internal.RegistryInfoMappersImpl;
 import com.gluonhq.jfxapps.boot.registry.internal.RegistryManagerImpl;
-import com.gluonhq.jfxapps.boot.registry.internal.RegistryMappersImpl;
 import com.gluonhq.jfxapps.boot.registry.internal.RegistrySourceManagerImpl;
-import com.gluonhq.jfxapps.boot.registry.model.Application;
-import com.gluonhq.jfxapps.boot.registry.model.Extension;
-import com.gluonhq.jfxapps.boot.registry.model.Registry;
-import com.gluonhq.jfxapps.boot.registry.model.RegistrySource;
+import com.gluonhq.jfxapps.boot.registry.model.ApplicationEntity;
+import com.gluonhq.jfxapps.boot.registry.model.ExtensionEntity;
+import com.gluonhq.jfxapps.boot.registry.model.FeatureEntity;
+import com.gluonhq.jfxapps.boot.registry.model.PluginEntity;
+import com.gluonhq.jfxapps.boot.registry.model.RegistryEntity;
+import com.gluonhq.jfxapps.boot.registry.model.RegistrySourceEntity;
+import com.gluonhq.jfxapps.boot.registry.repository.ApplicationRepository;
+import com.gluonhq.jfxapps.boot.registry.repository.ExtensionRepository;
+import com.gluonhq.jfxapps.boot.registry.repository.FeatureRepository;
+import com.gluonhq.jfxapps.boot.registry.repository.PluginRepository;
 import com.gluonhq.jfxapps.boot.registry.repository.RegistryRepository;
 import com.gluonhq.jfxapps.boot.registry.repository.RegistrySourceRepository;
+import com.gluonhq.jfxapps.boot.registry.service.RegistryService;
+import com.gluonhq.jfxapps.boot.registry.service.RegistrySourceService;
+import com.gluonhq.jfxapps.boot.registry.service.RegistryUpdateService;
 
 public class RegistryBootClasses implements BootContextConfigClasses {
 
@@ -54,18 +64,33 @@ public class RegistryBootClasses implements BootContextConfigClasses {
         return List.of(
                 RegistryConfig.class,
                 RegistryManagerImpl.class,
-                RegistryMappersImpl.class,
                 RegistrySourceManagerImpl.class,
 
+                //mappers
+                RegistryEntityMappersImpl.class,
+                RegistryInfoMappersImpl.class,
+
                 //jpa repositories
+                ApplicationRepository.class,
+                ExtensionRepository.class,
+                FeatureRepository.class,
+                PluginRepository.class,
                 RegistryRepository.class,
                 RegistrySourceRepository.class,
 
+
                 //model
-                Application.class,
-                Extension.class,
-                Registry.class,
-                RegistrySource.class
+                ApplicationEntity.class,
+                ExtensionEntity.class,
+                RegistryEntity.class,
+                FeatureEntity.class,
+                PluginEntity.class,
+                RegistrySourceEntity.class,
+
+                //service
+                RegistrySourceService.class,
+                RegistryService.class,
+                RegistryUpdateService.class
                 );
     }
 

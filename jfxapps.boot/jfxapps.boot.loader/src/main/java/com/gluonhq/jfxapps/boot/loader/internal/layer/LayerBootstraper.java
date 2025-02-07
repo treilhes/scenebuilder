@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -49,7 +49,7 @@ import com.gluonhq.jfxapps.boot.api.layer.Layer;
 import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.boot.loader.content.ExtensionContentProvider;
-import com.gluonhq.jfxapps.boot.loader.model.AbstractExtension;
+import com.gluonhq.jfxapps.boot.loader.model.LoadableContent;
 import com.gluonhq.jfxapps.boot.loader.model.LoadState;
 
 /**
@@ -112,7 +112,7 @@ public class LayerBootstraper {
      * @return the layer
      * @throws InvalidLayerException the invalid layer exception
      */
-    public Layer load(Layer parent, AbstractExtension<?> extension, MultipleProgressListener progresslistener) throws InvalidLayerException {
+    public Layer load(Layer parent, LoadableContent extension, MultipleProgressListener progresslistener) throws InvalidLayerException {
 
         progresslistener.notifyStart(extension.getId());
 
@@ -125,21 +125,14 @@ public class LayerBootstraper {
                     Files.createDirectories(path);
                 }
 
-                ExtensionContentProvider contentProvider = extension.getContentProvider();
-
-                if (!contentProvider.isValid()) {
-                    extension.setLoadState(LoadState.Error);
-                    throw new InvalidLayerException("ExtensionContentProvider contains invalid content " + contentProvider);
-                }
-
                 logger.info("Checking layer files are up to date {}", extension.getId());
+
                 var updateSTep = startup.start("update.layer");
                 updateSTep.tag("extension", extension.getId().toString());
 
-                if (!contentProvider.isUpToDate(path)) {
-                    logger.info("Updating layer files {}", extension.getId());
-                    contentProvider.update(path);
-                }
+                logger.info("Updating layer files {}", extension.getId());
+                extension.getContentProvider().update(path);
+
                 updateSTep.end();
 
                 logger.info("Layer files are up to date {}", extension.getId());
@@ -148,6 +141,7 @@ public class LayerBootstraper {
                 createStep.tag("extension", extension.getId().toString());
 
                 layer = layerManager.create(parent, extension.getId(), null, path);
+
                 createStep.end();
 
                 if (layer != null) {

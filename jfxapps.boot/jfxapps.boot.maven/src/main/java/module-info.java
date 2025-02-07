@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,7 +40,7 @@ open module jfxapps.boot.maven {
     exports com.gluonhq.jfxapps.boot.maven.client.type;
 
     requires jfxapps.boot.api;
-    requires jfxapps.boot.platform;
+    //requires jfxapps.boot.platform;
     requires jfxapps.boot.starter;
 
     requires maven.resolver.provider;

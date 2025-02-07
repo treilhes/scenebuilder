@@ -39,14 +39,13 @@ import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import com.gluonhq.jfxapps.boot.registry.RegistryArtifact;
+import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifact;
 
 @Configuration
 @ConfigurationProperties(prefix = "jfxapps.registry")
 //@Profile("!it")
 public class RegistryConfig {
 
-    private RegistryArtifact boot;
     private boolean snapshotsAllowed;
     private Map<String, RegistryArtifact> defaults = new HashMap<>();
 
@@ -56,14 +55,6 @@ public class RegistryConfig {
 
     public void setDefaults(Map<String, RegistryArtifact> defaults) {
         this.defaults = defaults;
-    }
-
-    public RegistryArtifact getBoot() {
-        return boot;
-    }
-
-    public void setBoot(RegistryArtifact boot) {
-        this.boot = boot;
     }
 
     public boolean isSnapshotsAllowed() {

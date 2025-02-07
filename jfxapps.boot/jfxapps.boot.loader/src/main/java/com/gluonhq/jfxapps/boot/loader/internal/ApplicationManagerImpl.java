@@ -44,7 +44,6 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.metrics.ApplicationStartup;
-import org.springframework.core.metrics.StartupStep;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
@@ -54,18 +53,14 @@ import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.api.loader.ApplicationManager;
 import com.gluonhq.jfxapps.boot.api.loader.BootException;
 import com.gluonhq.jfxapps.boot.api.loader.ExtensionReport;
+import com.gluonhq.jfxapps.boot.api.loader.LoadType;
 import com.gluonhq.jfxapps.boot.api.loader.OpenCommandEvent;
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.loader.ProgressListener;
 import com.gluonhq.jfxapps.boot.loader.StateProvider;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
 import com.gluonhq.jfxapps.boot.loader.internal.layer.LayerBootstraper;
-import com.gluonhq.jfxapps.boot.loader.model.AbstractExtension;
-import com.gluonhq.jfxapps.boot.loader.model.Application;
-import com.gluonhq.jfxapps.boot.loader.model.JfxApps;
 import com.gluonhq.jfxapps.boot.loader.model.LoadState;
-
-import jakarta.annotation.PostConstruct;
+import com.gluonhq.jfxapps.boot.loader.model.LoadableContent;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -74,403 +69,378 @@ import jakarta.annotation.PostConstruct;
 @Component
 public class ApplicationManagerImpl implements ApplicationManager {
 
-    /** The Constant logger. */
-    private final static Logger logger = LoggerFactory.getLogger(ApplicationManagerImpl.class);
-    private final static int NUM_THREADS = Runtime.getRuntime().availableProcessors();
-
-    private final JfxAppContext context;
-
-    /** The layer manager. */
-    private final ModuleLayerManager layerManager;
-
-    /** The contexts. */
-    private final ContextBootstraper contexts;
-
-    /** The layers. */
-    private final LayerBootstraper layers;
-
-    /** The application. */
-    private JfxApps appContainer = null;
-
-    /** The state. */
-    private Map<UUID, ExtensionReport> state = new HashMap<>();
-
-    private final StateProvider stateProvider;
-    private final Optional<ApplicationStartup> startup;
-
-    private boolean started = false;
-
-
-
-
-    /**
-     * Instantiates a new application manager impl.
-     *
-     * @param layerManager
-     * @param contexts
-     * @param layers
-     */
-    protected ApplicationManagerImpl(JfxAppContext context, ModuleLayerManager layerManager, ContextBootstraper contexts,
-            LayerBootstraper layers, StateProvider stateProvider, Optional<ApplicationStartup> startup) {
-        super();
-        this.context = context;
-        this.layerManager = layerManager;
-        this.contexts = contexts;
-        this.layers = layers;
-        this.stateProvider = stateProvider;
-        this.startup = startup;
-    }
-
-    @PostConstruct
-    public void init() {
-        var step = startup.map(s -> s.start("application.manager.init"));
-        appContainer = stateProvider.bootState();
-        step.ifPresent(StartupStep::end);
-    }
-
-    /**
-     * Get the current state of the application
-     * @return clone of the current state
-     */
-    public JfxApps getState() {
-        return appContainer == null ? null : appContainer.clone();
-    }
-
-    @Override
-    public void start() throws BootException {
-        if (!isStarted()) {
-            var mainLoad = startup.map(s -> s.start("application.manager.main.load"));
-            load(null);
-            mainLoad.ifPresent(s -> s.tag("Load Context", Extension.ROOT_ID.toString()).end());
-
-            var mainStart = startup.map(s -> s.start("application.manager.main.start"));
-            start(null);
-            mainStart.ifPresent(s -> s.tag("Boot Context", Extension.ROOT_ID.toString()).end());
-
-            started = true;
-        } else {
-            logger.warn("JfxApps already started bypassing start");
-        }
-    }
-
-    /**
-     * Start editor.
-     *
-     * @param editorId the editor id
-     */
-    @Override
-    public void startApplication(UUID editorId) {
-        Objects.requireNonNull(editorId, "editorId is null");
-
-        var appLoad = startup.map(s -> s.start("application.manager.main.load"));
-        loadApplication(editorId, null);
-        appLoad.ifPresent(s -> s.tag("Load Context", editorId.toString()).end());
-
-        var appStart = startup.map(s -> s.start("application.manager.main.start"));
-        startApplication(editorId, null);
-        appStart.ifPresent(s -> s.tag("Boot Context", editorId.toString()).end());
-    }
-
-    /**
-     * Stop.
-     */
-    @Override
-    public void stop() {
-        appContainer.getApplications().forEach(e -> stopApplication(e.getId()));
-        stopExtensionTree(Set.of(appContainer));
-        unload();
-    }
-
-    /**
-     * Stop editor.
-     *
-     * @param editorId the editor id
-     */
-    @Override
-    public void stopApplication(UUID editorId) {
-
-        Optional<Application> optionalEditor = appContainer.getApplications().stream()
-                .filter(e -> e.getId().equals(editorId)).findAny();
-        Application editor = optionalEditor.orElseThrow();
-
-        if (!contexts.exists(editor)) {
-            logger.warn("Editor context does not exists for {}", editor.getId());
-            return;
-        }
-
-        stopExtensionTree(Set.of(editor));
-        unloadApplication(editorId);
-    }
-
-    /**
-     * Load.
-     *
-     * @param progressListener the progress listener
-     */
-    private void load(ProgressListener progressListener) {
-
-        logger.info("Loading root layer");
-
-        MultipleProgressListener listener = new MultipleProgressListener(progressListener);
-
-        Layer appLayer = null;
-        try {
-            appLayer = layers.load(null, appContainer, listener);
-        } catch (Throwable e) {
-            logger.error("Unable to load layer", e);
-            appContainer.setLoadState(LoadState.Error);
-            reportOf(appContainer.getId()).error("Loading error", e);
-        }
-        logger.info("Loading root layer done");
-
-        if (appLayer != null) {
-            appContainer.setLoadState(LoadState.Loaded);
-
-
-            GroupTaskExecutor executor = new GroupTaskExecutor(NUM_THREADS);
-            loadExtensionTree(executor, appLayer, appContainer.getExtensions(), listener);
-            executor.shutdown();
-            // applications musn't be loaded automaticaly, but it is convenient for now
-            // loadExtensionTree(appLayer, appContainer.getApplications(), listener);
-        }
-
-    }
-
-    /**
-     * Load editor.
-     *
-     * @param editorId         the editor id
-     * @param progressListener the progress listener
-     */
-    public void loadApplication(UUID editorId, ProgressListener progressListener) {
-
-        MultipleProgressListener listener = new MultipleProgressListener(progressListener);
-
-        Layer appLayer = layers.get(appContainer.getId());
-
-        if (appLayer != null) {
-            Optional<Application> optionalEditor = appContainer.getApplications().stream()
-                    .filter(e -> e.getId().equals(editorId)).findAny();
-            Application editor = optionalEditor.orElseThrow();
-
-            GroupTaskExecutor executor = new GroupTaskExecutor(NUM_THREADS);
-            loadExtensionTree(executor, appLayer, Set.of(editor), listener);
-            executor.shutdown();
-        }
-
-    }
-
-    /**
-     * Load extension tree.
-     *
-     * @param parentLayer      the parent layer
-     * @param extensionSet     the extension set
-     * @param progressListener the progress listener
-     */
-    private void loadExtensionTree(GroupTaskExecutor executor , Layer parentLayer, Set<? extends AbstractExtension<?>> extensionSet,
-            MultipleProgressListener progressListener) {
-
-        List<Runnable> extensionLoadings = extensionSet.stream().map(ext -> {
-            Runnable runnable = () -> {
-                if (ext.getLoadState() != LoadState.Deleted || ext.getLoadState() != LoadState.Disabled) {
-                    logger.info("Loading extension layer {}", ext.getId());
-                    Layer layer = null;
-
-                    try {
-                        layer = layers.load(parentLayer, ext, progressListener);
-                    } catch (Throwable e) {
-                        ext.setLoadState(LoadState.Error);
-                        reportOf(ext.getId()).error("", e);
-                    }
-                    logger.info("Loading extension layer {} done", ext.getId());
-
-                    if (layer != null) {
-                        ext.setLoadState(LoadState.Loaded);
-                        loadExtensionTree(executor, layer, ext.getExtensions(), progressListener);
-                    }
-                }
-            };
-            return runnable;
-        }).toList();
-
-        try {
-            executor.submitGroupTasks(parentLayer.getId().toString(), extensionLoadings);
-        } catch (InterruptedException e) {
-            logger.error("Unable to load extension, interrupted", e);
-        }
-    }
-
-    /**
-     * Start.
-     *
-     * @param progressListener the progress listener
-     * @throws BootException the boot exception
-     */
-    private void start(ProgressListener progressListener) throws BootException {
-
-        MultipleProgressListener listener = new MultipleProgressListener(progressListener);
-
-        // start app root
-        if (appContainer.getLoadState() == LoadState.Loaded && !contexts.exists(appContainer)) {
-            GroupTaskExecutor executor = new GroupTaskExecutor(NUM_THREADS);
-            startExtensionTree(executor, context, Set.of(appContainer), listener);
-            executor.shutdown();
-        } else {
-            logger.error("Application layer not loaded");
-        }
-
-        ExtensionReport rootReport = getReport(Extension.ROOT_ID);
-        if (rootReport.hasError()) {
-            throw new BootException("Unable to boot root extension", rootReport);
-        }
-    }
-
-    /**
-     * Start editor.
-     *
-     * @param applicationId    the application id
-     * @param progressListener the progress listener
-     */
-    public void startApplication(UUID applicationId, ProgressListener progressListener) {
-
-        Optional<Application> optionalApplication = appContainer.getApplications().stream()
-                .filter(e -> e.getId().equals(applicationId)).findAny();
-        Application app = optionalApplication.orElseThrow();
-
-        MultipleProgressListener listener = new MultipleProgressListener(progressListener);
-
-        if (contexts.exists(app)) {
-            logger.warn("Extension context already exists for {}", app.getId());
-            return;
-        }
-
-        JfxAppContext parentContext = contexts.get(appContainer);
-
-        GroupTaskExecutor executor = new GroupTaskExecutor(NUM_THREADS);
-        startExtensionTree(executor, parentContext, Set.of(app), listener);
-        executor.shutdown();
-
-    }
-
-    /**
-     * Start extension tree.
-     *
-     * @param parentContext    the parent context
-     * @param extensionSet     the extension set
-     * @param progressListener the progress listener
-     */
-    private void startExtensionTree(GroupTaskExecutor executor, JfxAppContext parentContext, Set<? extends AbstractExtension<?>> extensionSet,
-            MultipleProgressListener progressListener) {
-
-        List<Runnable> extensionStartings = extensionSet.stream().map(ext -> {
-            Runnable runnable = () -> {
-                try {
-                    List<Object> singletonInstances = List.of(this);
-                    JfxAppContext extContext = contexts.create(parentContext, ext, singletonInstances, progressListener);
-                    startExtensionTree(executor, extContext, ext.getExtensions(), progressListener);
-                } catch (Throwable e) {
-                    ext.setLoadState(LoadState.Error);
-                    reportOf(ext.getId()).error("", e);
-                }
-            };
-            return runnable;
-        }).toList();
-        try {
-            executor.submitGroupTasks(parentContext == null ? "ROOT" : parentContext.getId(), extensionStartings);
-        } catch (InterruptedException e) {
-            logger.error("Unable to start extension, interrupted", e);
-        }
-    }
-
-    /**
-     * Stop extension tree.
-     *
-     * @param extensionSet the extension set
-     */
-    private void stopExtensionTree(Set<? extends AbstractExtension<?>> extensionSet) {
-        extensionSet.forEach(ext -> {
-            contexts.close(ext);
-            stopExtensionTree(ext.getExtensions());
-        });
-
-    }
-
-    /**
-     * Unload.
-     */
-    public void unload() {
-        appContainer.getApplications().forEach(e -> unloadApplication(e.getId()));
-        unloadExtensionTree(Set.of(appContainer));
-    }
-
-    /**
-     * Unload editor.
-     *
-     * @param editorId the editor id
-     */
-    public void unloadApplication(UUID editorId) {
-
-        Optional<Application> optionalEditor = appContainer.getApplications().stream()
-                .filter(e -> e.getId().equals(editorId)).findAny();
-        Application editor = optionalEditor.orElseThrow();
-
-        if (!contexts.exists(editor)) {
-            logger.warn("Editor context does not exists for {}", editor.getId());
-            return;
-        }
-
-        unloadExtensionTree(Set.of(editor));
-    }
-
-    /**
-     * Unload extension tree.
-     *
-     * @param extensionSet the extension set
-     */
-    private void unloadExtensionTree(Set<? extends AbstractExtension<?>> extensionSet) {
-        extensionSet.forEach(ext -> {
-            if (contexts.exists(ext)) {
-                throw new ExtensionStateException("Can't unload extension, stop it first!");
-            }
-            unloadExtensionTree(ext.getExtensions());
-            Layer layer = layers.get(ext.getId());
-            if (layer != null) {
-                layers.close(layer.getId());
-                ext.setLoadState(LoadState.Unloaded);
-            }
-        });
-    }
-
-    /**
-     * Removes the.
-     *
-     * @param extensionId the extension id
-     */
-    private void remove(UUID extensionId) {
-
-        Map<UUID, AbstractExtension<?>> flattened = flatten(appContainer);
-
-        AbstractExtension<?> extension = flattened.get(extensionId);
-
-        if (extension != null) {
-            extension.setLoadState(LoadState.Deleted);
-            // stopExtensionTree(Set.of(extension));
-            unloadExtensionTree(Set.of(extension));
-        } else {
-            logger.warn("Extension not found for {}", extensionId);
-        }
-    }
-
-    /**
-     * Disable.
-     *
-     * @param extensionId the extension id
-     */
-    private void disable(UUID extensionId) {
-//        Application application = updater.getLoaded();
-//        Map<UUID, AbstractExtension<?>> flattened = flatten(application);
+	/** The Constant logger. */
+	private final static Logger logger = LoggerFactory.getLogger(ApplicationManagerImpl.class);
+	private final static int NUM_THREADS = Runtime.getRuntime().availableProcessors();
+
+	private final static UUID ROOT_ID = com.gluonhq.jfxapps.boot.api.loader.extension.Extension.ROOT_ID;
+
+	private final JfxAppContext context;
+
+	/** The layer manager. */
+	private final ModuleLayerManager layerManager;
+
+	/** The contexts. */
+	private final ContextBootstraper contexts;
+
+	/** The layers. */
+	private final LayerBootstraper layers;
+
+	/** The application. */
+	private Map<UUID, LoadableContent> startedApplications = new HashMap<>();
+
+	/** The state. */
+	private Map<UUID, ExtensionReport> state = new HashMap<>();
+
+	private final StateProvider stateProvider;
+	private final Optional<ApplicationStartup> startup;
+
+	private boolean started = false;
+
+	/**
+	 * Instantiates a new application manager impl.
+	 *
+	 * @param layerManager
+	 * @param contexts
+	 * @param layers
+	 */
+	// @formatter:off
+    protected ApplicationManagerImpl(
+    		JfxAppContext context,
+    		ModuleLayerManager layerManager,
+    		ContextBootstraper contexts,
+            LayerBootstraper layers,
+            StateProvider stateProvider,
+            Optional<ApplicationStartup> startup) {
+    	// @formatter:on
+		super();
+		this.context = context;
+		this.layerManager = layerManager;
+		this.contexts = contexts;
+		this.layers = layers;
+		this.stateProvider = stateProvider;
+		this.startup = startup;
+	}
+
+	@Override
+	public void start(LoadType loadType) throws BootException {
+		startApplication(ROOT_ID, loadType);
+	}
+
+	/**
+	 * Start an application by : - loading the ModuleLayer of the application and
+	 * it's extensions. - starting the JfxAppContext of the application and it's
+	 * extensions.
+	 *
+	 * @param applicationId the application id
+	 */
+	@Override
+	public void startApplication(UUID applicationId, LoadType loadType) {
+		Objects.requireNonNull(applicationId, "applicationId is null");
+
+		if (!isStarted(applicationId)) {
+
+			var appLoad = startup.map(s -> s.start("application.manager.main.load"));
+			var loaded = loadApplication(applicationId, loadType, null);
+			appLoad.ifPresent(s -> s.tag("Load Context", applicationId.toString()).end());
+
+			var appStart = startup.map(s -> s.start("application.manager.main.start"));
+
+			try {
+				launchApplication(loaded, null);
+			} catch (BootException e) {
+				appStart.ifPresent(s -> s.tag("error", e.getMessage()));
+				logger.error("Unable to boot application {}", applicationId, e);
+			}
+			appStart.ifPresent(s -> s.tag("Boot Context", applicationId.toString()).end());
+
+			stateProvider.saveState(loaded.getExtension());
+			startedApplications.put(applicationId, loaded);
+		} else {
+			logger.warn("JfxApps {} already started bypassing start", applicationId);
+		}
+	}
+
+	/**
+	 * Stop.
+	 */
+	@Override
+	public void stop() {
+		LoadableContent root = startedApplications.get(ROOT_ID);
+
+		// stop all applications
+		startedApplications.values().stream().filter(a -> a != root).forEach(e -> stopApplication(e.getId()));
+
+		// stop root application
+		stopExtensionTree(Set.of(root));
+
+		unload();
+
+		startedApplications.clear();
+	}
+
+	/**
+	 * Stop editor.
+	 *
+	 * @param editorId the editor id
+	 */
+	@Override
+	public void stopApplication(UUID editorId) {
+
+		LoadableContent application = startedApplications.get(editorId);
+
+		if (application == null) {
+			logger.warn("Application not started for {}", editorId);
+			return;
+		}
+
+		if (!contexts.exists(application)) {
+			logger.warn("Application context does not exists for {}", application.getId());
+			return;
+		}
+
+		stopExtensionTree(Set.of(application));
+		unloadApplication(editorId);
+	}
+
+	/**
+	 * Load editor.
+	 *
+	 * @param applicationId    the editor id
+	 * @param progressListener the progress listener
+	 * @return
+	 */
+	public LoadableContent loadApplication(UUID applicationId, LoadType loadType, ProgressListener progressListener) {
+		Objects.nonNull(applicationId);
+
+		MultipleProgressListener listener = new MultipleProgressListener(progressListener);
+
+		var application = stateProvider.applicationState(applicationId, loadType);
+
+		if (application == null) {
+			throw new RuntimeException("Application not found for " + applicationId);
+		}
+
+		Layer parentLayer = ROOT_ID.equals(applicationId) ? null : layers.get(ROOT_ID);
+
+		if (parentLayer == null && !ROOT_ID.equals(applicationId)) {
+			throw new RuntimeException("Root layer not found");
+		}
+
+		GroupTaskExecutor executor = new GroupTaskExecutor(NUM_THREADS);
+		loadExtensionTree(executor, parentLayer, Set.of(application), listener);
+		executor.shutdown();
+
+		return application;
+	}
+
+	/**
+	 * Load extension tree.
+	 *
+	 * @param parentLayer      the parent layer
+	 * @param extensionSet     the extension set
+	 * @param progressListener the progress listener
+	 */
+	private void loadExtensionTree(GroupTaskExecutor executor, Layer parentLayer,
+			Set<? extends LoadableContent> extensionSet, MultipleProgressListener progressListener) {
+
+		List<Runnable> extensionLoadings = extensionSet.stream().map(ext -> {
+			Runnable runnable = () -> {
+				if (ext.getLoadState() != LoadState.Deleted && ext.getLoadState() != LoadState.Disabled) {
+					logger.info("Loading extension layer {}", ext.getId());
+					Layer layer = null;
+
+					try {
+						layer = layers.load(parentLayer, ext, progressListener);
+					} catch (Throwable e) {
+						logger.error("Unable to load extension layer {}", ext.getId(), e);
+						ext.setLoadState(LoadState.Error);
+						reportOf(ext.getId()).error("", e);
+					}
+					logger.info("Loading extension layer {} done", ext.getId());
+
+					if (layer != null) {
+						ext.setLoadState(LoadState.Loaded);
+						loadExtensionTree(executor, layer, ext.getExtensions(), progressListener);
+					}
+				}
+			};
+			return runnable;
+		}).toList();
+
+		try {
+			String loadKey = parentLayer == null ? "ROOT" : parentLayer.getId().toString();
+			executor.submitGroupTasks(loadKey, extensionLoadings);
+		} catch (InterruptedException e) {
+			logger.error("Unable to load extension, interrupted", e);
+		}
+	}
+
+	/**
+	 * Start editor.
+	 *
+	 * @param applicationId    the application id
+	 * @param progressListener the progress listener
+	 * @throws BootException
+	 */
+	private void launchApplication(LoadableContent application, ProgressListener progressListener) throws BootException {
+
+		Objects.requireNonNull(application, "application is null");
+
+		MultipleProgressListener listener = new MultipleProgressListener(progressListener);
+
+		if (application.getLoadState() != LoadState.Loaded) {
+			throw new RuntimeException("Application layer not loaded for " + application.getId());
+		}
+
+		if (contexts.exists(application)) {
+			logger.warn("Extension context already exists for {}", application.getId());
+			return;
+		}
+
+		final JfxAppContext parentContext;
+		if (ROOT_ID.equals(application.getId())) {
+			parentContext = context;
+		} else {
+			parentContext = contexts.get(ROOT_ID);
+		}
+
+		GroupTaskExecutor executor = new GroupTaskExecutor(NUM_THREADS);
+		launchExtensionTree(executor, parentContext, Set.of(application), listener);
+		executor.shutdown();
+
+		ExtensionReport rootReport = getReport(application.getId());
+		if (rootReport.hasError()) {
+			throw new BootException("Unable to boot root extension", rootReport);
+		}
+	}
+
+	/**
+	 * Start extension tree.
+	 *
+	 * @param parentContext    the parent context
+	 * @param extensionSet     the extension set
+	 * @param progressListener the progress listener
+	 */
+	private void launchExtensionTree(GroupTaskExecutor executor, JfxAppContext parentContext,
+			Set<? extends LoadableContent> extensionSet, MultipleProgressListener progressListener) {
+
+		List<Runnable> extensionStartings = extensionSet.stream().map(ext -> {
+			Runnable runnable = () -> {
+				try {
+					List<Object> singletonInstances = List.of(this);
+					JfxAppContext extContext = contexts.create(parentContext, ext, singletonInstances,
+							progressListener);
+					launchExtensionTree(executor, extContext, ext.getExtensions(), progressListener);
+				} catch (Throwable e) {
+					ext.setLoadState(LoadState.Error);
+					reportOf(ext.getId()).error("", e);
+				}
+			};
+			return runnable;
+		}).toList();
+		try {
+			executor.submitGroupTasks(parentContext == null ? "ROOT" : parentContext.getId(), extensionStartings);
+		} catch (InterruptedException e) {
+			logger.error("Unable to start extension, interrupted", e);
+		}
+	}
+
+	/**
+	 * Stop extension tree.
+	 *
+	 * @param extensionSet the extension set
+	 */
+	private void stopExtensionTree(Set<? extends LoadableContent> extensionSet) {
+		extensionSet.forEach(ext -> {
+			contexts.close(ext);
+			stopExtensionTree(ext.getExtensions());
+		});
+
+	}
+
+	/**
+	 * Unload.
+	 */
+	public void unload() {
+		LoadableContent root = startedApplications.get(ROOT_ID);
+
+		startedApplications.values().stream().filter(a -> a != root).forEach(e -> unloadApplication(e.getId()));
+
+		unloadExtensionTree(Set.of(root));
+	}
+
+	/**
+	 * Unload editor.
+	 *
+	 * @param applicationId the application id
+	 */
+	public void unloadApplication(UUID applicationId) {
+
+		LoadableContent application = startedApplications.get(applicationId);
+
+		if (application == null) {
+			logger.warn("Application not started for {}", applicationId);
+			return;
+		}
+
+		if (!contexts.exists(application)) {
+			logger.warn("Editor context does not exists for {}", application.getId());
+			return;
+		}
+
+		unloadExtensionTree(Set.of(application));
+	}
+
+	/**
+	 * Unload extension tree.
+	 *
+	 * @param extensionSet the extension set
+	 */
+	private void unloadExtensionTree(Set<? extends LoadableContent> extensionSet) {
+		extensionSet.forEach(ext -> {
+			if (contexts.exists(ext)) {
+				throw new ExtensionStateException("Can't unload extension, stop it first!");
+			}
+			unloadExtensionTree(ext.getExtensions());
+			Layer layer = layers.get(ext.getId());
+			if (layer != null) {
+				layers.close(layer.getId());
+				ext.setLoadState(LoadState.Unloaded);
+			}
+		});
+	}
+
+//    /**
+//     * Removes the.
+//     *
+//     * @param extensionId the extension id
+//     */
+//    private void remove(UUID extensionId) {
 //
-//        AbstractExtension<?> extension = flattened.get(extensionId);
+//        Map<UUID, Extension> flattened = flatten(appContainer);
+//
+//        Extension extension = flattened.get(extensionId);
+//
+//        if (extension != null) {
+//            extension.setLoadState(LoadState.Deleted);
+//            // stopExtensionTree(Set.of(extension));
+//            unloadExtensionTree(Set.of(extension));
+//        } else {
+//            logger.warn("Extension not found for {}", extensionId);
+//        }
+//    }
+
+//    /**
+//     * Disable.
+//     *
+//     * @param extensionId the extension id
+//     */
+//    private void disable(UUID extensionId) {
+//        Application application = updater.getLoaded();
+//        Map<UUID, AbstractExtension> flattened = flatten(application);
+//
+//        AbstractExtension extension = flattened.get(extensionId);
 //
 //        if (extension != null) {
 //            extension.setLoadState(LoadState.Disabled);
@@ -480,168 +450,174 @@ public class ApplicationManagerImpl implements ApplicationManager {
 //        } else {
 //            logger.warn("Extension not found for {}", extensionId);
 //        }
-    }
+//    }
 
-    /**
-     * Flatten.
-     *
-     * @param application the application
-     * @return the map
-     */
-    private static Map<UUID, AbstractExtension<?>> flatten(JfxApps application) {
-        Map<UUID, AbstractExtension<?>> flattened = new HashMap<>();
-        flattened.put(application.getId(), application);
-        flatten(flattened, application.getExtensions());
-        flatten(flattened, application.getApplications());
-        return flattened;
-    }
+//    /**
+//     * Flatten.
+//     *
+//     * @param application the application
+//     * @return the map
+//     */
+//    private static Map<UUID, Extension> flatten(JfxApps application) {
+//        Map<UUID, Extension> flattened = new HashMap<>();
+//        flattened.put(application.getId(), application);
+//        flatten(flattened, application.getExtensions());
+//        flatten(flattened, application.getApplications());
+//        return flattened;
+//    }
 
-    /**
-     * Flatten.
-     *
-     * @param flattened    the flattened
-     * @param extensionSet the extension set
-     */
-    private static void flatten(Map<UUID, AbstractExtension<?>> flattened,
-            Set<? extends AbstractExtension<?>> extensionSet) {
-        extensionSet.forEach(ext -> {
-            flattened.put(ext.getId(), ext);
-            flatten(flattened, ext.getExtensions());
-        });
-    }
+//    /**
+//     * Flatten.
+//     *
+//     * @param flattened    the flattened
+//     * @param extensionSet the extension set
+//     */
+//    private static void flatten(Map<UUID, Extension> flattened,
+//            Set<? extends Extension> extensionSet) {
+//        extensionSet.forEach(ext -> {
+//            flattened.put(ext.getId(), ext);
+//            flatten(flattened, ext.getExtensions());
+//        });
+//    }
 
-    /**
-     * Gets the report.
-     *
-     * @param id the id
-     * @return the report
-     */
-    @Override
-    public ExtensionReport getReport(UUID id) {
-        return reportOf(id);
-    }
+	/**
+	 * Gets the report.
+	 *
+	 * @param id the id
+	 * @return the report
+	 */
+	@Override
+	public ExtensionReport getReport(UUID id) {
+		return reportOf(id);
+	}
 
-    /**
-     * Log state.
-     */
-    public void logState() {
-        JfxApps application = getState();
+//    /**
+//     * Log state.
+//     */
+//    public void logState() {
+//        JfxApps application = getState();
+//
+//        printState(application);
+//
+//        application.getApplications().forEach(this::printState);
+//    }
 
-        printState(application);
+	/**
+	 * Prints the state.
+	 *
+	 * @param ext the ext
+	 */
+	public void printState(LoadableContent ext) {
 
-        application.getApplications().forEach(this::printState);
-    }
+		Layer layer = layerManager.get(ext.getId());
 
-    /**
-     * Prints the state.
-     *
-     * @param ext the ext
-     */
-    public void printState(AbstractExtension<?> ext) {
+		StringBuilder builder = new StringBuilder();
 
-        Layer layer = layerManager.get(ext.getId());
+		builder.append(String.format("%s : %s", ext.getClass().getName(), ext.getId())).append("\n");
+		builder.append(String.format("> state : %s", ext.getLoadState())).append("\n");
+		builder.append(String.format("> layer : %s", layer)).append("\n");
 
-        StringBuilder builder = new StringBuilder();
+		if (layer != null) {
+			layer.jars().forEach(j -> {
+				builder.append(String.format(">> jar : %s", j.getFileName())).append("\n");
+				;
+			});
+			layer.modules().forEach(m -> {
+				builder.append(String.format(">> module : %s", m.get().getName())).append("\n");
+				;
+			});
+			layer.automaticModules().forEach(m -> {
+				builder.append(String.format(">> auto : %s", m.get().getName())).append("\n");
+				;
+			});
+			layer.unnamedModules().forEach(m -> {
+				builder.append(String.format(">> unnamed : %s", m.get().getName())).append("\n");
+				;
+			});
+		} else {
+			reportOf(ext.getId()).getThrowable()
+					.ifPresent(e -> builder.append(String.format(">> error : %s", e.getMessage(), e)).append("\n"));
+		}
 
-        builder.append(String.format("%s : %s", ext.getClass().getName(), ext.getId())).append("\n");
-        builder.append(String.format("> state : %s", ext.getLoadState())).append("\n");
-        builder.append(String.format("> layer : %s", layer)).append("\n");
+		JfxAppContext ctx = contexts.get(ext);
 
-        if (layer != null) {
-            layer.jars().forEach(j -> {
-                builder.append(String.format(">> jar : %s", j.getFileName())).append("\n");;
-            });
-            layer.modules().forEach(m -> {
-                builder.append(String.format(">> module : %s", m.get().getName())).append("\n");;
-            });
-            layer.automaticModules().forEach(m -> {
-                builder.append(String.format(">> auto : %s", m.get().getName())).append("\n");;
-            });
-            layer.unnamedModules().forEach(m -> {
-                builder.append(String.format(">> unnamed : %s", m.get().getName())).append("\n");;
-            });
-        } else {
-            reportOf(ext.getId()).getThrowable().ifPresent(e -> builder.append(String.format(">> error : %s", e.getMessage(), e)).append("\n"));
-        }
+		builder.append(String.format("> context : %s", ctx)).append("\n");
+		if (ctx != null) {
+			builder.append(String.format(">> beans : %s", ctx.getBeanDefinitionNames().length)).append("\n");
 
-        JfxAppContext ctx = contexts.get(ext);
+			for (String name : ctx.getBeanDefinitionNames()) {
+				builder.append(String.format("      %s", name)).append("\n");
+			}
 
-        builder.append(String.format("> context : %s", ctx)).append("\n");
-        if (ctx != null) {
-            builder.append(String.format(">> beans : %s", ctx.getBeanDefinitionNames().length)).append("\n");
+		} else {
+			reportOf(ext.getId()).getThrowable()
+					.ifPresent(e -> builder.append(String.format(">> error : %s", e.getMessage(), e)).append("\n"));
+		}
 
-            for (String name:ctx.getBeanDefinitionNames()) {
-                builder.append(String.format("      %s", name)).append("\n");
-            }
+		logger.info("State of {}: \n{}", ext, builder);
 
-        } else {
-            reportOf(ext.getId()).getThrowable().ifPresent(e -> builder.append(String.format(">> error : %s", e.getMessage(), e)).append("\n"));
-        }
+		ext.getExtensions().forEach(this::printState);
+	}
 
-        logger.info("State of {}: \n{}", ext, builder);
+	/**
+	 * Report of.
+	 *
+	 * @param id the id
+	 * @return the extension report
+	 */
+	private ExtensionReport reportOf(UUID id) {
+		return state.compute(id, (i, report) -> report == null ? new ExtensionReport(i) : report);
+	}
 
-        ext.getExtensions().forEach(this::printState);
-    }
+	/**
+	 * Cleared report of.
+	 *
+	 * @param id the id
+	 * @return the extension report
+	 */
+	private ExtensionReport clearedReportOf(UUID id) {
+		return state.compute(id, (i, report) -> new ExtensionReport(i));
+	}
 
-    /**
-     * Report of.
-     *
-     * @param id the id
-     * @return the extension report
-     */
-    private ExtensionReport reportOf(UUID id) {
-        return state.compute(id, (i, report) -> report == null ? new ExtensionReport(i) : report);
-    }
+	/**
+	 * Gets the context.
+	 *
+	 * @param extensionId the extension id
+	 * @return the context
+	 */
+	private Optional<JfxAppContext> getContext(UUID extensionId) {
+		return Optional.ofNullable(contexts.get(extensionId));
+	}
 
-    /**
-     * Cleared report of.
-     *
-     * @param id the id
-     * @return the extension report
-     */
-    private ExtensionReport clearedReportOf(UUID id) {
-        return state.compute(id, (i, report) -> new ExtensionReport(i));
-    }
+	/**
+	 * Send.
+	 *
+	 * @param parameters the parameters
+	 */
+	@Override
+	public void send(OpenCommandEvent parameters) {
 
-    /**
-     * Gets the context.
-     *
-     * @param extensionId the extension id
-     * @return the context
-     */
-    private Optional<JfxAppContext> getContext(UUID extensionId) {
-        return Optional.ofNullable(contexts.get(extensionId));
-    }
+		UUID target = ROOT_ID;
 
-    /**
-     * Send.
-     *
-     * @param parameters the parameters
-     */
-    @Override
-    public void send(OpenCommandEvent parameters) {
+		if (parameters.getTarget() != null) {
+			target = parameters.getTarget();
+		}
 
-        UUID target = Extension.ROOT_ID;
+		send(target, parameters);
+	}
 
-        if (parameters.getTarget() != null) {
-            target = parameters.getTarget();
-        }
+	/**
+	 * Send.
+	 *
+	 * @param editorId   the editor id
+	 * @param parameters the parameters
+	 */
+	private void send(UUID editorId, OpenCommandEvent parameters) {
+		getContext(editorId).ifPresent(c -> c.publishEvent(parameters));
+	}
 
-        send(target, parameters);
-    }
-
-    /**
-     * Send.
-     *
-     * @param editorId   the editor id
-     * @param parameters the parameters
-     */
-    private void send(UUID editorId, OpenCommandEvent parameters) {
-        getContext(editorId).ifPresent(c -> c.publishEvent(parameters));
-    }
-
-    public boolean isStarted() {
-        return started;
-    }
+	private boolean isStarted(UUID applicationId) {
+		return startedApplications.containsKey(applicationId);
+	}
 
 }

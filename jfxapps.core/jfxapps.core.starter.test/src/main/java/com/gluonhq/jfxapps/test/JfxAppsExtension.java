@@ -61,7 +61,6 @@ import org.springframework.boot.test.context.SpringBootTestContextBootstrapper;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ConfigurationClassPostProcessor;
 import org.springframework.core.annotation.MergedAnnotations;
 import org.springframework.core.annotation.MergedAnnotations.SearchStrategy;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -78,11 +77,13 @@ import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.api.loader.extension.RootExtension;
 import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
+import com.gluonhq.jfxapps.boot.context.boot.BootContext;
 import com.gluonhq.jfxapps.boot.context.impl.ContextManagerImpl;
 import com.gluonhq.jfxapps.boot.context.impl.JfxAppContextImpl;
+import com.gluonhq.jfxapps.boot.jpa.JpaBootClasses;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper.ServiceLoader;
-import com.gluonhq.jfxapps.boot.loader.model.AbstractExtension;
+import com.gluonhq.jfxapps.boot.loader.model.LoadableContent;
 import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
@@ -182,7 +183,7 @@ public class JfxAppsExtension implements BeforeEachCallback, ParameterResolver {
             var contextId = SealedExtension.ROOT_ID;
             var parent = Mockito.mock(JfxAppContext.class);
             var loader = Mockito.mock(ServiceLoader.class);
-            var extensionDefinition = Mockito.mock(AbstractExtension.class);
+            var extensionDefinition = Mockito.mock(LoadableContent.class);
             var extension = Mockito.mock(RootExtension.class);
             var layer = Mockito.mock(Layer.class);
             var layerManager = Mockito.mock(ModuleLayerManager.class);
@@ -214,11 +215,18 @@ public class JfxAppsExtension implements BeforeEachCallback, ParameterResolver {
                     ApplicationInstanceEvents.ApplicationInstanceEventsImpl.class,
                     JavafxThreadClassloader.class,
                     StageBuilder.class));
+            //classes.addAll(new JpaBootClasses().classes());
             //@formatter:on
 
             when(extension.localContextClasses()).thenReturn(classes);
             //@formatter:on
-            var ctx = bootstraper.create(parent, extensionDefinition, List.of(contextManager), null, loader);
+            //var ctx = bootstraper.create(parent, extensionDefinition, List.of(contextManager), null, loader);
+
+            //var ctx = BootContext.create(classes, new String[0]);
+
+            var ctx = new JfxAppContextImpl(contextId);
+            ctx.register(classes.toArray(new Class[0]));
+            ctx.refresh();
 
             if (loadDefaultScopes) {
                 // set the current scopes

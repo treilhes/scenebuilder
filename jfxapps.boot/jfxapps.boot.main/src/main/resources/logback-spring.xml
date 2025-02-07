@@ -18,9 +18,11 @@
         <logger name="org.springframework" level="ERROR"/>
         <logger name="org.springframework.aop" level="ERROR"/>
         <logger name="org.springframework.orm.jpa" level="ERROR"/>
-         -->
 
         <logger name="org.apache.catalina" level="TRACE"/>
+         -->
+
+
 
 
         <root level="INFO">

@@ -33,43 +33,22 @@
  */
 package com.gluonhq.jfxapps.boot.registry.internal;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
-import com.gluonhq.jfxapps.boot.api.layer.InvalidLayerException;
-import com.gluonhq.jfxapps.boot.api.layer.Layer;
-import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
-import com.gluonhq.jfxapps.boot.api.maven.Artifact;
-import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
-import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient.VersionType;
-import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
-import com.gluonhq.jfxapps.boot.registry.RegistryArtifact;
-import com.gluonhq.jfxapps.boot.registry.RegistryException;
-import com.gluonhq.jfxapps.boot.registry.RegistryManager;
-import com.gluonhq.jfxapps.boot.registry.RegistrySourceManager;
-import com.gluonhq.jfxapps.boot.registry.config.RegistryConfig;
-import com.gluonhq.jfxapps.registry.mapper.Mapper;
-import com.gluonhq.jfxapps.registry.model.JfxApps;
-import com.gluonhq.jfxapps.registry.model.Registry;
-
-import jakarta.annotation.PostConstruct;
+import com.gluonhq.jfxapps.boot.api.registry.RegistryManager;
+import com.gluonhq.jfxapps.boot.api.registry.RegistryUpdateListener;
+import com.gluonhq.jfxapps.boot.api.registry.model.ApplicationInfo;
+import com.gluonhq.jfxapps.boot.api.registry.model.LayerDefinition;
+import com.gluonhq.jfxapps.boot.api.registry.model.PluginInfo;
+import com.gluonhq.jfxapps.boot.registry.service.RegistryService;
+import com.gluonhq.jfxapps.boot.registry.service.RegistrySourceService;
+import com.gluonhq.jfxapps.boot.registry.service.RegistryUpdateService;
 
 /**
  * The Class RegistryManagerImpl.
@@ -80,21 +59,9 @@ public class RegistryManagerImpl implements RegistryManager {
 
     private final static Logger logger = LoggerFactory.getLogger(RegistryManagerImpl.class);
 
-    /** The maven client. */
-    private final RepositoryClient mavenClient;
-
-    /** The module layer manager. */
-    private final ModuleLayerManager moduleLayerManager;
-
-    private final RegistrySourceManager source;
-
-    private final RegistryConfig config;
-
-    private final Map<UUID, Registry> registries;
-
-    private Registry bootRegistry;
-    private List<Registry> mandatoryRegistries = new ArrayList<>();
-    private List<Registry> guestRegistries = new ArrayList<>();
+    private final RegistryService registryService;
+    private final RegistryUpdateService updateService;
+    private final RegistrySourceService registrySourceService;
 
     /**
      * Instantiates a new registry manager impl.
@@ -102,193 +69,65 @@ public class RegistryManagerImpl implements RegistryManager {
      * @param mavenClient        the maven client
      * @param moduleLayerManager the module layer manager
      */
-    public RegistryManagerImpl(RepositoryClient mavenClient, ModuleLayerManager moduleLayerManager,
-            RegistrySourceManager source, RegistryConfig config) {
+    public RegistryManagerImpl(
+            RegistryService registryService,
+            RegistrySourceService registrySourceService,
+    		@Lazy RegistryUpdateService updateService
+    		) {
         super();
-        this.config = config;
-        this.mavenClient = mavenClient;
-        this.moduleLayerManager = moduleLayerManager;
-        this.source = source;
-        this.registries = new HashMap<>();
-    }
-
-    @PostConstruct
-    public void init() {
-        bootRegistry = loadArtifact(config.getBoot());
-        source.list().forEach(this::loadAndDispatch);
-    }
-
-    private void loadAndDispatch(RegistryArtifact src) {
-        var r = loadArtifact(src);
-        if (src.mandatory()) {
-            mandatoryRegistries.addAll(flatten(r));
-        } else {
-            guestRegistries.addAll(flatten(r));
-        }
-    }
-
-    private Collection<Registry> flatten(Registry r) {
-        var list = new ArrayList<Registry>();
-        list.add(r);
-        r.getRegistries().forEach(sr -> list.addAll(flatten(sr)));
-        return list;
-    }
-
-    private Layer createLayer(List<Path> a) {
-        try {
-            return moduleLayerManager.create(a, null);
-        } catch (IOException e) {
-            logger.error("Layer creation failed ! ", e);
-        } catch (InvalidLayerException e) {
-            logger.error("Layer validation failed ! ", e);
-        }
-        return null;
-    }
-
-    private Registry loadArtifact(RegistryArtifact src) {
-        var artifact = Artifact.builder().groupId(src.groupId()).artifactId(src.artifactId()).build();
-
-        logger.info("Loading artifact registry {}", artifact);
-
-        var scope = config.isSnapshotsAllowed() ? VersionType.RELEASE_SNAPHOT : VersionType.RELEASE;
-
-        //var latest = mavenClient.localOnly().getLatestVersion(artifact, scope).orElseThrow(
-                var latest = mavenClient.getLatestVersion(artifact, scope).orElseThrow(
-                () -> new RegistryException(String.format("Artifact not found %s scope: %s", artifact, scope)));
-
-        //var resolved = mavenClient.localOnly().resolveWithDependencies(latest)
-                var resolved = mavenClient.resolveWithDependencies(latest)
-                .orElseThrow(() -> new RegistryException(String.format("Artifact not resolved %s", latest)));
-
-        var layer = createLayer(resolved.toPaths());
-
-        var registry = loadRegistryLayer(layer).orElseThrow(() -> new RegistryException(String.format("Layer not loaded %s", layer)));
-
-        var populated = registry.getRegistries().stream().map(r -> {
-
-            var coordinates = r.getDependency();
-            var registryArtifact = new RegistryArtifact(coordinates.getGroupId(), coordinates.getArtifactId(), null,
-                    src.mandatory());
-
-            var subRegistry = loadArtifact(registryArtifact);
-            subRegistry.getApplications().addAll(r.getApplications());
-            subRegistry.getExtensions().addAll(r.getExtensions());
-
-            return subRegistry;
-        }).collect(Collectors.toSet());
-
-        registry.setRegistries(populated);
-
-        return registry;
+        this.registryService = registryService;
+        this.registrySourceService = registrySourceService;
+        this.updateService = updateService;
     }
 
     @Override
-    public Registry bootRegistry() {
-        return bootRegistry;
+    public ApplicationInfo rootInfo() {
+        return registryService.rootInfo();
     }
 
     @Override
-    public Registry installedRegistry() {
-        Registry result = new Registry();
-
-        mandatoryRegistries.stream()
-            .forEach(r -> result.getApplications().addAll(r.getApplications()));
-
-        return result;
+    public Set<ApplicationInfo> listApplicationsInfo() {
+        return registryService.listApplicationsInfo();
     }
 
     @Override
-    public Registry installableRegistry() {
-        Registry result = new Registry();
-
-        mandatoryRegistries.stream()
-            .forEach(r -> result.getExtensions().addAll(r.getExtensions()));
-
-        guestRegistries.stream()
-            .peek(r -> result.getApplications().addAll(r.getApplications()))
-            .forEach(r -> result.getExtensions().addAll(r.getExtensions()));
-
-        return result;
+    public PluginInfo pluginInfo(UUID pluginId) {
+        return registryService.pluginInfo(pluginId);
     }
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public void loadState() throws IOException {
-        Set<UniqueArtifact> artifactsToLoad = null;//store.load();
-        artifactsToLoad.stream().map(a -> load(a)).filter(Objects::nonNull).toList();
+    public Set<PluginInfo> listApplicationPluginsInfo(UUID applicationId) {
+        return registryService.listApplicationPluginsInfo(applicationId);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Registry load(UniqueArtifact artifact) {
-        Objects.requireNonNull(artifact);
-
-//        Registry registry = mavenClient
-//            .resolve(artifact, Classifier.DEFAULT)
-//            .filter(Files::exists)
-//            .map(this::loadRegistryFromTempLayer)
-//            .get().orElse(null);
-
-        Registry registry = null;
-
-        if (registry != null) {
-            registries.put(registry.getUuid(), registry);
-        }
-        return registry;
+    public Set<PluginInfo> listApplicationPluginsInfo(ApplicationInfo application) {
+        return registryService.listApplicationPluginsInfo(application.getUuid());
     }
 
-    private Optional<Registry> loadRegistryLayer(Layer layer) {
-        Objects.requireNonNull(layer);
-
-        try {
-            Registry registry = null;
-
-            for (String format:JfxApps.REGISTRY_FILE_FORMATS) {
-                InputStream is = layer.getResourceAsStream(JfxApps.registryResourcePath(format));
-
-                if (is == null) {
-                    continue;
-                }
-
-                registry = Mapper.get(format).from(is);
-
-                if (registry != null) {
-                    break;
-                }
-            }
-
-            moduleLayerManager.remove(layer);
-
-            return Optional.ofNullable(registry);
-        } catch (IOException e) {
-            logger.error("Loading registry failed !", e);
-        }
-        return Optional.empty();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public boolean delete(Registry registry) {
+    public LayerDefinition computeLayerDefinition(UUID applicationId) {
+        return registryService.computeLayerDefinition(applicationId);
+    }
+
+    @Override
+    public void searchForUpdate() {
         // TODO Auto-generated method stub
-        return false;
+
     }
 
     @Override
-    public Registry get(UUID registryId) {
-        return registries.get(registryId);
+    public void addUpdateListener(RegistryUpdateListener listener) {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
-    public Collection<Registry> list() {
-        return Collections.unmodifiableCollection(registries.values());
+    public void removeUpdateListener(RegistryUpdateListener listener) {
+        // TODO Auto-generated method stub
+
     }
 
-    private void saveState() {
-        //store.
-    }
+
+
 }

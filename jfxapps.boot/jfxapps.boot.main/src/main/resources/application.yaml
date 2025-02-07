@@ -3,10 +3,11 @@ jfxapps:
     rootPath: .
   registry:
 #    snapshotsAllowed: true
-    boot:
-      groupId: com.gluonhq.jfxapps
-      artifactId: jfxapps.core.registry
     defaults:
+      core:
+        groupId: com.gluonhq.jfxapps
+        artifactId: jfxapps.core.registry
+        mandatory: true
       mandatory:
         groupId: com.gluonhq.jfxapps
         artifactId: jfxapps.app.registry.mandatory

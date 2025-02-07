@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.gluonhq.jfxapps.boot.loader.internal.model.Extension;
+import com.gluonhq.jfxapps.boot.loader.internal.jpa.model.Extension;
 
 public interface ExtensionRepository extends JpaRepository<Extension, UUID>{
     List<Extension> findByRegistry(UUID registryId);
