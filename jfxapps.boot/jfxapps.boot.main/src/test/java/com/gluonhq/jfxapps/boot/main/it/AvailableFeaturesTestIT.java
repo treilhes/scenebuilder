@@ -71,6 +71,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.MergedContextConfiguration;
@@ -86,6 +87,7 @@ import com.gluonhq.jfxapps.boot.api.loader.LoadType;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifactManager;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryManager;
 import com.gluonhq.jfxapps.boot.api.web.client.InternalRestClient;
 import com.gluonhq.jfxapps.boot.api.web.client.InternalRestClient.JsonBodyHandler;
@@ -133,7 +135,8 @@ public class AvailableFeaturesTestIT {
             var application = super.getSpringApplication();
             application.setApplicationContextFactory(new BootContextFactory());
 
-            var filteredClasses = List.of(JfxAppsPlatform.class, StateProvider.class);
+            var filteredClasses = List.of(JfxAppsPlatform.class, StateProvider.class,
+            		Service.class, RegistryManager.class, RegistryArtifactManager.class);
             application.addInitializers(new BootContextInitializer(List.of(), filteredClasses));
 
             return application;

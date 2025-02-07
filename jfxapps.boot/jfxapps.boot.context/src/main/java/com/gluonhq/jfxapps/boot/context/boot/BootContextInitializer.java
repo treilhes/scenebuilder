@@ -33,13 +33,15 @@
  */
 package com.gluonhq.jfxapps.boot.context.boot;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.lang.NonNull;
 
 import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
 import com.gluonhq.jfxapps.boot.context.impl.JfxAppContextImpl;
@@ -64,17 +66,29 @@ public class BootContextInitializer implements ApplicationContextInitializer<Jfx
     }
 
     @Override
-    public void initialize(JfxAppContextImpl applicationContext) {
+    public void initialize(@NonNull JfxAppContextImpl applicationContext) {
 
-        var bootClassesStream = ServiceLoader.load(BootContextConfigClasses.class).stream().map(p -> p.get())
-                .map(bc -> bc.classes()).flatMap(l -> l.stream());
-
-        var bootClasses = Stream.concat(bootClassesStream, includedClasses.stream())
+        var bootClasses = ServiceLoader.load(BootContextConfigClasses.class).stream()
+        		.map(p -> p.get())
+                .map(bc -> bc.classes())
+                .flatMap(l -> l.stream())
                 .distinct()
-                .filter(c ->  filteredClasses.stream().allMatch(f -> !f.isAssignableFrom(c)))
+                .filter(classInheritingFilterClass())
+                .filter(classAnnotatedByFilterClass())
                 .collect(Collectors.toCollection(ArrayList::new));
+
+        bootClasses.addAll(includedClasses);
 
         applicationContext.register(bootClasses.toArray(Class<?>[]::new));
     }
+
+	@SuppressWarnings("unchecked")
+	private Predicate<? super Class<?>> classAnnotatedByFilterClass() {
+		return c ->  filteredClasses.stream().allMatch(f -> !(Annotation.class.isAssignableFrom(f) && c.isAnnotationPresent((Class<Annotation>)f)));
+	}
+
+	private Predicate<? super Class<?>> classInheritingFilterClass() {
+		return c ->  filteredClasses.stream().allMatch(f -> !f.isAssignableFrom(c));
+	}
 
 }
