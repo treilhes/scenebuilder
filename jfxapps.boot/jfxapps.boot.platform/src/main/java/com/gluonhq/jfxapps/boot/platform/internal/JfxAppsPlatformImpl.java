@@ -45,6 +45,8 @@ import com.gluonhq.jfxapps.boot.platform.config.PlatformConfig;
 @Component
 public class JfxAppsPlatformImpl implements JfxAppsPlatform {
 
+	private final static int NUM_THREADS = Runtime.getRuntime().availableProcessors();
+
     private final PlatformConfig config;
 
     public JfxAppsPlatformImpl(PlatformConfig config) {
@@ -106,5 +108,10 @@ public class JfxAppsPlatformImpl implements JfxAppsPlatform {
     @Override
     public File getMessageBoxFolder() {
         return DefaultFolders.getMessageBoxFolder();
+    }
+
+    @Override
+    public int getAvailableProcessors() {
+    	return NUM_THREADS;
     }
 }

@@ -25,5 +25,6 @@
 
     <module>jfxapps.boot.web</module>
     <module>jfxapps.boot.aop</module>
+    <module>jfxapps.boot.splash</module>
   </modules>
 </project>

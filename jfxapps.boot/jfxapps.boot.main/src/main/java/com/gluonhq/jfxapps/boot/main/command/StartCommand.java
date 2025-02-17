@@ -40,7 +40,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ServiceLoader;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -48,18 +47,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.WebApplicationType;
 
-import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.context.boot.BootContext;
 import com.gluonhq.jfxapps.boot.main.config.BootHandler;
 import com.gluonhq.jfxapps.boot.main.util.MessageBox;
 import com.gluonhq.jfxapps.boot.main.util.MessageBoxMessage;
 import com.gluonhq.jfxapps.boot.platform.internal.DefaultFolders;
+import com.gluonhq.jfxapps.boot.splash.impl.BootLoadingProgress;
+import com.gluonhq.jfxapps.boot.splash.impl.BootSplashScreen;
+import com.gluonhq.jfxapps.boot.splash.impl.ExtensionLoadingProgress;
+import com.gluonhq.jfxapps.boot.splash.impl.LoadingProgress;
 
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
 @Command(subcommands = {RunFxmlCommand.class})
@@ -98,8 +99,22 @@ public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMes
         String[] originalArgs = spec.commandLine().getParseResult().originalArgs().toArray(new String[0]);
 
 		if (bootHandler == null) {
-			var context = BootContext.create(null, WebApplicationType.SERVLET, originalArgs, null);
+			var imageUrl = StartCommand.class.getResource("/splash.png");
+
+			var loadingProgress = BootLoadingProgress.getInstance(Extension.BOOT_ID, imageUrl);
+
+			BootSplashScreen.getInstance(loadingProgress);
+
+			loadingProgress.start();
+
+			var context = BootContext.create(null, WebApplicationType.SERVLET, originalArgs, (c) -> {
+                c.addApplicationListener(loadingProgress.getContextMonitor());
+                c.addBeanFactoryPostProcessor(loadingProgress.getContextMonitor());
+                c.registerBean(LoadingProgress.class, () -> loadingProgress);
+			});
 			bootHandler = context.getBean(BootHandler.class);
+
+			loadingProgress.end();
 		}
 
         bootHandler.boot(targetApplication, files, originalArgs);

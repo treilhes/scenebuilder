@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.boot.context.boot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.SpringApplication;
@@ -69,7 +70,14 @@ public class BootContext {
 
         var bootInitializer = new BootContextInitializer(classes, List.of());
         var conditionEvaluation = new ConditionEvaluationReportLoggingListener();
-        var initializerList = List.of(bootInitializer, conditionEvaluation);
+
+        var initializerList = new ArrayList<ApplicationContextInitializer<?>>();
+        initializerList.add(bootInitializer);
+        initializerList.add(conditionEvaluation);
+
+		if (initializer != null) {
+			initializerList.add(initializer);
+		}
 
         SpringApplication application = new SpringApplication(BootConfig.class);
         application.setApplicationStartup(startup);
@@ -77,10 +85,6 @@ public class BootContext {
         application.setInitializers(initializerList);
         application.setWebApplicationType(type == null ? WebApplicationType.NONE : type);
         application.setAdditionalProfiles(BOOT_PROFILE);
-
-        if (initializer != null) {
-            application.addInitializers(initializer);
-        }
 
         var context = (JfxAppContext)application.run(args);
 

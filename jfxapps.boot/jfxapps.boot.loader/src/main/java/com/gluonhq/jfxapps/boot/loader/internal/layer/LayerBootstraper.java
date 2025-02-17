@@ -48,9 +48,8 @@ import com.gluonhq.jfxapps.boot.api.layer.InvalidLayerException;
 import com.gluonhq.jfxapps.boot.api.layer.Layer;
 import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
-import com.gluonhq.jfxapps.boot.loader.content.ExtensionContentProvider;
-import com.gluonhq.jfxapps.boot.loader.model.LoadableContent;
 import com.gluonhq.jfxapps.boot.loader.model.LoadState;
+import com.gluonhq.jfxapps.boot.loader.model.LoadableContent;
 
 /**
  * The Class LayerBootstraper.

@@ -55,6 +55,7 @@ import com.gluonhq.jfxapps.boot.api.loader.BootException;
 import com.gluonhq.jfxapps.boot.api.loader.ExtensionReport;
 import com.gluonhq.jfxapps.boot.api.loader.LoadType;
 import com.gluonhq.jfxapps.boot.api.loader.OpenCommandEvent;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.boot.loader.ProgressListener;
 import com.gluonhq.jfxapps.boot.loader.StateProvider;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
@@ -71,11 +72,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
 	/** The Constant logger. */
 	private final static Logger logger = LoggerFactory.getLogger(ApplicationManagerImpl.class);
-	private final static int NUM_THREADS = Runtime.getRuntime().availableProcessors();
 
 	private final static UUID ROOT_ID = com.gluonhq.jfxapps.boot.api.loader.extension.Extension.ROOT_ID;
 
 	private final JfxAppContext context;
+
+	private final JfxAppsPlatform platform;
 
 	/** The layer manager. */
 	private final ModuleLayerManager layerManager;
@@ -107,6 +109,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	// @formatter:off
     protected ApplicationManagerImpl(
     		JfxAppContext context,
+    		JfxAppsPlatform platform,
     		ModuleLayerManager layerManager,
     		ContextBootstraper contexts,
             LayerBootstraper layers,
@@ -115,6 +118,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
     	// @formatter:on
 		super();
 		this.context = context;
+		this.platform = platform;
 		this.layerManager = layerManager;
 		this.contexts = contexts;
 		this.layers = layers;
@@ -227,7 +231,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
 			throw new RuntimeException("Root layer not found");
 		}
 
-		GroupTaskExecutor executor = new GroupTaskExecutor(NUM_THREADS);
+		GroupTaskExecutor executor = new GroupTaskExecutor(platform.getAvailableProcessors());
 		loadExtensionTree(executor, parentLayer, Set.of(application), listener);
 		executor.shutdown();
 
@@ -305,7 +309,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
 			parentContext = contexts.get(ROOT_ID);
 		}
 
-		GroupTaskExecutor executor = new GroupTaskExecutor(NUM_THREADS);
+		GroupTaskExecutor executor = new GroupTaskExecutor(platform.getAvailableProcessors());
 		launchExtensionTree(executor, parentContext, Set.of(application), listener);
 		executor.shutdown();
 

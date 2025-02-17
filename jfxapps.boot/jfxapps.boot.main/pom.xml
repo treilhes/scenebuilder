@@ -41,6 +41,10 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>jfxapps.boot.splash</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.boot.web</artifactId>
         </dependency>
 

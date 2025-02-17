@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,26 +30,41 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
-import com.gluonhq.jfxapps.boot.main.config.MainBootClasses;
+package com.gluonhq.jfxapps.boot.splash.impl;
 
-open module jfxapps.boot.main {
+import java.net.URL;
+import java.util.UUID;
 
-    exports com.gluonhq.jfxapps.boot.main;
+public class BootLoadingProgress extends LoadingProgress {
 
-    requires jfxapps.boot.api;
-    requires jfxapps.boot.loader;
-    requires jfxapps.boot.platform;
-    requires jfxapps.boot.registry;
-    requires jfxapps.boot.layer;
-    requires jfxapps.boot.maven;
-    requires jfxapps.boot.jpa;
-    requires jfxapps.boot.context;
-    requires jfxapps.boot.splash;
+	//private static final Logger log = LoggerFactory.getLogger(BootLoadingProgress.class);
 
-    requires jfxapps.boot.starter;
+	private final ContextLoadingMonitor contextMonitor = new ContextLoadingMonitor(this);
 
-    requires info.picocli;
+	private final UUID id;
 
-    provides BootContextConfigClasses with MainBootClasses;
+	private final URL imageUrl;
+
+	public static BootLoadingProgress getInstance(UUID id, URL imageUrl) {
+		return new BootLoadingProgress(id, imageUrl);
+	}
+
+	private BootLoadingProgress(UUID id, URL imageUrl) {
+		super();
+		this.id = id;
+		this.imageUrl = imageUrl;
+	}
+
+	public ContextLoadingMonitor getContextMonitor() {
+		return contextMonitor;
+	}
+
+	public UUID getId() {
+		return id;
+	}
+
+	public URL getImageUrl() {
+		return imageUrl;
+	}
+
 }

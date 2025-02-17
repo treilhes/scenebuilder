@@ -2,5 +2,5 @@ package com.gluonhq.jfxapps.boot.loader;
 
 public interface ProgressListener extends com.gluonhq.jfxapps.boot.api.context.ProgressListener{
     @Override
-    void notifyProgress(double progress);
+    void notifyProgress(float progress);
 }

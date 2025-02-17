@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MultipleProgressListener {
 
     private ProgressListener progressListener;
-    private Map<UUID, Double> tasks = new ConcurrentHashMap<>();
+    private Map<UUID, Float> tasks = new ConcurrentHashMap<>();
     private final boolean inactive;
 
     public MultipleProgressListener(ProgressListener progressListener) {
@@ -20,11 +20,11 @@ public class MultipleProgressListener {
             return;
         }
         if (!tasks.containsKey(taskId)) {
-            tasks.put(taskId, 0d);
+            tasks.put(taskId, 0f);
         }
     }
 
-    public void notifyProgress(UUID taskId, double progress) {
+    public void notifyProgress(UUID taskId, float progress) {
         if (inactive) {
             return;
         }
@@ -36,14 +36,14 @@ public class MultipleProgressListener {
         if (inactive) {
             return;
         }
-        tasks.put(taskId, 1d);
+        tasks.put(taskId, 1f);
         progressListener.notifyProgress(computeProgress());
     }
 
-    private double computeProgress() {
+    private float computeProgress() {
         int size = tasks.size();
-        double sum = 0d;
-        for (Double d:tasks.values()) {
+        float sum = 0f;
+        for (Float d:tasks.values()) {
             sum += d;
         }
         return sum / size;

@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
 
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.boot.main.command.StartCommand;
-import com.gluonhq.jfxapps.boot.main.splashscreen.BootSplashScreen;
 
 import picocli.CommandLine;
 
@@ -49,7 +48,6 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println(">>>>>>>>>>>>>>>>>>>>  Staring JfxApps at " + LocalDateTime.now());
-        BootSplashScreen.getInstance().start();
 
         // Fix Start: Github Issue #301
         if (JfxAppsPlatform.IS_MAC) {

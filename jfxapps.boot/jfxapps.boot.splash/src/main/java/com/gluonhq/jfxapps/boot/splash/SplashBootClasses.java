@@ -31,26 +31,17 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.gluonhq.jfxapps.boot.splash;
+
+import java.util.List;
+
 import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
-import com.gluonhq.jfxapps.boot.main.config.MainBootClasses;
 
-open module jfxapps.boot.main {
+public class SplashBootClasses implements BootContextConfigClasses {
 
-    exports com.gluonhq.jfxapps.boot.main;
+    @Override
+    public List<Class<?>> classes() {
+        return List.of();
+    }
 
-    requires jfxapps.boot.api;
-    requires jfxapps.boot.loader;
-    requires jfxapps.boot.platform;
-    requires jfxapps.boot.registry;
-    requires jfxapps.boot.layer;
-    requires jfxapps.boot.maven;
-    requires jfxapps.boot.jpa;
-    requires jfxapps.boot.context;
-    requires jfxapps.boot.splash;
-
-    requires jfxapps.boot.starter;
-
-    requires info.picocli;
-
-    provides BootContextConfigClasses with MainBootClasses;
 }

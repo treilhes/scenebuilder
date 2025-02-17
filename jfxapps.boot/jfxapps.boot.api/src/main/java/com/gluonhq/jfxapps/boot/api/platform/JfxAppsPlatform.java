@@ -116,4 +116,5 @@ public interface JfxAppsPlatform {
     public static boolean isAssertionEnabled() {
         return JfxAppsPlatform.class.desiredAssertionStatus();
     }
+	int getAvailableProcessors();
 }

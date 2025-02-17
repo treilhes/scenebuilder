@@ -143,6 +143,11 @@
             </dependency>
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
+                <artifactId>jfxapps.boot.splash</artifactId>
+                <version>${jfxapps.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.boot.starter</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>

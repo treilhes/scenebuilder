@@ -33,7 +33,6 @@
  */
 package com.gluonhq.jfxapps.boot.context.impl;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collection;
@@ -51,30 +50,25 @@ import java.util.stream.Collectors;
 
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.ProxyFactory;
-import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.DependencyDescriptor;
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ContextAnnotationAutowireCandidateResolver;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.env.MapPropertySource;
-import org.springframework.core.io.Resource;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.lang.Nullable;
-import org.springframework.web.context.support.GenericWebApplicationContext;
 
 import com.gluonhq.jfxapps.boot.api.context.Application;
 import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
@@ -543,5 +537,10 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
     public ScopedExecutor<ApplicationInstance> getApplicationInstanceExecutor() {
         return JfxAppContextImpl.applicationInstanceScope;
     }
+
+	@Override
+	public String toString() {
+		return "JfxAppContextImpl [id=" + id + "]";
+	}
 
 }
