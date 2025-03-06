@@ -1,6 +1,8 @@
 jfxapps:
   platform:
     rootPath: .
+  repository:
+    directory: ${jfxapps.platform.rootPath}/.m2/repository
   registry:
 #    snapshotsAllowed: true
     defaults:
@@ -21,15 +23,18 @@ server:
   port: 0
   address: 127.0.0.1
   tomcat:
-    basedir: .
+    basedir: ${jfxapps.platform.rootPath}
+    threads:
+      max: 5
+      min-spare: 2
     accesslog:
       enabled: true
       directory: logs
-      prefix: access
-      buffered: false
+      prefix: access_log
+#      buffered: false
       suffix: .log
       file-date-format: yyyy-MM-dd
-      #pattern: "[ACCESS] %{org.apache.catalina.AccessLog.RemoteAddr}r %l %t %D %F %B %S vcap_request_id:%{X-Vcap-Request-Id}i"
+      pattern: '%h %l %u %t "%r" %s %b'
 
 spring:
   main:
@@ -48,7 +53,7 @@ spring:
   datasource:
     driverClassName: org.h2.Driver
 #    url: jdbc:h2:mem:jfxapps;DB_CLOSE_ON_EXIT=FALSE
-    url: jdbc:h2:file:./jfxapps-h2-db
+    url: jdbc:h2:file:${jfxapps.platform.rootPath}/jfxapps-h2-db
     username: sa
     password: ""
 

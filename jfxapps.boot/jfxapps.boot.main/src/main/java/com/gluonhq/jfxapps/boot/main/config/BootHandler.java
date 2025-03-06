@@ -40,6 +40,7 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.core.metrics.ApplicationStartup;
 import org.springframework.core.metrics.StartupStep;
 import org.springframework.stereotype.Component;
@@ -52,7 +53,11 @@ import com.gluonhq.jfxapps.boot.api.loader.OpenCommandEvent;
 @Component
 public class BootHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(BootHandler.class);
+    private static final String DEV_PROFILE = "dev";
+
+	private static final Logger logger = LoggerFactory.getLogger(BootHandler.class);
+
+    private final Environment env;
 
     private final ApplicationManager appManager;
 
@@ -60,10 +65,12 @@ public class BootHandler {
 
     // @formatter:off
     public BootHandler(
+    		Environment env,
     		ApplicationManager appManager,
     		Optional<ApplicationStartup> startup) {
     	// @formatter:on
         super();
+        this.env = env;
         this.appManager = appManager;
         this.startup = startup;
     }
@@ -71,15 +78,22 @@ public class BootHandler {
     public void boot(UUID application, List<File> files, String[] args) {
         var bootStep = startup.map(s -> s.start("boot.handler"));
 
+        var loadType = LoadType.LastSuccessfull;
+
+        // for dev profile force local update
+		if (env.matchesProfiles(DEV_PROFILE)) {
+			loadType = LoadType.LocalUpdateOnly;
+		}
+
         try {
             var defaultStart = startup.map(s -> s.start("boot.start.default"));
-            appManager.start(LoadType.LastSuccessfull);
+            appManager.start(loadType);
             defaultStart.ifPresent(StartupStep::end);
 
 
             if (application != null) {
                 var appStart = startup.map(s -> s.start("boot.start.application"));
-                appManager.startApplication(application, LoadType.LastSuccessfull);
+                appManager.startApplication(application, loadType);
                 appStart.ifPresent(StartupStep::end);
             }
 
