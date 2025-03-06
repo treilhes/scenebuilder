@@ -36,12 +36,13 @@ package com.gluonhq.jfxapps.boot.splash;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
+import com.gluonhq.jfxapps.boot.splash.impl.SplashScreenProviderImpl;
 
 public class SplashBootClasses implements BootContextConfigClasses {
 
     @Override
     public List<Class<?>> classes() {
-        return List.of();
+        return List.of(SplashScreenProviderImpl.class);
     }
 
 }

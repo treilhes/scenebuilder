@@ -45,11 +45,16 @@ import com.gluonhq.jfxapps.boot.registry.model.PluginEntity;
 public interface RegistryInfoMappers {
 
     @Mapping(target = "uuid", source = "id")
-    //@Mapping(target = "icon", source = "icon")
-    //@Mapping(target = "title", source = "title")
-    //@Mapping(target = "text", source = "text")
-    //@Mapping(target = "changelog", source = "changelog")
+    @Mapping(target = "title", source = "description.title")
+    @Mapping(target = "text", source = "description.text")
+    @Mapping(target = "splash", ignore = true)
+    @Mapping(target = "image", ignore = true)
+    @Mapping(target = "i18n", ignore = true)
     ApplicationInfo map(ApplicationEntity application);
 
+    @Mapping(target = "uuid", source = "id")
+    @Mapping(target = "title", source = "description.title")
+    @Mapping(target = "text", source = "description.text")
     PluginInfo map(PluginEntity pluginEntity);
+
 }

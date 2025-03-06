@@ -33,29 +33,28 @@
  */
 package com.gluonhq.jfxapps.boot.registry.model;
 
-import java.net.URI;
-import java.util.UUID;
+import org.hibernate.validator.constraints.Length;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Version;
+import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotNull;
 
-@MappedSuperclass
+@Embeddable
 public class Description {
 
-    @Id
-    private UUID id;
+    @NotNull
+    @Length(max = 255)
+    private String image;
 
-    @Version
-    private int jpaVersion;
-
-    /** The icon. */
-    private URI icon;
+    private String i18n;
 
     /** The title. */
+    @NotNull
+    @Length(max = 255)
     private String title;
 
     /** The text. */
+    @NotNull
+    @Length(max = 2000)
     private String text;
 
     /** The changelog. */
@@ -65,31 +64,23 @@ public class Description {
         super();
     }
 
-    public UUID getId() {
-        return id;
-    }
+	public String getImage() {
+		return image;
+	}
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+	public void setImage(String image) {
+		this.image = image;
+	}
 
-    public int getJpaVersion() {
-        return jpaVersion;
-    }
+	public String getI18n() {
+		return i18n;
+	}
 
-    public void setJpaVersion(int jpaVersion) {
-        this.jpaVersion = jpaVersion;
-    }
+	public void setI18n(String i18n) {
+		this.i18n = i18n;
+	}
 
-    public URI getIcon() {
-        return icon;
-    }
-
-    public void setIcon(URI icon) {
-        this.icon = icon;
-    }
-
-    public String getTitle() {
+	public String getTitle() {
         return title;
     }
 

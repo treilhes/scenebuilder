@@ -81,8 +81,8 @@ public class RegistryManagerImpl implements RegistryManager {
     }
 
     @Override
-    public ApplicationInfo rootInfo() {
-        return registryService.rootInfo();
+    public ApplicationInfo applicationInfo(UUID applicationId) {
+        return registryService.applicationInfo(applicationId);
     }
 
     @Override

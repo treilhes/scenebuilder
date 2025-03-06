@@ -33,87 +33,50 @@
 package com.gluonhq.jfxapps.boot.splash.impl;
 
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.api.context.ProgressListener;
+import com.gluonhq.jfxapps.boot.api.splash.ContextLoadingAdapter;
+import com.gluonhq.jfxapps.boot.api.utils.ProgressListener;
 
 public class ExtensionLoadingProgress extends LoadingProgress {
 
 	private static final Logger log = LoggerFactory.getLogger(ExtensionLoadingProgress.class);
 
-	static final Float INIT_CONTEXT_PROGRESS = -1f;
-	static final Float INIT_UI_PROGRESS = 0.95f;
+	private final ContextLoadingAdapter contextMonitor;
 
-	private final ContextLoadingMonitor contextMonitor = new ContextLoadingMonitor(this);
-
-	private final ExtensionLoadingProgress parent;
-	private final Set<ExtensionLoadingProgress> children = new HashSet<>();
 	private final UUID id;
-	private final URL imageUrl;
 
-	boolean childrenLoaded = false;
+	private final ProgressListener layerProgress;
+	private final ProgressListener contextProgress;
+	private final ProgressListener xxxProgress;
+	private final ProgressListener yyyProgress;
 
 	public static ExtensionLoadingProgress rootInstance(UUID id, URL imageUrl) {
-		return new ExtensionLoadingProgress(null, id, imageUrl);
+		return new ExtensionLoadingProgress(id, imageUrl);
 	}
 
-	private ExtensionLoadingProgress(ExtensionLoadingProgress parent, UUID id, URL imageUrl) {
-		super();
-		this.parent = parent;
+	private ExtensionLoadingProgress(UUID id, URL imageUrl) {
+		super(imageUrl);
 		this.id = id;
-		this.imageUrl = imageUrl;
+		this.asSubSteps(4);
+
+		this.layerProgress = getSubSteps().get(0);
+		this.contextProgress = getSubSteps().get(1);
+		this.xxxProgress = getSubSteps().get(2);
+		this.yyyProgress = getSubSteps().get(3);
+
+		contextMonitor = new ContextLoadingAdapter(this.contextProgress);
 	}
 
-	public void startLoadingLayer() {
-		step(INIT_CONTEXT_PROGRESS, "Scanning classpath");
-	}
-
-	public void startLoadingContext() {
-		step(INIT_CONTEXT_PROGRESS, "Scanning classpath");
-	}
-
-	public void initializingApplication() {
-		log.info("Initial loading of singletons beans done");
-		step(INIT_UI_PROGRESS, "Init UI");
-	}
-
-	public ContextLoadingMonitor getContextMonitor() {
+	public ContextLoadingAdapter getContextMonitor() {
 		return contextMonitor;
-	}
-
-	public ExtensionLoadingProgress createChild(UUID id, URL imageUrl) {
-		ExtensionLoadingProgress child = new ExtensionLoadingProgress(this, id, imageUrl);
-		children.add(child);
-		return child;
-	}
-
-	public ExtensionLoadingProgress getParent() {
-		return parent;
-	}
-
-	public Set<ExtensionLoadingProgress> getChildren() {
-		return children;
 	}
 
 	public UUID getId() {
 		return id;
-	}
-
-	public URL getImageUrl() {
-		return imageUrl;
-	}
-
-	public boolean isChildrenLoaded() {
-		return childrenLoaded;
-	}
-
-	private void notifyChildLoaded() {
-		childrenLoaded = children.stream().allMatch(ExtensionLoadingProgress::isDone);
 	}
 
 }

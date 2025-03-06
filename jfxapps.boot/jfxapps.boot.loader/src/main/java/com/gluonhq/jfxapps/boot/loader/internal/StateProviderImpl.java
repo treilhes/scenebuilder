@@ -85,11 +85,6 @@ public class StateProviderImpl implements StateProvider {
     }
 
     @Override
-    public LoadableContent bootState(LoadType loadType) {
-        return applicationState(ROOT_ID, loadType);
-    }
-
-    @Override
     public LoadableContent applicationState(UUID applicationId, LoadType loadType) {
 
         var savedState = loadSavedState(applicationId);

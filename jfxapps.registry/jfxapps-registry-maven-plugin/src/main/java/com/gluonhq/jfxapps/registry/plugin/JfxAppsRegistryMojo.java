@@ -56,7 +56,9 @@ import com.gluonhq.jfxapps.registry.model.Registry;
 @Mojo(name = "jfxappsRegistry", defaultPhase = LifecyclePhase.GENERATE_RESOURCES, requiresDependencyResolution = ResolutionScope.COMPILE, configurator = "jfxapps-mojo-component-configurator")
 public class JfxAppsRegistryMojo extends AbstractMojo {
 
-    private static String GENERATED_RESOURCES_FOLDER = "registry-maven-plugin";
+    private static final String REGISTRY_IS_NOT_VALID = "The registry is not valid!";
+
+	private static String GENERATED_RESOURCES_FOLDER = "registry-maven-plugin";
 
     /** The registry. */
     @Parameter(property = "registry", required = true, alias = "registry")
@@ -99,6 +101,8 @@ public class JfxAppsRegistryMojo extends AbstractMojo {
             default:
                 throw new IllegalArgumentException("Unexpected format: " + format);
             };
+
+            validate(registry);
 
             File resourceFolder = new File(outputDirectory, GENERATED_RESOURCES_FOLDER);
             File registryFolder = new File(resourceFolder, JfxApps.REGISTRY_FILE_FOLDER);
@@ -143,5 +147,107 @@ public class JfxAppsRegistryMojo extends AbstractMojo {
         }
 
     }
+
+	private void validate(Registry registry2) {
+
+        try {
+			if (registry == null) {
+				throw new IllegalArgumentException("The registry is null!");
+			}
+
+			if (registry.getUuid() == null) {
+				throw new IllegalArgumentException("The registry UUID is empty!");
+			}
+
+			validateApplications();
+			validatePlugins();
+		} catch (Exception e) {
+			throw new IllegalArgumentException(REGISTRY_IS_NOT_VALID, e);
+		}
+
+	}
+
+	private void validateApplications() {
+		for (var app : registry.getApplications()) {
+		    if (app.getUuid() == null) {
+		        throw new IllegalArgumentException("The application UUID is null!");
+		    }
+
+		    if (app.getDescription() == null) {
+		        throw new IllegalArgumentException(String.format("The application description of %s is null!", app.getUuid()));
+		    }
+
+		    if (app.getDescription().getTitle() == null || app.getDescription().getTitle().isBlank()) {
+				throw new IllegalArgumentException(String.format("The application title of %s is null or blank!", app.getUuid()));
+			}
+
+			if (app.getDescription().getImage() == null) {
+				throw new IllegalArgumentException(String.format("The application image of %s is null!", app.getUuid()));
+			}
+
+			if (!resourceExists(app.getDescription().getImage())) {
+				throw new IllegalArgumentException(String.format("The application image file of %s does not exists!", app.getUuid()));
+			}
+
+			if (app.getDescription().getSplash() == null) {
+				throw new IllegalArgumentException(String.format("The application splash of %s is null!", app.getUuid()));
+			}
+
+			if (!resourceExists(app.getDescription().getSplash())) {
+				throw new IllegalArgumentException(String.format("The application splash file of %s does not exists!", app.getUuid()));
+			}
+
+			if (app.getDescription().getI18n() != null && !resourceExists(app.getDescription().getI18n())) {
+				throw new IllegalArgumentException(String.format("The application i18n file of %s does not exists!", app.getUuid()));
+			}
+
+		}
+	}
+
+	private void validatePlugins(){
+		for (var plugin : registry.getPlugins()) {
+		    if (plugin.getUuid() == null) {
+		        throw new IllegalArgumentException("The plugin UUID is null!");
+		    }
+
+		    if (plugin.getDescription() == null) {
+		        throw new IllegalArgumentException(String.format("The plugin description of %s is null!", plugin.getUuid()));
+		    }
+
+		    if (plugin.getDescription().getTitle() == null || plugin.getDescription().getTitle().isBlank()) {
+				throw new IllegalArgumentException(String.format("The plugin title of %s is null or blank!", plugin.getUuid()));
+			}
+
+			if (plugin.getDescription().getImage() == null) {
+				throw new IllegalArgumentException(String.format("The plugin image of %s is null!", plugin.getUuid()));
+			}
+
+			if (!resourceExists(plugin.getDescription().getImage())) {
+				throw new IllegalArgumentException(String.format("The plugin image file of %s does not exists!", plugin.getUuid()));
+			}
+
+			if (plugin.getDescription().getSplash() == null) {
+				throw new IllegalArgumentException(String.format("The plugin splash of %s is null!", plugin.getUuid()));
+			}
+
+			if (!resourceExists(plugin.getDescription().getSplash())) {
+				throw new IllegalArgumentException(String.format("The plugin splash file of %s does not exists!", plugin.getUuid()));
+			}
+
+			if (plugin.getDescription().getI18n() != null && !resourceExists(plugin.getDescription().getI18n())) {
+				throw new IllegalArgumentException(String.format("The plugin i18n file of %s does not exists!", plugin.getUuid()));
+			}
+
+		}
+	}
+
+	private boolean resourceExists(String path) {
+		for (Resource resource : project.getResources()) {
+            File resourceDir = new File(resource.getDirectory());
+            File resourceFile = new File(resourceDir, path);
+            return resourceFile.exists();
+        }
+		return false;
+	}
 
 }

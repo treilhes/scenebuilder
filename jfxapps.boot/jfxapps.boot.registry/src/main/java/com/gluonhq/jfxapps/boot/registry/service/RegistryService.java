@@ -49,6 +49,7 @@ import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.api.registry.model.ApplicationInfo;
 import com.gluonhq.jfxapps.boot.api.registry.model.LayerDefinition;
 import com.gluonhq.jfxapps.boot.api.registry.model.PluginInfo;
+import com.gluonhq.jfxapps.boot.registry.internal.BinaryCache;
 import com.gluonhq.jfxapps.boot.registry.internal.RegistryEntityMappers;
 import com.gluonhq.jfxapps.boot.registry.internal.RegistryInfoMappers;
 import com.gluonhq.jfxapps.boot.registry.model.ExtensionEntity;
@@ -71,6 +72,7 @@ public class RegistryService {
 
 	private final static Logger logger = LoggerFactory.getLogger(RegistryService.class);
 
+	private final BinaryCache binaryCache;
 	private final RegistrySourceService registrySourceService;
 	private final RegistryUpdateService registryUpdateService;
     private final RegistryRepository registryRepository;
@@ -82,6 +84,7 @@ public class RegistryService {
     private final RegistryEntityMappers entityMappers;
 
     public RegistryService(
+    		BinaryCache binaryCache,
     		RegistrySourceService registrySourceService,
     		RegistryUpdateService registryUpdateService,
             RegistryRepository registryRepository,
@@ -91,6 +94,7 @@ public class RegistryService {
             ExtensionRepository extensionRepository,
             RegistryInfoMappers infoMappers,
             RegistryEntityMappers entityMappers) {
+    	this.binaryCache = binaryCache;
     	this.registrySourceService = registrySourceService;
     	this.registryUpdateService = registryUpdateService;
         this.registryRepository = registryRepository;
@@ -123,9 +127,17 @@ public class RegistryService {
 		return registryRepository.count() > 0;
 	}
 
-    public ApplicationInfo rootInfo() {
-        return applicationRepository.findById(Extension.ROOT_ID).map(infoMappers::map).orElse(null);
-    }
+	public ApplicationInfo applicationInfo(UUID applicationId) {
+		return applicationRepository.findById(applicationId)
+				.map(a -> {
+					var info = infoMappers.map(a);
+					info.setImage(binaryCache.get(a.getId(), "image"));
+					info.setI18n(binaryCache.get(a.getId(), "i18n"));
+					info.setSplash(binaryCache.get(a.getId(), "splash"));
+					return info;
+				})
+				.orElse(null);
+	};
 
     public PluginInfo pluginInfo(UUID pluginId) {
         return pluginRepository.findById(pluginId).map(infoMappers::map).orElse(null);
@@ -173,5 +185,6 @@ public class RegistryService {
 		}
 		layerDef.getChildren().forEach(c -> recurse(c, map));
         return layerDef;
-    };
+    }
+
 }

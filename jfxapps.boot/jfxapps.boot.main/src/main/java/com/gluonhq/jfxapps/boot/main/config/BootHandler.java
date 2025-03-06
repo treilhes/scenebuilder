@@ -48,7 +48,6 @@ import com.gluonhq.jfxapps.boot.api.loader.ApplicationManager;
 import com.gluonhq.jfxapps.boot.api.loader.BootException;
 import com.gluonhq.jfxapps.boot.api.loader.LoadType;
 import com.gluonhq.jfxapps.boot.api.loader.OpenCommandEvent;
-import com.gluonhq.jfxapps.boot.splash.impl.ExtensionLoadingProgress;
 
 @Component
 public class BootHandler {
@@ -59,7 +58,11 @@ public class BootHandler {
 
     private final Optional<ApplicationStartup> startup;
 
-    public BootHandler(ApplicationManager appManager, Optional<ApplicationStartup> startup) {
+    // @formatter:off
+    public BootHandler(
+    		ApplicationManager appManager,
+    		Optional<ApplicationStartup> startup) {
+    	// @formatter:on
         super();
         this.appManager = appManager;
         this.startup = startup;

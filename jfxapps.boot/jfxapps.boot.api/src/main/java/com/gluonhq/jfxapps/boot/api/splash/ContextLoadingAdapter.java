@@ -1,4 +1,4 @@
-package com.gluonhq.jfxapps.boot.splash.impl;
+package com.gluonhq.jfxapps.boot.api.splash;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -9,17 +9,19 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-class ContextLoadingMonitor implements BeanPostProcessor, ApplicationListener<ContextRefreshedEvent>, BeanFactoryPostProcessor {
+import com.gluonhq.jfxapps.boot.api.utils.ProgressListener;
+
+public class ContextLoadingAdapter implements BeanPostProcessor, ApplicationListener<ContextRefreshedEvent>, BeanFactoryPostProcessor {
 
     /**
 	 *
 	 */
-	private final LoadingProgress loadingProgress;
+	private final ProgressListener loadingProgress;
 
 	/**
 	 * @param loadingProgress
 	 */
-	ContextLoadingMonitor(LoadingProgress loadingProgress) {
+	public ContextLoadingAdapter(ProgressListener loadingProgress) {
 		this.loadingProgress = loadingProgress;
 	}
 
@@ -38,17 +40,18 @@ class ContextLoadingMonitor implements BeanPostProcessor, ApplicationListener<Co
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         createdBeanCount++;
         float stepProgress = createdBeanCount / singletonDefinitionCount;
-        loadingProgress.step(stepProgress, beanName);
+        loadingProgress.notifyProgress(stepProgress);
         return bean;
     }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        loadingProgress.end();
+        loadingProgress.notifyFinish();
     }
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+    	loadingProgress.notifyStart();
         this.beanFactory = (DefaultListableBeanFactory)beanFactory;
 
         singletonDefinitionCount = 0;

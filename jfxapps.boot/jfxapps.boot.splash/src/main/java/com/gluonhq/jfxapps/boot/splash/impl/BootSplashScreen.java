@@ -35,46 +35,62 @@ package com.gluonhq.jfxapps.boot.splash.impl;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.SplashScreen;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JWindow;
 
-public class BootSplashScreen {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.utils.ProgressListener;
+
+public class BootSplashScreen implements com.gluonhq.jfxapps.boot.api.splash.SplashScreen {
+
+	private static final Logger logger = LoggerFactory.getLogger(BootSplashScreen.class);
 	private static final int PROGRESS_BAR_HEIGHT = 4;
 	private static final Color PROGRESSBAR_BACKGROUND_COLOR = Color.BLACK;
 	private static final Color PROGRESSBAR_COLOR = Color.GREEN;
 
-	private static BootSplashScreen instance;
-
-	private final BootLoadingProgress root;
+	private final LoadingProgress loadingProgress;
 	private final SplashScreen splash;
 	private FallBackSplashScreen fallbackSplash;
 
 	private Thread progressThread;
 	private boolean closeRequested;
+	private boolean useDefaultIfPossible = false;
 
-	public static BootSplashScreen getInstance(BootLoadingProgress loadingProgress) {
-		if (instance == null) {
-			instance = new BootSplashScreen(loadingProgress);
-		}
-		return instance;
+	public static BootSplashScreen defaultSplashScreen() {
+		var imageUrl = BootSplashScreen.class.getResource("/splash.png");
+		var loadingProgress = BootLoadingProgress.getInstance(Extension.BOOT_ID, imageUrl);
+		return new BootSplashScreen(loadingProgress, true);
+
 	}
 
-	private BootSplashScreen(BootLoadingProgress loadingProgress) {
+	public static BootSplashScreen applicationSplashScreen(LoadingProgress loadingProgress) {
+		return new BootSplashScreen(loadingProgress, false);
+
+	}
+
+	private BootSplashScreen(LoadingProgress loadingProgress, boolean useDefaultIfPossible) {
+		this.useDefaultIfPossible = useDefaultIfPossible;
 		if (GraphicsEnvironment.isHeadless()) {
-			this.root = null;
+			this.loadingProgress = null;
 			this.splash = null;
 			return;
 		}
-		this.root = loadingProgress;
+		this.loadingProgress = loadingProgress;
 		this.splash = SplashScreen.getSplashScreen();
 		start();
 	}
@@ -84,15 +100,22 @@ public class BootSplashScreen {
 			return;
 		}
 
+		logger.debug("Starting splash");
+
 		final Graphics2D g;
 		final int width;
 		final int height;
-		if (splash == null || !splash.isVisible()) {
-			fallbackSplash = new FallBackSplashScreen(root.getImageUrl());
+		if (splash == null || !splash.isVisible() || !useDefaultIfPossible) {
+			logger.info("FallBackSplashScreen with image {}", loadingProgress.getImageUrl());
+
+			fallbackSplash = new FallBackSplashScreen(loadingProgress.getImageUrl());
 			g = fallbackSplash.getGraphics();
 			width = fallbackSplash.getWidth();
 			height = fallbackSplash.getHeight();
+			fallbackSplash.repaint();
 		} else {
+			logger.info("Using default SplashScreen");
+
 			g = splash.createGraphics();
 			width = splash.getSize().width;
 			height = splash.getSize().height;
@@ -101,7 +124,7 @@ public class BootSplashScreen {
 
 		progressThread = new Thread(() -> {
 
-			while (!root.isDone() && !closeRequested) {
+			while (!loadingProgress.isDone() && !closeRequested) {
 				updateProgress(g, width, height);
 
 				try {
@@ -137,6 +160,16 @@ public class BootSplashScreen {
 		closeRequested = true;
 	}
 
+
+    @Override
+	public boolean isDone() {
+		return loadingProgress.isDone();
+	}
+	@Override
+	public List<ProgressListener> asSubSteps(int i) {
+		return loadingProgress.asSubSteps(i);
+	}
+
 	private void updateProgress(Graphics2D g, int width, int height) {
 
 		if (g == null) {
@@ -144,12 +177,12 @@ public class BootSplashScreen {
 			return;
 		}
 
-		if (root == null) {
+		if (loadingProgress == null) {
 			System.out.println("no root splash");
 			return;
 		}
 
-		int progress = (int)(width * root.getCurrentProgress());
+		int progress = (int)(width * loadingProgress.computeCurrentProgress());
 
 		g.setColor(PROGRESSBAR_BACKGROUND_COLOR);
         g.fillRect(0, height - PROGRESS_BAR_HEIGHT, width, PROGRESS_BAR_HEIGHT);
@@ -184,7 +217,14 @@ public class BootSplashScreen {
 			}
 
 			setSize(image.getWidth(), image.getHeight());
-			getGraphics().drawImage(image, 0, 0, null);
+			setVisible(true);
+			toFront();
+        }
+
+		@Override
+		public void paint(Graphics g) {
+			super.paint(g);
+			((Graphics2D)g).drawImage(image, 0, 0, null);
 		}
 
 		@Override
@@ -212,4 +252,5 @@ public class BootSplashScreen {
 			}
 		}
 	}
+
 }

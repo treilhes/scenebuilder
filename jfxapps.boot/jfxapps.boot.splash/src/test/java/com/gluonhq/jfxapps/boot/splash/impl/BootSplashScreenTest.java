@@ -1,9 +1,6 @@
 package com.gluonhq.jfxapps.boot.splash.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.net.URL;
-import java.util.UUID;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,23 +8,24 @@ class BootSplashScreenTest {
 
 	@Test
 	void test() {
-		URL imageUrl = BootSplashScreenTest.class.getResource("splash_test1.png");
-		URL imageUrl2 = BootSplashScreenTest.class.getResource("splash_test2.png");
-		URL imageUrl3 = BootSplashScreenTest.class.getResource("splash_test3.png");
 
+		var splash = BootSplashScreen.defaultSplashScreen();
 
-		BootLoadingProgress root = BootLoadingProgress.getInstance(UUID.randomUUID(), imageUrl);
+		final int stepsNumber = 4;
 
-		BootSplashScreen.getInstance(root);
+		var steps = splash.asSubSteps(stepsNumber);
 
-		root.start();
-		root.notifyProgress(0.2f);
-		root.notifyProgress(0.4f);
-		root.notifyProgress(0.6f);
-		root.notifyProgress(0.8f);
-		root.end();
+		for (int i = 0; i < stepsNumber; i++) {
+			var step = steps.get(i);
+			step.notifyStart();
+			step.notifyProgress(0.2f);
+			step.notifyProgress(0.4f);
+			step.notifyProgress(0.6f);
+			step.notifyProgress(0.8f);
+			step.notifyFinish();
+		}
 
-		assertTrue(root.isDone(), "loading is not done");
+		assertTrue(splash.isDone(), "loading is not done");
 
 	}
 

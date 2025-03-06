@@ -27,6 +27,7 @@ import com.gluonhq.jfxapps.boot.loader.model.LoadState;
 @ExtendWith(MockitoExtension.class)
 class StateProviderImplTest {
 
+	private static final UUID ROOT_ID = com.gluonhq.jfxapps.boot.api.loader.extension.Extension.ROOT_ID;
 	private static final UUID NO_PARENT = null;
 	private static final UUID APP_ID = UUID.randomUUID();
 
@@ -46,7 +47,7 @@ class StateProviderImplTest {
 		var stateProvider = new StateProviderImpl(registryManager, mappers, repositoryClient, repository);
 
 		assertThrows(IllegalArgumentException.class, () -> {
-			stateProvider.bootState(LoadType.LastSuccessfull);
+			stateProvider.applicationState(ROOT_ID, LoadType.LastSuccessfull);
 		});
 	}
 
@@ -62,7 +63,7 @@ class StateProviderImplTest {
 		Mockito.lenient().when(registryManager.computeLayerDefinition(Mockito.any())).thenReturn(layerDefinition);
 
 		assertThrows(IllegalArgumentException.class, () -> {
-			stateProvider.bootState(LoadType.FullUpdate);
+			stateProvider.applicationState(ROOT_ID, LoadType.FullUpdate);
 		});
 	}
 
@@ -77,7 +78,7 @@ class StateProviderImplTest {
 		var layerDefinition = new LayerDefinition(NO_PARENT, APP_ID, "com.gluonhq", "jfxapps-boot-api", "1.0.0");
 		Mockito.lenient().when(registryManager.computeLayerDefinition(Mockito.any())).thenReturn(layerDefinition);
 
-		var state = stateProvider.bootState(LoadType.LastSuccessfull);
+		var state = stateProvider.applicationState(ROOT_ID, LoadType.LastSuccessfull);
 
 		assertNotNull(state);
 		assertEquals(extension, state.getExtension(), "must be the same");
@@ -94,7 +95,7 @@ class StateProviderImplTest {
 		var layerDefinition = new LayerDefinition(NO_PARENT, APP_ID, "com.gluonhq", "jfxapps-boot-api", "1.0.0");
 		Mockito.lenient().when(registryManager.computeLayerDefinition(Mockito.any())).thenReturn(layerDefinition);
 
-		var state = stateProvider.bootState(LoadType.LastSuccessfull);
+		var state = stateProvider.applicationState(ROOT_ID, LoadType.LastSuccessfull);
 
 		assertNotNull(state);
 		assertEquals(extension, state.getExtension(), "must be the same");
@@ -117,7 +118,7 @@ class StateProviderImplTest {
 		Mockito.when(repository.findById(Mockito.any())).thenReturn(Optional.of(extension));
 		Mockito.lenient().when(registryManager.computeLayerDefinition(Mockito.any())).thenReturn(layerDefinition);
 
-		var state = stateProvider.bootState(LoadType.LastSuccessfull);
+		var state = stateProvider.applicationState(ROOT_ID, LoadType.LastSuccessfull);
 
 		assertNotNull(state);
 		assertEquals(extension, state.getExtension(), "must be the same");
@@ -136,7 +137,7 @@ class StateProviderImplTest {
 		var layerDefinition = new LayerDefinition(NO_PARENT, APP_ID, "com.gluonhq", "jfxapps-boot-api", "1.0.0");
 		Mockito.lenient().when(registryManager.computeLayerDefinition(Mockito.any())).thenReturn(layerDefinition);
 
-		var state = stateProvider.bootState(LoadType.UpdateOnly);
+		var state = stateProvider.applicationState(ROOT_ID, LoadType.UpdateOnly);
 
 		assertNotNull(state);
 		assertEquals(extension, state.getExtension(), "must be the same");
@@ -159,7 +160,7 @@ class StateProviderImplTest {
 		Mockito.when(repository.findById(Mockito.any())).thenReturn(Optional.of(extension));
 		Mockito.lenient().when(registryManager.computeLayerDefinition(Mockito.any())).thenReturn(layerDefinition);
 
-		var state = stateProvider.bootState(LoadType.UpdateOnly);
+		var state = stateProvider.applicationState(ROOT_ID, LoadType.UpdateOnly);
 
 		assertNotNull(state);
 		assertEquals(extension, state.getExtension(), "must be the same");
@@ -182,7 +183,7 @@ class StateProviderImplTest {
 		Mockito.when(repository.findById(Mockito.any())).thenReturn(Optional.of(extension));
 		Mockito.when(registryManager.computeLayerDefinition(Mockito.any())).thenReturn(layerDefinition);
 
-		var state = stateProvider.bootState(LoadType.FullUpdate);
+		var state = stateProvider.applicationState(ROOT_ID, LoadType.FullUpdate);
 
 		assertNotNull(state);
 		assertEquals(extension.getId(), state.getExtension().getId(), "must be the same");
@@ -206,7 +207,7 @@ class StateProviderImplTest {
 		Mockito.when(repository.findById(Mockito.any())).thenReturn(Optional.of(extension));
 		Mockito.when(registryManager.computeLayerDefinition(Mockito.any())).thenReturn(layerDefinition);
 
-		var state = stateProvider.bootState(LoadType.FullUpdate);
+		var state = stateProvider.applicationState(ROOT_ID, LoadType.FullUpdate);
 
 		assertNotNull(state);
 		assertEquals(extension.getId(), state.getExtension().getId(), "must be the same");

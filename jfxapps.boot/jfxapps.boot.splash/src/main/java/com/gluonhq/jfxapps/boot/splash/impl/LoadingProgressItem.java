@@ -32,37 +32,50 @@
  */
 package com.gluonhq.jfxapps.boot.splash.impl;
 
-import java.net.URL;
-import java.util.UUID;
+import com.gluonhq.jfxapps.boot.api.utils.ProgressListener;
 
-import com.gluonhq.jfxapps.boot.api.splash.ContextLoadingAdapter;
+public class LoadingProgressItem implements ProgressListener {
 
-public class BootLoadingProgress extends LoadingProgress {
+	static final Float START_PROGRESS = 0f;
+	static final Float DONE_PROGRESS = 1.0f;
 
-	//private static final Logger log = LoggerFactory.getLogger(BootLoadingProgress.class);
+	float currentProgress = START_PROGRESS;
+	boolean started = false;
+	boolean done = false;
 
-	private final ContextLoadingAdapter contextMonitor;
-
-	private final UUID id;
-
-
-	public static BootLoadingProgress getInstance(UUID id, URL imageUrl) {
-		return new BootLoadingProgress(id, imageUrl);
+	@Override
+	public void notifyStart() {
+		started = true;
 	}
 
-	private BootLoadingProgress(UUID id, URL imageUrl) {
-		super(imageUrl);
-		this.id = id;
-		this.asSubSteps(1);
-		this.contextMonitor = new ContextLoadingAdapter(getSubSteps().get(0));
+	@Override
+	public void notifyProgress(float progress) {
+		currentProgress = progress;
+
 	}
 
-	public ContextLoadingAdapter getContextAdapter() {
-		return contextMonitor;
+	@Override
+	public void notifyProgressDelta(float delta) {
+		currentProgress += delta;
 	}
 
-	public UUID getId() {
-		return id;
+	@Override
+	public void notifyFinish() {
+		done = true;
+		currentProgress = DONE_PROGRESS;
+	}
+
+	public float getCurrentProgress() {
+		return currentProgress;
+	}
+
+
+	public boolean isStarted() {
+		return started;
+	}
+
+	public boolean isDone() {
+		return done;
 	}
 
 }

@@ -32,80 +32,36 @@
  */
 package com.gluonhq.jfxapps.boot.splash.impl;
 
-import com.gluonhq.jfxapps.boot.api.context.ProgressListener;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class LoadingProgress implements ProgressListener {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-	//private static final Logger log = LoggerFactory.getLogger(LoadingProgress.class);
+import com.gluonhq.jfxapps.boot.api.utils.ProgressListener;
+
+public class LoadingProgress {
+
+	private static final Logger log = LoggerFactory.getLogger(LoadingProgress.class);
 
 	static final Float START_PROGRESS = 0f;
 	static final Float DONE_PROGRESS = 1.0f;
 
-	private TextChange onTextChange;
-	private ProgressChange onProgressChange;
-	private LoadingDone onLoadingDone;
+	private final URL imageUrl;
+	private Map<LoadingProgressItem, Float> subSteps = null;
+	private List<ProgressListener> subStepsList = null;
 
-	float currentProgress;
 	boolean started = false;
 	boolean done = false;
 
-	protected LoadingProgress() {
+
+
+	protected LoadingProgress(URL imageUrl) {
 		super();
-	}
-
-	void step(Float value, String text) {
-		currentProgress = value;
-
-		if (onProgressChange != null && value != null) {
-			onProgressChange.onProgressChange(value);
-		}
-		if (onTextChange != null && text != null) {
-			onTextChange.onTextChange(text);
-		}
-		if (currentProgress >= DONE_PROGRESS && !done) {
-			end();
-		}
-	}
-
-	public void start() {
-		done = false;
-		started = true;
-		step(START_PROGRESS, "Start loading");
-	}
-
-	public void end() {
-		done = true;
-		step(DONE_PROGRESS, "");
-		if (onLoadingDone != null) {
-			onLoadingDone.loadingDone();
-		}
-	}
-
-	public void setOnTextChange(TextChange onTextChange) {
-		this.onTextChange = onTextChange;
-	}
-
-	public void setOnProgressChange(ProgressChange onProgressChange) {
-		this.onProgressChange = onProgressChange;
-	}
-
-	public void setOnLoadingDone(LoadingDone onLoadingDone) {
-		this.onLoadingDone = onLoadingDone;
-	}
-
-	@FunctionalInterface
-	public interface TextChange {
-		void onTextChange(String text);
-	}
-
-	@FunctionalInterface
-	public interface ProgressChange {
-		void onProgressChange(float progress);
-	}
-
-	@FunctionalInterface
-	public interface LoadingDone {
-		void loadingDone();
+		this.imageUrl = imageUrl;
 	}
 
 	public boolean isStarted() {
@@ -116,14 +72,61 @@ public class LoadingProgress implements ProgressListener {
 		return done;
 	}
 
-	@Override
-	public void notifyProgress(float progress) {
-		step(progress, null);
+	public float computeCurrentProgress() {
+		if (subSteps == null) {
+			return START_PROGRESS;
+		}
+
+		var currentProgress = START_PROGRESS;
+		var allDone = true;
+		for (var entry : subSteps.entrySet()) {
+			var item = entry.getKey();
+			var part = entry.getValue();
+
+			if (item.isDone()) {
+				currentProgress += part;
+			} else if (item.isStarted()) {
+				currentProgress += part * item.getCurrentProgress();
+				allDone = false;
+			} else {
+				allDone = false;
+			}
+		}
+
+		if (allDone) {
+			done = true;
+			return DONE_PROGRESS;
+		} else {
+			return currentProgress;
+		}
+
 	}
 
-	public float getCurrentProgress() {
-		return currentProgress;
+	public URL getImageUrl() {
+		return imageUrl;
 	}
 
+	public List<ProgressListener> asSubSteps(int stepNumber) {
+
+		if (started) {
+            throw new IllegalStateException("loading has started already, you can't split it anymore");
+		}
+
+		subSteps = new HashMap<>();
+
+		float part = 1f / stepNumber;
+		subStepsList = new ArrayList<>();
+
+		for (int i = 0; i < stepNumber; i++) {
+			LoadingProgressItem subStep = new LoadingProgressItem();
+            subStepsList.add(subStep);
+            subSteps.put(subStep, part);
+		}
+		return subStepsList;
+	}
+
+	public List<ProgressListener> getSubSteps() {
+		return subStepsList;
+	}
 
 }

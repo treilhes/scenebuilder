@@ -33,14 +33,16 @@
  */
 package com.gluonhq.jfxapps.boot.api.registry.model;
 
-import java.net.URI;
+import java.net.URL;
 import java.util.Objects;
 import java.util.UUID;
 
 public class ItemInfo {
 
     private UUID uuid;
-    private URI icon;
+    private URL splash;
+    private URL image;
+    private URL i18n;
     private String title;
     private String text;
     private String changelog;
@@ -56,15 +58,31 @@ public class ItemInfo {
         this.uuid = uuid;
     }
 
-    public URI getIcon() {
-        return icon;
-    }
+    public URL getSplash() {
+		return splash;
+	}
 
-    public void setIcon(URI icon) {
-        this.icon = icon;
-    }
+	public void setSplash(URL splash) {
+		this.splash = splash;
+	}
 
-    public String getTitle() {
+	public URL getImage() {
+		return image;
+	}
+
+	public void setImage(URL image) {
+		this.image = image;
+	}
+
+	public URL getI18n() {
+		return i18n;
+	}
+
+	public void setI18n(URL i18n) {
+		this.i18n = i18n;
+	}
+
+	public String getTitle() {
         return title;
     }
 

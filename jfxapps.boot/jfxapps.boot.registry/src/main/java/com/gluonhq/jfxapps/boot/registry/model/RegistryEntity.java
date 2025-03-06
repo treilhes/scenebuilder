@@ -33,20 +33,38 @@
  */
 package com.gluonhq.jfxapps.boot.registry.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Converter;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity(name = "JFXAPPS_BOOT_REGISTRY_REGISTRY")
-public class RegistryEntity extends Description {
+public class RegistryEntity {
+
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long internalId;
+
+    private UUID id;
 
 	@NotBlank
 	private String groupId;
@@ -56,6 +74,13 @@ public class RegistryEntity extends Description {
 
 	@NotBlank
 	private String version;
+
+	@Enumerated(EnumType.ORDINAL)
+    private LoadState loadState = LoadState.NOT_LOADED;
+
+	@Convert(converter = StringListConverter.class)
+	@Lob
+	private List<String> messages = new ArrayList<>();
 
 	@OneToMany(mappedBy = "registry", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
@@ -75,6 +100,14 @@ public class RegistryEntity extends Description {
 		this.artifactId = artifactId;
 		this.version = version;
 	}
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
 	public String getGroupId() {
 		return groupId;
@@ -148,5 +181,40 @@ public class RegistryEntity extends Description {
 		if (this.plugins.contains(plugin)) {
 			this.plugins.remove(plugin);
 		}
+	}
+
+	public LoadState getLoadState() {
+		return loadState;
+	}
+
+	public void setLoadState(LoadState loadState) {
+		this.loadState = loadState;
+	}
+
+	public List<String> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(List<String> messages) {
+		this.messages = messages;
+	}
+
+	public void addMessage(String message) {
+		this.messages.add(message);
+	}
+
+	@Converter
+	public class StringListConverter implements AttributeConverter<List<String>, String> {
+	    private static final String SPLIT_CHAR = "||";
+
+	    @Override
+	    public String convertToDatabaseColumn(List<String> stringList) {
+	        return stringList != null ? String.join(SPLIT_CHAR, stringList) : "";
+	    }
+
+	    @Override
+	    public List<String> convertToEntityAttribute(String string) {
+	        return string != null ? Arrays.asList(string.split(SPLIT_CHAR)) : Collections.emptyList();
+	    }
 	}
 }

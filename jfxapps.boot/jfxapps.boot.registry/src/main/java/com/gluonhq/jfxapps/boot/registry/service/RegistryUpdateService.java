@@ -39,6 +39,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,10 +53,14 @@ import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient.VersionType;
 import com.gluonhq.jfxapps.boot.registry.RegistryException;
 import com.gluonhq.jfxapps.boot.registry.config.RegistryConfig;
+import com.gluonhq.jfxapps.boot.registry.internal.BinaryCache;
 import com.gluonhq.jfxapps.boot.registry.internal.RegistryEntityMappers;
+import com.gluonhq.jfxapps.boot.registry.model.LoadState;
 import com.gluonhq.jfxapps.boot.registry.model.RegistryEntity;
 import com.gluonhq.jfxapps.boot.registry.model.RegistrySourceEntity;
 import com.gluonhq.jfxapps.registry.mapper.Mapper;
+import com.gluonhq.jfxapps.registry.model.Dependency;
+import com.gluonhq.jfxapps.registry.model.Description;
 import com.gluonhq.jfxapps.registry.model.JfxApps;
 import com.gluonhq.jfxapps.registry.model.Registry;
 
@@ -76,6 +81,8 @@ public class RegistryUpdateService {
 
 	private final RegistryEntityMappers mappers;
 
+	private final BinaryCache cache;
+
 
     /**
      * Instantiates a new registry manager impl.
@@ -87,12 +94,14 @@ public class RegistryUpdateService {
     		RepositoryClient mavenClient,
     		ModuleLayerManager moduleLayerManager,
             RegistryConfig config,
-            RegistryEntityMappers mappers) {
+            RegistryEntityMappers mappers,
+            BinaryCache cache) {
         super();
         this.config = config;
         this.mavenClient = mavenClient;
         this.moduleLayerManager = moduleLayerManager;
         this.mappers = mappers;
+        this.cache = cache;
     }
 
     public RegistryEntity loadLatest(@Valid RegistrySourceEntity src) {
@@ -111,9 +120,30 @@ public class RegistryUpdateService {
 
         var layer = createLayer(resolved.toPaths());
 
-        var registry = loadRegistryLayer(layer).orElseThrow(() -> new RegistryException(String.format("Layer not loaded %s", layer)));
-        var registryEntity = mappers.map(registry);
+        Registry registry = null;
+        RegistryEntity registryEntity = null;
 
+        try {
+			registry = loadRegistryLayer(layer).orElseThrow(() -> new RegistryException(String.format("Layer not loaded %s", layer)));
+			registryEntity = mappers.map(registry);
+			registryEntity.setLoadState(LoadState.SUCCESS);
+		} catch (Exception e) { // catch all exceptions
+			logger.error("Loading registry from layer failed ({}) ! ", artifact, e);
+
+			registry = new Registry();
+			var dependency = new Dependency();
+			dependency.setGroupId(src.getGroupId());
+			dependency.setArtifactId(src.getArtifactId());
+			dependency.setVersion(latest.getVersion());
+
+			registry.setDependency(dependency);
+
+			registryEntity = mappers.map(registry);
+			registryEntity.addMessage(e.getMessage());
+			registryEntity.setLoadState(LoadState.FAILURE);
+		}
+
+        final var finalRegistryEntity = registryEntity;
         registry.getRegistries().forEach(r -> {
 
             var coordinates = r.getDependency();
@@ -121,17 +151,60 @@ public class RegistryUpdateService {
             var subRegistry = loadLatest(nestedSource);
 
             if (subRegistry.getApplications() != null) {
-				subRegistry.getApplications().forEach(registryEntity::addApplication);
+				subRegistry.getApplications().forEach(finalRegistryEntity::addApplication);
             }
             if (subRegistry.getPlugins() != null) {
-				subRegistry.getPlugins().forEach(registryEntity::addPlugin);
+				subRegistry.getPlugins().forEach(finalRegistryEntity::addPlugin);
             }
+
+			if (subRegistry.getLoadState() == LoadState.FAILURE) {
+				finalRegistryEntity.addMessage("Nested registry loading failed: " + subRegistry.getMessages());
+				subRegistry.setLoadState(LoadState.PARTIAL);
+			}
         });
 
         return registryEntity;
     }
 
-    private Layer createLayer(List<Path> a) {
+    private void cacheBinaries(Registry registry, Layer layer) {
+    	cacheApplicationBinaries(registry, layer);
+        cachePluginsBinaries(registry, layer);
+	}
+
+	private void cachePluginsBinaries(Registry registry, Layer layer) {
+		for (var plugin:registry.getPlugins()) {
+			cacheDescriptionBinaries(plugin.getUuid(), plugin.getDescription(), layer);
+		}
+	}
+
+	private void cacheApplicationBinaries(Registry registry, Layer layer) {
+		for (var application:registry.getApplications()) {
+            cacheDescriptionBinaries(application.getUuid(), application.getDescription(), layer);
+		}
+	}
+
+	private void cacheDescriptionBinaries(UUID id, Description description, Layer layer) {
+		Objects.requireNonNull(id);
+		Objects.requireNonNull(description);
+		Objects.requireNonNull(layer);
+
+		cacheResource(id, "splash", description.getSplash(), layer);
+		cacheResource(id, "image", description.getImage(), layer);
+		cacheResource(id, "i18n", description.getI18n(), layer);
+	}
+
+	private void cacheResource(UUID id, String key, String resource, Layer layer) {
+		if (resource == null) {
+			return;
+		}
+		try (InputStream is = layer.getResourceAsStream(resource)) {
+			cache.add(id, key, is);
+		} catch (IOException e) {
+			logger.error("Loading {} failed ! ", key, e);
+		}
+	}
+
+	private Layer createLayer(List<Path> a) {
         try {
             return moduleLayerManager.create(a, null);
         } catch (IOException e) {
@@ -161,6 +234,8 @@ public class RegistryUpdateService {
                     break;
                 }
             }
+
+            cacheBinaries(registry, layer);
 
             moduleLayerManager.remove(layer);
 

@@ -71,6 +71,11 @@ public interface RegistryEntityMappers {
     @Mapping(target = "groupId", source = "source.dependency.groupId")
     @Mapping(target = "artifactId", source = "source.dependency.artifactId")
     @Mapping(target = "version", source = "source.dependency.version")
+    @Mapping(target = "splash", source = "source.description.splash")
+    @Mapping(target = "description.image", source = "source.description.image")
+    @Mapping(target = "description.i18n", source = "source.description.i18n")
+    @Mapping(target = "description.title", source = "source.description.title")
+    @Mapping(target = "description.text", source = "source.description.text")
     ApplicationEntity map(Application source);
 
     @Mapping(target = "id", source = "uuid")
@@ -80,6 +85,10 @@ public interface RegistryEntityMappers {
     ExtensionEntity map(Extension source);
 
     @Mapping(target = "id", source = "uuid")
+    @Mapping(target = "description.image", source = "source.description.image")
+    @Mapping(target = "description.i18n", source = "source.description.i18n")
+    @Mapping(target = "description.title", source = "source.description.title")
+    @Mapping(target = "description.text", source = "source.description.text")
     PluginEntity map(Plugin source);
 
     @Mapping(target = "id", source = "uuid")

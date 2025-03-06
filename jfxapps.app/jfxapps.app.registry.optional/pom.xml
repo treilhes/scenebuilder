@@ -36,7 +36,8 @@
                                     <artifactId>jfxapps.app.fxmlrunner</artifactId>
                                 </dependency>
                                 <description>
-                                    <icon>fxmlRunner64x64.png</icon>
+                                    <splash>fxmlRunner_256x256.jpeg</splash>
+                                    <image>fxmlRunner_64x64.png</image>
                                     <title>FXML Runner</title>
                                     <text>App that run fxml files</text>
                                 </description>

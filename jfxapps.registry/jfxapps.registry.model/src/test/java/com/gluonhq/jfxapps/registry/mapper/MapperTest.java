@@ -43,7 +43,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
 import java.util.Set;
 import java.util.UUID;
 
@@ -112,19 +111,19 @@ class MapperTest {
             Extension innerExt1 = new Extension(
                     UUID.randomUUID(),
                     new Dependency("innerExt1.groupId", "innerExt1.artifactId", "innerExt1.version"),
-                    new Description(null , "innerExt1", "innerExt1 text"),
+                    new Description("innerExt1", "innerExt1 text"),
                     Set.of());
 
             Extension ext1 = new Extension(
                     UUID.randomUUID(),
                     new Dependency("ext1.groupId", "ext1.artifactId", "ext1.version"),
-                    new Description(null , "ext1", "ext1 text"),
+                    new Description("ext1", "ext1 text"),
                     Set.of(innerExt1));
 
             Application app1 = new Application(
                     UUID.randomUUID(),
                     new Dependency("app1.groupId", "app1.artifactId", "app1.version"),
-                    new Description(new URI("/test"), "app1", "app1 text"),
+                    new Description("app1", "app1 text"),
                     Set.of(ext1));
 
 
@@ -132,19 +131,19 @@ class MapperTest {
             Extension singleExt1 = new Extension(
                     UUID.randomUUID(),
                     new Dependency("singleExt1.groupId", "singleExt1.artifactId", "singleExt1.version"),
-                    new Description(null , "singleExt1", "singleExt1 text"),
+                    new Description("singleExt1", "singleExt1 text"),
                     Set.of());
 
             Feature feature1 = new Feature(
                     ext1.getUuid(),
                     UUID.randomUUID(),
-                    new Description(null , "feature1", "feature1 text"),
+                    new Description("feature1", "feature1 text"),
                     Set.of(singleExt1));
 
             Plugin plugin1 = new Plugin(
                     app1.getUuid(),
                     UUID.randomUUID(),
-                    new Description(null, "plugin1", "plugin1 text"),
+                    new Description("plugin1", "plugin1 text"),
                     Set.of(feature1));
 
             return new Registry(

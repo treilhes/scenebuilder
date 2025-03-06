@@ -46,12 +46,16 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity(name = "JFXAPPS_BOOT_REGISTRY_EXTENSION")
-public class ExtensionEntity extends Description {
+public class ExtensionEntity {
+
+    @Id
+    private UUID id;
 
 	@NotBlank
     private String groupId;
@@ -91,6 +95,14 @@ public class ExtensionEntity extends Description {
         this.groupId = groupId;
         this.artifactId = artifactId;
         this.version = version;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getGroupId() {

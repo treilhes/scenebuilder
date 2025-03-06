@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.WebApplicationType;
 
 import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+import com.gluonhq.jfxapps.boot.api.splash.ContextLoadingAdapter;
 import com.gluonhq.jfxapps.boot.context.boot.BootContext;
 import com.gluonhq.jfxapps.boot.main.config.BootHandler;
 import com.gluonhq.jfxapps.boot.main.util.MessageBox;
@@ -55,129 +56,119 @@ import com.gluonhq.jfxapps.boot.main.util.MessageBoxMessage;
 import com.gluonhq.jfxapps.boot.platform.internal.DefaultFolders;
 import com.gluonhq.jfxapps.boot.splash.impl.BootLoadingProgress;
 import com.gluonhq.jfxapps.boot.splash.impl.BootSplashScreen;
-import com.gluonhq.jfxapps.boot.splash.impl.ExtensionLoadingProgress;
 import com.gluonhq.jfxapps.boot.splash.impl.LoadingProgress;
+import com.gluonhq.jfxapps.boot.splash.impl.SplashScreenProviderImpl;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-@Command(subcommands = {RunFxmlCommand.class})
+@Command(subcommands = { RunFxmlCommand.class })
 public class StartCommand implements Runnable, MessageBox.Delegate<MessageBoxMessage> {
 
-    private final static Logger logger = LoggerFactory.getLogger(StartCommand.class);
+	private final static Logger logger = LoggerFactory.getLogger(StartCommand.class);
 
-    private static MessageBox<MessageBoxMessage> messageBox;
+	private static MessageBox<MessageBoxMessage> messageBox;
 
-    @Option(names = {"--root", "-r"}, defaultValue = "./target", description = "Extensions download folder")
-    private Path root;
+	@Option(names = { "--root", "-r" }, defaultValue = "./target", description = "Extensions download folder")
+	private Path root;
 
-    @Option(names = {"--app", "-a"}, description = "target application uuid")
-    private UUID targetApplication;
+	@Option(names = { "--app", "-a" }, description = "target application uuid")
+	private UUID targetApplication;
 
-    @Option(names = {"--files", "-f"}, description = "list of files to open")
-    private List<File> files;
+	@Option(names = { "--files", "-f" }, description = "list of files to open")
+	private List<File> files;
 
-    private BootHandler bootHandler;
+	private BootHandler bootHandler;
 
-    @Spec
-    private CommandSpec spec;
+	@Spec
+	private CommandSpec spec;
 
-    @Override
-    public void run() {
+	@Override
+	public void run() {
 
-        try {
-            if (!lockMessageBox(this, targetApplication, files)) {
-                logger.warn("An instance is already running forwarding execution to existing instance");
-                return;
-            }
-        } catch (IOException e) {
-            logger.error("Unable to initialize the message box", e);
-        }
-
-        String[] originalArgs = spec.commandLine().getParseResult().originalArgs().toArray(new String[0]);
-
-		if (bootHandler == null) {
-			var imageUrl = StartCommand.class.getResource("/splash.png");
-
-			var loadingProgress = BootLoadingProgress.getInstance(Extension.BOOT_ID, imageUrl);
-
-			BootSplashScreen.getInstance(loadingProgress);
-
-			loadingProgress.start();
-
-			var context = BootContext.create(null, WebApplicationType.SERVLET, originalArgs, (c) -> {
-                c.addApplicationListener(loadingProgress.getContextMonitor());
-                c.addBeanFactoryPostProcessor(loadingProgress.getContextMonitor());
-                c.registerBean(LoadingProgress.class, () -> loadingProgress);
-			});
-			bootHandler = context.getBean(BootHandler.class);
-
-			loadingProgress.end();
+		try {
+			if (!lockMessageBox(this, targetApplication, files)) {
+				logger.warn("An instance is already running forwarding execution to existing instance");
+				return;
+			}
+		} catch (IOException e) {
+			logger.error("Unable to initialize the message box", e);
 		}
 
-        bootHandler.boot(targetApplication, files, originalArgs);
+		String[] originalArgs = spec.commandLine().getParseResult().originalArgs().toArray(new String[0]);
 
-    }
+		if (bootHandler == null) {
+			var splash = BootSplashScreen.defaultSplashScreen();
+			var step = splash.asSubSteps(1).get(0);
+			var contextAdapter = new ContextLoadingAdapter(step);
 
-    /*
-     * Private (requestStartGeneric)
-     */
+			var context = BootContext.create(null, WebApplicationType.SERVLET, originalArgs, (c) -> {
+				c.addApplicationListener(contextAdapter);
+				c.addBeanFactoryPostProcessor(contextAdapter);
+			});
+			bootHandler = context.getBean(BootHandler.class);
+		}
 
-    private static synchronized boolean lockMessageBox(MessageBox.Delegate<MessageBoxMessage> delegate, UUID targetApp, List<File> files) throws IOException {
-        assert messageBox == null;
+		bootHandler.boot(targetApplication, files, originalArgs);
 
-        var messageBoxFolder = DefaultFolders.getMessageBoxFolder();
+	}
 
-        try {
-            Files.createDirectories(messageBoxFolder.toPath());
-        } catch (FileAlreadyExistsException x) {
-            // Fine
-        }
+	/*
+	 * Private (requestStartGeneric)
+	 */
 
-        final boolean result;
-        messageBox = new MessageBox<>(messageBoxFolder, MessageBoxMessage.class, 1000 /* ms */);
+	private static synchronized boolean lockMessageBox(MessageBox.Delegate<MessageBoxMessage> delegate, UUID targetApp,
+			List<File> files) throws IOException {
+		assert messageBox == null;
 
-        // Fix End
-        if (messageBox.grab(delegate)) {
-            result = true;
-        } else {
-            result = false;
+		var messageBoxFolder = DefaultFolders.getMessageBoxFolder();
 
-            List<String> parameters = new ArrayList<>();
-            if (files != null) {
-                parameters.addAll(files.stream().map(File::getAbsolutePath).collect(Collectors.toList()));
-            }
-            final MessageBoxMessage unamedParameters = new MessageBoxMessage(targetApp, parameters);
-            try {
-                messageBox.sendMessage(unamedParameters);
-            } catch (InterruptedException x) {
-                throw new IOException(x);
-            }
-        }
+		try {
+			Files.createDirectories(messageBoxFolder.toPath());
+		} catch (FileAlreadyExistsException x) {
+			// Fine
+		}
 
-        return result;
-    }
+		final boolean result;
+		messageBox = new MessageBox<>(messageBoxFolder, MessageBoxMessage.class, 1000 /* ms */);
 
-    @Override
-    public void messageBoxDidGetMessage(MessageBoxMessage message) {
-        try {
-            UUID targetApplication = message.getTargetApplication();
-            List<File> files = message.getFiles().stream().map(File::new).toList();
-            bootHandler.boot(targetApplication, files, new String[0]);
-        } catch (Exception e) {
-            logger.error("Unable to execute the message {} the application", message, e);
-        }
-    }
+		// Fix End
+		if (messageBox.grab(delegate)) {
+			result = true;
+		} else {
+			result = false;
 
+			List<String> parameters = new ArrayList<>();
+			if (files != null) {
+				parameters.addAll(files.stream().map(File::getAbsolutePath).collect(Collectors.toList()));
+			}
+			final MessageBoxMessage unamedParameters = new MessageBoxMessage(targetApp, parameters);
+			try {
+				messageBox.sendMessage(unamedParameters);
+			} catch (InterruptedException x) {
+				throw new IOException(x);
+			}
+		}
 
+		return result;
+	}
 
-    @Override
-    public void messageBoxDidCatchException(Exception ex) {
-        logger.error("Received message but something failed", ex);
-    }
+	@Override
+	public void messageBoxDidGetMessage(MessageBoxMessage message) {
+		try {
+			UUID targetApplication = message.getTargetApplication();
+			List<File> files = message.getFiles().stream().map(File::new).toList();
+			bootHandler.boot(targetApplication, files, new String[0]);
+		} catch (Exception e) {
+			logger.error("Unable to execute the message {} the application", message, e);
+		}
+	}
 
-
+	@Override
+	public void messageBoxDidCatchException(Exception ex) {
+		logger.error("Received message but something failed", ex);
+	}
 
 }

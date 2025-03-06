@@ -59,6 +59,7 @@ open module jfxapps.boot.loader {
     requires jfxapps.boot.starter;
 
     requires java.compiler;
+	requires jfxapps.boot.splash;
 
     provides BootContextConfigClasses with LoaderBootClasses;
     provides ExtensionContextConfigClasses with LoaderExtensionClasses;

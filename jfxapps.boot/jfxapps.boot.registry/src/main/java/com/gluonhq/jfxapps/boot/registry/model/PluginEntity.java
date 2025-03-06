@@ -44,17 +44,25 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 
 @Entity(name = "JFXAPPS_BOOT_REGISTRY_PLUGIN")
-public class PluginEntity extends Description {
+public class PluginEntity {
+
+    @Id
+    private UUID id;
 
 	@NotNull
 	private UUID target;
+
+	@Embedded
+	private Description description;
 
 	private boolean installed;
 
@@ -71,12 +79,28 @@ public class PluginEntity extends Description {
 		super();
 	}
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
 	public UUID getTarget() {
 		return target;
 	}
 
 	public void setTarget(UUID target) {
 		this.target = target;
+	}
+
+	public Description getDescription() {
+		return description;
+	}
+
+	public void setDescription(Description description) {
+		this.description = description;
 	}
 
 	public boolean isInstalled() {

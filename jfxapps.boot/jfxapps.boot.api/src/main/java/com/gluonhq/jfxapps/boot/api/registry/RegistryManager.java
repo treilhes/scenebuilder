@@ -42,7 +42,7 @@ import com.gluonhq.jfxapps.boot.api.registry.model.PluginInfo;
 
 public interface RegistryManager {
 
-    ApplicationInfo rootInfo();
+    ApplicationInfo applicationInfo(UUID applicationId);
 
     Set<ApplicationInfo> listApplicationsInfo();
 

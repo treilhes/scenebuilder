@@ -41,8 +41,6 @@ import com.gluonhq.jfxapps.boot.loader.model.LoadableContent;
 
 public interface StateProvider {
 
-    LoadableContent bootState(LoadType loadType);
-
     LoadableContent applicationState(UUID applicationId, LoadType loadType);
 
     void saveState(Extension application);

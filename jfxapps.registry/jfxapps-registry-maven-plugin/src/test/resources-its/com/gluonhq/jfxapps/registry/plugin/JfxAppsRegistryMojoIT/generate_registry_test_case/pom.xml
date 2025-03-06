@@ -23,6 +23,7 @@
                 <configuration>
                     <format>json</format>
                     <registry>
+                    	<uuid>feda298c-4a63-450d-8c59-8cb43241baff</uuid>
                         <applications>
                             <application>
                                 <uuid>feda298c-4a63-450d-8c59-8cb43241ba3d</uuid>
@@ -32,7 +33,8 @@
                                     <artifactId>artId</artifactId>
                                 </dependency>
                                 <description>
-                                    <icon>icon.png</icon>
+                                	<image>image.png</image>
+                                    <splash>image.png</splash>
                                     <title>title</title>
                                     <text>txt</text>
                                 </description>

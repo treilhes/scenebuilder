@@ -37,6 +37,7 @@ import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
 import com.gluonhq.jfxapps.boot.registry.config.RegistryConfig;
+import com.gluonhq.jfxapps.boot.registry.internal.BinaryCache;
 import com.gluonhq.jfxapps.boot.registry.internal.RegistryEntityMappersImpl;
 import com.gluonhq.jfxapps.boot.registry.internal.RegistryInfoMappersImpl;
 import com.gluonhq.jfxapps.boot.registry.internal.RegistryManagerImpl;
@@ -61,10 +62,12 @@ public class RegistryBootClasses implements BootContextConfigClasses {
 
     @Override
     public List<Class<?>> classes() {
+    	// @formatter:off
         return List.of(
                 RegistryConfig.class,
                 RegistryManagerImpl.class,
                 RegistrySourceManagerImpl.class,
+                BinaryCache.class,
 
                 //mappers
                 RegistryEntityMappersImpl.class,
@@ -92,6 +95,7 @@ public class RegistryBootClasses implements BootContextConfigClasses {
                 RegistryService.class,
                 RegistryUpdateService.class
                 );
+        // @formatter:on
     }
 
 }

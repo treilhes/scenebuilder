@@ -31,7 +31,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<useModulePath>true</useModulePath>
-					<argLine>-splash:src/main/resources/splash.png</argLine>
+					<argLine>-splash:src/test/resources/splash.png</argLine>
 				</configuration>
 			</plugin>
 		</plugins>

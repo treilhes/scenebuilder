@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.gluonhq.jfxapps.boot.api.utils.ProgressListener;
+
 public class MultipleProgressListener {
 
     private ProgressListener progressListener;

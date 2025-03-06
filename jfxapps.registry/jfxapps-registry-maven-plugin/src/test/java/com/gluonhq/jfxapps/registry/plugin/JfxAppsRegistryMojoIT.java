@@ -6,13 +6,14 @@ import com.soebes.itf.jupiter.extension.MavenJupiterExtension;
 import com.soebes.itf.jupiter.extension.MavenTest;
 import com.soebes.itf.jupiter.maven.MavenExecutionResult;
 
+/**
+ * Integration test for the JfxAppsRegistryMojo.
+ * maven.home must be set to a valid maven installation
+ * internal eclipse maven installation is not supported
+ * create a Preferences /Maven / Installations with a valid maven installation and use it as default
+ */
 @MavenJupiterExtension
 public class JfxAppsRegistryMojoIT {
-
-
-    static {
-        System.setProperty("maven.home", "C:\\Users\\ptreilhes\\adns\\tools\\apache-maven-3.6.3");
-    }
 
     @MavenTest
 //    @MavenOptions({

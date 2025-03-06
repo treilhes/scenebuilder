@@ -56,7 +56,8 @@ import com.gluonhq.jfxapps.boot.api.loader.ExtensionReport;
 import com.gluonhq.jfxapps.boot.api.loader.LoadType;
 import com.gluonhq.jfxapps.boot.api.loader.OpenCommandEvent;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
-import com.gluonhq.jfxapps.boot.loader.ProgressListener;
+import com.gluonhq.jfxapps.boot.api.splash.SplashScreenProvider;
+import com.gluonhq.jfxapps.boot.api.utils.ProgressListener;
 import com.gluonhq.jfxapps.boot.loader.StateProvider;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
 import com.gluonhq.jfxapps.boot.loader.internal.layer.LayerBootstraper;
@@ -95,6 +96,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	private Map<UUID, ExtensionReport> state = new HashMap<>();
 
 	private final StateProvider stateProvider;
+
+	private final SplashScreenProvider splashScreenProvider;
+
 	private final Optional<ApplicationStartup> startup;
 
 	private boolean started = false;
@@ -114,6 +118,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
     		ContextBootstraper contexts,
             LayerBootstraper layers,
             StateProvider stateProvider,
+    		SplashScreenProvider splashScreenProvider,
             Optional<ApplicationStartup> startup) {
     	// @formatter:on
 		super();
@@ -123,6 +128,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		this.contexts = contexts;
 		this.layers = layers;
 		this.stateProvider = stateProvider;
+		this.splashScreenProvider = splashScreenProvider;
 		this.startup = startup;
 	}
 
@@ -144,22 +150,56 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
 		if (!isStarted(applicationId)) {
 
+			var splash = splashScreenProvider.getSplashScreen(applicationId);
+			var steps = splash != null ? splash.asSubSteps(3) : null;
+
+			var stateProgress = steps != null ? steps.get(0) : null;
+			var loadProgress = steps != null ? steps.get(1) : null;
+			var launchProgress = steps != null ? steps.get(2) : null;
+
+			if (splash != null) {
+				stateProgress.notifyStart();
+			}
+
+			var appDef = startup.map(s -> s.start("application.manager.main.state"));
+			var application = stateProvider.applicationState(applicationId, loadType);
+			appDef.ifPresent(s -> s.tag("Load definition", applicationId.toString()).end());
+
+			if (application == null) {
+				throw new RuntimeException("Application not found for " + applicationId);
+			}
 			var appLoad = startup.map(s -> s.start("application.manager.main.load"));
-			var loaded = loadApplication(applicationId, loadType, null);
+
+			if (splash != null) {
+				stateProgress.notifyFinish();
+				loadProgress.notifyStart();
+			}
+			// load all layers
+			loadApplication(application, loadType, loadProgress);
 			appLoad.ifPresent(s -> s.tag("Load Context", applicationId.toString()).end());
+
+			if (splash != null) {
+				loadProgress.notifyFinish();
+				launchProgress.notifyStart();
+			}
 
 			var appStart = startup.map(s -> s.start("application.manager.main.start"));
 
 			try {
-				launchApplication(loaded, null);
+				// start all contexts
+				launchApplication(application, launchProgress);
 			} catch (BootException e) {
 				appStart.ifPresent(s -> s.tag("error", e.getMessage()));
 				logger.error("Unable to boot application {}", applicationId, e);
 			}
 			appStart.ifPresent(s -> s.tag("Boot Context", applicationId.toString()).end());
 
-			stateProvider.saveState(loaded.getExtension());
-			startedApplications.put(applicationId, loaded);
+			if (splash != null) {
+				launchProgress.notifyFinish();
+			}
+
+			stateProvider.saveState(application.getExtension());
+			startedApplications.put(applicationId, application);
 		} else {
 			logger.warn("JfxApps {} already started bypassing start", applicationId);
 		}
@@ -214,16 +254,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	 * @param progressListener the progress listener
 	 * @return
 	 */
-	public LoadableContent loadApplication(UUID applicationId, LoadType loadType, ProgressListener progressListener) {
-		Objects.nonNull(applicationId);
+	public void loadApplication(LoadableContent application, LoadType loadType, ProgressListener progressListener) {
+		Objects.nonNull(application);
+
+		UUID applicationId = application.getId();
 
 		MultipleProgressListener listener = new MultipleProgressListener(progressListener);
-
-		var application = stateProvider.applicationState(applicationId, loadType);
-
-		if (application == null) {
-			throw new RuntimeException("Application not found for " + applicationId);
-		}
 
 		Layer parentLayer = ROOT_ID.equals(applicationId) ? null : layers.get(ROOT_ID);
 
@@ -235,7 +271,6 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		loadExtensionTree(executor, parentLayer, Set.of(application), listener);
 		executor.shutdown();
 
-		return application;
 	}
 
 	/**

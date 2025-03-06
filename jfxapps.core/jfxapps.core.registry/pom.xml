@@ -36,9 +36,10 @@
                                     <version>${project.version}</version>
                                 </dependency>
                                 <description>
-                                    <icon>fxmlRunner64x64.png</icon>
-                                    <title>FXML Runner</title>
-                                    <text>App that run fxml files</text>
+                                    <splash>jfxapps_core_256x256.png</splash>
+                                    <image>jfxapps_core_256x256.png</image>
+                                    <title>JFXApps Core</title>
+                                    <text>Core components</text>
                                 </description>
                                 <extensions>
                                     <extension>
