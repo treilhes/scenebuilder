@@ -12,10 +12,12 @@
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>devtools.model</artifactId>
         </dependency>
-        <dependency>
+        <!--
+			dependency obsolete
+			<dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>devtools.metadata.customization</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.api</artifactId>

@@ -8,7 +8,7 @@ toc: true
 
 ## Maven Builds
 
-### Project ennvironment
+### Project environment
 
 Maven musn't use an embedded 
 

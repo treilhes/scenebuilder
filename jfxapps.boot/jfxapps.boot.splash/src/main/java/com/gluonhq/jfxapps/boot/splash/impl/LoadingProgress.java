@@ -119,6 +119,7 @@ public class LoadingProgress {
 
 		for (int i = 0; i < stepNumber; i++) {
 			LoadingProgressItem subStep = new LoadingProgressItem();
+			subStep.setDoneCallback(this::computeCurrentProgress);
             subStepsList.add(subStep);
             subSteps.put(subStep, part);
 		}

@@ -45,6 +45,7 @@
                 <configuration>
                     <format>json</format>
                     <registry>
+                    	<uuid>feda298c-4a63-450d-8c59-8cb43241baaa</uuid>
                         <applications>
                             <application>
                                 <uuid>feda298c-4a63-450d-8c59-8cb43241ba3d</uuid>
@@ -54,7 +55,8 @@
                                     <artifactId>jfxapps.app.fxmlrunner.main</artifactId>
                                 </dependency>
                                 <description>
-                                    <icon>fxmlRunner64x64.png</icon>
+                                    <image>fake_image.png</image>
+                                    <splash>fake_image.png</splash>
                                     <title>FXML Runner</title>
                                     <text>App that run fxml files</text>
                                 </description>

@@ -164,6 +164,7 @@ public class AvailableFeaturesTestIT {
         JfxAppsPlatform jfxAppsPlatform() {
             JfxAppsPlatform jfxAppsPlatform = Mockito.mock(JfxAppsPlatform.class);
             when(jfxAppsPlatform.rootPath()).thenReturn(Paths.get("./target/it"));
+            when(jfxAppsPlatform.getAvailableProcessors()).thenReturn(4);
             return jfxAppsPlatform;
         }
 

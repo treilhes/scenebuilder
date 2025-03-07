@@ -97,7 +97,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
 	private final StateProvider stateProvider;
 
-	private final SplashScreenProvider splashScreenProvider;
+	private final Optional<SplashScreenProvider> splashScreenProvider;
 
 	private final Optional<ApplicationStartup> startup;
 
@@ -118,7 +118,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
     		ContextBootstraper contexts,
             LayerBootstraper layers,
             StateProvider stateProvider,
-    		SplashScreenProvider splashScreenProvider,
+    		Optional<SplashScreenProvider> splashScreenProvider,
             Optional<ApplicationStartup> startup) {
     	// @formatter:on
 		super();
@@ -150,16 +150,14 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
 		if (!isStarted(applicationId)) {
 
-			var splash = splashScreenProvider.getSplashScreen(applicationId);
-			var steps = splash != null ? splash.asSubSteps(3) : null;
+			var splash = splashScreenProvider.map(sp -> sp.getSplashScreen(applicationId));
+			var steps = splash.map(s -> s.asSubSteps(3));
 
-			var stateProgress = steps != null ? steps.get(0) : null;
-			var loadProgress = steps != null ? steps.get(1) : null;
-			var launchProgress = steps != null ? steps.get(2) : null;
+			var stateProgress = steps.map(s -> s.get(0));
+			var loadProgress = steps.map(s -> s.get(1));
+			var launchProgress = steps.map(s -> s.get(2));
 
-			if (splash != null) {
-				stateProgress.notifyStart();
-			}
+			stateProgress.ifPresent(s -> s.notifyStart());
 
 			var appDef = startup.map(s -> s.start("application.manager.main.state"));
 			var application = stateProvider.applicationState(applicationId, loadType);
@@ -170,34 +168,29 @@ public class ApplicationManagerImpl implements ApplicationManager {
 			}
 			var appLoad = startup.map(s -> s.start("application.manager.main.load"));
 
-			if (splash != null) {
-				stateProgress.notifyFinish();
-				loadProgress.notifyStart();
-			}
+			stateProgress.ifPresent(s -> s.notifyFinish());
+			loadProgress.ifPresent(s -> s.notifyStart());
+			
 			// load all layers
-			loadApplication(application, loadType, loadProgress);
+			loadApplication(application, loadType, loadProgress.orElse(null));
 			appLoad.ifPresent(s -> s.tag("Load Context", applicationId.toString()).end());
 
-			if (splash != null) {
-				loadProgress.notifyFinish();
-				launchProgress.notifyStart();
-			}
-
+			loadProgress.ifPresent(s -> s.notifyFinish());
+			launchProgress.ifPresent(s -> s.notifyStart());
+			
 			var appStart = startup.map(s -> s.start("application.manager.main.start"));
 
 			try {
 				// start all contexts
-				launchApplication(application, launchProgress);
+				launchApplication(application, launchProgress.orElse(null));
 			} catch (BootException e) {
 				appStart.ifPresent(s -> s.tag("error", e.getMessage()));
 				logger.error("Unable to boot application {}", applicationId, e);
 			}
 			appStart.ifPresent(s -> s.tag("Boot Context", applicationId.toString()).end());
 
-			if (splash != null) {
-				launchProgress.notifyFinish();
-			}
-
+			launchProgress.ifPresent(s -> s.notifyFinish());
+			
 			stateProvider.saveState(application.getExtension());
 			startedApplications.put(applicationId, application);
 		} else {

@@ -47,7 +47,6 @@ open module scenebuilder.core.app {
 
     requires jakarta.inject;
     requires jfxapps.core.controls;
-    requires jfxapps.ext.preference.editor.api;
 
     provides Extension with ScenebuilderAppExtension;
 }

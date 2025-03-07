@@ -15,7 +15,7 @@
 
     <modules>
 
-        <module>fxml.serializer</module>
+        <!--<module>fxml.serializer</module>-->
         <module>jfxapps.app</module>
         <module>jfxapps.boot</module>
         <module>jfxapps.core</module>
@@ -303,11 +303,6 @@
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps.ext.preference.editor</artifactId>
-                <version>${jfxapps.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.ext.preference.editor.api</artifactId>
                 <version>${jfxapps.version}</version>
             </dependency>
             <dependency>

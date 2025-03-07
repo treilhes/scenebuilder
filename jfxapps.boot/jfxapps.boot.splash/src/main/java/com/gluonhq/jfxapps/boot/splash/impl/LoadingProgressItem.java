@@ -34,7 +34,7 @@ package com.gluonhq.jfxapps.boot.splash.impl;
 
 import com.gluonhq.jfxapps.boot.api.utils.ProgressListener;
 
-public class LoadingProgressItem implements ProgressListener {
+class LoadingProgressItem implements ProgressListener {
 
 	static final Float START_PROGRESS = 0f;
 	static final Float DONE_PROGRESS = 1.0f;
@@ -42,7 +42,8 @@ public class LoadingProgressItem implements ProgressListener {
 	float currentProgress = START_PROGRESS;
 	boolean started = false;
 	boolean done = false;
-
+	LoadingDoneCallback doneCallback;
+	
 	@Override
 	public void notifyStart() {
 		started = true;
@@ -63,6 +64,9 @@ public class LoadingProgressItem implements ProgressListener {
 	public void notifyFinish() {
 		done = true;
 		currentProgress = DONE_PROGRESS;
+		if (doneCallback != null) {
+			doneCallback.loadingDone();
+		}
 	}
 
 	public float getCurrentProgress() {
@@ -78,4 +82,16 @@ public class LoadingProgressItem implements ProgressListener {
 		return done;
 	}
 
+	LoadingDoneCallback getDoneCallback() {
+		return doneCallback;
+	}
+
+	void setDoneCallback(LoadingDoneCallback doneCallback) {
+		this.doneCallback = doneCallback;
+	}
+
+	@FunctionalInterface
+	interface LoadingDoneCallback {
+		void loadingDone();
+	}
 }

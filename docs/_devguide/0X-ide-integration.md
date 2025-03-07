@@ -10,7 +10,7 @@ toc: true
 
 ### Maven
 
-#### javafx.platform
+#### javafx.platform (Obsolete)
 
 To be able to build properly the javafx.platform variable must be set to `win`|`mac`|`linux`<br/>
 
@@ -23,6 +23,19 @@ The prefered way to do this is to add the following into the maven `settings.xml
 ```
 
 ### Eclipse
+
+#### Required configuration
+
+To build successfully using m2e inside Eclipse you musn't use any embedded jre or maven installation
+
+- you MUST register an external JDK/JRE installation and attach it to the corresponding JavaSE configuration
+  Without this configuration, eclipse m2e isn't able to provide java.home to Maven (time of writing: Version: 2024-12 (4.34.0))
+
+- you MUST register an external MAVEN installation and set it as default
+  Without this configuration, eclipse m2e isn't able to provide maven.home to Maven (time of writing: Version: 2024-12 (4.34.0))
+
+
+#### Importing projects
 
 Eclipse integration is rather good but m2e still lacks some features about JPMS for a perfect integration
 

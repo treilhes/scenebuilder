@@ -62,6 +62,7 @@
             <plugin>
                 <artifactId>maven-invoker-plugin</artifactId>
                 <configuration>
+                
                     <!--<projectsDirectory>${basedir}/src/test/resources-its/com/oracle/javafx/scenebuilder/core</projectsDirectory>-->
                     <projectsDirectory>${basedir}/src/test/resources-its</projectsDirectory>
                     <pomIncludes>
@@ -89,6 +90,13 @@
                         </configuration>
                     </execution>
                 </executions>
+                <dependencies>
+                	<dependency>
+                		<groupId>com.gluonhq.jfxapps</groupId>
+	                    <artifactId>jfxapps-registry-maven-plugin</artifactId>
+	                    <version>${jfxapps.version}</version>
+                	</dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

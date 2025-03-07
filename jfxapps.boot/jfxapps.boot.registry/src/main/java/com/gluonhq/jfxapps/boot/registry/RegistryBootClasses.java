@@ -58,6 +58,10 @@ import com.gluonhq.jfxapps.boot.registry.service.RegistryService;
 import com.gluonhq.jfxapps.boot.registry.service.RegistrySourceService;
 import com.gluonhq.jfxapps.boot.registry.service.RegistryUpdateService;
 
+
+/**
+ * Boot classes for the Registry module.
+ */
 public class RegistryBootClasses implements BootContextConfigClasses {
 
     @Override
