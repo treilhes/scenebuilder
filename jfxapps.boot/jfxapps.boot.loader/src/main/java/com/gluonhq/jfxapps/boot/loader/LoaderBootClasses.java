@@ -36,6 +36,7 @@ package com.gluonhq.jfxapps.boot.loader;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
+import com.gluonhq.jfxapps.boot.api.loader.LoaderProperties;
 import com.gluonhq.jfxapps.boot.loader.internal.ApplicationManagerImpl;
 import com.gluonhq.jfxapps.boot.loader.internal.LoaderMappersImpl;
 import com.gluonhq.jfxapps.boot.loader.internal.StateProviderImpl;
@@ -49,7 +50,8 @@ public class LoaderBootClasses implements BootContextConfigClasses {
     @Override
     public List<Class<?>> classes() {
         return List.of(
-
+        		LoaderProperties.class,
+        		
                 ApplicationManagerImpl.class,
                 LoaderMappersImpl.class,
                 StateProviderImpl.class,

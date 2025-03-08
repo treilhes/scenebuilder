@@ -53,12 +53,12 @@ import com.gluonhq.jfxapps.boot.api.maven.Artifact;
 import com.gluonhq.jfxapps.boot.api.maven.Classifier;
 import com.gluonhq.jfxapps.boot.api.maven.Repository;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryConfig;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryManager;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryType;
 import com.gluonhq.jfxapps.boot.api.maven.ResolvedArtifact;
 import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
-import com.gluonhq.jfxapps.boot.maven.client.config.RepositoryConfig;
 import com.gluonhq.jfxapps.boot.maven.client.type.Maven;
 import com.gluonhq.jfxapps.boot.maven.client.type.Nexus;
 

@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifact;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifactManager;
-import com.gluonhq.jfxapps.boot.registry.config.RegistryConfig;
+import com.gluonhq.jfxapps.boot.api.registry.RegistryConfig;
 import com.gluonhq.jfxapps.boot.registry.service.RegistrySourceService;
 
 import jakarta.annotation.PostConstruct;

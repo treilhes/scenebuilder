@@ -54,6 +54,7 @@ import com.gluonhq.jfxapps.boot.api.loader.ApplicationManager;
 import com.gluonhq.jfxapps.boot.api.loader.BootException;
 import com.gluonhq.jfxapps.boot.api.loader.ExtensionReport;
 import com.gluonhq.jfxapps.boot.api.loader.LoadType;
+import com.gluonhq.jfxapps.boot.api.loader.LoaderProperties;
 import com.gluonhq.jfxapps.boot.api.loader.OpenCommandEvent;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.boot.api.splash.SplashScreenProvider;
@@ -103,6 +104,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
 	private boolean started = false;
 
+	private final LoaderProperties loaderProperties;
+
 	/**
 	 * Instantiates a new application manager impl.
 	 *
@@ -114,6 +117,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
     protected ApplicationManagerImpl(
     		JfxAppContext context,
     		JfxAppsPlatform platform,
+    		LoaderProperties loaderProperties,
     		ModuleLayerManager layerManager,
     		ContextBootstraper contexts,
             LayerBootstraper layers,
@@ -124,6 +128,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		super();
 		this.context = context;
 		this.platform = platform;
+		this.loaderProperties = loaderProperties;
 		this.layerManager = layerManager;
 		this.contexts = contexts;
 		this.layers = layers;
@@ -133,8 +138,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	}
 
 	@Override
-	public void start(LoadType loadType) throws BootException {
-		startApplication(ROOT_ID, loadType);
+	public void start() throws BootException {
+		startApplication(ROOT_ID);
 	}
 
 	/**
@@ -145,9 +150,11 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	 * @param applicationId the application id
 	 */
 	@Override
-	public void startApplication(UUID applicationId, LoadType loadType) {
+	public void startApplication(UUID applicationId) {
 		Objects.requireNonNull(applicationId, "applicationId is null");
 
+		LoadType loadType = loaderProperties.getDefaultLoadType();
+		
 		if (!isStarted(applicationId)) {
 
 			var splash = splashScreenProvider.map(sp -> sp.getSplashScreen(applicationId));

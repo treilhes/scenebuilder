@@ -39,7 +39,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifact;
-import com.gluonhq.jfxapps.boot.registry.config.RegistryConfig;
+import com.gluonhq.jfxapps.boot.api.registry.RegistryConfig;
 import com.gluonhq.jfxapps.boot.registry.internal.RegistryEntityMappers;
 import com.gluonhq.jfxapps.boot.registry.model.RegistrySourceEntity;
 import com.gluonhq.jfxapps.boot.registry.repository.RegistrySourceRepository;

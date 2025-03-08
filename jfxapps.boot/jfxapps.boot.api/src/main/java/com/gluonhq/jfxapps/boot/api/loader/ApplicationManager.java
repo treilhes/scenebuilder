@@ -40,7 +40,7 @@ import java.util.UUID;
  */
 public interface ApplicationManager {
 
-    void start(LoadType loadType) throws BootException;
+    void start() throws BootException;
 
     /**
      * Stop core components
@@ -51,7 +51,7 @@ public interface ApplicationManager {
      * Start the sub application
      * @param editorId
      */
-    void startApplication(UUID editorId, LoadType loadType);
+    void startApplication(UUID editorId);
 
     void stopApplication(UUID editorId);
 

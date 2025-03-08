@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.boot.maven;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
-import com.gluonhq.jfxapps.boot.maven.client.config.RepositoryConfig;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryConfig;
 import com.gluonhq.jfxapps.boot.maven.client.impl.MavenRepositoryClientImpl;
 import com.gluonhq.jfxapps.boot.maven.client.impl.RedirectedRepositoryBeanPostProcessor;
 import com.gluonhq.jfxapps.boot.maven.client.impl.RepositoryManagerImpl;

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,52 +31,24 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.maven.client.config;
+package com.gluonhq.jfxapps.boot.api.platform;
 
-import java.io.File;
-import java.util.List;
+import java.nio.file.Path;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = RepositoryConfig.PREFIX)
-//@Profile("!it")
-public class RepositoryConfig {
+@ConfigurationProperties(prefix = "jfxapps.platform")
+public class PlatformConfig {
 
-    public static final String PREFIX = "jfxapps.repository";
+    private Path rootPath;
 
-    public static record Redirect(String groupId, String artifactId, File path) {
+    public Path getRootPath() {
+        return rootPath;
     }
 
-    private List<Redirect> redirect;
-
-    private boolean redirectionsEnabled;
-
-    private File directory;
-
-    public List<Redirect> getRedirect() {
-        return redirect;
+    public void setRootPath(Path rootPath) {
+        this.rootPath = rootPath;
     }
-
-    public void setRedirect(List<Redirect> redirect) {
-        this.redirect = redirect;
-    }
-
-    public boolean isRedirectionsEnabled() {
-        return redirectionsEnabled;
-    }
-
-    public void setRedirectionsEnabled(boolean redirectionsEnabled) {
-        this.redirectionsEnabled = redirectionsEnabled;
-    }
-
-    public File getDirectory() {
-        return directory;
-    }
-
-    public void setDirectory(File directory) {
-        this.directory = directory;
-    }
-
 }

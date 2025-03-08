@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.boot.registry;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
-import com.gluonhq.jfxapps.boot.registry.config.RegistryConfig;
+import com.gluonhq.jfxapps.boot.api.registry.RegistryConfig;
 import com.gluonhq.jfxapps.boot.registry.internal.BinaryCache;
 import com.gluonhq.jfxapps.boot.registry.internal.RegistryEntityMappersImpl;
 import com.gluonhq.jfxapps.boot.registry.internal.RegistryInfoMappersImpl;

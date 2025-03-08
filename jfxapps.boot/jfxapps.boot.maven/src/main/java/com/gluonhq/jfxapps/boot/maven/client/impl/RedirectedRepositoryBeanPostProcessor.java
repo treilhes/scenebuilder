@@ -41,7 +41,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
-import com.gluonhq.jfxapps.boot.maven.client.config.RepositoryConfig;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryConfig;
 
 /**
  * When the property jfxapps.repository.redirect is provided, this component is

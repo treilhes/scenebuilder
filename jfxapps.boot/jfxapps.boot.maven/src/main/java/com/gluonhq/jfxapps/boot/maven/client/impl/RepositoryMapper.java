@@ -42,7 +42,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import com.gluonhq.jfxapps.boot.api.maven.ResolvedArtifact;
-import com.gluonhq.jfxapps.boot.maven.client.config.RepositoryConfig.Redirect;
+import com.gluonhq.jfxapps.boot.api.maven.RepositoryConfig.Redirect;
 import com.gluonhq.jfxapps.boot.maven.client.model.Repository;
 
 @Mapper(componentModel = "spring")

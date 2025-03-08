@@ -40,7 +40,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
-import com.gluonhq.jfxapps.boot.platform.config.PlatformConfig;
+import com.gluonhq.jfxapps.boot.api.platform.PlatformConfig;
 
 @Component
 public class JfxAppsPlatformImpl implements JfxAppsPlatform {

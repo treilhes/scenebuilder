@@ -1,4 +1,6 @@
 jfxapps:
+  loader:
+    defaultLoadType: LastSuccessfull #default
   platform:
     rootPath: .
   repository:

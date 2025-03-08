@@ -37,7 +37,6 @@ import com.gluonhq.jfxapps.boot.registry.RegistryBootClasses;
 open module jfxapps.boot.registry {
 
     exports com.gluonhq.jfxapps.boot.registry;
-    exports com.gluonhq.jfxapps.boot.registry.config;
 
     requires jfxapps.boot.api;
 

@@ -31,15 +31,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.registry.config;
+package com.gluonhq.jfxapps.boot.api.registry;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-
-import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifact;
 
 @Configuration
 @ConfigurationProperties(prefix = "jfxapps.registry")

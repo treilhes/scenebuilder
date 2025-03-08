@@ -83,7 +83,6 @@ import com.gluonhq.jfxapps.boot.api.context.ContextManager;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Primary;
 import com.gluonhq.jfxapps.boot.api.loader.ApplicationManager;
 import com.gluonhq.jfxapps.boot.api.loader.BootException;
-import com.gluonhq.jfxapps.boot.api.loader.LoadType;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
@@ -285,8 +284,8 @@ public class AvailableFeaturesTestIT {
     @BeforeAll
     public void initLaunchApp() throws BootException {
         var appManager = boot.getBean(ApplicationManager.class);
-        appManager.start(LoadType.FullUpdate);
-        appManager.startApplication(APP1_ID, LoadType.FullUpdate);
+        appManager.start();
+        appManager.startApplication(APP1_ID);
 
         internalClient = boot.getBean(InternalRestClient.class);
     }

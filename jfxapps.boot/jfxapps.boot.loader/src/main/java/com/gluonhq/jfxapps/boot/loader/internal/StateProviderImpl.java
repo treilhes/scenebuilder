@@ -93,7 +93,7 @@ public class StateProviderImpl implements StateProvider {
                 ? loadRegistryState(applicationId)
                 : Optional.<LayerDefinition>empty();
 
-		if (loadType == LoadType.LastSuccessfull && savedState.isEmpty()) {
+		if (savedState.isEmpty()) {
 			// first time running the application, change loadType to install the application
 			loadType = LoadType.FullUpdate;
 		}

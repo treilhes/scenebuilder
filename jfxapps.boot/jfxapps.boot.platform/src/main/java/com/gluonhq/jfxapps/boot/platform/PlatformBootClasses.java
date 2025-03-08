@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.boot.platform;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
-import com.gluonhq.jfxapps.boot.platform.config.PlatformConfig;
+import com.gluonhq.jfxapps.boot.api.platform.PlatformConfig;
 import com.gluonhq.jfxapps.boot.platform.internal.JfxAppsPlatformImpl;
 
 public class PlatformBootClasses implements BootContextConfigClasses {

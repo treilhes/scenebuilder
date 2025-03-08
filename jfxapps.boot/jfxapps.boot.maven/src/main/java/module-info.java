@@ -36,7 +36,6 @@ import com.gluonhq.jfxapps.boot.maven.MavenBootClasses;
 
 open module jfxapps.boot.maven {
 
-    exports com.gluonhq.jfxapps.boot.maven.client.config;
     exports com.gluonhq.jfxapps.boot.maven.client.type;
 
     requires jfxapps.boot.api;

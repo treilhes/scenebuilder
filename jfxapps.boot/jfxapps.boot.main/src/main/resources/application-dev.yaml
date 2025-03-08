@@ -1,4 +1,6 @@
 jfxapps:
+  loader:
+    defaultLoadType: LocalUpdateOnly
   platform:
     rootPath: ./target/devapp
   registry:
