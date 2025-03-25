@@ -72,11 +72,11 @@ public class StateProviderImpl implements StateProvider {
 
     // @formatter:off
     protected StateProviderImpl(
-    		RegistryManager registryManager,
-    		LoaderMappers mappers,
-    		RepositoryClient repositoryClient,
+            RegistryManager registryManager,
+            LoaderMappers mappers,
+            RepositoryClient repositoryClient,
             ExtensionRepository repository) {
-    	// @formatter:on
+        // @formatter:on
         super();
         this.registryManager = registryManager;
         this.mappers = mappers;
@@ -91,12 +91,12 @@ public class StateProviderImpl implements StateProvider {
 
         var registryState = (savedState.isEmpty() || loadType != LoadType.LastSuccessfull)
                 ? loadRegistryState(applicationId)
-                : Optional.<LayerDefinition>empty();
+                        : Optional.<LayerDefinition>empty();
 
-		if (savedState.isEmpty()) {
-			// first time running the application, change loadType to install the application
-			loadType = LoadType.FullUpdate;
-		}
+        if (savedState.isEmpty()) {
+            // first time running the application, change loadType to install the application
+            loadType = LoadType.FullUpdate;
+        }
         return mergeStates(savedState, registryState, loadType);
     }
 
@@ -154,110 +154,108 @@ public class StateProviderImpl implements StateProvider {
             LoadableContent loadableContent = null;
             boolean updated = false;
 
-			switch (loadType) {
-			case LastSuccessfull: {
-				if (savedState != null) {
-					loadableContent = new LoadableContent();
-	            	loadableContent.setExtension(savedState);
-	                loadableContent.setLoadState(mappers.map(savedState.getState()));
-	            }
-				break;
-			}
-			case LocalUpdateOnly:
-			case UpdateOnly: {
-				if (savedState != null) {
-					loadableContent = new LoadableContent();
-	            	loadableContent.setExtension(savedState);
-	                loadableContent.setLoadState(mappers.map(savedState.getState()));
+            switch (loadType) {
+            case LastSuccessfull: {
+                if (savedState != null) {
+                    loadableContent = new LoadableContent();
+                    loadableContent.setExtension(savedState);
+                    loadableContent.setLoadState(mappers.map(savedState.getState()));
+                }
+                break;
+            }
+            case LocalUpdateOnly:
+            case UpdateOnly: {
+                if (savedState != null) {
+                    loadableContent = new LoadableContent();
+                    loadableContent.setExtension(savedState);
+                    loadableContent.setLoadState(mappers.map(savedState.getState()));
 
-	                if (registryState != null) {
-						if (registryState.getGroupId().equals(savedState.getGroupId())
-								&& registryState.getArtifactId().equals(savedState.getArtifactId())
-								&& registryState.getVersion().equals(savedState.getVersion())) {
-							// No change
-						} else {
-							// Update
-							savedState.setGroupId(registryState.getGroupId());
-			                savedState.setArtifactId(registryState.getArtifactId());
-			                savedState.setVersion(registryState.getVersion());
-			                updated = true;
-						}
+                    if (registryState != null) {
+                        if (registryState.getGroupId().equals(savedState.getGroupId())
+                                && registryState.getArtifactId().equals(savedState.getArtifactId())
+                                && registryState.getVersion().equals(savedState.getVersion())) {
+                            // No change
+                        } else {
+                            // Update
+                            savedState.setGroupId(registryState.getGroupId());
+                            savedState.setArtifactId(registryState.getArtifactId());
+                            savedState.setVersion(registryState.getVersion());
+                            updated = true;
+                        }
 
-					} else {
-						loadableContent.setLoadState(LoadState.Deleted);
-					}
-	            }
-				break;
-			}
-			case LocalFullUpdate:
-			case FullUpdate: {
-				if (registryState != null) {
-	            	Extension extension = new Extension();
-	                extension.setId(registryState.getId());
-	                extension.setGroupId(registryState.getGroupId());
-	                extension.setArtifactId(registryState.getArtifactId());
-	                extension.setVersion(registryState.getVersion());
+                    }
+                }
+                break;
+            }
+            case LocalFullUpdate:
+            case FullUpdate: {
+                if (registryState != null) {
+                    Extension extension = new Extension();
+                    extension.setId(registryState.getId());
+                    extension.setGroupId(registryState.getGroupId());
+                    extension.setArtifactId(registryState.getArtifactId());
+                    extension.setVersion(registryState.getVersion());
 
-	                loadableContent = new LoadableContent();
-	                loadableContent.setExtension(extension);
-	                loadableContent.setLoadState(LoadState.Unloaded);
-				} else if (savedState != null) {
-					loadableContent = new LoadableContent();
-					loadableContent.setExtension(savedState);
-					loadableContent.setLoadState(LoadState.Deleted);
-				}
-				break;
-			}
+                    loadableContent = new LoadableContent();
+                    loadableContent.setExtension(extension);
+                    loadableContent.setLoadState(LoadState.Unloaded);
+                } else if (savedState != null) {
+                    loadableContent = new LoadableContent();
+                    loadableContent.setExtension(savedState);
+                    loadableContent.setLoadState(mappers.map(savedState.getState()));
+                }
+                break;
+            }
 
-			default:
-				throw new RuntimeException("Unknown load type " + loadType);
-			}
+            default:
+                throw new RuntimeException("Unknown load type " + loadType);
+            }
 
-			if (loadableContent != null) {
+            if (loadableContent != null) {
 
-				if (parent != null) {
-					parent.addExtension(loadableContent);
-				}
+                if (parent != null) {
+                    parent.addExtension(loadableContent);
+                }
 
-				var groupId = loadableContent.getExtension().getGroupId();
-				var artifactId = loadableContent.getExtension().getArtifactId();
-				var version = loadableContent.getExtension().getVersion();
+                var groupId = loadableContent.getExtension().getGroupId();
+                var artifactId = loadableContent.getExtension().getArtifactId();
+                var version = loadableContent.getExtension().getVersion();
 
-				var mavenProvider = new MavenExtensionProvider(groupId, artifactId, version);
-				ExtensionContentProvider contentProvider = mavenProvider;
+                var mavenProvider = new MavenExtensionProvider(groupId, artifactId, version);
+                ExtensionContentProvider contentProvider = mavenProvider;
 
-				switch (loadType) {
-				 	case LastSuccessfull:
-				 		if (!updated) {
-							contentProvider = new CreateOnlyContentProvider(mavenProvider);
-						}
-					case LocalUpdateOnly:
-					case LocalFullUpdate:
-						mavenProvider.setRepositoryClient(repositoryClient.localOnly());
-					case UpdateOnly:
-					case FullUpdate:
-						mavenProvider.setRepositoryClient(repositoryClient);
-						break;
-					default:
-						throw new RuntimeException("Unknown load type " + loadType);
-				}
+                switch (loadType) {
+                case LastSuccessfull:
+                    if (!updated) {
+                        contentProvider = new CreateOnlyContentProvider(mavenProvider);
+                    }
+                case LocalUpdateOnly:
+                case LocalFullUpdate:
+                    mavenProvider.setRepositoryClient(repositoryClient.localOnly());
+                case UpdateOnly:
+                case FullUpdate:
+                    mavenProvider.setRepositoryClient(repositoryClient);
+                    break;
+                default:
+                    throw new RuntimeException("Unknown load type " + loadType);
+                }
 
-				loadableContent.setContentProvider(contentProvider);
-			}
+                loadableContent.setContentProvider(contentProvider);
+            }
 
-			if (savedState != null) {
-				for (Extension ext : savedState.getExtensions()) {
-					var registryExt = flattenedRegistry.remove(ext.getId());
-					mergeItem(loadableContent, ext, registryExt, loadType);
-				}
-			}
+            if (savedState != null) {
+                for (Extension ext : savedState.getExtensions()) {
+                    var registryExt = flattenedRegistry.remove(ext.getId());
+                    mergeItem(loadableContent, ext, registryExt, loadType);
+                }
+            }
 
-			if (registryState != null) {
-				for (LayerDefinition ext : registryState.getChildren()) {
-					var registryExt = flattenedRegistry.remove(ext.getId());
-					mergeItem(loadableContent, flattenedSaved.get(ext.getId()), registryExt, loadType);
-				}
-			}
+            if (registryState != null) {
+                for (LayerDefinition ext : registryState.getChildren()) {
+                    var registryExt = flattenedRegistry.remove(ext.getId());
+                    mergeItem(loadableContent, flattenedSaved.get(ext.getId()), registryExt, loadType);
+                }
+            }
 
             return loadableContent;
         }

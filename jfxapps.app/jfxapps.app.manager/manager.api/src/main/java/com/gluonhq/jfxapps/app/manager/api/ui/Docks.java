@@ -36,6 +36,6 @@ package com.gluonhq.jfxapps.app.manager.api.ui;
 import java.util.UUID;
 
 public interface Docks {
-    public static final String BOTTOM_DOCK_ID = "e8a0168d-f074-47e7-b107-aa7302a27cf8";
-    public static final UUID BOTTOM_DOCK_UUID = UUID.fromString(BOTTOM_DOCK_ID);
+    public static final String CENTER_DOCK_ID = "42094e12-3aa8-44e4-bc4c-7633d6bc5b05";
+    public static final UUID CENTER_DOCK_UUID = UUID.fromString(CENTER_DOCK_ID);
 }

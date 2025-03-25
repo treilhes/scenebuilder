@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,9 +45,9 @@ public class I18NClipboard implements BundleProvider {
     private static ResourceBundle bundle;
 
     @Override
-	public synchronized ResourceBundle getBundle() {
+    public synchronized ResourceBundle getBundle() {
         if (bundle == null) {
-            final String packageName = I18NClipboard.class.getPackage().getName();
+            final var packageName = I18NClipboard.class.getPackage().getName();
             bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderClipboard"); //NOCHECK
         }
         return bundle;

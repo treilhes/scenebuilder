@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,49 +33,51 @@
  */
 package com.gluonhq.jfxapps.core.api.i18n;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.MissingResourceException;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.api.context.annotation.PreferedConstructor;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
+
+/**
+ * Internationalization class that allows to bind keys to values.
+ * Bindings are automatically updated when the locale is changed.
+ * This class is also a map of keys to values to allow easy access to the values using expression bindings
+ * See {@link AbstractFxmlController#i18nProperty()} allowing to bind keys to values in FXML using expression
+ * like <b>${controller.i18n.key1.key2.key3}</b> provided the fxml controller extends {@link AbstractFxmlController}
+ */
 @ApplicationSingleton("i18n")
-public class I18N {
+public class I18N extends SimpleMapOrValueProperty {
 
-//    public static void initForTest(String... bundleResources) {
-//        if (instance != null) {
-//            return;
-//        }
-//        List<BundleProvider> bundles = Arrays.stream(bundleResources)
-//                .map(s -> I18N.toBundleProvider(s))
-//                .collect(Collectors.toList());
-//        new I18N(bundles, true);
-//    }
-
-    private static BundleProvider toBundleProvider(String s) {
-        return () -> ResourceBundle.getBundle(s);
-    }
-
-    //private static I18N instance;
+    private static final Logger logger = LoggerFactory.getLogger(I18N.class);
 
     private CombinedResourceBundle combinedBundle;
+    private final List<BundleProvider> bundleProviders;
+    private final boolean allowUnresolvedKeys;
+    private Locale locale = Locale.getDefault();
 
     //@formatter:off
     public I18N(
             List<BundleProvider> bundleProviders,
             boolean allowUnresolvedKeys) {
         //@formatter:on
-        List<ResourceBundle> bundles = bundleProviders.stream().map(BundleProvider::getBundle)
-                .collect(Collectors.toList());
-        combinedBundle = new CombinedResourceBundle(bundles, allowUnresolvedKeys);
-//        if (instance == null) {
-//            instance = this;
-//        } else {
-//            throw new RuntimeException("Duplicate instance for class " + getClass().getName());
-//        }
+        super(null, "");
+        this.bundleProviders = bundleProviders;
+        this.allowUnresolvedKeys = allowUnresolvedKeys;
+        reload();
     }
 
     @PreferedConstructor
@@ -97,6 +99,9 @@ public class I18N {
 
     public String getStringOrDefault(String key, String defaultValue) {
         try {
+            if (!combinedBundle.containsKeyStrict(key)) {
+                return defaultValue;
+            }
             return get(key);
         } catch (MissingResourceException e) {
             return defaultValue;
@@ -104,28 +109,78 @@ public class I18N {
     }
 
     public String getString(String key, Object... arguments) {
-        final String pattern = getString(key);
+        final var pattern = getString(key);
         return MessageFormat.format(pattern, arguments);
     }
 
-//    public static ResourceBundle getBundle() {
-//        return instance.combinedBundle;
-//    }
-//
-//    public static String getString(String key) {
-//        return instance.get(key);
-//    }
-//
-//    public static String getStringOrDefault(String key, String defaultValue) {
-//        try {
-//            return instance.get(key);
-//        } catch (MissingResourceException e) {
-//            return defaultValue;
-//        }
-//    }
-//
-//    public static String getString(String key, Object... arguments) {
-//        final String pattern = getString(key);
-//        return MessageFormat.format(pattern, arguments);
-//    }
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void changeLocale(Locale newLocale) {
+        var localeBackup = Locale.getDefault();
+        Locale.setDefault(newLocale);
+        reload();
+        Locale.setDefault(localeBackup);
+        locale = newLocale;
+    }
+
+    private void reload() {
+        List<ResourceBundle> bundles = bundleProviders.stream()
+                .map(bp -> {
+                    try {
+                        return bp.getBundle();
+                    } catch (IOException e) {
+                        logger.error("Unable to load bundle from provider {}", bp.getClass(), e);
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        combinedBundle = new CombinedResourceBundle(bundles, allowUnresolvedKeys);
+
+        var keys = getBundle().getKeys();
+        while (keys.hasMoreElements()) {
+            var key = keys.nextElement();
+            var value = getString(key);
+
+            var parts = key.split("\\.");
+
+            SimpleMapOrValueProperty map = this;
+
+            for (var i=0;i < parts.length; i++) {
+                var part = parts[i];
+                final var finalMap = map;
+                map = map.computeIfAbsent(part, (k) -> new SimpleMapOrValueProperty(finalMap, part));
+                if (i == parts.length - 1) {
+                    map.setSimpleValue(value);
+                }
+            }
+        }
+    }
+
+    public StringBinding bind(String key) {
+        var parts = key.split("\\.");
+
+        SimpleMapOrValueProperty map = this;
+
+        for (var i=0;i < parts.length; i++) {
+            var part = parts[i];
+
+            if (i == parts.length - 1) {
+                return Bindings.valueAt(map, part).asString();
+            } else {
+                final var finalMap = map;
+                map = map.computeIfAbsent(part, (k) -> new SimpleMapOrValueProperty(finalMap, part));
+            }
+        }
+        throw new NullPointerException("Unknown key : " + key);
+    }
+
+    public void addBundleProvider(BundleProvider bundleProvider) {
+        bundleProviders.add(bundleProvider);
+    }
+
+
 }

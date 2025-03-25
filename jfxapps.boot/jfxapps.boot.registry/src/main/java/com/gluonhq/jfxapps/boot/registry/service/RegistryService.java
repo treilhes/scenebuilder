@@ -36,8 +36,6 @@ package com.gluonhq.jfxapps.boot.registry.service;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -45,13 +43,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.api.registry.model.ApplicationInfo;
 import com.gluonhq.jfxapps.boot.api.registry.model.LayerDefinition;
 import com.gluonhq.jfxapps.boot.api.registry.model.PluginInfo;
+import com.gluonhq.jfxapps.boot.api.registry.model.RegistryInfo;
 import com.gluonhq.jfxapps.boot.registry.internal.BinaryCache;
 import com.gluonhq.jfxapps.boot.registry.internal.RegistryEntityMappers;
 import com.gluonhq.jfxapps.boot.registry.internal.RegistryInfoMappers;
+import com.gluonhq.jfxapps.boot.registry.model.ApplicationEntity;
 import com.gluonhq.jfxapps.boot.registry.model.ExtensionEntity;
 import com.gluonhq.jfxapps.boot.registry.model.FeatureEntity;
 import com.gluonhq.jfxapps.boot.registry.model.PluginEntity;
@@ -70,11 +69,11 @@ import jakarta.validation.Valid;
 @Transactional
 public class RegistryService {
 
-	private final static Logger logger = LoggerFactory.getLogger(RegistryService.class);
+    private final static Logger logger = LoggerFactory.getLogger(RegistryService.class);
 
-	private final BinaryCache binaryCache;
-	private final RegistrySourceService registrySourceService;
-	private final RegistryUpdateService registryUpdateService;
+    private final BinaryCache binaryCache;
+    private final RegistrySourceService registrySourceService;
+    private final RegistryUpdateService registryUpdateService;
     private final RegistryRepository registryRepository;
     private final ApplicationRepository applicationRepository;
     private final FeatureRepository featureRepository;
@@ -84,9 +83,9 @@ public class RegistryService {
     private final RegistryEntityMappers entityMappers;
 
     public RegistryService(
-    		BinaryCache binaryCache,
-    		RegistrySourceService registrySourceService,
-    		RegistryUpdateService registryUpdateService,
+            BinaryCache binaryCache,
+            RegistrySourceService registrySourceService,
+            RegistryUpdateService registryUpdateService,
             RegistryRepository registryRepository,
             ApplicationRepository applicationRepository,
             FeatureRepository featureRepository,
@@ -94,9 +93,9 @@ public class RegistryService {
             ExtensionRepository extensionRepository,
             RegistryInfoMappers infoMappers,
             RegistryEntityMappers entityMappers) {
-    	this.binaryCache = binaryCache;
-    	this.registrySourceService = registrySourceService;
-    	this.registryUpdateService = registryUpdateService;
+        this.binaryCache = binaryCache;
+        this.registrySourceService = registrySourceService;
+        this.registryUpdateService = registryUpdateService;
         this.registryRepository = registryRepository;
         this.applicationRepository = applicationRepository;
         this.featureRepository = featureRepository;
@@ -108,83 +107,115 @@ public class RegistryService {
     }
 
     @PostConstruct
-	protected void init() {
-    	if (!isInitialized()) {
+    protected void init() {
+        if (!isInitialized()) {
 
-    		logger.info("Registry is not initialized, searching for updates");
+            logger.info("Registry is not initialized, searching for updates");
 
-			registrySourceService.findAll().forEach(registrySource -> {
-				if (registrySource.isMandatory()) {
-					var registry = registryUpdateService.loadLatest(registrySource);
-					registry.getApplications().forEach(a -> a.setInstalled(true));
-					save(registry);
-				}
-			});
-    	}
-	}
+            registrySourceService.findAll().forEach(registrySource -> {
+                if (registrySource.isMandatory()) {
+                    var registry = registryUpdateService.loadLatest(registrySource);
+                    registry.getApplications().forEach(a -> a.setInstalled(true));
+                    save(registry);
+                }
+            });
+        }
+    }
 
-	public boolean isInitialized() {
-		return registryRepository.count() > 0;
-	}
+    public boolean isInitialized() {
+        return registryRepository.count() > 0;
+    }
 
-	public ApplicationInfo applicationInfo(UUID applicationId) {
-		return applicationRepository.findById(applicationId)
-				.map(a -> {
-					var info = infoMappers.map(a);
-					info.setImage(binaryCache.get(a.getId(), "image"));
-					info.setI18n(binaryCache.get(a.getId(), "i18n"));
-					info.setSplash(binaryCache.get(a.getId(), "splash"));
-					return info;
-				})
-				.orElse(null);
-	};
+    public RegistryInfo registryInfo(String groupId, String artifactId) {
+        return registryRepository
+                .findByGroupIdAndArtifactId(groupId, artifactId)
+                .map(this::mapAndfillRegistryBinariesFromCache)
+                .orElse(null);
+    }
+
+    public RegistryInfo updateRegistryInfo(String groupId, String artifactId) {
+        var entity = registrySourceService.find(groupId, artifactId)
+                .map(registryUpdateService::loadLatest)
+                .orElse(null);
+
+        if (entity != null) {
+            var oldRegistry = registryRepository.findByGroupIdAndArtifactId(groupId, artifactId);
+
+            oldRegistry.ifPresent(e -> entity.setInternalId(e.getInternalId()));
+
+            save(entity);
+            return mapAndfillRegistryBinariesFromCache(entity);
+        } else {
+            return null;
+        }
+    }
+
+    public ApplicationInfo applicationInfo(UUID applicationId) {
+        return applicationRepository.findById(applicationId)
+                .map(this::mapAndfillAppBinariesFromCache)
+                .orElse(null);
+    }
 
     public PluginInfo pluginInfo(UUID pluginId) {
         return pluginRepository.findById(pluginId).map(infoMappers::map).orElse(null);
     }
 
     public Set<ApplicationInfo> listApplicationsInfo() {
-        return applicationRepository.findAll().stream().map(infoMappers::map).collect(Collectors.toSet());
+        return applicationRepository.findAll().stream().map(this::mapAndfillAppBinariesFromCache).collect(Collectors.toSet());
     }
 
     public Set<PluginInfo> listApplicationPluginsInfo(UUID applicationId) {
         return pluginRepository.findByTarget(applicationId).stream().map(infoMappers::map).collect(Collectors.toSet());
     }
 
-	public void save(@Valid RegistryEntity registry) {
-		registryRepository.save(registry);
-	}
+    public void save(@Valid RegistryEntity registry) {
+        registryRepository.save(registry);
+    }
 
-	public LayerDefinition computeLayerDefinition(UUID applicationId) {
-		var application = applicationRepository.findByInstalledTrueAndId(applicationId);
-		var plugins = pluginRepository.findByInstalledTrueAndTarget(applicationId);
-		return application.map(entityMappers::map).map(l -> this.populate(l, plugins)).orElse(null);
-	}
+    public LayerDefinition computeLayerDefinition(UUID applicationId) {
+        var application = applicationRepository.findByInstalledTrueAndId(applicationId);
+        var plugins = pluginRepository.findByInstalledTrueAndTarget(applicationId);
+        return application.map(entityMappers::map).map(l -> this.populate(l, plugins)).orElse(null);
+    }
 
-
-
-	private LayerDefinition populate(LayerDefinition layer, Set<PluginEntity> plugins) {
-		var uuidToExtensions = flatten(plugins);
+    private LayerDefinition populate(LayerDefinition layer, Set<PluginEntity> plugins) {
+        var uuidToExtensions = flatten(plugins);
         return recurse(layer, uuidToExtensions);
-	}
+    }
 
-	private Map<UUID, Set<ExtensionEntity>> flatten(Set<PluginEntity> plugins) {
-		// Group by target UUID and accumulate extensions into a list
-		var uuidToExtensions = plugins.stream().flatMap(p -> p.getFeatures().stream())
-				.collect(Collectors.groupingBy(FeatureEntity::getTarget, // Group by the target UUID
-						Collectors.flatMapping( // Flatten the extensions into a single list
-								f -> f.getExtensions().stream(), Collectors.toSet())));
+    private Map<UUID, Set<ExtensionEntity>> flatten(Set<PluginEntity> plugins) {
+        // Group by target UUID and accumulate extensions into a list
+        var uuidToExtensions = plugins.stream().flatMap(p -> p.getFeatures().stream())
+                .collect(Collectors.groupingBy(FeatureEntity::getTarget, // Group by the target UUID
+                        Collectors.flatMapping( // Flatten the extensions into a single list
+                                f -> f.getExtensions().stream(), Collectors.toSet())));
 
-		return uuidToExtensions;
-	}
+        return uuidToExtensions;
+    }
 
-	private LayerDefinition recurse(LayerDefinition layerDef, Map<UUID, Set<ExtensionEntity>> map) {
-		var extensions = map.get(layerDef.getId());
-		if (extensions != null) {
-			extensions.forEach(e -> layerDef.getChildren().add(entityMappers.map(e)));
-		}
-		layerDef.getChildren().forEach(c -> recurse(c, map));
+    private LayerDefinition recurse(LayerDefinition layerDef, Map<UUID, Set<ExtensionEntity>> map) {
+        var extensions = map.get(layerDef.getId());
+        if (extensions != null) {
+            extensions.forEach(e -> layerDef.getChildren().add(entityMappers.map(e)));
+        }
+        layerDef.getChildren().forEach(c -> recurse(c, map));
         return layerDef;
     }
+
+
+    private ApplicationInfo mapAndfillAppBinariesFromCache(ApplicationEntity a) {
+        var info = infoMappers.map(a);
+        info.setImage(binaryCache.get(a.getId(), "image"));
+        info.setI18n(binaryCache.get(a.getId(), "i18n"));
+        info.setSplash(binaryCache.get(a.getId(), "splash"));
+        return info;
+    }
+
+    private RegistryInfo mapAndfillRegistryBinariesFromCache(RegistryEntity registryEntity) {
+        var info = infoMappers.map(registryEntity);
+        info.setImage(binaryCache.get(registryEntity.getId(), "image"));
+        info.setI18n(binaryCache.get(registryEntity.getId(), "i18n"));
+        return info;
+    };
 
 }

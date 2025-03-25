@@ -33,50 +33,126 @@
  */
 package com.gluonhq.jfxapps.boot.registry.internal;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifact;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifactManager;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryConfig;
+import com.gluonhq.jfxapps.boot.api.registry.model.RegistrySourceInfo;
+import com.gluonhq.jfxapps.boot.registry.service.RegistryService;
 import com.gluonhq.jfxapps.boot.registry.service.RegistrySourceService;
-
-import jakarta.annotation.PostConstruct;
 
 @Component
 public class RegistrySourceManagerImpl implements RegistryArtifactManager {
 
     private final RegistryConfig config;
-    private final RegistrySourceService service;
+    private final RegistrySourceService sourceService;
     private final RegistryEntityMappers mappers;
+    private final RegistryService registryService;
 
     public RegistrySourceManagerImpl(
-    		RegistryConfig config,
-    		RegistrySourceService service,
-    		RegistryEntityMappers mappers) {
+            RegistryConfig config,
+            RegistrySourceService sourceService,
+            RegistryService registryService,
+            RegistryEntityMappers mappers) {
         super();
         this.config = config;
-        this.service = service;
+        this.sourceService = sourceService;
+        this.registryService = registryService;
         this.mappers = mappers;
     }
 
     @Override
     public void add(RegistryArtifact source) {
         var artifact = mappers.map(source);
-        service.save(artifact);
+        sourceService.save(artifact);
+    }
+
+    @Override
+    public void update(RegistryArtifact source) {
+        var artifact = mappers.map(source);
+        sourceService.save(artifact);
     }
 
     @Override
     public void remove(RegistryArtifact source) {
         var artifact = mappers.map(source);
-        service.delete(artifact);
+        sourceService.delete(artifact);
     }
 
     @Override
     public List<RegistryArtifact> list() {
-        var artifacts = service.findAll();
+        var artifacts = sourceService.findAll();
         return artifacts.stream().map(mappers::map).toList();
+    }
+
+    @Override
+    public Set<RegistrySourceInfo> listRegistrySourceInfo() {
+        var artifacts = list();
+        var infos = new HashSet<RegistrySourceInfo>();
+
+        for (var source: artifacts) {
+            var info = new RegistrySourceInfo();
+            info.setArtifact(source);
+
+            var registryInfo = registryService.registryInfo(source.groupId(), source.artifactId());
+
+            if (registryInfo != null) {
+                info.setRegistryInfo(registryInfo);
+            }
+
+            infos.add(info);
+        }
+
+        return infos;
+    }
+
+    @Override
+    public RegistrySourceInfo getRegistrySourceInfo(String groupId, String artifactId) {
+
+        var entity = sourceService.find(groupId, artifactId);
+
+        return entity.map(mappers::map).map(artifact -> {
+
+            var info = new RegistrySourceInfo();
+            info.setArtifact(artifact);
+
+            var registryInfo = registryService.registryInfo(artifact.groupId(), artifact.artifactId());
+
+            if (registryInfo != null) {
+                info.setRegistryInfo(registryInfo);
+            }
+
+            return info;
+
+        }).orElse(null);
+
+    }
+
+    @Override
+    public RegistrySourceInfo loadLatestRegistrySourceInfo(String groupId, String artifactId) {
+        var entity = sourceService.find(groupId, artifactId);
+
+        var result = entity.map(mappers::map).map(artifact -> {
+
+            var info = new RegistrySourceInfo();
+            info.setArtifact(artifact);
+
+            var registryInfo = registryService.updateRegistryInfo(artifact.groupId(), artifact.artifactId());
+
+            if (registryInfo != null) {
+                info.setRegistryInfo(registryInfo);
+            }
+
+            return info;
+
+        }).orElse(null);
+
+        return result;
     }
 
 }

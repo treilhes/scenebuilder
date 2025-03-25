@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,7 +39,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
-public class TestStage<T extends UiController> {
+public class TestStage<T extends UiController> implements AutoCloseable {
 
     Stage stage;
     T controller;
@@ -63,7 +63,8 @@ public class TestStage<T extends UiController> {
         return stage;
     }
 
-    public void end() {
+    @Override
+    public void close() {
         Platform.runLater(() -> {
             stage.close();
         });

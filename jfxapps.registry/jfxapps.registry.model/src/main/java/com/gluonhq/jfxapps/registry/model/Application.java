@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -47,6 +47,10 @@ public class Application {
     private UUID uuid;
     private Dependency dependency;
     private Description description;
+
+    /** The image. */
+    private String splash;
+
     private Set<Extension> extensions = new HashSet<>();
 
     public Application(UUID uuid, Dependency dependency, Description description, Set<Extension> extensions) {
@@ -79,6 +83,14 @@ public class Application {
         return description;
     }
 
+    public String getSplash() {
+        return splash;
+    }
+
+    public void setSplash(String splash) {
+        this.splash = splash;
+    }
+
     public void setDescription(Description description) {
         this.description = description;
     }
@@ -99,13 +111,16 @@ public class Application {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
-        Application other = (Application) obj;
+        }
+        var other = (Application) obj;
         return Objects.equals(dependency, other.dependency) && Objects.equals(description, other.description)
                 && Objects.equals(extensions, other.extensions) && Objects.equals(uuid, other.uuid);
     }

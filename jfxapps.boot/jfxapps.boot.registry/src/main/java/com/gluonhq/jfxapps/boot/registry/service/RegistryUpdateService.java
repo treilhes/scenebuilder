@@ -34,7 +34,6 @@
 package com.gluonhq.jfxapps.boot.registry.service;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
@@ -51,6 +50,7 @@ import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.api.maven.Artifact;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient.VersionType;
+import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryConfig;
 import com.gluonhq.jfxapps.boot.registry.RegistryException;
 import com.gluonhq.jfxapps.boot.registry.internal.BinaryCache;
@@ -60,7 +60,6 @@ import com.gluonhq.jfxapps.boot.registry.model.RegistryEntity;
 import com.gluonhq.jfxapps.boot.registry.model.RegistrySourceEntity;
 import com.gluonhq.jfxapps.registry.mapper.Mapper;
 import com.gluonhq.jfxapps.registry.model.Dependency;
-import com.gluonhq.jfxapps.registry.model.Description;
 import com.gluonhq.jfxapps.registry.model.JfxApps;
 import com.gluonhq.jfxapps.registry.model.Registry;
 
@@ -79,9 +78,9 @@ public class RegistryUpdateService {
 
     private final RegistryConfig config;
 
-	private final RegistryEntityMappers mappers;
+    private final RegistryEntityMappers mappers;
 
-	private final BinaryCache cache;
+    private final BinaryCache cache;
 
 
     /**
@@ -91,8 +90,8 @@ public class RegistryUpdateService {
      * @param moduleLayerManager the module layer manager
      */
     public RegistryUpdateService(
-    		RepositoryClient mavenClient,
-    		ModuleLayerManager moduleLayerManager,
+            RepositoryClient mavenClient,
+            ModuleLayerManager moduleLayerManager,
             RegistryConfig config,
             RegistryEntityMappers mappers,
             BinaryCache cache) {
@@ -112,11 +111,16 @@ public class RegistryUpdateService {
 
         var scope = config.isSnapshotsAllowed() ? VersionType.RELEASE_SNAPHOT : VersionType.RELEASE;
 
-        var latest = mavenClient.getLatestVersion(artifact, scope).orElseThrow(
-                () -> new RegistryException(String.format("Artifact not found %s scope: %s", artifact, scope)));
+        final UniqueArtifact uniqueArtifact;
+        if (src.getVersion() != null && !src.getVersion().isBlank()) {
+            uniqueArtifact = UniqueArtifact.builder().artifact(artifact).version(src.getVersion()).build();
+        } else {
+            uniqueArtifact = mavenClient.getLatestVersion(artifact, scope).orElseThrow(
+                    () -> new RegistryException(String.format("Artifact not found %s scope: %s", artifact, scope)));
+        }
 
-        var resolved = mavenClient.resolveWithDependencies(latest)
-                .orElseThrow(() -> new RegistryException(String.format("Artifact not resolved %s", latest)));
+        var resolved = mavenClient.resolveWithDependencies(uniqueArtifact)
+                .orElseThrow(() -> new RegistryException(String.format("Artifact not resolved %s", uniqueArtifact)));
 
         var layer = createLayer(resolved.toPaths());
 
@@ -124,24 +128,24 @@ public class RegistryUpdateService {
         RegistryEntity registryEntity = null;
 
         try {
-			registry = loadRegistryLayer(layer).orElseThrow(() -> new RegistryException(String.format("Layer not loaded %s", layer)));
-			registryEntity = mappers.map(registry);
-			registryEntity.setLoadState(LoadState.SUCCESS);
-		} catch (Exception e) { // catch all exceptions
-			logger.error("Loading registry from layer failed ({}) ! ", artifact, e);
+            registry = loadRegistryLayer(layer).orElseThrow(() -> new RegistryException(String.format("Layer not loaded %s", layer)));
+            registryEntity = mappers.map(registry);
+            registryEntity.setLoadState(LoadState.SUCCESS);
+        } catch (Exception e) { // catch all exceptions
+            logger.error("Loading registry from layer failed ({}) ! ", artifact, e);
 
-			registry = new Registry();
-			var dependency = new Dependency();
-			dependency.setGroupId(src.getGroupId());
-			dependency.setArtifactId(src.getArtifactId());
-			dependency.setVersion(latest.getVersion());
+            registry = new Registry();
+            var dependency = new Dependency();
+            dependency.setGroupId(src.getGroupId());
+            dependency.setArtifactId(src.getArtifactId());
+            dependency.setVersion(uniqueArtifact.getVersion());
 
-			registry.setDependency(dependency);
+            registry.setDependency(dependency);
 
-			registryEntity = mappers.map(registry);
-			registryEntity.addMessage(e.getMessage());
-			registryEntity.setLoadState(LoadState.FAILURE);
-		}
+            registryEntity = mappers.map(registry);
+            registryEntity.addMessage(e.getMessage());
+            registryEntity.setLoadState(LoadState.FAILURE);
+        }
 
         final var finalRegistryEntity = registryEntity;
         registry.getRegistries().forEach(r -> {
@@ -151,60 +155,93 @@ public class RegistryUpdateService {
             var subRegistry = loadLatest(nestedSource);
 
             if (subRegistry.getApplications() != null) {
-				subRegistry.getApplications().forEach(finalRegistryEntity::addApplication);
+                subRegistry.getApplications().forEach(finalRegistryEntity::addApplication);
             }
             if (subRegistry.getPlugins() != null) {
-				subRegistry.getPlugins().forEach(finalRegistryEntity::addPlugin);
+                subRegistry.getPlugins().forEach(finalRegistryEntity::addPlugin);
             }
 
-			if (subRegistry.getLoadState() == LoadState.FAILURE) {
-				finalRegistryEntity.addMessage("Nested registry loading failed: " + subRegistry.getMessages());
-				subRegistry.setLoadState(LoadState.PARTIAL);
-			}
+            if (subRegistry.getLoadState() == LoadState.FAILURE) {
+                finalRegistryEntity.addMessage("Nested registry loading failed: " + subRegistry.getMessages());
+                subRegistry.setLoadState(LoadState.PARTIAL);
+            }
         });
 
         return registryEntity;
     }
 
     private void cacheBinaries(Registry registry, Layer layer) {
-    	cacheApplicationBinaries(registry, layer);
+        cacheRegistryBinaries(registry, layer);
+        cacheApplicationBinaries(registry, layer);
         cachePluginsBinaries(registry, layer);
-	}
+    }
 
-	private void cachePluginsBinaries(Registry registry, Layer layer) {
-		for (var plugin:registry.getPlugins()) {
-			cacheDescriptionBinaries(plugin.getUuid(), plugin.getDescription(), layer);
-		}
-	}
+    private void cacheRegistryBinaries(Registry registry, Layer layer) {
+        if (registry == null) {
+            return;
+        }
+        if (registry.getDescription() == null) {
+            return;
+        }
+        cacheResource(registry.getUuid(), "image", registry.getDescription().getImage(), layer);
+        cacheI18nResource(registry.getUuid(), "i18n", registry.getDescription().getI18n(), layer);
+    }
 
-	private void cacheApplicationBinaries(Registry registry, Layer layer) {
-		for (var application:registry.getApplications()) {
-            cacheDescriptionBinaries(application.getUuid(), application.getDescription(), layer);
-		}
-	}
+    private void cachePluginsBinaries(Registry registry, Layer layer) {
+        for (var plugin:registry.getPlugins()) {
+            cacheResource(plugin.getUuid(), "image", plugin.getDescription().getImage(), layer);
+            cacheI18nResource(plugin.getUuid(), "i18n", plugin.getDescription().getI18n(), layer);
+        }
+    }
 
-	private void cacheDescriptionBinaries(UUID id, Description description, Layer layer) {
-		Objects.requireNonNull(id);
-		Objects.requireNonNull(description);
-		Objects.requireNonNull(layer);
+    private void cacheApplicationBinaries(Registry registry, Layer layer) {
+        for (var application:registry.getApplications()) {
+            cacheResource(application.getUuid(), "splash", application.getSplash(), layer);
+            cacheResource(application.getUuid(), "image", application.getDescription().getImage(), layer);
+            cacheI18nResource(application.getUuid(), "i18n", application.getDescription().getI18n(), layer);
+        }
+    }
 
-		cacheResource(id, "splash", description.getSplash(), layer);
-		cacheResource(id, "image", description.getImage(), layer);
-		cacheResource(id, "i18n", description.getI18n(), layer);
-	}
+    private void cacheI18nResource(UUID uuid, String key, List<String> i18n, Layer layer) {
+        if (i18n == null) {
+            return;
+        }
 
-	private void cacheResource(UUID id, String key, String resource, Layer layer) {
-		if (resource == null) {
-			return;
-		}
-		try (InputStream is = layer.getResourceAsStream(resource)) {
-			cache.add(id, key, is);
-		} catch (IOException e) {
-			logger.error("Loading {} failed ! ", key, e);
-		}
-	}
+        for (var resource:i18n) {
+            var keySuffix = extractI18nSuffix(resource);
+            cacheResource(uuid, key + keySuffix, resource, layer);
+        }
 
-	private Layer createLayer(List<Path> a) {
+    }
+
+    private String extractI18nSuffix(String resource) {
+        var keySuffix = "";
+        var path = Path.of(resource);
+        var filename = path.getFileName().toString();
+
+        var dotIndex = filename.lastIndexOf('.') != -1 ? filename.lastIndexOf('.') : filename.length();
+
+        if (filename.contains("_")) {
+            keySuffix = filename.substring(filename.indexOf('_'), dotIndex);
+        }
+
+        return keySuffix;
+    }
+
+    private void cacheResource(UUID id, String key, String resource, Layer layer) {
+        if (resource == null) {
+            return;
+        }
+
+        try (var is = layer.getResourceAsStream(resource)) {
+            layer.getResources(resource);
+            cache.add(id, key, is);
+        } catch (IOException e) {
+            logger.error("Loading {} failed ! ", key, e);
+        }
+    }
+
+    private Layer createLayer(List<Path> a) {
         try {
             return moduleLayerManager.create(a, null);
         } catch (IOException e) {
@@ -222,7 +259,7 @@ public class RegistryUpdateService {
             Registry registry = null;
 
             for (String format:JfxApps.REGISTRY_FILE_FORMATS) {
-                InputStream is = layer.getResourceAsStream(JfxApps.registryResourcePath(format));
+                var is = layer.getResourceAsStream(JfxApps.registryResourcePath(format));
 
                 if (is == null) {
                     continue;

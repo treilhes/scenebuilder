@@ -33,5 +33,97 @@
  */
 package com.gluonhq.jfxapps.boot.api.registry.model;
 
-public class PluginInfo extends ItemInfo {
+import java.net.URL;
+import java.util.Objects;
+import java.util.UUID;
+
+public class PluginInfo {
+
+    private UUID uuid;
+    private URL image;
+    private URL i18n;
+    private String title;
+    private String text;
+    private String changelog;
+    private String version;
+
+    public PluginInfo() {
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public URL getImage() {
+        return image;
+    }
+
+    public void setImage(URL image) {
+        this.image = image;
+    }
+
+    public URL getI18n() {
+        return i18n;
+    }
+
+    public void setI18n(URL i18n) {
+        this.i18n = i18n;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getChangelog() {
+        return changelog;
+    }
+
+    public void setChangelog(String changelog) {
+        this.changelog = changelog;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        var other = (PluginInfo) obj;
+        return Objects.equals(uuid, other.uuid);
+    }
+
 }

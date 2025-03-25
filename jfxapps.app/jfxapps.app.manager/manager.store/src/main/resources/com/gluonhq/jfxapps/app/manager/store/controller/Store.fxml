@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+
+<VBox fx:id="rootVbox" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="store-vbox" stylesheets="@Store.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="200.0" styleClass="store-title-hbox" VBox.vgrow="NEVER">
+         <children>
+            <Label styleClass="store-title-label" text="Search" />
+         </children>
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0" styleClass="store-search-hbox" VBox.vgrow="NEVER">
+         <children>
+            <TextField fx:id="searchField" styleClass="store-search-textfield" />
+            <Button mnemonicParsing="false" onAction="#search" styleClass="store-search-button" text="Search">
+               <effect>
+                  <DropShadow height="5.0" offsetX="1.0" offsetY="2.0" radius="2.0" width="5.0">
+                           <color>
+                              <Color red="0.3921568691730499" green="0.3921568691730499" blue="0.3921568691730499" />
+                           </color>
+                           <input>
+                              <InnerShadow offsetX="1.0" offsetY="1.0">
+                                 <color>
+                                    <Color red="0.3921568691730499" green="0.3921568691730499" blue="0.3921568691730499" />
+                                 </color>
+                              </InnerShadow>
+                           </input>
+                        </DropShadow>
+               </effect></Button>
+         </children>
+      </HBox>
+      <VBox styleClass="store-searchresults-vbox" VBox.vgrow="ALWAYS">
+         <children>
+            <HBox prefHeight="100.0" prefWidth="200.0" styleClass="store-searchresults-title-hbox">
+               <children>
+                  <Label styleClass="store-searchresults-title-label" text="Applications" />
+               </children>
+            </HBox>
+            <ListView fx:id="applications" prefHeight="200.0" prefWidth="200.0" styleClass="store-searchresults-listview" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+   </padding>
+</VBox>

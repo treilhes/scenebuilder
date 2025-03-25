@@ -47,6 +47,7 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Converter;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -60,46 +61,57 @@ import jakarta.validation.constraints.NotBlank;
 @Entity(name = "JFXAPPS_BOOT_REGISTRY_REGISTRY")
 public class RegistryEntity {
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long internalId;
 
     private UUID id;
 
-	@NotBlank
-	private String groupId;
+    @NotBlank
+    private String groupId;
 
-	@NotBlank
-	private String artifactId;
+    @NotBlank
+    private String artifactId;
 
-	@NotBlank
-	private String version;
+    @NotBlank
+    private String version;
 
-	@Enumerated(EnumType.ORDINAL)
+    @Embedded
+    private Description description;
+
+    @Enumerated(EnumType.ORDINAL)
     private LoadState loadState = LoadState.NOT_LOADED;
 
-	@Convert(converter = StringListConverter.class)
-	@Lob
-	private List<String> messages = new ArrayList<>();
+    @Convert(converter = StringListConverter.class)
+    @Lob
+    private List<String> messages = new ArrayList<>();
 
-	@OneToMany(mappedBy = "registry", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonManagedReference
-	private Set<ApplicationEntity> applications = new HashSet<ApplicationEntity>();
+    @OneToMany(mappedBy = "registry", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private Set<ApplicationEntity> applications = new HashSet<>();
 
-	@OneToMany(mappedBy = "registry", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonManagedReference
-	private Set<PluginEntity> plugins = new HashSet<PluginEntity>();
+    @OneToMany(mappedBy = "registry", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private Set<PluginEntity> plugins = new HashSet<>();
 
-	public RegistryEntity() {
-	}
+    public RegistryEntity() {
+    }
 
-	public RegistryEntity(UUID id, String groupId, String artifactId, String version) {
-		super();
-		this.setId(id);
-		this.groupId = groupId;
-		this.artifactId = artifactId;
-		this.version = version;
-	}
+    public RegistryEntity(UUID id, String groupId, String artifactId, String version) {
+        super();
+        this.setId(id);
+        this.groupId = groupId;
+        this.artifactId = artifactId;
+        this.version = version;
+    }
+
+    public long getInternalId() {
+        return internalId;
+    }
+
+    public void setInternalId(long internalId) {
+        this.internalId = internalId;
+    }
 
     public UUID getId() {
         return id;
@@ -109,112 +121,120 @@ public class RegistryEntity {
         this.id = id;
     }
 
-	public String getGroupId() {
-		return groupId;
-	}
+    public String getGroupId() {
+        return groupId;
+    }
 
-	public void setGroupId(String groupId) {
-		this.groupId = groupId;
-	}
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
 
-	public String getArtifactId() {
-		return artifactId;
-	}
+    public String getArtifactId() {
+        return artifactId;
+    }
 
-	public void setArtifactId(String artifactId) {
-		this.artifactId = artifactId;
-	}
+    public void setArtifactId(String artifactId) {
+        this.artifactId = artifactId;
+    }
 
-	public String getVersion() {
-		return version;
-	}
+    public String getVersion() {
+        return version;
+    }
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-	public Set<ApplicationEntity> getApplications() {
-		return Collections.unmodifiableSet(applications);
-	}
+    public Description getDescription() {
+        return description;
+    }
 
-	private void setApplications(Set<ApplicationEntity> applications) {
-		this.applications = applications;
-	}
+    public void setDescription(Description description) {
+        this.description = description;
+    }
 
-	public void addApplication(ApplicationEntity application) {
-		application.setRegistry(this);
-		this.applications.add(application);
-	}
+    public Set<ApplicationEntity> getApplications() {
+        return Collections.unmodifiableSet(applications);
+    }
 
-	public void removeApplication(ApplicationEntity application) {
-		if (application == null) {
-			return;
-		}
-		if (application.getRegistry() != this) {
-			return;
-		}
-		if (this.applications.contains(application)) {
-			this.applications.remove(application);
-		}
-	}
+    private void setApplications(Set<ApplicationEntity> applications) {
+        this.applications = applications;
+    }
 
-	public Set<PluginEntity> getPlugins() {
-		return Collections.unmodifiableSet(plugins);
-	}
+    public void addApplication(ApplicationEntity application) {
+        application.setRegistry(this);
+        this.applications.add(application);
+    }
 
-	private void setPlugins(Set<PluginEntity> plugins) {
-		this.plugins = plugins;
-	}
+    public void removeApplication(ApplicationEntity application) {
+        if (application == null) {
+            return;
+        }
+        if (application.getRegistry() != this) {
+            return;
+        }
+        if (this.applications.contains(application)) {
+            this.applications.remove(application);
+        }
+    }
 
-	public void addPlugin(PluginEntity plugin) {
-		plugin.setRegistry(this);
-		this.plugins.add(plugin);
-	}
+    public Set<PluginEntity> getPlugins() {
+        return Collections.unmodifiableSet(plugins);
+    }
 
-	public void removePlugin(PluginEntity plugin) {
-		if (plugin == null) {
-			return;
-		}
-		if (plugin.getRegistry() != this) {
-			return;
-		}
-		if (this.plugins.contains(plugin)) {
-			this.plugins.remove(plugin);
-		}
-	}
+    private void setPlugins(Set<PluginEntity> plugins) {
+        this.plugins = plugins;
+    }
 
-	public LoadState getLoadState() {
-		return loadState;
-	}
+    public void addPlugin(PluginEntity plugin) {
+        plugin.setRegistry(this);
+        this.plugins.add(plugin);
+    }
 
-	public void setLoadState(LoadState loadState) {
-		this.loadState = loadState;
-	}
+    public void removePlugin(PluginEntity plugin) {
+        if (plugin == null) {
+            return;
+        }
+        if (plugin.getRegistry() != this) {
+            return;
+        }
+        if (this.plugins.contains(plugin)) {
+            this.plugins.remove(plugin);
+        }
+    }
 
-	public List<String> getMessages() {
-		return messages;
-	}
+    public LoadState getLoadState() {
+        return loadState;
+    }
 
-	public void setMessages(List<String> messages) {
-		this.messages = messages;
-	}
+    public void setLoadState(LoadState loadState) {
+        this.loadState = loadState;
+    }
 
-	public void addMessage(String message) {
-		this.messages.add(message);
-	}
+    public List<String> getMessages() {
+        return messages;
+    }
 
-	@Converter
-	public class StringListConverter implements AttributeConverter<List<String>, String> {
-	    private static final String SPLIT_CHAR = "||";
+    public void setMessages(List<String> messages) {
+        this.messages = messages;
+    }
 
-	    @Override
-	    public String convertToDatabaseColumn(List<String> stringList) {
-	        return stringList != null ? String.join(SPLIT_CHAR, stringList) : "";
-	    }
+    public void addMessage(String message) {
+        this.messages.add(message);
+    }
 
-	    @Override
-	    public List<String> convertToEntityAttribute(String string) {
-	        return string != null ? Arrays.asList(string.split(SPLIT_CHAR)) : Collections.emptyList();
-	    }
-	}
+    @Converter
+    public class StringListConverter implements AttributeConverter<List<String>, String> {
+        private static final String SPLIT_CHAR = "||";
+
+        @Override
+        public String convertToDatabaseColumn(List<String> stringList) {
+            return stringList != null ? String.join(SPLIT_CHAR, stringList) : "";
+        }
+
+        @Override
+        public List<String> convertToEntityAttribute(String string) {
+            return string != null ? Arrays.asList(string.split(SPLIT_CHAR)) : Collections.emptyList();
+        }
+    }
 }

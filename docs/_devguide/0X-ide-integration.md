@@ -34,6 +34,9 @@ To build successfully using m2e inside Eclipse you musn't use any embedded jre o
 - you MUST register an external MAVEN installation and set it as default
   Without this configuration, eclipse m2e isn't able to provide maven.home to Maven (time of writing: Version: 2024-12 (4.34.0))
 
+To allow annotation processors (MapStruct) to be configured inside Eclipse:
+
+- ensure <b>"Automatically configure JDT APT"</b> is selected in <b>Window > Preferences > Maven > Annotation Processing</b>
 
 #### Importing projects
 

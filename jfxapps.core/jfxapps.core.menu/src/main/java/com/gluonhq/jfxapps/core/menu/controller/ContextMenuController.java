@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -78,8 +78,12 @@ public class ContextMenuController implements com.gluonhq.jfxapps.core.api.ui.co
     private final List<ContextMenuItemProvider> contextMenuItemProviders;
     private final Selection selection;
 
-    public ContextMenuController(JobManager jobManager, Selection selection,
+    //@formatter:off
+    public ContextMenuController(
+            JobManager jobManager,
+            Selection selection,
             @Autowired(required = false) List<ContextMenuItemProvider> contextMenuItemProviders) {
+        //@formatter:on
         this.contextMenuItemProviders = contextMenuItemProviders;
         this.selection = selection;
         jobManager.revisionProperty().addListener(jobManagerRevisionListener);
@@ -122,12 +126,12 @@ public class ContextMenuController implements com.gluonhq.jfxapps.core.api.ui.co
                     .filter(mip -> mip != null && mip.contextMenuItems() != null && !mip.contextMenuItems().isEmpty())
                     .collect(Collectors.toList());
 
-//           List<ContextMenuItemAttachment> validAttachments = validProviders.stream()
-//                   .flatMap(mip -> mip.contextMenuItems().stream())
-//                   .filter(ma -> ma.getSelectionGroup().isAssignableFrom(selectionGroup.getClass()))
-//                   .filter(ma -> ma != null && ma.getPositionRequest() != null && ma.getMenuItem() != null)
-//                   .sorted(Comparator.comparing(Attachment::getWeight))
-//                   .collect(Collectors.toList());
+            //           List<ContextMenuItemAttachment> validAttachments = validProviders.stream()
+            //                   .flatMap(mip -> mip.contextMenuItems().stream())
+            //                   .filter(ma -> ma.getSelectionGroup().isAssignableFrom(selectionGroup.getClass()))
+            //                   .filter(ma -> ma != null && ma.getPositionRequest() != null && ma.getMenuItem() != null)
+            //                   .sorted(Comparator.comparing(Attachment::getWeight))
+            //                   .collect(Collectors.toList());
 
             Map<String, List<ContextMenuItemAttachment>> validAttachments = validProviders.stream()
                     .flatMap(mip -> mip.contextMenuItems().stream())
@@ -140,7 +144,7 @@ public class ContextMenuController implements com.gluonhq.jfxapps.core.api.ui.co
             List<ContextMenuItemProvider> invalidProviders = hasInvalidProviders
                     ? contextMenuItemProviders.stream().filter(m -> !validProviders.contains(m))
                             .collect(Collectors.toList())
-                    : null;
+                            : null;
 
             boolean atLeastOneInserted = true;
             long iteration = 0;
@@ -176,7 +180,7 @@ public class ContextMenuController implements com.gluonhq.jfxapps.core.api.ui.co
                                 case AsFirstSibling: {
                                     ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null
                                             ? contextMenu.getItems()
-                                            : target.getParentMenu().getItems();
+                                                    : target.getParentMenu().getItems();
                                     items.add(0, ma.getMenuItem());
                                     inserted = true;
                                     break;
@@ -184,7 +188,7 @@ public class ContextMenuController implements com.gluonhq.jfxapps.core.api.ui.co
                                 case AsLastSibling: {
                                     ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null
                                             ? contextMenu.getItems()
-                                            : target.getParentMenu().getItems();
+                                                    : target.getParentMenu().getItems();
                                     items.add(ma.getMenuItem());
                                     inserted = true;
                                     break;
@@ -192,7 +196,7 @@ public class ContextMenuController implements com.gluonhq.jfxapps.core.api.ui.co
                                 case AsPreviousSibling: {
                                     ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null
                                             ? contextMenu.getItems()
-                                            : target.getParentMenu().getItems();
+                                                    : target.getParentMenu().getItems();
                                     int index = items.indexOf(target);
                                     items.add(index, ma.getMenuItem());
                                     inserted = true;
@@ -201,7 +205,7 @@ public class ContextMenuController implements com.gluonhq.jfxapps.core.api.ui.co
                                 case AsNextSibling: {
                                     ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null
                                             ? contextMenu.getItems()
-                                            : target.getParentMenu().getItems();
+                                                    : target.getParentMenu().getItems();
                                     int index = items.indexOf(target);
                                     items.add(index + 1, ma.getMenuItem());
                                     inserted = true;
@@ -210,7 +214,7 @@ public class ContextMenuController implements com.gluonhq.jfxapps.core.api.ui.co
                                 case AfterPreviousSeparator: {
                                     ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null
                                             ? contextMenu.getItems()
-                                            : target.getParentMenu().getItems();
+                                                    : target.getParentMenu().getItems();
                                     int index = items.indexOf(target);
                                     int insertAt = 0;
                                     for (int i = index; i >= 0; i--) {
@@ -226,7 +230,7 @@ public class ContextMenuController implements com.gluonhq.jfxapps.core.api.ui.co
                                 case BeforeNextSeparator: {
                                     ObservableList<MenuItem> items = rootTarget || target.getParentMenu() == null
                                             ? contextMenu.getItems()
-                                            : target.getParentMenu().getItems();
+                                                    : target.getParentMenu().getItems();
                                     int index = items.indexOf(target);
                                     int insertAt = items.size();
                                     for (int i = index; i < items.size(); i++) {

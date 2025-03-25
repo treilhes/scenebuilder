@@ -34,6 +34,7 @@
 package com.gluonhq.jfxapps.boot.registry.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,42 +52,49 @@ import jakarta.validation.Valid;
 @Transactional
 public class RegistrySourceService {
 
-	private final RegistryConfig config;
-	private final RegistrySourceRepository repository;
-	private final RegistryEntityMappers mappers;
+    private final RegistryConfig config;
+    private final RegistrySourceRepository repository;
+    private final RegistryEntityMappers mappers;
 
-	public RegistrySourceService(RegistryConfig config, RegistrySourceRepository repository,
-			RegistryEntityMappers mappers) {
-		this.config = config;
-		this.repository = repository;
-		this.mappers = mappers;
-	}
+    public RegistrySourceService(RegistryConfig config, RegistrySourceRepository repository,
+            RegistryEntityMappers mappers) {
+        this.config = config;
+        this.repository = repository;
+        this.mappers = mappers;
+    }
 
-	@PostConstruct
-	protected void init() {
-		if (isInitialized()) {
-			return;
-		}
+    @PostConstruct
+    protected void init() {
+        if (isInitialized()) {
+            return;
+        }
 
-		for (RegistryArtifact source : config.getDefaults().values()) {
-			var artifact = mappers.map(source);
-			save(artifact);
-		}
-	}
+        for (RegistryArtifact source : config.getDefaults().values()) {
+            var artifact = mappers.map(source);
+            save(artifact);
+        }
+    }
 
-	public boolean isInitialized() {
-		return repository.count() > 0;
-	}
+    public boolean isInitialized() {
+        return repository.count() > 0;
+    }
 
-	public void save(@Valid RegistrySourceEntity source) {
-		repository.save(source);
-	}
+    public void save(@Valid RegistrySourceEntity source) {
+        repository.save(source);
+    }
 
-	public void delete(@Valid RegistrySourceEntity source) {
-		repository.delete(source);
-	}
+    public void delete(@Valid RegistrySourceEntity source) {
+        repository.delete(source);
+    }
 
-	public List<RegistrySourceEntity> findAll() {
-		return repository.findAll();
-	}
+    public List<RegistrySourceEntity> findAll() {
+        return repository.findAll();
+    }
+
+    public Optional<RegistrySourceEntity> find(String groupId, String artifactId) {
+        var id = new RegistrySourceEntity.RegistrySourceId();
+        id.setGroupId(groupId);
+        id.setArtifactId(artifactId);
+        return repository.findById(id);
+    }
 }

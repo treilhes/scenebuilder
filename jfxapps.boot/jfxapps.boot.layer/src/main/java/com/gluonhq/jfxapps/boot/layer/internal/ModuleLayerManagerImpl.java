@@ -38,6 +38,7 @@ import java.io.InputStream;
 import java.lang.module.Configuration;
 import java.lang.module.ModuleFinder;
 import java.lang.module.ModuleReference;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
@@ -256,7 +257,7 @@ public class ModuleLayerManagerImpl implements ModuleLayerManager {
         private static ModuleLayerWithRef createModuleLayer(final List<ModuleLayer> parents, List<Path> paths,
                 Path tempDirectory) throws IOException {
 
-            ClassLoader scl = ClassLoader.getSystemClassLoader();
+            ClassLoader layerParentClassLoader = ClassLoader.getSystemClassLoader();
 
             var layerContent = new LayerContent();
 
@@ -309,7 +310,46 @@ public class ModuleLayerManagerImpl implements ModuleLayerManager {
                     foundModules);
 
 
-            ModuleLayer moduleLayer = ModuleLayer.defineModulesWithOneLoader(layerConfig, parents, scl).layer();
+            if (parents != null && !parents.isEmpty() && !parents.get(0).modules().isEmpty()) {
+                layerParentClassLoader = parents.get(0).modules().iterator().next().getClassLoader();
+
+                Set<ClassLoader> parentClassLoaders = parents.stream().map(ModuleLayer::modules)
+                        .flatMap(Set::stream)
+                        .filter(Objects::nonNull)
+                        .map(Module::getClassLoader)
+                        .filter(Objects::nonNull)
+                        .distinct()
+                        .collect(Collectors.toSet());
+
+                // do not break modular encapsulation but allow to find resources in parent
+                // classloader
+                // without that javafx will not be able to find resources in parent modules
+                // Ex;
+                // In a fxml file in module manager.app
+                // <URL value="@/com/gluonhq/jfxapps/app/manager/api/ui/Manager.css" />
+                // This resource available in module manager.api won't be resolved
+                layerParentClassLoader = new ClassLoader(layerParentClassLoader) {
+
+                    @Override
+                    protected URL findResource(String name) {
+                        var url = super.findResource(name);
+
+                        if (url == null) {
+                            for (ClassLoader cl : parentClassLoaders) {
+                                url = cl.getResource(name);
+                                if (url != null) {
+                                    break;
+                                }
+                            }
+                        }
+
+                        return url;
+                    }
+
+                };
+            }
+
+            ModuleLayer moduleLayer = ModuleLayer.defineModulesWithOneLoader(layerConfig, parents, layerParentClassLoader).layer();
 
             return new ModuleLayerWithRef(moduleLayer, moduleReferences);
 
@@ -366,8 +406,8 @@ public class ModuleLayerManagerImpl implements ModuleLayerManager {
 
         private static String tryGetPatchJpms(Path path) {
             try (ZipFile zf = new ZipFile(path.toFile())) {
-              InputStream in = zf.getInputStream(zf.getEntry("patch.jpms"));
-              return new String(in.readAllBytes()).trim();
+                InputStream in = zf.getInputStream(zf.getEntry("patch.jpms"));
+                return new String(in.readAllBytes()).trim();
             } catch (Exception e) {}
 
             return null;

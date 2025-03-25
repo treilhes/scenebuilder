@@ -224,7 +224,7 @@ public interface Layer {
                 .filter(Objects::nonNull).findFirst().orElse(null);
     }
 
-    default Enumeration<URL> getRessources(String moduleName, String resource) throws IOException {
+    default Enumeration<URL> getResources(String moduleName, String resource) throws IOException {
         try {
             ClassLoader loader = getModuleLayer().findLoader(moduleName);
             return loader.getResources(resource);
@@ -235,11 +235,11 @@ public interface Layer {
         throw new IllegalArgumentException(String.format("Module %s not found", moduleName));
     }
 
-    default Enumeration<URL> getRessources(String resource) throws IOException {
+    default Enumeration<URL> getResources(String resource) throws IOException {
         List<URL> list = getModuleLayer().modules().stream()
                 .map(m -> {
                     try {
-                        return getRessources(m.getName(), resource);
+                        return getResources(m.getName(), resource);
                     } catch (IOException e) {
                         return null;
                     }

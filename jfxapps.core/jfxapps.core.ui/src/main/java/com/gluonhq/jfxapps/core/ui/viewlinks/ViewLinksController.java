@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.app.ui;
+package com.gluonhq.jfxapps.core.ui.viewlinks;
 
 import java.io.IOException;
 import java.net.URL;
@@ -50,6 +50,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.AbstractPanelController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.ViewLinks;
 
 import jakarta.annotation.PostConstruct;
 import javafx.geometry.Pos;
@@ -59,15 +60,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
 @ApplicationInstanceSingleton
-public class ViewLinks extends AbstractPanelController {
+public class ViewLinksController extends AbstractPanelController implements ViewLinks {
 
-    private static final Logger logger = LoggerFactory.getLogger(ViewLinks.class);
+    private static final Logger logger = LoggerFactory.getLogger(ViewLinksController.class);
 
     private final I18N i18n;
     private final DockViewController dockViewController;
     private final DockActionFactory dockActionFactory;
     private final VBox vBox = new VBox();
-    protected ViewLinks(
+    protected ViewLinksController(
             I18N i18n,
             ApplicationEvents applicationEvents,
             ApplicationInstanceEvents applicationInstanceEvents,
@@ -101,7 +102,7 @@ public class ViewLinks extends AbstractPanelController {
                 Image image = new Image(icon.openStream());
                 ImageView imageView = new ImageView(image);
                 imageView.onMouseClickedProperty().set(e -> action.perform());
-                Tooltip.install(imageView, new Tooltip(displayName));
+                Tooltip.install(imageView, new Tooltip(displayName + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx"));
                 vBox.getChildren().add(imageView);
             } catch (IOException e) {
                 logger.error("Unable to iconize view {}", vi.getId(), e);

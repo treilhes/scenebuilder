@@ -1,0 +1,45 @@
+.registry-card-hbox {
+	-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #E5EDF0, #D5E3E6);
+	-fx-background-radius: 20;
+	-fx-border-radius: 20;
+	-fx-border-color: white;
+	-fx-border-width: 0;
+	-fx-font-size: 1.5em;
+}
+
+/* .registry-card-vbox {} */
+
+/* .registry-card-image-rectangle {} */
+
+.registry-card-title-hbox {
+	/*-fx-alignment: center_left;
+	-fx-border-width: 1;*/
+	-fx-border-color: white;
+	-fx-border-width: 0 0 1 0;
+	
+}
+
+.registry-card-title {
+	-fx-font-size: 1em;
+	-fx-font-weight: bold;
+	-fx-text-fill: black;
+	
+}
+.registry-card-description {
+	-fx-font-size: 0.8em;
+	-fx-text-fill: black;
+}
+
+/* .registry-card-install-button {} */
+
+.registry-card-version {}
+
+.registry-card-current-version {
+	-fx-font-size: 0.5em;
+	-fx-text-fill: black;
+}
+
+.registry-card-changelog-link{
+	-fx-font-size: 0.6em;
+	-fx-text-fill: blue;
+}

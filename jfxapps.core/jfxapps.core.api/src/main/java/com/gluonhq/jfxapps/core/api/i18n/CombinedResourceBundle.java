@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,30 +38,42 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CombinedResourceBundle extends ResourceBundle
 {
-	private Map<String, String> combinedResources = new HashMap<>();
-    private List<ResourceBundle> bundles;
+    private static final Logger logger = LoggerFactory.getLogger(CombinedResourceBundle.class);
+
+    private Map<String, String> combinedResources = new HashMap<>();
+    private List<ResourceBundle> bundles = new ArrayList<>();
     private final boolean allowUnresolvedKeys;
 
     public CombinedResourceBundle(List<ResourceBundle> bundles, boolean allowUnresolvedKeys)
     {
-        this.bundles = bundles;
         this.allowUnresolvedKeys = allowUnresolvedKeys;
+        bundles.forEach(b -> this.bundles.add(b));
         load();
     }
 
     public void load()
     {
-    	bundles.forEach(bundle ->
-        {
-            Enumeration<String> keysEnumeration = bundle.getKeys();
-            ArrayList<String> keysList = Collections.list(keysEnumeration);
-            keysList.forEach(key -> combinedResources.put(key, bundle.getString(key)));
-        });
+        logger.info("Loading bundles with locale: {}", Locale.getDefault());
+        bundles.forEach(this::loadBundle);
+    }
+
+    private void loadBundle(ResourceBundle bundle) {
+        var keysEnumeration = bundle.getKeys();
+        ArrayList<String> keysList = Collections.list(keysEnumeration);
+        keysList.forEach(key -> loadKey(bundle, key));
+    }
+
+    private String loadKey(ResourceBundle bundle, String key) {
+        return combinedResources.put(key, bundle.getString(key));
     }
 
     @Override
@@ -70,6 +82,10 @@ public class CombinedResourceBundle extends ResourceBundle
             return true;
         }
 
+        return super.containsKey(key);
+    }
+
+    public boolean containsKeyStrict(String key) {
         return super.containsKey(key);
     }
 
@@ -90,4 +106,20 @@ public class CombinedResourceBundle extends ResourceBundle
     {
         return Collections.enumeration(combinedResources.keySet());
     }
+
+    public boolean hasBundle(String baseBundleName)
+    {
+        return bundles.contains(baseBundleName);
+    }
+
+    public void addBundle(ResourceBundle bundle)
+    {
+        if (bundles.contains(bundle))
+        {
+            return;
+        }
+        bundles.add(bundle);
+        loadBundle(bundle);
+    }
+
 }

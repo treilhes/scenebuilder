@@ -30,13 +30,13 @@
 						<applications>
 							<application>
 								<uuid>1b8bb5f3-efb3-41a6-b6f0-12c9d96fc6a2</uuid>
+								<splash>jfxapps_devtools_256x256.jpeg</splash>
 								<dependency>
 									<groupId>com.gluonhq.jfxapps</groupId>
 									<artifactId>devtools.api</artifactId>
 									<version>${devtools.version}</version>
 								</dependency>
 								<description>
-									<splash>jfxapps_devtools_256x256.jpeg</splash>
 									<image>jfxapps_devtools_256x256.jpeg</image>
 									<title>FXML Runner</title>
 									<text>App that run fxml files</text>

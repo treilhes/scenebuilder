@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.boot.registry.repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -43,4 +44,5 @@ import com.gluonhq.jfxapps.boot.registry.model.RegistryEntity;
 @Repository
 public interface RegistryRepository extends JpaRepository<RegistryEntity, UUID> {
 
+    Optional<RegistryEntity> findByGroupIdAndArtifactId(String groupId, String artifactId);
 }

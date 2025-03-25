@@ -7,6 +7,9 @@ kit/build/
 target/
 
 # IDEA
+.theia/
+
+# IDEA
 .idea/
 *.iml
 out/

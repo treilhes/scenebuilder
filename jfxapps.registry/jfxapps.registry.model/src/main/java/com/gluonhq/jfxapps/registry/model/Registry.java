@@ -46,6 +46,7 @@ public class Registry {
 
     private UUID uuid;
     private Dependency dependency;
+    private Description description;
     private Set<Application> applications = new HashSet<>();
     private Set<Plugin> plugins = new HashSet<>();
     private Set<Registry> registries = new HashSet<>();
@@ -75,6 +76,14 @@ public class Registry {
 
     public void setDependency(Dependency dependency) {
         this.dependency = dependency;
+    }
+
+    public Description getDescription() {
+        return description;
+    }
+
+    public void setDescription(Description description) {
+        this.description = description;
     }
 
     public Set<Application> getApplications() {
@@ -108,13 +117,16 @@ public class Registry {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
-        Registry other = (Registry) obj;
+        }
+        var other = (Registry) obj;
         return Objects.equals(applications, other.applications) && Objects.equals(dependency, other.dependency)
                 && Objects.equals(plugins, other.plugins) && Objects.equals(registries, other.registries)
                 && Objects.equals(uuid, other.uuid);

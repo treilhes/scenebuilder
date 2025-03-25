@@ -27,16 +27,21 @@
 					<format>json</format>
 					<registry>
 						<uuid>8cf8eb01-5bc2-4ed8-9542-f88bf6bd8636</uuid>
+						<description>
+							<image>ScenebuilderSplash_400x400.png</image>
+							<title>FXML Runner</title>
+							<text>App that run fxml files</text>
+						</description>
 						<applications>
 							<application>
 								<uuid>06ae1f67-a8aa-49e3-abb5-4f108534578c</uuid>
+								<splash>ScenebuilderSplash_400x400.png</splash>
 								<dependency>
 									<groupId>com.gluonhq.jfxapps</groupId>
 									<artifactId>scenebuilder.api</artifactId>
 									<version>${scenebuilder.version}</version>
 								</dependency>
 								<description>
-									<splash>ScenebuilderSplash_400x400.png</splash>
 									<image>ScenebuilderSplash_400x400.png</image>
 									<title>FXML Runner</title>
 									<text>App that run fxml files</text>
@@ -129,22 +134,26 @@
 								<uuid>33276909-189c-43f0-93de-87e7bbeac6bc</uuid>
 								<target>06ae1f67-a8aa-49e3-abb5-4f108534578c</target>
 								<description>
-									<splash>ScenebuilderSplash_400x400.png</splash>
 									<image>ScenebuilderSplash_400x400.png</image>
 									<title>Exporter plugin</title>
 									<text>Allow exporting fxml content to image</text>
 								</description>
 								<features>
 									<feature>
-										<uuid>cf637ed0-d388-49f4-a09c-295a0f2727a0</uuid>
-										<target>06ae1f67-a8aa-49e3-abb5-4f108534578c</target>
+										<uuid>
+											cf637ed0-d388-49f4-a09c-295a0f2727a0</uuid>
+										<target>
+											06ae1f67-a8aa-49e3-abb5-4f108534578c</target>
 										<extensions>
 											<extension>
-												<uuid>f38264b5-aaea-444d-8ca8-f6d8ab910b2b</uuid>
+												<uuid>
+													f38264b5-aaea-444d-8ca8-f6d8ab910b2b</uuid>
 												<dependency>
 													<groupId>com.gluonhq.jfxapps</groupId>
-													<artifactId>scenebuilder.ext.exporter</artifactId>
-													<version>${scenebuilder.version}</version>
+													<artifactId>
+														scenebuilder.ext.exporter</artifactId>
+													<version>
+														${scenebuilder.version}</version>
 												</dependency>
 											</extension>
 										</extensions>

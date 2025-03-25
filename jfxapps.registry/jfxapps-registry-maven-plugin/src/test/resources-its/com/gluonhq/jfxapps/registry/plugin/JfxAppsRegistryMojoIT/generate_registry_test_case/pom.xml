@@ -32,11 +32,16 @@
                                     <version>0.0.0</version>
                                     <artifactId>artId</artifactId>
                                 </dependency>
+                                <splash>image.png</splash>
                                 <description>
                                 	<image>image.png</image>
-                                    <splash>image.png</splash>
                                     <title>title</title>
                                     <text>txt</text>
+                                    <i18n>
+                                    	<i18n>i18n.properties</i18n>
+                                    	<i18n>i18n_fr.properties</i18n>
+                                    	<i18n>i18n_jp.properties</i18n>
+                                    </i18n>
                                 </description>
                             </application>
                         </applications>

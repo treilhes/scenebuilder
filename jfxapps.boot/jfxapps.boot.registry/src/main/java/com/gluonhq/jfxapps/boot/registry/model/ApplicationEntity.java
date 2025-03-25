@@ -58,25 +58,23 @@ public class ApplicationEntity {
     @Id
     private UUID id;
 
-	@NotBlank
+    @NotBlank
     private String groupId;
 
-	@NotBlank
+    @NotBlank
     private String artifactId;
 
-	@NotBlank
+    @NotBlank
     private String version;
 
-	@Embedded
-	private Description description;
+    @Embedded
+    private Description description;
 
-    private String splash;
-
-	private boolean installed;
+    private boolean installed;
 
     @OneToMany(mappedBy = "parentApplication", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
-    private Set<ExtensionEntity> extensions = new HashSet<ExtensionEntity>();
+    private Set<ExtensionEntity> extensions = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
@@ -128,30 +126,30 @@ public class ApplicationEntity {
     }
 
     public boolean isInstalled() {
-		return installed;
-	}
+        return installed;
+    }
 
-	public void setInstalled(boolean installed) {
-		this.installed = installed;
-	}
+    public void setInstalled(boolean installed) {
+        this.installed = installed;
+    }
 
-	public Description getDescription() {
-		return description;
-	}
+    public Description getDescription() {
+        return description;
+    }
 
-	public void setDescription(Description description) {
-		this.description = description;
-	}
+    public void setDescription(Description description) {
+        this.description = description;
+    }
 
-    public String getSplash() {
-		return splash;
-	}
+    //    public String getSplash() {
+    //		return splash;
+    //	}
+    //
+    //	public void setSplash(String splash) {
+    //		this.splash = splash;
+    //	}
 
-	public void setSplash(String splash) {
-		this.splash = splash;
-	}
-
-	public Set<ExtensionEntity> getExtensions() {
+    public Set<ExtensionEntity> getExtensions() {
         return extensions;
     }
 
@@ -160,21 +158,21 @@ public class ApplicationEntity {
     }
 
     public void addExtension(ExtensionEntity extension) {
-		extension.setParentApplication(this);
-		this.extensions.add(extension);
-	}
+        extension.setParentApplication(this);
+        this.extensions.add(extension);
+    }
 
-	public void removeExtension(ExtensionEntity extension) {
-		if (extension == null) {
-			return;
-		}
-		if (extension.getParentApplication() != this) {
-			return;
-		}
-		if (this.extensions.contains(extension)) {
-			this.extensions.remove(extension);
-		}
-	}
+    public void removeExtension(ExtensionEntity extension) {
+        if (extension == null) {
+            return;
+        }
+        if (extension.getParentApplication() != this) {
+            return;
+        }
+        if (this.extensions.contains(extension)) {
+            this.extensions.remove(extension);
+        }
+    }
     public RegistryEntity getRegistry() {
         return registry;
     }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -50,6 +50,7 @@ import com.gluonhq.jfxapps.core.ui.dialog.TextViewDialog;
 import com.gluonhq.jfxapps.core.ui.dock.AnnotatedViewAttachmentProvider;
 import com.gluonhq.jfxapps.core.ui.dock.DockPanelController;
 import com.gluonhq.jfxapps.core.ui.dock.DockTypeAccordion;
+import com.gluonhq.jfxapps.core.ui.dock.DockTypeLatestOnly;
 import com.gluonhq.jfxapps.core.ui.dock.DockTypeSplitH;
 import com.gluonhq.jfxapps.core.ui.dock.DockTypeSplitV;
 import com.gluonhq.jfxapps.core.ui.dock.DockTypeTab;
@@ -84,6 +85,7 @@ import com.gluonhq.jfxapps.core.ui.selectionbar.SelectionBarController;
 import com.gluonhq.jfxapps.core.ui.tool.DriverExtensionRegistryImpl;
 import com.gluonhq.jfxapps.core.ui.tool.GenericDriver;
 import com.gluonhq.jfxapps.core.ui.tool.NoPickRefiner;
+import com.gluonhq.jfxapps.core.ui.viewlinks.ViewLinksController;
 
 public class BaseUiExtension implements OpenExtension {
 
@@ -101,13 +103,8 @@ public class BaseUiExtension implements OpenExtension {
 
     @Override
     public List<Class<?>> exportedContextClasses() {
-     // @formatter:off
+        // @formatter:off
         return Arrays.asList(
-
-
-
-
-
 
                 //EditorInstancesController.class,
                 //EditorsManagerImpl.class,
@@ -129,6 +126,7 @@ public class BaseUiExtension implements OpenExtension {
                 DockTypeSplitH.class,
                 DockTypeSplitV.class,
                 DockTypeTab.class,
+                DockTypeLatestOnly.class,
                 DockViewControllerImpl.class,
                 DockWindowController.class,
                 DockWindowFactory.class,
@@ -155,12 +153,13 @@ public class BaseUiExtension implements OpenExtension {
                 ToggleMinimizeDockAction.class,
                 ToggleViewVisibilityAction.class,
                 UndockViewAction.class,
+                ViewLinksController.class,
                 WorkspaceController.class,
                 XPosPreference.class,
                 YPosPreference.class
 
-            );
-     // @formatter:on
+                );
+        // @formatter:on
     }
 
     @Override

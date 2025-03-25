@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -77,10 +77,8 @@ import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
 import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.api.loader.extension.RootExtension;
 import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
-import com.gluonhq.jfxapps.boot.context.boot.BootContext;
 import com.gluonhq.jfxapps.boot.context.impl.ContextManagerImpl;
 import com.gluonhq.jfxapps.boot.context.impl.JfxAppContextImpl;
-import com.gluonhq.jfxapps.boot.jpa.JpaBootClasses;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper.ServiceLoader;
 import com.gluonhq.jfxapps.boot.loader.model.LoadableContent;
@@ -198,7 +196,7 @@ public class JfxAppsExtension implements BeforeEachCallback, ParameterResolver {
 
             when(extension.getId()).thenReturn(contextId);
 
-            var classes = new ArrayList<Class<?>>(List.of(mergedConfig.getClasses()));
+            var classes = new ArrayList<>(List.of(mergedConfig.getClasses()));
 
             //@formatter:off
             classes.addAll(List.of(
@@ -257,7 +255,7 @@ public class JfxAppsExtension implements BeforeEachCallback, ParameterResolver {
     @TestConfiguration
     //@AutoConfigureMockMvc
     static class I18NTestConfig {
-        @Bean
+        @Bean("i18n")
         @ConditionalOnMissingBean
         I18N i18nTest(List<BundleProvider> bundleProviders) {
             return new I18N(bundleProviders, true);
@@ -266,7 +264,7 @@ public class JfxAppsExtension implements BeforeEachCallback, ParameterResolver {
         @Bean
         @ConditionalOnMissingBean
         public DataSource dataSource() {
-            DriverManagerDataSource dataSource = new DriverManagerDataSource();
+            var dataSource = new DriverManagerDataSource();
             dataSource.setDriverClassName("org.h2.Driver");
             dataSource.setUrl("jdbc:h2:mem:testdb"); // Pour une base en mémoire ou file:./data/testdb pour fichier
             dataSource.setUsername("sa");
@@ -278,7 +276,7 @@ public class JfxAppsExtension implements BeforeEachCallback, ParameterResolver {
         @Bean
         @ConditionalOnBean(name = "servletContext")
         public JpaVendorAdapter jpaVendorAdapter() {
-            HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
+            var adapter = new HibernateJpaVendorAdapter();
             adapter.setGenerateDdl(true); // Générer automatiquement le schéma de base de données
             adapter.setShowSql(true); // Afficher les requêtes SQL dans la console
             adapter.setDatabasePlatform("org.hibernate.dialect.H2Dialect"); // Utilisation de H2

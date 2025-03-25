@@ -34,66 +34,52 @@
 package com.gluonhq.jfxapps.app.manager.main.ui;
 
 import com.gluonhq.jfxapps.app.manager.api.ui.Docks;
-import com.gluonhq.jfxapps.app.manager.api.ui.MainContent;
-import com.gluonhq.jfxapps.app.manager.preference.BottomDividerVPosPreference;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock.Orientation;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBar;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.ViewLinks;
 
-import jakarta.inject.Provider;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.SplitPane;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 @ApplicationInstanceSingleton
 public class ManagerUiTemplate extends AbstractFxmlWindowController implements MainInstanceWindow {
 
-    @FXML
-    private SplitPane mainSplitPane;
-    @FXML
-    private StackPane contentPanelHost;
-    @FXML
-    private VBox bottomHost;
-
-    private final Dock bottomDockController;
-
     private final MenuBar menuBar;
-    private final MainContent mainContent;
-    private final Provider<BottomDividerVPosPreference> bottomDividerVPos;
+    private final Dock centerDock;
+    private final ViewLinks viewLinks;
+
+    @FXML
+    private AnchorPane contentHost;
+    @FXML
+    private HBox hBox;
+
+
 
     // @formatter:off
     public ManagerUiTemplate(
             I18N i18n,
             ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
-            Provider<BottomDividerVPosPreference> bottomDividerVPos,
-            Dock bottomDockController,
+            DockFactory dockFactory,
             MenuBar menuBar,
-            MainContent mainContent) {
+            ViewLinks viewLinks) {
         super(i18n, sceneBuilderManager, iconSetting, ManagerUiTemplate.class.getResource("ManagerUiTemplate.fxml"), false);
         // @formatter:on
 
-        this.bottomDockController = bottomDockController;
-        this.bottomDockController.setId(Docks.BOTTOM_DOCK_UUID);
-        this.bottomDockController.setMinimizedOrientation(Orientation.HORIZONTAL);
-        this.bottomDockController.setMinimized(true);
-        this.bottomDockController.notifyDockCreated();
-
-        // preferences
-        this.bottomDividerVPos = bottomDividerVPos;
-
         this.menuBar = menuBar;
-        this.mainContent = mainContent;
-
+        this.viewLinks = viewLinks;
+        this.centerDock = dockFactory.create(Docks.CENTER_DOCK_UUID, "Center");
     }
 
     @FXML
@@ -107,11 +93,20 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements M
         assert getRoot() instanceof VBox;
     }
 
+
     @Override
     public void composeWindow() {
         final VBox rootVBox = (VBox) getRoot();
         rootVBox.getChildren().add(0, menuBar.getMenuBar());
-        contentPanelHost.getChildren().add(mainContent.getRoot());
+
+        hBox.getChildren().add(0, viewLinks.getRoot());
+
+        var content = centerDock.getContent();
+        AnchorPane.setTopAnchor(content, 0.0);
+        AnchorPane.setRightAnchor(content, 0.0);
+        AnchorPane.setBottomAnchor(content, 0.0);
+        AnchorPane.setLeftAnchor(content, 0.0);
+        contentHost.getChildren().add(content);
     }
 
     @Override

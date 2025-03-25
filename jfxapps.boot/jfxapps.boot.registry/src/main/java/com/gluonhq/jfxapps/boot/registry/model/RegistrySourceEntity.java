@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,7 +36,6 @@ package com.gluonhq.jfxapps.boot.registry.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.Version;
 
 @Entity(name = "JFXAPPS_BOOT_REGISTRY_REGISTRY_SOURCE")
 @IdClass(RegistrySourceEntity.RegistrySourceId.class)
@@ -60,9 +59,6 @@ public class RegistrySourceEntity {
 
     }
 
-    @Version
-    private int jpaVersion;
-
     @Id
     private String groupId;
 
@@ -81,14 +77,6 @@ public class RegistrySourceEntity {
         this.groupId = groupId;
         this.artifactId = artifactId;
         this.version = version;
-    }
-
-    public int getJpaVersion() {
-        return jpaVersion;
-    }
-
-    public void setJpaVersion(int jpaVersion) {
-        this.jpaVersion = jpaVersion;
     }
 
     public String getGroupId() {

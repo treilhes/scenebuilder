@@ -34,17 +34,20 @@
 -->
 
 <?import java.net.URL?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="DocumentWindow" alignment="CENTER" prefHeight="800.0" prefWidth="1240.0" spacing="0.0" styleClass="theme-presets" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<VBox id="DocumentWindow" alignment="CENTER" prefHeight="800.0" prefWidth="1240.0" spacing="0.0" styleClass="theme-presets" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
-    <SplitPane fx:id="mainSplitPane" dividerPositions="0.75" focusTraversable="false" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" VBox.vgrow="ALWAYS">
-      <items>
-    <StackPane fx:id="contentPanelHost" style="" />
-        <VBox fx:id="bottomHost" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" SplitPane.resizableWithParent="false" />
-      </items>
-    </SplitPane>
+      <HBox fx:id="hBox" VBox.vgrow="ALWAYS">
+         <children>
+            <AnchorPane fx:id="contentHost" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
   </children>
+   <stylesheets>
+      <URL value="@/com/gluonhq/jfxapps/app/manager/api/ui/Manager.css" />
+      <URL value="@ManagerUiTemplate.css" />
+   </stylesheets>
 </VBox>

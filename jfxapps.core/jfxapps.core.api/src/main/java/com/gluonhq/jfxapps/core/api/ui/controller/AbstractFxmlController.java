@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -71,7 +71,7 @@ public abstract class AbstractFxmlController extends AbstractPanelController imp
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
             URL fxmlURL) {
-     // @formatter:on
+        // @formatter:on
         super(scenebuilderManager, documentManager);
         this.i18n = i18n;
         this.fxmlURL = fxmlURL;
@@ -89,7 +89,17 @@ public abstract class AbstractFxmlController extends AbstractPanelController imp
         return i18n.getBundle();
     }
 
-    protected I18N getI18n() {
+    public I18N getI18n() {
+        return i18n;
+    }
+
+    /**
+     * Returns the I18N property.
+     * This property is bound to the I18N instance of the application
+     * to allow i18n expression binding using ${controller.i18n.some.key}
+     * @return
+     */
+    public I18N i18nProperty() {
         return i18n;
     }
 
@@ -103,11 +113,11 @@ public abstract class AbstractFxmlController extends AbstractPanelController imp
      * Warning : this routine may be invoked outside of the event thread.
      */
     @Override
-	public abstract void controllerDidLoadFxml();
+    public abstract void controllerDidLoadFxml();
 
-        // Note : remember that here:
-        // 1) getHost() might be null
-        // 2) getRoot().getScene() might be null
-        // 3) getRoot().getScene().getWindow() might be null
+    // Note : remember that here:
+    // 1) getHost() might be null
+    // 2) getRoot().getScene() might be null
+    // 3) getRoot().getScene().getWindow() might be null
 
 }

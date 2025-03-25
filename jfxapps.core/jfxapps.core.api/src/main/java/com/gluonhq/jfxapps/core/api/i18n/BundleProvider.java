@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,8 +33,10 @@
  */
 package com.gluonhq.jfxapps.core.api.i18n;
 
+import java.io.IOException;
 import java.util.ResourceBundle;
 
+@FunctionalInterface
 public interface BundleProvider {
-	ResourceBundle getBundle();
+    ResourceBundle getBundle() throws IOException;
 }

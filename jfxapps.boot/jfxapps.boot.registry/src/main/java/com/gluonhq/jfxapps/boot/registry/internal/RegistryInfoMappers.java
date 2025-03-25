@@ -38,8 +38,10 @@ import org.mapstruct.Mapping;
 
 import com.gluonhq.jfxapps.boot.api.registry.model.ApplicationInfo;
 import com.gluonhq.jfxapps.boot.api.registry.model.PluginInfo;
+import com.gluonhq.jfxapps.boot.api.registry.model.RegistryInfo;
 import com.gluonhq.jfxapps.boot.registry.model.ApplicationEntity;
 import com.gluonhq.jfxapps.boot.registry.model.PluginEntity;
+import com.gluonhq.jfxapps.boot.registry.model.RegistryEntity;
 
 @Mapper(componentModel = "spring")
 public interface RegistryInfoMappers {
@@ -47,14 +49,19 @@ public interface RegistryInfoMappers {
     @Mapping(target = "uuid", source = "id")
     @Mapping(target = "title", source = "description.title")
     @Mapping(target = "text", source = "description.text")
-    @Mapping(target = "splash", ignore = true)
-    @Mapping(target = "image", ignore = true)
-    @Mapping(target = "i18n", ignore = true)
+    @Mapping(target = "version", source = "version")
+    RegistryInfo map(RegistryEntity registryentity);
+
+    @Mapping(target = "uuid", source = "id")
+    @Mapping(target = "title", source = "description.title")
+    @Mapping(target = "text", source = "description.text")
+    @Mapping(target = "version", source = "version")
     ApplicationInfo map(ApplicationEntity application);
 
     @Mapping(target = "uuid", source = "id")
     @Mapping(target = "title", source = "description.title")
     @Mapping(target = "text", source = "description.text")
+    //@Mapping(target = "version", source = "version")
     PluginInfo map(PluginEntity pluginEntity);
 
 }

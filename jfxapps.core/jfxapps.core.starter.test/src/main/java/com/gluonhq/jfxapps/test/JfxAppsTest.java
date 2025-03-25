@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -48,6 +48,7 @@ import com.gluonhq.jfxapps.boot.api.context.Application;
 import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Primary;
 import com.gluonhq.jfxapps.test.JfxAppsExtension.JfxAppsTestContextBootstrapper;
 
 @Retention(RetentionPolicy.RUNTIME)
@@ -58,16 +59,18 @@ import com.gluonhq.jfxapps.test.JfxAppsExtension.JfxAppsTestContextBootstrapper;
     MockitoExtension.class,
     SpringExtension.class,
     JfxAppsExtension.class
-    })
+})
 public @interface JfxAppsTest {
     String[] properties() default {};
     boolean loadDefaultScopes() default true;
 
     @ApplicationSingleton
+    @Primary
     public static class Application1Bean implements Application {
     }
 
     @ApplicationInstanceSingleton
+    @Primary
     public static class Application1InstanceBean implements ApplicationInstance {
     }
 

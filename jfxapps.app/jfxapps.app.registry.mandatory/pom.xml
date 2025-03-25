@@ -30,13 +30,13 @@
                         <applications>
                             <application>
                                 <uuid>00000000-0000-0000-0000-000000000002</uuid>
+                                <splash>manager_256x256.jpeg</splash>
                                 <dependency>
                                     <groupId>com.gluonhq.jfxapps</groupId>
                                     <artifactId>manager.api</artifactId>
                                     <version>${manager.version}</version>
                                 </dependency>
                                 <description>
-                                    <splash>manager_256x256.jpeg</splash>
                                     <image>manager_256x256.jpeg</image>
                                     <title>FXML Runner</title>
                                     <text>App that run fxml files</text>
@@ -47,6 +47,22 @@
                                         <dependency>
                                             <groupId>com.gluonhq.jfxapps</groupId>
                                             <artifactId>manager.app</artifactId>
+                                            <version>${manager.version}</version>
+                                        </dependency>
+                                    </extension>
+                                    <extension>
+                                        <uuid>26a4c220-7adb-4fae-a9be-4c4bf233b812</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>manager.store</artifactId>
+                                            <version>${manager.version}</version>
+                                        </dependency>
+                                    </extension>
+                                    <extension>
+                                        <uuid>c1e38085-c20a-4481-8b91-ab9d7efec171</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>manager.source</artifactId>
                                             <version>${manager.version}</version>
                                         </dependency>
                                     </extension>

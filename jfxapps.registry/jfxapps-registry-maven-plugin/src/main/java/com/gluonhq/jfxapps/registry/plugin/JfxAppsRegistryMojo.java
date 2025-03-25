@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -50,6 +50,8 @@ import com.gluonhq.jfxapps.registry.mapper.Mapper;
 import com.gluonhq.jfxapps.registry.mapper.impl.JsonMapper;
 import com.gluonhq.jfxapps.registry.mapper.impl.XmlMapper;
 import com.gluonhq.jfxapps.registry.model.Dependency;
+import com.gluonhq.jfxapps.registry.model.Extension;
+import com.gluonhq.jfxapps.registry.model.Feature;
 import com.gluonhq.jfxapps.registry.model.JfxApps;
 import com.gluonhq.jfxapps.registry.model.Registry;
 
@@ -58,7 +60,7 @@ public class JfxAppsRegistryMojo extends AbstractMojo {
 
     private static final String REGISTRY_IS_NOT_VALID = "The registry is not valid!";
 
-	private static String GENERATED_RESOURCES_FOLDER = "registry-maven-plugin";
+    private static String GENERATED_RESOURCES_FOLDER = "registry-maven-plugin";
 
     /** The registry. */
     @Parameter(property = "registry", required = true, alias = "registry")
@@ -104,15 +106,15 @@ public class JfxAppsRegistryMojo extends AbstractMojo {
 
             validate(registry);
 
-            File resourceFolder = new File(outputDirectory, GENERATED_RESOURCES_FOLDER);
-            File registryFolder = new File(resourceFolder, JfxApps.REGISTRY_FILE_FOLDER);
-            File registryFile = new File(registryFolder, JfxApps.REGISTRY_FILE_NAME + "." + format);
+            var resourceFolder = new File(outputDirectory, GENERATED_RESOURCES_FOLDER);
+            var registryFolder = new File(resourceFolder, JfxApps.REGISTRY_FILE_FOLDER);
+            var registryFile = new File(registryFolder, JfxApps.REGISTRY_FILE_NAME + "." + format);
 
-            String projectPath = project.getBasedir().getAbsolutePath();
-            String resourcePath = resourceFolder.getAbsolutePath();
-            String relativePath = resourcePath.replace(projectPath + File.separator, "");
+            var projectPath = project.getBasedir().getAbsolutePath();
+            var resourcePath = resourceFolder.getAbsolutePath();
+            var relativePath = resourcePath.replace(projectPath + File.separator, "");
 
-            final Resource resource = new Resource();
+            final var resource = new Resource();
             resource.setDirectory(relativePath);
             project.getBuild().getResources().add(resource);
 
@@ -148,106 +150,239 @@ public class JfxAppsRegistryMojo extends AbstractMojo {
 
     }
 
-	private void validate(Registry registry2) {
+    private void validate(Registry registry2) {
 
         try {
-			if (registry == null) {
-				throw new IllegalArgumentException("The registry is null!");
-			}
+            validateRegistry();
+            validateApplications();
+            validatePlugins();
+            validateLinkedRegistries();
+        } catch (Exception e) {
+            throw new IllegalArgumentException(REGISTRY_IS_NOT_VALID, e);
+        }
 
-			if (registry.getUuid() == null) {
-				throw new IllegalArgumentException("The registry UUID is empty!");
-			}
+    }
 
-			validateApplications();
-			validatePlugins();
-		} catch (Exception e) {
-			throw new IllegalArgumentException(REGISTRY_IS_NOT_VALID, e);
-		}
+    private void validateRegistry() {
 
-	}
+        if (registry == null) {
+            throw new IllegalArgumentException("The registry is null!");
+        }
 
-	private void validateApplications() {
-		for (var app : registry.getApplications()) {
-		    if (app.getUuid() == null) {
-		        throw new IllegalArgumentException("The application UUID is null!");
-		    }
+        if (registry.getUuid() == null) {
+            throw new IllegalArgumentException("The registry UUID is empty!");
+        }
 
-		    if (app.getDescription() == null) {
-		        throw new IllegalArgumentException(String.format("The application description of %s is null!", app.getUuid()));
-		    }
+        if (registry.getDependency() != null) {
+            throw new IllegalArgumentException("The registry dependency must be set only for linked registries!");
+        }
 
-		    if (app.getDescription().getTitle() == null || app.getDescription().getTitle().isBlank()) {
-				throw new IllegalArgumentException(String.format("The application title of %s is null or blank!", app.getUuid()));
-			}
+        if (registry.getDescription() != null) {
+            if (registry.getDescription().getTitle() == null || registry.getDescription().getTitle().isBlank()) {
+                throw new IllegalArgumentException("The registry title is null or blank!");
+            }
 
-			if (app.getDescription().getImage() == null) {
-				throw new IllegalArgumentException(String.format("The application image of %s is null!", app.getUuid()));
-			}
+            if (registry.getDescription().getImage() == null) {
+                throw new IllegalArgumentException("The registry image is null!");
+            }
 
-			if (!resourceExists(app.getDescription().getImage())) {
-				throw new IllegalArgumentException(String.format("The application image file of %s does not exists!", app.getUuid()));
-			}
+            if (!resourceExists(registry.getDescription().getImage())) {
+                throw new IllegalArgumentException("The registry image file does not exists!");
+            }
 
-			if (app.getDescription().getSplash() == null) {
-				throw new IllegalArgumentException(String.format("The application splash of %s is null!", app.getUuid()));
-			}
+            if (registry.getDescription().getI18n() != null) {
+                for (var i18n : registry.getDescription().getI18n()) {
+                    if (!resourceExists(i18n)) {
+                        throw new IllegalArgumentException(String.format("The registry i18n file %s does not exists!", i18n));
+                    }
+                }
+            }
+        }
 
-			if (!resourceExists(app.getDescription().getSplash())) {
-				throw new IllegalArgumentException(String.format("The application splash file of %s does not exists!", app.getUuid()));
-			}
+    }
 
-			if (app.getDescription().getI18n() != null && !resourceExists(app.getDescription().getI18n())) {
-				throw new IllegalArgumentException(String.format("The application i18n file of %s does not exists!", app.getUuid()));
-			}
+    private void validateApplications() {
+        for (var app : registry.getApplications()) {
+            if (app.getUuid() == null) {
+                throw new IllegalArgumentException("The application UUID is null!");
+            }
 
-		}
-	}
+            if (app.getDependency() == null) {
+                throw new IllegalArgumentException(String.format("The application dependency of %s is null or blank!", app.getUuid()));
+            }
 
-	private void validatePlugins(){
-		for (var plugin : registry.getPlugins()) {
-		    if (plugin.getUuid() == null) {
-		        throw new IllegalArgumentException("The plugin UUID is null!");
-		    }
+            if (app.getDependency().getGroupId() == null || app.getDependency().getGroupId().isBlank()) {
+                throw new IllegalArgumentException(String.format("The application groupId of %s is null or blank!", app.getUuid()));
+            }
 
-		    if (plugin.getDescription() == null) {
-		        throw new IllegalArgumentException(String.format("The plugin description of %s is null!", plugin.getUuid()));
-		    }
+            if (app.getDependency().getArtifactId() == null || app.getDependency().getArtifactId().isBlank()) {
+                throw new IllegalArgumentException(String.format("The application artifactId of %s is null or blank!", app.getUuid()));
+            }
 
-		    if (plugin.getDescription().getTitle() == null || plugin.getDescription().getTitle().isBlank()) {
-				throw new IllegalArgumentException(String.format("The plugin title of %s is null or blank!", plugin.getUuid()));
-			}
+            if (app.getDependency().getVersion() == null || app.getDependency().getVersion().isBlank()) {
+                throw new IllegalArgumentException(String.format("The application version of %s is null or blank!", app.getUuid()));
+            }
 
-			if (plugin.getDescription().getImage() == null) {
-				throw new IllegalArgumentException(String.format("The plugin image of %s is null!", plugin.getUuid()));
-			}
+            if (app.getDescription() == null) {
+                throw new IllegalArgumentException(String.format("The application description of %s is null!", app.getUuid()));
+            }
 
-			if (!resourceExists(plugin.getDescription().getImage())) {
-				throw new IllegalArgumentException(String.format("The plugin image file of %s does not exists!", plugin.getUuid()));
-			}
+            if (app.getDescription().getTitle() == null || app.getDescription().getTitle().isBlank()) {
+                throw new IllegalArgumentException(String.format("The application title of %s is null or blank!", app.getUuid()));
+            }
 
-			if (plugin.getDescription().getSplash() == null) {
-				throw new IllegalArgumentException(String.format("The plugin splash of %s is null!", plugin.getUuid()));
-			}
+            if (app.getDescription().getImage() == null) {
+                throw new IllegalArgumentException(String.format("The application image of %s is null!", app.getUuid()));
+            }
 
-			if (!resourceExists(plugin.getDescription().getSplash())) {
-				throw new IllegalArgumentException(String.format("The plugin splash file of %s does not exists!", plugin.getUuid()));
-			}
+            if (!resourceExists(app.getDescription().getImage())) {
+                throw new IllegalArgumentException(String.format("The application image file of %s does not exists!", app.getUuid()));
+            }
 
-			if (plugin.getDescription().getI18n() != null && !resourceExists(plugin.getDescription().getI18n())) {
-				throw new IllegalArgumentException(String.format("The plugin i18n file of %s does not exists!", plugin.getUuid()));
-			}
+            if (app.getSplash() == null) {
+                throw new IllegalArgumentException(String.format("The application splash of %s is null!", app.getUuid()));
+            }
 
-		}
-	}
+            if (!resourceExists(app.getSplash())) {
+                throw new IllegalArgumentException(String.format("The application splash file of %s does not exists!", app.getUuid()));
+            }
 
-	private boolean resourceExists(String path) {
-		for (Resource resource : project.getResources()) {
-            File resourceDir = new File(resource.getDirectory());
-            File resourceFile = new File(resourceDir, path);
+            if (app.getDescription().getI18n() != null) {
+                for (var i18n : app.getDescription().getI18n()) {
+                    if (!resourceExists(i18n)) {
+                        throw new IllegalArgumentException(String.format("The application i18n file %s of %s does not exists!", i18n, app.getUuid()));
+                    }
+                }
+            }
+
+            if (app.getExtensions() != null) {
+                for (var extension : app.getExtensions()) {
+                    validateExtension(extension);
+                }
+            }
+        }
+    }
+
+    private void validatePlugins(){
+        for (var plugin : registry.getPlugins()) {
+            if (plugin.getUuid() == null) {
+                throw new IllegalArgumentException("The plugin UUID is null!");
+            }
+
+            if (plugin.getDescription() == null) {
+                throw new IllegalArgumentException(String.format("The plugin description of %s is null!", plugin.getUuid()));
+            }
+
+            if (plugin.getDescription().getTitle() == null || plugin.getDescription().getTitle().isBlank()) {
+                throw new IllegalArgumentException(String.format("The plugin title of %s is null or blank!", plugin.getUuid()));
+            }
+
+            if (plugin.getDescription().getImage() == null) {
+                throw new IllegalArgumentException(String.format("The plugin image of %s is null!", plugin.getUuid()));
+            }
+
+            if (!resourceExists(plugin.getDescription().getImage())) {
+                throw new IllegalArgumentException(String.format("The plugin image file of %s does not exists!", plugin.getUuid()));
+            }
+
+            if (plugin.getDescription().getI18n() != null) {
+                for (var i18n : plugin.getDescription().getI18n()) {
+                    if (!resourceExists(i18n)) {
+                        throw new IllegalArgumentException(String.format("The plugin i18n file %s of %s does not exists!", i18n, plugin.getUuid()));
+                    }
+                }
+            }
+
+            if (plugin.getFeatures() != null) {
+                for (var feature : plugin.getFeatures()) {
+                    validateFeature(feature);
+                }
+            }
+        }
+    }
+
+    private void validateFeature(Feature feature) {
+        if (feature.getUuid() == null) {
+            throw new IllegalArgumentException("The feature UUID is null!");
+        }
+
+        if (feature.getExtensions() != null) {
+            for (var extension : feature.getExtensions()) {
+                validateExtension(extension);
+            }
+        }
+    }
+
+    private void validateLinkedRegistries() {
+        for (var linked : registry.getRegistries()) {
+
+            if (linked == null) {
+                throw new IllegalArgumentException("The registry is null!");
+            }
+
+            if (linked.getUuid() != null) {
+                throw new IllegalArgumentException("The linked registry UUID musn't be set!");
+            }
+
+            if (linked.getDependency() == null) {
+                throw new IllegalArgumentException("The linked registry dependency must be set!");
+            }
+
+            if (linked.getDependency().getGroupId() == null || linked.getDependency().getGroupId().isBlank()) {
+                throw new IllegalArgumentException("The linked registry groupId is null or blank!");
+            }
+
+            if (linked.getDependency().getArtifactId() == null || linked.getDependency().getArtifactId().isBlank()) {
+                throw new IllegalArgumentException("The linked registry artifactId is null or blank!");
+            }
+
+            if (linked.getDependency().getVersion() == null || linked.getDependency().getVersion().isBlank()) {
+                throw new IllegalArgumentException("The linked registry version is null or blank!");
+            }
+
+            if (linked.getDescription() != null) {
+                throw new IllegalArgumentException("The linked registry description musn't be set!");
+            }
+
+
+        }
+    }
+
+    private void validateExtension(Extension extension) {
+
+        if (extension == null) {
+            throw new IllegalArgumentException("The extension is null!");
+        }
+
+        if (extension.getUuid() == null) {
+            throw new IllegalArgumentException("The extension UUID is empty!");
+        }
+
+        if (extension.getDependency() == null) {
+            throw new IllegalArgumentException(String.format("The extension dependency of %s is null or blank!", extension.getUuid()));
+        }
+
+        if (extension.getDependency().getGroupId() == null || extension.getDependency().getGroupId().isBlank()) {
+            throw new IllegalArgumentException(String.format("The extension groupId of %s is null or blank!", extension.getUuid()));
+        }
+
+        if (extension.getDependency().getArtifactId() == null || extension.getDependency().getArtifactId().isBlank()) {
+            throw new IllegalArgumentException(String.format("The extension artifactId of %s is null or blank!", extension.getUuid()));
+        }
+
+        if (extension.getDependency().getVersion() == null || extension.getDependency().getVersion().isBlank()) {
+            throw new IllegalArgumentException(String.format("The extension version of %s is null or blank!", extension.getUuid()));
+        }
+
+    }
+
+    private boolean resourceExists(String path) {
+        for (Resource resource : project.getResources()) {
+            var resourceDir = new File(resource.getDirectory());
+            var resourceFile = new File(resourceDir, path);
             return resourceFile.exists();
         }
-		return false;
-	}
+        return false;
+    }
 
 }

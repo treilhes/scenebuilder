@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -64,14 +64,14 @@ public class MavenExtension implements OpenExtension {
 
     @Override
     public List<Class<?>> exportedContextClasses() {
-     // @formatter:off
+        // @formatter:off
         return Arrays.asList(
                 SearchMavenArtifactDialogController.class,
                 GetMavenArtifactDialogController.class,
                 MavenRepositoriesPreferences.class,
                 RepositoryManagerController.class,
                 AddEditRepositoryDialogController.class
-            );
-     // @formatter:on
+                );
+        // @formatter:on
     }
 }

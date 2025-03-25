@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -86,6 +86,12 @@ public class FxmlControllerBeanPostProcessor implements PriorityOrdered, BeanPos
 
         if (bean instanceof FxmlController controller) {
             FXMLLoader loader = new FXMLLoader();
+            //            loader.setControllerFactory(c -> {
+            //                if (c != null && c != controller.getClass()) {
+            //                    logger.warn("Unexpected controller class {}, expected {}", c, controller.getClass()); // NOI18N
+            //                }
+            //                return controller;
+            //            });
             loader.setController(controller);
             loader.setLocation(controller.getFxmlURL());
             loader.setResources(controller.getResources());
@@ -94,7 +100,7 @@ public class FxmlControllerBeanPostProcessor implements PriorityOrdered, BeanPos
             try {
                 final Parent parent;
                 if (bean.getClass().getAnnotation(LoadInFxThread.class) != null) {
-                    var future = new FutureTask<Parent>(() -> (Parent) loader.load());
+                    var future = new FutureTask<>(() -> (Parent) loader.load());
                     Platform.runLater(future);
                     parent = future.get();
                 } else {

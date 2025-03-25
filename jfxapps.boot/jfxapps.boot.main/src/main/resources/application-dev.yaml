@@ -46,6 +46,12 @@ jfxapps:
       - groupId: com.gluonhq.jfxapps
         artifactId: manager.app
         path: ../../jfxapps.app/jfxapps.app.manager/manager.app/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: manager.store
+        path: ../../jfxapps.app/jfxapps.app.manager/manager.store/target/classes
+      - groupId: com.gluonhq.jfxapps
+        artifactId: manager.source
+        path: ../../jfxapps.app/jfxapps.app.manager/manager.source/target/classes
 
       - groupId: com.gluonhq.jfxapps
         artifactId: devtools.api

@@ -131,8 +131,8 @@ class LayerImplIT {
             assertNotNull(is);
         }
 
-        assertTrue(layer.getRessources(resourceName).hasMoreElements());
-        assertTrue(layer.getRessources(name, resourceName).hasMoreElements());
+        assertTrue(layer.getResources(resourceName).hasMoreElements());
+        assertTrue(layer.getResources(name, resourceName).hasMoreElements());
     }
 
     private static Stream<Arguments> module_class_is_accessible_parameters() {

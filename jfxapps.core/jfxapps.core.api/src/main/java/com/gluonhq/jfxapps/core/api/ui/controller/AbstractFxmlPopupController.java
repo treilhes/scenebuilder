@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,6 +36,7 @@ package com.gluonhq.jfxapps.core.api.ui.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
@@ -48,21 +49,25 @@ public abstract class AbstractFxmlPopupController extends AbstractPopupControlle
 
     private final URL fxmlURL;
     private final ResourceBundle resources;
+    private final I18N i18n;
 
     public AbstractFxmlPopupController(
+            I18N i18n,
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
             URL fxmlURL) {
-        this(scenebuilderManager, documentManager, fxmlURL, null);
+        this(i18n, scenebuilderManager, documentManager, fxmlURL, null);
     };
 
     public AbstractFxmlPopupController(
+            I18N i18n,
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
             URL fxmlURL,
             ResourceBundle resources) {
         super(scenebuilderManager, documentManager);
         assert fxmlURL != null : "Check fxml path given to " + getClass().getSimpleName();
+        this.i18n = i18n;
         this.fxmlURL = fxmlURL;
         this.resources = resources;
     }
@@ -72,11 +77,21 @@ public abstract class AbstractFxmlPopupController extends AbstractPopupControlle
         return fxmlURL;
     }
 
+    // FIXME: use i18n instead of resources
     @Override
     public ResourceBundle getResources() {
         return resources;
     }
 
+    /**
+     * Returns the I18N property.
+     * This property is bound to the I18N instance of the application
+     * to allow i18n expression binding using ${controller.i18n.some.key}
+     * @return
+     */
+    public I18N i18nProperty() {
+        return i18n;
+    }
     /*
      * To be implemented by subclasses
      */
@@ -86,30 +101,5 @@ public abstract class AbstractFxmlPopupController extends AbstractPopupControlle
         assert getRoot() != null;
         assert getRoot().getScene() == null;
     }
-
-//    /*
-//     * AbstractWindowController
-//     */
-//
-//    /**
-//     * This implementation loads the FXML file using the URL passed to
-//     * {@link AbstractFxmlWindowController}.
-//     */
-//    @Override
-//    protected void makeRoot() {
-//        final FXMLLoader loader = new FXMLLoader();
-//
-//        loader.setController(this);
-//        loader.setLocation(fxmlURL);
-//        loader.setResources(resources);
-//        try {
-//            setRoot((Region)loader.load());
-//            controllerDidLoadFxml();
-//        } catch (RuntimeException | IOException x) {
-//            System.out.println("loader.getController()=" + loader.getController());
-//            System.out.println("loader.getLocation()=" + loader.getLocation());
-//            throw new RuntimeException("Failed to load " + fxmlURL.getFile(), x); //NOCHECK
-//        }
-//    }
 
 }

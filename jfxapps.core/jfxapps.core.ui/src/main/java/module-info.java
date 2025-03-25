@@ -42,6 +42,7 @@ open module jfxapps.core.ui {
     exports com.gluonhq.jfxapps.core.ui.i18n;
     exports com.gluonhq.jfxapps.core.ui.message;
     exports com.gluonhq.jfxapps.core.ui.selectionbar;
+    exports com.gluonhq.jfxapps.core.ui.viewlinks;
 
     exports com.gluonhq.jfxapps.core.ui.dock;
     exports com.gluonhq.jfxapps.core.ui.dock.preference;

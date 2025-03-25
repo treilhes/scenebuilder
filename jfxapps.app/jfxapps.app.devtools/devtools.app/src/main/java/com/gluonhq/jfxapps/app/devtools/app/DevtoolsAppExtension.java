@@ -41,7 +41,6 @@ import com.gluonhq.jfxapps.app.devtools.app.action.ShowAboutAction;
 import com.gluonhq.jfxapps.app.devtools.app.action.ShowScenicViewAction;
 import com.gluonhq.jfxapps.app.devtools.app.menu.MainMenuProvider;
 import com.gluonhq.jfxapps.app.devtools.app.ui.DevtoolsUiTemplate;
-import com.gluonhq.jfxapps.app.devtools.app.ui.ViewLinks;
 import com.gluonhq.jfxapps.app.devtools.app.ui.WindowIconSettings;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.ext.about.api.AboutApi;
@@ -72,8 +71,7 @@ public class DevtoolsAppExtension implements OpenExtension  {
                 ShowAboutAction.class,
                 ShowScenicViewAction.class,
                 AboutApi.class,
-                ScenicViewApi.class,
-                ViewLinks.class
+                ScenicViewApi.class
                 );
     }
 

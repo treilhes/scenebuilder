@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -122,7 +122,7 @@ public class DockPanelController implements Dock {
             LastDockDockTypePreference lastDockDockTypePreference,
             DockMinimizedPreference dockMinimizedPreference,
             List<DockType<?>> dockTypes) {
-     // @formatter:on
+        // @formatter:on
 
         this.id = UUID.randomUUID();
         this.jfxAppPlatform= jfxAppPlatform;
@@ -142,13 +142,13 @@ public class DockPanelController implements Dock {
         dockTypeProperty().set(def.orElse(dockTypes.get(0)));
 
         viewManager.dock()
-                .filter(dr -> dr.getTarget().equals(this.getId()))
-                .observeOn(JavaFxScheduler.platform())
-                .subscribe(dr -> viewAdded(dr));
+        .filter(dr -> dr.getTarget().equals(this.getId()))
+        .observeOn(JavaFxScheduler.platform())
+        .subscribe(dr -> viewAdded(dr));
 
         viewManager.undock()
-                .observeOn(JavaFxScheduler.platform())
-                .subscribe(v -> viewDeleted(v));
+        .observeOn(JavaFxScheduler.platform())
+        .subscribe(v -> viewDeleted(v));
     }
 
     @Override

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,12 +33,23 @@
  */
 package com.gluonhq.jfxapps.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.testfx.api.FxRobot;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.UiController;
 import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
@@ -50,7 +61,6 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.util.URLUtils;
 
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -67,6 +77,7 @@ public class UiControllerBuilder<T extends UiController> {
     private Class<T> controller;
     private T controllerInstance;
     private String css;
+    private String i18n;
     private Stage stage;
     private int width;
     private int height;
@@ -75,7 +86,8 @@ public class UiControllerBuilder<T extends UiController> {
     private String fxml;
     private FXOMDocument document;
     private ToolStylesheetProvider toolStylesheetProvider;
-
+    private List<URL> cssUrl = new ArrayList<>();
+    private List<URL> i18nUrl = new ArrayList<>();
 
     protected UiControllerBuilder(JfxAppContext context, JavafxThreadClassloader classloader, ApplicationEvents events, ApplicationInstanceEvents instanceEvents) {
         this.context = context;
@@ -123,6 +135,21 @@ public class UiControllerBuilder<T extends UiController> {
         return this;
     }
 
+    public UiControllerBuilder<T> css(URL cssUrl) {
+        this.cssUrl.add(cssUrl);
+        return this;
+    }
+
+    public UiControllerBuilder<T> i18n(URL i18nUrl) {
+        this.i18nUrl.add(i18nUrl);
+        return this;
+    }
+
+    public UiControllerBuilder<T> i18n(String i18n) {
+        this.i18n = i18n;
+        return this;
+    }
+
     public UiControllerBuilder<T> css(ToolStylesheetProvider toolStylesheetProvider) {
         this.toolStylesheetProvider = toolStylesheetProvider;
         return this;
@@ -134,16 +161,47 @@ public class UiControllerBuilder<T extends UiController> {
     }
 
     public TestStage<T> show() {
-        int w = width == 0 ? 800 : width;
-        int h = height == 0 ? 600 : height;
+        var w = width == 0 ? 800 : width;
+        var h = height == 0 ? 600 : height;
 
         T instance;
-        AtomicReference<FXOMDocument> docRef = new AtomicReference<>();
+        var docRef = new AtomicReference<FXOMDocument>();
 
         robot.interact(() -> {
             classloader.addClassLoader(Thread.currentThread().getContextClassLoader());
             Thread.currentThread().setContextClassLoader(classloader);
         });
+
+        var i18nInstance = context.getBean(I18N.class);
+
+        if (i18n != null) {
+            i18nInstance.addBundleProvider(() -> new PropertyResourceBundle(new ByteArrayInputStream(i18n.getBytes())));
+        }
+
+        if (i18nUrl != null) {
+            for (var url : i18nUrl) {
+                final File file;
+                try {
+                    file = new File(url.toURI());
+                } catch (URISyntaxException e) {
+                    throw new IllegalArgumentException("Invalid i18n file: " + url, e);
+                }
+                if (!file.exists()) {
+                    throw new IllegalArgumentException("Invalid i18n file: " + file);
+                }
+                i18nInstance.addBundleProvider(() -> {
+                    var parent = file.getParentFile();
+                    var fileName = file.toPath().getFileName().toString();
+                    var nameWithoutExt = fileName.replaceFirst("[.][^.]+$", ""); // Remove last dot + extension
+
+                    var urlClassLoader = new URLClassLoader(new URL[]{parent.toURI().toURL()});
+
+                    return ResourceBundle.getBundle(nameWithoutExt, Locale.getDefault(), urlClassLoader);
+
+                });
+            }
+        }
+        i18nInstance.changeLocale(Locale.getDefault());
 
         if (controllerInstance != null) {
             instance = controllerInstance;
@@ -162,7 +220,7 @@ public class UiControllerBuilder<T extends UiController> {
         robot.interact(() -> {
 
             if (stageSetup != null) {
-                Parent c = instance.getRoot() == null ? new Pane() : instance.getRoot();
+                var c = instance.getRoot() == null ? new Pane() : instance.getRoot();
                 stageSetup.setup(stage, w, h, c);
             }
 
@@ -172,8 +230,11 @@ public class UiControllerBuilder<T extends UiController> {
                 builder.stylesheets(toolStylesheetProvider.getStylesheets());
             }
             if (css != null) {
-                String dataUri = URLUtils.toDataURI(css).toString();
+                var dataUri = URLUtils.toDataURI(css).toString();
                 builder.stylesheet(dataUri);
+            }
+            if (!cssUrl.isEmpty()) {
+                cssUrl.forEach(url -> builder.stylesheet(url.toExternalForm()));
             }
 
             var provider = builder.build();
@@ -213,6 +274,10 @@ public class UiControllerBuilder<T extends UiController> {
                 }
 
                 instanceEvents.fxomDocument().set(doc);
+            }
+
+            if (stage.getScene() != null) {
+                stage.getScene().getRoot().getStyleClass().add("testStage");
             }
 
         });

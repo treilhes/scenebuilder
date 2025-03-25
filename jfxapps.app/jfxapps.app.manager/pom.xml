@@ -16,6 +16,8 @@
         <module>manager.model</module>
         <module>manager.metadata</module>
         <module>manager.api</module>
+        <module>manager.store</module>
+        <module>manager.source</module>
     </modules>
     
     <properties>

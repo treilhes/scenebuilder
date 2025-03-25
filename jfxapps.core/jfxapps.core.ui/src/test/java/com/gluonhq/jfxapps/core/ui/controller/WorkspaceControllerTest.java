@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -76,13 +76,13 @@ import javafx.scene.control.Label;
 class WorkspaceControllerTest {
 
     private static final String WORKSPACE_CSS = """
-        #scrollPane {
-            -fx-border-color: red;
-        }
-        #workspacePane {
-            -fx-background-color: green;
-        }
-        """;
+            #scrollPane {
+                -fx-border-color: red;
+            }
+            #workspacePane {
+                -fx-background-color: green;
+            }
+            """;
 
     @TestConfiguration
     static class Config {
@@ -142,13 +142,13 @@ class WorkspaceControllerTest {
     @DirtiesContext
     void should_load_the_fxml(StageBuilder builder) {
         Mockito.when(backgroundImagePreference.getObservableValue())
-                .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
+        .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
         Mockito.when(content.contentChanged()).thenReturn(PublishSubject.create());
 
         var testStage = builder.controller(WorkspaceController.class).show();
         assertNotNull(testStage.getController().getRoot());
 
-        testStage.end();
+        testStage.close();
     }
 
     @Test
@@ -156,7 +156,7 @@ class WorkspaceControllerTest {
     void show_ui(StageBuilder builder, FxRobot robot) {
 
         Mockito.when(backgroundImagePreference.getObservableValue())
-            .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
+        .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
         Mockito.when(content.contentChanged()).thenReturn(PublishSubject.create());
 
         var testStage = builder.controller(WorkspaceController.class)
@@ -167,16 +167,16 @@ class WorkspaceControllerTest {
 
         applicationEvents.stylesheetConfig().set(ToolStylesheetProvider.builder()
                 .stylesheet(URLUtils.toDataURI("""
-                    #scrollPane {
-                        -fx-border-color: green;
-                    }
-                    #workspacePane {
-                        -fx-background-color: blue;
-                    }
-                    """).toString())
+                        #scrollPane {
+                            -fx-border-color: green;
+                        }
+                        #workspacePane {
+                            -fx-background-color: blue;
+                        }
+                        """).toString())
                 .build());
 
-        testStage.end();
+        testStage.close();
     }
 
     @Test
@@ -186,15 +186,15 @@ class WorkspaceControllerTest {
         var contentChanged = PublishSubject.<Boolean>create();
 
         Mockito.when(backgroundImagePreference.getObservableValue())
-            .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
+        .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
 
         Mockito.when(content.contentChanged()).thenReturn(contentChanged);
 
         var testStage = builder.controller(WorkspaceController.class)
-            .size(800, 600)
-            .setup(StageType.Fill)
-            .css(WORKSPACE_CSS)
-            .show();
+                .size(800, 600)
+                .setup(StageType.Fill)
+                .css(WORKSPACE_CSS)
+                .show();
 
         var workspace = testStage.getController();
 
@@ -207,7 +207,7 @@ class WorkspaceControllerTest {
 
         assertEquals("FXOMDocument is null", backgroundPane.getText());
 
-        testStage.end();
+        testStage.close();
     }
 
     @Test
@@ -217,15 +217,15 @@ class WorkspaceControllerTest {
         var contentChanged = PublishSubject.<Boolean>create();
 
         Mockito.when(backgroundImagePreference.getObservableValue())
-            .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
+        .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
         Mockito.when(content.contentChanged()).thenReturn(contentChanged);
 
 
         var testStage = builder.controller(WorkspaceController.class)
-            .size(800, 600)
-            .setup(StageType.Fill)
-            .css(WORKSPACE_CSS)
-            .show();
+                .size(800, 600)
+                .setup(StageType.Fill)
+                .css(WORKSPACE_CSS)
+                .show();
 
         var workspace = testStage.getController();
 
@@ -241,7 +241,7 @@ class WorkspaceControllerTest {
 
         assertEquals("content.label.status.invitation", backgroundPane.getText());
 
-        testStage.end();
+        testStage.close();
     }
 
     @Test
@@ -251,27 +251,27 @@ class WorkspaceControllerTest {
         var contentChanged = PublishSubject.<Boolean>create();
 
         Mockito.when(backgroundImagePreference.getObservableValue())
-            .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
+        .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
         Mockito.when(content.contentChanged()).thenReturn(contentChanged);
 
         var testStage = builder.controller(WorkspaceController.class)
-            .size(800, 600)
-            .setup(StageType.Fill)
-            .document("""
-                <?import javafx.scene.Scene?>
-                <?import javafx.scene.layout.AnchorPane?>
-                <?import javafx.stage.Stage?>
+                .size(800, 600)
+                .setup(StageType.Fill)
+                .document("""
+                        <?import javafx.scene.Scene?>
+                        <?import javafx.scene.layout.AnchorPane?>
+                        <?import javafx.stage.Stage?>
 
-                <Stage xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-                    <scene>
-                        <Scene>
-                            <AnchorPane prefHeight="200" prefWidth="200" />
-                        </Scene>
-                    </scene>
-                </Stage>
-                """)
-            .css(WORKSPACE_CSS)
-            .show();
+                        <Stage xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+                            <scene>
+                                <Scene>
+                                    <AnchorPane prefHeight="200" prefWidth="200" />
+                                </Scene>
+                            </scene>
+                        </Stage>
+                        """)
+                .css(WORKSPACE_CSS)
+                .show();
 
         var workspace = testStage.getController();
 
@@ -298,7 +298,7 @@ class WorkspaceControllerTest {
         assertEquals(before.getWidth()*2, after.getWidth(), 0.1);
         assertEquals(before.getHeight()*2, after.getHeight(), 0.1);
 
-        testStage.end();
+        testStage.close();
     }
 
 }

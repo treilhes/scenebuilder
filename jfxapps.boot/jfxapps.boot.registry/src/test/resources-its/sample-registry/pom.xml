@@ -49,6 +49,7 @@
                         <applications>
                             <application>
                                 <uuid>feda298c-4a63-450d-8c59-8cb43241ba3d</uuid>
+                                <splash>fake_image.png</splash>
                                 <dependency>
                                     <groupId>com.gluonhq.jfxapps</groupId>
                                     <version>${project.version}</version>
@@ -56,7 +57,6 @@
                                 </dependency>
                                 <description>
                                     <image>fake_image.png</image>
-                                    <splash>fake_image.png</splash>
                                     <title>FXML Runner</title>
                                     <text>App that run fxml files</text>
                                 </description>

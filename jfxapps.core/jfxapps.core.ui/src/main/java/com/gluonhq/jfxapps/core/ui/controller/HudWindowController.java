@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,6 +37,7 @@ import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.gesture.CardinalPoint;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPopupController;
@@ -79,10 +80,11 @@ public class HudWindowController extends AbstractFxmlPopupController implements 
      * Instantiates a new hud window controller.
      */
     public HudWindowController(
+            I18N i18n,
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager
             ) {
-        super(scenebuilderManager, documentManager, HudWindowController.class.getResource("HudWindow.fxml"));
+        super(i18n, scenebuilderManager, documentManager, HudWindowController.class.getResource("HudWindow.fxml"));
     }
 
     /** The relative position. */
@@ -142,8 +144,8 @@ public class HudWindowController extends AbstractFxmlPopupController implements 
         assert (0 <= rowIndex);
         assert (rowIndex < gridPane.getRowConstraints().size());
 
-        final int nameChildIndex = rowIndex * 2;
-        final Label nameLabel = (Label) gridPane.getChildren().get(nameChildIndex);
+        final var nameChildIndex = rowIndex * 2;
+        final var nameLabel = (Label) gridPane.getChildren().get(nameChildIndex);
         nameLabel.setText(name);
     }
 
@@ -158,8 +160,8 @@ public class HudWindowController extends AbstractFxmlPopupController implements 
         assert (0 <= rowIndex);
         assert (rowIndex < gridPane.getRowConstraints().size());
 
-        final int valueChildIndex = rowIndex * 2+1;
-        final Label valueLabel = (Label) gridPane.getChildren().get(valueChildIndex);
+        final var valueChildIndex = rowIndex * 2+1;
+        final var valueLabel = (Label) gridPane.getChildren().get(valueChildIndex);
         valueLabel.setText(value);
     }
 
@@ -242,7 +244,7 @@ public class HudWindowController extends AbstractFxmlPopupController implements 
         // scene. This looks like a bug in FX...
         // Anway we protect ourself by checking.
         if (getAnchor() != null && getAnchor().getScene() != null) {
-            final Point2D popupLocation = computePopupLocation();
+            final var popupLocation = computePopupLocation();
             getPopup().setX(popupLocation.getX());
             getPopup().setY(popupLocation.getY());
         }
@@ -283,63 +285,63 @@ public class HudWindowController extends AbstractFxmlPopupController implements 
          *       +-----+               +-----+               +-----+
          */
 
-        final Bounds anchorBounds = getAnchor().getLayoutBounds();
-        final Bounds usefulBounds = clampBounds(anchorBounds, 1.0, 1.0);
+        final var anchorBounds = getAnchor().getLayoutBounds();
+        final var usefulBounds = clampBounds(anchorBounds, 1.0, 1.0);
         assert usefulBounds.getWidth() > 0.0;
         assert usefulBounds.getHeight() > 0.0;
-        final Point2D p0 = relativePosition.getPosition(usefulBounds);
-        final Point2D p1 = relativePosition.getOpposite().getPosition(usefulBounds);
-        final Point2D sp0 = getAnchor().localToScreen(p0);
-        final Point2D sp1 = getAnchor().localToScreen(p1);
+        final var p0 = relativePosition.getPosition(usefulBounds);
+        final var p1 = relativePosition.getOpposite().getPosition(usefulBounds);
+        final var sp0 = getAnchor().localToScreen(p0);
+        final var sp1 = getAnchor().localToScreen(p1);
         System.out.println(this);
         assert sp0 != null;
         assert sp1 != null;
-        final LineEquation leq = new LineEquation(sp0, sp1);
+        final var leq = new LineEquation(sp0, sp1);
 
 
-        final Point2D k = leq.pointAtOffset(-30.0);
+        final var k = leq.pointAtOffset(-30.0);
 
         final double ox, oy; // Point O on the diagram above
-        final Bounds popupBounds = getRoot().getLayoutBounds();
-        switch(relativePosition) {
-            case N:
-                ox = k.getX() - popupBounds.getWidth() / 2.0;
-                oy = k.getY() - popupBounds.getHeight();
-                break;
-            case NE:
-                ox = k.getX();
-                oy = k.getY() - popupBounds.getHeight();
-                break;
-            case E:
-                ox = k.getX();
-                oy = k.getY() - popupBounds.getHeight() / 2.0;
-                break;
-            case SE:
-                ox = k.getX();
-                oy = k.getY();
-                break;
-            case S:
-                ox = k.getX() - popupBounds.getWidth() / 2.0;
-                oy = k.getY();
-                break;
-            case SW:
-                ox = k.getX() - popupBounds.getWidth();
-                oy = k.getY();
-                break;
-            case W:
-                ox = k.getX() - popupBounds.getWidth();
-                oy = k.getY() - popupBounds.getHeight() / 2.0;
-                break;
-            case NW:
-                ox = k.getX() - popupBounds.getWidth();
-                oy = k.getY() - popupBounds.getHeight();
-                break;
-            default:
-                assert false : "unexpected cardinal point:" + this;
-                ox = k.getX();
-                oy = k.getY();
-                break;
+        final var popupBounds = getRoot().getLayoutBounds();
+        oy = switch (relativePosition) {
+        case N -> {
+            ox = k.getX() - popupBounds.getWidth() / 2.0;
+            yield k.getY() - popupBounds.getHeight();
         }
+        case NE -> {
+            ox = k.getX();
+            yield k.getY() - popupBounds.getHeight();
+        }
+        case E -> {
+            ox = k.getX();
+            yield k.getY() - popupBounds.getHeight() / 2.0;
+        }
+        case SE -> {
+            ox = k.getX();
+            yield k.getY();
+        }
+        case S -> {
+            ox = k.getX() - popupBounds.getWidth() / 2.0;
+            yield k.getY();
+        }
+        case SW -> {
+            ox = k.getX() - popupBounds.getWidth();
+            yield k.getY();
+        }
+        case W -> {
+            ox = k.getX() - popupBounds.getWidth();
+            yield k.getY() - popupBounds.getHeight() / 2.0;
+        }
+        case NW -> {
+            ox = k.getX() - popupBounds.getWidth();
+            yield k.getY() - popupBounds.getHeight();
+        }
+        default -> {
+            assert false : "unexpected cardinal point:" + this;
+            ox = k.getX();
+            yield k.getY();
+        }
+        };
 
         return new Point2D(ox, oy);
     }
@@ -370,11 +372,11 @@ public class HudWindowController extends AbstractFxmlPopupController implements 
      * Append row.
      */
     private void appendRow() {
-        final int newRowIndex = gridPane.getRowConstraints().size();
+        final var newRowIndex = gridPane.getRowConstraints().size();
 
         // Add an entry to gridPane.rowConstraints.
         // We clone rowConstraint0 and add it to gridPane.
-        final RowConstraints rc = new RowConstraints();
+        final var rc = new RowConstraints();
         rc.setFillHeight(rowConstraint0.isFillHeight());
         rc.setMaxHeight(rowConstraint0.getMaxHeight());
         rc.setMinHeight(rowConstraint0.getMinHeight());
@@ -385,9 +387,9 @@ public class HudWindowController extends AbstractFxmlPopupController implements 
         gridPane.getRowConstraints().add(rc);
 
         // Add two Labels to gridPane.children
-        final Label nameLabel = new Label();
+        final var nameLabel = new Label();
         nameLabel.setId(String.format(NAME_LABEL_ID_FORMAT, newRowIndex));
-        final Label valueLabel = new Label();
+        final var valueLabel = new Label();
         valueLabel.setId(String.format(VALUE_LABEL_ID_FORMAT, newRowIndex));
 
         nameLabel.getStyleClass().add("hud-property-label");
@@ -408,7 +410,7 @@ public class HudWindowController extends AbstractFxmlPopupController implements 
         assert gridPane.getRowConstraints().size() >= 1;
         assert gridPane.getChildren().size() >= 2;
 
-        final int lastRowIndex = gridPane.getRowConstraints().size()-1;
+        final var lastRowIndex = gridPane.getRowConstraints().size()-1;
         gridPane.getRowConstraints().remove(lastRowIndex);
         gridPane.getChildren().remove(lastRowIndex * 2 + 1);
         gridPane.getChildren().remove(lastRowIndex * 2 + 0);

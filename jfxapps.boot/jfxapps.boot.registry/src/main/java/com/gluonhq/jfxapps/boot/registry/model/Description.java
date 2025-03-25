@@ -41,11 +41,11 @@ import jakarta.validation.constraints.NotNull;
 @Embeddable
 public class Description {
 
-    @NotNull
-    @Length(max = 255)
-    private String image;
-
-    private String i18n;
+    //    @NotNull
+    //    @Length(max = 255)
+    //    private String image;
+    //
+    //    private String i18n;
 
     /** The title. */
     @NotNull
@@ -64,23 +64,23 @@ public class Description {
         super();
     }
 
-	public String getImage() {
-		return image;
-	}
+    //	public String getImage() {
+    //		return image;
+    //	}
+    //
+    //	public void setImage(String image) {
+    //		this.image = image;
+    //	}
+    //
+    //	public String getI18n() {
+    //		return i18n;
+    //	}
+    //
+    //	public void setI18n(String i18n) {
+    //		this.i18n = i18n;
+    //	}
 
-	public void setImage(String image) {
-		this.image = image;
-	}
-
-	public String getI18n() {
-		return i18n;
-	}
-
-	public void setI18n(String i18n) {
-		this.i18n = i18n;
-	}
-
-	public String getTitle() {
+    public String getTitle() {
         return title;
     }
 

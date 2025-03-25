@@ -1,0 +1,74 @@
+.store-vbox {
+    -fx-background-color: transparent;
+}
+
+.store-title-hbox {
+}
+
+.store-title-label {
+	-fx-font-size: 3em;
+	-fx-font-weight: bold;
+	-fx-text-fill: white;
+	-fx-effect: dropshadow(three-pass-box, rgb(100, 100, 100), 2, 0, 1, 2);
+}
+
+.store-search-hbox {
+	-fx-alignment: center;
+	-fx-spacing: 20;
+	-fx-border-width: 1 0 1 0;
+	-fx-border-color: #FFFFFF77;
+}
+
+.store-search-textfield {
+	-fx-pref-width: 500;
+	-fx-background-color: white;
+	-fx-background-radius: 20;
+	-fx-border-radius: 20;
+	-fx-border-color: rgb(255, 255, 255);
+	-fx-border-width: 1;
+	-fx-padding: 5;
+	-fx-font-size: 1.5em;
+	-fx-effect: dropshadow(three-pass-box, rgb(100, 100, 100), 2, 0, 1, 2);
+}
+
+.store-search-button {  
+	-fx-pref-height: 40;
+	-fx-pref-width: 60;
+	-fx-spacing: 20;
+	-fx-alignment: center;
+	-fx-shape:"M10,0 L25,0 A1,1,1,0,1,25,20 L25,20,10,20 A1,1,1,0,1,10,0 Z";
+}
+
+.store-searchresults-vbox {
+	
+}
+
+.store-searchresults-title-hbox {
+	-fx-alignment: center_left;
+	-fx-pref-height: 60;
+}
+
+.store-searchresults-title-label {
+	-fx-font-size: 2em;
+	-fx-font-weight: bold;
+	-fx-text-fill: white;
+	-fx-effect: dropshadow(three-pass-box, rgb(100, 100, 100), 2, 0, 1, 2);
+}
+
+.store-searchresults-listview {
+	-fx-padding: 20;
+	-fx-background-color: #ECF7FB;
+	-fx-background-radius: 20;
+	-fx-border-radius: 20;
+	-fx-border-color: rgb(255, 255, 255);
+	-fx-border-width: 1;
+	-fx-effect: dropshadow(three-pass-box, rgb(100, 100, 100), 2, 0, 1, 2);
+
+}
+
+.store-searchresults-listview .list-cell {
+	-fx-background-color: #ECF7FB;
+	/* -fx-cell-size: 100; */
+	-fx-alignment: center;
+	-fx-padding: 0 20 10 0;
+}

@@ -14,11 +14,13 @@
       <module>jfxapps.app.manager</module>
       <module>jfxapps.app.scenebuilder</module>
       <module>jfxapps.app.devtools</module>
+      <module>jfxapps.app.sample</module>
   </modules>
   
   <properties>
       <devtools.version>1.0.0-SNAPSHOT</devtools.version>
       <manager.version>1.0.0-SNAPSHOT</manager.version>
+      <sample.version>1.0.0-SNAPSHOT</sample.version>
       <scenebuilder.version>17.0.0-SNAPSHOT</scenebuilder.version>
   </properties>
 </project>

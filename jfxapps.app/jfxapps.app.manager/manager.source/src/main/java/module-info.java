@@ -31,96 +31,15 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.api.registry.model;
+import com.gluonhq.jfxapps.app.manager.source.ManagerSourceExtension;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 
-import java.net.URL;
-import java.util.Objects;
-import java.util.UUID;
+open module manager.source {
+    exports com.gluonhq.jfxapps.app.manager.source;
+    exports com.gluonhq.jfxapps.app.manager.source.controller;
 
-public class ItemInfo {
+    requires manager.api;
+    requires jfxapps.core.starter;
 
-    private UUID uuid;
-    private URL splash;
-    private URL image;
-    private URL i18n;
-    private String title;
-    private String text;
-    private String changelog;
-
-    public ItemInfo() {
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public URL getSplash() {
-		return splash;
-	}
-
-	public void setSplash(URL splash) {
-		this.splash = splash;
-	}
-
-	public URL getImage() {
-		return image;
-	}
-
-	public void setImage(URL image) {
-		this.image = image;
-	}
-
-	public URL getI18n() {
-		return i18n;
-	}
-
-	public void setI18n(URL i18n) {
-		this.i18n = i18n;
-	}
-
-	public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getChangelog() {
-        return changelog;
-    }
-
-    public void setChangelog(String changelog) {
-        this.changelog = changelog;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(uuid);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        ItemInfo other = (ItemInfo) obj;
-        return Objects.equals(uuid, other.uuid);
-    }
-
+    provides Extension with ManagerSourceExtension;
 }
