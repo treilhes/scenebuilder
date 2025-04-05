@@ -109,7 +109,7 @@ class SourceControllerTest {
     }
 
     @Test
-    void should_create_3_rows_with_only_2_lines_with_values(StageBuilder stageBuilder, FxRobot robot) {
+    void must_load_two_sources(StageBuilder stageBuilder, FxRobot robot) {
         var b = new AtomicReference<Button>();
 
         var reg1 = new RegistryInfo();
@@ -166,8 +166,7 @@ class SourceControllerTest {
 
             var controller = testStage.getController();
 
-            controller.getRoot().getScene().getRoot().setStyle(
-                    "-fx-background-color:  radial-gradient(focus-angle 0deg , focus-distance -80% , center 0% -10% , radius 100% , #d5e3e6 30%, #72adaa 80%, #293950)");
+            addTestBackground(robot, controller);
 
             robot.interact(controller::onShow);
             // robot.interact(() -> ScenicView.show(controller.getRoot().getScene()));
@@ -177,6 +176,13 @@ class SourceControllerTest {
             testStage.close();
         } while (loopForEdit);
 
+    }
+
+    private void addTestBackground(FxRobot robot, SourceController controller) {
+        robot.interact(() -> {
+            controller.getRoot().getScene().getRoot().setStyle(
+                    "-fx-background-color:  radial-gradient(focus-angle 0deg , focus-distance -80% , center 0% -10% , radius 100% , #d5e3e6 30%, #72adaa 80%, #293950)");
+        });
     }
 
 }
