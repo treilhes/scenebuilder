@@ -51,7 +51,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 
-@Entity(name = "JFXAPPS_BOOT_REGISTRY_EXTENSION")
+@Entity(name = "Extension")
 public class ExtensionEntity {
 
     @Id
@@ -83,7 +83,7 @@ public class ExtensionEntity {
 
     @OneToMany(mappedBy = "parentExtension", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
-    private Set<ExtensionEntity> extensions = new HashSet<ExtensionEntity>();
+    private Set<ExtensionEntity> extensions = new HashSet<>();
 
     public ExtensionEntity() {
         super();

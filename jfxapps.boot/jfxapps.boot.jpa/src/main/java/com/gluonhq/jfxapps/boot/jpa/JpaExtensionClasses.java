@@ -43,7 +43,11 @@ public class JpaExtensionClasses implements ExtensionContextConfigClasses {
 
     @Override
     public List<Class<?>> classes() {
-        return List.of(JpaExtensionConfig.class, JfxAppsJpaRepositorySupport.class);
+        //@formatter:off
+        return List.of(
+                JpaExtensionConfig.class,
+                JfxAppsJpaRepositorySupport.class);
+        //@formatter:on
     }
 
 }

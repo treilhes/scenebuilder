@@ -33,12 +33,13 @@
  */
 package com.gluonhq.jfxapps.app.manager.store.controller;
 
+import java.util.function.Supplier;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.app.manager.api.ui.Docks;
-import com.gluonhq.jfxapps.app.manager.store.model.Application;
-import com.gluonhq.jfxapps.app.manager.store.model.StoreModelController;
+import com.gluonhq.jfxapps.app.manager.store.component.Switch;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -48,12 +49,9 @@ import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 
-import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.Node;
+import javafx.scene.layout.StackPane;
 
 @ApplicationInstanceSingleton
 @ViewAttachment(
@@ -68,21 +66,14 @@ import javafx.scene.control.TextField;
         )
 public class StoreController extends AbstractFxmlViewController {
 
-    private static final int STORE_SQUARE_IMAGE_SIZE = 128;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(StoreController.class);
 
     @FXML
-    TextField searchField;
+    private StackPane rootPane;
 
-    @FXML
-    ListView<Application> applications;
+    private final RootController rootController;
 
-    FilteredList<Application> filteredList;
-
-    private final StoreModelController registryManager;
-
-    private final JfxAppContext context;
+    private Switch switcher;
 
     //@formatter:off
     protected StoreController(
@@ -90,49 +81,39 @@ public class StoreController extends AbstractFxmlViewController {
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
             ViewMenu viewMenu,
-            StoreModelController registryManager,
+            RootController rootController,
             JfxAppContext context) {
         //@formatter:on
         super(i18n, scenebuilderManager, documentManager, viewMenu, StoreController.class.getResource("Store.fxml"));
 
-        this.registryManager = registryManager;
-        this.context = context;
+        this.rootController = rootController;
     }
 
     @FXML
-    public void initialize() {
-        applications.setCellFactory(l -> {
-            return new ListCell<Application>() {
-                @Override
-                protected void updateItem(Application item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty || item == null) {
-                        setText(null);
-                        setGraphic(null);
-                    } else {
-
-                        var controller = context.getBean(AppItemController.class);
-                        controller.setApplication(item);
-                        setGraphic(controller.getRoot());
-                    }
-                }
-            };
-        });
+    private void initialize() {
+        switcher = new Switch(rootPane);
     }
 
+    public void next(Supplier<Node> nodeSupplier) {
+        switcher.next(nodeSupplier.get());
+    }
 
-    @Override
-    public void controllerDidLoadFxml() {
-        getRoot().setId(StoreController.class.getSimpleName());
-        getRoot().minWidth(400.0);
-        getRoot().minHeight(400.0);
+    public void next(Node node) {
+        switcher.next(node);
+    }
+
+    public void back() {
+        switcher.back();
     }
 
     @Override
     public void onShow() {
-        registryManager.load();
-        filteredList = new FilteredList<>(registryManager.getApplications(), data -> true);
-        applications.setItems(filteredList);
+        rootController.onBack(switcher::back);
+        rootController.onNext(switcher::next);
+        rootController.load();
+
+        switcher.reset();
+        switcher.next(rootController.getRoot());
     }
 
     @Override
@@ -140,11 +121,5 @@ public class StoreController extends AbstractFxmlViewController {
         // TODO Auto-generated method stub
 
     }
-
-    @FXML
-    void search(ActionEvent event) {
-        filteredList.setPredicate(data -> data.match(searchField.getText()));
-    }
-
 
 }

@@ -51,7 +51,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 
-@Entity(name = "JFXAPPS_BOOT_REGISTRY_FEATURE")
+@Entity(name = "Feature")
 public class FeatureEntity {
 
     @Id
@@ -67,7 +67,7 @@ public class FeatureEntity {
 
     @OneToMany(mappedBy = "parentFeature", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
-    private Set<ExtensionEntity> extensions = new HashSet<ExtensionEntity>();
+    private Set<ExtensionEntity> extensions = new HashSet<>();
 
     public FeatureEntity() {
         super();

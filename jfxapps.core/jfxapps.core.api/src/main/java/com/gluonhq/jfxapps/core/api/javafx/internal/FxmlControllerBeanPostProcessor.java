@@ -33,16 +33,28 @@
  */
 package com.gluonhq.jfxapps.core.api.javafx.internal;
 
+import java.lang.annotation.Annotation;
 import java.util.concurrent.FutureTask;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.Ordered;
 import org.springframework.core.PriorityOrdered;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.core.type.StandardMethodMetadata;
+import org.springframework.lang.NonNull;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.DeportedSingleton;
+import com.gluonhq.jfxapps.core.api.javafx.DisableAutomaticFxmlLoading;
 import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
 import com.gluonhq.jfxapps.core.api.javafx.LoadInFxThread;
 
@@ -54,7 +66,7 @@ import javafx.scene.Parent;
  * The Class FxmlControllerBeanPostProcessor.
  */
 @DeportedSingleton
-public class FxmlControllerBeanPostProcessor implements PriorityOrdered, BeanPostProcessor {
+public class FxmlControllerBeanPostProcessor implements PriorityOrdered, BeanPostProcessor, BeanFactoryAware {
 
     private static final Logger logger = LoggerFactory.getLogger(FxmlControllerBeanPostProcessor.class);
 
@@ -64,6 +76,9 @@ public class FxmlControllerBeanPostProcessor implements PriorityOrdered, BeanPos
     /**
      * Instantiates a new fxml controller bean post processor.
      */
+
+    private ConfigurableListableBeanFactory beanFactory;
+
     public FxmlControllerBeanPostProcessor() {
         super();
     }
@@ -85,21 +100,35 @@ public class FxmlControllerBeanPostProcessor implements PriorityOrdered, BeanPos
         bean = BeanPostProcessor.super.postProcessAfterInitialization(bean, beanName);
 
         if (bean instanceof FxmlController controller) {
+
+            boolean disabled = false;
+            boolean loadOnFxThread = false;
+            // Get bean definition to access metadata
+            if (beanFactory != null && beanFactory.containsBeanDefinition(beanName)) {
+                var beanDefinition = beanFactory.getBeanDefinition(beanName);
+                var disableAnnotation = findAnnotation(beanDefinition, DisableAutomaticFxmlLoading.class);
+                if (disableAnnotation != null) {
+                    disabled = true;
+                } else {
+                    var loadInFxThreadAnnotation = findAnnotation(beanDefinition, LoadInFxThread.class);
+                    if (loadInFxThreadAnnotation != null) {
+                        loadOnFxThread = true;
+                    }
+                }
+            }
+
             FXMLLoader loader = new FXMLLoader();
-            //            loader.setControllerFactory(c -> {
-            //                if (c != null && c != controller.getClass()) {
-            //                    logger.warn("Unexpected controller class {}, expected {}", c, controller.getClass()); // NOI18N
-            //                }
-            //                return controller;
-            //            });
             loader.setController(controller);
             loader.setLocation(controller.getFxmlURL());
             loader.setResources(controller.getResources());
             loader.setClassLoader(bean.getClass().getClassLoader());
 
             try {
+
                 final Parent parent;
-                if (bean.getClass().getAnnotation(LoadInFxThread.class) != null) {
+                if (disabled) {
+                    return bean;
+                } else if (loadOnFxThread) {
                     var future = new FutureTask<>(() -> (Parent) loader.load());
                     Platform.runLater(future);
                     parent = future.get();
@@ -122,5 +151,26 @@ public class FxmlControllerBeanPostProcessor implements PriorityOrdered, BeanPos
     @Override
     public int getOrder() {
         return order;
+    }
+
+    @Override
+    public void setBeanFactory(@NonNull BeanFactory beanFactory) throws BeansException {
+        if (beanFactory instanceof ConfigurableListableBeanFactory clbf) {
+            this.beanFactory = clbf;
+        }
+    }
+
+    private static <A extends Annotation> A findAnnotation(BeanDefinition beanDefinition, Class<A> annotationType) {
+        if (beanDefinition instanceof AnnotatedGenericBeanDefinition annotatedBeanDefinition) {
+            AnnotationMetadata metadata = annotatedBeanDefinition.getMetadata();
+            if (metadata.isAnnotated(annotationType.getName())) {
+                return AnnotationUtils.synthesizeAnnotation(metadata.getAnnotationAttributes(annotationType.getName()), annotationType, null);
+            }
+        }
+        if (beanDefinition instanceof RootBeanDefinition rootBeanDefinition
+                && rootBeanDefinition.getSource() instanceof StandardMethodMetadata metadata) {
+            return metadata.getIntrospectedMethod().getAnnotation(annotationType);
+        }
+        return null;
     }
 }

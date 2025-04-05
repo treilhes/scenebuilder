@@ -37,9 +37,15 @@ import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.app.manager.api.ManagerApiExtension;
-import com.gluonhq.jfxapps.app.manager.store.controller.AppItemController;
+import com.gluonhq.jfxapps.app.manager.store.controller.ApplicationDetailController;
+import com.gluonhq.jfxapps.app.manager.store.controller.ApplicationItemController;
+import com.gluonhq.jfxapps.app.manager.store.controller.PluginDetailController;
+import com.gluonhq.jfxapps.app.manager.store.controller.PluginItemController;
+import com.gluonhq.jfxapps.app.manager.store.controller.RootController;
 import com.gluonhq.jfxapps.app.manager.store.controller.StoreController;
-import com.gluonhq.jfxapps.app.manager.store.model.StoreModelController;
+import com.gluonhq.jfxapps.app.manager.store.model.ApplicationModelControllerImpl;
+import com.gluonhq.jfxapps.app.manager.store.model.PluginModelControllerImpl;
+import com.gluonhq.jfxapps.app.manager.store.model.RootModelControllerImpl;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 
 /**
@@ -81,8 +87,14 @@ public class ManagerStoreExtension implements OpenExtension  {
     public List<Class<?>> exportedContextClasses() {
         return List.of(
                 StoreController.class,
-                AppItemController.class,
-                StoreModelController.class
+                RootController.class,
+                RootModelControllerImpl.class,
+                ApplicationDetailController.class,
+                ApplicationModelControllerImpl.class,
+                PluginDetailController.class,
+                PluginModelControllerImpl.class,
+                ApplicationItemController.class,
+                PluginItemController.class
                 );
     }
 

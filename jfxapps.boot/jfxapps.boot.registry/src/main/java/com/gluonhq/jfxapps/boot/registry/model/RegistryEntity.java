@@ -58,7 +58,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 
-@Entity(name = "JFXAPPS_BOOT_REGISTRY_REGISTRY")
+@Entity(name = "Registry")
 public class RegistryEntity {
 
     @Id

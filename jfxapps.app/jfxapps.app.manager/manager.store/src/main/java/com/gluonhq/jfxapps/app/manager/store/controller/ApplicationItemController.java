@@ -34,11 +34,14 @@
 package com.gluonhq.jfxapps.app.manager.store.controller;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.app.manager.store.model.Application;
+import com.gluonhq.jfxapps.app.manager.store.model.ApplicationController;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
@@ -47,36 +50,63 @@ import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
 @ApplicationInstancePrototype
-public class AppItemController extends AbstractFxmlController {
+public class ApplicationItemController extends AbstractFxmlController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AppItemController.class);
-
-    @FXML
-    Label titleLabel;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationItemController.class);
 
     @FXML
-    Label descriptionLabel;
+    private Button changeLogButton;
 
     @FXML
-    Label versionLabel;
+    private Label descriptionLabel;
 
     @FXML
-    Rectangle rectImage;
+    private Button installButton;
+
+    @FXML
+    private Rectangle rectImage;
+
+    @FXML
+    private Label titleLabel;
+
+    @FXML
+    private Button uninstallButton;
+
+    @FXML
+    private Label versionLabel;
+
+    @FXML
+    private Button viewButton;
+
+    private Consumer<Node> nextAction;
+
+    private Runnable backAction;
+
+    private Application item;
+
+    private JfxAppContext context;
+
+    private ApplicationController modelController;
 
     //@formatter:off
-    protected AppItemController(
+    protected ApplicationItemController(
             I18N i18n,
             ApplicationEvents scenebuilderManager,
-            ApplicationInstanceEvents documentManager) {
+            ApplicationInstanceEvents documentManager,
+            JfxAppContext context) {
         //@formatter:on
-        super(i18n, scenebuilderManager, documentManager, AppItemController.class.getResource("StoreItem.fxml"));
+        super(i18n, scenebuilderManager, documentManager, ApplicationItemController.class.getResource("ApplicationItem.fxml"));
+        this.context = context;
     }
 
     @FXML
@@ -87,17 +117,47 @@ public class AppItemController extends AbstractFxmlController {
 
     @Override
     public void controllerDidLoadFxml() {
-        getRoot().setId(AppItemController.class.getSimpleName());
+        getRoot().setId(ApplicationItemController.class.getSimpleName());
     }
 
-    public void setApplication(Application applicationItem) {
+    public void load(Application applicationItem, ApplicationController modelController) {
         Objects.requireNonNull(applicationItem, "sourceItem must not be null");
+        this.item = applicationItem;
+        this.modelController = modelController;
 
         titleLabel.textProperty().bind(applicationItem.nameProperty());
         descriptionLabel.textProperty().bind(applicationItem.descriptionProperty());
         versionLabel.textProperty().bind(applicationItem.versionProperty());
         rectImage.fillProperty().bind(createImageBinding(applicationItem));
 
+        installButton.visibleProperty().bind(applicationItem.installedProperty().not());
+        uninstallButton.visibleProperty().bind(applicationItem.installedProperty());
+    }
+
+    @FXML
+    void install(ActionEvent event) {
+        modelController.install(item);
+    }
+
+    @FXML
+    void showChangeLog(ActionEvent event) {
+
+    }
+
+    @FXML
+    void uninstall(ActionEvent event) {
+        modelController.uninstall(item);
+    }
+
+    @FXML
+    void view(ActionEvent event) {
+        var appController = context.getBean(ApplicationDetailController.class);
+        appController.onBack(backAction);
+        appController.onNext(nextAction);
+        appController.load(item, modelController);
+        if (nextAction != null) {
+            nextAction.accept(appController.getRoot());
+        }
     }
 
     private ObjectBinding<ImagePattern> createImageBinding(Application applicationItem) {
@@ -108,5 +168,13 @@ public class AppItemController extends AbstractFxmlController {
             }
             return null;
         }, applicationItem.imageProperty());
+    }
+
+    public void onBack(Runnable backAction) {
+        this.backAction = backAction;
+    }
+
+    public void onNext(Consumer<Node> nextAction) {
+        this.nextAction = nextAction;
     }
 }

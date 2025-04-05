@@ -31,91 +31,65 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.registry.model;
+package com.gluonhq.jfxapps.app.manager.store.model;
 
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
-public class Plugin {
-    private UUID target;
-    private UUID uuid;
-    private Description description;
-    private String version;
-    private Set<Feature> features;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.registry.RegistryManager;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 
-    public Plugin(UUID target, UUID uuid, Description description, Set<Feature> features) {
-        super();
-        this.target = target;
-        this.uuid = uuid;
-        this.description = description;
-        this.features = Set.copyOf(features);
+@ApplicationInstancePrototype
+public class PluginModelControllerImpl implements PluginController {
+
+    private final RegistryManager registryManager;
+    private PluginModel model;
+    private final I18N i18n;
+
+    public PluginModelControllerImpl(RegistryManager registryManager, I18N i18n) {
+        this.registryManager = registryManager;
+        this.i18n = i18n;
     }
 
-    public Plugin() {
-        super();
-    }
+    public PluginModel load(Plugin application) {
 
-    public UUID getTarget() {
-        return target;
-    }
+        model = new PluginModel();
 
-    public void setTarget(UUID target) {
-        this.target = target;
-    }
+        var appId = application.infoProperty().get().getUuid();
 
-    public UUID getUuid() {
-        return uuid;
-    }
+        model.getItem().set(application);
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
+        var apps = registryManager.listApplicationPluginsInfo(appId);
 
-    public Description getDescription() {
-        return description;
-    }
+        var sourceItems = apps.stream()
+                .map(p -> new Plugin(p, i18n))
+                .collect(Collectors.partitioningBy(a -> a.infoProperty().get().isInstalled()));
 
-    public void setDescription(Description description) {
-        this.description = description;
-    }
+        model.getAvailables().setAll(sourceItems.get(false));
+        model.getInstalled().setAll(sourceItems.get(true));
 
-    public Set<Feature> getFeatures() {
-        return features;
-    }
-
-    public void setFeatures(Set<Feature> features) {
-        this.features = features;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
+        return model;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(description, features, uuid);
+    public void install(Plugin item) {
+        registryManager.install(item.infoProperty().get());
+        item.installedProperty().set(true);
+        model.getAvailables().remove(item);
+        model.getInstalled().add(0, item);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        Plugin other = (Plugin) obj;
-        return Objects.equals(description, other.description) && Objects.equals(features, other.features)
-                && Objects.equals(uuid, other.uuid);
+    public void uninstall(Plugin item) {
+        registryManager.uninstall(item.infoProperty().get());
+        item.installedProperty().set(false);
+        model.getInstalled().remove(item);
+        model.getAvailables().add(0, item);
     }
 
-
+    @Override
+    public void update(Plugin plugin) {
+        registryManager.update(plugin.infoProperty().get());
+        plugin.versionProperty().set(plugin.nextVersionProperty().get());
+    }
 }

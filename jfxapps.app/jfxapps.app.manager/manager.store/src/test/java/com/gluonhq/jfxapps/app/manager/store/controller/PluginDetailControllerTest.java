@@ -34,10 +34,7 @@
 package com.gluonhq.jfxapps.app.manager.store.controller;
 
 import static org.junit.Assert.assertNotNull;
-
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
+import static org.mockito.ArgumentMatchers.any;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -48,21 +45,20 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
 import com.gluonhq.jfxapps.app.manager.api.ManagerApiExtension;
-import com.gluonhq.jfxapps.app.manager.store.model.StoreModelController;
+import com.gluonhq.jfxapps.app.manager.store.model.Plugin;
+import com.gluonhq.jfxapps.app.manager.store.model.PluginModel;
+import com.gluonhq.jfxapps.app.manager.store.model.PluginModelControllerImpl;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryManager;
-import com.gluonhq.jfxapps.boot.api.registry.model.ApplicationInfo;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 import com.gluonhq.jfxapps.test.StageBuilder;
 import com.gluonhq.jfxapps.test.StageType;
 
-import javafx.scene.control.Button;
-
 @JfxAppsTest
-@ContextConfiguration(classes = { AppDetailControllerTest.Config.class, StoreController.class, AppItemController.class,
-        StoreModelController.class })
-class AppDetailControllerTest {
+@ContextConfiguration(classes = { PluginDetailControllerTest.Config.class, PluginDetailController.class,
+        PluginItemController.class })
+class PluginDetailControllerTest {
 
     @TestConfiguration
     static class Config {
@@ -81,89 +77,78 @@ class AppDetailControllerTest {
         RegistryManager registryManager() {
             return Mockito.mock(RegistryManager.class);
         }
+
+        @Bean
+        PluginModelControllerImpl pluginModelController() {
+            return Mockito.mock(PluginModelControllerImpl.class);
+        }
     }
 
     @Autowired
     RegistryManager registryManager;
 
+    @Autowired
+    PluginModelControllerImpl applicationModelController;
+
     @Test
     void should_load_the_fxml(StageBuilder stageBuilder) {
-        var testStage = stageBuilder.controller(StoreController.class).show();
-        assertNotNull(testStage.getController().getRoot());
-        testStage.close();
+        try(var testStage = stageBuilder.controller(PluginDetailController.class).show()){
+            assertNotNull(testStage.getController().getRoot());
+        }
     }
 
     @Test
     void should_create_3_rows_with_only_2_lines_with_values(StageBuilder stageBuilder, FxRobot robot) {
-        var b = new AtomicReference<Button>();
 
-        var app1 = new ApplicationInfo();
-        app1.setUuid(UUID.randomUUID());
-        app1.setImage(AppDetailControllerTest.class.getResource("image1.png"));
-        app1.setTitle("Scene Builder");
-        app1.setText("Scene Builder is an open source tool that allows for drag and drop design of JavaFX user interfaces.");
-        app1.setVersion("X.X.X");
+        var appModel = new PluginModel();
+        var app = new Plugin(null, null);
+        var plug1 = new Plugin(null, null);
+        var plug2 = new Plugin(null, null);
 
-        var app2 = new ApplicationInfo();
-        app2.setUuid(UUID.randomUUID());
-        app2.setImage(AppDetailControllerTest.class.getResource("image2.png"));
-        app2.setTitle("App2");
-        app2.setText("Description2");
-        app2.setVersion("X.X.X");
+        appModel.getItem().set(app);
+        appModel.getAvailables().add(plug1);
+        appModel.getInstalled().add(plug2);
 
-        Mockito.when(registryManager.listApplicationsInfo()).thenReturn(Set.of(app1, app2));
+        app.imageProperty().set(PluginDetailControllerTest.class.getResource("image1.png"));
+        app.nameProperty().set("Scene Builder");
+        app.descriptionProperty().set("Scene Builder is an open source tool that allows for drag and drop design of JavaFX user interfaces.");
+        app.versionProperty().set("X.X.X");
+
+        plug1.imageProperty().set(PluginDetailControllerTest.class.getResource("image1.png"));
+        plug1.nameProperty().set("Scene Builder");
+        plug1.descriptionProperty().set("Scene Builder is an open source tool that allows for drag and drop design of JavaFX user interfaces.");
+        plug1.versionProperty().set("X.X.X");
+
+        plug2.imageProperty().set(PluginDetailControllerTest.class.getResource("image2.png"));
+        plug2.nameProperty().set("App2");
+        plug2.descriptionProperty().set("Description2");
+        plug2.versionProperty().set("X.X.X");
+
+        Mockito.when(applicationModelController.load(any())).thenReturn(appModel);
 
         var loopForEdit = false;
 
         do {
-            var testStage = stageBuilder.controller(StoreController.class)
+            try (var testStage = stageBuilder.controller(PluginDetailController.class)
                     .size(800, 600)
                     .css(ManagerApiExtension.class.getResource("/com/gluonhq/jfxapps/app/manager/api/ui/Manager.css"))
                     .setup(StageType.Fill)
-                    .show();
+                    .show()) {
 
-            var controller = testStage.getController();
 
-            controller.getRoot().getScene().getRoot().setStyle("-fx-background-color:  radial-gradient(focus-angle 0deg , focus-distance -80% , center 0% -10% , radius 100% , #d5e3e6 30%, #72adaa 80%, #293950)");
+                var controller = testStage.getController();
 
-            robot.interact(controller::onShow);
-            //robot.interact(() -> ScenicView.show(controller.getRoot().getScene()));
+                controller.getRoot().getScene().getRoot().setStyle("-fx-background-color:  radial-gradient(focus-angle 0deg , focus-distance -80% , center 0% -10% , radius 100% , #d5e3e6 30%, #72adaa 80%, #293950)");
 
-            System.out.println();
+                robot.interact(() -> controller.load(null, null));
+                //robot.interact(() -> ScenicView.show(controller.getRoot().getScene()));
 
-            testStage.close();
+                System.out.println();
+
+                testStage.close();
+            }
         } while (loopForEdit);
 
-        //        robot.interact(() -> {
-        //            hud.setRowCount(3);
-        //            hud.setNameAtRowIndex(name1, 0);
-        //            hud.setValueAtRowIndex(value1, 0);
-        //
-        //            hud.setNameAtRowIndex(name2, 2);
-        //            hud.setValueAtRowIndex(value2, 2);
-        //
-        //            hud.openWindow(b.get());
-        //        });
-        //
-        //        String idName1 = String.format(HudWindowController.NAME_LABEL_ID_FORMAT, 0);
-        //        String idValue1 = String.format(HudWindowController.VALUE_LABEL_ID_FORMAT, 0);
-        //
-        //        String idName2 = String.format(HudWindowController.NAME_LABEL_ID_FORMAT, 2);
-        //        String idValue2 = String.format(HudWindowController.VALUE_LABEL_ID_FORMAT, 2);
-        //
-        //        FxAssert.verifyThat("#" + idName1, Objects::nonNull);
-        //        FxAssert.verifyThat("#" + idValue1, Objects::nonNull);
-        //
-        //        FxAssert.verifyThat("#" + idName1, LabeledMatchers.hasText(name1));
-        //        FxAssert.verifyThat("#" + idValue1, LabeledMatchers.hasText(value1));
-        //
-        //        FxAssert.verifyThat("#" + idName2, Objects::nonNull);
-        //        FxAssert.verifyThat("#" + idValue2, Objects::nonNull);
-        //
-        //        FxAssert.verifyThat("#" + idName2, LabeledMatchers.hasText(name2));
-        //        FxAssert.verifyThat("#" + idValue2, LabeledMatchers.hasText(value2));
-        //
-        //        robot.interact(hud::closeWindow);
     }
 
 

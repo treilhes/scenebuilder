@@ -35,7 +35,7 @@ package com.gluonhq.jfxapps.app.manager.store.model;
 
 import java.net.URL;
 
-import com.gluonhq.jfxapps.boot.api.registry.model.ApplicationInfo;
+import com.gluonhq.jfxapps.boot.api.registry.model.PluginInfo;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 
 import javafx.beans.property.BooleanProperty;
@@ -45,7 +45,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class Application {
+public class Plugin {
 
     private StringProperty name = new SimpleStringProperty();
     private StringProperty description = new SimpleStringProperty();
@@ -57,10 +57,10 @@ public class Application {
     private BooleanProperty error = new SimpleBooleanProperty(false);
     private StringProperty errorMessage = new SimpleStringProperty();
 
-    private ObjectProperty<ApplicationInfo> info = new SimpleObjectProperty<>();
+    private ObjectProperty<PluginInfo> info = new SimpleObjectProperty<>();
     private I18N i18n;
-
-    public Application(ApplicationInfo info, I18N i18n) {
+    
+    public Plugin(PluginInfo info, I18N i18n) {
         this.i18n = i18n;
         this.infoProperty().addListener((obs, ov, nv) -> {
             if (nv != null) {
@@ -86,7 +86,7 @@ public class Application {
         return image;
     }
 
-    public ObjectProperty<ApplicationInfo> infoProperty() {
+    public ObjectProperty<PluginInfo> infoProperty() {
         return info;
     }
 
@@ -117,18 +117,16 @@ public class Application {
         }
         var data = info.get();
 
-        var lowerCaseSearch = searchTerm.toLowerCase();
+        var lowerCaseSearch=searchTerm.toLowerCase();
         var title = data.getTitle() == null ? "" : data.getTitle();
         return i18n.getStringOrDefault(title, title).toLowerCase().contains(lowerCaseSearch);
 
     }
 
-    private void update(ApplicationInfo source) {
+    private void update(PluginInfo source) {
         this.name.set(source.getTitle());
         this.description.set(source.getText());
         this.version.set(source.getVersion());
-        this.nextVersion.set(source.getNextVersion());
-        this.changeLog.set(source.getChangelog());
         this.image.set(source.getImage());
         this.installed.set(source.isInstalled());
     }

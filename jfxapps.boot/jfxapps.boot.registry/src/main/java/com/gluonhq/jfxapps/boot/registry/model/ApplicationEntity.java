@@ -52,7 +52,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 
-@Entity(name = "JFXAPPS_BOOT_REGISTRY_APPLICATION")
+@Entity(name = "Application")
 public class ApplicationEntity {
 
     @Id
@@ -66,6 +66,8 @@ public class ApplicationEntity {
 
     @NotBlank
     private String version;
+
+    private String nextVersion;
 
     @Embedded
     private Description description;
@@ -125,6 +127,14 @@ public class ApplicationEntity {
         this.version = version;
     }
 
+    public String getNextVersion() {
+        return nextVersion;
+    }
+
+    public void setNextVersion(String nextVersion) {
+        this.nextVersion = nextVersion;
+    }
+
     public boolean isInstalled() {
         return installed;
     }
@@ -140,14 +150,6 @@ public class ApplicationEntity {
     public void setDescription(Description description) {
         this.description = description;
     }
-
-    //    public String getSplash() {
-    //		return splash;
-    //	}
-    //
-    //	public void setSplash(String splash) {
-    //		this.splash = splash;
-    //	}
 
     public Set<ExtensionEntity> getExtensions() {
         return extensions;

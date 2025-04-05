@@ -110,6 +110,40 @@ public class RegistryManagerImpl implements RegistryManager {
         return registryService.computeLayerDefinition(applicationId);
     }
 
+
+    @Override
+    public void install(PluginInfo pluginInfo) {
+        registryService.install(pluginInfo);
+    }
+
+    @Override
+    public void uninstall(PluginInfo pluginInfo) {
+        registryService.uninstall(pluginInfo);
+    }
+
+    @Override
+    public void update(PluginInfo pluginInfo) {
+        registryService.update(pluginInfo);
+    }
+
+    @Override
+    public void install(ApplicationInfo applicationInfo) {
+        registryService.install(applicationInfo);
+    }
+
+    @Override
+    public void uninstall(ApplicationInfo applicationInfo) {
+        registryService.uninstall(applicationInfo);
+    }
+
+
+    @Override
+    public void update(ApplicationInfo applicationInfo) {
+        registryService.update(applicationInfo);
+    }
+
+
+
     @Override
     public void searchForUpdate() {
         // TODO Auto-generated method stub
@@ -127,7 +161,5 @@ public class RegistryManagerImpl implements RegistryManager {
         // TODO Auto-generated method stub
 
     }
-
-
 
 }

@@ -34,6 +34,7 @@
 package com.gluonhq.jfxapps.boot.registry.service;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -53,6 +54,7 @@ import com.gluonhq.jfxapps.boot.registry.internal.RegistryInfoMappers;
 import com.gluonhq.jfxapps.boot.registry.model.ApplicationEntity;
 import com.gluonhq.jfxapps.boot.registry.model.ExtensionEntity;
 import com.gluonhq.jfxapps.boot.registry.model.FeatureEntity;
+import com.gluonhq.jfxapps.boot.registry.model.LoadState;
 import com.gluonhq.jfxapps.boot.registry.model.PluginEntity;
 import com.gluonhq.jfxapps.boot.registry.model.RegistryEntity;
 import com.gluonhq.jfxapps.boot.registry.repository.ApplicationRepository;
@@ -133,17 +135,24 @@ public class RegistryService {
                 .orElse(null);
     }
 
+    @Transactional
     public RegistryInfo updateRegistryInfo(String groupId, String artifactId) {
         var entity = registrySourceService.find(groupId, artifactId)
                 .map(registryUpdateService::loadLatest)
                 .orElse(null);
 
         if (entity != null) {
+
             var oldRegistry = registryRepository.findByGroupIdAndArtifactId(groupId, artifactId);
 
-            oldRegistry.ifPresent(e -> entity.setInternalId(e.getInternalId()));
+            entity = mergeOldAndNewRegistries(entity, oldRegistry);
 
             save(entity);
+
+            if (entity.getLoadState() != LoadState.SUCCESS) {
+                String messages = entity.getMessages().stream().collect(Collectors.joining(","));
+                throw new RuntimeException("Registry update failed ! " + messages);
+            }
             return mapAndfillRegistryBinariesFromCache(entity);
         } else {
             return null;
@@ -171,6 +180,32 @@ public class RegistryService {
     public void save(@Valid RegistryEntity registry) {
         registryRepository.save(registry);
     }
+
+
+    public void install(PluginInfo pluginInfo) {
+        pluginRepository.install(pluginInfo.getUuid());
+    }
+
+    public void uninstall(PluginInfo pluginInfo) {
+        pluginRepository.uninstall(pluginInfo.getUuid());
+    }
+
+    public void update(PluginInfo pluginInfo) {
+        applicationRepository.update(pluginInfo.getUuid());
+    }
+
+    public void install(ApplicationInfo applicationInfo) {
+        applicationRepository.install(applicationInfo.getUuid());
+    }
+
+    public void uninstall(ApplicationInfo applicationInfo) {
+        applicationRepository.uninstall(applicationInfo.getUuid());
+    }
+
+    public void update(ApplicationInfo applicationInfo) {
+        applicationRepository.update(applicationInfo.getUuid());
+    }
+
 
     public LayerDefinition computeLayerDefinition(UUID applicationId) {
         var application = applicationRepository.findByInstalledTrueAndId(applicationId);
@@ -216,6 +251,38 @@ public class RegistryService {
         info.setImage(binaryCache.get(registryEntity.getId(), "image"));
         info.setI18n(binaryCache.get(registryEntity.getId(), "i18n"));
         return info;
-    };
+    }
+
+
+    /**
+     * Merge the old registry with the new one.
+     * We keep the internalId, the current version of the applications and plugins
+     * We also keep the installed state of the applications and plugins
+     * @param entity
+     * @param oldRegistry
+     * @return the merged registry
+     */
+    private RegistryEntity mergeOldAndNewRegistries(RegistryEntity entity, Optional<RegistryEntity> oldRegistry) {
+
+        oldRegistry.ifPresent(e -> {
+            entity.setInternalId(e.getInternalId());
+
+            var appVersionMap = e.getApplications().stream().collect(Collectors.toMap(ApplicationEntity::getId, a -> a));
+            entity.getApplications().forEach(a -> Optional.ofNullable(appVersionMap.get(a.getId())).ifPresent(old -> {
+                a.setVersion(old.getVersion());
+                a.setInstalled(old.isInstalled());
+            }));
+
+
+            var pluginVersionMap = e.getPlugins().stream().collect(Collectors.toMap(PluginEntity::getId, p -> p));
+            entity.getPlugins().forEach(p -> Optional.ofNullable(pluginVersionMap.get(p.getId())).ifPresent(old -> {
+                p.setVersion(old.getVersion());
+                p.setInstalled(old.isInstalled());
+            }));
+        });
+
+        return entity;
+    }
+
 
 }

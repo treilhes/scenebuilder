@@ -37,12 +37,29 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gluonhq.jfxapps.boot.registry.model.PluginEntity;
 
 @Repository
+@Transactional
 public interface PluginRepository extends JpaRepository<PluginEntity, UUID> {
     Set<PluginEntity> findByTarget(UUID target);
     Set<PluginEntity> findByInstalledTrueAndTarget(UUID target);
+
+    @Modifying
+    @Query("update Plugin p set p.installed = true where p.id = :id")
+    void install(@Param(value = "id") UUID id);
+
+    @Modifying
+    @Query("update Plugin p set p.installed = false where p.id = :id")
+    void uninstall(@Param(value = "id") UUID id);
+
+    @Modifying
+    @Query("update Plugin p set p.version = p.nextVersion where p.id = :id")
+    void update(UUID uuid);
 }

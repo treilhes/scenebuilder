@@ -154,7 +154,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		Objects.requireNonNull(applicationId, "applicationId is null");
 
 		LoadType loadType = loaderProperties.getDefaultLoadType();
-		
+
 		if (!isStarted(applicationId)) {
 
 			var splash = splashScreenProvider.map(sp -> sp.getSplashScreen(applicationId));
@@ -177,14 +177,14 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
 			stateProgress.ifPresent(s -> s.notifyFinish());
 			loadProgress.ifPresent(s -> s.notifyStart());
-			
+
 			// load all layers
 			loadApplication(application, loadType, loadProgress.orElse(null));
 			appLoad.ifPresent(s -> s.tag("Load Context", applicationId.toString()).end());
 
 			loadProgress.ifPresent(s -> s.notifyFinish());
 			launchProgress.ifPresent(s -> s.notifyStart());
-			
+
 			var appStart = startup.map(s -> s.start("application.manager.main.start"));
 
 			try {
@@ -197,7 +197,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
 			appStart.ifPresent(s -> s.tag("Boot Context", applicationId.toString()).end());
 
 			launchProgress.ifPresent(s -> s.notifyFinish());
-			
+
 			stateProvider.saveState(application.getExtension());
 			startedApplications.put(applicationId, application);
 		} else {
@@ -367,7 +367,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		List<Runnable> extensionStartings = extensionSet.stream().map(ext -> {
 			Runnable runnable = () -> {
 				try {
-					List<Object> singletonInstances = List.of(this);
+					//List<Object> singletonInstances = List.of(this);
+				    List<Object> singletonInstances = List.of();
 					JfxAppContext extContext = contexts.create(parentContext, ext, singletonInstances,
 							progressListener);
 					launchExtensionTree(executor, extContext, ext.getExtensions(), progressListener);

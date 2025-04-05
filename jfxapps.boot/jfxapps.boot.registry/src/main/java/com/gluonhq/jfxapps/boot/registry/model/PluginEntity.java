@@ -52,32 +52,37 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 
-@Entity(name = "JFXAPPS_BOOT_REGISTRY_PLUGIN")
+@Entity(name = "Plugin")
 public class PluginEntity {
 
     @Id
     private UUID id;
 
-	@NotNull
-	private UUID target;
+    @NotNull
+    private UUID target;
 
-	@Embedded
-	private Description description;
+    @Embedded
+    private Description description;
 
-	private boolean installed;
+    @NotNull
+    private String version;
 
-	@OneToMany(mappedBy = "parentPlugin", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonManagedReference
-	private Set<FeatureEntity> features = new HashSet<FeatureEntity>();
+    private String nextVersion;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonBackReference
-	@NotFound(action = NotFoundAction.IGNORE)
-	private RegistryEntity registry;
+    private boolean installed;
 
-	public PluginEntity() {
-		super();
-	}
+    @OneToMany(mappedBy = "parentPlugin", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private Set<FeatureEntity> features = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @NotFound(action = NotFoundAction.IGNORE)
+    private RegistryEntity registry;
+
+    public PluginEntity() {
+        super();
+    }
 
     public UUID getId() {
         return id;
@@ -87,60 +92,76 @@ public class PluginEntity {
         this.id = id;
     }
 
-	public UUID getTarget() {
-		return target;
-	}
+    public UUID getTarget() {
+        return target;
+    }
 
-	public void setTarget(UUID target) {
-		this.target = target;
-	}
+    public void setTarget(UUID target) {
+        this.target = target;
+    }
 
-	public Description getDescription() {
-		return description;
-	}
+    public Description getDescription() {
+        return description;
+    }
 
-	public void setDescription(Description description) {
-		this.description = description;
-	}
+    public void setDescription(Description description) {
+        this.description = description;
+    }
 
-	public boolean isInstalled() {
-		return installed;
-	}
+    public String getVersion() {
+        return version;
+    }
 
-	public void setInstalled(boolean installed) {
-		this.installed = installed;
-	}
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-	public Set<FeatureEntity> getFeatures() {
-		return features;
-	}
+    public String getNextVersion() {
+        return nextVersion;
+    }
 
-	protected void setFeatures(Set<FeatureEntity> features) {
-		this.features = features;
-	}
+    public void setNextVersion(String nextVersion) {
+        this.nextVersion = nextVersion;
+    }
 
-	public void addFeature(FeatureEntity feature) {
-		feature.setParentPlugin(this);
-		this.features.add(feature);
-	}
+    public boolean isInstalled() {
+        return installed;
+    }
 
-	public void removeFeature(FeatureEntity feature) {
-		if (feature == null) {
-			return;
-		}
-		if (feature.getParentPlugin() != this) {
-			return;
-		}
-		if (this.features.contains(feature)) {
-			this.features.remove(feature);
-		}
-	}
+    public void setInstalled(boolean installed) {
+        this.installed = installed;
+    }
 
-	public RegistryEntity getRegistry() {
-		return registry;
-	}
+    public Set<FeatureEntity> getFeatures() {
+        return features;
+    }
 
-	public void setRegistry(RegistryEntity registry) {
-		this.registry = registry;
-	}
+    protected void setFeatures(Set<FeatureEntity> features) {
+        this.features = features;
+    }
+
+    public void addFeature(FeatureEntity feature) {
+        feature.setParentPlugin(this);
+        this.features.add(feature);
+    }
+
+    public void removeFeature(FeatureEntity feature) {
+        if (feature == null) {
+            return;
+        }
+        if (feature.getParentPlugin() != this) {
+            return;
+        }
+        if (this.features.contains(feature)) {
+            this.features.remove(feature);
+        }
+    }
+
+    public RegistryEntity getRegistry() {
+        return registry;
+    }
+
+    public void setRegistry(RegistryEntity registry) {
+        this.registry = registry;
+    }
 }

@@ -37,11 +37,28 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gluonhq.jfxapps.boot.registry.model.ApplicationEntity;
 
 @Repository
+@Transactional
 public interface ApplicationRepository extends JpaRepository<ApplicationEntity, UUID> {
-	Optional<ApplicationEntity> findByInstalledTrueAndId(UUID id);
+    Optional<ApplicationEntity> findByInstalledTrueAndId(UUID id);
+
+    @Modifying
+    @Query("update Application a set a.installed = true where a.id = :id")
+    void install(@Param(value = "id") UUID id);
+
+    @Modifying
+    @Query("update Application a set a.installed = false where a.id = :id")
+    void uninstall(@Param(value = "id") UUID id);
+
+    @Modifying
+    @Query("update Application a set a.version = a.nextVersion where a.id = :id")
+    void update(UUID uuid);
 }

@@ -47,6 +47,8 @@ public class ApplicationInfo {
     private String text;
     private String changelog;
     private String version;
+    private String nextVersion;
+    private boolean installed;
 
     public ApplicationInfo() {
     }
@@ -113,6 +115,22 @@ public class ApplicationInfo {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getNextVersion() {
+        return nextVersion;
+    }
+
+    public void setNextVersion(String nextVersion) {
+        this.nextVersion = nextVersion;
+    }
+
+    public boolean isInstalled() {
+        return installed;
+    }
+
+    public void setInstalled(boolean installed) {
+        this.installed = installed;
     }
 
     @Override

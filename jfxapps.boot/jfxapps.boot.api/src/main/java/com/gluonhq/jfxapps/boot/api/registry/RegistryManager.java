@@ -60,6 +60,17 @@ public interface RegistryManager {
 
     void removeUpdateListener(RegistryUpdateListener listener);
 
+    void install(PluginInfo pluginInfo);
+
+    void uninstall(PluginInfo pluginInfo);
+
+    void update(PluginInfo pluginInfo);
+
+    void install(ApplicationInfo applicationInfo);
+
+    void uninstall(ApplicationInfo applicationInfo);
+
+    void update(ApplicationInfo applicationInfo);
 
 
 }

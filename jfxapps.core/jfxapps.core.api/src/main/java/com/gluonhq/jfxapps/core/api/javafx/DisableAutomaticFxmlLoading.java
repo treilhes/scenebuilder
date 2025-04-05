@@ -31,31 +31,24 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.manager.store.model;
+package com.gluonhq.jfxapps.core.api.javafx;
 
-import com.gluonhq.jfxapps.boot.api.registry.RegistryManager;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
 
-public class StoreModelController {
+/**
+ * This annotation is used to indicate that a {@link FxmlController} class
+ * should be loaded manually, it will disable loding the backing fxml by by the
+ * {@link FxmlControllerBeanPostProcessor}.
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Inherited
+public @interface DisableAutomaticFxmlLoading {
 
-    private final RegistryManager registryManager;
-    private final ObservableList<Application> sources = FXCollections.observableArrayList();
-
-    public StoreModelController(RegistryManager registryManager) {
-        this.registryManager = registryManager;
-    }
-
-    public ObservableList<Application> getApplications() {
-        return sources;
-    }
-
-    public void load() {
-        var registrySourceInfos = registryManager.listApplicationsInfo();
-        var sourceItems = registrySourceInfos.stream()
-                .map(Application::new)
-                .toList();
-        sources.setAll(sourceItems);
-    }
 }

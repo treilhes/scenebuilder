@@ -59,7 +59,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ConditionalOnLocalBeanAnnotation;
+import com.gluonhq.jfxapps.boot.api.context.annotation.LocalContextOnly;
 import com.gluonhq.jfxapps.boot.api.jpa.ResolvablePersistenceManagedTypes;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
@@ -70,7 +72,7 @@ import jakarta.persistence.Table;
 @Import({
     PersistenceAnnotationBeanPostProcessor.class,
 })
-@EnableTransactionManagement
+@EnableTransactionManagement(proxyTargetClass = true)
 public class JpaExtensionConfig {
 
     @Autowired
@@ -100,6 +102,7 @@ public class JpaExtensionConfig {
             ResolvablePersistenceManagedTypes persistenceManagedTypes) {
 
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        //em.setJtaDataSource(dataSource);
         em.setDataSource(dataSource);
         em.setJpaVendorAdapter(jpaVendorAdapter);
         em.setManagedTypes(persistenceManagedTypes);
@@ -119,8 +122,9 @@ public class JpaExtensionConfig {
      */
     @Bean(name = "transactionManager")
     //@ConditionalOnMissingBean(TransactionManager.class)
-    PlatformTransactionManager localTransactionManager(EntityManagerFactory factory, DataSource dataSource) {
+    PlatformTransactionManager localTransactionManager(EntityManagerFactory factory, DataSource dataSource, @LocalContextOnly Extension extension) {
         JpaTransactionManager tm = new JpaTransactionManager();
+        //tm.setTransactionManagerName(extension.getId().toString());
         tm.setEntityManagerFactory(factory);
         tm.setDataSource(dataSource);
         tm.setNestedTransactionAllowed(true);

@@ -35,6 +35,8 @@ package com.gluonhq.jfxapps.boot.jpa;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration;
+
 import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
 import com.gluonhq.jfxapps.boot.jpa.context.JfxAppsJpaRepositorySupport;
 
@@ -59,6 +61,8 @@ public class JpaBootClasses implements BootContextConfigClasses {
                 //org.springframework.boot.autoconfigure.dao.PersistenceExceptionTranslationAutoConfiguration.class,
                 //org.springframework.boot.autoconfigure.transaction.TransactionAutoConfiguration.class,
                 //org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration.class,
+
+                ProxyTransactionManagementConfiguration.class,
                 //end tmp
 
                 //jfxapps

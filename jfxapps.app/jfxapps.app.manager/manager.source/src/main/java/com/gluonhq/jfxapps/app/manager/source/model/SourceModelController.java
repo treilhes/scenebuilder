@@ -56,7 +56,6 @@ public class SourceModelController {
     private final ObservableList<Source> sources = FXCollections.observableArrayList();
     private final ApplicationInstance instance;
 
-
     public SourceModelController(
             RegistryArtifactManager registryArtifactManager,
             ApplicationInstance instance,
@@ -165,27 +164,34 @@ public class SourceModelController {
 
 
         try {
-            Thread.startVirtualThread(() -> {
-                try {
-                    var newInfo = registryArtifactManager.loadLatestRegistrySourceInfo(artifact.groupId(), artifact.artifactId());
-
-                    jfxAppPlatform.runOnFxThreadWithScope(instance, () -> {
-                        source.infoProperty().set(newInfo);
-                        source.updatingProperty().set(false);
-                    });
-                } catch (Exception e) {
-                    jfxAppPlatform.runOnFxThreadWithScope(instance, () -> {
-                        source.updatingProperty().set(false);
-                        handleException(source, e);
-                    });
-                }
-            }).join();
+            handleUpdate(source, artifact);
 
         } catch (Exception e) {
             source.updatingProperty().set(false);
             handleException(source, e);
         }
     }
+
+    private void handleUpdate(Source source, RegistryArtifact artifact) throws InterruptedException {
+
+        Thread.startVirtualThread(() -> {
+            try {
+
+                var newInfo = registryArtifactManager.loadLatestRegistrySourceInfo(artifact.groupId(), artifact.artifactId());
+                jfxAppPlatform.runOnFxThreadWithScope(instance, () -> {
+                    source.infoProperty().set(newInfo);
+                    source.updatingProperty().set(false);
+                });
+            } catch (Exception e) {
+                jfxAppPlatform.runOnFxThreadWithScope(instance, () -> {
+                    source.updatingProperty().set(false);
+                    handleException(source, e);
+                });
+            }
+        });
+    }
+
+
 
     private void handleException(Source source, Exception e) {
         logger.error("Error updating source", e);

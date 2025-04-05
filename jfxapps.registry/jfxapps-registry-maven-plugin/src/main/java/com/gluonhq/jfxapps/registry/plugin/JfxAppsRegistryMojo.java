@@ -269,6 +269,10 @@ public class JfxAppsRegistryMojo extends AbstractMojo {
                 throw new IllegalArgumentException("The plugin UUID is null!");
             }
 
+            if (plugin.getVersion() == null) {
+                throw new IllegalArgumentException(String.format("The plugin version of %s is null!", plugin.getUuid()));
+            }
+
             if (plugin.getDescription() == null) {
                 throw new IllegalArgumentException(String.format("The plugin description of %s is null!", plugin.getUuid()));
             }

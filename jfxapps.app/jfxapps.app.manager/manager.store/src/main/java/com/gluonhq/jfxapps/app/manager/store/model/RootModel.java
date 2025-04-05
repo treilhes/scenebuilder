@@ -31,84 +31,31 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.registry.model;
+package com.gluonhq.jfxapps.app.manager.store.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
-@Entity(name = "RegistrySource")
-@IdClass(RegistrySourceEntity.RegistrySourceId.class)
-public class RegistrySourceEntity {
+public class RootModel<U, V> {
 
-    public static class RegistrySourceId {
-        private String groupId;
-        private String artifactId;
-        public String getGroupId() {
-            return groupId;
-        }
-        public void setGroupId(String groupId) {
-            this.groupId = groupId;
-        }
-        public String getArtifactId() {
-            return artifactId;
-        }
-        public void setArtifactId(String artifactId) {
-            this.artifactId = artifactId;
-        }
+    private final ObjectProperty<U> root = new SimpleObjectProperty<>();
+    private final ObservableList<V> availables = FXCollections.observableArrayList();
+    private final ObservableList<V> installed = FXCollections.observableArrayList();
 
+    public RootModel() {}
+
+    public ObservableList<V> getAvailables() {
+        return availables;
     }
 
-    @Id
-    private String groupId;
-
-    @Id
-    private String artifactId;
-
-    private String version;
-
-    private boolean mandatory;
-
-    public RegistrySourceEntity() {
+    public ObservableList<V> getInstalled() {
+        return installed;
     }
 
-    public RegistrySourceEntity(String groupId, String artifactId, String version) {
-        super();
-        this.groupId = groupId;
-        this.artifactId = artifactId;
-        this.version = version;
-    }
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
-
-    public String getArtifactId() {
-        return artifactId;
-    }
-
-    public void setArtifactId(String artifactId) {
-        this.artifactId = artifactId;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public boolean isMandatory() {
-        return mandatory;
-    }
-
-    public void setMandatory(boolean mandatory) {
-        this.mandatory = mandatory;
+    public ObjectProperty<U> getItem() {
+        return root;
     }
 
 }

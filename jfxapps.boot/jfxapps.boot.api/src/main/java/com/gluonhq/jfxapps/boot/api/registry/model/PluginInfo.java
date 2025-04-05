@@ -46,6 +46,9 @@ public class PluginInfo {
     private String text;
     private String changelog;
     private String version;
+    private String nextVersion;
+
+    private boolean installed;
 
     public PluginInfo() {
     }
@@ -104,6 +107,22 @@ public class PluginInfo {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getNextVersion() {
+        return nextVersion;
+    }
+
+    public void setNextVersion(String nextVersion) {
+        this.nextVersion = nextVersion;
+    }
+
+    public boolean isInstalled() {
+        return installed;
+    }
+
+    public void setInstalled(boolean installed) {
+        this.installed = installed;
     }
 
     @Override

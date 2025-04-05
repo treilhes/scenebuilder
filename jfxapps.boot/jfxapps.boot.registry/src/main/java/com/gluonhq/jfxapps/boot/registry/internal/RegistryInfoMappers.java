@@ -56,12 +56,16 @@ public interface RegistryInfoMappers {
     @Mapping(target = "title", source = "description.title")
     @Mapping(target = "text", source = "description.text")
     @Mapping(target = "version", source = "version")
+    @Mapping(target = "nextVersion", source = "nextVersion")
+    @Mapping(target = "installed", source = "installed")
     ApplicationInfo map(ApplicationEntity application);
 
     @Mapping(target = "uuid", source = "id")
     @Mapping(target = "title", source = "description.title")
     @Mapping(target = "text", source = "description.text")
-    //@Mapping(target = "version", source = "version")
+    @Mapping(target = "version", source = "version")
+    @Mapping(target = "nextVersion", source = "nextVersion")
+    @Mapping(target = "installed", source = "installed")
     PluginInfo map(PluginEntity pluginEntity);
 
 }

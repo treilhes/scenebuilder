@@ -38,8 +38,8 @@
 								</dependency>
 								<description>
 									<image>jfxapps_devtools_256x256.jpeg</image>
-									<title>FXML Runner</title>
-									<text>App that run fxml files</text>
+									<title>JfxApps Devtools</title>
+									<text>Helper application for JfxApps application development</text>
 								</description>
 								<extensions>
 									<extension>
