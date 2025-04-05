@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.manager.store.controller;
+package com.gluonhq.jfxapps.app.manager.store.ui.component;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.app.manager.store.model.Application;
 import com.gluonhq.jfxapps.app.manager.store.model.ApplicationController;
+import com.gluonhq.jfxapps.app.manager.store.ui.app.ApplicationDetailController;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;

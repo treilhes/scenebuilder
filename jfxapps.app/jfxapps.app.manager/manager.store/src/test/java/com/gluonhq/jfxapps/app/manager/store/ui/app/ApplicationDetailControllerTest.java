@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.manager.store.controller;
+package com.gluonhq.jfxapps.app.manager.store.ui.app;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,9 +45,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
 import com.gluonhq.jfxapps.app.manager.api.ManagerApiExtension;
+import com.gluonhq.jfxapps.app.manager.store.TestUtil;
+import com.gluonhq.jfxapps.app.manager.store.model.Application;
 import com.gluonhq.jfxapps.app.manager.store.model.Plugin;
-import com.gluonhq.jfxapps.app.manager.store.model.PluginModel;
-import com.gluonhq.jfxapps.app.manager.store.model.PluginModelControllerImpl;
+import com.gluonhq.jfxapps.app.manager.store.ui.component.PluginItemController;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryManager;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
@@ -56,9 +57,9 @@ import com.gluonhq.jfxapps.test.StageBuilder;
 import com.gluonhq.jfxapps.test.StageType;
 
 @JfxAppsTest
-@ContextConfiguration(classes = { PluginDetailControllerTest.Config.class, PluginDetailController.class,
+@ContextConfiguration(classes = { ApplicationDetailControllerTest.Config.class, ApplicationDetailController.class,
         PluginItemController.class })
-class PluginDetailControllerTest {
+class ApplicationDetailControllerTest {
 
     @TestConfiguration
     static class Config {
@@ -79,8 +80,8 @@ class PluginDetailControllerTest {
         }
 
         @Bean
-        PluginModelControllerImpl pluginModelController() {
-            return Mockito.mock(PluginModelControllerImpl.class);
+        ApplicationModelControllerImpl applicationModelController() {
+            return Mockito.mock(ApplicationModelControllerImpl.class);
         }
     }
 
@@ -88,11 +89,11 @@ class PluginDetailControllerTest {
     RegistryManager registryManager;
 
     @Autowired
-    PluginModelControllerImpl applicationModelController;
+    ApplicationModelControllerImpl applicationModelController;
 
     @Test
     void should_load_the_fxml(StageBuilder stageBuilder) {
-        try(var testStage = stageBuilder.controller(PluginDetailController.class).show()){
+        try(var testStage = stageBuilder.controller(ApplicationDetailController.class).show()){
             assertNotNull(testStage.getController().getRoot());
         }
     }
@@ -100,8 +101,8 @@ class PluginDetailControllerTest {
     @Test
     void should_create_3_rows_with_only_2_lines_with_values(StageBuilder stageBuilder, FxRobot robot) {
 
-        var appModel = new PluginModel();
-        var app = new Plugin(null, null);
+        var appModel = new ApplicationModel();
+        var app = new Application(null, null);
         var plug1 = new Plugin(null, null);
         var plug2 = new Plugin(null, null);
 
@@ -109,17 +110,17 @@ class PluginDetailControllerTest {
         appModel.getAvailables().add(plug1);
         appModel.getInstalled().add(plug2);
 
-        app.imageProperty().set(PluginDetailControllerTest.class.getResource("image1.png"));
+        app.imageProperty().set(ApplicationDetailControllerTest.class.getResource("../image1.png"));
         app.nameProperty().set("Scene Builder");
         app.descriptionProperty().set("Scene Builder is an open source tool that allows for drag and drop design of JavaFX user interfaces.");
         app.versionProperty().set("X.X.X");
 
-        plug1.imageProperty().set(PluginDetailControllerTest.class.getResource("image1.png"));
+        plug1.imageProperty().set(ApplicationDetailControllerTest.class.getResource("../image1.png"));
         plug1.nameProperty().set("Scene Builder");
         plug1.descriptionProperty().set("Scene Builder is an open source tool that allows for drag and drop design of JavaFX user interfaces.");
         plug1.versionProperty().set("X.X.X");
 
-        plug2.imageProperty().set(PluginDetailControllerTest.class.getResource("image2.png"));
+        plug2.imageProperty().set(ApplicationDetailControllerTest.class.getResource("../image2.png"));
         plug2.nameProperty().set("App2");
         plug2.descriptionProperty().set("Description2");
         plug2.versionProperty().set("X.X.X");
@@ -129,7 +130,7 @@ class PluginDetailControllerTest {
         var loopForEdit = false;
 
         do {
-            try (var testStage = stageBuilder.controller(PluginDetailController.class)
+            try (var testStage = stageBuilder.controller(ApplicationDetailController.class)
                     .size(800, 600)
                     .css(ManagerApiExtension.class.getResource("/com/gluonhq/jfxapps/app/manager/api/ui/Manager.css"))
                     .setup(StageType.Fill)
@@ -138,7 +139,7 @@ class PluginDetailControllerTest {
 
                 var controller = testStage.getController();
 
-                controller.getRoot().getScene().getRoot().setStyle("-fx-background-color:  radial-gradient(focus-angle 0deg , focus-distance -80% , center 0% -10% , radius 100% , #d5e3e6 30%, #72adaa 80%, #293950)");
+                TestUtil.setSceneBackground(robot, controller);
 
                 robot.interact(() -> controller.load(null, null));
                 //robot.interact(() -> ScenicView.show(controller.getRoot().getScene()));

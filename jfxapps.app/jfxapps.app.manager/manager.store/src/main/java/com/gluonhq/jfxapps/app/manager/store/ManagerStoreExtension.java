@@ -37,15 +37,15 @@ import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.app.manager.api.ManagerApiExtension;
-import com.gluonhq.jfxapps.app.manager.store.controller.ApplicationDetailController;
-import com.gluonhq.jfxapps.app.manager.store.controller.ApplicationItemController;
-import com.gluonhq.jfxapps.app.manager.store.controller.PluginDetailController;
-import com.gluonhq.jfxapps.app.manager.store.controller.PluginItemController;
-import com.gluonhq.jfxapps.app.manager.store.controller.RootController;
-import com.gluonhq.jfxapps.app.manager.store.controller.StoreController;
-import com.gluonhq.jfxapps.app.manager.store.model.ApplicationModelControllerImpl;
-import com.gluonhq.jfxapps.app.manager.store.model.PluginModelControllerImpl;
-import com.gluonhq.jfxapps.app.manager.store.model.RootModelControllerImpl;
+import com.gluonhq.jfxapps.app.manager.store.ui.StoreController;
+import com.gluonhq.jfxapps.app.manager.store.ui.app.ApplicationDetailController;
+import com.gluonhq.jfxapps.app.manager.store.ui.app.ApplicationModelControllerImpl;
+import com.gluonhq.jfxapps.app.manager.store.ui.component.ApplicationItemController;
+import com.gluonhq.jfxapps.app.manager.store.ui.component.PluginItemController;
+import com.gluonhq.jfxapps.app.manager.store.ui.plugin.PluginDetailController;
+import com.gluonhq.jfxapps.app.manager.store.ui.plugin.PluginModelControllerImpl;
+import com.gluonhq.jfxapps.app.manager.store.ui.root.RootController;
+import com.gluonhq.jfxapps.app.manager.store.ui.root.RootModelControllerImpl;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 
 /**

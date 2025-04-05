@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.manager.store.controller;
+package com.gluonhq.jfxapps.app.manager.store.ui.plugin;
 
 import java.util.function.Consumer;
 
@@ -40,8 +40,9 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.app.manager.store.model.Plugin;
 import com.gluonhq.jfxapps.app.manager.store.model.PluginController;
-import com.gluonhq.jfxapps.app.manager.store.model.PluginModelControllerImpl;
-import com.gluonhq.jfxapps.app.manager.store.model.RootModel;
+import com.gluonhq.jfxapps.app.manager.store.ui.component.PluginItemController;
+import com.gluonhq.jfxapps.app.manager.store.ui.root.RootController;
+import com.gluonhq.jfxapps.app.manager.store.ui.root.RootModel;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -150,7 +151,7 @@ public class PluginDetailController extends AbstractFxmlController {
             PluginModelControllerImpl modelController,
             JfxAppContext context) {
         //@formatter:on
-        super(i18n, applicationEvents, instanceEvents, RootController.class.getResource("ApplicationDetail.fxml"));
+        super(i18n, applicationEvents, instanceEvents, PluginDetailController.class.getResource("PluginDetail.fxml"));
 
         this.applicationModelController = modelController;
         this.context = context;

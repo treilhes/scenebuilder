@@ -31,6 +31,18 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.manager.store.model;
+package com.gluonhq.jfxapps.app.manager.store;
 
-public class PluginModel extends RootModel<Plugin, Plugin> {}
+import org.testfx.api.FxRobot;
+
+import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
+
+public class TestUtil {
+
+    public static void setSceneBackground(FxRobot robot, FxmlController controller) {
+        robot.interact(() -> {
+            controller.getRoot().getScene().getRoot().setStyle(
+                    "-fx-background-color:  radial-gradient(focus-angle 0deg , focus-distance -80% , center 0% -10% , radius 100% , #d5e3e6 30%, #72adaa 80%, #293950)");
+        });
+    }
+}

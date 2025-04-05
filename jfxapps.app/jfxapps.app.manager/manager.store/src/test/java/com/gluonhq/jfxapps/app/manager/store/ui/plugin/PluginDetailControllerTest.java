@@ -31,9 +31,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.manager.store.controller;
+package com.gluonhq.jfxapps.app.manager.store.ui.plugin;
 
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -44,18 +45,20 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
 import com.gluonhq.jfxapps.app.manager.api.ManagerApiExtension;
-import com.gluonhq.jfxapps.core.api.javafx.DisableAutomaticFxmlLoading;
+import com.gluonhq.jfxapps.app.manager.store.TestUtil;
+import com.gluonhq.jfxapps.app.manager.store.model.Plugin;
+import com.gluonhq.jfxapps.app.manager.store.ui.component.PluginItemController;
+import com.gluonhq.jfxapps.boot.api.registry.RegistryManager;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 import com.gluonhq.jfxapps.test.StageBuilder;
 import com.gluonhq.jfxapps.test.StageType;
 
-import javafx.scene.control.Label;
-
 @JfxAppsTest
-@ContextConfiguration(classes = { StoreControllerTest.Config.class, StoreController.class })
-class StoreControllerTest {
+@ContextConfiguration(classes = { PluginDetailControllerTest.Config.class, PluginDetailController.class,
+        PluginItemController.class })
+class PluginDetailControllerTest {
 
     @TestConfiguration
     static class Config {
@@ -71,73 +74,82 @@ class StoreControllerTest {
         }
 
         @Bean
-        @DisableAutomaticFxmlLoading
-        RootController rootController() {
-            return Mockito.mock(RootController.class);
+        RegistryManager registryManager() {
+            return Mockito.mock(RegistryManager.class);
+        }
+
+        @Bean
+        PluginModelControllerImpl pluginModelController() {
+            return Mockito.mock(PluginModelControllerImpl.class);
         }
     }
 
     @Autowired
-    RootController rootController;
+    RegistryManager registryManager;
+
+    @Autowired
+    PluginModelControllerImpl applicationModelController;
 
     @Test
     void should_load_the_fxml(StageBuilder stageBuilder) {
-        var testStage = stageBuilder.controller(StoreController.class).show();
-        assertNotNull(testStage.getController().getRoot());
-        testStage.close();
+        try(var testStage = stageBuilder.controller(PluginDetailController.class).show()){
+            assertNotNull(testStage.getController().getRoot());
+        }
     }
 
     @Test
-    void must_show_ui_with_two_applications(StageBuilder stageBuilder, FxRobot robot) {
+    void should_create_3_rows_with_only_2_lines_with_values(StageBuilder stageBuilder, FxRobot robot) {
 
-        Mockito.when(rootController.getRoot()).thenReturn(new Label("Root"));
+        var appModel = new PluginModel();
+        var app = new Plugin(null, null);
+        var plug1 = new Plugin(null, null);
+        var plug2 = new Plugin(null, null);
+
+        appModel.getItem().set(app);
+        appModel.getAvailables().add(plug1);
+        appModel.getInstalled().add(plug2);
+
+        app.imageProperty().set(PluginDetailControllerTest.class.getResource("../image1.png"));
+        app.nameProperty().set("Scene Builder");
+        app.descriptionProperty().set("Scene Builder is an open source tool that allows for drag and drop design of JavaFX user interfaces.");
+        app.versionProperty().set("X.X.X");
+
+        plug1.imageProperty().set(PluginDetailControllerTest.class.getResource("../image1.png"));
+        plug1.nameProperty().set("Scene Builder");
+        plug1.descriptionProperty().set("Scene Builder is an open source tool that allows for drag and drop design of JavaFX user interfaces.");
+        plug1.versionProperty().set("X.X.X");
+
+        plug2.imageProperty().set(PluginDetailControllerTest.class.getResource("../image2.png"));
+        plug2.nameProperty().set("App2");
+        plug2.descriptionProperty().set("Description2");
+        plug2.versionProperty().set("X.X.X");
+
+        Mockito.when(applicationModelController.load(any())).thenReturn(appModel);
 
         var loopForEdit = false;
 
         do {
-            try(var testStage = stageBuilder
-                    .controller(StoreController.class)
+            try (var testStage = stageBuilder.controller(PluginDetailController.class)
                     .size(800, 600)
                     .css(ManagerApiExtension.class.getResource("/com/gluonhq/jfxapps/app/manager/api/ui/Manager.css"))
                     .setup(StageType.Fill)
                     .show()) {
 
+
                 var controller = testStage.getController();
 
-                controller.getRoot().getScene().getRoot().setStyle(
-                        "-fx-background-color:  radial-gradient(focus-angle 0deg , focus-distance -80% , center 0% -10% , radius 100% , #d5e3e6 30%, #72adaa 80%, #293950)");
+                TestUtil.setSceneBackground(robot, controller);
 
-                robot.interact(controller::onShow);
-
-                System.out.println();
-
-                robot.interact(() -> controller.next(() -> {
-                    var node = new Label("next1");
-                    node.setStyle("-fx-background-color: red; -fx-min-width: 200px; -fx-min-height: 200px;");
-                    return node;
-                }));
+                robot.interact(() -> controller.load(null, null));
+                //robot.interact(() -> ScenicView.show(controller.getRoot().getScene()));
 
                 System.out.println();
 
-                robot.interact(() -> controller.next(() -> {
-                    var node = new Label("next2");
-                    node.setStyle("-fx-background-color: red; -fx-min-width: 200px; -fx-min-height: 200px;");
-                    return node;
-                }));
-
-                System.out.println();
-
-                robot.interact(() -> controller.back());
-
-                System.out.println();
-
-                robot.interact(() -> controller.back());
-
-                System.out.println();
-
+                testStage.close();
             }
         } while (loopForEdit);
 
     }
+
 
 }

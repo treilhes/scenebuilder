@@ -31,38 +31,44 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.manager.store.model;
+package com.gluonhq.jfxapps.app.manager.store.ui.root;
 
 import java.util.stream.Collectors;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.app.manager.store.model.Application;
+import com.gluonhq.jfxapps.app.manager.store.model.ApplicationController;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.loader.ApplicationManager;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryManager;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 
-@ApplicationInstancePrototype
-public class PluginModelControllerImpl implements PluginController {
+@ApplicationInstanceSingleton
+public class RootModelControllerImpl implements ApplicationController{
 
     private final RegistryManager registryManager;
-    private PluginModel model;
     private final I18N i18n;
+    private RootModel<Application, Application> model;
+    private ApplicationManager appManager;
 
-    public PluginModelControllerImpl(RegistryManager registryManager, I18N i18n) {
-        this.registryManager = registryManager;
+    public RootModelControllerImpl(I18N i18n, RegistryManager registryManager, ApplicationManager appManager) {
         this.i18n = i18n;
+        this.registryManager = registryManager;
+        this.appManager = appManager;
     }
 
-    public PluginModel load(Plugin application) {
+    public RootModel<Application, Application> load() {
 
-        model = new PluginModel();
+        model = new RootModel<>();
 
-        var appId = application.infoProperty().get().getUuid();
+        var rootInfo = registryManager.applicationInfo(Extension.ROOT_ID);
 
-        model.getItem().set(application);
+        model.getItem().set(new Application(rootInfo, i18n));
 
-        var apps = registryManager.listApplicationPluginsInfo(appId);
+        var apps = registryManager.listApplicationsInfo();
 
         var sourceItems = apps.stream()
-                .map(p -> new Plugin(p, i18n))
+                .map(a -> new Application(a, i18n))
                 .collect(Collectors.partitioningBy(a -> a.infoProperty().get().isInstalled()));
 
         model.getAvailables().setAll(sourceItems.get(false));
@@ -72,7 +78,7 @@ public class PluginModelControllerImpl implements PluginController {
     }
 
     @Override
-    public void install(Plugin item) {
+    public void install(Application item) {
         registryManager.install(item.infoProperty().get());
         item.installedProperty().set(true);
         model.getAvailables().remove(item);
@@ -80,16 +86,19 @@ public class PluginModelControllerImpl implements PluginController {
     }
 
     @Override
-    public void uninstall(Plugin item) {
+    public void uninstall(Application item) {
         registryManager.uninstall(item.infoProperty().get());
         item.installedProperty().set(false);
         model.getInstalled().remove(item);
         model.getAvailables().add(0, item);
     }
 
-    @Override
-    public void update(Plugin plugin) {
-        registryManager.update(plugin.infoProperty().get());
-        plugin.versionProperty().set(plugin.nextVersionProperty().get());
+    public void launch(Application application) {
+        appManager.startApplication(application.infoProperty().get().getUuid());
+    }
+
+    public void update(Application application) {
+        registryManager.update(application.infoProperty().get());
+        application.versionProperty().set(application.nextVersionProperty().get());
     }
 }

@@ -31,31 +31,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.manager.store.model;
+package com.gluonhq.jfxapps.app.manager.store.ui.app;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.gluonhq.jfxapps.app.manager.store.model.Application;
+import com.gluonhq.jfxapps.app.manager.store.model.Plugin;
+import com.gluonhq.jfxapps.app.manager.store.ui.root.RootModel;
 
-public class RootModel<U, V> {
-
-    private final ObjectProperty<U> root = new SimpleObjectProperty<>();
-    private final ObservableList<V> availables = FXCollections.observableArrayList();
-    private final ObservableList<V> installed = FXCollections.observableArrayList();
-
-    public RootModel() {}
-
-    public ObservableList<V> getAvailables() {
-        return availables;
-    }
-
-    public ObservableList<V> getInstalled() {
-        return installed;
-    }
-
-    public ObjectProperty<U> getItem() {
-        return root;
-    }
-
-}
+public class ApplicationModel extends RootModel<Application, Plugin> {}

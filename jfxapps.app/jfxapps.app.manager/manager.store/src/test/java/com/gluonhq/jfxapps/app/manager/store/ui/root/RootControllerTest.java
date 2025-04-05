@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.manager.store.controller;
+package com.gluonhq.jfxapps.app.manager.store.ui.root;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
@@ -45,9 +45,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
 import com.gluonhq.jfxapps.app.manager.api.ManagerApiExtension;
+import com.gluonhq.jfxapps.app.manager.store.TestUtil;
 import com.gluonhq.jfxapps.app.manager.store.model.Application;
-import com.gluonhq.jfxapps.app.manager.store.model.RootModel;
-import com.gluonhq.jfxapps.app.manager.store.model.RootModelControllerImpl;
+import com.gluonhq.jfxapps.app.manager.store.ui.component.ApplicationItemController;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryManager;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
@@ -161,12 +161,12 @@ class RootControllerTest {
         rootModel.getAvailables().add(app1);
         rootModel.getInstalled().add(app2);
 
-        app1.imageProperty().set(RootControllerTest.class.getResource("image1.png"));
+        app1.imageProperty().set(RootControllerTest.class.getResource("../image1.png"));
         app1.nameProperty().set("Scene Builder");
         app1.descriptionProperty().set("Scene Builder is an open source tool that allows for drag and drop design of JavaFX user interfaces.");
         app1.versionProperty().set("X.X.X");
 
-        app2.imageProperty().set(RootControllerTest.class.getResource("image2.png"));
+        app2.imageProperty().set(RootControllerTest.class.getResource("../image2.png"));
         app2.nameProperty().set("App2");
         app2.descriptionProperty().set("Description2");
         app2.versionProperty().set("X.X.X");
@@ -187,7 +187,7 @@ class RootControllerTest {
 
                 var controller = testStage.getController();
 
-                controller.getRoot().getScene().getRoot().setStyle("-fx-background-color:  radial-gradient(focus-angle 0deg , focus-distance -80% , center 0% -10% , radius 100% , #d5e3e6 30%, #72adaa 80%, #293950)");
+                TestUtil.setSceneBackground(robot, controller);
 
                 robot.interact(controller::load);
                 //robot.interact(() -> ScenicView.show(controller.getRoot().getScene()));

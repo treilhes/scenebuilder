@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.manager.store.controller;
+package com.gluonhq.jfxapps.app.manager.store.ui.root;
 
 import java.util.function.Consumer;
 
@@ -39,8 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.app.manager.store.model.Application;
-import com.gluonhq.jfxapps.app.manager.store.model.RootModel;
-import com.gluonhq.jfxapps.app.manager.store.model.RootModelControllerImpl;
+import com.gluonhq.jfxapps.app.manager.store.ui.app.ApplicationDetailController;
+import com.gluonhq.jfxapps.app.manager.store.ui.component.ApplicationItemController;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -148,7 +148,7 @@ public class RootController extends AbstractFxmlController {
             RootModelControllerImpl rootModelController,
             JfxAppContext context) {
         //@formatter:on
-        super(i18n, applicationEvents, instanceEvents, RootController.class.getResource("ApplicationDetail.fxml"));
+        super(i18n, applicationEvents, instanceEvents, RootController.class.getResource("RootDetail.fxml"));
 
         this.modelController = rootModelController;
         this.context = context;
