@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,49 +31,47 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.manager.main.ui.cmp;
+package com.gluonhq.jfxapps.app.manager.store.action;
 
-import com.gluonhq.jfxapps.app.manager.api.ui.ExtensionCard;
-import com.gluonhq.jfxapps.app.manager.model.Extension;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.gluonhq.jfxapps.app.manager.store.ui.StoreController;
+import com.gluonhq.jfxapps.app.manager.store.ui.component.Switch;
+import com.gluonhq.jfxapps.app.manager.store.ui.component.SwitchFactory;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
+import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 
-@Prototype
-public class ExtensionCardController extends AbstractFxmlController implements ExtensionCard{
+@ApplicationInstancePrototype
+@ActionMeta(nameKey = "xxx", descriptionKey = "xxx")
+@Accelerator(acceleratorKeyCodes = {KeyCode.BACK_SPACE})
+public class SwitchBackAction extends AbstractAction {
 
-    @FXML
-    private Label descriptionLabel;
+    private final Switch switchComponent;
 
-    @FXML
-    private Label nameLabel;
-
-    @FXML
-    private Label versionLabel;
-
-    public ExtensionCardController(
+    public SwitchBackAction(
+    // @formatter:off
             I18N i18n,
-            ApplicationEvents scenebuilderManager,
-            ApplicationInstanceEvents documentManager
+            ActionExtensionFactory extensionFactory,
+            SwitchFactory switchFactory
             ) {
-        super(i18n, scenebuilderManager, documentManager, ExtensionCardController.class.getResource("ExtensionCard.fxml"));
+    // @formatter:on
+        super(i18n, extensionFactory);
+        this.switchComponent = switchFactory.getSwitch(StoreController.SWITCH_ID);
     }
 
     @Override
-    public void controllerDidLoadFxml() {
-        // TODO Auto-generated method stub
-
+    public boolean canPerform() {
+        return switchComponent.canBack();
     }
 
     @Override
-    public void bind(Extension extension) {
-        nameLabel.textProperty().bind(extension.nameProperty());
-        versionLabel.textProperty().bind(extension.versionProperty());
-        descriptionLabel.textProperty().bind(extension.descriptionProperty());
+    public ActionStatus doPerform() {
+        switchComponent.back();
+        return ActionStatus.DONE;
     }
+
 }

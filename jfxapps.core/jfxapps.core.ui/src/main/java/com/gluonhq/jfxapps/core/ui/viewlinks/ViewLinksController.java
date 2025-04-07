@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,7 +36,9 @@ package com.gluonhq.jfxapps.core.ui.viewlinks;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,9 +56,12 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.ViewLinks;
 
 import jakarta.annotation.PostConstruct;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 @ApplicationInstanceSingleton
@@ -68,6 +73,10 @@ public class ViewLinksController extends AbstractPanelController implements View
     private final DockViewController dockViewController;
     private final DockActionFactory dockActionFactory;
     private final VBox vBox = new VBox();
+    private BiFunction<ViewAttachment, I18N, Node> linkCreator;
+    private UnaryOperator<Region> regionCustomizer;
+    private boolean populated;
+
     protected ViewLinksController(
             I18N i18n,
             ApplicationEvents applicationEvents,
@@ -83,31 +92,69 @@ public class ViewLinksController extends AbstractPanelController implements View
     @PostConstruct
     public void init() {
         setRoot(vBox);
-
         vBox.setAlignment(Pos.TOP_CENTER);
+    }
+
+    private void populateViewLinks() {
+
+        if (regionCustomizer != null) {
+            regionCustomizer.apply(vBox);
+        }
 
         dockViewController.getViewItems().stream()
         .filter(Predicate.not(ViewAttachment::isDebug))
         .sorted(Comparator.comparing(view -> view.getOrder()))
         .forEach(vi -> {
 
-            String displayName = i18n.getStringOrDefault(vi.getName(), vi.getName());
             var action = dockActionFactory.toggleViewVisibility(vi.getViewClass());
+            var displayName = i18n.getStringOrDefault(vi.getName(), vi.getName());
 
-            URL icon = vi.getIconX2();
-            if (icon == null) {
-                icon = View.VIEW_ICON_MISSING;
-            }
-            try {
-                Image image = new Image(icon.openStream());
-                ImageView imageView = new ImageView(image);
-                imageView.onMouseClickedProperty().set(e -> action.perform());
-                Tooltip.install(imageView, new Tooltip(displayName + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx"));
-                vBox.getChildren().add(imageView);
-            } catch (IOException e) {
-                logger.error("Unable to iconize view {}", vi.getId(), e);
+            final Node node;
+            if (linkCreator != null) {
+                node = linkCreator.apply(vi, i18n);
+            } else {
+
+                URL icon = vi.getIconX2();
+                if (icon == null) {
+                    icon = View.VIEW_ICON_MISSING;
+                }
+                try {
+                    Image image = new Image(icon.openStream());
+                    ImageView imageView = new ImageView(image);
+                    node = imageView;
+                } catch (IOException e) {
+                    logger.error("Unable to iconize view {}", vi.getId(), e);
+                    return;
+                }
             }
 
+            if (node != null) {
+                node.onMouseClickedProperty().set(e -> action.perform());
+                Tooltip.install(node, new Tooltip(displayName));
+                vBox.getChildren().add(node);
+            }
         });
     }
+
+    @Override
+    public Parent getRoot() {
+
+        if (!populated) {
+            populateViewLinks();
+            populated = true;
+        }
+
+        return super.getRoot();
+    }
+
+    @Override
+    public void setLinkCreator(BiFunction<ViewAttachment, I18N, Node> linkCreator) {
+        this.linkCreator = linkCreator;
+    }
+
+    @Override
+    public void setRegionCustomizer(UnaryOperator<Region> regionCustomizer) {
+        this.regionCustomizer = regionCustomizer;
+    }
+
 }

@@ -12,7 +12,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="600.0" spacing="20.0" styleClass="store-app-card-hbox" stylesheets="@PluginItem.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="360.0" prefHeight="120.0" prefWidth="360.0" spacing="20.0" styleClass="store-app-card-hbox" stylesheets="@PluginItem.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Rectangle fx:id="rectImage" arcHeight="30.0" arcWidth="30.0" fill="DODGERBLUE" height="96.0" styleClass="store-app-card-image-rectangle" width="96.0">
          <effect>

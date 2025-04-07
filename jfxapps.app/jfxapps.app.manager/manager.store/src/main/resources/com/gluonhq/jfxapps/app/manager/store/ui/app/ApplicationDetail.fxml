@@ -16,7 +16,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox fx:id="rootVbox" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="800.0" styleClass="store-vbox" stylesheets="@../Detail.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="rootVbox" maxHeight="Infinity" maxWidth="Infinity" minHeight="600.0" minWidth="800.0" styleClass="store-vbox" stylesheets="@../Detail.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox maxHeight="-Infinity" minHeight="40.0" prefHeight="40.0">
          <children>
@@ -124,7 +124,7 @@
                      <children>
                         <Label maxWidth="1.7976931348623157E308" styleClass="store-item-changelog-link" HBox.hgrow="ALWAYS">
                            <cursor>
-                              <Cursor fx:constant="HAND" />
+                              <Cursor fx:constant="DEFAULT" />
                            </cursor>
                         </Label>
                         <Button fx:id="changeLogButton" alignment="CENTER_RIGHT" layoutX="384.0" layoutY="10.0" maxHeight="10.0" minHeight="30.0" mnemonicParsing="false" onAction="#showChangeLog" prefHeight="10.0" styleClass="store-item-install-button">
@@ -144,25 +144,6 @@
                            </effect>
                            <graphic>
                               <FontIcon iconLiteral="far-list-alt" iconSize="20" />
-                           </graphic>
-                        </Button>
-                        <Button fx:id="viewButton" alignment="CENTER_RIGHT" maxHeight="10.0" minHeight="30.0" mnemonicParsing="false" onAction="#view" prefHeight="10.0" styleClass="store-item-install-button">
-                           <effect>
-                              <DropShadow height="5.0" offsetX="1.0" offsetY="2.0" radius="2.0" width="5.0">
-                                 <color>
-                                    <Color red="0.3921568691730499" green="0.3921568691730499" blue="0.3921568691730499" />
-                                 </color>
-                                 <input>
-                                    <InnerShadow offsetX="1.0" offsetY="1.0">
-                                       <color>
-                                          <Color red="0.3921568691730499" green="0.3921568691730499" blue="0.3921568691730499" />
-                                       </color>
-                                    </InnerShadow>
-                                 </input>
-                              </DropShadow>
-                           </effect>
-                           <graphic>
-                              <FontIcon iconLiteral="far-eye" iconSize="20" />
                            </graphic>
                         </Button>
                         <Button fx:id="launchButton" alignment="CENTER_RIGHT" layoutX="436.0" layoutY="10.0" maxHeight="10.0" minHeight="30.0" mnemonicParsing="false" onAction="#launch" prefHeight="10.0" styleClass="store-item-install-button">
@@ -221,7 +202,7 @@
       </HBox>
       <HBox prefHeight="50.0" prefWidth="200.0" styleClass="store-search-hbox" VBox.vgrow="NEVER">
          <children>
-            <Label fx:id="typeLabel" styleClass="store-title-label" text="Applications">
+            <Label styleClass="store-title-label" text="Plugins">
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin></Label>
@@ -234,7 +215,7 @@
          <children>
             <VBox styleClass="store-searchresults-vbox" HBox.hgrow="ALWAYS">
                <children>
-                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" styleClass="store-searchresults-title-hbox">
+                  <HBox spacing="10.0" styleClass="store-searchresults-title-hbox">
                      <children>
                         <Label maxWidth="1.7976931348623157E308" styleClass="store-searchresults-title-label" text="Availables" HBox.hgrow="ALWAYS" />
                         <TextField fx:id="searchAvailablesTextField" alignment="CENTER" maxWidth="300.0" promptText="Search" styleClass="store-search-textfield" HBox.hgrow="ALWAYS">
@@ -262,13 +243,16 @@
                            </graphic>
                         </Button>
                      </children>
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
                   </HBox>
-                  <ListView fx:id="availablesList" prefHeight="200.0" prefWidth="200.0" styleClass="store-searchresults-listview" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="availablesList" styleClass="store-searchresults-listview" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
             <VBox layoutX="10.0" layoutY="10.0" styleClass="store-searchresults-vbox" HBox.hgrow="ALWAYS">
                <children>
-                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" styleClass="store-searchresults-title-hbox">
+                  <HBox spacing="10.0" styleClass="store-searchresults-title-hbox">
                      <children>
                         <Label maxWidth="1.7976931348623157E308" styleClass="store-searchresults-title-label" text="Installed" HBox.hgrow="ALWAYS" />
                         <TextField fx:id="searchInstalledTextField" alignment="CENTER" maxWidth="300.0" promptText="Search" styleClass="store-search-textfield" HBox.hgrow="ALWAYS" />
@@ -292,8 +276,11 @@
                            </graphic>
                         </Button>
                      </children>
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
                   </HBox>
-                  <ListView fx:id="installedList" prefHeight="200.0" prefWidth="200.0" styleClass="store-searchresults-listview" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="installedList" styleClass="store-searchresults-listview" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
          </children>

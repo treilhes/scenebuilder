@@ -12,7 +12,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="600.0" spacing="20.0" styleClass="store-app-card-hbox" stylesheets="@ApplicationItem.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="360.0" prefHeight="120.0" prefWidth="360.0" spacing="20.0" styleClass="store-app-card-hbox" stylesheets="@ApplicationItem.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Rectangle fx:id="rectImage" arcHeight="30.0" arcWidth="30.0" fill="DODGERBLUE" height="96.0" styleClass="store-app-card-image-rectangle" width="96.0">
          <effect>
@@ -22,7 +22,7 @@
                </color>
             </DropShadow>
          </effect></Rectangle>
-      <VBox styleClass="store-app-card-vbox" HBox.hgrow="ALWAYS">
+      <VBox minHeight="30.0" minWidth="100.0" styleClass="store-app-card-vbox" HBox.hgrow="ALWAYS">
          <children>
             <HBox styleClass="store-app-card-title-hbox">
                <children>
@@ -30,12 +30,12 @@
                   <Label fx:id="versionLabel" text="Label" />
                </children>
             </HBox>
-            <Label fx:id="descriptionLabel" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="444.0" styleClass="store-app-card-description" text="Label jfhksdh fkjhf shkdfhskjdfh ksjh kfhdfkjshkdhjf kshj kfdjh ksjhf ksjhdfkdjs hkfj hskh fkshj dkfhsj" wrapText="true" VBox.vgrow="ALWAYS" />
+            <Label fx:id="descriptionLabel" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="100.0" styleClass="store-app-card-description" text="Label jfhksdh fkjhf shkdfhskjdfh ksjh kfhdfkjshkdhjf kshj kfdjh ksjhf ksjhdfkdjs hkfj hskh fkshj dkfhsj" wrapText="true" VBox.vgrow="ALWAYS" />
             <HBox alignment="CENTER_LEFT" spacing="10.0" VBox.vgrow="NEVER">
                <children>
                   <Label maxWidth="1.7976931348623157E308" styleClass="store-app-card-changelog-link" HBox.hgrow="ALWAYS">
                      <cursor>
-                        <Cursor fx:constant="HAND" />
+                        <Cursor fx:constant="DEFAULT" />
                      </cursor>
                   </Label>
                   <Button fx:id="changeLogButton" alignment="CENTER_RIGHT" maxHeight="10.0" minHeight="30.0" mnemonicParsing="false" onAction="#showChangeLog" prefHeight="10.0">

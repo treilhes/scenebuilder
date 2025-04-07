@@ -34,11 +34,11 @@
 package com.gluonhq.jfxapps.app.manager.store.ui.component;
 
 import java.util.Objects;
-import java.util.function.Consumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.app.manager.store.action.StoreActionFactory;
 import com.gluonhq.jfxapps.app.manager.store.model.Plugin;
 import com.gluonhq.jfxapps.app.manager.store.model.PluginController;
 import com.gluonhq.jfxapps.app.manager.store.ui.plugin.PluginDetailController;
@@ -53,7 +53,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -89,9 +88,7 @@ public class PluginItemController extends AbstractFxmlController {
     @FXML
     private Button viewButton;
 
-    private Consumer<Node> nextAction;
-
-    private Runnable backAction;
+    private final StoreActionFactory storeActionFactory;
 
     private Plugin item;
 
@@ -104,10 +101,12 @@ public class PluginItemController extends AbstractFxmlController {
             I18N i18n,
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
-            JfxAppContext context) {
+            JfxAppContext context,
+            StoreActionFactory storeActionFactory) {
         //@formatter:on
         super(i18n, scenebuilderManager, documentManager, PluginItemController.class.getResource("PluginItem.fxml"));
         this.context = context;
+        this.storeActionFactory = storeActionFactory;
     }
 
     @FXML
@@ -133,6 +132,8 @@ public class PluginItemController extends AbstractFxmlController {
 
         installButton.visibleProperty().bind(applicationItem.installedProperty().not());
         uninstallButton.visibleProperty().bind(applicationItem.installedProperty());
+        installButton.managedProperty().bind(applicationItem.installedProperty().not());
+        uninstallButton.managedProperty().bind(applicationItem.installedProperty());
     }
 
     @FXML
@@ -153,12 +154,8 @@ public class PluginItemController extends AbstractFxmlController {
     @FXML
     void view(ActionEvent event) {
         var appController = context.getBean(PluginDetailController.class);
-        appController.onBack(backAction);
-        appController.onNext(nextAction);
         appController.load(item, modelController);
-        if (nextAction != null) {
-            nextAction.accept(appController.getRoot());
-        }
+        storeActionFactory.switchNext(appController.getRoot()).checkAndPerform();
     }
 
     private ObjectBinding<ImagePattern> createImageBinding(Plugin applicationItem) {
@@ -171,11 +168,4 @@ public class PluginItemController extends AbstractFxmlController {
         }, applicationItem.imageProperty());
     }
 
-    public void onBack(Runnable backAction) {
-        this.backAction = backAction;
-    }
-
-    public void onNext(Consumer<Node> nextAction) {
-        this.nextAction = nextAction;
-    }
 }

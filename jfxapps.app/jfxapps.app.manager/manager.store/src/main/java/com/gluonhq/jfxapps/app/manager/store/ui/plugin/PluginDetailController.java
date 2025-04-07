@@ -33,11 +33,10 @@
  */
 package com.gluonhq.jfxapps.app.manager.store.ui.plugin;
 
-import java.util.function.Consumer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.app.manager.store.action.StoreActionFactory;
 import com.gluonhq.jfxapps.app.manager.store.model.Plugin;
 import com.gluonhq.jfxapps.app.manager.store.model.PluginController;
 import com.gluonhq.jfxapps.app.manager.store.ui.component.PluginItemController;
@@ -55,7 +54,6 @@ import javafx.beans.binding.ObjectBinding;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -80,9 +78,6 @@ public class PluginDetailController extends AbstractFxmlController {
     private Button deleteButton;
 
     @FXML
-    private Button launchButton;
-
-    @FXML
     private Button changeLogButton;
 
     @FXML
@@ -99,9 +94,6 @@ public class PluginDetailController extends AbstractFxmlController {
 
     @FXML
     private ListView<Plugin> availablesList;
-
-    @FXML
-    private Label typeLabel;
 
     @FXML
     private Rectangle rectImage;
@@ -137,9 +129,7 @@ public class PluginDetailController extends AbstractFxmlController {
 
     private RootModel<Plugin, Plugin> model;
 
-    private Consumer<Node> nextAction;
-
-    private Runnable backAction;
+    private final StoreActionFactory storeActionFactory;
 
     private PluginController modelController;
 
@@ -149,12 +139,14 @@ public class PluginDetailController extends AbstractFxmlController {
             ApplicationEvents applicationEvents,
             ApplicationInstanceEvents instanceEvents,
             PluginModelControllerImpl modelController,
-            JfxAppContext context) {
+            JfxAppContext context,
+            StoreActionFactory storeActionFactory) {
         //@formatter:on
         super(i18n, applicationEvents, instanceEvents, PluginDetailController.class.getResource("PluginDetail.fxml"));
 
         this.applicationModelController = modelController;
         this.context = context;
+        this.storeActionFactory = storeActionFactory;
     }
 
     @FXML
@@ -170,8 +162,6 @@ public class PluginDetailController extends AbstractFxmlController {
                         setGraphic(null);
                     } else {
                         var controller = context.getBean(PluginItemController.class);
-                        controller.onNext(nextAction);
-                        controller.onBack(backAction);
                         controller.load(item, applicationModelController);
                         setGraphic(controller.getRoot());
                     }
@@ -189,8 +179,6 @@ public class PluginDetailController extends AbstractFxmlController {
                         setGraphic(null);
                     } else {
                         var controller = context.getBean(PluginItemController.class);
-                        controller.onNext(nextAction);
-                        controller.onBack(backAction);
                         controller.load(item, applicationModelController);
                         setGraphic(controller.getRoot());
                     }
@@ -241,9 +229,6 @@ public class PluginDetailController extends AbstractFxmlController {
         deleteButton.disableProperty()
         .bind(Bindings.createBooleanBinding(() -> !item.installedProperty().get(), item.installedProperty()));
 
-        launchButton.disableProperty()
-        .bind(Bindings.createBooleanBinding(() -> !item.installedProperty().get(), item.installedProperty()));
-
         changeLogButton.disableProperty().bind(Bindings.createBooleanBinding(() -> {
             var value = item.changeLogProperty().get();
             return value == null || value.isBlank();
@@ -262,9 +247,7 @@ public class PluginDetailController extends AbstractFxmlController {
 
     @FXML
     void goBack(ActionEvent event) {
-        if (backAction != null) {
-            backAction.run();
-        }
+        storeActionFactory.switchBack().checkAndPerform();
     }
 
     @FXML
@@ -275,24 +258,12 @@ public class PluginDetailController extends AbstractFxmlController {
     @FXML
     void deleteItem(ActionEvent event) {
         modelController.uninstall(model.getItem().get());
-        if (backAction != null) {
-            backAction.run();
-        }
+        storeActionFactory.switchBack().checkAndPerform();
     }
 
     @FXML
     void showChangeLog(KeyEvent event) {
 
-    }
-
-    @FXML
-    void launch(KeyEvent event) {
-        new IllegalArgumentException("Nothing to launch here");
-    }
-
-    @FXML
-    void view(ActionEvent event) {
-        new IllegalArgumentException("Nothing to view here");
     }
 
     @FXML
@@ -315,11 +286,4 @@ public class PluginDetailController extends AbstractFxmlController {
         }, sourceItem.imageProperty());
     }
 
-    public void onBack(Runnable backAction) {
-        this.backAction = backAction;
-    }
-
-    public void onNext(Consumer<Node> nextAction) {
-        this.nextAction = nextAction;
-    }
 }

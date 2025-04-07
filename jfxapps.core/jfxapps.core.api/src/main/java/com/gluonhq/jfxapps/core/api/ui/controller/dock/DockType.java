@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,14 +39,19 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.Node;
 
 public interface DockType<T> {
-	String getNameKey();
+
+    String getNameKey();
+
 	DockContext<T> computeView(DockContext<T> view);
+
 	Node computeRoot(Collection<DockContext<T>> views);//, DockContext<T> focused);
 
 	ObjectProperty<DockContext<T>> focusedProperty();
+
     default void setFocused(DockContext<T> focused) {
         focusedProperty().set(focused);
     }
+
     default DockContext<T> getFocused() {
         return focusedProperty().get();
     }

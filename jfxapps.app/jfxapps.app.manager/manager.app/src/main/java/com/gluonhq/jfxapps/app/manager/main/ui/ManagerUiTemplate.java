@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,6 +33,12 @@
  */
 package com.gluonhq.jfxapps.app.manager.main.ui;
 
+import java.io.IOException;
+import java.net.URL;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.gluonhq.jfxapps.app.manager.api.ui.Docks;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -41,12 +47,16 @@ import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockFactory;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBar;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.ViewLinks;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -54,6 +64,8 @@ import javafx.scene.layout.VBox;
 
 @ApplicationInstanceSingleton
 public class ManagerUiTemplate extends AbstractFxmlWindowController implements MainInstanceWindow {
+
+    private static final Logger logger = LoggerFactory.getLogger(ManagerUiTemplate.class);
 
     private final MenuBar menuBar;
     private final Dock centerDock;
@@ -63,8 +75,6 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements M
     private AnchorPane contentHost;
     @FXML
     private HBox hBox;
-
-
 
     // @formatter:off
     public ManagerUiTemplate(
@@ -85,6 +95,34 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements M
     @FXML
     public void initialize() {
 
+        viewLinks.setRegionCustomizer(r -> {
+            r.setPadding(new Insets(30, 10, 30, 10));
+            return r;
+        });
+        viewLinks.setLinkCreator((vi, i18n) -> {
+            URL icon = vi.getIconX2();
+            if (icon == null) {
+                icon = View.VIEW_ICON_MISSING;
+            }
+            try {
+                HBox hBox = new HBox();
+                Image image = new Image(icon.openStream());
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(128);
+                imageView.setFitHeight(128);
+
+                hBox.setAlignment(javafx.geometry.Pos.CENTER);
+                hBox.setMinWidth(200);
+                hBox.setMaxWidth(200);
+
+                hBox.setPadding(new Insets(5));
+                hBox.getChildren().add(imageView);
+                return hBox;
+            } catch (IOException e) {
+                logger.error("Unable to iconize view {}", vi.getId(), e);
+                return null;
+            }
+        });
     }
 
     @Override
@@ -92,7 +130,6 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements M
         super.controllerDidLoadFxml();
         assert getRoot() instanceof VBox;
     }
-
 
     @Override
     public void composeWindow() {
@@ -117,8 +154,7 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements M
 
     @Override
     public void updateStageTitle() {
-        // TODO Auto-generated method stub
-
+        this.getStage().setTitle(getI18n().getStringOrDefault("manager.title", "manager.title"));
     }
 
 }

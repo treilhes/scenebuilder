@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,12 +40,8 @@ import com.gluonhq.jfxapps.app.manager.api.ManagerApiExtension;
 import com.gluonhq.jfxapps.app.manager.main.action.ShowAboutAction;
 import com.gluonhq.jfxapps.app.manager.main.action.ShowScenicViewAction;
 import com.gluonhq.jfxapps.app.manager.main.menu.MainMenuProvider;
-import com.gluonhq.jfxapps.app.manager.main.model.ModelController;
 import com.gluonhq.jfxapps.app.manager.main.ui.ManagerUiTemplate;
 import com.gluonhq.jfxapps.app.manager.main.ui.WindowIconSettings;
-import com.gluonhq.jfxapps.app.manager.main.ui.cmp.ApplicationCardController;
-import com.gluonhq.jfxapps.app.manager.main.ui.cmp.ExtensionCardController;
-import com.gluonhq.jfxapps.app.manager.main.ui.cmp.MainContentController;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.ext.about.api.AboutApi;
 import com.gluonhq.jfxapps.ext.scenicview.api.ScenicViewApi;
@@ -70,12 +66,7 @@ public class ManagerAppExtension implements OpenExtension  {
         return List.of(
                 WindowIconSettings.class,
                 ManagerUiTemplate.class,
-                ApplicationCardController.class,
-                ExtensionCardController.class,
-                MainContentController.class,
                 MainMenuProvider.class,
-                ModelController.class,
-
                 ShowAboutAction.class,
                 ShowScenicViewAction.class,
                 AboutApi.class,

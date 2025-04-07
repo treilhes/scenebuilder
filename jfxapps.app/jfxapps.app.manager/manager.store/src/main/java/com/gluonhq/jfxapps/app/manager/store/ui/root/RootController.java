@@ -33,11 +33,10 @@
  */
 package com.gluonhq.jfxapps.app.manager.store.ui.root;
 
-import java.util.function.Consumer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.app.manager.store.action.StoreActionFactory;
 import com.gluonhq.jfxapps.app.manager.store.model.Application;
 import com.gluonhq.jfxapps.app.manager.store.ui.app.ApplicationDetailController;
 import com.gluonhq.jfxapps.app.manager.store.ui.component.ApplicationItemController;
@@ -54,7 +53,6 @@ import javafx.beans.binding.ObjectBinding;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -70,15 +68,6 @@ import javafx.scene.shape.Rectangle;
 public class RootController extends AbstractFxmlController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RootController.class);
-
-    @FXML
-    private Button backButton;
-
-    @FXML
-    private Button deleteButton;
-
-    @FXML
-    private Button launchButton;
 
     @FXML
     private Button changeLogButton;
@@ -97,9 +86,6 @@ public class RootController extends AbstractFxmlController {
 
     @FXML
     private ListView<Application> availablesList;
-
-    @FXML
-    private Label typeLabel;
 
     @FXML
     private Rectangle rectImage;
@@ -135,9 +121,11 @@ public class RootController extends AbstractFxmlController {
 
     private RootModel<Application, Application> model;
 
-    private Consumer<Node> nextAction;
+    private StoreActionFactory storeActionFactory;
 
-    private Runnable backAction;
+    //private Consumer<Node> nextAction;
+
+    //private Runnable backAction;
 
     //@formatter:off
     protected RootController(
@@ -146,12 +134,14 @@ public class RootController extends AbstractFxmlController {
             ApplicationInstanceEvents instanceEvents,
             ViewMenu viewMenu,
             RootModelControllerImpl rootModelController,
-            JfxAppContext context) {
+            JfxAppContext context,
+            StoreActionFactory storeActionFactory) {
         //@formatter:on
         super(i18n, applicationEvents, instanceEvents, RootController.class.getResource("RootDetail.fxml"));
 
         this.modelController = rootModelController;
         this.context = context;
+        this.storeActionFactory = storeActionFactory;
     }
 
     @FXML
@@ -167,8 +157,6 @@ public class RootController extends AbstractFxmlController {
                         setGraphic(null);
                     } else {
                         var controller = context.getBean(ApplicationItemController.class);
-                        controller.onNext(nextAction);
-                        controller.onBack(backAction);
                         controller.load(item, modelController);
                         setGraphic(controller.getRoot());
                     }
@@ -186,8 +174,6 @@ public class RootController extends AbstractFxmlController {
                         setGraphic(null);
                     } else {
                         var controller = context.getBean(ApplicationItemController.class);
-                        controller.onNext(nextAction);
-                        controller.onBack(backAction);
                         controller.load(item, modelController);
                         setGraphic(controller.getRoot());
                     }
@@ -228,10 +214,6 @@ public class RootController extends AbstractFxmlController {
         errorLabel.visibleProperty().bind(item.errorProperty());
         errorTooltip.textProperty().bind(item.errorMessageProperty());
 
-        deleteButton.disableProperty().bind(item.installedProperty().not());
-
-        launchButton.disableProperty().bind(item.installedProperty().not());
-
         changeLogButton.disableProperty().bind(item.changeLogProperty().isEmpty());
 
         updateButton.disableProperty().bind(Bindings.createBooleanBinding(() -> {
@@ -246,20 +228,8 @@ public class RootController extends AbstractFxmlController {
     }
 
     @FXML
-    void goBack(ActionEvent event) {
-        if (backAction != null) {
-            backAction.run();
-        }
-    }
-
-    @FXML
     void updateItem(ActionEvent event) {
         modelController.update(model.getItem().get());
-    }
-
-    @FXML
-    void deleteItem(ActionEvent event) {
-        throw new IllegalStateException("Not applicable for this root application");
     }
 
     @FXML
@@ -268,22 +238,13 @@ public class RootController extends AbstractFxmlController {
     }
 
     @FXML
-    void launch(ActionEvent event) {
-        modelController.launch(model.getItem().get());
-    }
-
-    @FXML
     void view(ActionEvent event) {
-        if (nextAction != null) {
-            var item = model.getItem().get();
+        var item = model.getItem().get();
 
-            var appController = context.getBean(ApplicationDetailController.class);
-            appController.onBack(backAction);
-            appController.onNext(nextAction);
-            appController.load(item, modelController);
+        var appController = context.getBean(ApplicationDetailController.class);
+        appController.load(item, modelController);
 
-            nextAction.accept(appController.getRoot());
-        }
+        storeActionFactory.switchNext(appController.getRoot()).checkAndPerform();
     }
 
     @FXML
@@ -306,11 +267,4 @@ public class RootController extends AbstractFxmlController {
         }, sourceItem.imageProperty());
     }
 
-    public void onBack(Runnable backAction) {
-        this.backAction = backAction;
-    }
-
-    public void onNext(Consumer<Node> nextAction) {
-        this.nextAction = nextAction;
-    }
 }

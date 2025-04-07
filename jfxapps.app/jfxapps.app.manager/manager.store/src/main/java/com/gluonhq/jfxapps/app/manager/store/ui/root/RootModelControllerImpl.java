@@ -68,6 +68,7 @@ public class RootModelControllerImpl implements ApplicationController{
         var apps = registryManager.listApplicationsInfo();
 
         var sourceItems = apps.stream()
+                .filter(a -> !Extension.ROOT_ID.equals(a.getUuid()))
                 .map(a -> new Application(a, i18n))
                 .collect(Collectors.partitioningBy(a -> a.infoProperty().get().isInstalled()));
 
@@ -91,10 +92,6 @@ public class RootModelControllerImpl implements ApplicationController{
         item.installedProperty().set(false);
         model.getInstalled().remove(item);
         model.getAvailables().add(0, item);
-    }
-
-    public void launch(Application application) {
-        appManager.startApplication(application.infoProperty().get().getUuid());
     }
 
     public void update(Application application) {

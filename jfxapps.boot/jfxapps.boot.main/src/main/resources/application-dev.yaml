@@ -16,6 +16,9 @@ jfxapps:
         artifactId: jfxapps.core.appmngr
         path: ../../jfxapps.core/jfxapps.core.appmngr/target/classes
       - groupId: com.gluonhq.jfxapps
+        artifactId: jfxapps.core.accelerators
+        path: ../../jfxapps.core/jfxapps.core.accelerators/target/classes
+      - groupId: com.gluonhq.jfxapps
         artifactId: jfxapps.core.ui
         path: ../../jfxapps.core/jfxapps.core.ui/target/classes
       - groupId: com.gluonhq.jfxapps

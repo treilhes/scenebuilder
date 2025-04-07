@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -51,7 +51,10 @@ import com.gluonhq.jfxapps.core.api.shortcut.Accelerator;
 import com.gluonhq.jfxapps.core.api.shortcut.AcceleratorProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractCommonUiController;
 
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyCombination.Modifier;
 
 @ApplicationInstanceSingleton
 public class AnnotatedActionAcceleratorProvider implements AcceleratorProvider {
@@ -109,18 +112,17 @@ public class AnnotatedActionAcceleratorProvider implements AcceleratorProvider {
 
             for (com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator annotation : annotations) {
 
-                final String rawAccelerator;
-                if (JfxAppsPlatform.IS_MAC && !annotation.macosAccelerator().isBlank()) {
-                    rawAccelerator = annotation.macosAccelerator();
-                } else {
-                    rawAccelerator = annotation.accelerator().isBlank() ? null : annotation.accelerator();
-                }
+                final KeyCombination keyCombination;
 
-                if (rawAccelerator.isBlank()) {
+                if (hasKeyCodeAccelerator(annotation)) {
+                    keyCombination = keyCombinationFromKeyCodes(annotation);
+                } else if (hasStringAccelerator(annotation)) {
+                    keyCombination = keyCombinationFromString(annotation);
+                } else {
+                    logger.warn("{} : Accelerator annotation must have either keyCode or string accelerator", cls.getClass());
                     continue;
                 }
 
-                final KeyCombination keyCombination = KeyCombination.valueOf(rawAccelerator);
                 Accelerator accelerator = new Accelerator() {
 
                     @Override
@@ -150,4 +152,62 @@ public class AnnotatedActionAcceleratorProvider implements AcceleratorProvider {
         return result;
     }
 
+    private boolean hasStringAccelerator(com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator annotation) {
+        return !annotation.accelerator().isBlank() || !annotation.macosAccelerator().isBlank();
+    }
+    private boolean hasKeyCodeAccelerator(com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator annotation) {
+        return annotation.acceleratorKeyCodes().length > 0 || annotation.macosAcceleratorKeyCodes().length > 0;
+    }
+    private KeyCombination keyCombinationFromString(com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator annotation) {
+        if (JfxAppsPlatform.IS_MAC && !annotation.macosAccelerator().isBlank()) {
+            return KeyCombination.valueOf(annotation.macosAccelerator());
+        } else {
+            return KeyCombination.valueOf(annotation.accelerator().isBlank() ? null : annotation.accelerator());
+        }
+    }
+
+    private KeyCombination keyCombinationFromKeyCodes(com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator annotation) {
+        if (JfxAppsPlatform.IS_MAC && annotation.macosAcceleratorKeyCodes().length != 0) {
+            return fromKeyCodes(annotation.macosAcceleratorKeyCodes());
+        } else {
+            return fromKeyCodes(annotation.acceleratorKeyCodes().length == 0 ? null : annotation.acceleratorKeyCodes());
+        }
+    }
+
+    private static KeyCombination fromKeyCodes(KeyCode... codes) {
+        if (codes == null || codes.length == 0) {
+            throw new IllegalArgumentException("KeyCode array must not be empty");
+        }
+
+        List<Modifier> modifiers = new ArrayList<>();
+        KeyCode mainKey = null;
+
+        for (KeyCode code : codes) {
+            switch (code) {
+                case CONTROL:
+                    modifiers.add(KeyCombination.CONTROL_DOWN);
+                    break;
+                case SHIFT:
+                    modifiers.add(KeyCombination.SHIFT_DOWN);
+                    break;
+                case ALT:
+                    modifiers.add(KeyCombination.ALT_DOWN);
+                    break;
+                case META:
+                    modifiers.add(KeyCombination.META_DOWN);
+                    break;
+                case SHORTCUT:
+                    modifiers.add(KeyCombination.SHORTCUT_DOWN);
+                    break;
+                default:
+                    mainKey = code; // assume the last non-modifier is the key
+            }
+        }
+
+        if (mainKey == null) {
+            throw new IllegalArgumentException("No non-modifier KeyCode found");
+        }
+
+        return new KeyCodeCombination(mainKey, modifiers.toArray(new Modifier[0]));
+    }
 }

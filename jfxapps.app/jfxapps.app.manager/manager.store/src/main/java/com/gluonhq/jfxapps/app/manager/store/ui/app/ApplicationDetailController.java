@@ -33,11 +33,7 @@
  */
 package com.gluonhq.jfxapps.app.manager.store.ui.app;
 
-import java.util.function.Consumer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.gluonhq.jfxapps.app.manager.store.action.StoreActionFactory;
 import com.gluonhq.jfxapps.app.manager.store.model.Application;
 import com.gluonhq.jfxapps.app.manager.store.model.ApplicationController;
 import com.gluonhq.jfxapps.app.manager.store.model.Plugin;
@@ -46,6 +42,7 @@ import com.gluonhq.jfxapps.app.manager.store.ui.root.RootController;
 import com.gluonhq.jfxapps.app.manager.store.ui.root.RootModel;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
@@ -56,7 +53,6 @@ import javafx.beans.binding.ObjectBinding;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -72,7 +68,7 @@ import javafx.scene.shape.Rectangle;
 @ApplicationInstancePrototype
 public class ApplicationDetailController extends AbstractFxmlController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationDetailController.class);
+    //private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationDetailController.class);
 
     @FXML
     private Button backButton;
@@ -100,9 +96,6 @@ public class ApplicationDetailController extends AbstractFxmlController {
 
     @FXML
     private ListView<Plugin> availablesList;
-
-    @FXML
-    private Label typeLabel;
 
     @FXML
     private Rectangle rectImage;
@@ -138,9 +131,7 @@ public class ApplicationDetailController extends AbstractFxmlController {
 
     private RootModel<Application, Plugin> model;
 
-    private Consumer<Node> nextAction;
-
-    private Runnable backAction;
+    private final StoreActionFactory storeActionFactory;
 
     private ApplicationController parentModelController;
 
@@ -150,12 +141,15 @@ public class ApplicationDetailController extends AbstractFxmlController {
             ApplicationEvents applicationEvents,
             ApplicationInstanceEvents instanceEvents,
             ApplicationModelControllerImpl applicationModelController,
-            JfxAppContext context) {
+            JfxAppContext context,
+            StoreActionFactory storeActionFactory) {
         //@formatter:on
-        super(i18n, applicationEvents, instanceEvents, ApplicationDetailController.class.getResource("ApplicationDetail.fxml"));
+        super(i18n, applicationEvents, instanceEvents,
+                ApplicationDetailController.class.getResource("ApplicationDetail.fxml"));
 
         this.modelController = applicationModelController;
         this.context = context;
+        this.storeActionFactory = storeActionFactory;
     }
 
     @FXML
@@ -171,8 +165,6 @@ public class ApplicationDetailController extends AbstractFxmlController {
                         setGraphic(null);
                     } else {
                         var controller = context.getBean(PluginItemController.class);
-                        controller.onNext(nextAction);
-                        controller.onBack(backAction);
                         controller.load(item, modelController);
                         setGraphic(controller.getRoot());
                     }
@@ -190,8 +182,6 @@ public class ApplicationDetailController extends AbstractFxmlController {
                         setGraphic(null);
                     } else {
                         var controller = context.getBean(PluginItemController.class);
-                        controller.onNext(nextAction);
-                        controller.onBack(backAction);
                         controller.load(item, modelController);
                         setGraphic(controller.getRoot());
                     }
@@ -199,7 +189,6 @@ public class ApplicationDetailController extends AbstractFxmlController {
             };
         });
     }
-
 
     @Override
     public void controllerDidLoadFxml() {
@@ -224,13 +213,6 @@ public class ApplicationDetailController extends AbstractFxmlController {
         bindAll(item.get());
     }
 
-//    @Override
-//    public void onHidden() {
-//        if (subscription != null) {
-//            subscription.unsubscribe();
-//        }
-//    }
-
     private void bindAll(Application item) {
         titleLabel.textProperty().bind(item.nameProperty());
         descriptionLabel.textProperty().bind(item.descriptionProperty());
@@ -240,11 +222,19 @@ public class ApplicationDetailController extends AbstractFxmlController {
         errorLabel.visibleProperty().bind(item.errorProperty());
         errorTooltip.textProperty().bind(item.errorMessageProperty());
 
-        deleteButton.disableProperty()
-        .bind(Bindings.createBooleanBinding(() -> !item.installedProperty().get(), item.installedProperty()));
+        if (Extension.ROOT_ID.equals(item.infoProperty().get().getUuid())
+                || Extension.MANAGER_APP_ID.equals(item.infoProperty().get().getUuid())) {
+            deleteButton.setManaged(false);
+            deleteButton.setVisible(false);
+            launchButton.setManaged(false);
+            launchButton.setVisible(false);
+        } else {
+            deleteButton.disableProperty().bind(
+                    Bindings.createBooleanBinding(() -> !item.installedProperty().get(), item.installedProperty()));
 
-        launchButton.disableProperty()
-        .bind(Bindings.createBooleanBinding(() -> !item.installedProperty().get(), item.installedProperty()));
+            launchButton.disableProperty().bind(
+                    Bindings.createBooleanBinding(() -> !item.installedProperty().get(), item.installedProperty()));
+        }
 
         changeLogButton.disableProperty().bind(Bindings.createBooleanBinding(() -> {
             var value = item.changeLogProperty().get();
@@ -264,9 +254,7 @@ public class ApplicationDetailController extends AbstractFxmlController {
 
     @FXML
     void goBack(ActionEvent event) {
-        if (backAction != null) {
-            backAction.run();
-        }
+        storeActionFactory.switchBack().checkAndPerform();
     }
 
     @FXML
@@ -277,9 +265,7 @@ public class ApplicationDetailController extends AbstractFxmlController {
     @FXML
     void deleteItem(ActionEvent event) {
         parentModelController.uninstall(model.getItem().get());
-        if (backAction != null) {
-            backAction.run();
-        }
+        storeActionFactory.switchBack().checkAndPerform();
     }
 
     @FXML
@@ -290,11 +276,6 @@ public class ApplicationDetailController extends AbstractFxmlController {
     @FXML
     void launch(KeyEvent event) {
         modelController.launch(model.getItem().get());
-    }
-
-    @FXML
-    void view(ActionEvent event) {
-        new IllegalArgumentException("Nothing to view here");
     }
 
     @FXML
@@ -317,11 +298,4 @@ public class ApplicationDetailController extends AbstractFxmlController {
         }, sourceItem.imageProperty());
     }
 
-    public void onBack(Runnable backAction) {
-        this.backAction = backAction;
-    }
-
-    public void onNext(Consumer<Node> nextAction) {
-        this.nextAction = nextAction;
-    }
 }

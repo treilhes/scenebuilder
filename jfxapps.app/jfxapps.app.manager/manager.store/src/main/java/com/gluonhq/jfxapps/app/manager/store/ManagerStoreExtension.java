@@ -37,11 +37,15 @@ import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.app.manager.api.ManagerApiExtension;
+import com.gluonhq.jfxapps.app.manager.store.action.StoreActionFactory;
+import com.gluonhq.jfxapps.app.manager.store.action.SwitchBackAction;
+import com.gluonhq.jfxapps.app.manager.store.action.SwitchNextAction;
 import com.gluonhq.jfxapps.app.manager.store.ui.StoreController;
 import com.gluonhq.jfxapps.app.manager.store.ui.app.ApplicationDetailController;
 import com.gluonhq.jfxapps.app.manager.store.ui.app.ApplicationModelControllerImpl;
 import com.gluonhq.jfxapps.app.manager.store.ui.component.ApplicationItemController;
 import com.gluonhq.jfxapps.app.manager.store.ui.component.PluginItemController;
+import com.gluonhq.jfxapps.app.manager.store.ui.component.SwitchFactory;
 import com.gluonhq.jfxapps.app.manager.store.ui.plugin.PluginDetailController;
 import com.gluonhq.jfxapps.app.manager.store.ui.plugin.PluginModelControllerImpl;
 import com.gluonhq.jfxapps.app.manager.store.ui.root.RootController;
@@ -94,7 +98,11 @@ public class ManagerStoreExtension implements OpenExtension  {
                 PluginDetailController.class,
                 PluginModelControllerImpl.class,
                 ApplicationItemController.class,
-                PluginItemController.class
+                PluginItemController.class,
+                SwitchFactory.class,
+                StoreActionFactory.class,
+                SwitchBackAction.class,
+                SwitchNextAction.class
                 );
     }
 

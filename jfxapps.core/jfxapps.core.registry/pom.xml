@@ -121,6 +121,16 @@
                                             <version>${project.version}</version>
                                         </dependency>
                                     </extension>
+                                    
+                                    <!-- optional -->
+                                    <extension>
+                                        <uuid>6c858b4e-b74f-4e8d-89c6-99c96ca77732</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>jfxapps.core.accelerators</artifactId>
+                                            <version>${project.version}</version>
+                                        </dependency>
+                                    </extension>
 
                                     <!-- temp -->
                                     <extension>

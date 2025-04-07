@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,31 +31,34 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.manager.main.model;
+package com.gluonhq.jfxapps.app.manager.store.action;
 
-import com.gluonhq.jfxapps.app.manager.api.ui.Model;
-import com.gluonhq.jfxapps.app.manager.model.AppModel;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
+import java.util.function.Supplier;
 
-@Singleton
-public class ModelController implements Model {
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.action.Action;
+import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 
-    private AppModel appModel;
+import javafx.scene.Node;
 
-    @Override
-    public void save() {
+@ApplicationInstanceSingleton
+public class StoreActionFactory {
 
+    private final ActionFactory actionFactory;
+
+    public StoreActionFactory(ActionFactory actionFactory) {
+        this.actionFactory = actionFactory;
     }
 
-    public void load() {
-
+    public Action switchBack() {
+        return actionFactory.create(SwitchBackAction.class);
     }
 
-    @Override
-    public AppModel getModel() {
-        if (appModel == null) {
-            load();
-        }
-        return appModel;
+    public Action switchNext(Node node) {
+        return actionFactory.create(SwitchNextAction.class, a -> a.setNodeSupplier(() -> node));
+    }
+
+    public Action switchNext(Supplier<Node> nodeSupplier) {
+        return actionFactory.create(SwitchNextAction.class, a -> a.setNodeSupplier(nodeSupplier));
     }
 }

@@ -109,17 +109,17 @@ class PluginDetailControllerTest {
         appModel.getAvailables().add(plug1);
         appModel.getInstalled().add(plug2);
 
-        app.imageProperty().set(PluginDetailControllerTest.class.getResource("../image1.png"));
+        app.imageProperty().set(PluginDetailControllerTest.class.getResource("/com/gluonhq/jfxapps/app/manager/store/ui/image1.png"));
         app.nameProperty().set("Scene Builder");
         app.descriptionProperty().set("Scene Builder is an open source tool that allows for drag and drop design of JavaFX user interfaces.");
         app.versionProperty().set("X.X.X");
 
-        plug1.imageProperty().set(PluginDetailControllerTest.class.getResource("../image1.png"));
+        plug1.imageProperty().set(PluginDetailControllerTest.class.getResource("/com/gluonhq/jfxapps/app/manager/store/ui/image1.png"));
         plug1.nameProperty().set("Scene Builder");
         plug1.descriptionProperty().set("Scene Builder is an open source tool that allows for drag and drop design of JavaFX user interfaces.");
         plug1.versionProperty().set("X.X.X");
 
-        plug2.imageProperty().set(PluginDetailControllerTest.class.getResource("../image2.png"));
+        plug2.imageProperty().set(PluginDetailControllerTest.class.getResource("/com/gluonhq/jfxapps/app/manager/store/ui/image2.png"));
         plug2.nameProperty().set("App2");
         plug2.descriptionProperty().set("Description2");
         plug2.versionProperty().set("X.X.X");

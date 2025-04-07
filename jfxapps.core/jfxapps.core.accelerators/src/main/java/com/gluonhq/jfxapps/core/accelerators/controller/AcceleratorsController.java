@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -43,10 +43,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.accelerators.preference.AcceleratorsMapPreference;
 import com.gluonhq.jfxapps.core.accelerators.preference.FocusedAcceleratorsMapPreference;
 import com.gluonhq.jfxapps.core.api.action.Action;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
+import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
 import com.gluonhq.jfxapps.core.api.preference.Preference;
 import com.gluonhq.jfxapps.core.api.shortcut.Accelerator;
 import com.gluonhq.jfxapps.core.api.shortcut.AcceleratorProvider;
@@ -78,7 +81,7 @@ import javafx.scene.input.KeyCombination.ModifierValue;
  * {@link FocusedAcceleratorsMapPreference.Factory}
  */
 @ApplicationInstanceSingleton
-public class AcceleratorsController implements Accelerators {
+public class AcceleratorsController implements Accelerators, InitWithDocument {
 
     private static final Logger logger = LoggerFactory.getLogger(AcceleratorsController.class);
 
@@ -92,13 +95,17 @@ public class AcceleratorsController implements Accelerators {
     private Map<Action, List<KeyCombination>> defaultGlobalAccelerators = new HashMap<>();
     private Map<Class<? extends AbstractCommonUiController>, Map<Action, List<KeyCombination>>> defaultFocusedAccelerators = new HashMap<>();
 
+    private final JfxAppPlatform platform;
+
     public AcceleratorsController(
+            JfxAppPlatform platform,
             ApplicationInstanceEvents documentManager,
-            MainInstanceWindow documentWindow,
+            @Lazy MainInstanceWindow documentWindow,
             AcceleratorsMapPreference acceleratorsMapPreference,
             FocusedAcceleratorsMapPreference focusedAcceleratorsMapPreference,
             Optional<List<AcceleratorProvider>> acceleratorProviders) {
         super();
+        this.platform = platform;
         this.acceleratorsMapPreference = acceleratorsMapPreference;
         this.focusedAcceleratorsMapPreference = focusedAcceleratorsMapPreference;
         this.acceleratorProviders = acceleratorProviders;
@@ -106,19 +113,25 @@ public class AcceleratorsController implements Accelerators {
         this.documentWindow = documentWindow;
 
         defaultFocusedAccelerators.put(null, defaultGlobalAccelerators);
+
+    }
+
+
+    @Override
+    public void initWithDocument() {
         documentManager.dependenciesLoaded().subscribe((b) -> {
             if (b) {
                 this.setup();
             }
         });
-
     }
 
     private void setup() {
         initializeProviders(acceleratorProviders);
         documentManager.focusedView().subscribe(this::onViewFocused);
-        resetAll(null);
+        platform.runOnFxThreadWithActiveScope(() -> resetAll(null));
     }
+
     /**
      * @param providers
      */
@@ -283,6 +296,5 @@ public class AcceleratorsController implements Accelerators {
             action.checkAndPerform();
         }
     }
-
 
 }

@@ -151,7 +151,7 @@ class RootControllerTest {
     }
 
     @Test
-    void should_create_3_rows_with_only_2_lines_with_values(StageBuilder stageBuilder, FxRobot robot) {
+    void must_show_the_root_app_and_one_installable_and_one_installed(StageBuilder stageBuilder, FxRobot robot) {
 
         var rootModel = new RootModel<Application, Application>();
         var app1 = new Application(null, null);
@@ -161,12 +161,12 @@ class RootControllerTest {
         rootModel.getAvailables().add(app1);
         rootModel.getInstalled().add(app2);
 
-        app1.imageProperty().set(RootControllerTest.class.getResource("../image1.png"));
+        app1.imageProperty().set(RootControllerTest.class.getResource("/com/gluonhq/jfxapps/app/manager/store/ui/image1.png"));
         app1.nameProperty().set("Scene Builder");
         app1.descriptionProperty().set("Scene Builder is an open source tool that allows for drag and drop design of JavaFX user interfaces.");
         app1.versionProperty().set("X.X.X");
 
-        app2.imageProperty().set(RootControllerTest.class.getResource("../image2.png"));
+        app2.imageProperty().set(RootControllerTest.class.getResource("/com/gluonhq/jfxapps/app/manager/store/ui/image2.png"));
         app2.nameProperty().set("App2");
         app2.descriptionProperty().set("Description2");
         app2.versionProperty().set("X.X.X");

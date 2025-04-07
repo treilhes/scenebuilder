@@ -45,7 +45,13 @@ import org.testfx.api.FxRobot;
 
 import com.gluonhq.jfxapps.app.manager.api.ManagerApiExtension;
 import com.gluonhq.jfxapps.app.manager.store.TestUtil;
+import com.gluonhq.jfxapps.app.manager.store.action.StoreActionFactory;
+import com.gluonhq.jfxapps.app.manager.store.action.SwitchBackAction;
+import com.gluonhq.jfxapps.app.manager.store.action.SwitchNextAction;
+import com.gluonhq.jfxapps.app.manager.store.ui.component.SwitchFactory;
 import com.gluonhq.jfxapps.app.manager.store.ui.root.RootController;
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.javafx.DisableAutomaticFxmlLoading;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
@@ -56,7 +62,8 @@ import com.gluonhq.jfxapps.test.StageType;
 import javafx.scene.control.Label;
 
 @JfxAppsTest
-@ContextConfiguration(classes = { StoreControllerTest.Config.class, StoreController.class })
+@ContextConfiguration(classes = { StoreControllerTest.Config.class, StoreController.class, SwitchFactory.class,
+        StoreActionFactory.class, SwitchBackAction.class, SwitchNextAction.class, ActionFactory.class, ActionExtensionFactory.class})
 class StoreControllerTest {
 
     @TestConfiguration
@@ -77,10 +84,14 @@ class StoreControllerTest {
         RootController rootController() {
             return Mockito.mock(RootController.class);
         }
+
     }
 
     @Autowired
     RootController rootController;
+
+    @Autowired
+    StoreActionFactory storeActionFactory;
 
     @Test
     void should_load_the_fxml(StageBuilder stageBuilder) {
@@ -113,19 +124,19 @@ class StoreControllerTest {
 
                 System.out.println();
 
-                robot.interact(() -> controller.next(() -> {
+                robot.interact(() -> storeActionFactory.switchNext(() -> {
                     var node = new Label("next1");
                     node.setStyle("-fx-background-color: red; -fx-min-width: 200px; -fx-min-height: 200px;");
                     return node;
-                }));
+                }).checkAndPerform());
 
                 System.out.println();
 
-                robot.interact(() -> controller.next(() -> {
+                robot.interact(() -> storeActionFactory.switchNext(() -> {
                     var node = new Label("next2");
                     node.setStyle("-fx-background-color: red; -fx-min-width: 200px; -fx-min-height: 200px;");
                     return node;
-                }));
+                }).checkAndPerform());
 
                 System.out.println();
 

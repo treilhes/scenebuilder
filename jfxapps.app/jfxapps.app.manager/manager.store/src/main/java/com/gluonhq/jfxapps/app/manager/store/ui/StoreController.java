@@ -33,13 +33,12 @@
  */
 package com.gluonhq.jfxapps.app.manager.store.ui;
 
-import java.util.function.Supplier;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.app.manager.api.ui.Docks;
 import com.gluonhq.jfxapps.app.manager.store.ui.component.Switch;
+import com.gluonhq.jfxapps.app.manager.store.ui.component.SwitchFactory;
 import com.gluonhq.jfxapps.app.manager.store.ui.root.RootController;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
@@ -51,7 +50,6 @@ import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
 @ApplicationInstanceSingleton
@@ -59,7 +57,7 @@ import javafx.scene.layout.StackPane;
         name = "Store",
         id = "5dd924ad-f410-4612-bb23-196c5b672441",
         prefDockId = Docks.CENTER_DOCK_ID,
-        openOnStart = false,
+        openOnStart = true,
         selectOnStart = false,
         order = 4000,
         icon = "openapi_tool.png",
@@ -68,6 +66,8 @@ import javafx.scene.layout.StackPane;
 public class StoreController extends AbstractFxmlViewController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StoreController.class);
+
+    public static final String SWITCH_ID = "StoreSwitch";
 
     @FXML
     private StackPane rootPane;
@@ -83,24 +83,18 @@ public class StoreController extends AbstractFxmlViewController {
             ApplicationInstanceEvents documentManager,
             ViewMenu viewMenu,
             RootController rootController,
-            JfxAppContext context) {
+            JfxAppContext context,
+            SwitchFactory switchFactory) {
         //@formatter:on
         super(i18n, scenebuilderManager, documentManager, viewMenu, StoreController.class.getResource("Store.fxml"));
 
         this.rootController = rootController;
+        this.switcher = switchFactory.getSwitch(SWITCH_ID);
     }
 
     @FXML
     private void initialize() {
-        switcher = new Switch(rootPane);
-    }
-
-    public void next(Supplier<Node> nodeSupplier) {
-        switcher.next(nodeSupplier.get());
-    }
-
-    public void next(Node node) {
-        switcher.next(node);
+        switcher.attach(rootPane);
     }
 
     public void back() {
@@ -109,8 +103,6 @@ public class StoreController extends AbstractFxmlViewController {
 
     @Override
     public void onShow() {
-        rootController.onBack(switcher::back);
-        rootController.onNext(switcher::next);
         rootController.load();
 
         switcher.reset();

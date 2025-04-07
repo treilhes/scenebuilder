@@ -35,6 +35,8 @@ package com.gluonhq.jfxapps.app.manager.store.ui.component;
 
 import java.util.function.Supplier;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -43,19 +45,24 @@ import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+@ApplicationInstanceSingleton
 public class Switch {
 
     private enum Direction {
         LeftToRight, RightToLeft
     }
 
-    private final StackPane container;
     private final ObservableList<Node> screenStack;
 
-    public Switch(StackPane container) {
-        this.container = container;
+    private StackPane container;
+
+    public Switch() {
         this.screenStack = FXCollections.observableArrayList();
 
+    }
+
+    public void attach(StackPane rootPane) {
+        this.container = rootPane;
         initialize();
     }
 
@@ -151,7 +158,12 @@ public class Switch {
 
     }
 
+    public boolean canBack() {
+        return screenStack.size() > 1;
+    }
+
     public void reset() {
         screenStack.clear();
     }
+
 }
