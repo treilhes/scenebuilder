@@ -40,7 +40,6 @@ open module manager.api {
     exports com.gluonhq.jfxapps.app.manager.api.ui;
 
     requires transitive jfxapps.core.api;
-    requires manager.model;
 
     requires transitive org.kordamp.ikonli.core;
     requires transitive org.kordamp.ikonli.javafx;

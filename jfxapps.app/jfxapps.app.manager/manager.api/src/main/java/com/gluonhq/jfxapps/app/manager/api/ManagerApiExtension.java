@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,8 +36,6 @@ package com.gluonhq.jfxapps.app.manager.api;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.app.manager.api.ui.ApplicationCard;
-import com.gluonhq.jfxapps.app.manager.api.ui.ExtensionCard;
 import com.gluonhq.jfxapps.boot.api.loader.extension.ApplicationExtension;
 import com.gluonhq.jfxapps.core.api.application.annotation.EditorDescriptor;
 
@@ -61,10 +59,7 @@ public class ManagerApiExtension implements ApplicationExtension  {
 
     @Override
     public List<Class<?>> localContextClasses() {
-        return List.of(
-                ApplicationCard.Factory.class,
-                ExtensionCard.Factory.class
-                );
+        return List.of();
     }
 
 }

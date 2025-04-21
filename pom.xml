@@ -479,10 +479,13 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- slow the build , so commented (at least for now)-->
+            <!--
 			<plugin>
 				<groupId>io.github.git-commit-id</groupId>
 			    <artifactId>git-commit-id-maven-plugin</artifactId>
 			</plugin>
+			-->
         </plugins>
         <pluginManagement>
             <plugins>

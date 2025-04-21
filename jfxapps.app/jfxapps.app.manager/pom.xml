@@ -13,8 +13,6 @@
 
     <modules>
         <module>manager.app</module>
-        <module>manager.model</module>
-        <module>manager.metadata</module>
         <module>manager.api</module>
         <module>manager.store</module>
         <module>manager.source</module>
@@ -30,26 +28,6 @@
             <dependency>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>manager.api</artifactId>
-                <version>${manager.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>manager.metadata.customization</artifactId>
-                <version>${manager.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>manager.metadata.model</artifactId>
-                <version>${manager.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>manager.metadata.model.data</artifactId>
-                <version>${manager.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>manager.model</artifactId>
                 <version>${manager.version}</version>
             </dependency>
         </dependencies>
