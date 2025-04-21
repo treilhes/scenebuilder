@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -47,6 +47,19 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
+/**
+ * Same as
+ * https://maven.apache.org/plugins/maven-dependency-plugin/properties-mojo.html
+ * Goal that sets a property pointing to the artifact file for each project
+ * dependency. For each dependency (direct and transitive) a project property
+ * will be set which follows the groupId:artifactId:type:[classifier] form and
+ * contains the path to the resolved artifact.
+ *
+ * What this plugin does on top of the maven-dependency-plugin is to set the
+ * properties for the plugin dependencies as well.
+ * It allows to add properties for artifacts outside of the project classpath
+ * For modular projects, this is useful to set the properties for the patched artifacts
+ */
 @Mojo(name = "properties", requiresDependencyResolution = ResolutionScope.TEST, defaultPhase = LifecyclePhase.INITIALIZE, threadSafe = true)
 public class PropertiesMojo extends AbstractMojo {
     @Component
