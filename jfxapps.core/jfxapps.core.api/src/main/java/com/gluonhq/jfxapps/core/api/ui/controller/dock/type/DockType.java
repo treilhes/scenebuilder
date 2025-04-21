@@ -31,34 +31,32 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.api.ui.controller.dock;
+package com.gluonhq.jfxapps.core.api.ui.controller.dock.type;
 
 import java.util.Collection;
-import java.util.UUID;
 
-/**
- * Keep track of the dock and views available in the application.
- * Keep also track of the current active views and docks and save their last state to
- * be able to restore them when the application is restarted.
- */
-public interface DockViewController {
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockContext;
 
-    void performResetDockAndViews();
+import javafx.beans.property.ObjectProperty;
+import javafx.scene.Node;
 
-    void performLoadDockAndViewsPreferences();
+public interface DockType<T> {
 
-    Collection<ViewAttachment> getViewItems();
+    String getNameKey();
 
-    void performOpenView(View view);
+    boolean isMultiViews();
 
-    void performOpenView(ViewAttachment vi);
+	DockContext<T> computeView(DockContext<T> view);
 
-    void performCloseView(View view);
+	Node computeRoot(Collection<DockContext<T>> views);//, DockContext<T> focused);
 
-    void performUndock(View view);
+	ObjectProperty<DockContext<T>> focusedProperty();
 
-    void performDock(View view, UUID targetDockId);
+    default void setFocused(DockContext<T> focused) {
+        focusedProperty().set(focused);
+    }
 
-    Dock getDock(UUID dockId);
-
+    default DockContext<T> getFocused() {
+        return focusedProperty().get();
+    }
 }

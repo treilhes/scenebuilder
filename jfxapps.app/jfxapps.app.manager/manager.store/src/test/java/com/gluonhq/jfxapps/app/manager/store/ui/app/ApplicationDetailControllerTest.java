@@ -36,6 +36,8 @@ package com.gluonhq.jfxapps.app.manager.store.ui.app;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,7 @@ import org.testfx.api.FxRobot;
 
 import com.gluonhq.jfxapps.app.manager.api.ManagerApiExtension;
 import com.gluonhq.jfxapps.app.manager.store.TestUtil;
+import com.gluonhq.jfxapps.app.manager.store.action.StoreActionFactory;
 import com.gluonhq.jfxapps.app.manager.store.model.Application;
 import com.gluonhq.jfxapps.app.manager.store.model.Plugin;
 import com.gluonhq.jfxapps.app.manager.store.ui.component.PluginItemController;
@@ -83,6 +86,12 @@ class ApplicationDetailControllerTest {
         ApplicationModelControllerImpl applicationModelController() {
             return Mockito.mock(ApplicationModelControllerImpl.class);
         }
+
+        @Bean
+        StoreActionFactory storeActionFactory() {
+            return Mockito.mock(StoreActionFactory.class);
+        }
+
     }
 
     @Autowired
@@ -99,7 +108,7 @@ class ApplicationDetailControllerTest {
     }
 
     @Test
-    void should_create_3_rows_with_only_2_lines_with_values(StageBuilder stageBuilder, FxRobot robot) {
+    void must_load_the_app_and_sub_apps(StageBuilder stageBuilder, FxRobot robot) {
 
         var appModel = new ApplicationModel();
         var app = new Application(null, null);
@@ -110,6 +119,7 @@ class ApplicationDetailControllerTest {
         appModel.getAvailables().add(plug1);
         appModel.getInstalled().add(plug2);
 
+        app.uuidProperty().set(UUID.randomUUID());
         app.imageProperty().set(ApplicationDetailControllerTest.class.getResource("/com/gluonhq/jfxapps/app/manager/store/ui/image1.png"));
         app.nameProperty().set("Scene Builder");
         app.descriptionProperty().set("Scene Builder is an open source tool that allows for drag and drop design of JavaFX user interfaces.");

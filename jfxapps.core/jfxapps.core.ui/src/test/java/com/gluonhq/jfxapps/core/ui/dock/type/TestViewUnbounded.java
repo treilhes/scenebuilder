@@ -31,34 +31,42 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.api.ui.controller.dock;
+package com.gluonhq.jfxapps.core.ui.dock.type;
 
-import java.util.Collection;
 import java.util.UUID;
 
-/**
- * Keep track of the dock and views available in the application.
- * Keep also track of the current active views and docks and save their last state to
- * be able to restore them when the application is restarted.
- */
-public interface DockViewController {
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
+import com.gluonhq.jfxapps.test.TestView;
 
-    void performResetDockAndViews();
+@ApplicationInstanceSingleton
+@com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment(
+        name = "testView",
+        id = TestViewUnbounded.VIEW_ID,
+        prefDockId = TestApp.DOCK_ID
+)
+public class TestViewUnbounded extends TestView {
+    public static final String VIEW_ID = "d4e424f2-0b0f-4e51-8ff6-6a9ae42a27ab";
+    public static final UUID VIEW_UUID = UUID.fromString(VIEW_ID);
 
-    void performLoadDockAndViewsPreferences();
+    public TestViewUnbounded(I18N i18n, ApplicationEvents scenebuilderManager, ApplicationInstanceEvents documentManager,
+            ViewMenu viewMenuController) {
+        super(i18n, scenebuilderManager, documentManager, viewMenuController, TestViewUnbounded.class, """
+                <?xml version="1.0" encoding="UTF-8"?>
 
-    Collection<ViewAttachment> getViewItems();
+                <?import javafx.scene.control.Button?>
+                <?import javafx.scene.layout.Pane?>
 
-    void performOpenView(View view);
 
-    void performOpenView(ViewAttachment vi);
-
-    void performCloseView(View view);
-
-    void performUndock(View view);
-
-    void performDock(View view, UUID targetDockId);
-
-    Dock getDock(UUID dockId);
-
+                <Pane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
+                style="-fx-background-color: red;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+                   <children>
+                      <Button layoutX="274.0" layoutY="188.0" mnemonicParsing="false" text="Button" />
+                   </children>
+                </Pane>
+                """);
+    }
 }

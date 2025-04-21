@@ -31,17 +31,17 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.ui.dock;
+package com.gluonhq.jfxapps.core.ui.dock.type;
 
 import java.util.Collection;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockContext;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockType;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockContextDisposer;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.type.DockType;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.type.LastSurvivor;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 
 import javafx.beans.property.ObjectProperty;
@@ -52,7 +52,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 @ApplicationInstanceSingleton
-public class DockTypeLatestOnly implements DockType<Pane> {
+public class DockTypeLatestOnly implements DockType<Pane>, LastSurvivor {
 
     private final static String VIEW_SOURCE = "Pane.fxml";
 
@@ -70,43 +70,62 @@ public class DockTypeLatestOnly implements DockType<Pane> {
     }
 
     @Override
+    public boolean isMultiViews() {
+        return false;
+    }
+
+    @Override
     public DockContext<Pane> computeView(DockContext<Pane> viewContext) {
-        View view = viewContext.getView();
-        ViewAttachment viewAttachment = viewContext.getViewAttachment();
-        var ctrl = context.getBean(ViewController.class);
+        var view = viewContext.getView();
+        var viewAttachment = viewContext.getViewAttachment();
 
-        Pane pane = FXMLUtils.load(ctrl, DockTypeLatestOnly.class, VIEW_SOURCE);
+        var viewController = context.getBean(ViewController.class);
+        var searchController = view.getSearchController();
+        var contentController = view.getContentController();
 
-        if (view.getSearchController() != null) {
-            ctrl.getViewSearchHost().getChildren().add(view.getSearchController().getRoot());
+        Pane pane = FXMLUtils.load(viewController, DockTypeLatestOnly.class, VIEW_SOURCE);
+
+        var searchHost = viewController.getViewSearchHost();
+        var contentHost = viewController.getViewContentHost();
+        var viewMenu = viewController.getViewMenuButton();
+
+        if (searchController != null) {
+            var searchRoot = searchController.getRoot();
+            searchHost.getChildren().add(searchRoot);
         }
 
-        Node content = view.getViewController().getRoot();
-        ctrl.getViewContentHost().getChildren().add(content);
-        VBox.setVgrow(content, Priority.ALWAYS);
+        var contentRoot = contentController.getRoot();
+        contentHost.getChildren().add(contentRoot);
 
-        view.populateMenu(ctrl.getViewMenuButton());
+        VBox.setVgrow(contentRoot, Priority.ALWAYS);
 
-        var dockContext = new DockContext<>(view, viewAttachment, ctrl, pane, () -> {
-            if (view.getSearchController() != null) {
-                ctrl.getViewSearchHost().getChildren().remove(view.getSearchController().getRoot());
+        view.populateMenu(viewMenu);
+
+        DockContextDisposer disposer = () -> {
+            if (searchController != null) {
+                var searchNode = searchController.getRoot();
+                searchHost.getChildren().remove(searchNode);
             }
-            ctrl.getViewContentHost().getChildren().remove(view.getViewController().getRoot());
-            view.clearMenu(ctrl.getViewMenuButton());
-        });
 
-        return dockContext;
+            contentHost.getChildren().remove(contentRoot);
+            view.clearMenu(viewMenu);
+        };
+
+        return new DockContext<>(view, viewAttachment, viewController, pane, disposer);
     }
 
     @Override
     public Node computeRoot(Collection<DockContext<Pane>> views) {
         var panes = views.stream().map(v -> v.getDockContent()).toList();
-        var pane = new Pane();
-
-        if (!panes.isEmpty()) {
-            pane.getChildren().add(panes.getLast());
-        }
-        return pane;
+//        var pane = new Pane();
+//
+//        pane.setPrefWidth(Double.MAX_VALUE);
+//
+//        if (!panes.isEmpty()) {
+//            pane.getChildren().add(panes.getLast());
+//        }
+//        return pane;
+        return panes.getLast();
     }
 
     @Override
@@ -123,4 +142,5 @@ public class DockTypeLatestOnly implements DockType<Pane> {
         }
         return focusedProperty;
     }
+
 }

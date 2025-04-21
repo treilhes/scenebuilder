@@ -35,6 +35,7 @@ package com.gluonhq.jfxapps.core.ui.dock;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -49,15 +50,17 @@ import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager.DockRequest;
+import com.gluonhq.jfxapps.core.api.ui.DockActionFactory;
 import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockContext;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockType;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.type.DockType;
 import com.gluonhq.jfxapps.core.ui.dock.preference.DockMinimizedPreference;
 import com.gluonhq.jfxapps.core.ui.dock.preference.LastDockDockTypePreference;
 import com.gluonhq.jfxapps.core.ui.dock.preference.LastDockUuidPreference;
+import com.gluonhq.jfxapps.core.ui.dock.type.DockTypeSplitV;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -97,11 +100,14 @@ public class DockPanelController implements Dock {
 
     @SuppressWarnings("rawtypes")
     private ObjectProperty<DockType> dockTypeProperty;
+    private ObjectProperty<Class[]> dockTypeFilterProperty;
     private ObjectProperty<View> focusedProperty;
     private BooleanProperty minimizedProperty;
     private StringProperty nameProperty;
     private ObjectProperty<Orientation> minimizedOrientationProperty;
     private final BooleanProperty visibleProperty = new SimpleBooleanProperty();
+
+    private final DockActionFactory dockActionFactory;
 
     /**
      * Instantiates a new dock panel controller.
@@ -121,12 +127,14 @@ public class DockPanelController implements Dock {
             LastDockUuidPreference lastDockUuidPreference,
             LastDockDockTypePreference lastDockDockTypePreference,
             DockMinimizedPreference dockMinimizedPreference,
+            DockActionFactory dockActionFactory,
             List<DockType<?>> dockTypes) {
         // @formatter:on
 
         this.id = UUID.randomUUID();
         this.jfxAppPlatform= jfxAppPlatform;
         this.dockManager = dockManager;
+        this.dockActionFactory = dockActionFactory;
         this.lastDockUuidPreference = lastDockUuidPreference;
         this.lastDockDockTypePreference = lastDockDockTypePreference;
         this.dockMinimizedPreference = dockMinimizedPreference;
@@ -229,7 +237,7 @@ public class DockPanelController implements Dock {
             dockContext.getDisposer().dispose();
             views.remove(view);
             view.parentDockProperty().set(null);
-            viewDeleted(dockContext.getView());
+            //viewDeleted(dockContext.getView());
 
             jfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
                 updateDockView(isMinimized());
@@ -248,6 +256,10 @@ public class DockPanelController implements Dock {
         assert view != null;
         assert dockTypeProperty().isNotNull().get();
         assert dockTypes.size() > 0;
+
+        if (!dockTypeProperty().get().isMultiViews()) {
+            views.keySet().forEach(v -> dockActionFactory.close(v).checkAndPerform());
+        }
 
         lastDockUuidPreference.getValue().put(view.getId(), this.getId());
         lastDockUuidPreference.save();
@@ -366,6 +378,10 @@ public class DockPanelController implements Dock {
                     if (dockType != null) {
                         lastDockDockTypePreference.getValue().put(DockPanelController.this.getId(), dockType.getNameKey());
                     }
+                    if (dockTypeFilterProperty().get() != null
+                            && Arrays.stream(dockTypeFilterProperty().get()).noneMatch(c -> c.isInstance(dockType))) {
+                        return;
+                    }
                     super.set(dockType);
                     updateViews();
                     updateDockView(isMinimized());
@@ -397,5 +413,35 @@ public class DockPanelController implements Dock {
         return content;
     }
 
+    @Override
+    public ObjectProperty<Class[]> dockTypeFilterProperty() {
+        if (dockTypeFilterProperty == null) {
+            dockTypeFilterProperty = new SimpleObjectProperty<>() {
 
+                @Override
+                public void set(Class[] allowed) {
+                    var dockType = dockTypeProperty.get();
+
+                    if (dockType != null
+                            && Arrays.stream(allowed).noneMatch(c -> c.isInstance(dockType))) {
+
+                        var firstAllowed = dockTypes.stream().filter(dt -> isAllowedDockType(allowed, dt)).findFirst();
+
+                        firstAllowed.ifPresent(dt -> setDockType(dt));
+                    }
+
+                    super.set(allowed);
+                }
+
+            };
+        }
+        return dockTypeFilterProperty;
+    }
+
+    private static boolean isAllowedDockType(Class[] allowed, DockType<?> dockType) {
+        if (allowed == null) {
+            return true;
+        }
+        return Arrays.stream(allowed).anyMatch(c -> c.isInstance(dockType));
+    }
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,17 +31,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.ui.dock;
+package com.gluonhq.jfxapps.core.ui.dock.type;
 
 import java.util.Collection;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockContext;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockType;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockContextDisposer;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.type.DockType;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 
 import javafx.beans.property.ObjectProperty;
@@ -53,7 +52,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 @ApplicationInstanceSingleton
-public class DockTypeTab implements DockType<Tab> {
+public class DockTypeTab implements DockType<Tab>, com.gluonhq.jfxapps.core.api.ui.controller.dock.type.Tab {
 
     private final static String VIEW_SOURCE = "Tab.fxml";
 
@@ -71,12 +70,20 @@ public class DockTypeTab implements DockType<Tab> {
     }
 
     @Override
-    public DockContext<Tab> computeView(DockContext<Tab> viewContext) {
-        View view = viewContext.getView();
-        ViewAttachment viewAttachment = viewContext.getViewAttachment();
-        var ctrl = context.getBean(ViewController.class);
+    public boolean isMultiViews() {
+        return true;
+    }
 
-        Tab tab = FXMLUtils.load(ctrl, DockTypeTab.class, VIEW_SOURCE);
+    @Override
+    public DockContext<Tab> computeView(DockContext<Tab> viewContext) {
+        var view = viewContext.getView();
+        var viewAttachment = viewContext.getViewAttachment();
+
+        var viewController = context.getBean(ViewController.class);
+        var searchController = view.getSearchController();
+        var contentController = view.getContentController();
+
+        Tab tab = FXMLUtils.load(viewController, DockTypeTab.class, VIEW_SOURCE);
 
         tab.textProperty().bind(view.nameProperty());
         tab.setOnSelectionChanged(e -> {
@@ -84,26 +91,34 @@ public class DockTypeTab implements DockType<Tab> {
                 view.notifyFocused();
             }
         });
-        if (view.getSearchController() != null) {
-            ctrl.getViewSearchHost().getChildren().add(view.getSearchController().getRoot());
+
+        var searchHost = viewController.getViewSearchHost();
+        var contentHost = viewController.getViewContentHost();
+        var viewMenu = viewController.getViewMenuButton();
+
+        if (searchController != null) {
+            var searchRoot = searchController.getRoot();
+            searchHost.getChildren().add(searchRoot);
         }
 
-        Node content = view.getViewController().getRoot();
-        ctrl.getViewContentHost().getChildren().add(content);
-        VBox.setVgrow(content, Priority.ALWAYS);
+        var contentRoot = contentController.getRoot();
+        contentHost.getChildren().add(contentRoot);
 
-        view.populateMenu(ctrl.getViewMenuButton());
+        VBox.setVgrow(contentRoot, Priority.ALWAYS);
 
-        var dockContext = new DockContext<>(view, viewAttachment, ctrl, tab, () -> {
+        view.populateMenu(viewMenu);
+
+        DockContextDisposer disposer = () -> {
             tab.textProperty().unbind();
-            if (view.getSearchController() != null) {
-                ctrl.getViewSearchHost().getChildren().remove(view.getSearchController().getRoot());
+            if (searchController != null) {
+                var searchRoot = searchController.getRoot();
+                searchHost.getChildren().remove(searchRoot);
             }
-            ctrl.getViewContentHost().getChildren().remove(view.getViewController().getRoot());
-            view.clearMenu(ctrl.getViewMenuButton());
-        });
+            contentHost.getChildren().remove(contentRoot);
+            view.clearMenu(viewMenu);
+        };
 
-        return dockContext;
+        return new DockContext<>(view, viewAttachment, viewController, tab, disposer);
     }
 
     @Override

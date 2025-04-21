@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,7 +41,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 import com.gluonhq.jfxapps.test.StageBuilder;
@@ -53,11 +52,6 @@ class LogViewerControllerTest {
 
     @TestConfiguration
     static class Config {
-
-        @Bean
-        JfxAppPlatform jfxAppPlatform() {
-            return Mockito.mock(JfxAppPlatform.class);
-        }
 
         @Bean
         ViewMenu viewMenuController() {

@@ -129,7 +129,7 @@ public abstract class AbstractFxmlViewController extends AbstractFxmlController 
     }
 
     @Override
-    public ViewContent getViewController() {
+    public ViewContent getContentController() {
         return this;
     }
 

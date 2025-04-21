@@ -88,7 +88,10 @@ import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.subjects.LifecyclePostProcessor;
+import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewController;
 
 import javafx.stage.Stage;
 
@@ -202,17 +205,34 @@ public class JfxAppsExtension implements BeforeEachCallback, ParameterResolver {
             classes.addAll(List.of(
                     // FIXME MockitoPostProcessor.class generates:NoSuchMethodException: org.springframework.boot.test.mock.mockito.MockitoPostProcessor.<init>()
                     //MockitoPostProcessor.class,
+
+                    com.gluonhq.jfxapps.core.api.javafx.internal.JfxAppPlatformImpl.class,
                     I18NTestConfig.class,
                     LifecyclePostProcessor.class,
-                    FxmlControllerBeanPostProcessor.class,
+
+                    // application beans for default scopes
                     JfxAppsTest.Application1Bean.class,
                     JfxAppsTest.Application1InstanceBean.class,
                     JfxAppsTest.Application2Bean.class,
                     JfxAppsTest.Application2InstanceBean.class,
+
+                    // events
                     ApplicationEvents.ApplicationEventsImpl.class,
                     ApplicationInstanceEvents.ApplicationInstanceEventsImpl.class,
+                    ViewManager.ViewManagerImpl.class,
+                    DockManager.DockManagerImpl.class,
+
+                    // JavaFX
                     JavafxThreadClassloader.class,
+                    FxmlControllerBeanPostProcessor.class,
+
+                    //UI
+                    ViewController.class, //base ui for views
+
+                    // test setup
                     StageBuilder.class));
+
+
             //classes.addAll(new JpaBootClasses().classes());
             //@formatter:on
 

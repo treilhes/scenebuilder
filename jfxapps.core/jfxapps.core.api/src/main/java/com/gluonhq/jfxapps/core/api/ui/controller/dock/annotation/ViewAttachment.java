@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -50,4 +50,9 @@ public @interface ViewAttachment {
 	public String icon() default "";
 	public String iconX2() default "";
 	public boolean debug() default false;
+
+	// maybe one day
+	//public Pos position() default Pos.TOP_LEFT;
+	//public boolean fitToWidth() default false;
+	//public boolean fitToHeight() default false;
 }

@@ -37,8 +37,8 @@ import java.util.UUID;
 
 import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockType;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.type.DockType;
 
 public interface DockActionFactory {
 

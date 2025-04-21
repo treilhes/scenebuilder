@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.ui.dock;
+package com.gluonhq.jfxapps.core.ui.dock.type;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -39,10 +39,9 @@ import java.util.Collection;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockContext;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockType;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockContextDisposer;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.type.DockType;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 
 import javafx.beans.property.ObjectProperty;
@@ -54,7 +53,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 @ApplicationInstanceSingleton
-public class DockTypeAccordion implements DockType<TitledPane> {
+public class DockTypeAccordion implements DockType<TitledPane>, com.gluonhq.jfxapps.core.api.ui.controller.dock.type.Accordion {
 
     private final static String VIEW_SOURCE = "TitledPane.fxml";
 
@@ -72,37 +71,53 @@ public class DockTypeAccordion implements DockType<TitledPane> {
     }
 
     @Override
+    public boolean isMultiViews() {
+        return true;
+    }
+
+    @Override
     public DockContext<TitledPane> computeView(DockContext<TitledPane> viewContext) {
-        View view = viewContext.getView();
-        ViewAttachment viewAttachment = viewContext.getViewAttachment();
+        var view = viewContext.getView();
+        var viewAttachment = viewContext.getViewAttachment();
 
-        var ctrl = context.getBean(ViewController.class);
+        var viewController = context.getBean(ViewController.class);
+        var searchController = view.getSearchController();
+        var contentController = view.getContentController();
 
-        TitledPane titledPane = FXMLUtils.load(ctrl, DockTypeAccordion.class, VIEW_SOURCE);
+        TitledPane titledPane = FXMLUtils.load(viewController, DockTypeAccordion.class, VIEW_SOURCE);
 
-        ctrl.getViewLabel().textProperty().bind(view.nameProperty());
+        var searchHost = viewController.getViewSearchHost();
+        var contentHost = viewController.getViewContentHost();
+        var viewMenu = viewController.getViewMenuButton();
+
+        viewController.getViewLabel().textProperty().bind(view.nameProperty());
         titledPane.setOnMouseEntered(e -> view.notifyFocused());
 
-        if (view.getSearchController() != null) {
-            ctrl.getViewSearchHost().getChildren().add(view.getSearchController().getRoot());
+        if (searchController != null) {
+            var searchRoot = searchController.getRoot();
+            searchHost.getChildren().add(searchRoot);
         }
 
-        Node content = view.getViewController().getRoot();
-        ctrl.getViewContentHost().getChildren().add(content);
-        VBox.setVgrow(content, Priority.ALWAYS);
+        var contentRoot = contentController.getRoot();
+        contentHost.getChildren().add(contentRoot);
 
-        view.populateMenu(ctrl.getViewMenuButton());
+        VBox.setVgrow(contentRoot, Priority.ALWAYS);
 
-        var dockContext = new DockContext<>(view, viewAttachment, ctrl, titledPane, () -> {
-            ctrl.getViewLabel().textProperty().unbind();
-            if (view.getSearchController() != null) {
-                ctrl.getViewSearchHost().getChildren().remove(view.getSearchController().getRoot());
+        view.populateMenu(viewMenu);
+
+        DockContextDisposer disposer = () -> {
+            viewController.getViewLabel().textProperty().unbind();
+
+            if (searchController != null) {
+                var searchNode = searchController.getRoot();
+                searchHost.getChildren().remove(searchNode);
             }
-            ctrl.getViewContentHost().getChildren().remove(view.getViewController().getRoot());
-            view.clearMenu(ctrl.getViewMenuButton());
-        });
 
-        return dockContext;
+            contentHost.getChildren().remove(contentController.getRoot());
+            view.clearMenu(viewMenu);
+        };
+
+        return new DockContext<>(view, viewAttachment, viewController, titledPane, disposer);
     }
 
     @Override
@@ -132,7 +147,7 @@ public class DockTypeAccordion implements DockType<TitledPane> {
 
                 @Override
                 public void set(DockContext<TitledPane> focused) {
-                    if (focused != null) {
+                    if (focused != null && focused.getDockContent() != null && focused.getDockContent().getParent() != null) {
                         TitledPane titlePane = focused.getDockContent();
                         Accordion accordion = (Accordion)titlePane.getParent();
                         accordion.setExpandedPane(titlePane);

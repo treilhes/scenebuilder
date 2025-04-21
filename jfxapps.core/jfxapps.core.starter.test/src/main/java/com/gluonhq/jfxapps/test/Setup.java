@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,22 +31,28 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.ui.dock;
+package com.gluonhq.jfxapps.test;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.subjects.DockManager;
+import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewController;
 
-import javafx.geometry.Orientation;
+public enum Setup {
 
-@ApplicationInstanceSingleton
-public class DockTypeSplitH extends AbstractDockTypeSplit {
+    Empty(new Class[0]),
+    DockViewSystem(
+            ViewController.class,
+            ViewManager.ViewManagerImpl.class,
+            DockManager.DockManagerImpl.class)
+    ;
 
-    public DockTypeSplitH(JfxAppContext context) {
-        super(context, Orientation.HORIZONTAL);
+    private Class<?>[] classes;
+
+    Setup(Class<?>... classes) {
+        this.classes = classes;
     }
 
-    @Override
-    public String getNameKey() {
-        return "viewtype.splith";
+    public Class<?>[] getClasses() {
+        return classes;
     }
 }

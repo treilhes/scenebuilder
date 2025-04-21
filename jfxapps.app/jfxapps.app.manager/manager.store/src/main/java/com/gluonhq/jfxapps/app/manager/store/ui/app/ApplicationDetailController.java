@@ -222,8 +222,8 @@ public class ApplicationDetailController extends AbstractFxmlController {
         errorLabel.visibleProperty().bind(item.errorProperty());
         errorTooltip.textProperty().bind(item.errorMessageProperty());
 
-        if (Extension.ROOT_ID.equals(item.infoProperty().get().getUuid())
-                || Extension.MANAGER_APP_ID.equals(item.infoProperty().get().getUuid())) {
+        if (Extension.ROOT_ID.equals(item.uuidProperty().get())
+                || Extension.MANAGER_APP_ID.equals(item.uuidProperty().get())) {
             deleteButton.setManaged(false);
             deleteButton.setVisible(false);
             launchButton.setManaged(false);

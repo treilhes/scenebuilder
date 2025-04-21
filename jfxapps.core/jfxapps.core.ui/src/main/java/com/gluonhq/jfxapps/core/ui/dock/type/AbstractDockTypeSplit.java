@@ -31,17 +31,18 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.ui.dock;
+package com.gluonhq.jfxapps.core.ui.dock.type;
 
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockContext;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockType;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockContextDisposer;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.type.DockType;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 
 import javafx.beans.property.ObjectProperty;
@@ -68,39 +69,53 @@ public abstract class AbstractDockTypeSplit implements DockType<Node> {
     }
 
     @Override
+    public boolean isMultiViews() {
+        return true;
+    }
+
+    @Override
     public DockContext<Node> computeView(DockContext<Node> viewContext) {
 
         View view = viewContext.getView();
         ViewAttachment viewAttachment = viewContext.getViewAttachment();
 
-        var ctrl = context.getBean(ViewController.class);
+        var viewController = context.getBean(ViewController.class);
+        var searchController = view.getSearchController();
+        var contentController = view.getContentController();
 
-        Node node = FXMLUtils.load(ctrl, AbstractDockTypeSplit.class, VIEW_SOURCE);
+        Node node = FXMLUtils.load(viewController, AbstractDockTypeSplit.class, VIEW_SOURCE);
 
-        ctrl.getViewLabel().textProperty().bind(view.nameProperty());
+        var searchHost = viewController.getViewSearchHost();
+        var contentHost = viewController.getViewContentHost();
+        var viewMenu = viewController.getViewMenuButton();
+
+        viewController.getViewLabel().textProperty().bind(view.nameProperty());
         node.setOnMouseEntered(e -> view.notifyFocused());
 
-        if (view.getSearchController() != null) {
-            ctrl.getViewSearchHost().getChildren().add(view.getSearchController().getRoot());
+        if (searchController != null) {
+            var searchRoot = searchController.getRoot();
+            searchHost.getChildren().add(searchRoot);
         }
 
-        Node content = view.getViewController().getRoot();
-        ctrl.getViewContentHost().getChildren().add(content);
+        var contentRoot = contentController.getRoot();
+        contentHost.getChildren().add(contentRoot);
 
-        VBox.setVgrow(content, Priority.ALWAYS);
+        VBox.setVgrow(contentRoot, Priority.ALWAYS);
 
-        view.populateMenu(ctrl.getViewMenuButton());
+        view.populateMenu(viewMenu);
 
-        var newViewContext = new DockContext<>(view, viewAttachment, ctrl, node, () -> {
-            ctrl.getViewLabel().textProperty().unbind();
-            if (view.getSearchController() != null) {
-                ctrl.getViewSearchHost().getChildren().remove(view.getSearchController().getRoot());
+        DockContextDisposer disposer = () -> {
+            viewController.getViewLabel().textProperty().unbind();
+            if (searchController != null) {
+                var searchNode = searchController.getRoot();
+                searchHost.getChildren().remove(searchNode);
             }
-            ctrl.getViewContentHost().getChildren().remove(view.getViewController().getRoot());
-            view.clearMenu(ctrl.getViewMenuButton());
-        });
 
-        return newViewContext;
+            contentHost.getChildren().remove(contentController.getRoot());
+            view.clearMenu(viewMenu);
+        };
+
+        return new DockContext<>(view, viewAttachment, viewController, node, disposer);
     }
 
     @Override

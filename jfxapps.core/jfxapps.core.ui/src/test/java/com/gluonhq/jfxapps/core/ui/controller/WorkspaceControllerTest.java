@@ -50,7 +50,6 @@ import org.testfx.api.FxRobot;
 
 import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
 import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
@@ -86,11 +85,6 @@ class WorkspaceControllerTest {
 
     @TestConfiguration
     static class Config {
-
-        @Bean
-        JfxAppPlatform jfxAppPlatform() {
-            return Mockito.mock(JfxAppPlatform.class);
-        }
 
         @Bean
         ContextMenu contextMenu() {

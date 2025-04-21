@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.javafx.internal;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.concurrent.FutureTask;
 
@@ -129,11 +130,11 @@ public class FxmlControllerBeanPostProcessor implements PriorityOrdered, BeanPos
                 if (disabled) {
                     return bean;
                 } else if (loadOnFxThread) {
-                    var future = new FutureTask<>(() -> (Parent) loader.load());
+                    var future = new FutureTask<>(() -> handleLoad(controller, loader));
                     Platform.runLater(future);
                     parent = future.get();
                 } else {
-                    parent = (Parent) loader.load();
+                    parent = handleLoad(controller, loader);
                 }
                 controller.setRoot(parent);
                 controller.controllerDidLoadFxml();
@@ -146,6 +147,15 @@ public class FxmlControllerBeanPostProcessor implements PriorityOrdered, BeanPos
         }
 
         return bean;
+    }
+
+    private Parent handleLoad(FxmlController controller, FXMLLoader loader) throws IOException {
+        if (controller.isFxmlFromStream()) {
+            try (var inputStream = controller.getFxmlStream()) {
+                return (Parent) loader.load(inputStream);
+            }
+        }
+        return (Parent) loader.load();
     }
 
     @Override

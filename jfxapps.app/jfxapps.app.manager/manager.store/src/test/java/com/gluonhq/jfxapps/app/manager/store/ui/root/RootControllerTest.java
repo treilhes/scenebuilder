@@ -46,6 +46,7 @@ import org.testfx.api.FxRobot;
 
 import com.gluonhq.jfxapps.app.manager.api.ManagerApiExtension;
 import com.gluonhq.jfxapps.app.manager.store.TestUtil;
+import com.gluonhq.jfxapps.app.manager.store.action.StoreActionFactory;
 import com.gluonhq.jfxapps.app.manager.store.model.Application;
 import com.gluonhq.jfxapps.app.manager.store.ui.component.ApplicationItemController;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryManager;
@@ -82,6 +83,11 @@ class RootControllerTest {
         @Bean
         RootModelControllerImpl rootModelController() {
             return Mockito.mock(RootModelControllerImpl.class);
+        }
+
+        @Bean
+        StoreActionFactory storeActionFactory() {
+            return Mockito.mock(StoreActionFactory.class);
         }
     }
 

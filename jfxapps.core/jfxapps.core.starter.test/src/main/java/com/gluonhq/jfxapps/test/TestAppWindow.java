@@ -31,28 +31,44 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.api.ui.controller.dock;
+package com.gluonhq.jfxapps.test;
 
-import java.util.Collection;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.scene.Node;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
+import com.gluonhq.jfxapps.util.ClassUtils;
 
-public interface DockType<T> {
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyEvent;
 
-    String getNameKey();
+public abstract class TestAppWindow extends AbstractFxmlWindowController implements MainInstanceWindow {
 
-	DockContext<T> computeView(DockContext<T> view);
+    private String fxmlContent;
 
-	Node computeRoot(Collection<DockContext<T>> views);//, DockContext<T> focused);
-
-	ObjectProperty<DockContext<T>> focusedProperty();
-
-    default void setFocused(DockContext<T> focused) {
-        focusedProperty().set(focused);
+    public TestAppWindow(I18N i18n, ApplicationEvents sceneBuilderManager, IconSetting iconSetting, Class<?> appClass, String fxmlContent) {
+        super(i18n, sceneBuilderManager, iconSetting, ClassUtils.findClassURL(appClass));
+        this.fxmlContent = fxmlContent;
     }
 
-    default DockContext<T> getFocused() {
-        return focusedProperty().get();
+    @Override
+    public void setMainKeyPressedEvent(EventHandler<KeyEvent> mainKeyEventFilter) {}
+
+    @Override
+    public void updateStageTitle() {}
+
+    @Override
+    public boolean isFxmlFromStream() {
+        return true;
     }
+
+    @Override
+    public InputStream getFxmlStream() {
+        return new ByteArrayInputStream(fxmlContent.getBytes());
+    }
+
 }

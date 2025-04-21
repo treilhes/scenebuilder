@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,13 +44,18 @@ import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 
+/**
+ * This preference stores the last dock used for each view
+ * The key match a view id and the value the last dock id of the dock that contained the view.
+ * It is used to keep track of the user ui preference.
+ */
 @ApplicationInstanceSingleton
 @PreferenceContext(id = "156698a4-e3e9-46b7-abea-69383d220fed", //
         name = LastDockUuidPreference.PREFERENCE_KEY, //
         defaultValueProvider = LastDockUuidPreference.DefaultProvider.class)
 public interface LastDockUuidPreference extends Preference<ObservableMap<UUID, UUID>>, ManagedDocumentPreference {
 
-    public static final String PREFERENCE_KEY = "LastDockDockType"; // NOCHECK
+    public static final String PREFERENCE_KEY = "LastDockForView"; // NOCHECK
 
     public static class DefaultProvider implements DefaultValueProvider<ObservableMap<UUID, UUID>> {
         @Override

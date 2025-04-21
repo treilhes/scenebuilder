@@ -31,34 +31,44 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.api.ui.controller.dock;
+package com.gluonhq.jfxapps.test;
 
-import java.util.Collection;
-import java.util.UUID;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
-/**
- * Keep track of the dock and views available in the application.
- * Keep also track of the current active views and docks and save their last state to
- * be able to restore them when the application is restarted.
- */
-public interface DockViewController {
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
+import com.gluonhq.jfxapps.util.ClassUtils;
 
-    void performResetDockAndViews();
+public abstract class TestView extends AbstractFxmlViewController {
 
-    void performLoadDockAndViewsPreferences();
+    private final String fxmlContent;
 
-    Collection<ViewAttachment> getViewItems();
+    public TestView(I18N i18n, ApplicationEvents scenebuilderManager, ApplicationInstanceEvents documentManager,
+            ViewMenu viewMenuController, Class<?> viewClass, String fxmlContent) {
+        super(i18n, scenebuilderManager, documentManager, viewMenuController, ClassUtils.findClassURL(viewClass));
+        this.fxmlContent = fxmlContent;
+    }
 
-    void performOpenView(View view);
+    @Override
+    public boolean isFxmlFromStream() {
+        return true;
+    }
 
-    void performOpenView(ViewAttachment vi);
+    @Override
+    public InputStream getFxmlStream() {
+        return new ByteArrayInputStream(fxmlContent.getBytes());
+    }
 
-    void performCloseView(View view);
+    @Override
+    public void onShow() {
+    }
 
-    void performUndock(View view);
-
-    void performDock(View view, UUID targetDockId);
-
-    Dock getDock(UUID dockId);
+    @Override
+    public void onHidden() {
+    }
 
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,6 +33,8 @@
  */
 package com.gluonhq.jfxapps.core.api.javafx.internal;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
@@ -50,9 +52,11 @@ import javafx.application.Platform;
 @ApplicationSingleton
 public final class JfxAppPlatformImpl implements JfxAppPlatform {
 
-    ScopedExecutor<ApplicationInstance> executor;
+    private ScopedExecutor<ApplicationInstance> executor;
 
-    ScopedExecutor<Application> application;
+    private ScopedExecutor<Application> application;
+
+    private List<Object> executionStack = new ArrayList<>();
 
     public JfxAppPlatformImpl(JfxAppContext context) {
         super();
@@ -65,7 +69,8 @@ public final class JfxAppPlatformImpl implements JfxAppPlatform {
      */
     @Override
     public void runOnFxThread(Runnable runnable) {
-        Platform.runLater(runnable);
+        var wrapped = wrap(runnable);
+        Platform.runLater(wrapped);
     }
 
     /**
@@ -77,6 +82,17 @@ public final class JfxAppPlatformImpl implements JfxAppPlatform {
     public void runOnFxThreadWithScope(ApplicationInstance scopedDocument, Runnable runnable) {
         runOnFxThreadWithScope(executor.getScopeId(scopedDocument), runnable);
     }
+
+    /**
+     * Same as {@link Platform#runOnFxThread(Runnable)} but will also ensure execution
+     * with the currently active {@link ApplicationInstance} scope
+     * @param runnable
+     */
+    @Override
+    public void runOnFxThreadWithActiveScope(Runnable runnable) {
+        runOnFxThreadWithScope(executor.getActiveScopeId(), runnable);
+    }
+
     /**
      * Execute the runnable later on the fx thread
      * @param scopedDocument the document scope uuid
@@ -87,30 +103,22 @@ public final class JfxAppPlatformImpl implements JfxAppPlatform {
         if (scopedDocument == null) {
             throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
         }
-        Platform.runLater(() -> {
-            executor.executeRunnable(runnable, scopedDocument);
-        });
+
+        var wrapped = wrap(runnable);
+
+        if (Platform.isFxApplicationThread()) {
+            executor.executeRunnable(wrapped, scopedDocument);
+        } else {
+            Platform.runLater(() -> {
+                executor.executeRunnable(wrapped, scopedDocument);
+            });
+        }
+
     }
 
     @Override
     public <T> FutureTask<T> callOnFxThreadWithScope(ApplicationInstance scopedDocument, Callable<T> callable) {
         return callOnFxThreadWithScope(executor.getScopeId(scopedDocument), callable);
-    }
-    @Override
-    public <T> FutureTask<T> callOnFxThreadWithScope(UUID scopedDocument, Callable<T> callable) {
-        if (scopedDocument == null) {
-            throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
-        }
-        final FutureTask<T> task = new FutureTask<>(callable);
-        if (Platform.isFxApplicationThread()) {
-            executor.executeRunnable(task, scopedDocument);
-        } else {
-            Platform.runLater(() -> {
-            	executor.executeRunnable(task, scopedDocument);
-            });
-        }
-
-        return task;
     }
 
     /**
@@ -123,6 +131,25 @@ public final class JfxAppPlatformImpl implements JfxAppPlatform {
         return callOnFxThreadWithScope(executor.getActiveScopeId(), callable);
     }
 
+    @Override
+    public <T> FutureTask<T> callOnFxThreadWithScope(UUID scopedDocument, Callable<T> callable) {
+        if (scopedDocument == null) {
+            throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
+        }
+
+        var wrapped = wrap(callable);
+
+        final FutureTask<T> task = new FutureTask<>(wrapped);
+        if (Platform.isFxApplicationThread()) {
+            executor.executeRunnable(task, scopedDocument);
+        } else {
+            Platform.runLater(() -> {
+            	executor.executeRunnable(task, scopedDocument);
+            });
+        }
+
+        return task;
+    }
 
     /**
      * Execute the runnable on the same thread ensuring an unchanging scope
@@ -151,7 +178,10 @@ public final class JfxAppPlatformImpl implements JfxAppPlatform {
         if (scopedDocument == null) {
             throw new RuntimeException("Illegal document scope! The scope must be created before using it here");// NOCHECK
         }
-        executor.executeRunnable(runnable, scopedDocument);
+
+        var wrapped = wrap(runnable);
+
+        executor.executeRunnable(wrapped, scopedDocument);
     }
 
     @Override
@@ -159,7 +189,10 @@ public final class JfxAppPlatformImpl implements JfxAppPlatform {
         if (scopedDocument == null) {
             throw new RuntimeException("Illegal document scope! The scope must be created before using it here");// NOCHECK
         }
-        return executor.executeSupplier(runnable, scopedDocument);
+
+        var wrapped = wrap(runnable);
+
+        return executor.executeSupplier(wrapped, scopedDocument);
     }
 
     /**
@@ -184,21 +217,13 @@ public final class JfxAppPlatformImpl implements JfxAppPlatform {
         if (scopedDocument == null) {
             throw new RuntimeException("Illegal document scope! The scope must be created before using it here");// NOCHECK
         }
+
+        var wrapped = wrap(runnable);
+
         Thread t = new Thread(() -> {
-            executor.executeRunnable(runnable, scopedDocument);
+            executor.executeRunnable(wrapped, scopedDocument);
         });
         t.run();
-    }
-
-
-    /**
-     * Same as {@link Platform#runOnFxThread(Runnable)} but will also ensure execution
-     * with the currently active {@link ApplicationInstance} scope
-     * @param runnable
-     */
-    @Override
-    public void runOnFxThreadWithActiveScope(Runnable runnable) {
-        runOnFxThreadWithScope(executor.getActiveScopeId(), runnable);
     }
 
     @Override
@@ -222,4 +247,36 @@ public final class JfxAppPlatformImpl implements JfxAppPlatform {
     }
 
 
+    private Runnable wrap(Runnable runnable) {
+        return () -> {
+            executionStack.add(runnable);
+            try {
+                runnable.run();
+            } finally {
+                executionStack.remove(runnable);
+            }
+        };
+    }
+
+    private <T> Callable<T> wrap(Callable<T> callable) {
+        return () -> {
+            executionStack.add(callable);
+            try {
+                return callable.call();
+            } finally {
+                executionStack.remove(callable);
+            }
+        };
+    }
+
+    private <T> Supplier<T> wrap(Supplier<T> supplier) {
+        return () -> {
+            executionStack.add(supplier);
+            try {
+                return supplier.get();
+            } finally {
+                executionStack.remove(supplier);
+            }
+        };
+    }
 }

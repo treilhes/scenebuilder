@@ -46,6 +46,7 @@ import org.testfx.api.FxRobot;
 
 import com.gluonhq.jfxapps.app.manager.api.ManagerApiExtension;
 import com.gluonhq.jfxapps.app.manager.store.TestUtil;
+import com.gluonhq.jfxapps.app.manager.store.action.StoreActionFactory;
 import com.gluonhq.jfxapps.app.manager.store.model.Plugin;
 import com.gluonhq.jfxapps.app.manager.store.ui.component.PluginItemController;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryManager;
@@ -81,6 +82,11 @@ class PluginDetailControllerTest {
         @Bean
         PluginModelControllerImpl pluginModelController() {
             return Mockito.mock(PluginModelControllerImpl.class);
+        }
+
+        @Bean
+        StoreActionFactory storeActionFactory() {
+            return Mockito.mock(StoreActionFactory.class);
         }
     }
 

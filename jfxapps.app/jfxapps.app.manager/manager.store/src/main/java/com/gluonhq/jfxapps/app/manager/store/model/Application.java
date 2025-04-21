@@ -34,6 +34,7 @@
 package com.gluonhq.jfxapps.app.manager.store.model;
 
 import java.net.URL;
+import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.api.registry.model.ApplicationInfo;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -47,6 +48,7 @@ import javafx.beans.property.StringProperty;
 
 public class Application {
 
+    private ObjectProperty<UUID> uuid = new SimpleObjectProperty<>();
     private StringProperty name = new SimpleStringProperty();
     private StringProperty description = new SimpleStringProperty();
     private StringProperty changeLog = new SimpleStringProperty();
@@ -59,6 +61,7 @@ public class Application {
 
     private ObjectProperty<ApplicationInfo> info = new SimpleObjectProperty<>();
     private I18N i18n;
+
 
     public Application(ApplicationInfo info, I18N i18n) {
         this.i18n = i18n;
@@ -109,6 +112,9 @@ public class Application {
     public StringProperty nextVersionProperty() {
         return nextVersion;
     }
+    public ObjectProperty<UUID> uuidProperty() {
+        return uuid ;
+    }
 
     public boolean match(String searchTerm) {
 
@@ -124,6 +130,7 @@ public class Application {
     }
 
     private void update(ApplicationInfo source) {
+        this.uuid.set(source.getUuid());
         this.name.set(source.getTitle());
         this.description.set(source.getText());
         this.version.set(source.getVersion());
@@ -132,4 +139,6 @@ public class Application {
         this.image.set(source.getImage());
         this.installed.set(source.isInstalled());
     }
+
+
 }

@@ -31,34 +31,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.api.ui.controller.dock;
+package com.gluonhq.jfxapps.core.api.ui.controller.dock.type;
 
-import java.util.Collection;
-import java.util.UUID;
-
-/**
- * Keep track of the dock and views available in the application.
- * Keep also track of the current active views and docks and save their last state to
- * be able to restore them when the application is restarted.
- */
-public interface DockViewController {
-
-    void performResetDockAndViews();
-
-    void performLoadDockAndViewsPreferences();
-
-    Collection<ViewAttachment> getViewItems();
-
-    void performOpenView(View view);
-
-    void performOpenView(ViewAttachment vi);
-
-    void performCloseView(View view);
-
-    void performUndock(View view);
-
-    void performDock(View view, UUID targetDockId);
-
-    Dock getDock(UUID dockId);
+public interface Accordion {
 
 }

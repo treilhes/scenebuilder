@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.core.api.javafx;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -58,6 +59,25 @@ public interface FxmlController extends UiController {
     @NonNull
 	URL getFxmlURL();
 
+    /**
+     * This method is automatically called by {@link com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor#postProcessAfterInitialization(Object, String)}
+     * if true then the fxml content will be load from the stream provided by {@link #getFxmlStream()} instead of the url provided by {@link #getFxmlURL()}
+     * The location used to load the stream is still the one provided by {@link #getFxmlURL()}
+     * @param root the root node of the fxml file
+     */
+    default boolean isFxmlFromStream() {
+        return false;
+    }
+
+    /**
+     * This method is automatically called by {@link com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor#postProcessAfterInitialization(Object, String)}
+     * if  {@link #isFxmlFromStream()} returns true then the fxml content will be load from the stream provided by {@link #getFxmlStream()} instead of the url provided by {@link #getFxmlURL()}
+     * The location used to load the stream is still the one provided by {@link #getFxmlURL()}
+     * @param root the root node of the fxml file
+     */
+    default InputStream getFxmlStream() {
+        return null;
+    }
 	/**
 	 * May return a valid ResourceBundle containing all the necessary keys to translate every i18n expression
 	 * ("%xxx.xxx") contained in the fxml file provided by {@link #getFxmlURL()}

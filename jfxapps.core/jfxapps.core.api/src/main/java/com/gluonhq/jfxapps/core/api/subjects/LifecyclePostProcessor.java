@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -46,6 +46,10 @@ import com.gluonhq.jfxapps.boot.api.context.Application;
 import com.gluonhq.jfxapps.boot.api.context.annotation.DeportedSingleton;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 
+/**
+ * This class is a Spring BeanPostProcessor that processes beans of type {@link Application} and {@link ApplicationInstance}.
+ * It sets the opened application and document opened events in the {@link ApplicationEvents} class.
+ */
 @DeportedSingleton
 public class LifecyclePostProcessor implements PriorityOrdered, BeanPostProcessor, BeanFactoryAware {
 

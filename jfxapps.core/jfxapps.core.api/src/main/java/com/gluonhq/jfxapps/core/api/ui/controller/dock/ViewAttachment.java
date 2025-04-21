@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -62,6 +62,36 @@ public interface ViewAttachment {
 
     default boolean isDebug() {
         return false;
+    }
+
+    static ViewAttachment of(AbstractFxmlViewController controller) {
+        return of(controller.getClass());
+    }
+    static ViewAttachment of(Class<? extends AbstractFxmlViewController> cls) {
+
+        if (!AbstractFxmlViewController.class.isAssignableFrom(cls)) {
+            throw new IllegalArgumentException("Class " + cls.getName() + " is not a subclass of " + AbstractFxmlViewController.class);
+        }
+        final Class<AbstractFxmlViewController> viewClass = (Class<AbstractFxmlViewController>) cls;
+
+        final com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment annotation = viewClass
+                .getAnnotation(com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment.class);
+
+        assert annotation != null;
+
+        ViewAttachment viewAttachment = ViewAttachment.create(
+                viewClass,
+                UUID.fromString(annotation.id()),
+                annotation.name(),
+                annotation.prefDockId().isBlank() ? null : UUID.fromString(annotation.prefDockId()),
+                annotation.openOnStart(),
+                annotation.selectOnStart(),
+                annotation.order(),
+                annotation.icon().isBlank() ? null: cls.getResource(annotation.icon()),
+                annotation.iconX2().isBlank() ? null: cls.getResource(annotation.iconX2()),
+                annotation.debug());
+
+        return viewAttachment;
     }
 
     static ViewAttachment create(Class<AbstractFxmlViewController> view, UUID viewId, String name, UUID defaultDockId, boolean openOnStart,

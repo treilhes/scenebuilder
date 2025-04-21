@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -48,10 +48,12 @@ import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockType;
+import com.gluonhq.jfxapps.core.api.ui.DockActionFactory;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.type.DockType;
 import com.gluonhq.jfxapps.core.ui.dock.preference.DockMinimizedPreference;
 import com.gluonhq.jfxapps.core.ui.dock.preference.LastDockDockTypePreference;
 import com.gluonhq.jfxapps.core.ui.dock.preference.LastDockUuidPreference;
+import com.gluonhq.jfxapps.core.ui.dock.type.DockTypeSplitH;
 
 import javafx.collections.FXCollections;
 
@@ -71,6 +73,8 @@ class DockPanelControllerTest {
     private LastDockDockTypePreference lastDockDockTypePreference;
     @Mock
     private DockMinimizedPreference dockMinimizedPreference;
+    @Mock
+    private DockActionFactory dockActionFactory;
 
     private List<DockType<?>> dockTypes;
 
@@ -86,6 +90,7 @@ class DockPanelControllerTest {
             lastDockUuidPreference,
             lastDockDockTypePreference,
             dockMinimizedPreference,
+            dockActionFactory,
             dockTypes);
         return dpc;
     }

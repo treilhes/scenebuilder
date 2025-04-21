@@ -1,29 +1,39 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.gluonhq.jfxapps</groupId>
-        <artifactId>jfxapps.core</artifactId>
-        <version>${jfxapps.version}</version>
-    </parent>
-    <artifactId>jfxapps.core.ui</artifactId>
-    <description>This module define the main ui of SceneBuilder and expose extension points to customize the layout</description>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.gluonhq.jfxapps</groupId>
+		<artifactId>jfxapps.core</artifactId>
+		<version>${jfxapps.version}</version>
+	</parent>
+	<artifactId>jfxapps.core.ui</artifactId>
+	<description>This module define the main ui of SceneBuilder and expose
+		extension points to customize the layout</description>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.starter</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.starter.test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>com.gluonhq.jfxapps</groupId>
+			<artifactId>jfxapps.core.api</artifactId>
+			<scope>provided</scope>
+			<exclusions>
+				<!-- prevent "The package javafx.fxml is accessible from more than one module" in Eclipse -->
+				<exclusion>
+					<groupId>com.gluonhq.jfxapps</groupId>
+					<artifactId>javafx.fxml.patch</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.gluonhq.jfxapps</groupId>
+			<artifactId>jfxapps.core.starter</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.gluonhq.jfxapps</groupId>
+			<artifactId>jfxapps.core.starter.test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
 </project>

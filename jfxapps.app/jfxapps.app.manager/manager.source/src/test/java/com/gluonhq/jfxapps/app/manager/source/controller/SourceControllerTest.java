@@ -58,7 +58,6 @@ import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifact;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifactManager;
 import com.gluonhq.jfxapps.boot.api.registry.model.RegistryInfo;
 import com.gluonhq.jfxapps.boot.api.registry.model.RegistrySourceInfo;
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 import com.gluonhq.jfxapps.test.StageBuilder;
@@ -73,11 +72,6 @@ class SourceControllerTest {
 
     @TestConfiguration
     static class Config {
-
-        @Bean
-        JfxAppPlatform jfxAppPlatform() {
-            return Mockito.mock(JfxAppPlatform.class);
-        }
 
         @Bean
         ViewMenu viewMenuController() {

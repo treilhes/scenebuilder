@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,6 +44,11 @@ import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 
+/**
+ * This preference stores the last view visible state used for each view.
+ * The key matches a view id and the value indicates whether the view is visible or not.
+ * It is used to restore the last view visible state when the application is restarted.
+ */
 @ApplicationInstanceSingleton
 @PreferenceContext(id = "16062578-36c7-4306-8083-52592aefb73d", //
         name = LastViewVisibilityPreference.PREFERENCE_KEY, //

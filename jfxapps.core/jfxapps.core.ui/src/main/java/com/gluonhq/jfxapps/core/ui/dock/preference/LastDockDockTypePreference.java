@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,6 +44,10 @@ import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 
+/**
+ * This preference stores the last dock type used for each dock item.
+ * It is used to restore the last dock type when the application is restarted.
+ */
 @ApplicationInstanceSingleton
 @PreferenceContext(id = "f8957359-81c3-4ad0-a74b-70a84b836f02", //
         name = LastDockDockTypePreference.PREFERENCE_KEY, //

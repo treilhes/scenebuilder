@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,22 +31,23 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.ui.dock;
+package com.gluonhq.jfxapps.core.ui.dock.type;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.type.HSplit;
 
 import javafx.geometry.Orientation;
 
 @ApplicationInstanceSingleton
-public class DockTypeSplitV extends AbstractDockTypeSplit {
+public class DockTypeSplitH extends AbstractDockTypeSplit implements HSplit {
 
-    public DockTypeSplitV(JfxAppContext context) {
-        super(context, Orientation.VERTICAL);
+    public DockTypeSplitH(JfxAppContext context) {
+        super(context, Orientation.HORIZONTAL);
     }
 
     @Override
     public String getNameKey() {
-        return "viewtype.splitv";
+        return "viewtype.splith";
     }
 }

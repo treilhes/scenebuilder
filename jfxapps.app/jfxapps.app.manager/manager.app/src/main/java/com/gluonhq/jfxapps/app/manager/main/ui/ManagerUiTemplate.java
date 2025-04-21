@@ -48,6 +48,7 @@ import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.type.LastSurvivor;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBar;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.ViewLinks;
@@ -89,7 +90,7 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements M
 
         this.menuBar = menuBar;
         this.viewLinks = viewLinks;
-        this.centerDock = dockFactory.create(Docks.CENTER_DOCK_UUID, "Center");
+        this.centerDock = dockFactory.create(Docks.CENTER_DOCK_UUID, "Center", new Class[] { LastSurvivor.class });
     }
 
     @FXML
@@ -138,6 +139,7 @@ public class ManagerUiTemplate extends AbstractFxmlWindowController implements M
 
         hBox.getChildren().add(0, viewLinks.getRoot());
 
+        // dock must fill the entire contentHost
         var content = centerDock.getContent();
         AnchorPane.setTopAnchor(content, 0.0);
         AnchorPane.setRightAnchor(content, 0.0);

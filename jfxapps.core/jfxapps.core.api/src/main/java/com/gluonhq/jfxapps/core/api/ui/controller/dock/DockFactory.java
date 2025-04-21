@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -47,9 +47,14 @@ public class DockFactory extends AbstractFactory<Dock> {
     }
 
     public <U extends Dock> Dock create(UUID id, String name) {
+        return create(id, name, null);
+    }
+
+    public <U extends Dock> Dock create(UUID id, String name, Class[] dockTypeFilter) {
         Dock dock = super.create(Dock.class);
         dock.setId(id);
         dock.setName(name);
+        dock.setDockTypeFilter(dockTypeFilter);
         dock.notifyDockCreated();
         return dock;
     }

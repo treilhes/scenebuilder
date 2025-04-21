@@ -51,7 +51,7 @@ public interface View {
     StringProperty nameProperty();
 	//ViewManager getViewManager();
 	ViewSearch getSearchController();
-	ViewContent getViewController();
+	ViewContent getContentController();
 	void populateMenu(MenuButton menuButton);
 	void clearMenu(MenuButton menuButton);
 

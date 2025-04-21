@@ -31,34 +31,23 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.api.ui.controller.dock;
+package com.gluonhq.jfxapps.core.ui.dock.type;
 
-import java.util.Collection;
-import java.util.UUID;
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.type.VSplit;
 
-/**
- * Keep track of the dock and views available in the application.
- * Keep also track of the current active views and docks and save their last state to
- * be able to restore them when the application is restarted.
- */
-public interface DockViewController {
+import javafx.geometry.Orientation;
 
-    void performResetDockAndViews();
+@ApplicationInstanceSingleton
+public class DockTypeSplitV extends AbstractDockTypeSplit implements VSplit {
 
-    void performLoadDockAndViewsPreferences();
+    public DockTypeSplitV(JfxAppContext context) {
+        super(context, Orientation.VERTICAL);
+    }
 
-    Collection<ViewAttachment> getViewItems();
-
-    void performOpenView(View view);
-
-    void performOpenView(ViewAttachment vi);
-
-    void performCloseView(View view);
-
-    void performUndock(View view);
-
-    void performDock(View view, UUID targetDockId);
-
-    Dock getDock(UUID dockId);
-
+    @Override
+    public String getNameKey() {
+        return "viewtype.splitv";
+    }
 }
