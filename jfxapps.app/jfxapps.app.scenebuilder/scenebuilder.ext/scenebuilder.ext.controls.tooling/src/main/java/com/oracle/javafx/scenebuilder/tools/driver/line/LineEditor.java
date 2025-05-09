@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.gesture.Tunable;
+import com.gluonhq.jfxapps.core.api.fxom.gesture.Tunable;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.api.control.curve.AbstractCurveEditor;

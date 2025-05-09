@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,21 +42,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
-import com.gluonhq.jfxapps.core.api.css.StylesheetProvider;
-import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.content.mode.ModeManager;
+import com.gluonhq.jfxapps.core.api.fxom.css.StylesheetProvider;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.ContextMenu;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
+import com.gluonhq.jfxapps.core.api.fxom.ui.tool.Driver;
+import com.gluonhq.jfxapps.core.api.fxom.ui.tool.PickRefiner;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.api.ui.tool.Driver;
-import com.gluonhq.jfxapps.core.api.ui.tool.PickRefiner;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.SceneGraphObject;
@@ -149,7 +150,7 @@ public class WorkspaceController extends AbstractFxmlController implements Works
 
     private StylesheetProvider stylesheetConfig = null;
 
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents documentManager;
     private final ContextMenu contextMenu;
     private final BackgroundImagePreference backgroundImagePreference;
     private final Selection selection;
@@ -165,7 +166,8 @@ public class WorkspaceController extends AbstractFxmlController implements Works
             I18N i18n,
             JfxAppPlatform jfxAppPlatform,
             ApplicationEvents scenebuilderManager,
-            ApplicationInstanceEvents documentManager,
+            ApplicationInstanceEvents instanceEvents,
+            FxomEvents documentManager,
             BackgroundImagePreference backgroundImagePreference,
             ContextMenu contextMenu,
             FXOMObjectMask.Factory maskFactory,
@@ -173,7 +175,7 @@ public class WorkspaceController extends AbstractFxmlController implements Works
             Content content,
             ModeManager modeManager,
             Driver driver) {
-        super(i18n, scenebuilderManager, documentManager, WorkspaceController.class.getResource("Workspace.fxml"));
+        super(i18n, scenebuilderManager, instanceEvents, WorkspaceController.class.getResource("Workspace.fxml"));
         this.jfxAppPlatform = jfxAppPlatform;
         this.documentManager = documentManager;
         this.contextMenu = contextMenu;
@@ -450,8 +452,7 @@ public class WorkspaceController extends AbstractFxmlController implements Works
                 statusStyleClass = "stage-prompt"; // NOCHECK
             } else {
                 final Object userSceneGraph = content.getRoot();
-                if (userSceneGraph instanceof Node) {
-                    final Node rootNode = (Node) userSceneGraph;
+                if (userSceneGraph instanceof final Node rootNode) {
                     assert rootNode.getParent() == null;
                     contentGroup.getChildren().add(rootNode);
                     layoutContent(true /* applyCSS */);
@@ -544,9 +545,7 @@ public class WorkspaceController extends AbstractFxmlController implements Works
 
         final Object userSceneGraph = content.getRoot();
 
-        if ((userSceneGraph instanceof Node) && (content.getLayoutException() == null)) {
-            final Node rootNode = (Node) userSceneGraph;
-
+        if ((userSceneGraph instanceof final Node rootNode) && (content.getLayoutException() == null)) {
             final Bounds rootBounds = rootNode.getLayoutBounds();
 
             if (rootBounds.isEmpty() || (rootBounds.getWidth() == 0.0) || (rootBounds.getHeight() == 0.0)) {
@@ -610,9 +609,7 @@ public class WorkspaceController extends AbstractFxmlController implements Works
         minZ = layoutBounds.getMinZ();
         maxZ = layoutBounds.getMaxZ();
 
-        if (node instanceof Parent) {
-            final Parent parent = (Parent) node;
-
+        if (node instanceof final Parent parent) {
             for (Node child : parent.getChildrenUnmodifiable()) {
                 final Bounds childBounds = child.getBoundsInParent();
                 minX = Math.min(minX, childBounds.getMinX());
@@ -784,8 +781,7 @@ public class WorkspaceController extends AbstractFxmlController implements Works
         sb.append(e.getEventType());
         sb.append(", target="); // NOCHECK
         sb.append(e.getTarget());
-        if (e instanceof KeyEvent) {
-            final KeyEvent ke = (KeyEvent) e;
+        if (e instanceof final KeyEvent ke) {
             sb.append(", keyCode="); // NOCHECK
             sb.append(ke.getCode());
         }
@@ -851,13 +847,11 @@ public class WorkspaceController extends AbstractFxmlController implements Works
         while (fxomObject != null) {
             final Object sceneGraphObject = fxomObject.getSceneGraphObject().getObjectClass();
 
-            if (sceneGraphObject instanceof Tab) {
-                final Tab tab = (Tab) sceneGraphObject;
+            if (sceneGraphObject instanceof final Tab tab) {
                 final TabPane tabPane = tab.getTabPane();
                 assert tabPane != null;
                 tabPane.getSelectionModel().select(tab);
-            } else if (sceneGraphObject instanceof TitledPane) {
-                final TitledPane titledPane = (TitledPane) sceneGraphObject;
+            } else if (sceneGraphObject instanceof final TitledPane titledPane) {
                 if (titledPane.getParent() instanceof Accordion) {
                     final Accordion accordion = (Accordion) titledPane.getParent();
                     accordion.setExpandedPane(titledPane);

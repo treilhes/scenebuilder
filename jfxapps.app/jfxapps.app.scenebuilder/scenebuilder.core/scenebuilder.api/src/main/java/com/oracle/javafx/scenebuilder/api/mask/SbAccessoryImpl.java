@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.mask;
 
-import com.gluonhq.jfxapps.core.api.mask.AccessoryGeneric;
+import com.gluonhq.jfxapps.core.api.fxom.mask.AccessoryGeneric;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbComponentPropertyMetadata;
 

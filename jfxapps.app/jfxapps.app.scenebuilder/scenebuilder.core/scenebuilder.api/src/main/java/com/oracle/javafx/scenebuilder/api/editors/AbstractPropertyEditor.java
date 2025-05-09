@@ -39,9 +39,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.core.api.css.CssPropAuthorInfo;
-import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.fxom.css.CssPropAuthorInfo;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;

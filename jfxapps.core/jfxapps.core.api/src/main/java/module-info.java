@@ -45,42 +45,25 @@ open module jfxapps.core.api {
     exports com.gluonhq.jfxapps.core.api.lifecycle;
 
     exports com.gluonhq.jfxapps.core.api.ui.controller.alert;
-    exports com.gluonhq.jfxapps.core.api.clipboard;
 
-
-    exports com.gluonhq.jfxapps.core.api.content.decoration;
-    exports com.gluonhq.jfxapps.core.api.gesture;
-    exports com.gluonhq.jfxapps.core.api.content.mode;
-    exports com.gluonhq.jfxapps.core.api.content.mode.annotation;
-    exports com.gluonhq.jfxapps.core.api.css;
-
-    exports com.gluonhq.jfxapps.core.api.dnd;
     exports com.gluonhq.jfxapps.core.api.ui.controller.dock;
     exports com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation;
     exports com.gluonhq.jfxapps.core.api.editor.images;
-    exports com.gluonhq.jfxapps.core.api.editor.selection;
-    exports com.gluonhq.jfxapps.core.api.error;
     exports com.gluonhq.jfxapps.core.api.factory;
     exports com.gluonhq.jfxapps.core.api.fs;
-    exports com.gluonhq.jfxapps.core.api.fxom;
+
     exports com.gluonhq.jfxapps.core.api.guide;
     exports com.gluonhq.jfxapps.core.api.i18n;
-    exports com.gluonhq.jfxapps.core.api.job;
-    exports com.gluonhq.jfxapps.core.api.job.base;
-    exports com.gluonhq.jfxapps.core.api.library;
 
     exports com.gluonhq.jfxapps.core.api.maven;
-    exports com.gluonhq.jfxapps.core.api.mask;
     exports com.gluonhq.jfxapps.core.api.ui;
     exports com.gluonhq.jfxapps.core.api.ui.controller;
     exports com.gluonhq.jfxapps.core.api.ui.controller.dock.type;
-    exports com.gluonhq.jfxapps.core.api.ui.controller.selbar;
     exports com.gluonhq.jfxapps.core.api.ui.controller.menu;
     exports com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation;
     exports com.gluonhq.jfxapps.core.api.ui.controller.misc;
 
     exports com.gluonhq.jfxapps.core.api.ui.dialog;
-    exports com.gluonhq.jfxapps.core.api.ui.tool;
 
     exports com.gluonhq.jfxapps.core.api.preference;
 
@@ -91,9 +74,36 @@ open module jfxapps.core.api {
 
     exports com.gluonhq.jfxapps.core.api.tooltheme;
 
+    exports com.gluonhq.jfxapps.core.api.javafx;
+    exports com.gluonhq.jfxapps.core.api.job;
+    exports com.gluonhq.jfxapps.core.api.job.base;
     exports com.gluonhq.jfxapps.core.api.util;
 
-    exports com.gluonhq.jfxapps.core.api.javafx;
+    exports com.gluonhq.jfxapps.core.api.fxom.clipboard;
+
+
+    exports com.gluonhq.jfxapps.core.api.fxom.content.decoration;
+    exports com.gluonhq.jfxapps.core.api.fxom.gesture;
+    exports com.gluonhq.jfxapps.core.api.fxom.content.mode;
+    exports com.gluonhq.jfxapps.core.api.fxom.content.mode.annotation;
+    exports com.gluonhq.jfxapps.core.api.fxom.css;
+
+    exports com.gluonhq.jfxapps.core.api.fxom.dnd;
+    exports com.gluonhq.jfxapps.core.api.fxom.editor.selection;
+    exports com.gluonhq.jfxapps.core.api.fxom.error;
+    exports com.gluonhq.jfxapps.core.api.fxom.jobs;
+    exports com.gluonhq.jfxapps.core.api.fxom.job;
+    exports com.gluonhq.jfxapps.core.api.fxom.job.base;
+    exports com.gluonhq.jfxapps.core.api.fxom.library;
+    exports com.gluonhq.jfxapps.core.api.fxom.subjects;
+    exports com.gluonhq.jfxapps.core.api.fxom.util;
+    exports com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc;
+    exports com.gluonhq.jfxapps.core.api.fxom.mask;
+    exports com.gluonhq.jfxapps.core.api.fxom.ui.controller.selbar;
+    exports com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu;
+    exports com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.annotation;
+    exports com.gluonhq.jfxapps.core.api.fxom.ui.tool;
+
 
     requires transitive jfxapps.javafx.starter;
 

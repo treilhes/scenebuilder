@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,10 +36,10 @@ package com.oracle.javafx.scenebuilder.app.error.collectors;
 import java.util.Optional;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.error.AbstractErrorCollector;
-import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
+import com.gluonhq.jfxapps.core.api.fxom.error.AbstractErrorCollector;
+import com.gluonhq.jfxapps.core.api.fxom.error.ErrorReportEntry;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInclude;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
@@ -54,12 +54,12 @@ public class UnresolvedObjectsCollector extends AbstractErrorCollector {
 
     private final I18N i18n;
     private final SbFXOMObjectMask.Factory designHierarchyMaskFactory;
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents documentManager;
 
     // @formatter:off
     public UnresolvedObjectsCollector(
             I18N i18n,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             SbFXOMObjectMask.Factory designHierarchyMaskFactory) {
         // @formatter:on
         super();
@@ -80,8 +80,7 @@ public class UnresolvedObjectsCollector extends AbstractErrorCollector {
             }
 
             final Object sceneGraphObject;
-            if (fxomObject instanceof FXOMIntrinsic) {
-                final FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) fxomObject;
+            if (fxomObject instanceof final FXOMIntrinsic fxomIntrinsic) {
                 sceneGraphObject = fxomIntrinsic.getSceneGraphObject().get();
                 if (!(fxomObject instanceof FXOMInclude)) {
                     String reference = fxomIntrinsic.getSource();

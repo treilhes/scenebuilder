@@ -49,6 +49,7 @@ import com.gluonhq.jfxapps.boot.api.aop.AopMetadata;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
 import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
@@ -60,7 +61,6 @@ import com.gluonhq.jfxapps.core.api.preference.PreferenceEditorFactory;
 import com.gluonhq.jfxapps.core.api.preference.UserPreference;
 import com.gluonhq.jfxapps.core.api.preference.ValueValidator;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.preferences.internal.behaviour.ApplicationPreferenceBehaviour;
 import com.gluonhq.jfxapps.core.preferences.internal.behaviour.GlobalPreferenceBehaviour;
 import com.gluonhq.jfxapps.core.preferences.internal.behaviour.InstancePreferenceBehaviour;
@@ -143,7 +143,7 @@ public class PreferenceAopContext extends AopContext<Preference, PreferenceConte
                 context.getBean(ApplicationEvents.class));
 
         case ApplicationInstanceSingleton.SCOPE_NAME -> new InstancePreferenceBehaviour(metadata, preferenceRepository,
-                context.getBean(ApplicationEvents.class), context.getBean(ApplicationInstanceEvents.class));
+                context.getBean(ApplicationEvents.class), context.getBean(FxomEvents.class));
 
         default -> throw new IllegalArgumentException("Unexpected value: " + scope);
         };
@@ -220,7 +220,7 @@ public class PreferenceAopContext extends AopContext<Preference, PreferenceConte
             this.defaultValueProvider = defaultValueProvider != null ? defaultValueProvider : () -> null;
             this.valueValidator = valueValidator != null ? valueValidator : v -> getValue() != null;
             this.preferenceBehaviour = preferenceBehaviour;
-            this.value = new SimpleObjectProperty<T>(getDefault());
+            this.value = new SimpleObjectProperty<>(getDefault());
             this.dataClass = dataClass;
             this.preferenceEditorFactory = preferenceEditorFactory;
             this.jsonMapper = jsonMapper;

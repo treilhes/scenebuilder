@@ -34,9 +34,9 @@
 package com.oracle.javafx.scenebuilder.tools.driver.gridpane;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.dnd.AbstractDropTarget;
-import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.AbstractDropTarget;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
+import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;

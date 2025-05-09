@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.api.mask;
 
 import java.net.URL;
 
-import com.gluonhq.jfxapps.core.api.mask.HierarchyMask;
+import com.gluonhq.jfxapps.core.api.fxom.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 
 import javafx.scene.image.Image;

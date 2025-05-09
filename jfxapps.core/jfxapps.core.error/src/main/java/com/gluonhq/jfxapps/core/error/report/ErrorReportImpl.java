@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -43,10 +43,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.error.ErrorCollector;
-import com.gluonhq.jfxapps.core.api.error.ErrorReport;
-import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.fxom.error.ErrorCollector;
+import com.gluonhq.jfxapps.core.api.fxom.error.ErrorReport;
+import com.gluonhq.jfxapps.core.api.fxom.error.ErrorReportEntry;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.FXOMObjectCollector;
@@ -59,14 +59,14 @@ import com.gluonhq.jfxapps.core.fxom.collector.FXOMObjectCollector;
 public class ErrorReportImpl implements ErrorReport {
 
     private final Map<FXOMNode, List<ErrorReportEntry>> documentErrors = new HashMap<>();
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents documentManager;
 
     private boolean dirty = true;
 
     private final Optional<List<ErrorCollector>> errorCollectors;
 
     public ErrorReportImpl(
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             Optional<List<ErrorCollector>> errorCollectors) {
         super();
         this.documentManager = documentManager;

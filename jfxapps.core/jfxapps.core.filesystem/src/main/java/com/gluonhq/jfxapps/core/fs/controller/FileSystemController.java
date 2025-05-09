@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -57,11 +57,11 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fs.RecentItems;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.CombinedResourceBundle;
 import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.fs.preference.InitialDirectoryPreference;
 import com.gluonhq.jfxapps.core.fs.util.FileWatcher;
@@ -79,7 +79,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
 
     private final JfxAppPlatform jfxAppPlatform;
     private final ApplicationEvents applicationEvents;
-    private final ApplicationInstanceEvents applicationInstanceEvents;
+    private final FxomEvents applicationInstanceEvents;
     private final FXOMDocumentFactory fxomDocumentFactory;
     private final RecentItems recentItems;
     private final InitialDirectoryPreference initialDirectoryPreference;
@@ -99,7 +99,7 @@ public class FileSystemController implements FileWatcher.Delegate, FileSystem {
     public FileSystemController(
             JfxAppPlatform jfxAppPlatform,
             ApplicationEvents applicationEvents,
-            ApplicationInstanceEvents applicationInstanceEvents,
+            FxomEvents applicationInstanceEvents,
             FXOMDocumentFactory fxomDocumentFactory,
             RecentItems recentItems,
             InitialDirectoryPreference initialDirectoryPreference,

@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.imagelibrary.library.builtin;
 import java.util.Comparator;
 import java.util.Locale;
 
-import com.gluonhq.jfxapps.core.api.library.LibraryItem;
+import com.gluonhq.jfxapps.core.api.fxom.library.LibraryItem;
 
 /**
  *

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,11 +40,11 @@ import java.util.Locale;
 import java.util.Set;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchDocumentJob;
+import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMElement;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
@@ -89,7 +89,7 @@ public final class FitToParentObjectJob extends BatchDocumentJob {
 
     protected FitToParentObjectJob(
             JobExtensionFactory extensionFactory,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             SbMetadata metadata,
             FxomJobsFactory fxomJobsFactory) {
         super(extensionFactory, documentManager);
@@ -216,43 +216,26 @@ public final class FitToParentObjectJob extends BatchDocumentJob {
     }
 
     private Set<Sizing> getSizingMask(final Node node) {
-        Set<Sizing> result;
+        Set<Sizing> result = switch (node) {
+        case ScrollBar scrollBar -> getSizingMask(scrollBar.getOrientation());
+        case Separator separator -> getSizingMask(separator.getOrientation());
+        case Slider slider -> getSizingMask(slider.getOrientation());
+        case null, default -> EnumSet.of(Sizing.HORIZONTAL, Sizing.VERTICAL);
+        };
 
-        // ScrollBar
-        if (node instanceof ScrollBar) {
-            final ScrollBar scrollBar = (ScrollBar) node;
-            result = getSizingMask(scrollBar.getOrientation());
-        } //
-        // Separator
-        else if (node instanceof Separator) {
-            final Separator separator = (Separator) node;
-            result = getSizingMask(separator.getOrientation());
-        } //
-        // Slider
-        else if (node instanceof Slider) {
-            final Slider slider = (Slider) node;
-            result = getSizingMask(slider.getOrientation());
-        } //
-        else {
-            result = EnumSet.of(Sizing.HORIZONTAL, Sizing.VERTICAL);
-        }
         return result;
     }
 
     private Set<Sizing> getSizingMask(final Orientation orientation) {
         assert orientation != null;
-        final Set<Sizing> result;
-        switch (orientation) {
-            case HORIZONTAL:
-                result = EnumSet.of(Sizing.HORIZONTAL);
-                break;
-            case VERTICAL:
-                result = EnumSet.of(Sizing.VERTICAL);
-                break;
-            default:
-                assert false : "unexpected orientation: " + orientation;
-                result = null;
+        final Set<Sizing> result = switch (orientation) {
+        case HORIZONTAL -> EnumSet.of(Sizing.HORIZONTAL);
+        case VERTICAL -> EnumSet.of(Sizing.VERTICAL);
+        default -> {
+            assert false : "unexpected orientation: " + orientation;
+            yield null;
         }
+        };
         return result;
     }
 

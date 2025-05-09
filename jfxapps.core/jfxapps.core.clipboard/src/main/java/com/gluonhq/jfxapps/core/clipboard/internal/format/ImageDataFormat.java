@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
+import com.gluonhq.jfxapps.core.api.fxom.clipboard.ClipboardDataFormat;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.scene.image.ImageView;

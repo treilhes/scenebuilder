@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -43,17 +43,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
-import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.selbar.SelectionBarContentFactory;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.selbar.SelectionBarContentFactory.BarItem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.SelectionBar;
-import com.gluonhq.jfxapps.core.api.ui.controller.selbar.SelectionBarContentFactory;
-import com.gluonhq.jfxapps.core.api.ui.controller.selbar.SelectionBarContentFactory.BarItem;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
@@ -76,7 +77,7 @@ public class SelectionBarController extends AbstractFxmlController implements Se
 
     private static final Logger logger = LoggerFactory.getLogger(SelectionBarController.class);
 
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents documentManager;
     private final Selection selection;
     private final Optional<SelectionBarContentFactory> barContentFactory;
     private final SelectionGroupFactory defaultSelectionGroupFactory;
@@ -90,13 +91,14 @@ public class SelectionBarController extends AbstractFxmlController implements Se
 
     public SelectionBarController(
             I18N i18n,
-            ApplicationEvents scenebuilderManager,
-            ApplicationInstanceEvents documentManager,
+            ApplicationEvents applicationEvents,
+            ApplicationInstanceEvents instanceEvents,
+            FxomEvents documentManager,
             JobManager jobManager,
             Selection selection,
             SelectionGroupFactory defaultSelectionGroupFactory,
             Optional<SelectionBarContentFactory> barContentFactory) {
-        super(i18n, scenebuilderManager, documentManager, SelectionBarController.class.getResource("SelectionBar.fxml"));
+        super(i18n, applicationEvents, instanceEvents, SelectionBarController.class.getResource("SelectionBar.fxml"));
         this.documentManager = documentManager;
         this.selection = selection;
         this.defaultSelectionGroupFactory = defaultSelectionGroupFactory;

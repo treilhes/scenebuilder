@@ -34,10 +34,10 @@
 package com.oracle.javafx.scenebuilder.tools.driver.hbox;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.dnd.DefaultDropTargetFactory;
-import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.DefaultDropTargetFactory;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
+import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
+import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetProvider;

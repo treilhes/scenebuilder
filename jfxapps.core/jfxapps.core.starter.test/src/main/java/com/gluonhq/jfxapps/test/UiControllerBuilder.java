@@ -49,12 +49,12 @@ import org.testfx.api.FxRobot;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.UiController;
 import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
@@ -71,8 +71,8 @@ public class UiControllerBuilder<T extends UiController> {
     private final JfxAppContext context;
     private final JavafxThreadClassloader classloader;
     private final ApplicationEvents events;
-    private final ApplicationInstanceEvents instanceEvents;
-    private final FxRobot robot;;
+    private final FxomEvents fxomEvents;
+    private final FxRobot robot;
 
     private Class<T> controller;
     private T controllerInstance;
@@ -89,11 +89,11 @@ public class UiControllerBuilder<T extends UiController> {
     private List<URL> cssUrl = new ArrayList<>();
     private List<URL> i18nUrl = new ArrayList<>();
 
-    protected UiControllerBuilder(JfxAppContext context, JavafxThreadClassloader classloader, ApplicationEvents events, ApplicationInstanceEvents instanceEvents) {
+    protected UiControllerBuilder(JfxAppContext context, JavafxThreadClassloader classloader, ApplicationEvents events, FxomEvents instanceEvents) {
         this.context = context;
         this.classloader = classloader;
         this.events = events;
-        this.instanceEvents = instanceEvents;
+        this.fxomEvents = instanceEvents;
         this.robot = new FxRobot();
     }
 
@@ -273,7 +273,7 @@ public class UiControllerBuilder<T extends UiController> {
                     hiddenStage.setScene(new Scene(pane));
                 }
 
-                instanceEvents.fxomDocument().set(doc);
+                fxomEvents.fxomDocument().set(doc);
             }
 
             if (stage.getScene() != null) {

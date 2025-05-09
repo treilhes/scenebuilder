@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,10 +39,10 @@ import org.testfx.api.FxRobot;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.UiController;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
@@ -64,7 +64,7 @@ public class WorkspaceBuilder {
     private final JfxAppContext context;
     private final JavafxThreadClassloader classloader;
     private final ApplicationEvents events;
-    private final ApplicationInstanceEvents instanceEvents;
+    private final FxomEvents instanceEvents;
     private final FxRobot robot;;
 
     private String css;
@@ -78,7 +78,7 @@ public class WorkspaceBuilder {
     private ToolStylesheetProvider toolStylesheetProvider;
 
     protected WorkspaceBuilder(JfxAppContext context, JavafxThreadClassloader classloader, ApplicationEvents events,
-            ApplicationInstanceEvents instanceEvents) {
+            FxomEvents instanceEvents) {
         this.context = context;
         this.classloader = classloader;
         this.events = events;
@@ -137,7 +137,7 @@ public class WorkspaceBuilder {
 
         robot.interact(() -> setup(instance, w + stageSizeDelta * 2, h + stageSizeDelta * 2, docRef));
 
-        return new TestStage<SubSceneController>(stage, instance, docRef.get());
+        return new TestStage<>(stage, instance, docRef.get());
     }
 
     private void setup(SubSceneController instance, int width, int height, AtomicReference<FXOMDocument> docRef) {
@@ -195,7 +195,7 @@ public class WorkspaceBuilder {
         private final Pane glassLayer = new Pane();
         private final Group layer = new Group();
 
-        public SubSceneController(ApplicationInstanceEvents instanceEvents, int width, int height, int delta) {
+        public SubSceneController(FxomEvents instanceEvents, int width, int height, int delta) {
             super();
             contentGroup.setLayoutX(0);
             contentGroup.setLayoutY(0);

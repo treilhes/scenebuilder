@@ -39,10 +39,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.dnd.DefaultDropTargetFactory;
-import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.mask.Accessory;
-import com.gluonhq.jfxapps.core.api.util.CoordinateHelper;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.DefaultDropTargetFactory;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
+import com.gluonhq.jfxapps.core.api.fxom.mask.Accessory;
+import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetProvider;

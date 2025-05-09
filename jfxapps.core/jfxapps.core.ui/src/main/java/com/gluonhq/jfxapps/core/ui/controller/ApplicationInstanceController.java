@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -49,6 +49,7 @@ import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloaderDispatcher;
@@ -57,7 +58,6 @@ import com.gluonhq.jfxapps.core.api.lifecycle.DisposeWithDocument;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
 import com.gluonhq.jfxapps.core.api.preference.Preferences;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.WindowPreferenceTracker;
@@ -110,7 +110,7 @@ public class ApplicationInstanceController implements ApplicationInstance {
 
     private EventHandler<KeyEvent> mainKeyEventFilter;
 
-    private final ApplicationInstanceEvents applicationInstanceEvents;
+    private final FxomEvents applicationInstanceEvents;
     private final Provider<Optional<List<InitWithDocument>>> initializations;
     private final Provider<Optional<List<DisposeWithDocument>>> finalizations;
 
@@ -140,7 +140,7 @@ public class ApplicationInstanceController implements ApplicationInstance {
             InlineEdit inlineEdit,
             MessageLogger messageLogger,
             MainInstanceWindow documentWindow,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             DockManager dockManager,
             DockViewController viewMenuController,
             InstancesManager main,

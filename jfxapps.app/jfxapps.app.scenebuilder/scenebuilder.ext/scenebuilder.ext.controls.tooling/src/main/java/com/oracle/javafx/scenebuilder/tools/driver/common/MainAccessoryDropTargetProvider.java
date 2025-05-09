@@ -34,8 +34,8 @@
 package com.oracle.javafx.scenebuilder.tools.driver.common;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.dnd.DefaultDropTargetFactory;
-import com.gluonhq.jfxapps.core.api.dnd.DropTarget;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.DefaultDropTargetFactory;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetProvider;

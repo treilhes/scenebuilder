@@ -55,11 +55,11 @@ import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
 import com.gluonhq.jfxapps.core.api.preference.Preference;
 import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
 import com.gluonhq.jfxapps.core.api.preference.ValueValidator;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceBeanPostProcessor;
 import com.gluonhq.jfxapps.core.preferences.model.PreferenceEntity;
@@ -188,14 +188,14 @@ public class ScopedPreferenceTest {
         final String INST3_VALUE = "val3";
         final String INST4_VALUE = "val4";
 
-        var instance1Events = context.getBean(ApplicationInstanceEvents.class);
+        var instance1Events = context.getBean(FxomEvents.class);
         var prefInst1 = context.getBean(TestAppInstancePreference.class);
         assertTrue("should have default value", DEFAULT_VALUE.equals(prefInst1.getValue()));
 
         context.getApplicationInstanceExecutor().unbindScope();
         context.getBean(JfxAppsTest.Application1InstanceBean.class);
 
-        var instance2Events = context.getBean(ApplicationInstanceEvents.class);
+        var instance2Events = context.getBean(FxomEvents.class);
         var prefInst2 = context.getBean(TestAppInstancePreference.class);
         assertTrue("should have default value", DEFAULT_VALUE.equals(prefInst2.getValue()));
 
@@ -204,14 +204,14 @@ public class ScopedPreferenceTest {
         context.getBean(JfxAppsTest.Application2Bean.class);
         context.getBean(JfxAppsTest.Application2InstanceBean.class);
 
-        var instance3Events = context.getBean(ApplicationInstanceEvents.class);
+        var instance3Events = context.getBean(FxomEvents.class);
         var prefInst3 = context.getBean(TestAppInstancePreference.class);
         assertTrue("should have default value", DEFAULT_VALUE.equals(prefInst3.getValue()));
 
         context.getApplicationInstanceExecutor().unbindScope();
         context.getBean(JfxAppsTest.Application2InstanceBean.class);
 
-        var instance4Events = context.getBean(ApplicationInstanceEvents.class);
+        var instance4Events = context.getBean(FxomEvents.class);
         var prefInst4 = context.getBean(TestAppInstancePreference.class);
         assertTrue("should have default value", DEFAULT_VALUE.equals(prefInst4.getValue()));
 
@@ -410,12 +410,15 @@ public class ScopedPreferenceTest {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj)
+            if (this == obj) {
                 return true;
-            if (obj == null)
+            }
+            if (obj == null) {
                 return false;
-            if (getClass() != obj.getClass())
+            }
+            if (getClass() != obj.getClass()) {
                 return false;
+            }
             Value other = (Value) obj;
             return Objects.equals(value, other.value);
         }

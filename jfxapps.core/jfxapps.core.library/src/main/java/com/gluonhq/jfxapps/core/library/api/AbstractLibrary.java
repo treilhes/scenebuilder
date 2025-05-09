@@ -57,11 +57,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.fxom.library.Library;
+import com.gluonhq.jfxapps.core.api.fxom.library.LibraryArtifact;
+import com.gluonhq.jfxapps.core.api.fxom.library.LibraryItem;
+import com.gluonhq.jfxapps.core.api.fxom.library.Report;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.library.Library;
-import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
-import com.gluonhq.jfxapps.core.api.library.LibraryItem;
-import com.gluonhq.jfxapps.core.api.library.Report;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithApplication;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;

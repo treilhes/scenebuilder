@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,8 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceAopContext.BasePreference;
 import com.gluonhq.jfxapps.core.preferences.internal.aop.PreferenceAopContext.PreferenceMetadata;
 import com.gluonhq.jfxapps.core.preferences.model.PreferenceEntity;
@@ -59,7 +59,7 @@ public class InstancePreferenceBehaviour extends AbstractPreferenceBehaviour {
     public InstancePreferenceBehaviour(
             PreferenceMetadata metadata, PreferenceRepository repository,
             ApplicationEvents applicationEvents,
-            ApplicationInstanceEvents applicationInstanceEvents) {
+            FxomEvents applicationInstanceEvents) {
         super(metadata, repository);
         applicationEvents.opened().subscribe(app -> {
             applicationId = app != null ? app.getClass().getName() : null;

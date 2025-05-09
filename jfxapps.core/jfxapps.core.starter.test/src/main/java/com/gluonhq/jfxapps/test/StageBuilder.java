@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,10 +39,10 @@ import org.testfx.api.FxToolkit;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.UiController;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -53,11 +53,11 @@ public class StageBuilder {
     private final JfxAppContext context;
     private final JavafxThreadClassloader classloader;
     private final ApplicationEvents events;
-    private final ApplicationInstanceEvents instanceEvents;
+    private final FxomEvents instanceEvents;
     private Stage stage;
 
 
-    protected StageBuilder(JfxAppContext context, JavafxThreadClassloader classloader, ApplicationEvents events, ApplicationInstanceEvents instanceEvents) {
+    protected StageBuilder(JfxAppContext context, JavafxThreadClassloader classloader, ApplicationEvents events, FxomEvents instanceEvents) {
         this.context = context;
         this.classloader = classloader;
         this.events = events;

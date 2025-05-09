@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.function.Consumer;
 
-import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
+import com.gluonhq.jfxapps.core.api.fxom.library.LibraryArtifact;
 
 import javafx.collections.ObservableList;
 import javafx.scene.image.WritableImage;

@@ -35,11 +35,11 @@ package com.gluonhq.jfxapps.core.clipboard.controller;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
-import com.gluonhq.jfxapps.core.api.clipboard.ClipboardEncoder;
-import com.gluonhq.jfxapps.core.api.clipboard.ClipboardHandler;
-import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.clipboard.ClipboardEncoder;
+import com.gluonhq.jfxapps.core.api.fxom.clipboard.ClipboardHandler;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
@@ -51,7 +51,7 @@ import javafx.scene.control.TextInputControl;
 import javafx.scene.input.Clipboard;
 
 @ApplicationInstanceSingleton
-public class ClipboardController implements com.gluonhq.jfxapps.core.api.clipboard.Clipboard {
+public class ClipboardController implements com.gluonhq.jfxapps.core.api.fxom.clipboard.Clipboard {
 
     private final MainInstanceWindow documentWindow;
     private final InlineEdit inlineEdit;

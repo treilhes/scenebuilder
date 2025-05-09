@@ -55,10 +55,10 @@ import org.graalvm.compiler.lir.CompositeValue.Component;
 import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
-import com.gluonhq.jfxapps.core.api.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.dnd.DragSource;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSource;
+import com.gluonhq.jfxapps.core.api.fxom.library.LibraryItem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.library.LibraryItem;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;

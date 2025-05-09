@@ -38,7 +38,7 @@ import java.net.URL;
 import java.util.Objects;
 
 import com.gluonhq.jfxapps.core.api.fxom.FxomDocumentFactory;
-import com.gluonhq.jfxapps.core.api.library.LibraryItem;
+import com.gluonhq.jfxapps.core.api.fxom.library.LibraryItem;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
 

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,15 +42,15 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.error.ErrorReport;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.error.ErrorReport;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.CombinedResourceBundle;
 import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.FxomDisplay;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
@@ -99,7 +99,7 @@ public class FxomDisplayController implements FxomDisplay, InitWithDocument {
 
     private final FileSystem fileSystem;
     private I18nResourceProvider resourceConfig;
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents documentManager;
 
     private FXOMDocument fxomDocument;
     private final ApplicationEvents sceneBuilderManager;
@@ -116,7 +116,7 @@ public class FxomDisplayController implements FxomDisplay, InitWithDocument {
             FileSystem fileSystem,
             MessageLogger messageLogger,
             Selection selection,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             ErrorReport errorReport,
             InlineEdit inlineEditController,
             FXOMSerializer serializer

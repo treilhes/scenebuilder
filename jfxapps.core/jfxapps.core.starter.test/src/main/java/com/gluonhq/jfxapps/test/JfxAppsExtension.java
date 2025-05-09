@@ -82,6 +82,7 @@ import com.gluonhq.jfxapps.boot.context.impl.JfxAppContextImpl;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper.ServiceLoader;
 import com.gluonhq.jfxapps.boot.loader.model.LoadableContent;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
@@ -219,6 +220,7 @@ public class JfxAppsExtension implements BeforeEachCallback, ParameterResolver {
                     // events
                     ApplicationEvents.ApplicationEventsImpl.class,
                     ApplicationInstanceEvents.ApplicationInstanceEventsImpl.class,
+                    FxomEvents.FxomEventsImpl.class,
                     ViewManager.ViewManagerImpl.class,
                     DockManager.DockManagerImpl.class,
 

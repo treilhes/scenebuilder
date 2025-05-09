@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.api.editors;
 
-import com.gluonhq.jfxapps.core.api.css.CssPropAuthorInfo;
-import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
+import com.gluonhq.jfxapps.core.api.fxom.css.CssPropAuthorInfo;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor.LayoutFormat;

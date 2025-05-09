@@ -37,8 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.gluonhq.jfxapps.core.api.css.CssPropAuthorInfo;
-import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
+import com.gluonhq.jfxapps.core.api.fxom.css.CssPropAuthorInfo;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.PropertyGroupMetadata;

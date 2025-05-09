@@ -39,9 +39,9 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.gesture.AbstractMouseGesture;
-import com.gluonhq.jfxapps.core.api.gesture.GestureFactory;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
+import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractMouseGesture;
+import com.gluonhq.jfxapps.core.api.fxom.gesture.GestureFactory;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
 
 import javafx.scene.input.KeyEvent;
 

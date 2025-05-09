@@ -40,10 +40,10 @@ import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.editor.EditorPlatform;
-import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.gesture.AbstractMouseDragGesture;
-import com.gluonhq.jfxapps.core.api.gesture.GestureFactory;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractMouseDragGesture;
+import com.gluonhq.jfxapps.core.api.fxom.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
 

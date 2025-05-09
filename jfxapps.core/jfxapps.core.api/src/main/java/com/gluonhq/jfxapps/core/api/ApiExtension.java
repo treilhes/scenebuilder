@@ -42,10 +42,12 @@ import com.gluonhq.jfxapps.boot.api.loader.extension.RootExtension;
 import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
-import com.gluonhq.jfxapps.core.api.editor.selection.DefaultSelectionGroupFactory;
-import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroupFactoryRegistry;
-import com.gluonhq.jfxapps.core.api.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.DefaultSelectionGroupFactory;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroupFactoryRegistry;
+import com.gluonhq.jfxapps.core.api.fxom.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.dock.SearchController;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
@@ -62,7 +64,6 @@ import com.gluonhq.jfxapps.core.api.subjects.NetworkManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockNameHelper;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.SearchController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 
@@ -100,6 +101,7 @@ public class ApiExtension implements RootExtension {
                 ActionFactory.class,
                 ApplicationEvents.ApplicationEventsImpl.class,
                 ApplicationInstanceEvents.ApplicationInstanceEventsImpl.class,
+                FxomEvents.FxomEventsImpl.class,
                 DefaultSelectionGroupFactory.class,
                 DiscardGesture.Factory.class,
                 DiscardGesture.class,

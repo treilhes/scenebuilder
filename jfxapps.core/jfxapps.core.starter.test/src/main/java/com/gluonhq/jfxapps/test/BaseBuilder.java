@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,11 +41,11 @@ import org.testfx.api.FxToolkit;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.UiController;
 import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
@@ -65,7 +65,7 @@ public class BaseBuilder {
     private final JfxAppContext context;
     private final JavafxThreadClassloader classloader;
     private final ApplicationEvents events;
-    private final ApplicationInstanceEvents instanceEvents;
+    private final FxomEvents fxomEvents;
     private final FxRobot robot;;
 
     private Class<? extends UiController> controller;
@@ -81,11 +81,11 @@ public class BaseBuilder {
     private ToolStylesheetProvider toolStylesheetProvider;
 
 
-    protected BaseBuilder(JfxAppContext context, JavafxThreadClassloader classloader, ApplicationEvents events, ApplicationInstanceEvents instanceEvents) {
+    protected BaseBuilder(JfxAppContext context, JavafxThreadClassloader classloader, ApplicationEvents events, FxomEvents instanceEvents) {
         this.context = context;
         this.classloader = classloader;
         this.events = events;
-        this.instanceEvents = instanceEvents;
+        this.fxomEvents = instanceEvents;
         this.robot = new FxRobot();
     }
 
@@ -237,7 +237,7 @@ public class BaseBuilder {
                     hiddenStage.setScene(new Scene(pane));
                 }
 
-                instanceEvents.fxomDocument().set(doc);
+                fxomEvents.fxomDocument().set(doc);
             }
 
         });

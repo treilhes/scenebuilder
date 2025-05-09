@@ -37,7 +37,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.gluonhq.jfxapps.core.api.library.ReportEntry;
+import com.gluonhq.jfxapps.core.api.fxom.library.ReportEntry;
 import com.gluonhq.jfxapps.core.library.api.Transform;
 
 

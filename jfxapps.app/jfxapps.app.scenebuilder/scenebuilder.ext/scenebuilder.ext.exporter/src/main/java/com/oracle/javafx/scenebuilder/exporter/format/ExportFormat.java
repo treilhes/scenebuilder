@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.exporter.format;
 
 import java.io.File;
 
-import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
 
 import javafx.scene.Node;
 

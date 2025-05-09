@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,11 +39,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.job.base.InlineDocumentJob;
+import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.base.InlineDocumentJob;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMCollection;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
@@ -76,7 +76,7 @@ public final class DeleteRefereeObjectJob extends InlineDocumentJob {
     // @formatter:off
     public DeleteRefereeObjectJob(
             JobExtensionFactory extensionFactory,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             FxomJobsFactory fxomJobsFactory) {
      // @formatter:on
         super(extensionFactory, documentManager);
@@ -175,18 +175,15 @@ public final class DeleteRefereeObjectJob extends InlineDocumentJob {
         }
 
         if (result == node) {
-            if (node instanceof FXOMInstance) {
-                final FXOMInstance fxomInstance = (FXOMInstance) node;
+            if (node instanceof final FXOMInstance fxomInstance) {
                 for (FXOMProperty p : new LinkedList<>(fxomInstance.getProperties().values())) {
-                    if (p instanceof FXOMPropertyC) {
-                        final FXOMPropertyC cp = (FXOMPropertyC) p;
+                    if (p instanceof final FXOMPropertyC cp) {
                         for (FXOMObject value : new LinkedList<>(cp.getChildren())) {
                             prepareDeleteObject(executedJobs, value, target);
                         }
                     }
                 }
-            } else if (result instanceof FXOMCollection) {
-                final FXOMCollection fxomCollection = (FXOMCollection) result;
+            } else if (result instanceof final FXOMCollection fxomCollection) {
                 for (FXOMObject i : new LinkedList<>(fxomCollection.getItems())) {
                     prepareDeleteObject(executedJobs, i, target);
                 }

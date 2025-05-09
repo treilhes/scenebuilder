@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,13 +35,13 @@ package com.oracle.javafx.scenebuilder.api.control.handles;
 
 import java.net.URL;
 
-import com.gluonhq.jfxapps.core.api.content.decoration.AbstractDecoration;
-import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
-import com.gluonhq.jfxapps.core.api.gesture.DiscardGesture;
-import com.gluonhq.jfxapps.core.api.gesture.DiscardGesture.Factory;
-import com.gluonhq.jfxapps.core.api.gesture.Gesture;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
+import com.gluonhq.jfxapps.core.api.fxom.content.decoration.AbstractDecoration;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.fxom.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.fxom.gesture.DiscardGesture.Factory;
+import com.gluonhq.jfxapps.core.api.fxom.gesture.Gesture;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 
 import javafx.scene.Node;
@@ -70,7 +70,7 @@ public abstract class AbstractHandles<T> extends AbstractDecoration<T> implement
 
     public AbstractHandles(
             Workspace workspace,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             DiscardGesture.Factory discardGestureFactory,
             Class<T> sceneGraphClass) {
         super(workspace, documentManager, sceneGraphClass);

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,8 +38,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.fxom.clipboard.ClipboardDataFormat;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMArchive;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -54,9 +54,9 @@ public class FXOMArchiveDataFormat implements ClipboardDataFormat {
     // Internal SB2 data format
     static final DataFormat SB_DATA_FORMAT = new DataFormat("com.oracle.javafx.scenebuilder2/internal"); // NOCHECK
 
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents documentManager;
 
-    public FXOMArchiveDataFormat(ApplicationInstanceEvents documentManager) {
+    public FXOMArchiveDataFormat(FxomEvents documentManager) {
         super();
         this.documentManager = documentManager;
     }
@@ -81,8 +81,7 @@ public class FXOMArchiveDataFormat implements ClipboardDataFormat {
         // SB_DATA_FORMAT
         if (clipboard.hasContent(SB_DATA_FORMAT)) {
             final Object content = clipboard.getContent(SB_DATA_FORMAT);
-            if (content instanceof FXOMArchive) {
-                final FXOMArchive archive = (FXOMArchive) content;
+            if (content instanceof final FXOMArchive archive) {
                 try {
                     result = archive.decode(targetDocument);
                 } catch(IOException x) {

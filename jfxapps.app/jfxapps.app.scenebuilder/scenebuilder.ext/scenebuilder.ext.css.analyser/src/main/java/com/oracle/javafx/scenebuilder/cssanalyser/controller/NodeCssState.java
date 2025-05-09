@@ -45,7 +45,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.gluonhq.jfxapps.core.api.css.CssInternal;
+import com.gluonhq.jfxapps.core.api.fxom.css.CssInternal;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.CssPropertyState;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;

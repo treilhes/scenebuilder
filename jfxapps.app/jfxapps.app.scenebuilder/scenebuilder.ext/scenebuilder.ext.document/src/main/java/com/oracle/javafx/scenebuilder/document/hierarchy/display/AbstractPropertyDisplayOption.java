@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.document.hierarchy.display;
 
-import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.fxom.FXOMElement;

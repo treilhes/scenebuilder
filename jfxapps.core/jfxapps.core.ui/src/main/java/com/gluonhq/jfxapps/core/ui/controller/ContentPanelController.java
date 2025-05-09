@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,10 +37,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
@@ -85,7 +85,7 @@ public class ContentPanelController //extends AbstractFxmlController
     //private final ModeManager modeManager;
     //private final Drag drag;
     //private final Selection selection;
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents documentManager;
     private final MessageLogger messageLogger;
     //private final FXOMObjectMask.Factory maskFactory;
     //private final Workspace workspaceController;
@@ -109,7 +109,7 @@ public class ContentPanelController //extends AbstractFxmlController
     public ContentPanelController(
             I18N i18n,
             ApplicationEvents scenebuilderManager,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
 
             //FXOMObjectMask.Factory maskFactory,
 

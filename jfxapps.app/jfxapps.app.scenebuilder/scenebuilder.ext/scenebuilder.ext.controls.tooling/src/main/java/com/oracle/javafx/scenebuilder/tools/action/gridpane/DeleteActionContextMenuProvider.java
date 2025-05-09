@@ -36,8 +36,8 @@ package com.oracle.javafx.scenebuilder.tools.action.gridpane;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemProvider;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.ContextMenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.ContextMenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;

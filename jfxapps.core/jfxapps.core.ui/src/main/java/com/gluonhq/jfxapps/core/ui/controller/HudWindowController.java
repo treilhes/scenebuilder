@@ -36,12 +36,12 @@ package com.gluonhq.jfxapps.core.ui.controller;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.gesture.CardinalPoint;
+import com.gluonhq.jfxapps.core.api.fxom.gesture.CardinalPoint;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.HudWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlPopupController;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.HudWindow;
 import com.gluonhq.jfxapps.util.javafx.LineEquation;
 
 import javafx.fxml.FXML;

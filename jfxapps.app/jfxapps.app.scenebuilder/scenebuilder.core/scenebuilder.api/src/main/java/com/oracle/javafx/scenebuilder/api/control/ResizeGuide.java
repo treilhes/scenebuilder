@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.control;
 
-import com.gluonhq.jfxapps.core.api.content.decoration.Decoration;
+import com.gluonhq.jfxapps.core.api.fxom.content.decoration.Decoration;
 
 public interface ResizeGuide<T> extends Decoration<T> {
 

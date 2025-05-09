@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,8 +42,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
-import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDecoder;
+import com.gluonhq.jfxapps.core.api.fxom.clipboard.ClipboardDataFormat;
+import com.gluonhq.jfxapps.core.api.fxom.clipboard.ClipboardDecoder;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.scene.input.Clipboard;
@@ -58,8 +58,7 @@ public class ClipboardDecoderImpl implements ClipboardDecoder {
     private final AtomicInteger errorCount = new AtomicInteger();
     private final AtomicReference<Exception> lastException = new AtomicReference<>();
 
-    public ClipboardDecoderImpl(
-            Optional<List<ClipboardDataFormat>> dataFormats) {
+    public ClipboardDecoderImpl(Optional<List<ClipboardDataFormat>> dataFormats) {
         this.dataFormats = dataFormats;
     }
 
@@ -67,13 +66,10 @@ public class ClipboardDecoderImpl implements ClipboardDecoder {
     public List<FXOMObject> decode(Clipboard clipboard) {
 
         List<FXOMObject> draggedObjects = dataFormats.orElse(Collections.emptyList()).stream()
-                .filter(cpf -> cpf.hasDecodableContent(clipboard))
-                .map(cpf -> cpf.quietDecode(clipboard, e -> {
+                .filter(cpf -> cpf.hasDecodableContent(clipboard)).map(cpf -> cpf.quietDecode(clipboard, e -> {
                     errorCount.incrementAndGet();
                     lastException.set(e);
-                }))
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
+                })).flatMap(List::stream).collect(Collectors.toList());
 
         return draggedObjects;
     }

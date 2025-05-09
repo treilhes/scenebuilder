@@ -45,11 +45,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
-import com.gluonhq.jfxapps.core.api.content.decoration.Decoration;
-import com.gluonhq.jfxapps.core.api.gesture.CardinalPoint;
-import com.gluonhq.jfxapps.core.api.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.fxom.content.decoration.Decoration;
+import com.gluonhq.jfxapps.core.api.fxom.gesture.CardinalPoint;
+import com.gluonhq.jfxapps.core.api.fxom.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 import com.gluonhq.jfxapps.test.StageBuilder;
 import com.oracle.javafx.scenebuilder.api.control.Resizer;

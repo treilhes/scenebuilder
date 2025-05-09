@@ -34,7 +34,7 @@ package com.oracle.javafx.scenebuilder.tools.driver.tab;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.content.decoration.AbstractDecoration;
+import com.gluonhq.jfxapps.core.api.fxom.content.decoration.AbstractDecoration;
 import com.oracle.javafx.scenebuilder.tools.driver.tabpane.TabPaneDesignInfoX;
 
 import javafx.geometry.Bounds;

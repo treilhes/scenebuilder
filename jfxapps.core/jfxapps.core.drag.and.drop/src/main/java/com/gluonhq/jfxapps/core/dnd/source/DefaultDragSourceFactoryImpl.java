@@ -37,9 +37,9 @@ import java.util.Collection;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.dnd.DefaultDragSourceFactory;
-import com.gluonhq.jfxapps.core.api.dnd.DragSource;
-import com.gluonhq.jfxapps.core.api.dnd.DragSourceFactory;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.DefaultDragSourceFactory;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSource;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSourceFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.scene.image.Image;

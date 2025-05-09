@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.tools.action.wrap;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemProvider;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.ContextMenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.ContextMenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;

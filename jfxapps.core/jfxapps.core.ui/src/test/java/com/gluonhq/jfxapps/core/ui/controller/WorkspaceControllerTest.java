@@ -48,15 +48,15 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
-import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
-import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.mask.FXOMObjectMask;
+import com.gluonhq.jfxapps.core.api.fxom.content.mode.ModeManager;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.ContextMenu;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Content;
+import com.gluonhq.jfxapps.core.api.fxom.ui.tool.Driver;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.Content;
-import com.gluonhq.jfxapps.core.api.ui.tool.Driver;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.ui.preference.BackgroundImagePreference;
 import com.gluonhq.jfxapps.core.ui.preference.BackgroundImagePreference.BackgroundImage;
@@ -121,7 +121,7 @@ class WorkspaceControllerTest {
     private ApplicationEvents applicationEvents;
 
     @Autowired
-    private ApplicationInstanceEvents instanceEvents;
+    private FxomEvents instanceEvents;
 
     @Autowired
     private ContextMenu contextMenu;

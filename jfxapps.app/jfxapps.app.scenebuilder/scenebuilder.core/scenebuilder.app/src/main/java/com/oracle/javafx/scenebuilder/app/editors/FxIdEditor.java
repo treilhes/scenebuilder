@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,10 +40,10 @@ import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.Glossary;
-import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -69,7 +69,7 @@ public class FxIdEditor extends AutoSuggestEditor {
     //private Editor editorController;
     private final MessageLogger messageLog;
     private final Glossary glossary;
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents documentManager;
 
 //    public FxIdEditor(List<String> suggestedFxIds, Editor editorController) {
 //        super(PROPERTY_NAME, DEFAULT_VALUE, suggestedFxIds); //NOCHECK
@@ -82,7 +82,7 @@ public class FxIdEditor extends AutoSuggestEditor {
             Documentation documentation,
             FileSystem fileSystem,
             Glossary glossary,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             MessageLogger messageLogger) {
         super(i18n, dialog, documentation, fileSystem);
         this.messageLog = messageLogger;

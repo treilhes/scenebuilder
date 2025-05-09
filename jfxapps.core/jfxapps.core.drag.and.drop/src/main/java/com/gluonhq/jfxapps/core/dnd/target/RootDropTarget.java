@@ -37,10 +37,10 @@ package com.gluonhq.jfxapps.core.dnd.target;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.dnd.AbstractDropTarget;
-import com.gluonhq.jfxapps.core.api.dnd.DragSource;
-import com.gluonhq.jfxapps.core.api.dnd.DropTargetFactory;
-import com.gluonhq.jfxapps.core.api.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.AbstractDropTarget;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSource;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTargetFactory;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 

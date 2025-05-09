@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.app.error;
 
 import java.net.URL;
 
-import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
+import com.gluonhq.jfxapps.core.api.fxom.error.ErrorReportEntry;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;

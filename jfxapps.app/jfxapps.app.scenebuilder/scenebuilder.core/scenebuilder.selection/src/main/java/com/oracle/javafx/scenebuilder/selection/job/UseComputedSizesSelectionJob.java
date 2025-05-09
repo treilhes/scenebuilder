@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,11 +42,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchDocumentJob;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
@@ -66,7 +66,7 @@ public final class UseComputedSizesSelectionJob extends BatchDocumentJob {
     // @formatter:off
     protected UseComputedSizesSelectionJob(
             JobExtensionFactory extensionFactory,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             Selection selection,
             SbJobsFactory sbJobsFactory) {
     // @formatter:on
@@ -107,18 +107,11 @@ public final class UseComputedSizesSelectionJob extends BatchDocumentJob {
 
     @Override
     protected String makeDescription() {
-        final String result;
-        switch (getSubJobs().size()) {
-        case 0:
-            result = "Unexecutable Use Computed Sizes"; // NO18N
-            break;
-        case 1:
-            result = getSubJobs().get(0).getDescription();
-            break;
-        default:
-            result = makeMultipleSelectionDescription();
-            break;
-        }
+        final String result = switch (getSubJobs().size()) {
+        case 0 -> "Unexecutable Use Computed Sizes"; // NO18N
+        case 1 -> getSubJobs().get(0).getDescription();
+        default -> makeMultipleSelectionDescription();
+        };
         return result;
     }
 

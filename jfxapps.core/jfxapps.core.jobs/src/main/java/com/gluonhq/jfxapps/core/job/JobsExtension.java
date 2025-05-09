@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
-import com.gluonhq.jfxapps.core.api.job.base.BatchJob;
+import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchJob;
 import com.gluonhq.jfxapps.core.job.manager.JobManagerImpl;
 import com.gluonhq.jfxapps.core.job.manager.action.JobManagerActionFactoryImpl;
 import com.gluonhq.jfxapps.core.job.manager.action.impl.RedoAction;

@@ -47,12 +47,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.ContextMenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.ContextMenuItemProvider;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.Attachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenuItemProvider;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
@@ -67,7 +67,7 @@ import javafx.scene.control.SeparatorMenuItem;
  * Controller used to handle contextual menu in hierarchy and content view.
  */
 @ApplicationInstanceSingleton
-public class ContextMenuController implements com.gluonhq.jfxapps.core.api.ui.controller.menu.ContextMenu {
+public class ContextMenuController implements com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.ContextMenu {
 
     private static final Logger logger = LoggerFactory.getLogger(ContextMenuController.class);
 

@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
 
-import com.gluonhq.jfxapps.core.api.library.LibraryFilter;
+import com.gluonhq.jfxapps.core.api.fxom.library.LibraryFilter;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.UILogger;
 import com.gluonhq.jfxapps.core.extstore.fs.ExtensionFileSystemFactory;

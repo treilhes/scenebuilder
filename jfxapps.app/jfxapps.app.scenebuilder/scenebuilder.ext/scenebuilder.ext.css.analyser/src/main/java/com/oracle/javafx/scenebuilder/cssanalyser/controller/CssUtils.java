@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.cssanalyser.controller;
 
 import java.util.Set;
 
-import com.gluonhq.jfxapps.core.api.css.CssInternal;
+import com.gluonhq.jfxapps.core.api.fxom.css.CssInternal;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 
 import javafx.css.CssMetaData;

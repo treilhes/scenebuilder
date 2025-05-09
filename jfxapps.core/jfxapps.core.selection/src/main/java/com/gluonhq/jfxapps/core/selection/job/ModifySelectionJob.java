@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,13 +42,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchDocumentJob;
+import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -77,7 +77,7 @@ public final class ModifySelectionJob extends BatchDocumentJob {
     protected ModifySelectionJob(
             I18N i18n,
             JobExtensionFactory extensionFactory,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             Selection selection,
             FxomJobsFactory fxomJobsFactory) {
      // @formatter:on
@@ -133,8 +133,7 @@ public final class ModifySelectionJob extends BatchDocumentJob {
     }
 
     private void handleFxomIntrinsic(FXOMObject fxomObject, Set<FXOMInstance> candidates) {
-        if (fxomObject instanceof FXOMIntrinsic) {
-            FXOMIntrinsic intrinsic = (FXOMIntrinsic) fxomObject;
+        if (fxomObject instanceof FXOMIntrinsic intrinsic) {
             FXOMInstance fxomInstance = intrinsic.createFxomInstanceFromIntrinsic();
             candidates.add(fxomInstance);
         }
@@ -168,17 +167,14 @@ public final class ModifySelectionJob extends BatchDocumentJob {
         final List<Job> subJobs = getSubJobs();
         final int subJobCount = subJobs.size();
 
-        switch (subJobCount) {
+        result = switch (subJobCount) {
         case 0:
-            result = "Unexecutable Set"; // NOCHECK
-            break;
+            yield "Unexecutable Set"; // NOCHECK
         case 1: // Single selection
-            result = subJobs.get(0).getDescription();
-            break;
+            yield subJobs.get(0).getDescription();
         default:
-            result = i18n.getString(I18N_LABEL_ACTION_EDIT_SET_N, propertyMetadata.getName().toString(), subJobCount);
-            break;
-        }
+            yield i18n.getString(I18N_LABEL_ACTION_EDIT_SET_N, propertyMetadata.getName().toString(), subJobCount);
+        };
 
         return result;
     }

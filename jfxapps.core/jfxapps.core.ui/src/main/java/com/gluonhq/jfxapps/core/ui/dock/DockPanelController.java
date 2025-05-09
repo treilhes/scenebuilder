@@ -422,7 +422,7 @@ public class DockPanelController implements Dock {
                 public void set(Class[] allowed) {
                     var dockType = dockTypeProperty.get();
 
-                    if (dockType != null
+                    if (dockType != null && allowed != null
                             && Arrays.stream(allowed).noneMatch(c -> c.isInstance(dockType))) {
 
                         var firstAllowed = dockTypes.stream().filter(dt -> isAllowedDockType(allowed, dt)).findFirst();

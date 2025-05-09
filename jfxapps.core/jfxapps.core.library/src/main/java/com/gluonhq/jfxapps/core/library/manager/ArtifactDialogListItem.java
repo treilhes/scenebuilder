@@ -34,7 +34,7 @@
 
 package com.gluonhq.jfxapps.core.library.manager;
 
-import com.gluonhq.jfxapps.core.api.library.LibraryArtifact;
+import com.gluonhq.jfxapps.core.api.fxom.library.LibraryArtifact;
 
 /**
  * List cell item in the JAR/FXML Library dialog.

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,14 +39,14 @@ import java.util.List;
 import java.util.Set;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.editor.selection.SelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchDocumentJob;
+import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.base.BatchDocumentJob;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
@@ -82,7 +82,7 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
     protected ModifyCacheHintJob(
             I18N i18n,
             JobExtensionFactory extensionFactory,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             Selection selection,
             SbMetadata metadata,
             FxomJobsFactory fxomJobsFactory) {
@@ -140,21 +140,16 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
 
     @Override
     protected String makeDescription() {
-        final String result;
-
-        switch (subJobCount) {
-            case 0:
-                result = "Unexecutable Set"; //NOCHECK
-                break;
-            case 1: // Single selection
-                result = getSubJobs().get(0).getDescription();
-                break;
-            default:
-                result = i18n.getString("label.action.edit.set.n",
-                        propertyMetadata.getName().toString(),
-                        subJobCount);
-                break;
-        }
+        final String result = switch (subJobCount) {
+        case 0:
+            yield "Unexecutable Set"; //NOCHECK
+        case 1: // Single selection
+            yield getSubJobs().get(0).getDescription();
+        default:
+            yield i18n.getString("label.action.edit.set.n",
+                                    propertyMetadata.getName().toString(),
+                                    subJobCount);
+        };
 
         return result;
     }

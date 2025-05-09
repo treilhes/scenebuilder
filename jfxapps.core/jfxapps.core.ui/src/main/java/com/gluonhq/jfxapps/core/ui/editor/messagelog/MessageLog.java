@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,8 +42,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 
 import javafx.beans.property.IntegerProperty;
@@ -68,7 +68,7 @@ public class MessageLog implements MessageLogger{
      * Public
      */
 
-    public MessageLog(I18N i18n, ApplicationInstanceEvents documentManager) {
+    public MessageLog(I18N i18n, FxomEvents documentManager) {
         super();
         this.i18n = i18n;
         documentManager.fxomDocument().subscribe(fd -> clear());

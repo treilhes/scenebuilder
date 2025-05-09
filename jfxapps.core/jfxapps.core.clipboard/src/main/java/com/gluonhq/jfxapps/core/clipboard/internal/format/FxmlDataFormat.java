@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,8 +41,8 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.clipboard.ClipboardDataFormat;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.fxom.clipboard.ClipboardDataFormat;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
@@ -60,12 +60,12 @@ public class FxmlDataFormat implements ClipboardDataFormat {
     static final DataFormat FXML_DATA_FORMAT = new DataFormat("com.oracle.javafx/fxml"); // NOCHECK
 
     private final FXOMDocumentFactory fxomDocumentFactory;
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents documentManager;
     private final FXOMSerializer serializer;
 
     public FxmlDataFormat(
             FXOMDocumentFactory fxomDocumentFactory,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             FXOMSerializer serializer) {
         super();
         this.fxomDocumentFactory = fxomDocumentFactory;
@@ -94,8 +94,7 @@ public class FxmlDataFormat implements ClipboardDataFormat {
         // FXML_DATA_FORMAT
         if (clipboard.hasContent(FXML_DATA_FORMAT)) {
             final Object content = clipboard.getContent(FXML_DATA_FORMAT);
-            if (content instanceof String) {
-                final String fxmlText = (String) content;
+            if (content instanceof final String fxmlText) {
                 try {
                     final URL location = targetDocument.getLocation();
                     final ClassLoader classLoader = targetDocument.getClassLoader();

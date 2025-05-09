@@ -2,7 +2,7 @@ package com.oracle.javafx.scenebuilder.api.editors;
 
 import java.util.function.Consumer;
 
-import com.gluonhq.jfxapps.core.api.editor.selection.SelectionState;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 

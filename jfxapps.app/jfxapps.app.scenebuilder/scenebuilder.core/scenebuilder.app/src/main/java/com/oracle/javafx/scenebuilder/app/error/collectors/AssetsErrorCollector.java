@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,12 +40,12 @@ import java.util.Map;
 import java.util.Set;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.error.AbstractErrorCollector;
-import com.gluonhq.jfxapps.core.api.error.ErrorReportEntry;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem.WatchingCallback;
+import com.gluonhq.jfxapps.core.api.fxom.error.AbstractErrorCollector;
+import com.gluonhq.jfxapps.core.api.fxom.error.ErrorReportEntry;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.fxom.FXOMAssetIndex;
 import com.gluonhq.jfxapps.core.fxom.FXOMNode;
@@ -59,7 +59,7 @@ public class AssetsErrorCollector extends AbstractErrorCollector implements Watc
 
     private final I18N i18n;
     private final SbFXOMObjectMask.Factory designHierarchyMaskFactory;
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents documentManager;
     private final Map<Path, CSSParsingReportImpl> cssParsingReports = new HashMap<>();
     private final FileSystem fileSystem;
     private final MainInstanceWindow documentWindow;
@@ -68,7 +68,7 @@ public class AssetsErrorCollector extends AbstractErrorCollector implements Watc
             I18N i18n,
             FileSystem fileSystem,
             MainInstanceWindow documentWindow,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             SbFXOMObjectMask.Factory designHierarchyMaskFactory) {
         super();
         this.i18n = i18n;

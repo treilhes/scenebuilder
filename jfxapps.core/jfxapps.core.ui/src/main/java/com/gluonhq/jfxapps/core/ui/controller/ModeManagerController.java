@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,14 +42,14 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.content.mode.AbstractModeController;
-import com.gluonhq.jfxapps.core.api.content.mode.Mode;
-import com.gluonhq.jfxapps.core.api.content.mode.ModeDescriptor;
-import com.gluonhq.jfxapps.core.api.content.mode.ModeManager;
-import com.gluonhq.jfxapps.core.api.content.mode.ModeProvider;
-import com.gluonhq.jfxapps.core.api.dnd.Drag;
+import com.gluonhq.jfxapps.core.api.fxom.content.mode.AbstractModeController;
+import com.gluonhq.jfxapps.core.api.fxom.content.mode.Mode;
+import com.gluonhq.jfxapps.core.api.fxom.content.mode.ModeDescriptor;
+import com.gluonhq.jfxapps.core.api.fxom.content.mode.ModeManager;
+import com.gluonhq.jfxapps.core.api.fxom.content.mode.ModeProvider;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 @ApplicationInstanceSingleton
@@ -70,7 +70,7 @@ public class ModeManagerController implements ModeManager {
 
     public ModeManagerController(
             JfxAppContext context,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             List<ModeProvider> modeProviders,
             JobManager jobManager,
             Drag drag
