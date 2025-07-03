@@ -1,0 +1,49 @@
+name: Scene Builder Kit
+
+on:
+  workflow_call:
+    inputs:
+      project-version:
+        required: true
+        type: string
+      java-release:
+        required: true
+        type: string
+      java-version:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: oracle-actions/setup-java@v1.4.0
+        with:
+          website: jdk.java.net
+          release: ${{ inputs.java-release }}
+          version: ${{ inputs.java-version }}
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Create Kit Jar
+        run: |
+          export DISPLAY=:90
+          Xvfb -ac :90 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+          mvn -B -ntp -q versions:set -DnewVersion=${{ env.PROJECT_VERSION }} -DgenerateBackupPoms=false
+          mvn -B -ntp clean package -Dmaven.test.skip=true -f kit -ntp -B
+        env:
+          PROJECT_VERSION: ${{ inputs.project-version }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: scenebuilder-kit-${{ inputs.project-version }}.jar
+          path: kit/target/lib/*.jar
