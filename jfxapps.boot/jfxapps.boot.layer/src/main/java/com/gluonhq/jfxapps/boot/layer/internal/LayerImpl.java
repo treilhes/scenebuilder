@@ -46,7 +46,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.channels.FileLock;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -381,9 +380,9 @@ public class LayerImpl implements Layer {
         File file = path.toFile();
 
         try (RandomAccessFile fis = new RandomAccessFile(file, "rw")) {
-            FileLock lck = fis.getChannel().lock();
-            lck.release();
+            fis.getChannel().lock().release();
         } catch (Exception ex) {
+        	logger.info("Unable to exclusively lock file {}", file, ex);
             locked = true;
         }
         if (locked) {

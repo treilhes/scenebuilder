@@ -52,6 +52,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -299,9 +300,12 @@ class LayerImplIT {
     /**
      * Layer is locked if ref exists and unlocked if none.
      *
+     * This test is effective only on windows
      * @throws Exception the exception
      */
+    //FIXME Try to find a way to do the same on linux/macos
     @Test
+    @EnabledOnOs(org.junit.jupiter.api.condition.OS.WINDOWS)
     void layer_is_locked_if_ref_exists_and_unlocked_if_none() throws Exception {
         copy(rootDir, Constants.IT_MODULE_JAR);
 
