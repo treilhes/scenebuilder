@@ -1,7 +1,7 @@
 build-job:       # This job runs in the build stage, which runs first.
   tags:
     - linux
-  image: maven:3.9.10-eclipse-temurin-21
+  image: $DOCKER_REGISTRY_URL/jfxapss/build-linux:latest
   stage: build
   script:
 #    - mvn clean install
