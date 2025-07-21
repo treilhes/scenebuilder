@@ -1,7 +1,7 @@
 build-job:       # This job runs in the build stage, which runs first.
   tags:
     - linux
-  image: $DOCKER_REGISTRY_URL/jfxapss/build-linux:latest
+  image: pdocker.treilhes.home/jfxapss/build-linux:latest
   stage: build
   script:
 #    - mvn clean install
