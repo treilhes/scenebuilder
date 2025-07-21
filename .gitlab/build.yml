@@ -1,0 +1,5 @@
+build-job:       # This job runs in the build stage, which runs first.
+  image: maven:3.9.10-eclipse-temurin-21
+  stage: build
+  script:
+    - mvn clean install
