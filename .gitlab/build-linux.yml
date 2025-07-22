@@ -1,7 +1,7 @@
 build-job:       # This job runs in the build stage, which runs first.
   tags:
     - linux
-  image: docker.treilhes.home/jfxapss/builder-linux:latest
+  image: docker.treilhes.home/jfxapps/builder-linux:latest
   stage: build
   script:
 #    - mvn clean install
