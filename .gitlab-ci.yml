@@ -21,9 +21,6 @@ stages:          # List of stages for jobs, and their order of execution
   - test
   - deploy
 
-before_script:
-  - mkdir -p ~/.docker
-  - echo "$DOCKER_AUTH_CONFIG" > ~/.docker/config.json
 include:
   - local: '.gitlab/build-linux.yml'
 
