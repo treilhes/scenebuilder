@@ -1,7 +1,6 @@
 build-job:       # This job runs in the build stage, which runs first.
   tags:
     - windows-vm
-  image: docker.treilhes.home/jfxapps/builder-windows:latest
   stage: build
   script:
     - mvn -B -ntp clean install checkstyle:checkstyle
