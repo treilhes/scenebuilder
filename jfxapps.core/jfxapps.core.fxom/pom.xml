@@ -12,7 +12,7 @@
     <artifactId>jfxapps.core.fxom</artifactId>
 
 	<properties>
-		<graalvm.js.engine.version>24.2.2</graalvm.js.engine.version>
+		<graalvm.js.engine.version>21.3.0</graalvm.js.engine.version>
 	</properties>
     
     <dependencies>
@@ -27,15 +27,14 @@
 
         <dependency>
             <groupId>org.graalvm.js</groupId>
-            <artifactId>js-community</artifactId>
-            <version>${graalvm.js.engine.version}</version>
-            <type>pom</type>
+            <artifactId>js</artifactId>
+            <version>21.3.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.graalvm.js</groupId>
             <artifactId>js-scriptengine</artifactId>
-            <version>${graalvm.js.engine.version}</version>
+            <version>21.3.0</version>
             <scope>test</scope>
         </dependency>
 
