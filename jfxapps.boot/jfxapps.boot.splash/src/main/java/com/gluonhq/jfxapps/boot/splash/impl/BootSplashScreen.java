@@ -38,11 +38,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
-import java.awt.Image;
 import java.awt.SplashScreen;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -86,6 +84,7 @@ public class BootSplashScreen implements com.gluonhq.jfxapps.boot.api.splash.Spl
 	private BootSplashScreen(LoadingProgress loadingProgress, boolean useDefaultIfPossible) {
 		this.useDefaultIfPossible = useDefaultIfPossible;
 		if (GraphicsEnvironment.isHeadless()) {
+			logger.warn("Graphic environment is headless, loading progress is null");
 			this.loadingProgress = null;
 			this.splash = null;
 			return;
@@ -224,7 +223,7 @@ public class BootSplashScreen implements com.gluonhq.jfxapps.boot.api.splash.Spl
 		@Override
 		public void paint(Graphics g) {
 			super.paint(g);
-			((Graphics2D)g).drawImage(image, 0, 0, null);
+			g.drawImage(image, 0, 0, null);
 		}
 
 		@Override
@@ -239,6 +238,7 @@ public class BootSplashScreen implements com.gluonhq.jfxapps.boot.api.splash.Spl
 			setLocation(x, y);
 		}
 
+		@Override
 		public Graphics2D getGraphics() {
 			return (Graphics2D) super.getGraphics();
 		}
