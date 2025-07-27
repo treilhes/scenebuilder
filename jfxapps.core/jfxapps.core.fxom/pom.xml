@@ -27,8 +27,9 @@
 
         <dependency>
             <groupId>org.graalvm.js</groupId>
-            <artifactId>js</artifactId>
+            <artifactId>js-community</artifactId>
             <version>${graalvm.js.engine.version}</version>
+            <type>pom</type>
             <scope>test</scope>
         </dependency>
         <dependency>
