@@ -104,18 +104,7 @@
 
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>initialize</phase>
-						<goals>
-							<goal>properties</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
+				<!-- jpackage-maven-plugin BUG: A path cannot contain spaces and unicode characters. -->
 				<groupId>com.github.akman</groupId>
 				<artifactId>jpackage-maven-plugin</artifactId>
 				<version>0.1.5</version>

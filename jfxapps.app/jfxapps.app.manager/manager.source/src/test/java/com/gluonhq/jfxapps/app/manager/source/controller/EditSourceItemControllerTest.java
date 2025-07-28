@@ -120,9 +120,8 @@ class EditSourceItemControllerTest {
 
         var controller = testStage.getController();
 
-        controller.getRoot().getScene().getRoot().setStyle(
-                "-fx-background-color:  radial-gradient(focus-angle 0deg , focus-distance -80% , center 0% -10% , radius 100% , #d5e3e6 30%, #72adaa 80%, #293950)");
-
+        robot.interact(() -> addTestBackground(controller));
+        
         var validate = robot.lookup("#validate").queryButton();
         var cancel = robot.lookup("#cancel").queryButton();
         var versions = robot.lookup("#version").queryAs(ComboBox.class);
@@ -203,8 +202,8 @@ class EditSourceItemControllerTest {
 
                 var controller = testStage.getController();
 
-                controller.getRoot().getScene().getRoot().setStyle(
-                        "-fx-background-color:  radial-gradient(focus-angle 0deg , focus-distance -80% , center 0% -10% , radius 100% , #d5e3e6 30%, #72adaa 80%, #293950)");
+                robot.interact(() -> addTestBackground(controller));
+                
 
                 //robot.interact(controller::onShow);
                 // robot.interact(() -> ScenicView.show(controller.getRoot().getScene()));
@@ -214,5 +213,10 @@ class EditSourceItemControllerTest {
         } while (loopForEdit);
 
     }
+
+	private void addTestBackground(EditSourceItemController controller) {
+		controller.getRoot().getScene().getRoot().setStyle(
+		        "-fx-background-color:  radial-gradient(focus-angle 0deg , focus-distance -80% , center 0% -10% , radius 100% , #d5e3e6 30%, #72adaa 80%, #293950)");
+	}
 
 }
