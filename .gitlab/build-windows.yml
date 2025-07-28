@@ -3,4 +3,4 @@ build-job:       # This job runs in the build stage, which runs first.
     - windows-gui
   stage: build
   script:
-    - mvn -X -B -ntp clean install checkstyle:checkstyle
+    - mvn -B -ntp clean install checkstyle:checkstyle
