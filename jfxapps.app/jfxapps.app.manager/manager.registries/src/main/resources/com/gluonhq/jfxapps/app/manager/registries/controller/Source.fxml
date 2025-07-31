@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<StackPane fx:id="sourceStack" stylesheets="@Source.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox fx:id="rootVbox" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="store-vbox">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="200.0" styleClass="store-title-hbox" VBox.vgrow="NEVER">
+               <children>
+                  <Label styleClass="store-title-label" text="${controller.i18n.manager.source.search}" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" styleClass="store-search-hbox" VBox.vgrow="NEVER">
+               <children>
+                  <TextField fx:id="searchField" styleClass="store-search-textfield" />
+                  <Button mnemonicParsing="false" onAction="#search" styleClass="store-search-button">
+                     <effect>
+                        <DropShadow height="5.0" offsetX="1.0" offsetY="2.0" radius="2.0" width="5.0">
+                                 <color>
+                                    <Color red="0.3921568691730499" green="0.3921568691730499" blue="0.3921568691730499" />
+                                 </color>
+                                 <input>
+                                    <InnerShadow offsetX="1.0" offsetY="1.0">
+                                       <color>
+                                          <Color red="0.3921568691730499" green="0.3921568691730499" blue="0.3921568691730499" />
+                                       </color>
+                                    </InnerShadow>
+                                 </input>
+                              </DropShadow>
+                     </effect>
+                     <graphic>
+                        <FontIcon iconColor="WHITE" iconLiteral="fas-search" iconSize="30" styleClass="store-search-button" />
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="${controller.i18n.manager.source.search}" />
+                     </tooltip>
+                  </Button>
+               </children>
+            </HBox>
+            <VBox styleClass="store-searchresults-vbox" VBox.vgrow="ALWAYS">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" styleClass="store-searchresults-title-hbox">
+                     <children>
+                        <Label maxWidth="1.7976931348623157E308" styleClass="store-searchresults-title-label" text="${controller.i18n.manager.source.results}" HBox.hgrow="ALWAYS" />
+                        <Button alignment="CENTER_RIGHT" maxHeight="10.0" minHeight="30.0" mnemonicParsing="false" onAction="#syncAllSource" prefHeight="10.0" styleClass="store-app-card-install-button">
+                           <effect>
+                              <DropShadow height="5.0" offsetX="1.0" offsetY="2.0" radius="2.0" width="5.0">
+                                 <color>
+                                    <Color red="0.3921568691730499" green="0.3921568691730499" blue="0.3921568691730499" />
+                                 </color>
+                                 <input>
+                                    <InnerShadow offsetX="1.0" offsetY="1.0">
+                                       <color>
+                                          <Color red="0.3921568691730499" green="0.3921568691730499" blue="0.3921568691730499" />
+                                       </color>
+                                    </InnerShadow>
+                                 </input>
+                              </DropShadow>
+                           </effect>
+                           <graphic>
+                              <FontIcon cache="true" cacheHint="ROTATE" iconLiteral="fas-sync" iconSize="20" />
+                           </graphic>
+                        </Button>
+                        <Button alignment="CENTER_RIGHT" layoutX="696.0" layoutY="25.0" maxHeight="10.0" minHeight="30.0" mnemonicParsing="false" onAction="#addSource" prefHeight="10.0" styleClass="store-app-card-install-button">
+                           <effect>
+                              <DropShadow height="5.0" offsetX="1.0" offsetY="2.0" radius="2.0" width="5.0">
+                                 <color>
+                                    <Color red="0.3921568691730499" green="0.3921568691730499" blue="0.3921568691730499" />
+                                 </color>
+                                 <input>
+                                    <InnerShadow offsetX="1.0" offsetY="1.0">
+                                       <color>
+                                          <Color red="0.3921568691730499" green="0.3921568691730499" blue="0.3921568691730499" />
+                                       </color>
+                                    </InnerShadow>
+                                 </input>
+                              </DropShadow>
+                           </effect>
+                           <graphic>
+                              <FontIcon cache="true" cacheHint="ROTATE" iconLiteral="fas-plus" iconSize="20" />
+                           </graphic>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <ListView fx:id="sources" prefHeight="200.0" prefWidth="200.0" styleClass="store-searchresults-listview" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+         </padding>
+      </VBox>
+   </children>
+</StackPane>
