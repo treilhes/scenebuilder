@@ -13,7 +13,7 @@
 
     <modules>
         <module>scenebuilder.core</module>
-        <module>scenebuilder.ext</module>
+        <!--<module>scenebuilder.ext</module>-->
         <!--<module>scenebuilder.gluon</module>-->
         <module>scenebuilder.registry</module>
     </modules>

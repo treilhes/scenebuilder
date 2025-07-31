@@ -1,0 +1,151 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.gluonhq.jfxapps</groupId>
+		<artifactId>jfxapps.boot</artifactId>
+		<version>${jfxapps.version}</version>
+	</parent>
+	<artifactId>jfxapps.boot.package</artifactId>
+	<packaging>pom</packaging>
+
+	<properties>
+	    <!-- Replace SNAPSHOT with .0 to keep numeric MSI version -->
+	    <app.version>${project.version.replace("-SNAPSHOT", ".0")}</app.version>
+	    <app.name>JfxAppsBoot</app.name>
+	    <app.description>JfxApps Boot application</app.description>
+	    <app.vendor>Gluon</app.vendor>
+	    <main.jar.name>boot.jar</main.jar.name>
+	    <main.class.name>org.springframework.boot.loader.launch.JarLauncher</main.class.name>
+        
+        
+        <!-- For about.properties file -->
+        <buildDate>${maven.build.timestamp}</buildDate>
+        <buildDateFormat>${maven.build.timestamp.format}</buildDateFormat>
+        <javaVersion>${java.version}, ${java.runtime.name}</javaVersion>
+        <javafxVersion>${javafx.version}</javafxVersion>
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.gluonhq.jfxapps</groupId>
+			<artifactId>jfxapps.boot.runtime</artifactId>
+			<version>${jfxapps.version}</version>
+			<type>zip</type>
+			<!--
+				Scope test prevents jpackage plugin to process this dependency as a project
+			dependency
+				This dependency ensure the runtime is built prior this one
+			-->
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.gluonhq.jfxapps</groupId>
+			<artifactId>jfxapps.boot.main</artifactId>
+			<version>${jfxapps.version}</version>
+			<!--
+				Scope test prevents jpackage plugin to process this dependency as a project
+			dependency
+				This dependency ensure the runtime is built prior this one
+			-->
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.8.1</version>
+				<executions>
+					<execution>
+						<id>unpack runtime</id>
+						<phase>package</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>com.gluonhq.jfxapps</groupId>
+									<artifactId>jfxapps.boot.runtime</artifactId>
+									<version>${jfxapps.version}</version>
+									<type>zip</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/runtime</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy main jar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>com.gluonhq.jfxapps</groupId>
+									<artifactId>jfxapps.boot.main</artifactId>
+									<version>${jfxapps.version}</version>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/application</outputDirectory>
+									<destFileName>${main.jar.name}</destFileName>
+								</artifactItem>
+							</artifactItems>
+							<!-- other configurations here -->
+						</configuration>
+					</execution>
+				</executions>
+
+			</plugin>
+			<plugin>
+				<!-- jpackage-maven-plugin BUG: A path cannot contain spaces and unicode characters. -->
+				<groupId>com.github.akman</groupId>
+				<artifactId>jpackage-maven-plugin</artifactId>
+				<version>0.1.5</version>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>jpackage</goal>
+						</goals>
+						<configuration>
+							<toolhome>${java.home}</toolhome>
+							<appversion>${app.version}</appversion>
+							<input>${project.build.directory}/application</input>
+							<licensefile>${basedir}/src/assets/LICENSE.txt</licensefile>
+							<mainjar>${main.jar.name}</mainjar>
+							<mainclass>${main.class.name}</mainclass>
+							<name>${app.name}</name>
+							<description>${app.description}</description>
+							<vendor>${app.vendor}</vendor>
+							<verbose>true</verbose>
+							<runtimeimage>${project.build.directory}/runtime</runtimeimage>
+							<dest>${project.build.directory}/package</dest>
+							<!-- <type>PLATFORM</type> -->
+							<javaoptions>-Djavafx.allowjs=true</javaoptions>
+							<javaoptions>--add-opens=javafx.fxml/javafx.fxml=ALL-UNNAMED</javaoptions>
+							<javaoptions>--enable-native-access=javafx.graphics</javaoptions>
+							<javaoptions>--sun-misc-unsafe-memory-access=allow</javaoptions>
+							<javaoptions>-Djava.library.path=runtime\bin;runtime\lib</javaoptions>
+							<icon>${basedir}/src/assets/windows/icon-windows.ico</icon>
+
+							<!-- Windows -->
+							<windirchooser>true</windirchooser>
+							<winmenu>true</winmenu>
+							<winmenugroup>Scene Builder</winmenugroup>
+							<winperuserinstall>true</winperuserinstall>
+							<winshortcut>true</winshortcut>
+
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

@@ -33,6 +33,7 @@
             <plugin>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps-registry-maven-plugin</artifactId>
+                <version>${jfxapps.version}</version>
                 <executions>
                     <execution>
                         <id>generate-registry-resources</id>

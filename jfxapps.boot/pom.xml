@@ -26,5 +26,7 @@
     <module>jfxapps.boot.web</module>
     <module>jfxapps.boot.aop</module>
     <module>jfxapps.boot.splash</module>
+    <module>jfxapps.boot.runtime</module>
+    <module>jfxapps.boot.package</module>
   </modules>
 </project>

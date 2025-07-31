@@ -11,6 +11,10 @@
 
     <artifactId>jfxapps.core.fxom</artifactId>
 
+	<properties>
+		<graalvm.js.engine.version>21.3.0</graalvm.js.engine.version>
+	</properties>
+    
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
