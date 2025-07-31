@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,7 +35,9 @@ package com.gluonhq.jfxapps.core.api.javafx.internal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Role;
 import org.springframework.lang.NonNull;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
@@ -59,6 +61,7 @@ import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 
 @Singleton
+@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 public class JavafxThreadBootstrapper implements ApplicationListener<StageReadyEvent>, JavafxThreadHolder {
 
     private final static Logger logger = LoggerFactory.getLogger(JavafxThreadBootstrapper.class);

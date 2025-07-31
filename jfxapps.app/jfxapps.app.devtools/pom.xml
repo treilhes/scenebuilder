@@ -11,6 +11,7 @@
   <modules>
       <module>devtools.api</module>
       <module>devtools.app</module>
+      <module>devtools.css</module>
       <module>devtools.model</module>
       <!--<module>devtools.metadata</module>-->
       <module>devtools.i18n</module>

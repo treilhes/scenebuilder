@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -43,6 +43,7 @@ import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
 
 import javafx.application.Platform;
 
+// TODO simplify the functions to use the same name
 public interface JfxAppPlatform {
 
     public static void ensureFxThread(Runnable runnable) {
@@ -71,16 +72,16 @@ public interface JfxAppPlatform {
 
     /**
      * Execute the runnable later on the fx thread
-     * @param scopedDocument the document scope
+     * @param instance the instance scope
      * @param runnable the code to run
      */
-    void runOnFxThreadWithScope(ApplicationInstance scopedDocument, Runnable runnable);
+    void runOnFxThread(ApplicationInstance instance, Runnable runnable);
     /**
      * Execute the runnable later on the fx thread
      * @param scopedDocument the document scope uuid
      * @param runnable the code to run
      */
-    void runOnFxThreadWithScope(UUID scopedDocument, Runnable runnable);
+    void runOnFxThread(UUID scopedDocument, Runnable runnable);
 
     <T> FutureTask<T> callOnFxThreadWithScope(ApplicationInstance scopedDocument, Callable<T> callable);
     <T> FutureTask<T> callOnFxThreadWithScope(UUID scopedDocument, Callable<T> callable);

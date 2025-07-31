@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -180,8 +180,17 @@ public class OverridedBeanPostProcessor implements BeanPostProcessor {
                     continue;
                 }
                 try {
-                    Method originalMethod = beanClass.getMethod(overrideMethod.getName(),
+                    var annotation = cls.getAnnotation(OverrideBean.class);
+                    var targetClass = annotation.value();
+
+                    if (!targetClass.isAssignableFrom(beanClass)) {
+                        // The override class is not applicable for the bean class
+                        continue;
+                    }
+
+                    Method originalMethod = targetClass.getMethod(overrideMethod.getName(),
                             overrideMethod.getParameterTypes());
+
                     methodMap.put(originalMethod, overrideMethod);
                 } catch (NoSuchMethodException e) {
                     // No matching method found, ignore

@@ -41,10 +41,10 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceProtot
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchDocumentJob;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.tools.mask.GridPaneHierarchyMask;
@@ -62,7 +62,7 @@ public final class RemoveColumnConstraintsJob extends BatchDocumentJob {
 
     protected RemoveColumnConstraintsJob(
             JobExtensionFactory extensionFactory,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             SelectionJobsFactory selectionJobsFactory,
             GridPaneHierarchyMask.Factory maskFactory) {
         super(extensionFactory, documentManager);

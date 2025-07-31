@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,38 +37,44 @@ import javafx.scene.image.Image;
 
 public interface Alert {
 
-    public enum ButtonID { OK, CANCEL, ACTION }
+    public enum ButtonID {
+        OK, CANCEL, ACTION
+    }
+
+    /**
+     * Set the window title of the dialog.
+     * @param title
+     */
+    void setTitle(String title);
 
     void setMessage(String message);
 
     void setDetails(String details);
 
-    void setTitle(String title);
-
-    void setActionButtonDisable(boolean b);
+    void setActionButtonTitle(String title);
 
     void setActionButtonVisible(boolean b);
 
-    ButtonID showAndWait();
+    void setActionButtonDisable(boolean b);
 
     void setOKButtonTitle(String title);
-
-    void setCancelButtonTitle(String title);
-
-    void setActionButtonTitle(String title);
 
     void setOKButtonVisible(boolean visible);
 
     void setOKButtonDisable(boolean disable);
 
-    void setShowDefaultButton(boolean show);
-
-    void setDefaultButtonID(ButtonID buttonID);
+    void setCancelButtonTitle(String title);
 
     void setImageViewVisible(boolean visible);
 
     void setImageViewImage(Image image);
 
+    void setShowDefaultButton(boolean show);
+
+    void setDefaultButtonID(ButtonID buttonID);
+
     void setButtonsFocusTraversable();
+
+    ButtonID showAndWait();
 
 }

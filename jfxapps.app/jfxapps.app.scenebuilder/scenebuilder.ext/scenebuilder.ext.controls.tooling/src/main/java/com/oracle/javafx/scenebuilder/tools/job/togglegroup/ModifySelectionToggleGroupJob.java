@@ -43,12 +43,12 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingle
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchDocumentJob;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -72,7 +72,7 @@ public final class ModifySelectionToggleGroupJob extends BatchDocumentJob {
     protected ModifySelectionToggleGroupJob(
             I18N i18n,
             JobExtensionFactory extensionFactory,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             Selection selection,
             ModifyToggleGroupJob.Factory modifyToggleGroupJobFactory) {
         super(extensionFactory, documentManager);

@@ -43,5 +43,6 @@
 
         <module>jfxapps.core.jpms.patches</module>
         <module>jfxapps.core.metadefault</module>
+        <module>jfxapps.core.document</module>
     </modules>
 </project>

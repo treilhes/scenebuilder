@@ -69,7 +69,7 @@ public class ViewLinksController extends AbstractPanelController implements View
 
     private static final Logger logger = LoggerFactory.getLogger(ViewLinksController.class);
 
-    private final I18N i18n;
+    //private final I18N i18n;
     private final DockViewController dockViewController;
     private final DockActionFactory dockActionFactory;
     private final VBox vBox = new VBox();
@@ -83,8 +83,8 @@ public class ViewLinksController extends AbstractPanelController implements View
             ApplicationInstanceEvents applicationInstanceEvents,
             DockViewController dockViewController,
             DockActionFactory dockActionFactory) {
-        super(applicationEvents, applicationInstanceEvents);
-        this.i18n = i18n;
+        super(i18n, applicationEvents, applicationInstanceEvents, null);
+        //this.i18n = i18n;
         this.dockViewController = dockViewController;
         this.dockActionFactory = dockActionFactory;
     }
@@ -107,11 +107,11 @@ public class ViewLinksController extends AbstractPanelController implements View
         .forEach(vi -> {
 
             var action = dockActionFactory.toggleViewVisibility(vi.getViewClass());
-            var displayName = i18n.getStringOrDefault(vi.getName(), vi.getName());
+            var displayName = getI18n().getStringOrDefault(vi.getName(), vi.getName());
 
             final Node node;
             if (linkCreator != null) {
-                node = linkCreator.apply(vi, i18n);
+                node = linkCreator.apply(vi, getI18n());
             } else {
 
                 URL icon = vi.getIconX2();
@@ -155,6 +155,10 @@ public class ViewLinksController extends AbstractPanelController implements View
     @Override
     public void setRegionCustomizer(UnaryOperator<Region> regionCustomizer) {
         this.regionCustomizer = regionCustomizer;
+    }
+
+    @Override
+    public void controllerDidLoadFxml() {
     }
 
 }

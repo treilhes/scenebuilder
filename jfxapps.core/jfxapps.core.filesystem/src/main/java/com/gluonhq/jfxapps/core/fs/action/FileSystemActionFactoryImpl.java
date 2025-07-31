@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,7 +34,7 @@
 package com.gluonhq.jfxapps.core.fs.action;
 
 import java.io.File;
-import java.net.URL;
+import java.io.InputStream;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
@@ -42,18 +42,11 @@ import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.fs.FileSystemActionFactory;
 import com.gluonhq.jfxapps.core.fs.action.impl.ClearRecentItemsAction;
-import com.gluonhq.jfxapps.core.fs.action.impl.LoadBlankAction;
-import com.gluonhq.jfxapps.core.fs.action.impl.LoadFileAction;
-import com.gluonhq.jfxapps.core.fs.action.impl.LoadUrlAction;
-import com.gluonhq.jfxapps.core.fs.action.impl.NewAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.OpenAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.OpenFileWithSystemDefaultAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.OpenFilesAction;
-import com.gluonhq.jfxapps.core.fs.action.impl.ReloadFileAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.RevealFileAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.SaveAction;
-import com.gluonhq.jfxapps.core.fs.action.impl.SaveAsAction;
-import com.gluonhq.jfxapps.core.fs.action.impl.SaveOrSaveAsAction;
 
 @ApplicationInstanceSingleton
 public class FileSystemActionFactoryImpl implements FileSystemActionFactory{
@@ -70,30 +63,6 @@ public class FileSystemActionFactoryImpl implements FileSystemActionFactory{
     }
 
     @Override
-    public Action loadBlank() {
-        return actionFactory.create(LoadBlankAction.class);
-    }
-
-    @Override
-    public Action loadFile() {
-        return actionFactory.create(LoadFileAction.class);
-    }
-
-    @Override
-    public Action loadURL(URL url, boolean keepTrackOfLocation) {
-        return actionFactory.create(LoadUrlAction.class, a -> {
-            a.setFxmlURL(url);
-            a.setKeepTrackOfLocation(keepTrackOfLocation);
-        });
-    }
-
-    @Override
-    //FIXME better to move it in a container related module
-    public Action newInstance() {
-        return actionFactory.create(NewAction.class);
-    }
-
-    @Override
     public Action open() {
         return actionFactory.create(OpenAction.class);
     }
@@ -103,25 +72,25 @@ public class FileSystemActionFactoryImpl implements FileSystemActionFactory{
         return actionFactory.create(OpenFilesAction.class, a -> a.setFxmlFile(list));
     }
 
-    @Override
-    public Action reload() {
-        return actionFactory.create(ReloadFileAction.class);
-    }
+//    @Override
+//    public Action reload() {
+//        return actionFactory.create(ReloadFileAction.class);
+//    }
 
     @Override
-    public Action save() {
-        return actionFactory.create(SaveAction.class);
+    public Action save(InputStream inputStream, File targetFile) {
+        return actionFactory.create(SaveAction.class, a -> a.setParameters(inputStream, targetFile));
     }
 
-    @Override
-    public Action saveAs() {
-        return actionFactory.create(SaveAsAction.class);
-    }
-
-    @Override
-    public Action saveOrSaveAs() {
-        return actionFactory.create(SaveOrSaveAsAction.class);
-    }
+//    @Override
+//    public Action saveAs() {
+//        return actionFactory.create(SaveAsAction.class);
+//    }
+//
+//    @Override
+//    public Action saveOrSaveAs() {
+//        return actionFactory.create(SaveOrSaveAsAction.class);
+//    }
 
     @Override
     public Action reveal(File file) {

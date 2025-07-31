@@ -35,6 +35,8 @@ package com.gluonhq.jfxapps.core.api.javafx;
 
 import java.util.function.Predicate;
 
+import com.gluonhq.jfxapps.core.api.application.ApplicationClassloader;
+
 import javafx.stage.Window;
 
 public interface JavafxThreadClassloaderDispatcher {
@@ -45,13 +47,13 @@ public interface JavafxThreadClassloaderDispatcher {
      * @param window
      * @param classloader
      */
-    void register(Window window, JavafxThreadClassloader classloader);
+    void register(Window window, ApplicationClassloader classloader);
 
     /**
      * Register a classloader with the next opened window that matches the provided predicates.
      * @param classloader
      * @param predicates
      */
-    void registerWithNextWindow(JavafxThreadClassloader classloader, Predicate<Window>... predicates);
+    void registerWithNextWindow(ApplicationClassloader classloader, Predicate<Window>... predicates);
 
 }

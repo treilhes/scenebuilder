@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -56,6 +56,7 @@ public class PreferenceEntity {
     @Column(nullable = true)
     private String instance;
 
+    @Column(nullable = true, length = 10240)
     private String jsonValue;
 
 
@@ -125,12 +126,15 @@ public class PreferenceEntity {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj)
+            if (this == obj) {
                 return true;
-            if (obj == null)
+            }
+            if (obj == null) {
                 return false;
-            if (getClass() != obj.getClass())
+            }
+            if (getClass() != obj.getClass()) {
                 return false;
+            }
             PreferenceEntityId other = (PreferenceEntityId) obj;
             return Objects.equals(application, other.application) && Objects.equals(id, other.id)
                     && Objects.equals(instance, other.instance);

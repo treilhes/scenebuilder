@@ -39,8 +39,8 @@ import org.testfx.api.FxToolkit;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.application.ApplicationClassloader;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.UiController;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 
@@ -51,13 +51,13 @@ import javafx.stage.StageStyle;
 public class StageBuilder {
 
     private final JfxAppContext context;
-    private final JavafxThreadClassloader classloader;
+    private final ApplicationClassloader classloader;
     private final ApplicationEvents events;
     private final FxomEvents instanceEvents;
     private Stage stage;
 
 
-    protected StageBuilder(JfxAppContext context, JavafxThreadClassloader classloader, ApplicationEvents events, FxomEvents instanceEvents) {
+    protected StageBuilder(JfxAppContext context, ApplicationClassloader classloader, ApplicationEvents events, FxomEvents instanceEvents) {
         this.context = context;
         this.classloader = classloader;
         this.events = events;

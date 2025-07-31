@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,14 +35,18 @@
 package com.oracle.javafx.scenebuilder.welcome.controller;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.WelcomeDialog;
+import com.gluonhq.jfxapps.core.api.application.ApplicationActionFactory;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
+import com.gluonhq.jfxapps.core.api.document.DocumentActionFactory;
 import com.gluonhq.jfxapps.core.api.fs.RecentItems;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
@@ -60,7 +64,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 
-@ApplicationInstanceSingleton
+@ApplicationSingleton
 public class WelcomeDialogWindowController extends AbstractFxmlWindowController implements WelcomeDialog {
 
     public final static Logger logger = LoggerFactory.getLogger(WelcomeDialogWindowController.class);
@@ -75,6 +79,8 @@ public class WelcomeDialogWindowController extends AbstractFxmlWindowController 
     private ScrollPane scrollPane;
 
     private final InstancesManager instancesManager;
+    private final DocumentActionFactory documentActionFactory;
+    private final ApplicationActionFactory applicationActionFactory;
 
 	private final RecentItems recentItems;
 
@@ -83,12 +89,15 @@ public class WelcomeDialogWindowController extends AbstractFxmlWindowController 
 
     private final IconSetting windowIconSetting;
 
+
     //@formatter:off
     private WelcomeDialogWindowController(
             I18N i18n,
             ApplicationEvents applicationEvents,
             IconSetting iconSetting,
             InstancesManager instancesManager,
+            DocumentActionFactory documentActionFactory,
+            ApplicationActionFactory applicationActionFactory,
             IconSetting windowIconSetting,
             RecentItems recentItems,
             TemplateLoader templateLoader,
@@ -98,6 +107,8 @@ public class WelcomeDialogWindowController extends AbstractFxmlWindowController 
                 null); // We want it to be a top level window so we're setting the owner to null.
 
         this.instancesManager = instancesManager;
+        this.documentActionFactory = documentActionFactory;
+        this.applicationActionFactory = applicationActionFactory;
         this.recentItems = recentItems;
         this.templateSelection = templateSelection;
         this.windowIconSetting = windowIconSetting;
@@ -168,13 +179,27 @@ public class WelcomeDialogWindowController extends AbstractFxmlWindowController 
     }
 
     private void fireOpenRecentProject(ActionEvent event, String projectPath) {
-        instancesManager.open(List.of(new File(projectPath)));
+        try {
+            URL url = new File(projectPath).toURI().toURL();
+            //instancesManager.open(List.of(url));
+            var action = applicationActionFactory.lookupUnusedInstance(url, (instance) -> {
+                documentActionFactory.loadURL(url, true).perform();
+            });
+            action.perform();
+
+        } catch (MalformedURLException e) {
+            logger.error("Unable to open recent project", e);
+        }
         getStage().hide();
     }
 
     @FXML
     private void openDocument() {
-        instancesManager.open(List.of());
+        //instancesManager.open(List.of());
+        applicationActionFactory.newInstance((instance) -> {
+            documentActionFactory.loadBlank().perform();
+        }).perform();
+
         getStage().hide();
     }
 
@@ -182,7 +207,10 @@ public class WelcomeDialogWindowController extends AbstractFxmlWindowController 
     private void openEmpty() {
         getStage().hide();
         //templateController.loadTemplateInCurrentWindow(null);
-        instancesManager.open(List.of());
+        //instancesManager.open(List.of());
+        applicationActionFactory.newInstance((instance) -> {
+            documentActionFactory.loadBlank().perform();
+        }).perform();
     }
 
     private void loadTemplate(Template template) {

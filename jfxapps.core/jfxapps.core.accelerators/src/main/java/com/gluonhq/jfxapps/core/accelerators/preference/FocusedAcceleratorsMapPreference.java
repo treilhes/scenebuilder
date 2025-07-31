@@ -39,7 +39,7 @@ import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
 import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
 import com.gluonhq.jfxapps.core.api.preference.Preference;
 import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractCommonUiController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractInstanceUiController;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -51,13 +51,13 @@ import javafx.scene.input.KeyCombination;
         id = "46be149c-b787-43ab-a0be-d4613122c27e",
         name = FocusedAcceleratorsMapPreference.PREFERENCE_KEY,
         defaultValueProvider = FocusedAcceleratorsMapPreference.DefaultProvider.class)
-public interface FocusedAcceleratorsMapPreference extends Preference<ObservableMap<Class<? extends AbstractCommonUiController>,ObservableMap<Class<? extends Action>, ObservableList<KeyCombination>>>>, ManagedGlobalPreference {
+public interface FocusedAcceleratorsMapPreference extends Preference<ObservableMap<Class<? extends AbstractInstanceUiController>,ObservableMap<Class<? extends Action>, ObservableList<KeyCombination>>>>, ManagedGlobalPreference {
 
     public static final String PREFERENCE_KEY = "ApplicationAccelerators"; //NOCHECK
 
-    public static class DefaultProvider implements DefaultValueProvider<ObservableMap<Class<? extends AbstractCommonUiController>,ObservableMap<Class<? extends Action>, ObservableList<KeyCombination>>>> {
+    public static class DefaultProvider implements DefaultValueProvider<ObservableMap<Class<? extends AbstractInstanceUiController>,ObservableMap<Class<? extends Action>, ObservableList<KeyCombination>>>> {
         @Override
-        public ObservableMap<Class<? extends AbstractCommonUiController>,ObservableMap<Class<? extends Action>, ObservableList<KeyCombination>>> get() {
+        public ObservableMap<Class<? extends AbstractInstanceUiController>,ObservableMap<Class<? extends Action>, ObservableList<KeyCombination>>> get() {
             return FXCollections.observableHashMap();
         }
     }

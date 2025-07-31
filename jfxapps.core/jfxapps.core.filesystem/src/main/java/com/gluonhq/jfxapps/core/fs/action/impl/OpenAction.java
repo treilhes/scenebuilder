@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,39 +33,45 @@
  */
 package com.gluonhq.jfxapps.core.fs.action.impl;
 
-import java.io.File;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.fs.RecentItems;
+import com.gluonhq.jfxapps.core.api.fs.FileSystemActionFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 
 import javafx.stage.FileChooser;
 
 @ApplicationInstancePrototype("com.gluonhq.jfxapps.core.fs.action.impl.OpenAction")
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
-public class OpenAction extends AbstractOpenFilesAction {
+public class OpenAction extends AbstractAction {
+
+    private static final Logger logger = LoggerFactory.getLogger(OpenAction.class);
 
     private final FileSystem fileSystem;
+    private final FileSystemActionFactory fileSystemActionFactory;
+//    private final ApplicationActionFactory applicationActionFactory;
+//    private final DocumentActionFactory documentActionFactory;
+//    private final ApplicationDialog applicationDialog;
+//    private final RecentItems recentItems;
 
     // @formatter:off
     public OpenAction(
             I18N i18n,
-            JfxAppPlatform jfxAppPlatform,
             ActionExtensionFactory extensionFactory,
-            Dialog dialog,
-            InstancesManager main,
-            RecentItems recentItems,
-            FileSystem fileSystem) {
+            FileSystem fileSystem,
+            FileSystemActionFactory fileSystemActionFactory) {
      // @formatter:on
-        super(i18n, jfxAppPlatform, extensionFactory, dialog, main, recentItems);
+        super(i18n, extensionFactory);
         this.fileSystem = fileSystem;
+        this.fileSystemActionFactory = fileSystemActionFactory;
+//        this.documentActionFactory = documentActionFactory;
+//        this.applicationDialog = applicationDialog;
+//        this.recentItems = recentItems;
     }
 
     @Override
@@ -75,17 +81,23 @@ public class OpenAction extends AbstractOpenFilesAction {
 
     @Override
     public ActionStatus doPerform() {
-        final FileChooser fileChooser = new FileChooser();
 
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(getI18n().getString("file.filter.label.fxml"),
-                "*.fxml")); //NOCHECK
+        final var fileChooser = new FileChooser();
+        final var filter = getI18n().getString("file.filter.label.fxml");
+        final var extension = "*.fxml";
+        final var extensionFilter = new FileChooser.ExtensionFilter(filter, extension);
+
+        fileChooser.getExtensionFilters().add(extensionFilter);
         fileChooser.setInitialDirectory(fileSystem.getNextInitialDirectory());
-        final List<File> fxmlFiles = fileChooser.showOpenMultipleDialog(null);
+
+        final var fxmlFiles = fileChooser.showOpenMultipleDialog(null);
+
         if (fxmlFiles != null) {
             assert fxmlFiles.isEmpty() == false;
             fileSystem.updateNextInitialDirectory(fxmlFiles.get(0));
-            performOpenFiles(fxmlFiles);
+            fileSystemActionFactory.openFiles(fxmlFiles).checkAndPerform();
         }
+
         return ActionStatus.DONE;
     }
 }

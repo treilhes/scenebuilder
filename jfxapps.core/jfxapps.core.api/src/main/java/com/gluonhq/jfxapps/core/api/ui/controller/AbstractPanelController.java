@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,6 +33,9 @@
  */
 package com.gluonhq.jfxapps.core.api.ui.controller;
 
+import java.net.URL;
+
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
@@ -58,7 +61,7 @@ import javafx.scene.Parent;
  *
  *
  */
-public abstract class AbstractPanelController extends AbstractCommonUiController {
+public abstract class AbstractPanelController extends AbstractInstanceUiController {
 
 //    /** The Constant LOG. */
 //    private static final Logger logger = Logger.getLogger(AbstractPanelController.class.getName());
@@ -70,10 +73,14 @@ public abstract class AbstractPanelController extends AbstractCommonUiController
      *
      * @param api the api object
      */
+    // @formatter:off
     protected AbstractPanelController(
+            I18N i18n,
             ApplicationEvents applicationEvents,
-            ApplicationInstanceEvents applicationInstanceEvents) {
-        super(applicationEvents, applicationInstanceEvents);
+            ApplicationInstanceEvents instanceEvents,
+            URL fxmlURL) {
+        // @formatter:on
+        super(i18n, applicationEvents, instanceEvents, fxmlURL);
     }
 
 //    public void startListeners() {

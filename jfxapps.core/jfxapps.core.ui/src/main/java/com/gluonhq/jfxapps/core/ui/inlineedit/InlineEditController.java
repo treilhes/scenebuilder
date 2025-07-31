@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractPopupController;
@@ -83,13 +84,17 @@ public class InlineEditController implements InlineEdit{
     private final ApplicationEvents scenebuilderManager;
     private final ApplicationInstanceEvents documentManager;
 
+    private final I18N i18n;
+
     private static final String NID_INLINE_EDITOR = "inlineEditor";
 
 
 
     public InlineEditController(
+            I18N i18n,
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager) {
+        this.i18n = i18n;
         this.scenebuilderManager = scenebuilderManager;
         this.documentManager = documentManager;
     }
@@ -170,7 +175,7 @@ public class InlineEditController implements InlineEdit{
         //assert getEditorController().isTextEditingSessionOnGoing() == false;
         assert isTextEditingSessionOnGoing() == false;
 
-        popupController = new InlineEditPopupController(scenebuilderManager, documentManager, editor, requestCommit);
+        popupController = new InlineEditPopupController(i18n, scenebuilderManager, documentManager, editor, requestCommit);
 
         // Handle key events
         // 1) Commit then stop inline editing when pressing Ctl/Meta + ENTER key
@@ -332,11 +337,12 @@ public class InlineEditController implements InlineEdit{
         private final String initialValue;
 
         public InlineEditPopupController(
+                I18N i18n,
                 ApplicationEvents scenebuilderManager,
                 ApplicationInstanceEvents documentManager,
                 final TextInputControl editor,
                 final Callback<String, Boolean> requestCommit) {
-            super(scenebuilderManager, documentManager);
+            super(i18n, scenebuilderManager, documentManager, null);
             this.editor = editor;
             this.requestCommit = requestCommit;
             this.initialValue = editor.getText();
@@ -428,6 +434,12 @@ public class InlineEditController implements InlineEdit{
                 popup.setX(popupLocation.getX());
                 popup.setY(popupLocation.getY());
             }
+        }
+
+        @Override
+        public void controllerDidLoadFxml() {
+            // TODO Auto-generated method stub
+
         }
     }
 

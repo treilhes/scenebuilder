@@ -41,9 +41,9 @@ import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
@@ -62,7 +62,7 @@ public abstract class AbstractWrapInContentJob extends AbstractWrapInJob {
     //@formatter:off
     public AbstractWrapInContentJob(
             JobExtensionFactory extensionFactory,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             Selection selection,
             FXOMObjectMask.Factory designMaskFactory,
             SbMetadata metadata,

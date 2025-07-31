@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -80,39 +80,40 @@ class MessageTest {
     @DirtiesContext
     void should_load_the_fxml(StageBuilder builder, FxRobot robot) {
 
-        MessageBarController controller = builder.controller(MessageBarController.class)
+        try (var testStage = builder.controller(MessageBarController.class)
                 .setup(StageType.Fill)
                 .size(800, 30)
                 .css(CSS_THEME_PRESET)
-                .show().getController();
-
-        assertNotNull(controller.getRoot());
+                .show()){
+            MessageBarController controller = testStage.getController();
+            assertNotNull(controller.getRoot());
+        }
     }
 
     @Test
     @DirtiesContext
     void should_show_two_warnings_are_available(StageBuilder builder, FxRobot robot) {
 
-        var testStage = builder.controller(MessageBarController.class)
+        try(var testStage = builder.controller(MessageBarController.class)
                 .setup(StageType.Fill)
                 .size(800, 30)
                 .css(CSS_THEME_PRESET)
-                .show();
+                .show()) {
 
-        var controller = testStage.getController();
+            var controller = testStage.getController();
 
-        robot.interact(() -> {
-            messageLogger.logInfoMessage("sssssssssssssssssssssssss");
-            messageLogger.logInfoMessage("sssssssssssssssssssssssss");
-            messageLogger.logWarningMessage("wwwwwwwwwwwwwwwwwwwwwwwwwwwww");
-            messageLogger.logWarningMessage("wwwwwwwwwwwwwwwwwwwwwwwwwwwww");
-        });
+            robot.interact(() -> {
+                messageLogger.logInfoMessage("sssssssssssssssssssssssss");
+                messageLogger.logInfoMessage("sssssssssssssssssssssssss");
+                messageLogger.logWarningMessage("wwwwwwwwwwwwwwwwwwwwwwwwwwwww");
+                messageLogger.logWarningMessage("wwwwwwwwwwwwwwwwwwwwwwwwwwwww");
+            });
 
-        Button messageButton = robot.from(controller.getRoot()).lookup("#messageButton").query();
+            Button messageButton = robot.from(controller.getRoot()).lookup("#messageButton").query();
 
-        assertEquals(4, messageLogger.getEntryCount());
-        assertEquals("2", messageButton.getText());
-
+            assertEquals(4, messageLogger.getEntryCount());
+            assertEquals("2", messageButton.getText());
+        }
     }
 
 }

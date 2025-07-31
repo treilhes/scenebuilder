@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,10 +33,9 @@
  */
 package com.gluonhq.jfxapps.core.api.application;
 
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 
-import com.gluonhq.jfxapps.boot.api.loader.OpenCommandEvent;
-
-public interface CommandHandler extends ApplicationListener<OpenCommandEvent> {
+public interface CommandHandler extends ApplicationListener<ApplicationEvent> {
 
 }

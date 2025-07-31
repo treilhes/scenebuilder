@@ -36,10 +36,10 @@ package com.oracle.javafx.scenebuilder.tools.driver.node;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractGesture;
 import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.api.guide.ResizingGuide;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizeGuide;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
@@ -63,7 +63,7 @@ public class NodeResizeGuide extends AbstractResizeGuide<Node> {
     //@formatter:off
     public NodeResizeGuide(
             Workspace contentPanelController,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             FXOMObjectMask.Factory maskFactory,
             ResizingGuide resizingGuideController) {
         //@formatter:on

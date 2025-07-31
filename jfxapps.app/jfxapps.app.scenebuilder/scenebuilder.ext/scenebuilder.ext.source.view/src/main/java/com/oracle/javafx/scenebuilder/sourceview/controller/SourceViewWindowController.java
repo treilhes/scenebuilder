@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.util.FXOMDocumentUtils;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
@@ -85,7 +86,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
 
 
     private final JfxAppPlatform platform;
-    private final ApplicationInstanceEvents applicationInstanceEvents;
+    private final FxomEvents fxomEvents;
     private final FXOMSerializer fxomSerializer;
 
     private final FXOMDocumentFactory fxomDocumentFactory;
@@ -104,13 +105,14 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
             JfxAppPlatform platform,
             ApplicationEvents applicationEvents,
             ApplicationInstanceEvents applicationInstanceEvents,
+            FxomEvents fxomEvents,
             FXOMDocumentFactory fxomDocumentFactory,
             FXOMSerializer fxomSerializer,
             ViewMenu viewMenu) {
         //@formatter:on
         super(i18n, applicationEvents, applicationInstanceEvents, viewMenu, SourceViewWindowController.class.getResource("SourceWindow.fxml"));
         this.platform = platform;
-        this.applicationInstanceEvents = applicationInstanceEvents;
+        this.fxomEvents = fxomEvents;
         this.fxomDocumentFactory = fxomDocumentFactory;
         this.fxomSerializer = fxomSerializer;
     }
@@ -156,7 +158,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
             var bundle = fxomDocument.getResources();
             var newDocument = fxomDocumentFactory.newDocument(fxmlText, location, loader, bundle);
 
-            applicationInstanceEvents.fxomDocument().set(newDocument);
+            fxomEvents.fxomDocument().set(newDocument);
 
             updateResultLabel.setOpacity(1.0);
             updateResultLabel.setText("SUCCESS!");
@@ -192,8 +194,8 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
     public void controllerDidLoadFxml() {
         assert textArea != null;
         setupFadeTransition();
-        applicationInstanceEvents.fxomDocument().subscribe(fx -> setFxomDocument(fx));
-        applicationInstanceEvents.sceneGraphRevisionDidChange().observeOn(JavaFxScheduler.platform()).subscribe(fx -> {
+        fxomEvents.fxomDocument().subscribe(fx -> setFxomDocument(fx));
+        fxomEvents.sceneGraphRevisionDidChange().observeOn(JavaFxScheduler.platform()).subscribe(fx -> {
             scrollLeftSave = textArea.getScrollLeft();
             scrollTopSave = textArea.getScrollTop();
             update();
@@ -220,7 +222,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
                 textArea.setScrollLeft(scrollLeftSave);
                 textArea.setScrollTop(scrollTopSave);
             });
-            applicationInstanceEvents.dirty().set(true);
+            fxomEvents.dirty().set(true);
             dirty  = false;
         } else {
             dirty = true;

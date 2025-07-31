@@ -51,21 +51,20 @@ public abstract class AbstractFxmlPopupController extends AbstractPopupControlle
     private final ResourceBundle resources;
     private final I18N i18n;
 
-    public AbstractFxmlPopupController(
-            I18N i18n,
-            ApplicationEvents scenebuilderManager,
-            ApplicationInstanceEvents documentManager,
-            URL fxmlURL) {
+    public AbstractFxmlPopupController(I18N i18n, ApplicationEvents scenebuilderManager,
+            ApplicationInstanceEvents documentManager, URL fxmlURL) {
         this(i18n, scenebuilderManager, documentManager, fxmlURL, null);
     };
 
+    //@formatter:off
     public AbstractFxmlPopupController(
             I18N i18n,
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
             URL fxmlURL,
             ResourceBundle resources) {
-        super(scenebuilderManager, documentManager);
+        // @formatter:on
+        super(i18n, scenebuilderManager, documentManager, fxmlURL);
         assert fxmlURL != null : "Check fxml path given to " + getClass().getSimpleName();
         this.i18n = i18n;
         this.fxmlURL = fxmlURL;
@@ -84,11 +83,13 @@ public abstract class AbstractFxmlPopupController extends AbstractPopupControlle
     }
 
     /**
-     * Returns the I18N property.
-     * This property is bound to the I18N instance of the application
-     * to allow i18n expression binding using ${controller.i18n.some.key}
+     * Returns the I18N property. This property is bound to the I18N instance of the
+     * application to allow i18n expression binding using
+     * ${controller.i18n.some.key}
+     *
      * @return
      */
+    @Override
     public I18N i18nProperty() {
         return i18n;
     }

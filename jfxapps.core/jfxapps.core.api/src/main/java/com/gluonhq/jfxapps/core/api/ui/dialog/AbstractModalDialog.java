@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -60,8 +60,10 @@ import javafx.stage.Window;
  *
  *
  */
+@Deprecated
 public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
 
+    private final JfxAppsPlatform appsPlatform;
     private final Window owner;
     private final URL contentFxmlURL;
     private Parent contentRoot;
@@ -71,28 +73,41 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
     private boolean focusTraversableButtons;
 
     /*
-     * The following members should be considered as 'private'.
-     * They are 'protected' only to please the FXML loader.
+     * The following members should be considered as 'private'. They are 'protected'
+     * only to please the FXML loader.
      */
-    @FXML protected StackPane contentPane;
-    @FXML protected Button okButton;
-    @FXML protected Button cancelButton;
-    @FXML protected Button actionButton;
-    @FXML protected Pane okParent;
-    @FXML protected Pane actionParent;
-    @FXML protected ImageView imageView;
-    @FXML protected Pane imageViewParent;
+    @FXML
+    protected StackPane contentPane;
+    @FXML
+    protected Button okButton;
+    @FXML
+    protected Button cancelButton;
+    @FXML
+    protected Button actionButton;
+    @FXML
+    protected Pane okParent;
+    @FXML
+    protected Pane actionParent;
+    @FXML
+    protected ImageView imageView;
+    @FXML
+    protected Pane imageViewParent;
 
     /*
      * Public
      */
 
+    // @formatter:off
     public AbstractModalDialog(
+            JfxAppsPlatform appsPlatform,
             I18N i18n,
             ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
-            URL contentFxmlURL, Window owner) {
-        super(i18n, sceneBuilderManager, iconSetting, getContainerFxmlURL());
+            URL contentFxmlURL,
+            Window owner) {
+     // @formatter:on
+        super(i18n, sceneBuilderManager, iconSetting, getContainerFxmlURL(appsPlatform));
+        this.appsPlatform = appsPlatform;
         this.owner = owner;
         this.contentFxmlURL = contentFxmlURL;
         assert contentFxmlURL != null;
@@ -106,12 +121,13 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
             loader.setController(this);
             loader.setLocation(contentFxmlURL);
             loader.setResources(getI18n().getBundle());
+            loader.setClassLoader(getClass().getClassLoader());
             try {
-                contentRoot = (Parent)loader.load();
+                contentRoot = (Parent) loader.load();
                 controllerDidLoadContentFxml();
             } catch (IOException x) {
                 contentRoot = null;
-                throw new RuntimeException("Failed to load " + contentFxmlURL.getFile(), x); //NOCHECK
+                throw new RuntimeException("Failed to load " + contentFxmlURL.getFile(), x); // NOCHECK
             }
         }
 
@@ -124,6 +140,13 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
         getStage().showAndWait();
         return clickedButtonID;
     }
+
+    public final ButtonID show() {
+//      center();
+      clickedButtonID = ButtonID.CANCEL;
+      getStage().show();
+      return clickedButtonID;
+  }
 
     public String getTitle() {
         return getStage().getTitle();
@@ -236,7 +259,7 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
     // Preview Background Color we'd better have them focus traversable hence
     // this method.
     public void setButtonsFocusTraversable() {
-        if (JfxAppsPlatform.IS_MAC) {
+        if (appsPlatform.isMac()) {
             getOKButton().setFocusTraversable(true);
             getCancelButton().setFocusTraversable(true);
             getActionButton().setFocusTraversable(true);
@@ -261,7 +284,6 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
 
     @FXML
     protected abstract void actionButtonPressed(ActionEvent e);
-
 
     /*
      * AbstractWindowController
@@ -322,15 +344,16 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
     }
 
     @Override
-    public void onFocus() {}
+    public void onFocus() {
+    }
 
     /*
      * Private
      */
-    private static URL getContainerFxmlURL() {
+    private static URL getContainerFxmlURL(JfxAppsPlatform appsPlatform) {
         final String fxmlName;
 
-        if (JfxAppsPlatform.IS_WINDOWS) {
+        if (appsPlatform.isWindows()) {
             fxmlName = "AbstractModalDialogW.fxml";
         } else {
             fxmlName = "AbstractModalDialogM.fxml";
@@ -380,7 +403,7 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
         } else if (source == getActionButton()) {
             clickedButtonID = ButtonID.ACTION;
         } else {
-            throw new IllegalArgumentException("Bug"); //NOCHECK
+            throw new IllegalArgumentException("Bug"); // NOCHECK
         }
     }
 
@@ -401,28 +424,28 @@ public abstract class AbstractModalDialog extends AbstractFxmlWindowController {
         // interferes with a button set as default one.
         // See DTL-5333.
         if (showDefaultButton) {
-            switch(defaultButtonID) {
-                case OK:
-                    if (JfxAppsPlatform.IS_MAC && ! focusTraversableButtons) {
-                        getOKButton().setDefaultButton(true);
-                    } else {
-                        getOKButton().requestFocus();
-                    }
-                    break;
-                case CANCEL:
-                    if (JfxAppsPlatform.IS_MAC && ! focusTraversableButtons) {
-                        getCancelButton().setDefaultButton(true);
-                    } else {
-                        getCancelButton().requestFocus();
-                    }
-                    break;
-                case ACTION:
-                    if (JfxAppsPlatform.IS_MAC && ! focusTraversableButtons) {
-                        getActionButton().setDefaultButton(true);
-                    } else {
-                        getActionButton().requestFocus();
-                    }
-                    break;
+            switch (defaultButtonID) {
+            case OK:
+                if (appsPlatform.isMac() && !focusTraversableButtons) {
+                    getOKButton().setDefaultButton(true);
+                } else {
+                    getOKButton().requestFocus();
+                }
+                break;
+            case CANCEL:
+                if (appsPlatform.isMac() && !focusTraversableButtons) {
+                    getCancelButton().setDefaultButton(true);
+                } else {
+                    getCancelButton().requestFocus();
+                }
+                break;
+            case ACTION:
+                if (appsPlatform.isMac() && !focusTraversableButtons) {
+                    getActionButton().setDefaultButton(true);
+                } else {
+                    getActionButton().requestFocus();
+                }
+                break;
             }
         }
     }

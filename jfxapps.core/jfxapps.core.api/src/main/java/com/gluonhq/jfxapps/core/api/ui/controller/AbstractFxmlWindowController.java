@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -54,42 +54,42 @@ public abstract class AbstractFxmlWindowController extends AbstractWindowControl
 
     public AbstractFxmlWindowController(
             I18N i18n,
-            ApplicationEvents sceneBuilderManager,
+            ApplicationEvents applicationEvents,
             IconSetting iconSetting,
             URL fxmlURL) {
-        this(i18n, sceneBuilderManager, iconSetting, fxmlURL, null);
+        this(i18n, applicationEvents, iconSetting, fxmlURL, null);
     }
 
     public AbstractFxmlWindowController(
             I18N i18n,
-            ApplicationEvents sceneBuilderManager,
+            ApplicationEvents applicationEvents,
             IconSetting iconSetting,
             URL fxmlURL,
             boolean sizeToScene) {
-        this(i18n, sceneBuilderManager, iconSetting, fxmlURL, null, sizeToScene);
+        this(i18n, applicationEvents, iconSetting, fxmlURL, null, sizeToScene);
     }
 
     public AbstractFxmlWindowController(
             I18N i18n,
-            ApplicationEvents sceneBuilderManager,
+            ApplicationEvents applicationEvents,
             IconSetting iconSetting,
             URL fxmlURL,
             InstanceWindow owner) {
-        super(sceneBuilderManager, iconSetting, owner);
-        assert fxmlURL != null : "Check fxml path given to " + getClass().getSimpleName();
+        super(applicationEvents, iconSetting, owner);
+        assert fxmlURL != null || isFxmlFromStream() : "Check fxml path given to " + getClass().getSimpleName();
         this.fxmlURL = fxmlURL;
         this.i18n = i18n;
     }
 
     public AbstractFxmlWindowController(
             I18N i18n,
-            ApplicationEvents sceneBuilderManager,
+            ApplicationEvents applicationEvents,
             IconSetting iconSetting,
             URL fxmlURL,
             InstanceWindow owner,
             boolean sizeToScene) {
-        super(sceneBuilderManager, iconSetting, owner, sizeToScene);
-        assert fxmlURL != null : "Check fxml path given to " + getClass().getSimpleName();
+        super(applicationEvents, iconSetting, owner, sizeToScene);
+        assert fxmlURL != null || isFxmlFromStream() : "Check fxml path given to " + getClass().getSimpleName();
         this.fxmlURL = fxmlURL;
         this.i18n = i18n;
     }

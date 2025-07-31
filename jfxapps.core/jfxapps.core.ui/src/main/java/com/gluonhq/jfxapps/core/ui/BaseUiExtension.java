@@ -43,10 +43,14 @@ import com.gluonhq.jfxapps.core.ui.controller.ApplicationWindowTracker;
 import com.gluonhq.jfxapps.core.ui.controller.ContentPanelController;
 import com.gluonhq.jfxapps.core.ui.controller.ModeManagerController;
 import com.gluonhq.jfxapps.core.ui.controller.WorkspaceController;
-import com.gluonhq.jfxapps.core.ui.dialog.AlertDialog;
-import com.gluonhq.jfxapps.core.ui.dialog.DialogController;
-import com.gluonhq.jfxapps.core.ui.dialog.ErrorDialog;
-import com.gluonhq.jfxapps.core.ui.dialog.TextViewDialog;
+import com.gluonhq.jfxapps.core.ui.dialog.ModalWindowImpl;
+import com.gluonhq.jfxapps.core.ui.dialog.application.ApplicationDialogController;
+import com.gluonhq.jfxapps.core.ui.dialog.application.ApplicationMessageController;
+import com.gluonhq.jfxapps.core.ui.dialog.application.ApplicationMessageDialog;
+import com.gluonhq.jfxapps.core.ui.dialog.instance.AlertDialog;
+import com.gluonhq.jfxapps.core.ui.dialog.instance.DialogController;
+import com.gluonhq.jfxapps.core.ui.dialog.instance.ErrorDialog;
+import com.gluonhq.jfxapps.core.ui.dialog.instance.TextViewDialog;
 import com.gluonhq.jfxapps.core.ui.dock.AnnotatedViewAttachmentProvider;
 import com.gluonhq.jfxapps.core.ui.dock.DockPanelController;
 import com.gluonhq.jfxapps.core.ui.dock.DockViewControllerImpl;
@@ -113,6 +117,9 @@ public class BaseUiExtension implements OpenExtension {
                 AnnotatedViewAttachmentProvider.class,
                 ApplicationInstanceController.class,
                 ApplicationWindowTracker.class,
+                ApplicationDialogController.class,
+                ApplicationMessageDialog.class,
+                ApplicationMessageController.class,
                 BackgroundImagePreference.class,
                 ChangeDockTypeAction.class,
                 CloseDockAction.class,
@@ -143,6 +150,7 @@ public class BaseUiExtension implements OpenExtension {
                 MessageLog.class,
                 MessagePanelController.class,
                 MessagePopupController.class,
+                ModalWindowImpl.class,
                 ModeManagerController.class,
                 MoveToDockAction.class,
                 NoPickRefiner.class,

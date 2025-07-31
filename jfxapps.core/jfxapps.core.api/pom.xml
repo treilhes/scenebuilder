@@ -41,7 +41,6 @@
             <groupId>org.pdfsam.rxjava3</groupId>
             <artifactId>rxjavafx</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.starter</artifactId>

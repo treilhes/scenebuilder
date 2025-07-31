@@ -45,7 +45,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
+import com.gluonhq.jfxapps.core.api.application.ApplicationActionFactory;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
+import com.gluonhq.jfxapps.core.api.document.DocumentActionFactory;
 import com.gluonhq.jfxapps.core.api.fs.RecentItems;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
@@ -59,7 +61,7 @@ import javafx.stage.Stage;
 
 @JfxAppsTest
 @ContextConfiguration(classes = { WelcomeDialogWindowControllerTest.Config.class, TemplatesSelectionController.class,
-        WelcomeDialogWindowController.class })
+        WelcomeDialogWindowController.class, TemplateLoader.class })
 class WelcomeDialogWindowControllerTest {
 
     @TestConfiguration
@@ -67,6 +69,15 @@ class WelcomeDialogWindowControllerTest {
         @Bean
         InstancesManager instancesManager() {
             return Mockito.mock(InstancesManager.class);
+        }
+
+        @Bean
+        ApplicationActionFactory applicationActionFactory() {
+            return Mockito.mock(ApplicationActionFactory.class);
+        }
+        @Bean
+        DocumentActionFactory documentActionFactory() {
+            return Mockito.mock(DocumentActionFactory.class);
         }
 
         @Bean

@@ -34,8 +34,8 @@
 package com.oracle.javafx.scenebuilder.tools.driver.node;
 
 import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractGesture;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractGenericPring;
@@ -55,7 +55,7 @@ public abstract class AbstractNodePring<T extends Node> extends AbstractGenericP
 
     public AbstractNodePring(
             Workspace workspace,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             SelectWithPringGesture.Factory selectWithPringGestureFactory,
             Class<T> sceneGraphClass) {
         super(workspace, documentManager, sceneGraphClass);

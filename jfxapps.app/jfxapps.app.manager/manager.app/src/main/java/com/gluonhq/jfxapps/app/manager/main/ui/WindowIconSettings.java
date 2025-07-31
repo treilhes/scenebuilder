@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,14 +33,14 @@
  */
 package com.gluonhq.jfxapps.app.manager.main.ui;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-@Singleton
+@ApplicationSingleton
 public class WindowIconSettings implements IconSetting {
 
     public static final String APP_ICON_16 = WindowIconSettings.class.getResource("/manager.png").toString();

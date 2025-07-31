@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -56,15 +56,16 @@ class HudWindowControllerTest {
 
     @Test
     void should_load_the_hud_fxml(StageBuilder stageBuilder) {
-        var testStage = stageBuilder.controller(HudWindowController.class).show();
-        assertNotNull(testStage.getController().getRoot());
+        try(var testStage = stageBuilder.controller(HudWindowController.class).show()){
+            assertNotNull(testStage.getController().getRoot());
+        }
     }
 
     @Test
     void should_create_3_rows_with_only_2_lines_with_values(StageBuilder stageBuilder, FxRobot robot) {
         AtomicReference<Button> b = new AtomicReference<>();
 
-        var testStage = stageBuilder.controller(HudWindowController.class)
+        try(var testStage = stageBuilder.controller(HudWindowController.class)
                 .size(800, 600)
                 .css("""
                     #gridPane {
@@ -77,46 +78,47 @@ class HudWindowControllerTest {
                     s.show();
                     return b.get();
                 })
-                .show();
+                .show()) {
 
-        final String name1 = "SomeName";
-        final String value1 = "DLKJDK";
+            final String name1 = "SomeName";
+            final String value1 = "DLKJDK";
 
-        final String name2 = "SomeName2";
-        final String value2 = "DLKJDK3";
+            final String name2 = "SomeName2";
+            final String value2 = "DLKJDK3";
 
-        HudWindowController hud = testStage.getController();
+            HudWindowController hud = testStage.getController();
 
-        robot.interact(() -> {
-            hud.setRowCount(3);
-            hud.setNameAtRowIndex(name1, 0);
-            hud.setValueAtRowIndex(value1, 0);
+            robot.interact(() -> {
+                hud.setRowCount(3);
+                hud.setNameAtRowIndex(name1, 0);
+                hud.setValueAtRowIndex(value1, 0);
 
-            hud.setNameAtRowIndex(name2, 2);
-            hud.setValueAtRowIndex(value2, 2);
+                hud.setNameAtRowIndex(name2, 2);
+                hud.setValueAtRowIndex(value2, 2);
 
-            hud.openWindow(b.get());
-        });
+                hud.openWindow(b.get());
+            });
 
-        String idName1 = String.format(HudWindowController.NAME_LABEL_ID_FORMAT, 0);
-        String idValue1 = String.format(HudWindowController.VALUE_LABEL_ID_FORMAT, 0);
+            String idName1 = String.format(HudWindowController.NAME_LABEL_ID_FORMAT, 0);
+            String idValue1 = String.format(HudWindowController.VALUE_LABEL_ID_FORMAT, 0);
 
-        String idName2 = String.format(HudWindowController.NAME_LABEL_ID_FORMAT, 2);
-        String idValue2 = String.format(HudWindowController.VALUE_LABEL_ID_FORMAT, 2);
+            String idName2 = String.format(HudWindowController.NAME_LABEL_ID_FORMAT, 2);
+            String idValue2 = String.format(HudWindowController.VALUE_LABEL_ID_FORMAT, 2);
 
-        FxAssert.verifyThat("#" + idName1, Objects::nonNull);
-        FxAssert.verifyThat("#" + idValue1, Objects::nonNull);
+            FxAssert.verifyThat("#" + idName1, Objects::nonNull);
+            FxAssert.verifyThat("#" + idValue1, Objects::nonNull);
 
-        FxAssert.verifyThat("#" + idName1, LabeledMatchers.hasText(name1));
-        FxAssert.verifyThat("#" + idValue1, LabeledMatchers.hasText(value1));
+            FxAssert.verifyThat("#" + idName1, LabeledMatchers.hasText(name1));
+            FxAssert.verifyThat("#" + idValue1, LabeledMatchers.hasText(value1));
 
-        FxAssert.verifyThat("#" + idName2, Objects::nonNull);
-        FxAssert.verifyThat("#" + idValue2, Objects::nonNull);
+            FxAssert.verifyThat("#" + idName2, Objects::nonNull);
+            FxAssert.verifyThat("#" + idValue2, Objects::nonNull);
 
-        FxAssert.verifyThat("#" + idName2, LabeledMatchers.hasText(name2));
-        FxAssert.verifyThat("#" + idValue2, LabeledMatchers.hasText(value2));
+            FxAssert.verifyThat("#" + idName2, LabeledMatchers.hasText(name2));
+            FxAssert.verifyThat("#" + idValue2, LabeledMatchers.hasText(value2));
 
-        robot.interact(hud::closeWindow);
+            robot.interact(hud::closeWindow);
+        }
     }
 
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -77,6 +77,9 @@ public class MetadataSourceMojo extends JfxAppsAbstractMojo {
 
     @Parameter(property = "moduleName", required = false, defaultValue = "${project.artifactId}")
     String moduleName;
+
+    @Parameter(property = "parentUuid", required = true)
+    String parentUuid;
 
     @Parameter(property = "uuid", required = true)
     String uuid;
@@ -220,6 +223,7 @@ public class MetadataSourceMojo extends JfxAppsAbstractMojo {
             javaContext.addModuleRequire(s);
         }
 
+        javaContext.setParentUuid(parentUuid);
         javaContext.setUuid(uuid);
 
         javaContext.setExtensionName(extensionName);

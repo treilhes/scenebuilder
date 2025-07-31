@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.core.ui.template;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -52,6 +53,7 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBar;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
@@ -159,6 +161,9 @@ class DocumentWindowControllerTest {
 
     // @formatter:off
     private ScenebuilderWindowController getInstance() {
+        DockFactory dockFactory = Mockito.mock(DockFactory.class);
+        Mockito.when(dockFactory.create(any(), any(String.class))).thenReturn(leftDockController, rightDockController, bottomDockController);
+
         ScenebuilderWindowController dwc = new ScenebuilderWindowController(
                 i18n,
                 jfxAppPlatform,
@@ -170,9 +175,7 @@ class DocumentWindowControllerTest {
                 () -> rightDividerHPos,
                 () -> bottomDividerVPos,
 
-                leftDockController,
-                rightDockController,
-                bottomDockController,
+                dockFactory,
 
                 menuBar,
                 messageBar,

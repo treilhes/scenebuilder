@@ -33,8 +33,6 @@
  */
 package com.gluonhq.jfxapps.core.ui.controller;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -48,10 +46,10 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingle
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
+import com.gluonhq.jfxapps.core.api.application.ApplicationClassloader;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloaderDispatcher;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.lifecycle.DisposeWithDocument;
@@ -102,7 +100,7 @@ public class ApplicationInstanceController implements ApplicationInstance {
     private final JfxAppContext context;
     private final JfxAppPlatform jfxAppPlatform;
     private final JavafxThreadClassloaderDispatcher dispatcher;
-    private final JavafxThreadClassloader fxThreadClassloader;
+    private final ApplicationClassloader fxThreadClassloader;
     private final MainInstanceWindow documentWindow;
     private final FileSystem fileSystem;
 
@@ -115,7 +113,7 @@ public class ApplicationInstanceController implements ApplicationInstance {
     private final Provider<Optional<List<DisposeWithDocument>>> finalizations;
 
     private final InstancesManager main;
-    private final ApplicationEvents sceneBuilderManager;
+    private final ApplicationEvents applicationEvents;
 
     private FXOMDocument fxomDocument;
     private final InlineEdit inlineEdit;
@@ -134,7 +132,7 @@ public class ApplicationInstanceController implements ApplicationInstance {
             JfxAppContext context,
             JfxAppPlatform jfxAppPlatform,
             JavafxThreadClassloaderDispatcher dispatcher,
-            JavafxThreadClassloader fxThreadClassloader,
+            ApplicationClassloader fxThreadClassloader,
             FileSystem fileSystem,
             Preferences preferences,
             InlineEdit inlineEdit,
@@ -144,7 +142,7 @@ public class ApplicationInstanceController implements ApplicationInstance {
             DockManager dockManager,
             DockViewController viewMenuController,
             InstancesManager main,
-            ApplicationEvents sceneBuilderManager,
+            ApplicationEvents applicationEvents,
             WindowPreferenceTracker tracker,
             Provider<Optional<List<InitWithDocument>>> initializations,
             Provider<Optional<List<DisposeWithDocument>>> finalizations,
@@ -162,7 +160,7 @@ public class ApplicationInstanceController implements ApplicationInstance {
         this.documentWindow = documentWindow;
         //this.workspace = workspace;
         this.main = main;
-        this.sceneBuilderManager = sceneBuilderManager;
+        this.applicationEvents = applicationEvents;
         //this.recentItemsPreference = recentItemsPreference;
         //this.wildcardImportsPreference = wildcardImportsPreference;
         //this.menuBarController = menuBarController;
@@ -277,7 +275,7 @@ public class ApplicationInstanceController implements ApplicationInstance {
 
         applicationInstanceEvents.closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> close());
 
-        sceneBuilderManager.closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> close());
+        applicationEvents.closed().subscribeOn(JavaFxScheduler.platform()).subscribe(c -> close());
 
         jfxAppPlatform.runOnFxThreadWithActiveScope(() -> {
             initializeDocumentWindow();
@@ -401,7 +399,7 @@ public class ApplicationInstanceController implements ApplicationInstance {
     @Override
     public void onFocus() {
         jfxAppPlatform.setCurrentScope(this);
-        sceneBuilderManager.documentScoped().set(this);
+        applicationEvents.documentScoped().set(this);
     }
 
     @Override
@@ -460,15 +458,20 @@ public class ApplicationInstanceController implements ApplicationInstance {
         return fxomDocument == null ? null : fxomDocument.getLocation();
     }
 
-    @Override
-    public void loadFromFile(File file, boolean keepTrackOfLocation) throws IOException {
-        fileSystem.loadFromFile(file, keepTrackOfLocation);
-    }
-
-    @Override
-    public void loadBlank() {
-        fileSystem.loadDefaultContent();
-    }
+//    @Override
+//    public void loadFromFile(File file, boolean keepTrackOfLocation) throws IOException {
+//        fileSystem.loadFromFile(file, keepTrackOfLocation);
+//    }
+//
+//    @Override
+//    public void loadFromURL(URL url, boolean keepTrackOfLocation) throws IOException {
+//        fileSystem.loadFromURL(url, keepTrackOfLocation);
+//    }
+//
+//    @Override
+//    public void loadBlank() {
+//        fileSystem.loadDefaultContent();
+//    }
 
     @Override
     public JfxAppContext getContext() {

@@ -44,13 +44,16 @@ import com.gluonhq.jfxapps.app.manager.store.model.ApplicationController;
 import com.gluonhq.jfxapps.app.manager.store.ui.app.ApplicationDetailController;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -87,6 +90,9 @@ public class ApplicationItemController extends AbstractFxmlController {
 
     @FXML
     private Button viewButton;
+
+    @FXML
+    private Button launchButton;
 
     private final StoreActionFactory storeActionFactory;
 
@@ -125,15 +131,26 @@ public class ApplicationItemController extends AbstractFxmlController {
         this.item = applicationItem;
         this.modelController = modelController;
 
+        var isRunnable = new SimpleBooleanProperty(!Extension.MANAGER_APP_ID.equals(item.uuidProperty().get()));
+        var isMandatory = new SimpleBooleanProperty(Extension.MANAGER_APP_ID.equals(item.uuidProperty().get()));
+        var isInstalled = applicationItem.installedProperty();
+
         titleLabel.textProperty().bind(applicationItem.nameProperty());
         descriptionLabel.textProperty().bind(applicationItem.descriptionProperty());
         versionLabel.textProperty().bind(applicationItem.versionProperty());
         rectImage.fillProperty().bind(createImageBinding(applicationItem));
 
-        installButton.visibleProperty().bind(applicationItem.installedProperty().not());
-        uninstallButton.visibleProperty().bind(applicationItem.installedProperty());
-        installButton.managedProperty().bind(applicationItem.installedProperty().not());
-        uninstallButton.managedProperty().bind(applicationItem.installedProperty());
+        var installable = BooleanBinding.booleanExpression(isInstalled.not());
+        installButton.visibleProperty().bind(installable);
+        installButton.managedProperty().bind(installable);
+
+        var uninstallable = BooleanBinding.booleanExpression(isInstalled.and(isMandatory.not()));
+        uninstallButton.visibleProperty().bind(uninstallable);
+        uninstallButton.managedProperty().bind(uninstallable);
+
+        var launchable = BooleanBinding.booleanExpression(isInstalled.and(isRunnable));
+        launchButton.visibleProperty().bind(launchable);
+        launchButton.managedProperty().bind(launchable);
     }
 
     @FXML
@@ -156,6 +173,11 @@ public class ApplicationItemController extends AbstractFxmlController {
         var appController = context.getBean(ApplicationDetailController.class);
         appController.load(item, modelController);
         storeActionFactory.switchNext(appController.getRoot()).checkAndPerform();
+    }
+
+    @FXML
+    void launch(ActionEvent event) {
+        modelController.launch(item);
     }
 
     private ObjectBinding<ImagePattern> createImageBinding(Application applicationItem) {

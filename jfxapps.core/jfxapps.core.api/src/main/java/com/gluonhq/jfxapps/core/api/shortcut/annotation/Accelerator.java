@@ -39,7 +39,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractCommonUiController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractInstanceUiController;
 
 import javafx.scene.input.KeyCode;
 
@@ -54,5 +54,5 @@ public @interface Accelerator {
     public String macosAccelerator() default "";
     public KeyCode[] acceleratorKeyCodes() default {};
     public KeyCode[] macosAcceleratorKeyCodes() default {};
-    public Class<? extends AbstractCommonUiController> whenFocusing() default AbstractCommonUiController.class;
+    public Class<? extends AbstractInstanceUiController> whenFocusing() default AbstractInstanceUiController.class;
 }

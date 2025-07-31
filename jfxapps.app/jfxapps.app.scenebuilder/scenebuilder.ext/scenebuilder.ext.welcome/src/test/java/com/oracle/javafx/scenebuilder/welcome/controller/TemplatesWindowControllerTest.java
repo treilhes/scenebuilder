@@ -43,6 +43,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
+import com.gluonhq.jfxapps.core.api.application.ApplicationActionFactory;
+import com.gluonhq.jfxapps.core.api.application.InstancesManager;
+import com.gluonhq.jfxapps.core.api.document.DocumentActionFactory;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
@@ -55,11 +58,25 @@ import javafx.stage.Stage;
 
 @JfxAppsTest
 @ContextConfiguration(classes = { TemplatesWindowControllerTest.Config.class, TemplatesSelectionController.class,
-        TemplatesWindowController.class })
+        TemplatesWindowController.class, TemplateLoader.class })
 class TemplatesWindowControllerTest {
 
     @TestConfiguration
     static class Config {
+        @Bean
+        InstancesManager instancesManager() {
+            return Mockito.mock(InstancesManager.class);
+        }
+
+        @Bean
+        ApplicationActionFactory applicationActionFactory() {
+            return Mockito.mock(ApplicationActionFactory.class);
+        }
+        @Bean
+        DocumentActionFactory documentActionFactory() {
+            return Mockito.mock(DocumentActionFactory.class);
+        }
+
         @Bean
         MainInstanceWindow mainInstanceWindow() {
             return Mockito.mock(MainInstanceWindow.class);

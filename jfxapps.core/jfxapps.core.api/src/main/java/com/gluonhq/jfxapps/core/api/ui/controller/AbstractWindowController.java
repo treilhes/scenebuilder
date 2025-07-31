@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -89,7 +89,7 @@ public abstract class AbstractWindowController implements InstanceWindow {
     private CloseHandler closeHandler;
     private FocusHandler focusHandler;
 
-    private final ApplicationEvents sceneBuilderManager;
+    private final ApplicationEvents applicationEvents;
     private final IconSetting iconSetting;
 
     /**
@@ -98,8 +98,8 @@ public abstract class AbstractWindowController implements InstanceWindow {
      * @param api the scene builder api
      * @param owner the owner
      */
-    public AbstractWindowController(ApplicationEvents sceneBuilderManager, IconSetting iconSetting, InstanceWindow owner) {
-        this(sceneBuilderManager, iconSetting, owner, true);
+    public AbstractWindowController(ApplicationEvents applicationEvents, IconSetting iconSetting, InstanceWindow owner) {
+        this(applicationEvents, iconSetting, owner, true);
     }
 
     /**
@@ -110,7 +110,7 @@ public abstract class AbstractWindowController implements InstanceWindow {
      * @param sizeToScene the size to scene
      */
     public AbstractWindowController(ApplicationEvents sceneBuilderManager, IconSetting iconSetting, InstanceWindow owner, boolean sizeToScene) {
-        this.sceneBuilderManager = sceneBuilderManager;
+        this.applicationEvents = sceneBuilderManager;
         this.iconSetting = iconSetting;
         this.owner = owner;
         this.sizeToScene = sizeToScene;
@@ -128,7 +128,7 @@ public abstract class AbstractWindowController implements InstanceWindow {
         assert root != null;
         this.root = root;
 
-        sceneBuilderManager.stylesheetConfig().subscribeOn(JavaFxScheduler.platform()).subscribe(s -> {
+        applicationEvents.stylesheetConfig().subscribeOn(JavaFxScheduler.platform()).subscribe(s -> {
             toolStylesheetDidChange(s);
         });
     }
@@ -220,12 +220,14 @@ public abstract class AbstractWindowController implements InstanceWindow {
      * Opens this window and place it in front.
      */
     @Override
-
     public void openWindow() {
+
         JfxAppPlatform.ensureFxThread(() -> {
             iconSetting.setWindowIcon(getStage());
-            getStage().show();
-            getStage().toFront();
+            var stage = getStage();
+            applicationEvents.newWindow().set(stage);
+            stage.show();
+            stage.toFront();
         });
     }
 

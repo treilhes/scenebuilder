@@ -35,9 +35,9 @@ package com.oracle.javafx.scenebuilder.tools.driver.tab;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.util.javafx.BoundsUtils;
@@ -73,7 +73,7 @@ public class TabHandles extends AbstractResilientHandles<Tab> {
     public TabHandles(
             SbDriver driver,
             Workspace workspace,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory) {
         super(driver, workspace, documentManager, discardGestureFactory, resizeGestureFactory, Tab.class);

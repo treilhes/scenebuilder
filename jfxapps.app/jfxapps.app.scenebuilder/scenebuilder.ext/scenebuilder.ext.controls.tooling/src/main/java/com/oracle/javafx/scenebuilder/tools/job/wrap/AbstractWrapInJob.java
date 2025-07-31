@@ -46,9 +46,9 @@ import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
 import com.gluonhq.jfxapps.core.api.fxom.mask.HierarchyMask;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -83,7 +83,7 @@ public abstract class AbstractWrapInJob extends BatchSelectionJob {
     //@formatter:off
     public AbstractWrapInJob(
             JobExtensionFactory extensionFactory,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             Selection selection,
             FXOMObjectMask.Factory designMaskFactory,
             SbMetadata metadata,

@@ -40,6 +40,7 @@ import com.gluonhq.jfxapps.app.manager.store.model.Plugin;
 import com.gluonhq.jfxapps.app.manager.store.model.PluginController;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.loader.ApplicationManager;
+import com.gluonhq.jfxapps.boot.api.loader.OpenCommandEvent;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryManager;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 
@@ -101,7 +102,10 @@ public class ApplicationModelControllerImpl implements PluginController {
     }
 
     public void launch(Application application) {
-        appManager.startApplication(application.infoProperty().get().getUuid());
+        var uuid = application.infoProperty().get().getUuid();
+        var openCommandEvent = new OpenCommandEvent(uuid, null);
+        appManager.startApplication(uuid);
+        appManager.send(openCommandEvent);
     }
 
     @Override

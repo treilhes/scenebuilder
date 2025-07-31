@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.core.ui.settings;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.settings.AbstractSetting;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 
@@ -41,7 +41,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-@ApplicationInstanceSingleton
+@ApplicationSingleton
 public class WindowIconSetting extends AbstractSetting implements IconSetting {
 
 	public static final String APP_ICON_16 = WindowIconSetting.class.getResource("SceneBuilderLogo_16.png").toString();

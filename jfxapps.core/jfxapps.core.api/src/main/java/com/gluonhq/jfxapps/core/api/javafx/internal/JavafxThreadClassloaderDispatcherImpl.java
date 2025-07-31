@@ -43,7 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
-import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
+import com.gluonhq.jfxapps.core.api.application.ApplicationClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloaderDispatcher;
 
 import javafx.application.Platform;
@@ -61,9 +61,9 @@ public class JavafxThreadClassloaderDispatcherImpl implements JavafxThreadClassl
 
     private static final Logger log = LoggerFactory.getLogger(JavafxThreadClassloaderDispatcherImpl.class);
 
-    private final Map<Window, JavafxThreadClassloader> windowToClassloader = new ConcurrentHashMap<>();
+    private final Map<Window, ApplicationClassloader> windowToClassloader = new ConcurrentHashMap<>();
 
-    private Map<Predicate<Window>[], JavafxThreadClassloader> predicatesToWindow = new ConcurrentHashMap<>();
+    private Map<Predicate<Window>[], ApplicationClassloader> predicatesToWindow = new ConcurrentHashMap<>();
 
     JavafxThreadClassloaderDispatcherImpl() {
 
@@ -81,7 +81,7 @@ public class JavafxThreadClassloaderDispatcherImpl implements JavafxThreadClassl
     }
 
     @Override
-    public void register(Window window, JavafxThreadClassloader classloader) {
+    public void register(Window window, ApplicationClassloader classloader) {
         log.info("Registering window {} with classloader {}", window, classloader);
         windowToClassloader.put(window, classloader);
     }
@@ -141,7 +141,7 @@ public class JavafxThreadClassloaderDispatcherImpl implements JavafxThreadClassl
     }
 
     @Override
-    public void registerWithNextWindow(JavafxThreadClassloader classloader, Predicate<Window>... predicates) {
+    public void registerWithNextWindow(ApplicationClassloader classloader, Predicate<Window>... predicates) {
         if (classloader == null)
             throw new IllegalArgumentException("classloader cannot be null");
         predicatesToWindow.put(predicates, classloader);

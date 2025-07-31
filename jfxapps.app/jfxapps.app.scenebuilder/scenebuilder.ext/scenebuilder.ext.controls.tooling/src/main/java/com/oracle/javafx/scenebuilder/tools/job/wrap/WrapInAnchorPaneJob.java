@@ -41,9 +41,9 @@ import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 import javafx.scene.layout.AnchorPane;
@@ -57,7 +57,7 @@ public final class WrapInAnchorPaneJob extends AbstractWrapInSubComponentJob {
     //@formatter:off
     protected WrapInAnchorPaneJob(
             JobExtensionFactory extensionFactory,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             Selection selection,
             SbMetadata metadata,
             FXOMObjectMask.Factory designMaskFactory,

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -46,6 +46,7 @@ public class JavaGenerationContext {
     private String extensionName;
     private String moduleName;
     private String metadataPrefix;
+    private UUID parentUuid;
     private UUID uuid;
     private final List<String> moduleRequires = new ArrayList<>();
 
@@ -96,6 +97,12 @@ public class JavaGenerationContext {
     }
     public void setUuid(String uuid) {
         this.uuid = UUID.fromString(uuid);
+    }
+    public UUID getParentUuid() {
+        return parentUuid;
+    }
+    public void setParentUuid(String parentUuid) {
+        this.parentUuid = UUID.fromString(parentUuid);
     }
     public String getExtensionName() {
         return extensionName;

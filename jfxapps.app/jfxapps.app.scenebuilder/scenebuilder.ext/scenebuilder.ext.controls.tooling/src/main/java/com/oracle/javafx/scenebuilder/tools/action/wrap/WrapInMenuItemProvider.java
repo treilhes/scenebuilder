@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,7 +44,6 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
-import com.oracle.javafx.scenebuilder.editor.fxml.actions.SendBackwardAction;
 
 import javafx.scene.control.Menu;
 
@@ -68,7 +67,7 @@ public class WrapInMenuItemProvider implements MenuItemProvider, ContextMenuItem
     public List<MenuItemAttachment> menuItems() {
 
         Menu menu = menuBuilder.menu().id(MENU_ID).title(MENU_LABEL).build();
-        MenuItemAttachment attachment = MenuItemAttachment.create(menu, DefaultMenu.ARRANGE_MENU_ID, PositionRequest.AsLastChild);
+        MenuItemAttachment attachment = MenuItemAttachment.create(menu, DefaultMenu.Arrange.ID, PositionRequest.AsLastChild);
         return List.of(
                 attachment,
                 MenuItemAttachment.create(menuBuilder.separator().build(), MENU_ID, PositionRequest.AsPreviousSibling)

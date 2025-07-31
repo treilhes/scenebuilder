@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -51,12 +51,12 @@ import com.gluonhq.jfxapps.core.api.fxom.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.Tunable;
 import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.HudWindow;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.api.guide.EditCurveGuide;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -101,7 +101,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
     private final JobManager jobManager;
     private final SbDriver driver;
     private final HudWindow hudWindow;
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents documentManager;
     private final FxomJobsFactory fxomJobsFactory;
 
     private Parent closestParent;
@@ -113,7 +113,7 @@ public class EditCurveGesture extends AbstractMouseGesture {
             SbDriver driver,
             FXOMObjectMask.Factory designMaskFactory,
             JobManager jobManager,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             HudWindow hudWindow,
             FxomJobsFactory fxomJobsFactory) {
         //@formatter:on

@@ -49,6 +49,7 @@ import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock.Orientation;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBar;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageBar;
@@ -141,10 +142,10 @@ public class ScenebuilderWindowController extends AbstractFxmlWindowController i
             Provider<LeftDividerHPosPreference> leftDividerHPos,
             Provider<RightDividerHPosPreference> rightDividerHPos,
             Provider<BottomDividerVPosPreference> bottomDividerVPos,
-
-            Dock leftDockController,
-            Dock rightDockController,
-            Dock bottomDockController,
+            DockFactory dockFactory,
+//            Dock leftDockController,
+//            Dock rightDockController,
+//            Dock bottomDockController,
 
             MenuBar menuBar,
             MessageBar messageBar,
@@ -156,23 +157,23 @@ public class ScenebuilderWindowController extends AbstractFxmlWindowController i
         this.jfxAppPlatform = jfxAppPlatform;
         this.documentManager = documentManager;
 
-        this.leftDockController = leftDockController;
-        this.rightDockController = rightDockController;
-        this.bottomDockController = bottomDockController;
-
-        this.leftDockController.setId(Docks.LEFT_DOCK_UUID);
-        this.rightDockController.setId(Docks.RIGHT_DOCK_UUID);
-        this.bottomDockController.setId(Docks.BOTTOM_DOCK_UUID);
-
-        this.leftDockController.setName(getI18n().getString("dock.name.left"));
-        this.rightDockController.setName(getI18n().getString("dock.name.right"));
-        this.bottomDockController.setName(getI18n().getString("dock.name.bottom"));
+        this.leftDockController = dockFactory.create(Docks.LEFT_DOCK_UUID, "dock.name.left");
+        this.rightDockController = dockFactory.create(Docks.RIGHT_DOCK_UUID, "dock.name.right");
+        this.bottomDockController = dockFactory.create(Docks.BOTTOM_DOCK_UUID, "dock.name.bottom");
+//
+//        this.leftDockController.setId(Docks.LEFT_DOCK_UUID);
+//        this.rightDockController.setId(Docks.RIGHT_DOCK_UUID);
+//        this.bottomDockController.setId(Docks.BOTTOM_DOCK_UUID);
+//
+//        this.leftDockController.setName(getI18n().getString("dock.name.left"));
+//        this.rightDockController.setName(getI18n().getString("dock.name.right"));
+//        this.bottomDockController.setName(getI18n().getString("dock.name.bottom"));
 
         this.bottomDockController.setMinimizedOrientation(Orientation.HORIZONTAL);
 
-        this.leftDockController.notifyDockCreated();
-        this.rightDockController.notifyDockCreated();
-        this.bottomDockController.notifyDockCreated();
+//        this.leftDockController.notifyDockCreated();
+//        this.rightDockController.notifyDockCreated();
+//        this.bottomDockController.notifyDockCreated();
 
         // preferences
         this.leftDividerHPos = leftDividerHPos;

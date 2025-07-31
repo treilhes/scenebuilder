@@ -112,7 +112,7 @@ public class JfxAppPlatformTest {
             }
         });
 
-        platform.runOnFxThreadWithScope(f1, futureTask::run);
+        platform.runOnFxThread(f1, futureTask::run);
 
         latch.await();
 
@@ -126,7 +126,7 @@ public class JfxAppPlatformTest {
     void documentScopeNotCreatedThrowException() {
         final FakeDocument f1 = new FakeDocument(null); // no scope created
         Assertions.assertThrows(RuntimeException.class, () -> {
-            platform.runOnFxThreadWithScope(f1, () -> {});
+            platform.runOnFxThread(f1, () -> {});
         });
     }
 
@@ -153,7 +153,7 @@ public class JfxAppPlatformTest {
             }
         });
 
-        platform.runOnFxThreadWithScope(f1, futureTask::run);
+        platform.runOnFxThread(f1, futureTask::run);
 
         latch.await();
 
@@ -193,7 +193,7 @@ public class JfxAppPlatformTest {
         FutureTask<Runnable> futureTask1 = new FutureTask<>(() -> {
             try {
                 final DocumentScopedObject scoped = context.getBean(DocumentScopedObject.class);
-                platform.runOnFxThreadWithScope(f2, futureTask2::run);
+                platform.runOnFxThread(f2, futureTask2::run);
                 final DocumentScopedObject scoped2 = context.getBean(DocumentScopedObject.class);
                 return () -> {
                     assertEquals(f1.getDocumentScopedObject(), scoped);
@@ -204,7 +204,7 @@ public class JfxAppPlatformTest {
             }
         });
 
-        platform.runOnFxThreadWithScope(f1, futureTask1::run);
+        platform.runOnFxThread(f1, futureTask1::run);
 
         latch.await();
 

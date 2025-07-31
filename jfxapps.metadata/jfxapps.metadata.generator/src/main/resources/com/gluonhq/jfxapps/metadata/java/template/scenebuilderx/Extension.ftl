@@ -47,7 +47,7 @@ public class ${context.extensionClassSimpleName} implements OpenExtension {
 
     @Override
     public UUID getParentId() {
-        return OpenExtension.ROOT_ID;
+        return UUID.fromString("${context.parentUuid}");
     }
 
     @Override

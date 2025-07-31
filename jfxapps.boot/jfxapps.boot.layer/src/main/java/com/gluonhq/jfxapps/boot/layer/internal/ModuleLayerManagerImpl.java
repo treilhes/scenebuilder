@@ -34,7 +34,6 @@
 package com.gluonhq.jfxapps.boot.layer.internal;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.module.Configuration;
 import java.lang.module.ModuleFinder;
 import java.lang.module.ModuleReference;
@@ -51,7 +50,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.zip.ZipFile;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -278,7 +276,8 @@ public class ModuleLayerManagerImpl implements ModuleLayerManager {
                     }
                 });
             }
-
+System.out.println();
+            layerContent.resolvePatchRequests();
             var content = layerContent.getPaths().toArray(Path[]::new);
             var patches = layerContent.getPatches();
 
@@ -363,6 +362,8 @@ public class ModuleLayerManagerImpl implements ModuleLayerManager {
          * ----- the folder contains a module-info.class file : add it to content
          * ----- the folder contains a jar file or a folder containing a module-info.class : add all children as content
          * ----- else it must be a folder containing classes : add it to content
+         *
+         * If it is a jar file, the jar can contain a patch.jpms file containing the name of a module to patch.
          * @param contentList
          * @param f
          * @throws IOException
@@ -382,12 +383,7 @@ public class ModuleLayerManagerImpl implements ModuleLayerManager {
                     try {
                         Files.list(f).forEach(p -> {
                             if (isJar.test(p)) {
-                                String patchedModule = tryGetPatchJpms(p);
-                                if (patchedModule == null) {
-                                    layerContent.addPath(p);
-                                } else {
-                                    layerContent.addPatch(patchedModule, p.toString());
-                                }
+                                handleJarFile(layerContent, p);
                             } else {
                                 layerContent.addPath(p);
                             }
@@ -404,14 +400,31 @@ public class ModuleLayerManagerImpl implements ModuleLayerManager {
             }
         }
 
-        private static String tryGetPatchJpms(Path path) {
-            try (ZipFile zf = new ZipFile(path.toFile())) {
-                InputStream in = zf.getInputStream(zf.getEntry("patch.jpms"));
-                return new String(in.readAllBytes()).trim();
-            } catch (Exception e) {}
+        private static void handleJarFile(LayerContent layerContent, Path p) {
+            var optionalPatch = JpmsPatch.tryGetPatchJpms(p);
 
-            return null;
+            if (optionalPatch.isEmpty()) {
+                layerContent.addPath(p);
+            } else {
+                var patch = optionalPatch.get();
+
+                if (patch.getPatchTarget() != null) {
+                    layerContent.addPatch(patch.getPatchTarget(), p.toString());
+                } else {
+                    // If no patch target is specified, we add the path to the layer content
+                    layerContent.addPath(p);
+                }
+
+                patch.getPatchRequests().forEach((moduleName, patchFile) -> {
+                    if (moduleName != null && !moduleName.isEmpty()) {
+                        layerContent.addPatchRequest(moduleName, patchFile);
+                    } else {
+                        logger.warn("Invalid patch request for module {} for file {} in {}", moduleName, patchFile, p);
+                    }
+                });
+            }
         }
+
     }
 
     /**

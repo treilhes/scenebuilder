@@ -60,5 +60,5 @@ public interface ApplicationRepository extends JpaRepository<ApplicationEntity, 
 
     @Modifying
     @Query("update Application a set a.version = a.nextVersion where a.id = :id")
-    void update(UUID uuid);
+    void update(@Param(value = "id") UUID uuid);
 }

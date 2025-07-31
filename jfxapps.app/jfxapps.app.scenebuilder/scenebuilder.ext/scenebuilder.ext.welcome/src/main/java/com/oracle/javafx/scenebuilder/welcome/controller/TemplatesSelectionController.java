@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,12 +42,11 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractApplicationUiController;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
@@ -61,8 +60,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-@ApplicationInstanceSingleton
-public class TemplatesSelectionController extends AbstractFxmlController {
+@ApplicationSingleton
+public class TemplatesSelectionController extends AbstractApplicationUiController {
 
     private static final Comparator<TemplateGroup> GROUP_COMPARATOR = Comparator.comparing(TemplateGroup::getOrderKey)
             .thenComparing(Comparator.comparing(TemplateGroup::getName));
@@ -86,13 +85,11 @@ public class TemplatesSelectionController extends AbstractFxmlController {
     //@formatter:off
     public TemplatesSelectionController(
             I18N i18n,
-            ApplicationEvents sceneBuilderManager,
-            ApplicationInstanceEvents applicationInstanceEvents,
+            ApplicationEvents applicationEvents,
             List<TemplateGroup> templateGroups,
             List<Template> templates) {
         //@formatter:on
-        super(i18n, sceneBuilderManager, applicationInstanceEvents,
-                TemplatesSelectionController.class.getResource("TemplatesSelection.fxml"));
+        super(i18n, applicationEvents, TemplatesSelectionController.class.getResource("TemplatesSelection.fxml"));
         this.templates = templates;
         this.templateGroups = templateGroups;
     }

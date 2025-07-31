@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.util.FXOMDocumentUtils;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
@@ -79,16 +80,17 @@ public class SkeletonViewController extends AbstractFxmlViewController {
     private FXOMDocument fxomDocument;
     private String documentName;
     private boolean dirty = true;
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents fxomEvents;
 
     public SkeletonViewController(
             I18N i18n,
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
+            FxomEvents fxomEvents,
             ViewMenu viewMenuController) {
         super(i18n, scenebuilderManager, documentManager, viewMenuController, SkeletonViewController.class.getResource("SkeletonWindow.fxml"));
 
-        this.documentManager = documentManager;
+        this.fxomEvents = fxomEvents;
     }
 
     private void setFxomDocument(FXOMDocument fxomDocument) {
@@ -128,8 +130,8 @@ public class SkeletonViewController extends AbstractFxmlViewController {
 
         formatCheckBox.selectedProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> update());
 
-        documentManager.fxomDocument().subscribe(fx -> setFxomDocument(fx));
-        documentManager.sceneGraphRevisionDidChange().subscribe(fx -> update());
+        fxomEvents.fxomDocument().subscribe(fx -> setFxomDocument(fx));
+        fxomEvents.sceneGraphRevisionDidChange().subscribe(fx -> update());
     }
 
     private void updateTitle() {

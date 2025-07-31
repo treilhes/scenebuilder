@@ -39,6 +39,7 @@ import com.gluonhq.jfxapps.app.manager.store.model.Application;
 import com.gluonhq.jfxapps.app.manager.store.model.ApplicationController;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.boot.api.loader.ApplicationManager;
+import com.gluonhq.jfxapps.boot.api.loader.OpenCommandEvent;
 import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryManager;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -97,5 +98,13 @@ public class RootModelControllerImpl implements ApplicationController{
     public void update(Application application) {
         registryManager.update(application.infoProperty().get());
         application.versionProperty().set(application.nextVersionProperty().get());
+    }
+
+    @Override
+    public void launch(Application application) {
+        var uuid = application.infoProperty().get().getUuid();
+        var openCommandEvent = new OpenCommandEvent(uuid, null);
+        appManager.startApplication(uuid);
+        appManager.send(openCommandEvent);
     }
 }

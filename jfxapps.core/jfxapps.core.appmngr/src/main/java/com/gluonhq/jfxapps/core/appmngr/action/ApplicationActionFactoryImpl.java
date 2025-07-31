@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,14 +33,20 @@
  */
 package com.gluonhq.jfxapps.core.appmngr.action;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import java.net.URL;
+import java.util.function.Consumer;
+
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.application.ApplicationActionFactory;
-import com.gluonhq.jfxapps.core.appmngr.action.impl.CloseFileAction;
-import com.gluonhq.jfxapps.core.appmngr.action.impl.QuitScenebuilderAction;
+import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
+import com.gluonhq.jfxapps.core.appmngr.action.impl.CloseAllInstancesAction;
+import com.gluonhq.jfxapps.core.appmngr.action.impl.CloseInstanceAction;
+import com.gluonhq.jfxapps.core.appmngr.action.impl.LookupUnusedInstanceAction;
+import com.gluonhq.jfxapps.core.appmngr.action.impl.NewInstanceAction;
 
-@ApplicationInstanceSingleton
+@ApplicationSingleton
 public class ApplicationActionFactoryImpl implements ApplicationActionFactory {
 
     private final ActionFactory actionFactory;
@@ -50,12 +56,32 @@ public class ApplicationActionFactoryImpl implements ApplicationActionFactory {
     }
 
     @Override
+    public Action newInstance() {
+        return actionFactory.create(NewInstanceAction.class);
+    }
+
+    @Override
+    public Action newInstance(Consumer<ApplicationInstance> consumer) {
+        return actionFactory.create(NewInstanceAction.class, a -> a.setConsumer(consumer));
+    }
+
+    @Override
+    public Action lookupUnusedInstance(URL lookupUrl, Consumer<ApplicationInstance> consumer) {
+        return actionFactory.create(LookupUnusedInstanceAction.class, a -> a.setParameters(lookupUrl, consumer));
+    }
+
+    @Override
     public Action closeInstance(boolean force) {
-        return actionFactory.create(CloseFileAction.class, a -> a.setForce(force));
+        return actionFactory.create(CloseInstanceAction.class, a -> a.setForce(force));
+    }
+
+    @Override
+    public Action closeAllInstances() {
+        return actionFactory.create(CloseAllInstancesAction.class);
     }
 
     @Override
     public Action quitApplication() {
-        return actionFactory.create(QuitScenebuilderAction.class);
+        return actionFactory.create(CloseAllInstancesAction.class);
     }
 }

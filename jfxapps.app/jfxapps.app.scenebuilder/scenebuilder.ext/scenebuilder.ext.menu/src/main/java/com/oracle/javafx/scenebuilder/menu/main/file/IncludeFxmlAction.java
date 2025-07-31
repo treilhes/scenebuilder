@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,9 +39,9 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceProtot
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -65,7 +65,7 @@ public class IncludeFxmlAction extends AbstractAction {
 
     public final static String MENU_ID = "includeFxmlMenu"; //NOCHECK
 
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents documentManager;
     private final SbSelectionJobsFactory selectionJobsFactory;
     private final JobManager jobManager;
     private final FileHelper fileHelper;
@@ -75,7 +75,7 @@ public class IncludeFxmlAction extends AbstractAction {
             ActionExtensionFactory extensionFactory,
             JobManager jobManager,
             SbSelectionJobsFactory selectionJobsFactory,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             FileHelper fileHelper) {
         super(i18n, extensionFactory);
         this.documentManager = documentManager;

@@ -45,10 +45,10 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceProtot
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -94,7 +94,7 @@ public final class AddRowConstraintsJob extends BatchDocumentJob {
 
     protected AddRowConstraintsJob(JfxAppContext context,
             JobExtensionFactory extensionFactory,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             FxomJobsFactory fxomJobsFactory,
             GridPaneHierarchyMask.Factory maskFactory) {
         super(extensionFactory, documentManager);

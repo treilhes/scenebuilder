@@ -33,22 +33,16 @@
  */
 package com.gluonhq.jfxapps.core.api.subjects;
 
-import java.nio.file.Path;
-import java.util.Map;
-
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractCommonUiController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractInstanceUiController;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 
-import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.ReplaySubject;
-import io.reactivex.rxjava3.subjects.Subject;
 
 /**
  * This interface describe events related to the currently edited document
  *
  */
-// TODO this interface must be split in 2: document events / fxml specific events
 public interface ApplicationInstanceEvents {
     /**
      * The current "closed" state has changed.
@@ -66,7 +60,7 @@ public interface ApplicationInstanceEvents {
      */
     SubjectItem<Boolean> dependenciesLoaded();
 
-    SubjectItem<AbstractCommonUiController> focused();
+    SubjectItem<AbstractInstanceUiController> focused();
     SubjectItem<AbstractFxmlViewController> focusedView();
 
     @ApplicationInstanceSingleton
@@ -77,9 +71,9 @@ public interface ApplicationInstanceEvents {
         private final SubjectItem<Boolean> closed;
         private final SubjectItem<Boolean> dependenciesLoaded;
         private final SubjectItem<ClassLoader> classLoaderDidChange;
-        private final SubjectItem<AbstractCommonUiController> focused;
+        private final SubjectItem<AbstractInstanceUiController> focused;
         private final SubjectItem<AbstractFxmlViewController> focusedView;
-        
+
 
         public ApplicationInstanceEventsImpl() {
             subjects = new ApplicationInstanceSubjects();
@@ -89,7 +83,7 @@ public interface ApplicationInstanceEvents {
             classLoaderDidChange = new SubjectItem<>(subjects.getClassLoaderDidChange());
             focused = new SubjectItem<>(subjects.getFocused());
             focusedView = new SubjectItem<>(subjects.getFocusedView());
-            
+
         }
 
         @Override
@@ -108,7 +102,7 @@ public interface ApplicationInstanceEvents {
         }
 
         @Override
-        public SubjectItem<AbstractCommonUiController> focused() {
+        public SubjectItem<AbstractInstanceUiController> focused() {
             return focused;
         }
 
@@ -119,16 +113,16 @@ public interface ApplicationInstanceEvents {
 
 
     }
- 
+
     public class ApplicationInstanceSubjects extends SubjectManager {
 
         private ReplaySubject<Boolean> closed;
         private ReplaySubject<Boolean> dependenciesLoaded;
         private ReplaySubject<ClassLoader> classLoaderDidChange;
 
-        private ReplaySubject<AbstractCommonUiController> focused;
+        private ReplaySubject<AbstractInstanceUiController> focused;
         private ReplaySubject<AbstractFxmlViewController> focusedView;
-        
+
 
         public ApplicationInstanceSubjects() {
             closed = wrap(ApplicationInstanceSubjects.class, "closed", ReplaySubject.create(1)); // NOI18N
@@ -136,7 +130,7 @@ public interface ApplicationInstanceEvents {
             classLoaderDidChange = wrap(ApplicationInstanceSubjects.class, "classLoaderDidChange", ReplaySubject.create(1)); // NOI18N
             focused = wrap(ApplicationInstanceSubjects.class, "focused", ReplaySubject.create(1)); // NOI18N
             focusedView = wrap(ApplicationInstanceSubjects.class, "focusedView", ReplaySubject.create(1)); // NOI18N
-            
+
         }
 
         public ReplaySubject<Boolean> getClosed() {
@@ -151,7 +145,7 @@ public interface ApplicationInstanceEvents {
             return classLoaderDidChange;
         }
 
-        public ReplaySubject<AbstractCommonUiController> getFocused() {
+        public ReplaySubject<AbstractInstanceUiController> getFocused() {
             return focused;
         }
 

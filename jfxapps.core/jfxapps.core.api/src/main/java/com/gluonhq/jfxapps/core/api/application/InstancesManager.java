@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,11 +33,13 @@
  */
 package com.gluonhq.jfxapps.core.api.application;
 
-import java.io.File;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+
+@ApplicationSingleton
 public interface InstancesManager {
 
 	/**
@@ -72,12 +74,12 @@ public interface InstancesManager {
 
     void notifyInstanceClosed(ApplicationInstance instance);
 
-    /**
-     * @param fxmlFiles
-     */
-    void open(List<File> fxmlFiles);
-    void open(List<File> fxmlFiles, boolean keepTrackOfLocation);
-    ApplicationInstance open(File fxmlFile, boolean keepTrackOfLocation);
+//    /**
+//     * @param fxmlFiles
+//     */
+//    void open(List<URL> fxmlFiles);
+//    void open(List<URL> fxmlFiles, boolean keepTrackOfLocation);
+//    ApplicationInstance open(URL fxmlFile, boolean keepTrackOfLocation);
     /**
      *
      */

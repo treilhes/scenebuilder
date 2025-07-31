@@ -33,137 +33,71 @@
  */
 package com.gluonhq.jfxapps.core.fs.action.impl;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
-import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
-@ApplicationInstancePrototype("com.gluonhq.jfxapps.core.fs.action.impl.SaveAction")
+@ApplicationInstancePrototype("com.gluonhq.jfxapps.core.fs.action.impl.OpenAction")
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 public class SaveAction extends AbstractAction {
 
-    private final ApplicationInstance document;
-    private final InlineEdit inlineEdit;
-    private final Dialog dialog;
-    private final MainInstanceWindow documentWindow;
-    private final MessageLogger messageLogger;
-    private final InstancesManager editor;
-    private final FxomEvents documentManager;
+    private static final Logger logger = LoggerFactory.getLogger(SaveAction.class);
+
     private final FileSystem fileSystem;
+    private final MainInstanceWindow mainInstanceWindow;
+    private final Dialog dialog;
+
+    private InputStream inputStream;
+
+    private File target;
 
     // @formatter:off
     public SaveAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            ApplicationInstance document,
-            FxomEvents documentManager,
-            MainInstanceWindow documentWindow,
-            InstancesManager editor,
-            InlineEdit inlineEdit,
-            Dialog dialog,
-            MessageLogger messageLogger,
-            FileSystem fileSystem) {
+            FileSystem fileSystem,
+            MainInstanceWindow mainInstanceWindow,
+            Dialog dialog) {
      // @formatter:on
         super(i18n, extensionFactory);
-        this.document = document;
-        this.documentManager = documentManager;
-        this.inlineEdit = inlineEdit;
-        this.editor = editor;
-        this.dialog = dialog;
-        this.documentWindow = documentWindow;
-        this.messageLogger = messageLogger;
         this.fileSystem = fileSystem;
+        this.mainInstanceWindow = mainInstanceWindow;
+        this.dialog = dialog;
+    }
+
+    public void setParameters(InputStream inputStream, File target) {
+        this.inputStream = inputStream;
+        this.target = target;
     }
 
     @Override
     public boolean canPerform() {
-        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
-        boolean locationSet = fxomDocument != null && fxomDocument.getLocation() != null;
-        return locationSet;
+        return inputStream != null && target != null && target.getParentFile().exists();
     }
 
     @Override
     public ActionStatus doPerform() {
-        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
-        assert fxomDocument != null;
-        assert fxomDocument.getLocation() != null;
 
-        ActionStatus result;
-        if (inlineEdit.canGetFxmlText()) { // no editing session ongoing
-            final Path fxmlPath;
-            try {
-                fxmlPath = Paths.get(fxomDocument.getLocation().toURI());
-            } catch (URISyntaxException x) {
-                // Should not happen
-                throw new RuntimeException("Bug in " + getClass().getSimpleName(), x); // NOI18N
-            }
-            final String fileName = fxmlPath.getFileName().toString();
-
-            try {
-                final boolean saveConfirmed;
-                if (fileSystem.checkLoadFileTime()) {
-                    saveConfirmed = true;
-                } else {
-                    final Alert d = dialog.customAlert(documentWindow.getStage());
-                    d.setMessage(getI18n().getString("alert.overwrite.message", fileName));
-                    d.setDetails(getI18n().getString("alert.overwrite.details"));
-                    d.setOKButtonVisible(true);
-                    d.setOKButtonTitle(getI18n().getString("label.overwrite"));
-                    d.setDefaultButtonID(ButtonID.CANCEL);
-                    d.setShowDefaultButton(true);
-                    saveConfirmed = (d.showAndWait() == ButtonID.OK);
-                }
-
-                if (saveConfirmed) {
-                    try {
-                        // TODO remove after checking the new watching system is operational in
-                        // EditorController or in filesystem
-                        // watchingController.removeDocumentTarget();
-
-                        fileSystem.save();
-
-                        // TODO remove after checking the new watching system is operational in
-                        // EditorController or in filesystem
-                        // watchingController.update();
-
-                        messageLogger.logInfoMessage("log.info.save.confirmation", fileName);
-                        result = ActionStatus.DONE;
-                    } catch (UnsupportedEncodingException x) {
-                        // Should not happen
-                        throw new RuntimeException("Bug", x); // NOI18N
-                    }
-                } else {
-                    result = ActionStatus.CANCELLED;
-                }
-            } catch (IOException x) {
-                dialog.showErrorAndWait(documentWindow.getStage(), null,
-                        getI18n().getString("alert.save.failure.message", fileName),
-                        getI18n().getString("alert.save.failure.details"), x);
-                result = ActionStatus.CANCELLED;
-            }
-        } else {
-            result = ActionStatus.CANCELLED;
+        try {
+            fileSystem.save(inputStream, target);
+            return ActionStatus.DONE;
+        } catch (IOException e) {
+            dialog.showErrorAndWait(mainInstanceWindow.getStage(), null,
+                    getI18n().getString("alert.save.failure.message", target.getAbsolutePath()),
+                    getI18n().getString("alert.save.failure.details"), e);
+            return ActionStatus.CANCELLED;
         }
-
-        return result;
     }
-
 }

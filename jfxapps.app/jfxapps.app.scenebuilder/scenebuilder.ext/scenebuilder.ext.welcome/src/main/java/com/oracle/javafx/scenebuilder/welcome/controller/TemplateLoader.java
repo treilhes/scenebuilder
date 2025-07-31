@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,38 +33,45 @@
  */
 package com.oracle.javafx.scenebuilder.welcome.controller;
 
-import java.io.File;
-import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.application.ApplicationActionFactory;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
+import com.gluonhq.jfxapps.core.api.document.DocumentActionFactory;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 
 
 /**
  * Allow control of {@link Template} selection and loading into a document window
- * @author ptreilhes
  *
  */
-@ApplicationInstanceSingleton
+@ApplicationSingleton
 public class TemplateLoader {
 
     public final static Logger logger = LoggerFactory.getLogger(TemplateLoader.class);
 
     private final InstancesManager instancesManager;
+    private final ApplicationActionFactory applicationActionFactory;
+    private final DocumentActionFactory documentActionFactory;
     /**
      * Instantiates a new template loader.
      *
 -     * @param instancesManager the main controller instance
      */
-    public TemplateLoader(InstancesManager instancesManager) {
+    public TemplateLoader(
+            InstancesManager instancesManager,
+            ApplicationActionFactory applicationActionFactory,
+            DocumentActionFactory documentActionFactory) {
     	this.instancesManager = instancesManager;
+    	this.applicationActionFactory = applicationActionFactory;
+    	this.documentActionFactory = documentActionFactory;
     }
 
     /**
@@ -80,25 +87,31 @@ public class TemplateLoader {
         }
 
         try {
-            File file = new File(template.getFxmlUrl().toURI());
-            var instance = instancesManager.open(file, false);
-            var instanceContext = instance.getContext();
+            URL file = template.getFxmlUrl();
+            applicationActionFactory.newInstance(instance -> {
 
-            if (!template.getThemes().isEmpty()) {
-                var instanceEvents = instanceContext.getBean(ApplicationInstanceEvents.class);
-                var theme = template.getThemes().get(0);
-                instanceEvents.stylesheetConfig().set(theme);
-            }
+                documentActionFactory.loadURL(file, false).perform();
 
-            if (template.getWidth() != 0 && template.getHeight() != 0) {
-                var jobManager = instanceContext.getBean(JobManager.class);
-                var sbJobsFactory = instanceContext.getBean(SbJobsFactory.class);
-                final var job = sbJobsFactory.useSize(template.getWidth(), template.getHeight());
-                if (job.isExecutable()) {
-                    jobManager.push(job);
+                var instanceContext = instance.getContext();
+
+                if (!template.getThemes().isEmpty()) {
+                    var instanceEvents = instanceContext.getBean(FxomEvents.class);
+                    var theme = template.getThemes().get(0);
+                    instanceEvents.stylesheetConfig().set(theme);
                 }
-            }
-        } catch (URISyntaxException e) {
+
+                if (template.getWidth() != 0 && template.getHeight() != 0) {
+                    var jobManager = instanceContext.getBean(JobManager.class);
+                    var sbJobsFactory = instanceContext.getBean(SbJobsFactory.class);
+                    final var job = sbJobsFactory.useSize(template.getWidth(), template.getHeight());
+                    if (job.isExecutable()) {
+                        jobManager.push(job);
+                    }
+                }
+            });
+
+
+        } catch (Exception e) {
             logger.error("Unable to load template", e);
         }
     }

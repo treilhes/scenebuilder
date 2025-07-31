@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -49,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.application.ApplicationClassloader;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 
 @ApplicationInstanceSingleton
@@ -60,12 +61,16 @@ public class ClassLoaderController {
 
     private URLClassLoader urlClassLoader;
 
-    private ApplicationEvents sbManager;
+    private final ApplicationEvents applicationEvents;
+
+    private final ApplicationClassloader applicationClassloader;
 
     public ClassLoaderController(
-            ApplicationEvents sbManager
+            ApplicationEvents applicationEvents,
+            ApplicationClassloader applicationClassloader
             ) {
-        this.sbManager = sbManager;
+        this.applicationEvents = applicationEvents;
+        this.applicationClassloader = applicationClassloader;
     }
 
     public Set<Path> getJarsOrFolders() {
@@ -74,13 +79,14 @@ public class ClassLoaderController {
 
     public void releaseClassLoader() throws IOException {
 
-        sbManager.classloader().set(this.getClass().getClassLoader());
+        applicationClassloader.removeClassLoader(this.getClass().getName());
 
         if (urlClassLoader != null) {
             urlClassLoader.close();
             urlClassLoader = null;
         }
 
+        applicationEvents.classloader().set(applicationClassloader);
         logger.info("Classloader has been released");
     }
 
@@ -101,7 +107,9 @@ public class ClassLoaderController {
             logger.info("Classloader created is customized with: {}", Arrays.toString(urls));
         }
 
-        sbManager.classloader().set(urlClassLoader == null ? this.getClass().getClassLoader() : urlClassLoader);
+        var classLoader = urlClassLoader != null ? urlClassLoader : ClassLoader.getSystemClassLoader();
+        applicationClassloader.putClassLoader(this.getClass().getName(), classLoader);
+        applicationEvents.classloader().set(applicationClassloader);
     }
 
     public URLClassLoader copyClassLoader(List<Path> sources) throws IOException {

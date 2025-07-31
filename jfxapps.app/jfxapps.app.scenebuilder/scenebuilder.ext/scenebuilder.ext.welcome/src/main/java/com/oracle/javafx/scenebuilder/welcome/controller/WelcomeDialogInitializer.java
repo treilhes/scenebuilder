@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,42 +33,39 @@
  */
 package com.oracle.javafx.scenebuilder.welcome.controller;
 
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithApplication;
 
-@Component
+@ApplicationSingleton
 public class WelcomeDialogInitializer implements InitWithApplication {
 
-
-    private final JfxAppContext context;
     private final JfxAppPlatform platform;
     private final InstancesManager main;
 
     public WelcomeDialogInitializer(
-            JfxAppContext context,
             JfxAppPlatform platform,
             InstancesManager main) {
         super();
-        this.context = context;
         this.platform = platform;
         this.main = main;
     }
 
     @Override
     public void init() {
-        WelcomeDialogWindowController wdwc = context.getBean(WelcomeDialogWindowController.class);
 
         // Unless we're on a Mac we're starting SB directly (fresh start)
         // so we're not opening any file and as such we should show the Welcome Dialog
-        if (main.lookupUnusedInstance() != null) {
+        var target = main.lookupUnusedInstance();
+        if (target != null) {
+            var targetContext = target.getContext();
+            var wdwc = targetContext.getBean(WelcomeDialogWindowController.class);
             platform.runOnFxThreadWithActiveScope(() -> {
                 wdwc.getStage().show();
             });
         }
 
     }
+
 }

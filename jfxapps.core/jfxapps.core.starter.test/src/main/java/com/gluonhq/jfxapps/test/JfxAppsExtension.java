@@ -43,6 +43,7 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
+import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -82,21 +83,22 @@ import com.gluonhq.jfxapps.boot.context.impl.JfxAppContextImpl;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper.ServiceLoader;
 import com.gluonhq.jfxapps.boot.loader.model.LoadableContent;
+import com.gluonhq.jfxapps.core.api.application.ApplicationClassloader;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.subjects.LifecyclePostProcessor;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
+import com.gluonhq.jfxapps.core.api.task.TaskService;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewController;
 
 import javafx.stage.Stage;
 
-public class JfxAppsExtension implements BeforeEachCallback, ParameterResolver {
+public class JfxAppsExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
     private final static Logger logger = LoggerFactory.getLogger(JfxAppsExtension.class);
     private final static Namespace JFXAPPS = create("com.gluonhq.jfxapps");
 
@@ -112,6 +114,21 @@ public class JfxAppsExtension implements BeforeEachCallback, ParameterResolver {
      */
     @Override
     public void beforeEach(final ExtensionContext context) {
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void afterEach(ExtensionContext context) throws Exception {
+//        var root = FxToolkit.toolkitContext().getRegisteredStage().getScene().getRoot();
+//        if (root instanceof Pane r) {
+//            Platform.runLater(() -> {
+//                r.getChildren().clear();
+//            });
+//            //r.getChildren().clear();
+//        }
     }
 
     @Override
@@ -225,8 +242,10 @@ public class JfxAppsExtension implements BeforeEachCallback, ParameterResolver {
                     DockManager.DockManagerImpl.class,
 
                     // JavaFX
-                    JavafxThreadClassloader.class,
+                    ApplicationClassloader.class,
                     FxmlControllerBeanPostProcessor.class,
+                    // services
+                    TaskService.class,
 
                     //UI
                     ViewController.class, //base ui for views

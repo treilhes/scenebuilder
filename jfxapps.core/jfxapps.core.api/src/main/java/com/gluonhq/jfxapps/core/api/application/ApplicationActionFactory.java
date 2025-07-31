@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,12 +33,37 @@
  */
 package com.gluonhq.jfxapps.core.api.application;
 
+import java.net.URL;
+import java.util.function.Consumer;
+
 import com.gluonhq.jfxapps.core.api.action.Action;
 
 public interface ApplicationActionFactory {
 
+    /**
+     * Creates a new instance of the application or reuse an empty one
+     * and set the focus on it changing the current scope.
+     * @return the new instance action
+     */
+    Action newInstance();
+
+    /**
+     * Creates a new instance of the application or reuse an empty one
+     * then execute the provided scopedAction using the new instance scope.
+     * @param consumer the code to execute with the new instance scope
+     * @return the new instance action
+     */
+    Action newInstance(Consumer<ApplicationInstance> consumer);
+    Action lookupUnusedInstance(URL lookup, Consumer<ApplicationInstance> consumer);
+
     Action closeInstance(boolean force);
 
+    Action closeAllInstances();
+
     Action quitApplication();
+
+
+
+
 
 }

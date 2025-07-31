@@ -99,10 +99,10 @@ public class FxomDisplayController implements FxomDisplay, InitWithDocument {
 
     private final FileSystem fileSystem;
     private I18nResourceProvider resourceConfig;
-    private final FxomEvents documentManager;
+    private final FxomEvents fxomEvents;
 
     private FXOMDocument fxomDocument;
-    private final ApplicationEvents sceneBuilderManager;
+    private final ApplicationEvents applicationEvents;
     private final FXOMSerializer serializer;
 
     /**
@@ -111,12 +111,12 @@ public class FxomDisplayController implements FxomDisplay, InitWithDocument {
     // @formatter:off
     public FxomDisplayController(
             FXOMDocumentFactory fxomDocumentFactory,
-            ApplicationEvents sceneBuilderManager,
+            ApplicationEvents applicationEvents,
             JobManager jobManager,
             FileSystem fileSystem,
             MessageLogger messageLogger,
             Selection selection,
-            FxomEvents documentManager,
+            FxomEvents fxomEvents,
             ErrorReport errorReport,
             InlineEdit inlineEditController,
             FXOMSerializer serializer
@@ -124,13 +124,13 @@ public class FxomDisplayController implements FxomDisplay, InitWithDocument {
         // @formatter:on
         this.fxomDocumentFactory = fxomDocumentFactory;
         // this.api = api;
-        this.sceneBuilderManager = sceneBuilderManager;
+        this.applicationEvents = applicationEvents;
         this.jobManager = jobManager;
         this.fileSystem = fileSystem;
 //    	this.dragController = dragController;
         this.messageLogger = messageLogger;
         this.selection = selection;
-        this.documentManager = documentManager;
+        this.fxomEvents = fxomEvents;
         this.errorReport = errorReport;
         this.inlineEdit = inlineEditController;
         this.serializer = serializer;
@@ -142,13 +142,13 @@ public class FxomDisplayController implements FxomDisplay, InitWithDocument {
 
     @Override
     public void initWithDocument() {
-        documentManager.i18nResourceConfig().subscribe(s -> {
+        fxomEvents.i18nResourceConfig().subscribe(s -> {
             resourceConfig = s;
             resourcesDidChange();
         });
         jobManager.revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
-        documentManager.fxomDocument().subscribe(cl -> fxomDocumentDidChange(cl));
-        sceneBuilderManager.classloader().subscribe(cl -> libraryClassLoaderDidChange(cl));
+        fxomEvents.fxomDocument().subscribe(cl -> fxomDocumentDidChange(cl));
+        applicationEvents.classloader().subscribe(cl -> libraryClassLoaderDidChange(cl));
     }
 
 
@@ -464,13 +464,13 @@ public class FxomDisplayController implements FxomDisplay, InitWithDocument {
         final FXOMDocument newFxomDocument;
 
         if (fxmlText != null) {
-            newFxomDocument = fxomDocumentFactory.newDocument(fxmlText, fxmlLocation, sceneBuilderManager.classloader().get(),
+            newFxomDocument = fxomDocumentFactory.newDocument(fxmlText, fxmlLocation, applicationEvents.classloader().get(),
                     resources);
         } else {
             newFxomDocument = null;
         }
 
-        documentManager.fxomDocument().set(newFxomDocument);
+        fxomEvents.fxomDocument().set(newFxomDocument);
 
         updateFileWatcher(newFxomDocument);
 

@@ -34,8 +34,8 @@
 package com.oracle.javafx.scenebuilder.tools.driver.node;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.util.javafx.LineEquation;
 import com.oracle.javafx.scenebuilder.api.control.rudder.AbstractRudder;
@@ -59,7 +59,7 @@ public class ResizeRudder extends AbstractRudder<Node> {
 
     public ResizeRudder(
             Workspace workspace,
-            ApplicationInstanceEvents documentManager) {
+            FxomEvents documentManager) {
         super(workspace, documentManager, Node.class);
 
         diagonalLine.setMouseTransparent(true);

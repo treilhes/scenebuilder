@@ -41,8 +41,8 @@ import org.slf4j.LoggerFactory;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
 import com.gluonhq.jfxapps.core.api.fxom.mask.Accessory;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
 import com.oracle.javafx.scenebuilder.tools.mask.BorderPaneHierarchyMask;
 
@@ -82,7 +82,7 @@ public class BorderPaneTring extends AbstractNodeTring<BorderPane> {
 
     public BorderPaneTring(
             Workspace workspace,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             BorderPaneHierarchyMask.Factory borderPaneHierarchyMaskFactory) {
         super(workspace, documentManager, BorderPane.class);
         this.borderPaneHierarchyMaskFactory = borderPaneHierarchyMaskFactory;

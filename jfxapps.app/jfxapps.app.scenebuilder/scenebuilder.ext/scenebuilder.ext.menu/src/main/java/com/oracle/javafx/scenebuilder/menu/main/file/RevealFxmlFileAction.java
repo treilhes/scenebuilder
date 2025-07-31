@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -43,8 +43,8 @@ import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.fs.FileSystemActionFactory;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
@@ -65,7 +65,7 @@ public class RevealFxmlFileAction extends AbstractAction {
 
     public final static String MENU_ID = DefaultMenu.File.REVEAL_ID;
 
-    private final ApplicationInstanceEvents applicationInstanceEvents;
+    private final FxomEvents applicationInstanceEvents;
     private final FileSystemActionFactory fileSystemActionFactory;
     private final Dialog dialog;
 
@@ -74,7 +74,7 @@ public class RevealFxmlFileAction extends AbstractAction {
     public RevealFxmlFileAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            ApplicationInstanceEvents applicationInstanceEvents,
+            FxomEvents applicationInstanceEvents,
             FileSystemActionFactory fileSystemActionFactory,
             Dialog dialog,
             @Lazy MainInstanceWindow mainInstanceWindow) {

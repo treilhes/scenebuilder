@@ -139,10 +139,9 @@ class WorkspaceControllerTest {
         .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
         Mockito.when(content.contentChanged()).thenReturn(PublishSubject.create());
 
-        var testStage = builder.controller(WorkspaceController.class).show();
-        assertNotNull(testStage.getController().getRoot());
-
-        testStage.close();
+        try (var testStage = builder.controller(WorkspaceController.class).show()) {
+            assertNotNull(testStage.getController().getRoot());
+        }
     }
 
     @Test
@@ -153,24 +152,23 @@ class WorkspaceControllerTest {
         .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
         Mockito.when(content.contentChanged()).thenReturn(PublishSubject.create());
 
-        var testStage = builder.controller(WorkspaceController.class)
+        try ( var testStage = builder.controller(WorkspaceController.class)
                 .size(800, 600)
                 .setup(StageType.Fill)
                 .css(WORKSPACE_CSS)
-                .show();
+                .show()) {
 
-        applicationEvents.stylesheetConfig().set(ToolStylesheetProvider.builder()
-                .stylesheet(URLUtils.toDataURI("""
-                        #scrollPane {
-                            -fx-border-color: green;
-                        }
-                        #workspacePane {
-                            -fx-background-color: blue;
-                        }
-                        """).toString())
-                .build());
-
-        testStage.close();
+            applicationEvents.stylesheetConfig().set(ToolStylesheetProvider.builder()
+                    .stylesheet(URLUtils.toDataURI("""
+                            #scrollPane {
+                                -fx-border-color: green;
+                            }
+                            #workspacePane {
+                                -fx-background-color: blue;
+                            }
+                            """).toString())
+                    .build());
+        }
     }
 
     @Test
@@ -184,24 +182,23 @@ class WorkspaceControllerTest {
 
         Mockito.when(content.contentChanged()).thenReturn(contentChanged);
 
-        var testStage = builder.controller(WorkspaceController.class)
+        try (var testStage = builder.controller(WorkspaceController.class)
                 .size(800, 600)
                 .setup(StageType.Fill)
                 .css(WORKSPACE_CSS)
-                .show();
+                .show()) {
 
-        var workspace = testStage.getController();
+            var workspace = testStage.getController();
 
-        Mockito.when(content.hasContent()).thenReturn(false);
+            Mockito.when(content.hasContent()).thenReturn(false);
 
-        robot.interact(() -> contentChanged.onNext(true));
+            robot.interact(() -> contentChanged.onNext(true));
 
-        // lookup from workspace to ensure we get current test backgroundPane
-        Label backgroundPane = robot.from(workspace.getRoot()).lookup("#backgroundPane").query();
+            // lookup from workspace to ensure we get current test backgroundPane
+            Label backgroundPane = robot.from(workspace.getRoot()).lookup("#backgroundPane").query();
 
-        assertEquals("FXOMDocument is null", backgroundPane.getText());
-
-        testStage.close();
+            assertEquals("FXOMDocument is null", backgroundPane.getText());
+        }
     }
 
     @Test
@@ -215,27 +212,27 @@ class WorkspaceControllerTest {
         Mockito.when(content.contentChanged()).thenReturn(contentChanged);
 
 
-        var testStage = builder.controller(WorkspaceController.class)
+        try (var testStage = builder.controller(WorkspaceController.class)
                 .size(800, 600)
                 .setup(StageType.Fill)
                 .css(WORKSPACE_CSS)
-                .show();
+                .show()) {
 
-        var workspace = testStage.getController();
+            var workspace = testStage.getController();
 
-        Mockito.when(content.hasContent()).thenReturn(true);
-        Mockito.when(content.isDisplayable()).thenReturn(false);
+            Mockito.when(content.hasContent()).thenReturn(true);
+            Mockito.when(content.isDisplayable()).thenReturn(false);
 
-        robot.interact(() -> {
-            contentChanged.onNext(true);
-        });
+            robot.interact(() -> {
+                contentChanged.onNext(true);
+            });
 
-        // lookup from workspace to ensure we get current test backgroundPane
-        Label backgroundPane = robot.from(workspace.getRoot()).lookup("#backgroundPane").query();
+            // lookup from workspace to ensure we get current test backgroundPane
+            Label backgroundPane = robot.from(workspace.getRoot()).lookup("#backgroundPane").query();
 
-        assertEquals("content.label.status.invitation", backgroundPane.getText());
+            assertEquals("content.label.status.invitation", backgroundPane.getText());
+        }
 
-        testStage.close();
     }
 
     @Test
@@ -248,7 +245,7 @@ class WorkspaceControllerTest {
         .thenReturn(new SimpleObjectProperty<>(BackgroundImage.BACKGROUND_01));
         Mockito.when(content.contentChanged()).thenReturn(contentChanged);
 
-        var testStage = builder.controller(WorkspaceController.class)
+        try (var testStage = builder.controller(WorkspaceController.class)
                 .size(800, 600)
                 .setup(StageType.Fill)
                 .document("""
@@ -265,34 +262,32 @@ class WorkspaceControllerTest {
                         </Stage>
                         """)
                 .css(WORKSPACE_CSS)
-                .show();
+                .show()) {
 
-        var workspace = testStage.getController();
+            var workspace = testStage.getController();
 
-        FXOMDocument fxomDocument = instanceEvents.fxomDocument().get();
+            FXOMDocument fxomDocument = instanceEvents.fxomDocument().get();
 
-        Mockito.when(content.hasContent()).thenReturn(true);
-        Mockito.when(content.isDisplayable()).thenReturn(true);
-        Mockito.when(content.getRoot()).thenReturn(fxomDocument.getDisplayNodeOrSceneGraphRoot());
+            Mockito.when(content.hasContent()).thenReturn(true);
+            Mockito.when(content.isDisplayable()).thenReturn(true);
+            Mockito.when(content.getRoot()).thenReturn(fxomDocument.getDisplayNodeOrSceneGraphRoot());
 
-        robot.interact(() -> {
-            contentChanged.onNext(true);
-        });
+            robot.interact(() -> {
+                contentChanged.onNext(true);
+            });
 
-        Node sceneGraph = (Node)fxomDocument.getDisplayNodeOrSceneGraphRoot();
+            Node sceneGraph = (Node)fxomDocument.getDisplayNodeOrSceneGraphRoot();
 
-        var before = sceneGraph.localToScreen(sceneGraph.getLayoutBounds());
+            var before = sceneGraph.localToScreen(sceneGraph.getLayoutBounds());
 
-        robot.interact(() -> {
-            workspace.setScaling(2.0d);
-        });
+            robot.interact(() -> {
+                workspace.setScaling(2.0d);
+            });
 
-        var after = sceneGraph.localToScreen(sceneGraph.getLayoutBounds());
+            var after = sceneGraph.localToScreen(sceneGraph.getLayoutBounds());
 
-        assertEquals(before.getWidth()*2, after.getWidth(), 0.1);
-        assertEquals(before.getHeight()*2, after.getHeight(), 0.1);
-
-        testStage.close();
+            assertEquals(before.getWidth()*2, after.getWidth(), 0.1);
+            assertEquals(before.getHeight()*2, after.getHeight(), 0.1);
+        }
     }
-
 }

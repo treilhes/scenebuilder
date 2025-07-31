@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,6 +34,7 @@
 package com.gluonhq.jfxapps.core.ui.message;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractPopupController;
@@ -51,10 +52,11 @@ public class MessagePopupController extends AbstractPopupController {
     private final MessagePanelController messagePanelController;
 
     public MessagePopupController(
+            I18N i18n,
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
             MessagePanelController messagePanelController) {
-        super(scenebuilderManager, documentManager);
+        super(i18n, scenebuilderManager, documentManager, null);
         this.messagePanelController = messagePanelController;
 
         setRoot(messagePanelController.getRoot());
@@ -112,5 +114,11 @@ public class MessagePopupController extends AbstractPopupController {
             getPopup().setX(popupLocation.getX());
             getPopup().setY(popupLocation.getY());
         }
+    }
+
+    @Override
+    public void controllerDidLoadFxml() {
+        // TODO Auto-generated method stub
+
     }
 }

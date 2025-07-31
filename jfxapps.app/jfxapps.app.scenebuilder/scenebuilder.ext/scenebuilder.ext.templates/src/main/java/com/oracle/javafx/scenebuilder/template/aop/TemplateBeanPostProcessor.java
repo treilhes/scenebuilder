@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,10 +33,14 @@
  */
 package com.oracle.javafx.scenebuilder.template.aop;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+
 import com.gluonhq.jfxapps.boot.api.aop.AopBeanDefinitionRegistryPostProcessor;
 import com.gluonhq.jfxapps.boot.api.context.annotation.DeportedSingleton;
 
 @DeportedSingleton
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class TemplateBeanPostProcessor extends AopBeanDefinitionRegistryPostProcessor {
     public TemplateBeanPostProcessor() {
         super(new TemplateAopContext());

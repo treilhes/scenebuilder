@@ -34,8 +34,8 @@
 package com.oracle.javafx.scenebuilder.tools.driver.node;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.util.javafx.RegionRectangle;
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractShadow;
 
@@ -53,7 +53,7 @@ public class NodeShadow extends AbstractShadow<Node> {
 
     public NodeShadow(
             Workspace workspace,
-            ApplicationInstanceEvents documentManager) {
+            FxomEvents documentManager) {
         super(workspace, documentManager, Node.class);
 
     }

@@ -54,6 +54,7 @@ import com.gluonhq.jfxapps.boot.api.context.MultipleProgressListener;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationConfiguration;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationPrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.api.context.annotation.DeportedSingleton;
 import com.gluonhq.jfxapps.boot.api.layer.Layer;
@@ -75,7 +76,8 @@ public class ContextBootstraper {
     private static final Logger logger = LoggerFactory.getLogger(ContextBootstraper.class);
 
     private static final Set<Class<? extends Annotation>> deportableAnnotations = Set.of(ApplicationSingleton.class,
-            ApplicationInstanceSingleton.class, ApplicationInstancePrototype.class, DeportedSingleton.class, ApplicationConfiguration.class);
+            ApplicationPrototype.class, ApplicationInstanceSingleton.class, ApplicationInstancePrototype.class,
+            DeportedSingleton.class, ApplicationConfiguration.class);
 
     /** The context manager. */
     private final ContextManager contextManager;
@@ -343,8 +345,8 @@ public class ContextBootstraper {
             throw new InvalidExtensionException.Unchecked(msg);
         }
         if (parentId != null && !extension.getParentId().equals(parentId)) {
-            String msg = "Invalid extension parent id expected : %s but was %s";
-            msg = String.format(msg, parentId, extension.getParentId());
+            String msg = "Invalid extension %s parent id expected : %s but was %s";
+            msg = String.format(msg, id, parentId, extension.getParentId());
             throw new InvalidExtensionException.Unchecked(msg);
         }
         return true;

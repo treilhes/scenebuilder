@@ -37,10 +37,10 @@ package com.oracle.javafx.scenebuilder.tools.job.gridpane;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -80,7 +80,7 @@ public final class MoveCellContentJob extends AbstractJob {
 
     protected MoveCellContentJob(
             JobExtensionFactory extensionFactory,
-            ApplicationInstanceEvents documentManager) {
+            FxomEvents documentManager) {
         super(extensionFactory);
         this.fxomDocument = documentManager.fxomDocument().get();
     }

@@ -43,8 +43,10 @@ import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
 import com.oracle.javafx.scenebuilder.api.control.driver.SbDriverImpl;
 import com.oracle.javafx.scenebuilder.api.control.inlineedit.SimilarInlineEditorBounds;
 import com.oracle.javafx.scenebuilder.api.i18n.I18NSceneBuilderApi;
+import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 import com.oracle.javafx.scenebuilder.api.preference.ParentRingColorPreference;
 import com.oracle.javafx.scenebuilder.api.util.FileHelper;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 @EditorDescriptor(
             label = "scenebuilder.app.label",
@@ -87,7 +89,10 @@ public class SbApiExtension implements ApplicationExtension  {
 
 
                 SimilarInlineEditorBounds.class,
-                I18NSceneBuilderApi.class
+                I18NSceneBuilderApi.class,
+
+                SbMetadata.class,
+                SbFXOMObjectMask.Factory.class
             );
      // @formatter:on
     }

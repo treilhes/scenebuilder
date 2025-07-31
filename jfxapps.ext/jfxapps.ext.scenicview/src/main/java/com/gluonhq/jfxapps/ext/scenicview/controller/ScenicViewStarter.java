@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,7 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
+import com.gluonhq.jfxapps.core.api.application.ApplicationClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloaderDispatcher;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 
@@ -62,10 +62,10 @@ public class ScenicViewStarter implements Runnable {
     public void run() {
 
         MainInstanceWindow mainInstanceWindow = context.getBean(MainInstanceWindow.class);
-        JavafxThreadClassloader classloader = context.getBean(JavafxThreadClassloader.class);
+        ApplicationClassloader classloader = context.getBean(ApplicationClassloader.class);
         JavafxThreadClassloaderDispatcher dispatcher = context.getBean(JavafxThreadClassloaderDispatcher.class);
 
-        classloader.addClassLoader(ScenicView.class.getClassLoader());
+        classloader.putClassLoader(ScenicView.class.getName(), ScenicView.class.getClassLoader());
         dispatcher.registerWithNextWindow(classloader, w -> {
             return w instanceof Stage s && s.getTitle() != null && s.getTitle().contains("Scenic View");
         });

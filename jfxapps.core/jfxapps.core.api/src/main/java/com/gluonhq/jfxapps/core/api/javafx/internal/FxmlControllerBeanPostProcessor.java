@@ -118,6 +118,19 @@ public class FxmlControllerBeanPostProcessor implements PriorityOrdered, BeanPos
                 }
             }
 
+            if (disabled) { // If the controller is annotated with @DisableAutomaticFxmlLoading, we do not load the FXML
+                return bean;
+            }
+
+            if (controller.getFxmlURL() == null && !controller.isFxmlFromStream()) {
+                logger.error("""
+                        FxmlController {} does not have a valid FXML URL set and is not using a stream.
+                        If it is intended please annotate it with @DisableAutomaticFxmlLoading to prevent this error
+                        """,
+                        beanName);
+                return bean;
+            }
+
             FXMLLoader loader = new FXMLLoader();
             loader.setController(controller);
             loader.setLocation(controller.getFxmlURL());
@@ -127,9 +140,7 @@ public class FxmlControllerBeanPostProcessor implements PriorityOrdered, BeanPos
             try {
 
                 final Parent parent;
-                if (disabled) {
-                    return bean;
-                } else if (loadOnFxThread) {
+                if (loadOnFxThread && !Platform.isFxApplicationThread()) {
                     var future = new FutureTask<>(() -> handleLoad(controller, loader));
                     Platform.runLater(future);
                     parent = future.get();
@@ -153,7 +164,10 @@ public class FxmlControllerBeanPostProcessor implements PriorityOrdered, BeanPos
         if (controller.isFxmlFromStream()) {
             try (var inputStream = controller.getFxmlStream()) {
                 return (Parent) loader.load(inputStream);
+            } catch (Exception e) {
+                logger.error("Failed to load FXML from stream for controller: {}", controller.getClass().getName(), e);
             }
+
         }
         return (Parent) loader.load();
     }

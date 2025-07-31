@@ -49,7 +49,7 @@ import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.shortcut.Accelerator;
 import com.gluonhq.jfxapps.core.api.shortcut.AcceleratorProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractCommonUiController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractInstanceUiController;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -131,8 +131,8 @@ public class AnnotatedActionAcceleratorProvider implements AcceleratorProvider {
                     }
 
                     @Override
-                    public Class<? extends AbstractCommonUiController> getAcceleratorTarget() {
-                        return annotation.whenFocusing().equals(AbstractCommonUiController.class) ? null
+                    public Class<? extends AbstractInstanceUiController> getAcceleratorTarget() {
+                        return annotation.whenFocusing().equals(AbstractInstanceUiController.class) ? null
                                 : annotation.whenFocusing();
                     }
 

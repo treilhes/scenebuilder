@@ -40,8 +40,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.core.api.application.ApplicationClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
-import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 
@@ -53,7 +53,7 @@ public class StageBuilderTest {
     JfxAppContext context;
 
     @Mock
-    JavafxThreadClassloader classloader;
+    ApplicationClassloader classloader;
 
     @Mock
     ApplicationEvents events;

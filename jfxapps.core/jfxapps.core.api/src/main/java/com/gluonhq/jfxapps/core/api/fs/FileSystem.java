@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,7 +41,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -54,16 +53,16 @@ import javafx.collections.ObservableList;
 public interface FileSystem {
 
 
-    void loadFromFile(File fxmlFile, boolean keepTrackOfLocation) throws IOException;
+    //void loadFromFile(File fxmlFile, boolean keepTrackOfLocation) throws IOException;
     /**
      * Load an fxml document from a local file and track his location.
      *
      * @param fxmlFile the fxml file
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    default void loadFromFile(File fxmlFile) throws IOException {
-        loadFromFile(fxmlFile, true);
-    }
+//    default void loadFromFile(File fxmlFile) throws IOException {
+//        loadFromFile(fxmlFile, true);
+//    }
 
 
     /**
@@ -75,7 +74,7 @@ public interface FileSystem {
      * @param url the url
      * @param keepTrackOfLocation keep track of the document location
      */
-    void loadFromURL(URL url, boolean keepTrackOfLocation);
+    //void loadFromURL(URL url, boolean keepTrackOfLocation);
 
     /**
      * Load an empty fxml document tracking his location.
@@ -84,13 +83,13 @@ public interface FileSystem {
      * Not tracking the location of an fxml file is mainly done for templates which prevent
      * overwriting them
      */
-    void loadDefaultContent();
-    void reload() throws IOException;
+    //void loadDefaultContent();
+    //void reload() throws IOException;
 
-    void save() throws IOException;
-    void saveAs(File target) throws IOException;
+    //void save() throws IOException;
+    //void saveAs(File target) throws IOException;
 
-    FileTime getLoadFileTime();
+    //FileTime getLoadFileTime();
 
     //File getMessageBoxFolder();
 
@@ -268,7 +267,7 @@ public interface FileSystem {
     * @return
     * @throws IOException
     */
-    boolean checkLoadFileTime() throws IOException;
+    //boolean checkLoadFileTime() throws IOException;
 
     /**
      * Returns the list of recent items.
@@ -285,5 +284,14 @@ public interface FileSystem {
      */
     @Deprecated
     void cleanupRecentItems();
+
+    /**
+     * Save the content of the given InputStream to the target file.
+     *
+     * @param input the InputStream to save
+     * @param target the target file
+     * @throws IOException if an error occurs
+     */
+    void save(InputStream input, File target) throws IOException;
 
 }

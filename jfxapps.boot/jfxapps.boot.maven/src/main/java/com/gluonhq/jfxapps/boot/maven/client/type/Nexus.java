@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -51,10 +51,12 @@ import javax.json.JsonReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.boot.api.context.annotation.DeportedSingleton;
 import com.gluonhq.jfxapps.boot.api.maven.Artifact;
 import com.gluonhq.jfxapps.boot.api.maven.Repository;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryType;
 
+@DeportedSingleton
 public class Nexus implements RepositoryType {
 
     private static final Logger logger = LoggerFactory.getLogger(Nexus.class);

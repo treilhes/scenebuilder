@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,8 +38,8 @@ import java.util.List;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractGesture;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.CardinalPoint;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.DiscardGesture;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.util.MathUtils;
@@ -99,7 +99,7 @@ public abstract class AbstractGenericHandles<T> extends AbstractHandles<T> {
     public AbstractGenericHandles(
             SbDriver driver,
             Workspace workspace,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             DiscardGesture.Factory discardGestureFactory,
             ResizeGesture.Factory resizeGestureFactory,
             Class<T> sceneGraphObjectClass) {
@@ -159,38 +159,20 @@ public abstract class AbstractGenericHandles<T> extends AbstractHandles<T> {
     }
 
     public Node getHandleNode(CardinalPoint cp) {
-        final Node result;
-
-        switch(cp) {
-            case N:
-                result = handleNN;
-                break;
-            case S:
-                result = handleSS;
-                break;
-            case E:
-                result = handleEE;
-                break;
-            case W:
-                result = handleWW;
-                break;
-            case NW:
-                result = handleNW;
-                break;
-            case NE:
-                result = handleNE;
-                break;
-            case SW:
-                result = handleSW;
-                break;
-            case SE:
-                result = handleSE;
-                break;
-            default:
-                assert false;
-                result = null;
-                break;
+        final Node result = switch (cp) {
+        case N -> handleNN;
+        case S -> handleSS;
+        case E -> handleEE;
+        case W -> handleWW;
+        case NW -> handleNW;
+        case NE -> handleNE;
+        case SW -> handleSW;
+        case SE -> handleSE;
+        default -> {
+            assert false;
+            yield null;
         }
+        };
 
         return result;
     }

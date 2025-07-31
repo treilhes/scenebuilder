@@ -37,7 +37,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import javafx.scene.Parent;
@@ -56,14 +55,13 @@ public interface FxmlController extends UiController {
 	 * for this fxml file. Which means any fields or methods annotated with @FXML will be binded using this fxml
 	 * @return the url to the fxml that must be binded to this controller
 	 */
-    @NonNull
 	URL getFxmlURL();
 
     /**
      * This method is automatically called by {@link com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor#postProcessAfterInitialization(Object, String)}
-     * if true then the fxml content will be load from the stream provided by {@link #getFxmlStream()} instead of the url provided by {@link #getFxmlURL()}
-     * The location used to load the stream is still the one provided by {@link #getFxmlURL()}
-     * @param root the root node of the fxml file
+     * if true then the fxml content will be loaded from the stream provided by {@link #getFxmlStream()} instead of the url provided by {@link #getFxmlURL()}
+     * The location used to load the stream is still the one provided by {@link #getFxmlURL()} or null if the stream has no source location.
+     * @return true if the fxml content must be loaded from a stream, false otherwise
      */
     default boolean isFxmlFromStream() {
         return false;

@@ -34,7 +34,7 @@
 package com.gluonhq.jfxapps.core.api.shortcut;
 
 import com.gluonhq.jfxapps.core.api.action.Action;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractCommonUiController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractInstanceUiController;
 
 import javafx.scene.input.KeyCombination;
 
@@ -43,6 +43,6 @@ import javafx.scene.input.KeyCombination;
  */
 public interface Accelerator {
     KeyCombination getKeyCombination();
-    Class<? extends AbstractCommonUiController> getAcceleratorTarget();
+    Class<? extends AbstractInstanceUiController> getAcceleratorTarget();
     Action getAction();
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -41,9 +41,9 @@ import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.fxom.css.StylesheetProvider;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report")
@@ -51,16 +51,16 @@ public class GenerateFxmlContentAction extends AbstractAction implements InitWit
 
     private ApplyCssContentConfig config;
 
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents fxomEvents;
 
     //@formatter:off
     public GenerateFxmlContentAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            ApplicationInstanceEvents documentManager) {
+            FxomEvents fxomEvents) {
         //@formatter:on
         super(i18n, extensionFactory);
-        this.documentManager = documentManager;
+        this.fxomEvents = fxomEvents;
     }
 
     public synchronized ApplyCssContentConfig getActionConfig() {
@@ -82,7 +82,7 @@ public class GenerateFxmlContentAction extends AbstractAction implements InitWit
     @Override
     public ActionStatus doPerform() {
         assert getActionConfig() != null;
-        documentManager.stylesheetConfig().set(getActionConfig());
+        fxomEvents.stylesheetConfig().set(getActionConfig());
         return ActionStatus.DONE;
     }
 

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,8 +33,6 @@
  */
 package com.gluonhq.jfxapps.core.api.application;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
 
@@ -92,10 +90,6 @@ public interface ApplicationInstance extends com.gluonhq.jfxapps.boot.api.contex
     }
 
     URL getLocation();
-    default void loadFromFile(File file) throws IOException {
-        loadFromFile(file, true);
-    }
-    void loadFromFile(File file, boolean keepTrackOfLocation) throws IOException;
-    void loadBlank();
+
 
 }

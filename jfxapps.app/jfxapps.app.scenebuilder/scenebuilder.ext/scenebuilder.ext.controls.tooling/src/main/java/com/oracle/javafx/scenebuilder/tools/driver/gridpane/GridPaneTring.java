@@ -36,8 +36,8 @@ package com.oracle.javafx.scenebuilder.tools.driver.gridpane;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridPaneDropTarget.ColumnArea;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridPaneDropTarget.RowArea;
@@ -53,7 +53,7 @@ public class GridPaneTring extends AbstractNodeTring<GridPane> {
     private final GridPaneMosaic mosaic = new GridPaneMosaic("tring", // NOCHECK
             false /* shouldShowTray */, false /* shouldCreateSensors */ );
 
-    public GridPaneTring(Workspace workspace, ApplicationInstanceEvents documentManager) {
+    public GridPaneTring(Workspace workspace, FxomEvents documentManager) {
         super(workspace, documentManager, GridPane.class);
         getRootNode().getChildren().add(0, mosaic.getTopGroup()); // Below handles
     }

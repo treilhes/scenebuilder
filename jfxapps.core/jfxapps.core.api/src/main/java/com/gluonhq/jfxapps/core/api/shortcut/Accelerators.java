@@ -34,7 +34,7 @@
 package com.gluonhq.jfxapps.core.api.shortcut;
 
 import com.gluonhq.jfxapps.core.api.action.Action;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractCommonUiController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractInstanceUiController;
 
 import javafx.scene.control.MenuItem;
 
@@ -56,6 +56,6 @@ public interface Accelerators {
      * @param menuItem
      * @param focusedClass
      */
-    void bind(Action action, MenuItem menuItem, Class<? extends AbstractCommonUiController> focusedClass);
+    void bind(Action action, MenuItem menuItem, Class<? extends AbstractInstanceUiController> focusedClass);
 
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -68,7 +68,7 @@ public class GridPaneMenuProvider implements MenuItemProvider, ContextMenuItemPr
     @Override
     public List<MenuItemAttachment> menuItems() {
         Menu menu = menuBuilder.menu().id(MENU_ID).title(MENU_LABEL).build();
-        MenuItemAttachment attachment = MenuItemAttachment.create(menu, DefaultMenu.MODIFY_MENU_ID,
+        MenuItemAttachment attachment = MenuItemAttachment.create(menu, DefaultMenu.Modify.ID,
                 PositionRequest.AsLastChild);
         return Arrays.asList(attachment);
     }
@@ -76,8 +76,8 @@ public class GridPaneMenuProvider implements MenuItemProvider, ContextMenuItemPr
     @Override
     public List<ContextMenuItemAttachment> contextMenuItems() {
         Menu menu = menuBuilder.menu().id(MENU_ID).title(MENU_LABEL).build();
-        ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(menu, ObjectSelectionGroup.class, UseComputedSizeAction.MENU_ID,
-                PositionRequest.AsNextSibling, ORDER_WEIGHT);
+        ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(menu, ObjectSelectionGroup.class,
+                UseComputedSizeAction.MENU_ID, PositionRequest.AsNextSibling, ORDER_WEIGHT);
         return Arrays.asList(attachment);
     }
 

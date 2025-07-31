@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -45,32 +45,32 @@ import com.gluonhq.jfxapps.boot.api.aop.AopContext;
 import com.gluonhq.jfxapps.boot.api.aop.AopFactoryBean;
 import com.gluonhq.jfxapps.boot.api.aop.AopMetadata;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.oracle.javafx.scenebuilder.api.theme.ThemeGroup;
-import com.oracle.javafx.scenebuilder.api.theme.ThemeGroupContext;
+import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
+import com.oracle.javafx.scenebuilder.api.template.TemplateGroupContext;
 
-public class TemplateGroupAopContext extends AopContext<ThemeGroup, ThemeGroupContext, TemplateGroupAopContext.ThemeGroupMetadata> {
+public class TemplateGroupAopContext extends AopContext<TemplateGroup, TemplateGroupContext, TemplateGroupAopContext.TemplateGroupMetadata> {
 
     public TemplateGroupAopContext() {
-        super(ThemeGroup.class, ThemeGroupContext.class);
+        super(TemplateGroup.class, TemplateGroupContext.class);
     }
 
     @Override
-    public TemplateGroupAopContext.ThemeGroupMetadata loadMetadata(Class<?> clazz) {
-        return new ThemeGroupMetadata(getContexAnnotationClass(), getMarkerClass(), clazz);
+    public TemplateGroupAopContext.TemplateGroupMetadata loadMetadata(Class<?> clazz) {
+        return new TemplateGroupMetadata(getContexAnnotationClass(), getMarkerClass(), clazz);
     }
 
     @Override
-    public ThemeGroup createTarget(JfxAppContext context, ThemeGroupMetadata metadata) {
+    public TemplateGroup createTarget(JfxAppContext context, TemplateGroupMetadata metadata) {
 
         var id = metadata.getId();
         var name = metadata.getName();
-
-        return new BaseThemeGroup(id, name);
+        var orderKey = metadata.getOrderKey();
+        return new BaseTemplateGroup(id, name, orderKey);
     }
 
     @Override
-    public Class<? extends AopFactoryBean<ThemeGroup, ThemeGroupMetadata>> factoryBeanClass() {
-        return ThemeGroupFactoryBean.class;
+    public Class<? extends AopFactoryBean<TemplateGroup, TemplateGroupMetadata>> factoryBeanClass() {
+        return TemplateGroupFactoryBean.class;
     }
 
 
@@ -80,9 +80,9 @@ public class TemplateGroupAopContext extends AopContext<ThemeGroup, ThemeGroupCo
         return null;
     }
 
-    public static class ThemeGroupFactoryBean extends AopFactoryBean<ThemeGroup, ThemeGroupMetadata> {
+    public static class TemplateGroupFactoryBean extends AopFactoryBean<TemplateGroup, TemplateGroupMetadata> {
 
-        public ThemeGroupFactoryBean(Class<?> preferenceInterface) {
+        public TemplateGroupFactoryBean(Class<?> preferenceInterface) {
             super(preferenceInterface, new TemplateGroupAopContext());
         }
 
@@ -91,29 +91,32 @@ public class TemplateGroupAopContext extends AopContext<ThemeGroup, ThemeGroupCo
     @Override
     public boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
 
-        boolean isNonPreferenceInterface = !ThemeGroup.class.getName().equals(beanDefinition.getBeanClassName());
+        boolean isNonPreferenceInterface = !TemplateGroup.class.getName().equals(beanDefinition.getBeanClassName());
         boolean isPreference = Arrays.stream(beanDefinition.getMetadata().getInterfaceNames())
-                .anyMatch(ThemeGroup.class.getName()::equals);
+                .anyMatch(TemplateGroup.class.getName()::equals);
         boolean isInterface = beanDefinition.getMetadata().isInterface();
-        boolean hasContextAnnotation = beanDefinition.getMetadata().isAnnotated(ThemeGroupContext.class.getName());
+        boolean hasContextAnnotation = beanDefinition.getMetadata().isAnnotated(TemplateGroupContext.class.getName());
 
         return isPreference && isInterface && isNonPreferenceInterface && hasContextAnnotation;
     }
 
-    public class BaseThemeGroup implements ThemeGroup {
+    public class BaseTemplateGroup implements TemplateGroup {
 
-        private static final Logger logger = LoggerFactory.getLogger(BaseThemeGroup.class);
+        private static final Logger logger = LoggerFactory.getLogger(BaseTemplateGroup.class);
 
         private final UUID id;
         private final String name;
+        private final String orderKey;
 
         //@formatter:off
-        public BaseThemeGroup(
+        public BaseTemplateGroup(
                 UUID id,
-                String name) {
+                String name,
+                String orderKey) {
             //@formatter:on
             this.id = id;
             this.name = name;
+            this.orderKey = orderKey;
         }
 
         @Override
@@ -125,25 +128,33 @@ public class TemplateGroupAopContext extends AopContext<ThemeGroup, ThemeGroupCo
         public String getName() {
             return name;
         }
+
+        @Override
+        public String getOrderKey() {
+            return orderKey;
+        }
     }
 
-    public static class ThemeGroupMetadata extends AopMetadata<ThemeGroupContext, ThemeGroup> {
+    public static class TemplateGroupMetadata extends AopMetadata<TemplateGroupContext, TemplateGroup> {
 
         private UUID id;
         private String name;
+        private String orderKey;
 
-        public ThemeGroupMetadata(Class<ThemeGroupContext> annotationClass, Class<ThemeGroup> markerClass, Class<?> preferenceInterface) {
+        public TemplateGroupMetadata(Class<TemplateGroupContext> annotationClass, Class<TemplateGroup> markerClass, Class<?> preferenceInterface) {
             super(annotationClass, markerClass, preferenceInterface);
         }
 
         @Override
-        protected void loadMetadata(ThemeGroupContext annotation) {
+        protected void loadMetadata(TemplateGroupContext annotation) {
             if (hasAnnotation()) {
                 this.id = UUID.fromString(annotation.id());
                 this.name = annotation.name();
+                this.orderKey = annotation.orderKey();
             } else {
                 this.id = null;
                 this.name = null;
+                this.orderKey = null;
             }
         }
 
@@ -153,6 +164,10 @@ public class TemplateGroupAopContext extends AopContext<ThemeGroup, ThemeGroupCo
 
         public String getName() {
             return name;
+        }
+
+        public String getOrderKey() {
+            return orderKey;
         }
     }
 

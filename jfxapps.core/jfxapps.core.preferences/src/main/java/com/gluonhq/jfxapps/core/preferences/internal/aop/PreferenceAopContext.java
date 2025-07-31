@@ -110,7 +110,7 @@ public class PreferenceAopContext extends AopContext<Preference, PreferenceConte
         DefaultValueProvider<?> defaultValueProvider = null;
         try {
             defaultValueProvider = defaultValueProviderClass != PreferenceContext.NoOpDefaultValueProvider.class //
-                    ? defaultValueProviderClass.getDeclaredConstructor().newInstance()
+                    ? instanciate(jfxAppContext, defaultValueProviderClass)
                     : () -> null;
         } catch (Exception e) {
             throw new IllegalArgumentException("Unable to create DefaultValueProvider", e);

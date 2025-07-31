@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,8 +40,11 @@ import java.util.UUID;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.api.SbApiExtension;
 import com.oracle.javafx.scenebuilder.welcome.action.NewFromTemplateAction;
+import com.oracle.javafx.scenebuilder.welcome.action.ShowWelcomeDialogAction;
 import com.oracle.javafx.scenebuilder.welcome.controller.TemplateLoader;
+import com.oracle.javafx.scenebuilder.welcome.controller.TemplatesSelectionController;
 import com.oracle.javafx.scenebuilder.welcome.controller.TemplatesWindowController;
+import com.oracle.javafx.scenebuilder.welcome.controller.WelcomeDialogActionOverride;
 import com.oracle.javafx.scenebuilder.welcome.controller.WelcomeDialogInitializer;
 import com.oracle.javafx.scenebuilder.welcome.controller.WelcomeDialogWindowController;
 import com.oracle.javafx.scenebuilder.welcome.i18n.I18NWelcome;
@@ -72,9 +75,12 @@ public class WelcomeExtension implements OpenExtension {
                 I18NWelcome.class,
                 WelcomeDialogWindowController.class,
                 WelcomeDialogInitializer.class,
+                WelcomeDialogActionOverride.class,
                 NewFromTemplateAction.class,
+                ShowWelcomeDialogAction.class,
                 TemplateLoader.class,
-                TemplatesWindowController.class
+                TemplatesWindowController.class,
+                TemplatesSelectionController.class
             );
      // @formatter:on
     }

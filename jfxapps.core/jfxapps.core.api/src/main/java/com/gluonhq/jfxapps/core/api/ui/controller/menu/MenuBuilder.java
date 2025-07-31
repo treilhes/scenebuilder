@@ -45,7 +45,7 @@ import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.Accelerators;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractCommonUiController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractInstanceUiController;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
 
 import javafx.event.Event;
@@ -230,10 +230,10 @@ public class MenuBuilder {
             item.setOnMenuValidation(updateMenuHandler::handle);
 
             if (viewClass != null) {
-                if (AbstractCommonUiController.class.isAssignableFrom(viewClass)) {
-                    acceleratorsController.ifPresent(a -> a.bind(action, item, (Class<? extends AbstractCommonUiController>)viewClass));
+                if (AbstractInstanceUiController.class.isAssignableFrom(viewClass)) {
+                    acceleratorsController.ifPresent(a -> a.bind(action, item, (Class<? extends AbstractInstanceUiController>)viewClass));
                 } else {
-                    logger.error("The view {} does not inherit from {}. View accelerators discarded !", viewClass, AbstractCommonUiController.class);
+                    logger.error("The view {} does not inherit from {}. View accelerators discarded !", viewClass, AbstractInstanceUiController.class);
                 }
             } else {
                 acceleratorsController.ifPresent(a -> a.bind(action, item));

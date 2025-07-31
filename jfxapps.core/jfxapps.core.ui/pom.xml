@@ -17,7 +17,8 @@
 			<artifactId>jfxapps.core.api</artifactId>
 			<scope>provided</scope>
 			<exclusions>
-				<!-- prevent "The package javafx.fxml is accessible from more than one module" in Eclipse -->
+				<!-- prevent "The package javafx.fxml is accessible from more
+				than one module" in Eclipse -->
 				<exclusion>
 					<groupId>com.gluonhq.jfxapps</groupId>
 					<artifactId>javafx.fxml.patch</artifactId>
@@ -29,10 +30,20 @@
 			<artifactId>jfxapps.core.starter</artifactId>
 			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>com.gluonhq.jfxapps</groupId>
 			<artifactId>jfxapps.core.starter.test</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.kordamp.ikonli</groupId>
+			<artifactId>ikonli-javafx</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.kordamp.ikonli</groupId>
+			<artifactId>ikonli-fontawesome5-pack</artifactId>
 		</dependency>
 	</dependencies>
 

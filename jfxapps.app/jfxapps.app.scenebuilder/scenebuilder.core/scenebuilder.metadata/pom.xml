@@ -106,6 +106,7 @@
                         <targetPackage>com.oracle.javafx.scenebuilder.metadata.javafx</targetPackage>
                         <extensionName>JavafxMetadataExtension</extensionName>
                         <moduleName>scenebuilder.metadata.javafx</moduleName>
+                        <parentUuid>06ae1f67-a8aa-49e3-abb5-4f108534578c</parentUuid>
                         <uuid>5cadadb4-8aba-44f1-b66d-78e988cd998c</uuid>
                         <failOnError>false</failOnError>
                         <javafxVersion>${javafx.version}</javafxVersion>

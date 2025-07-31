@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
@@ -92,13 +93,14 @@ public class ImportProgressDialogController extends AbstractModalDialog {
 
     // @formatter:off
     protected ImportProgressDialogController(
+            JfxAppsPlatform appsPlatform,
             I18N i18n,
             ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
             Dialog dialog
             ) {
      // @formatter:on
-        super(i18n, sceneBuilderManager, iconSetting, ImportProgressDialogController.class.getResource("ImportProgressDialog.fxml"), null);
+        super(appsPlatform, i18n, sceneBuilderManager, iconSetting, ImportProgressDialogController.class.getResource("ImportProgressDialog.fxml"), null);
         this.dialog = dialog;
     }
 

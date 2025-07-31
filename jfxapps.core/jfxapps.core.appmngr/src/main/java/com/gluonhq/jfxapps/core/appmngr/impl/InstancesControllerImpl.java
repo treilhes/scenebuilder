@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,26 +33,19 @@
  */
 package com.gluonhq.jfxapps.core.appmngr.impl;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.DependsOn;
 
-import com.gluonhq.jfxapps.boot.api.context.Application;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
@@ -60,8 +53,6 @@ import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.lifecycle.DisposeWithApplication;
-import com.gluonhq.jfxapps.core.api.lifecycle.InitWithApplication;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
@@ -82,14 +73,12 @@ public class InstancesControllerImpl implements InstancesManager {
     private final JfxAppContext context;
     private final JfxAppPlatform jfxAppPlatform;
     private final Provider<Dialog> dialog;
-    private final Provider<Optional<List<InitWithApplication>>> initializations;
-    private final Provider<Optional<List<DisposeWithApplication>>> finalizations;
 
     // private IconSetting windowIconSetting;
 
     // private RecentItemsPreference recentItemsPreference;
 
-    private final ObservableList<ApplicationInstance> windowList = FXCollections.observableArrayList();
+    private final ObservableList<ApplicationInstance> instances = FXCollections.observableArrayList();
 
     // private UserLibrary userLibrary;
 
@@ -106,9 +95,7 @@ public class InstancesControllerImpl implements InstancesManager {
             JfxAppPlatform jfxAppPlatform,
             //IconSetting windowIconSetting,
             //FileSystem fileSystem,
-            Provider<Dialog> dialog,
-            Provider<Optional<List<InitWithApplication>>> initializations,
-            Provider<Optional<List<DisposeWithApplication>>> finalizations) {
+            Provider<Dialog> dialog) {
       //@formatter:on
         this.i18n = i18n;
         this.context = context;
@@ -116,8 +103,7 @@ public class InstancesControllerImpl implements InstancesManager {
         // this.windowIconSetting = windowIconSetting;
         // this.fileSystem = fileSystem;
         this.dialog = dialog;
-        this.initializations = initializations;
-        this.finalizations = finalizations;
+
 
 //        if (singleton != null) {
 //            return;
@@ -140,8 +126,8 @@ public class InstancesControllerImpl implements InstancesManager {
 
     @Override
     public void notifyInstanceClosed(ApplicationInstance document) {
-        assert windowList.contains(document);
-        windowList.remove(document);
+        assert instances.contains(document);
+        instances.remove(document);
     }
 
     // TODO comment this
@@ -151,12 +137,12 @@ public class InstancesControllerImpl implements InstancesManager {
 
     @Override
     public List<ApplicationInstance> getInstances() {
-        return Collections.unmodifiableList(windowList);
+        return Collections.unmodifiableList(instances);
     }
 
     @Override
     public int countInstances() {
-        return windowList.size();
+        return instances.size();
     }
 
     @Override
@@ -166,7 +152,7 @@ public class InstancesControllerImpl implements InstancesManager {
         ApplicationInstance result = null;
         try {
             final URI fxmlURI = fxmlLocation.toURI();
-            for (ApplicationInstance dwc : windowList) {
+            for (ApplicationInstance dwc : instances) {
                 final URL docLocation = dwc.getLocation();
                 if ((docLocation != null) && fxmlURI.equals(docLocation.toURI())) {
                     result = dwc;
@@ -190,7 +176,7 @@ public class InstancesControllerImpl implements InstancesManager {
     public ApplicationInstance lookupUnusedInstance(Collection<ApplicationInstance> ignored) {
         ApplicationInstance result = null;
 
-        for (ApplicationInstance dwc : windowList) {
+        for (ApplicationInstance dwc : instances) {
             if (dwc.isUnused() && !ignored.contains(dwc)) {
                 result = dwc;
                 break;
@@ -200,148 +186,150 @@ public class InstancesControllerImpl implements InstancesManager {
         return result;
     }
 
-    @Override
-    public void open(List<File> fxmlFiles) {
-        open(fxmlFiles, true);
-    }
-    @Override
-    public void open(List<File> fxmlFiles, boolean keepTrackOfLocation) {
-
-        if (fxmlFiles == null || fxmlFiles.isEmpty()) {
-            final ApplicationInstance instance = newInstance();
-            instance.openWindow();
-            instance.loadBlank();
-            return;
-        }
-
-        final Map<File, ApplicationInstance> documents = new HashMap<>();
-
-        final Map<File, IOException> exceptions = new HashMap<>();
-
-        // build dependency injections first
-        for (File fxmlFile : fxmlFiles) {
-            try {
-                final ApplicationInstance dwc = lookupInstance(fxmlFile.toURI().toURL());
-                if (dwc != null) {
-                    // fxmlFile is already opened
-                    dwc.getDocumentWindow().getStage().toFront();
-                } else {
-                    // Open fxmlFile
-                    final ApplicationInstance hostWindow;
-                    final ApplicationInstance unusedWindow = lookupUnusedInstance(documents.values());
-                    if (unusedWindow != null) {
-                        logger.info("Assign {} to unused document", fxmlFile.getName());
-                        hostWindow = unusedWindow;
-                    } else {
-                        logger.info("Assign {} to new document", fxmlFile.getName());
-                        hostWindow = newInstance();
-                    }
-                    documents.put(fxmlFile, hostWindow);
-                }
-            } catch (IOException e) {
-                exceptions.put(fxmlFile, e);
-            }
-        }
-
-        // execute ui related loading now
-        jfxAppPlatform.runOnFxThread(() -> {
-
-            for (Entry<File, ApplicationInstance> entry : documents.entrySet()) {
-                File file = entry.getKey();
-                ApplicationInstance hostWindow = entry.getValue();
-                hostWindow.onFocus();
-                // SbPlatform.runForDocument(hostWindow, () -> {
-                try {
-                    hostWindow.loadFromFile(file, keepTrackOfLocation);
-                    hostWindow.openWindow();
-                } catch (IOException xx) {
-                    hostWindow.closeWindow();
-                    exceptions.put(file, xx);
-                }
-                // });
-
-                switch (exceptions.size()) {
-                case 0: { // Good
-                    // Update recent items with opened files
-                    // recentItemsPreference.addRecentItems(fxmlFiles);
-                    break;
-                }
-                case 1: {
-                    final File fxmlFile = exceptions.keySet().iterator().next();
-                    final Exception x = exceptions.get(fxmlFile);
-                    dialog.get().showErrorAndWait(i18n.getString("alert.title.open"),
-                            i18n.getString("alert.open.failure1.message", displayName(fxmlFile.getPath())),
-                            i18n.getString("alert.open.failure1.details"), x);
-                    break;
-                }
-                default: {
-                    if (exceptions.size() == fxmlFiles.size()) {
-                        // Open operation has failed for all the files
-                        dialog.get().showErrorAndWait(i18n.getString("alert.title.open"),
-                                i18n.getString("alert.open.failureN.message"),
-                                i18n.getString("alert.open.failureN.details"));
-                    } else {
-                        // Open operation has failed for some files
-                        dialog.get().showErrorAndWait(i18n.getString("alert.title.open"),
-                                i18n.getString("alert.open.failureMofN.message", exceptions.size(), fxmlFiles.size()),
-                                i18n.getString("alert.open.failureMofN.details"));
-                    }
-                    break;
-                }
-                }
-            }
-        });
-    }
-
-    @Override
-    public ApplicationInstance open(File fxmlFile, boolean keepTrackOfLocation) {
-
-        if (fxmlFile == null) {
-            final ApplicationInstance instance = newInstance();
-            instance.openWindow();
-            instance.loadBlank();
-            return instance;
-        }
-
-        try {
-            final ApplicationInstance dwc = lookupInstance(fxmlFile.toURI().toURL());
-            if (dwc != null) {
-                // fxmlFile is already opened
-                dwc.getDocumentWindow().getStage().toFront();
-            } else {
-                // Open fxmlFile
-                final ApplicationInstance instance;
-                final ApplicationInstance unusedInstance = lookupUnusedInstance();
-                if (unusedInstance != null) {
-                    logger.info("Assign {} to unused document", fxmlFile.getName());
-                    instance = unusedInstance;
-                } else {
-                    logger.info("Assign {} to new document", fxmlFile.getName());
-                    instance = newInstance();
-                }
-
-                jfxAppPlatform.runOnFxThread(() -> {
-                    instance.onFocus();
-                    try {
-                        instance.loadFromFile(fxmlFile, keepTrackOfLocation);
-                        instance.openWindow();
-                    } catch (IOException ex) {
-                        instance.closeWindow();
-                        dialog.get().showErrorAndWait(i18n.getString("alert.title.open"),
-                                i18n.getString("alert.open.failure1.message", displayName(fxmlFile.getPath())),
-                                i18n.getString("alert.open.failure1.details"), ex);
-                    }
-                });
-
-                return instance;
-            }
-        } catch (IOException ex) {
-            dialog.get().showErrorAndWait(i18n.getString("alert.title.open"),
-                    i18n.getString("alert.open.failure1.message", displayName(fxmlFile.getPath())),
-                    i18n.getString("alert.open.failure1.details"), ex);
-        }
-        return null;
-    }
+//    @Override
+//    public void open(List<URL> fxmlFiles) {
+//        open(fxmlFiles, true);
+//    }
+//    @Override
+//    public void open(List<URL> fxmlFiles, boolean keepTrackOfLocation) {
+//
+//        if (fxmlFiles == null || fxmlFiles.isEmpty()) {
+//            final ApplicationInstance instance = newInstance();
+//            instance.openWindow();
+//            instance.loadBlank();
+//            return;
+//        }
+//
+//        final Map<URL, ApplicationInstance> documents = new HashMap<>();
+//
+//        final Map<URL, Exception> exceptions = new HashMap<>();
+//
+//        // build dependency injections first
+//        for (URL fxmlFile : fxmlFiles) {
+//            try {
+//                final ApplicationInstance dwc = lookupInstance(fxmlFile);
+//                if (dwc != null) {
+//                    // fxmlFile is already opened
+//                    dwc.getDocumentWindow().getStage().toFront();
+//                } else {
+//                    // Open fxmlFile
+//                    final ApplicationInstance hostWindow;
+//                    final ApplicationInstance unusedWindow = lookupUnusedInstance(documents.values());
+//                    if (unusedWindow != null) {
+//                        logger.info("Assign {} to unused document", fxmlFile.getFile());
+//                        hostWindow = unusedWindow;
+//                    } else {
+//                        logger.info("Assign {} to new document", fxmlFile.getFile());
+//                        hostWindow = newInstance();
+//                    }
+//                    documents.put(fxmlFile, hostWindow);
+//                }
+//            } catch (Exception e) {
+//                exceptions.put(fxmlFile, e);
+//            }
+//        }
+//
+//        // execute ui related loading now
+//        jfxAppPlatform.runOnFxThread(() -> {
+//
+//            for (Entry<URL, ApplicationInstance> entry : documents.entrySet()) {
+//                var file = entry.getKey();
+//                ApplicationInstance hostWindow = entry.getValue();
+//                hostWindow.onFocus();
+//                // SbPlatform.runForDocument(hostWindow, () -> {
+//                try {
+//                    hostWindow.loadFromURL(file, keepTrackOfLocation);
+//                    hostWindow.openWindow();
+//                } catch (IOException xx) {
+//                    hostWindow.closeWindow();
+//                    exceptions.put(file, xx);
+//                }
+//                // });
+//
+//                switch (exceptions.size()) {
+//                case 0: { // Good
+//                    // Update recent items with opened files
+//                    // recentItemsPreference.addRecentItems(fxmlFiles);
+//                    break;
+//                }
+//                case 1: {
+//                    final URL fxmlFile = exceptions.keySet().iterator().next();
+//                    final Exception x = exceptions.get(fxmlFile);
+//                    dialog.get().showErrorAndWait(
+//                            i18n.getString("alert.title.open"),
+//                            i18n.getString("alert.open.failure1.message", displayName(fxmlFile.getPath())),
+//                            i18n.getString("alert.open.failure1.details"), x);
+//                    break;
+//                }
+//                default: {
+//                    if (exceptions.size() == fxmlFiles.size()) {
+//                        // Open operation has failed for all the files
+//                        dialog.get().showErrorAndWait(
+//                                i18n.getString("alert.title.open"),
+//                                i18n.getString("alert.open.failureN.message"),
+//                                i18n.getString("alert.open.failureN.details"));
+//                    } else {
+//                        // Open operation has failed for some files
+//                        dialog.get().showErrorAndWait(i18n.getString("alert.title.open"),
+//                                i18n.getString("alert.open.failureMofN.message", exceptions.size(), fxmlFiles.size()),
+//                                i18n.getString("alert.open.failureMofN.details"));
+//                    }
+//                    break;
+//                }
+//                }
+//            }
+//        });
+//    }
+//
+//    @Override
+//    public ApplicationInstance open(URL fxmlFile, boolean keepTrackOfLocation) {
+//
+//        if (fxmlFile == null) {
+//            final ApplicationInstance instance = newInstance();
+//            instance.openWindow();
+//            instance.loadBlank();
+//            return instance;
+//        }
+//
+//        try {
+//            final ApplicationInstance dwc = lookupInstance(fxmlFile);
+//            if (dwc != null) {
+//                // fxmlFile is already opened
+//                dwc.getDocumentWindow().getStage().toFront();
+//            } else {
+//                // Open fxmlFile
+//                final ApplicationInstance instance;
+//                final ApplicationInstance unusedInstance = lookupUnusedInstance();
+//                if (unusedInstance != null) {
+//                    logger.info("Assign {} to unused document", fxmlFile.getFile());
+//                    instance = unusedInstance;
+//                } else {
+//                    logger.info("Assign {} to new document", fxmlFile.getFile());
+//                    instance = newInstance();
+//                }
+//
+//                jfxAppPlatform.runOnFxThread(instance, () -> {
+//                    instance.onFocus();
+//                    try {
+//                        instance.loadFromURL(fxmlFile, keepTrackOfLocation);
+//                        instance.openWindow();
+//                    } catch (IOException ex) {
+//                        instance.closeWindow();
+//                        dialog.get().showErrorAndWait(i18n.getString("alert.title.open"),
+//                                i18n.getString("alert.open.failure1.message", displayName(fxmlFile.getPath())),
+//                                i18n.getString("alert.open.failure1.details"), ex);
+//                    }
+//                });
+//
+//                return instance;
+//            }
+//        } catch (Exception ex) {
+//            dialog.get().showErrorAndWait(i18n.getString("alert.title.open"),
+//                    i18n.getString("alert.open.failure1.message", displayName(fxmlFile.getPath())),
+//                    i18n.getString("alert.open.failure1.details"), ex);
+//        }
+//        return null;
+//    }
 
 //    public void toggleDebugMenu() {
 //        final boolean visible;
@@ -511,17 +499,17 @@ public class InstancesControllerImpl implements InstancesManager {
         context.getApplicationInstanceExecutor().unbindScope();
 
         final ApplicationInstance result = context.getBean(ApplicationInstance.class);
-        final ApplicationEvents sceneBuilderManager = context.getBean(ApplicationEvents.class);
-        final ApplicationInstanceEvents documentManager = context.getBean(ApplicationInstanceEvents.class);
+        final ApplicationEvents applicationEvents = context.getBean(ApplicationEvents.class);
+        final ApplicationInstanceEvents instanceEvents = context.getBean(ApplicationInstanceEvents.class);
 
-        sceneBuilderManager.documentScoped().set(result);
-        documentManager.dependenciesLoaded().set(true);
+        applicationEvents.documentScoped().set(result);
+        instanceEvents.dependenciesLoaded().set(true);
 
         // TODO checkme: can be deleted, already handled by documentWidowController
         // SbPlatform.runOnFxThreadWithActiveScope(() ->
         // windowIconSetting.setWindowIcon(result.getDocumentWindow().getStage()));
 
-        windowList.add(result);
+        instances.add(result);
         return result;
     }
 
@@ -703,13 +691,12 @@ public class InstancesControllerImpl implements InstancesManager {
     }
 
     public void applyToAllDocuments(Consumer<ApplicationInstance> consumer) {
-        windowList.stream().forEach(consumer::accept);
+        instances.stream().forEach(consumer::accept);
     }
 
     @Override
     public void close() {
 
-        finalizations.get().ifPresent(f -> f.forEach(a -> a.dispose()));
     }
 
 }

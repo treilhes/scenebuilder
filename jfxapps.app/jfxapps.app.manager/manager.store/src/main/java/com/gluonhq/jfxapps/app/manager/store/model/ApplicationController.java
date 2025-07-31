@@ -35,6 +35,6 @@ package com.gluonhq.jfxapps.app.manager.store.model;
 
 public interface ApplicationController {
     void install(Application item);
-
     void uninstall(Application item);
+    void launch(Application item);
 }

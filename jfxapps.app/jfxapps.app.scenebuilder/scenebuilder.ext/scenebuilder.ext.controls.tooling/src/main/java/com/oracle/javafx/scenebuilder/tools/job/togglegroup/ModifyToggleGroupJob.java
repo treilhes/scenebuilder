@@ -42,10 +42,10 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceProtot
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -72,7 +72,7 @@ public final class ModifyToggleGroupJob extends BatchDocumentJob {
 
     private final FxomJobsFactory fxomJobsFactory;
 
-    public ModifyToggleGroupJob(JobExtensionFactory extensionFactory, ApplicationInstanceEvents documentManager,
+    public ModifyToggleGroupJob(JobExtensionFactory extensionFactory, FxomEvents documentManager,
             SbMetadata metadata, FxomJobsFactory fxomJobsFactory) {
         super(extensionFactory, documentManager);
         this.metadata = metadata;

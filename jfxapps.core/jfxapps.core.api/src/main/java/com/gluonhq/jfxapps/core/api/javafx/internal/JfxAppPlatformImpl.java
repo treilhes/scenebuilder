@@ -79,8 +79,8 @@ public final class JfxAppPlatformImpl implements JfxAppPlatform {
      * @param runnable the code to run
      */
     @Override
-    public void runOnFxThreadWithScope(ApplicationInstance scopedDocument, Runnable runnable) {
-        runOnFxThreadWithScope(executor.getScopeId(scopedDocument), runnable);
+    public void runOnFxThread(ApplicationInstance scopedDocument, Runnable runnable) {
+        runOnFxThread(executor.getScopeId(scopedDocument), runnable);
     }
 
     /**
@@ -90,7 +90,7 @@ public final class JfxAppPlatformImpl implements JfxAppPlatform {
      */
     @Override
     public void runOnFxThreadWithActiveScope(Runnable runnable) {
-        runOnFxThreadWithScope(executor.getActiveScopeId(), runnable);
+        runOnFxThread(executor.getActiveScopeId(), runnable);
     }
 
     /**
@@ -99,7 +99,7 @@ public final class JfxAppPlatformImpl implements JfxAppPlatform {
      * @param runnable the code to run
      */
     @Override
-    public void runOnFxThreadWithScope(UUID scopedDocument, Runnable runnable) {
+    public void runOnFxThread(UUID scopedDocument, Runnable runnable) {
         if (scopedDocument == null) {
             throw new RuntimeException("Illegal document scope! The scope must be created before using it here");//NOCHECK
         }

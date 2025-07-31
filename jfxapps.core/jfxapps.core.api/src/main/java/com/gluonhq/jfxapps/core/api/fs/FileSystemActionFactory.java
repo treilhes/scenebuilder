@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,7 +34,7 @@
 package com.gluonhq.jfxapps.core.api.fs;
 
 import java.io.File;
-import java.net.URL;
+import java.io.InputStream;
 import java.util.List;
 
 import com.gluonhq.jfxapps.core.api.action.Action;
@@ -43,27 +43,29 @@ public interface FileSystemActionFactory {
 
     Action clearRecentItems();
 
-    Action loadBlank();
+    //Action loadBlank();
 
-    Action loadFile();
+    //Action loadFile();
 
-    Action loadURL(URL url, boolean keepTrackOfLocation);
+    //Action loadURL(URL url, boolean keepTrackOfLocation);
 
-    Action newInstance();
+    //Action newInstance();
 
     Action open();
 
     Action openFiles(List<File> list);
 
-    Action reload();
+    //Action reload();
 
-    Action save();
+    //Action save();
 
-    Action saveAs();
+    //Action saveAs();
 
-    Action saveOrSaveAs();
+    //Action saveOrSaveAs();
 
     Action reveal(File file);
 
     Action openWithSystemDefault(File file);
+
+    Action save(InputStream inputStream, File targetFile);
 }

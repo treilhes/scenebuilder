@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,6 +35,7 @@ package com.gluonhq.jfxapps.core.api.action;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,8 @@ public abstract class AbstractAction implements Action {
     private final String nameI18nKey;
     private final String descriptionI18nKey;
     private final List<ActionExtension<?>> extensions = new ArrayList<>();
+
+    private Action previousAction;
 
     public AbstractAction(I18N i18n, ActionExtensionFactory extensionFactory) {
         this.i18n = i18n;
@@ -125,4 +128,11 @@ public abstract class AbstractAction implements Action {
     public abstract boolean canPerform();
 
     public abstract ActionStatus doPerform();
+
+
+    @Override
+    public Actions then(Action nextAction) {
+        Objects.requireNonNull(nextAction, "nextAction cannot be null");
+        return Actions.startWith(this).then(nextAction);
+    }
 }

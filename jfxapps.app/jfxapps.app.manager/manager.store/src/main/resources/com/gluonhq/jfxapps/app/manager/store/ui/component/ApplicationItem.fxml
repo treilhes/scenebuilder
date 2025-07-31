@@ -76,6 +76,25 @@
                         <FontIcon iconLiteral="far-eye" iconSize="20" />
                      </graphic>
                   </Button>
+                  <Button fx:id="launchButton" alignment="CENTER_RIGHT" layoutX="74.0" layoutY="10.0" maxHeight="10.0" minHeight="30.0" mnemonicParsing="false" onAction="#launch" prefHeight="10.0">
+                     <effect>
+                        <DropShadow height="5.0" offsetX="1.0" offsetY="2.0" radius="2.0" width="5.0">
+                           <color>
+                              <Color red="0.3921568691730499" green="0.3921568691730499" blue="0.3921568691730499" />
+                           </color>
+                           <input>
+                              <InnerShadow offsetX="1.0" offsetY="1.0">
+                                 <color>
+                                    <Color red="0.3921568691730499" green="0.3921568691730499" blue="0.3921568691730499" />
+                                 </color>
+                              </InnerShadow>
+                           </input>
+                        </DropShadow>
+                     </effect>
+                     <graphic>
+                        <FontIcon iconLiteral="fas-play" iconSize="20" />
+                     </graphic>
+                  </Button>
                   <Button fx:id="uninstallButton" alignment="CENTER_RIGHT" maxHeight="10.0" minHeight="30.0" mnemonicParsing="false" onAction="#uninstall" prefHeight="10.0">
                      <effect>
                         <DropShadow height="5.0" offsetX="1.0" offsetY="2.0" radius="2.0" width="5.0">

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -45,9 +45,14 @@ public class LayerContent {
 
     private final Map<String, List<String>> patches = new HashMap<>();
     private final Set<Path> paths = new HashSet<>();
+    private final Map<String, List<String>> patchRequests = new HashMap<>();
 
     public void addPatch(String module, String path) {
         patches.computeIfAbsent(module, k -> new ArrayList<>()).add(path);
+    }
+
+    public void addPatchRequest(String module, String filename) {
+        patchRequests.computeIfAbsent(module, k -> new ArrayList<>()).add(filename);
     }
 
     public void addPath(Path path) {
@@ -62,6 +67,38 @@ public class LayerContent {
         return paths;
     }
 
+    /**
+     * Resolves the patch requests.
+     * Patch requests are entries composed of a module name and a list of jar file names.
+     * The method iterates through the patch requests, for each file name it searches for a matching path
+     * in the provided paths. If a match is found, it adds a patch in patches.
+     */
+    public void resolvePatchRequests() {
+        for (Map.Entry<String, List<String>> entry : patchRequests.entrySet()) {
+            String module = entry.getKey();
+            List<String> patchFiles = entry.getValue();
+            if (patchFiles.isEmpty()) {
+                continue; // No patch files for this module
+            }
+
+            for (String patchFile : patchFiles) {
+                // Search for the patch file in the paths
+                Path foundPath = null;
+                for (Path path : paths) {
+                    if (path.getFileName().toString().equals(patchFile)) {
+                        // Found a matching path for the patch file
+                        addPatch(module, path.toString());
+                        foundPath = path;
+                        break; // No need to search further for this patch file
+                    }
+                }
+
+                if (foundPath != null) {
+                    paths.remove(foundPath); // Remove the path if it was used for a patch
+                }
+            }
+        }
+    }
     @Override
     public String toString() {
         return "LayerContent [patches=" + patches + ", paths=" + paths + "]";

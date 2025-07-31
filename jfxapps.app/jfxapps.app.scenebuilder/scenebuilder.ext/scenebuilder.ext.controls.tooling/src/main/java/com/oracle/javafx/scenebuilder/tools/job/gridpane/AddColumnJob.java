@@ -48,10 +48,10 @@ import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchSelectionJob;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
@@ -90,7 +90,7 @@ public final class AddColumnJob extends BatchSelectionJob {
     // @formatter:off
     protected AddColumnJob(
             JobExtensionFactory extensionFactory,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             Selection selection,
             AddColumnConstraintsJob.Factory addColumnConstraintsJobFactory,
             ReIndexColumnContentJob.Factory reIndexColumnContentJobFactory,

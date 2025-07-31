@@ -42,6 +42,7 @@ open module jfxapps.core.api {
 
     exports com.gluonhq.jfxapps.core.api.application;
     exports com.gluonhq.jfxapps.core.api.application.annotation;
+
     exports com.gluonhq.jfxapps.core.api.lifecycle;
 
     exports com.gluonhq.jfxapps.core.api.ui.controller.alert;
@@ -72,6 +73,7 @@ open module jfxapps.core.api {
     exports com.gluonhq.jfxapps.core.api.shortcut.annotation;
     exports com.gluonhq.jfxapps.core.api.subjects;
 
+    exports com.gluonhq.jfxapps.core.api.task;
     exports com.gluonhq.jfxapps.core.api.tooltheme;
 
     exports com.gluonhq.jfxapps.core.api.javafx;
@@ -80,29 +82,27 @@ open module jfxapps.core.api {
     exports com.gluonhq.jfxapps.core.api.util;
 
     exports com.gluonhq.jfxapps.core.api.fxom.clipboard;
-
-
     exports com.gluonhq.jfxapps.core.api.fxom.content.decoration;
-    exports com.gluonhq.jfxapps.core.api.fxom.gesture;
     exports com.gluonhq.jfxapps.core.api.fxom.content.mode;
     exports com.gluonhq.jfxapps.core.api.fxom.content.mode.annotation;
     exports com.gluonhq.jfxapps.core.api.fxom.css;
-
     exports com.gluonhq.jfxapps.core.api.fxom.dnd;
+    exports com.gluonhq.jfxapps.core.api.document;
     exports com.gluonhq.jfxapps.core.api.fxom.editor.selection;
     exports com.gluonhq.jfxapps.core.api.fxom.error;
+    exports com.gluonhq.jfxapps.core.api.fxom.gesture;
     exports com.gluonhq.jfxapps.core.api.fxom.jobs;
     exports com.gluonhq.jfxapps.core.api.fxom.job;
     exports com.gluonhq.jfxapps.core.api.fxom.job.base;
     exports com.gluonhq.jfxapps.core.api.fxom.library;
-    exports com.gluonhq.jfxapps.core.api.fxom.subjects;
-    exports com.gluonhq.jfxapps.core.api.fxom.util;
-    exports com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc;
     exports com.gluonhq.jfxapps.core.api.fxom.mask;
+    exports com.gluonhq.jfxapps.core.api.fxom.subjects;
+    exports com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc;
     exports com.gluonhq.jfxapps.core.api.fxom.ui.controller.selbar;
     exports com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu;
     exports com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.annotation;
     exports com.gluonhq.jfxapps.core.api.fxom.ui.tool;
+    exports com.gluonhq.jfxapps.core.api.fxom.util;
 
 
     requires transitive jfxapps.javafx.starter;

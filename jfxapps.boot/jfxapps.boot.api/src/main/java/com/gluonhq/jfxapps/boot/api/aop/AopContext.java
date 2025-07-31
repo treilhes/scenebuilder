@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -36,6 +36,8 @@ package com.gluonhq.jfxapps.boot.api.aop;
 import java.lang.annotation.Annotation;
 
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 
@@ -67,4 +69,17 @@ public abstract class AopContext<M, A extends Annotation, META extends AopMetada
     public abstract M createTarget(JfxAppContext context, META metadata);
 
     public abstract <EX extends Annotation> Class<EX> getExclusionAnnotation();
+
+    protected <T> T instanciate(JfxAppContext context, Class<T> clazz) {
+        boolean isComponent = AnnotationUtils.findAnnotation(clazz, Component.class) != null;
+        try {
+            if (isComponent) {
+                return context.getBean(clazz);
+            }
+            return clazz.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to instantiate class: " + clazz, e);
+        }
+    }
+
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,6 +38,7 @@ import java.util.List;
 
 public class Context {
     private String targetPackage;
+    private String parentUuid;
     private String uuid;
     private String moduleName;
     private List<String> requiredModules = new ArrayList<>();
@@ -58,6 +59,14 @@ public class Context {
 
     public void setTargetPackage(String targetPackage) {
         this.targetPackage = targetPackage;
+    }
+
+    public String getParentUuid() {
+        return parentUuid;
+    }
+
+    public void setParentUuid(String parentUuid) {
+        this.parentUuid = parentUuid;
     }
 
     public String getUuid() {

@@ -37,8 +37,8 @@ import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
@@ -54,7 +54,7 @@ public class ScenePring extends AbstractNodePring<Node> {
 
     public ScenePring(
             Workspace workspace,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents documentManager,
             FXOMObjectMask.Factory maskFactory,
             SelectWithPringGesture.Factory selectWithPringGestureFactory) {
         super(workspace , documentManager, selectWithPringGestureFactory, Node.class);

@@ -41,8 +41,8 @@ import org.testfx.api.FxToolkit;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.gluonhq.jfxapps.core.api.application.ApplicationClassloader;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.UiController;
 import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
@@ -63,7 +63,7 @@ import javafx.stage.StageStyle;
 public class BaseBuilder {
 
     private final JfxAppContext context;
-    private final JavafxThreadClassloader classloader;
+    private final ApplicationClassloader classloader;
     private final ApplicationEvents events;
     private final FxomEvents fxomEvents;
     private final FxRobot robot;;
@@ -81,7 +81,7 @@ public class BaseBuilder {
     private ToolStylesheetProvider toolStylesheetProvider;
 
 
-    protected BaseBuilder(JfxAppContext context, JavafxThreadClassloader classloader, ApplicationEvents events, FxomEvents instanceEvents) {
+    protected BaseBuilder(JfxAppContext context, ApplicationClassloader classloader, ApplicationEvents events, FxomEvents instanceEvents) {
         this.context = context;
         this.classloader = classloader;
         this.events = events;
@@ -149,7 +149,7 @@ public class BaseBuilder {
         AtomicReference<FXOMDocument> docRef = new AtomicReference<>();
 
         robot.interact(() -> {
-            classloader.addClassLoader(Thread.currentThread().getContextClassLoader());
+            classloader.putClassLoader(BaseBuilder.class.getName() + "_context", Thread.currentThread().getContextClassLoader());
             Thread.currentThread().setContextClassLoader(classloader);
         });
 
@@ -179,7 +179,7 @@ public class BaseBuilder {
         instance.getRoot().getStyleClass().add("theme-presets");
 
         if (controller != null) {
-            classloader.addClassLoader(controller.getClassLoader());
+            classloader.putClassLoader(BaseBuilder.class.getName() + "_controller", controller.getClassLoader());
         }
 
         robot.interact(() -> {

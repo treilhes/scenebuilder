@@ -34,9 +34,6 @@
 package com.gluonhq.jfxapps.core.api.ui.controller;
 
 import java.net.URL;
-import java.util.ResourceBundle;
-
-import org.springframework.lang.NonNull;
 
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.FxmlController;
@@ -54,70 +51,71 @@ import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
  *
  */
 public abstract class AbstractFxmlController extends AbstractPanelController implements FxmlController{
-
-    private final I18N i18n;
-    private final URL fxmlURL;
+//
+//    private final I18N i18n;
+//    private final URL fxmlURL;
 
     /**
      * Base constructor for invocation by the subclasses.
      * @param i18n
-     * @param scenebuilderManager
-     * @param documentManager
+     * @param applicationEvents
+     * @param instanceEvents
      * @param fxmlURL the URL of the FXML file to be loaded (cannot be null)
      */
     // @formatter:off
     protected AbstractFxmlController(
             I18N i18n,
-            ApplicationEvents scenebuilderManager,
-            ApplicationInstanceEvents documentManager,
+            ApplicationEvents applicationEvents,
+            ApplicationInstanceEvents instanceEvents,
             URL fxmlURL) {
         // @formatter:on
-        super(scenebuilderManager, documentManager);
-        this.i18n = i18n;
-        this.fxmlURL = fxmlURL;
-        assert fxmlURL != null : "Check the name of the FXML file used by " + getClass().getSimpleName();
+        super(i18n, applicationEvents, instanceEvents, fxmlURL);
+//        this.i18n = i18n;
+//        this.fxmlURL = fxmlURL;
+//        assert fxmlURL != null : "Check the name of the FXML file used by " + getClass().getSimpleName();
     }
-
-    @Override
-    @NonNull
-    public URL getFxmlURL() {
-        return fxmlURL;
-    }
-
-    @Override
-    public ResourceBundle getResources() {
-        return i18n.getBundle();
-    }
-
-    public I18N getI18n() {
-        return i18n;
-    }
-
-    /**
-     * Returns the I18N property.
-     * This property is bound to the I18N instance of the application
-     * to allow i18n expression binding using ${controller.i18n.some.key}
-     * @return
-     */
-    public I18N i18nProperty() {
-        return i18n;
-    }
-
-    /*
-     * Protected
-     */
-
-    /**
-     * Called by {@link SceneBuilderBeanFactoryPostProcessor#postProcessBeanFactory(org.springframework.beans.factory.config.ConfigurableListableBeanFactory) } after
-     * the FXML file has been successfully loaded.
-     * Warning : this routine may be invoked outside of the event thread.
-     */
-    @Override
-    public abstract void controllerDidLoadFxml();
-
-    // Note : remember that here:
-    // 1) getHost() might be null
-    // 2) getRoot().getScene() might be null
-    // 3) getRoot().getScene().getWindow() might be null
+//
+//    @Override
+//    public URL getFxmlURL() {
+//        return fxmlURL;
+//    }
+//
+//    @Override
+//    public ResourceBundle getResources() {
+//        return i18n.getBundle();
+//    }
+//
+//    @Override
+//    public I18N getI18n() {
+//        return i18n;
+//    }
+//
+//    /**
+//     * Returns the I18N property.
+//     * This property is bound to the I18N instance of the application
+//     * to allow i18n expression binding using ${controller.i18n.some.key}
+//     * @return
+//     */
+//    @Override
+//    public I18N i18nProperty() {
+//        return i18n;
+//    }
+//
+//    /*
+//     * Protected
+//     */
+//
+//    /**
+//     * Called by {@link SceneBuilderBeanFactoryPostProcessor#postProcessBeanFactory(org.springframework.beans.factory.config.ConfigurableListableBeanFactory) } after
+//     * the FXML file has been successfully loaded.
+//     * Warning : this routine may be invoked outside of the event thread.
+//     */
+//    @Override
+//    public abstract void controllerDidLoadFxml();
+//
+//    // Note : remember that here:
+//    // 1) getHost() might be null
+//    // 2) getRoot().getScene() might be null
+//    // 3) getRoot().getScene().getWindow() might be null
 
 }

@@ -56,7 +56,7 @@ import com.gluonhq.jfxapps.core.api.shortcut.AcceleratorProvider;
 import com.gluonhq.jfxapps.core.api.shortcut.Accelerators;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractCommonUiController;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractInstanceUiController;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
 
 import javafx.beans.binding.Bindings;
@@ -72,7 +72,7 @@ import javafx.scene.input.KeyCombination.ModifierValue;
  * This class manage two level of accelerators. Global accelerators are valid
  * regardless of the scenebuilder focused panel but they can be override by
  * accelerator specific to scenebuilder focused panel
- * {@link AbstractCommonUiController}. The initial configuration is provided by
+ * {@link AbstractInstanceUiController}. The initial configuration is provided by
  * injection of {@link AcceleratorProvider} or class annotated by
  * {@link com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator}.
  * The initial configuration is override by preferences. A global
@@ -93,7 +93,7 @@ public class AcceleratorsController implements Accelerators, InitWithDocument {
     private MainInstanceWindow documentWindow;
 
     private Map<Action, List<KeyCombination>> defaultGlobalAccelerators = new HashMap<>();
-    private Map<Class<? extends AbstractCommonUiController>, Map<Action, List<KeyCombination>>> defaultFocusedAccelerators = new HashMap<>();
+    private Map<Class<? extends AbstractInstanceUiController>, Map<Action, List<KeyCombination>>> defaultFocusedAccelerators = new HashMap<>();
 
     private final JfxAppPlatform platform;
 
@@ -198,10 +198,10 @@ public class AcceleratorsController implements Accelerators, InitWithDocument {
         });
 
         if (focusedPart != null) { // some view has the focus, we override default accelerators with specific ones if any
-            var hierarchy = new ArrayList<Class<? extends AbstractCommonUiController>>();
+            var hierarchy = new ArrayList<Class<? extends AbstractInstanceUiController>>();
             Class<?> cls = focusedPart.getClass();
-            while (cls != null && AbstractCommonUiController.class.isAssignableFrom(cls)) {
-                hierarchy.add(0, (Class<? extends AbstractCommonUiController>)cls);
+            while (cls != null && AbstractInstanceUiController.class.isAssignableFrom(cls)) {
+                hierarchy.add(0, (Class<? extends AbstractInstanceUiController>)cls);
                 cls = cls.getSuperclass();
             }
 
@@ -260,7 +260,7 @@ public class AcceleratorsController implements Accelerators, InitWithDocument {
     }
 
     @Override
-    public void bind(Action action, MenuItem menuItem, Class<? extends AbstractCommonUiController> focusedClass) {
+    public void bind(Action action, MenuItem menuItem, Class<? extends AbstractInstanceUiController> focusedClass) {
         if (action == null || focusedClass == null) {
             return;
         }

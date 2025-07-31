@@ -43,6 +43,8 @@ import com.gluonhq.jfxapps.boot.maven.client.impl.RepositoryManagerImpl;
 import com.gluonhq.jfxapps.boot.maven.client.impl.RepositoryMapperImpl;
 import com.gluonhq.jfxapps.boot.maven.client.model.Repository;
 import com.gluonhq.jfxapps.boot.maven.client.repository.RepositoryRepository;
+import com.gluonhq.jfxapps.boot.maven.client.type.Maven;
+import com.gluonhq.jfxapps.boot.maven.client.type.Nexus;
 
 public class MavenBootClasses implements BootContextConfigClasses {
 
@@ -54,6 +56,9 @@ public class MavenBootClasses implements BootContextConfigClasses {
                 RedirectedRepositoryBeanPostProcessor.class,
                 RepositoryManagerImpl.class,
                 RepositoryMapperImpl.class,
+
+                Maven.class,
+                Nexus.class,
 
                 //model
                 Repository.class,

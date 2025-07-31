@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,40 +34,57 @@
 package com.gluonhq.jfxapps.core.fs.action.impl;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.application.InstancesManager;
+import com.gluonhq.jfxapps.core.api.application.ApplicationActionFactory;
+import com.gluonhq.jfxapps.core.api.document.DocumentActionFactory;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fs.RecentItems;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.ui.dialog.ApplicationDialog;
 
 @ApplicationInstancePrototype("com.gluonhq.jfxapps.core.fs.action.impl.OpenFilesAction")
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
-public class OpenFilesAction extends AbstractOpenFilesAction {
+public class OpenFilesAction extends AbstractAction {
 
-    //private static final Logger logger = LoggerFactory.getLogger(OpenFilesAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(OpenFilesAction.class);
 
     private final FileSystem fileSystem;
+
+    private final ApplicationActionFactory applicationActionFactory;
+
+    private final DocumentActionFactory documentActionFactory;
+
+    private final ApplicationDialog applicationDialog;
+
+    private final RecentItems recentItems;
 
     private List<File> fxmlFiles;
 
     // @formatter:off
     protected OpenFilesAction(
             I18N i18n,
-            JfxAppPlatform jfxAppPlatform,
             ActionExtensionFactory extensionFactory,
-            Dialog dialog,
-            InstancesManager main,
             RecentItems recentItems,
-            FileSystem fileSystem) {
+            FileSystem fileSystem,
+            ApplicationActionFactory applicationActionFactory,
+            DocumentActionFactory documentActionFactory,
+            ApplicationDialog applicationDialog) {
      // @formatter:on
-        super(i18n, jfxAppPlatform, extensionFactory, dialog, main, recentItems);
+        super(i18n, extensionFactory);
         this.fileSystem = fileSystem;
+        this.applicationActionFactory = applicationActionFactory;
+        this.documentActionFactory = documentActionFactory;
+        this.applicationDialog = applicationDialog;
+        this.recentItems = recentItems;
     }
 
     public void setFxmlFile(List<File> fxmlFiles) {
@@ -85,8 +102,23 @@ public class OpenFilesAction extends AbstractOpenFilesAction {
 
     @Override
     public ActionStatus doPerform() {
-        fileSystem.updateNextInitialDirectory(fxmlFiles.get(0));
-        performOpenFiles(fxmlFiles);
+
+        if (fxmlFiles != null) {
+            assert fxmlFiles.isEmpty() == false;
+            fileSystem.updateNextInitialDirectory(fxmlFiles.get(0));
+
+            for (File file : fxmlFiles) {
+                try {
+                    var fileURL = file.toURI().toURL();
+                    applicationActionFactory.lookupUnusedInstance(fileURL,
+                            (instance) -> documentActionFactory.loadURL(fileURL, true));
+                    recentItems.addRecentItem(fileURL);
+                } catch (MalformedURLException e) {
+                    logger.error("Error converting file to URL: {}", file, e);
+                    applicationDialog.addError("Unable to open file", e.getMessage(), e);
+                }
+            }
+        }
         return ActionStatus.DONE;
     }
 

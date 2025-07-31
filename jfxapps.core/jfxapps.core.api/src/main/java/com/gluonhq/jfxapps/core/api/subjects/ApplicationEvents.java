@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,13 +35,20 @@ package com.gluonhq.jfxapps.core.api.subjects;
 
 import com.gluonhq.jfxapps.boot.api.context.Application;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.application.ApplicationClassloader;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.ReplaySubject;
 import io.reactivex.rxjava3.subjects.Subject;
+import javafx.stage.Window;
 
+/**
+ * Application events.
+ *
+ * @ApplicationSingleton
+ */
 public interface ApplicationEvents {
 
     SubjectItem<Boolean> debugMode();
@@ -58,29 +65,32 @@ public interface ApplicationEvents {
 
     SubjectItem<ToolStylesheetProvider> stylesheetConfig();
 
-    SubjectItem<ClassLoader> classloader();
+    SubjectItem<ApplicationClassloader> classloader();
+
+    SubjectItem<Window> newWindow();
 
     @ApplicationSingleton
     public class ApplicationEventsImpl implements ApplicationEvents {
 
         private final ApplicationSubjects subjects;
         private final SubjectItem<Boolean> debugMode;
-        private final SubjectItem<ClassLoader> classloader;
+        private final SubjectItem<ApplicationClassloader> classloader;
 
         private final SubjectItem<ToolStylesheetProvider> stylesheetConfig;
         private final SubjectItem<Application> opened;
         private final SubjectItem<Application> closed;
         private final SubjectItem<ApplicationInstance> documentScoped;
-
+        private final SubjectItem<Window> newWindow;
 
         public ApplicationEventsImpl() {
             subjects = new ApplicationSubjects();
-            debugMode = new SubjectItem<Boolean>(subjects.getDebugMode()).set(false);
-            classloader = new SubjectItem<ClassLoader>(subjects.getClassloader()).set(this.getClass().getClassLoader());
-            stylesheetConfig = new SubjectItem<ToolStylesheetProvider>(subjects.getStylesheetConfig());
-            opened = new SubjectItem<Application>(subjects.getOpened());
-            closed = new SubjectItem<Application>(subjects.getClosed());
-            documentScoped = new SubjectItem<ApplicationInstance>(subjects.getDocumentScoped());
+            debugMode = new SubjectItem<>(subjects.getDebugMode()).set(false);
+            classloader = new SubjectItem<>(subjects.getClassloader());//.set(null);
+            stylesheetConfig = new SubjectItem<>(subjects.getStylesheetConfig());
+            opened = new SubjectItem<>(subjects.getOpened());
+            closed = new SubjectItem<>(subjects.getClosed());
+            documentScoped = new SubjectItem<>(subjects.getDocumentScoped());
+            newWindow = new SubjectItem<>(subjects.getNewWindow());
         }
 
         @Override
@@ -119,8 +129,13 @@ public interface ApplicationEvents {
         }
 
         @Override
-        public SubjectItem<ClassLoader> classloader() {
+        public SubjectItem<ApplicationClassloader> classloader() {
             return classloader;
+        }
+
+        @Override
+        public SubjectItem<Window> newWindow() {
+            return newWindow;
         }
     }
 
@@ -133,7 +148,8 @@ public interface ApplicationEvents {
         private PublishSubject<ApplicationInstance> documentClosed;
         private ReplaySubject<ApplicationInstance> documentScoped;
         private ReplaySubject<Boolean> debugMode;
-        private ReplaySubject<ClassLoader> classloader;
+        private ReplaySubject<ApplicationClassloader> classloader;
+        private PublishSubject<Window> newWindow;
 
         public ApplicationSubjects() {
             opened = wrap(ApplicationSubjects.class, "opened", ReplaySubject.create(1)); // NOI18N
@@ -144,6 +160,7 @@ public interface ApplicationEvents {
             documentClosed = wrap(ApplicationSubjects.class, "documentClosed", PublishSubject.create()); // NOI18N
             documentScoped = wrap(ApplicationSubjects.class, "documentScoped", ReplaySubject.create(1)); // NOI18N
             classloader = wrap(ApplicationSubjects.class, "classloader", ReplaySubject.create(1)); // NOI18N
+            newWindow = wrap(ApplicationSubjects.class, "newWindow", PublishSubject.create()); // NOI18N
         }
 
         public ReplaySubject<ToolStylesheetProvider> getStylesheetConfig() {
@@ -174,8 +191,12 @@ public interface ApplicationEvents {
             return debugMode;
         }
 
-        public ReplaySubject<ClassLoader> getClassloader() {
+        public ReplaySubject<ApplicationClassloader> getClassloader() {
             return classloader;
+        }
+
+        public PublishSubject<Window> getNewWindow() {
+            return newWindow;
         }
 
     }

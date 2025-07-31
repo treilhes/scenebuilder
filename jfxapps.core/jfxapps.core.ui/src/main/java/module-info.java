@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,7 +38,8 @@ open module jfxapps.core.ui {
 
     exports com.gluonhq.jfxapps.core.ui.editor.messagelog;
     exports com.gluonhq.jfxapps.core.ui.controller;
-    exports com.gluonhq.jfxapps.core.ui.dialog;
+    exports com.gluonhq.jfxapps.core.ui.dialog.application;
+    exports com.gluonhq.jfxapps.core.ui.dialog.instance;
     exports com.gluonhq.jfxapps.core.ui.i18n;
     exports com.gluonhq.jfxapps.core.ui.message;
     exports com.gluonhq.jfxapps.core.ui.selectionbar;

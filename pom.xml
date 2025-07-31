@@ -43,7 +43,7 @@
         <spring.boot.version>3.4.0</spring.boot.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <rxjavafx.version>3.0.2</rxjavafx.version>
-
+		<ikonli.version>12.3.1</ikonli.version>
     </properties>
 
     <repositories>
@@ -352,6 +352,17 @@
                 <artifactId>rxjavafx</artifactId>
                 <version>${rxjavafx.version}</version>
             </dependency>
+
+			<dependency>
+				<groupId>org.kordamp.ikonli</groupId>
+				<artifactId>ikonli-javafx</artifactId>
+				<version>${ikonli.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.kordamp.ikonli</groupId>
+				<artifactId>ikonli-fontawesome5-pack</artifactId>
+				<version>${ikonli.version}</version>
+			</dependency>
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>

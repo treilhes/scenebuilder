@@ -58,6 +58,14 @@
 
                                     <!-- secondary boot -->
                                     <extension>
+                                        <uuid>033bfca9-6681-497c-b4ce-10ea31080eab</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>jfxapps.core.document</artifactId>
+                                            <version>${project.version}</version>
+                                        </dependency>
+                                    </extension>
+                                    <extension>
                                         <uuid>0f456500-a6d0-4438-8186-4d3de840b81b</uuid>
                                         <dependency>
                                             <groupId>com.gluonhq.jfxapps</groupId>

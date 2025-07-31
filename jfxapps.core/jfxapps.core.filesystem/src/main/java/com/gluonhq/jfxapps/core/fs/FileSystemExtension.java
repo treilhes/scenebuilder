@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,28 +39,18 @@ import java.util.UUID;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.core.fs.action.FileSystemActionFactoryImpl;
 import com.gluonhq.jfxapps.core.fs.action.impl.ClearRecentItemsAction;
-import com.gluonhq.jfxapps.core.fs.action.impl.LoadBlankAction;
-import com.gluonhq.jfxapps.core.fs.action.impl.LoadFileAction;
-import com.gluonhq.jfxapps.core.fs.action.impl.LoadUrlAction;
-import com.gluonhq.jfxapps.core.fs.action.impl.NewAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.OpenAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.OpenFileWithSystemDefaultAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.OpenFilesAction;
-import com.gluonhq.jfxapps.core.fs.action.impl.ReloadFileAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.RevealFileAction;
 import com.gluonhq.jfxapps.core.fs.action.impl.SaveAction;
-import com.gluonhq.jfxapps.core.fs.action.impl.SaveAsAction;
-import com.gluonhq.jfxapps.core.fs.action.impl.SaveOrSaveAsAction;
 import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
 import com.gluonhq.jfxapps.core.fs.controller.FileSystemController;
-import com.gluonhq.jfxapps.core.fs.controller.FxmlSerializer;
+import com.gluonhq.jfxapps.core.fs.controller.FileWatchController;
 import com.gluonhq.jfxapps.core.fs.controller.RecentItemsController;
-import com.gluonhq.jfxapps.core.fs.preference.CompressFxmlPreference;
 import com.gluonhq.jfxapps.core.fs.preference.InitialDirectoryPreference;
 import com.gluonhq.jfxapps.core.fs.preference.RecentItemsPreference;
 import com.gluonhq.jfxapps.core.fs.preference.RecentItemsSizePreference;
-import com.gluonhq.jfxapps.core.fs.preference.UseSampleDataPreference;
-import com.gluonhq.jfxapps.core.fs.preference.WildcardImportsPreference;
 
 public class FileSystemExtension implements OpenExtension {
 
@@ -87,29 +77,30 @@ public class FileSystemExtension implements OpenExtension {
         return List.of(
                 ClassLoaderController.class,
                 ClearRecentItemsAction.class,
-                CompressFxmlPreference.class,
-                DefaultDocumentFactory.class,
+                //CompressFxmlPreference.class,
+                //DefaultDocumentFactory.class,
                 FileSystemActionFactoryImpl.class,
                 FileSystemController.class,
-                FxmlSerializer.class,
+                FileWatchController.class,
+                //FxmlSerializer.class,
                 InitialDirectoryPreference.class,
-                LoadBlankAction.class,
-                LoadFileAction.class,
-                LoadUrlAction.class,
-                NewAction.class,
+                //LoadBlankAction.class,
+                //LoadFileAction.class,
+                //LoadUrlAction.class,
+                //NewAction.class,
                 OpenAction.class,
                 OpenFilesAction.class,
                 OpenFileWithSystemDefaultAction.class,
                 RecentItemsController.class,
                 RecentItemsPreference.class,
                 RecentItemsSizePreference.class,
-                ReloadFileAction.class,
+                //ReloadFileAction.class,
                 RevealFileAction.class,
-                SaveAction.class,
-                SaveAsAction.class,
-                SaveOrSaveAsAction.class,
-                UseSampleDataPreference.class,
-                WildcardImportsPreference.class
+                SaveAction.class
+                //SaveAsAction.class,
+                //SaveOrSaveAsAction.class,
+                //UseSampleDataPreference.class,
+                //WildcardImportsPreference.class
             );
      // @formatter:on
     }

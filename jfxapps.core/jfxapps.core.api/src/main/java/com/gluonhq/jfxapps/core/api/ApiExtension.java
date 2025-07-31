@@ -42,6 +42,7 @@ import com.gluonhq.jfxapps.boot.api.loader.extension.RootExtension;
 import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
+import com.gluonhq.jfxapps.core.api.application.ApplicationClassloader;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.DefaultSelectionGroupFactory;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroupFactoryRegistry;
@@ -49,7 +50,6 @@ import com.gluonhq.jfxapps.core.api.fxom.gesture.DiscardGesture;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.dock.SearchController;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.javafx.JavafxThreadClassloader;
 import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
 import com.gluonhq.jfxapps.core.api.javafx.internal.JavafxThreadBootstrapper;
 import com.gluonhq.jfxapps.core.api.javafx.internal.JavafxThreadClassloaderDispatcherImpl;
@@ -62,6 +62,7 @@ import com.gluonhq.jfxapps.core.api.subjects.DockManager;
 import com.gluonhq.jfxapps.core.api.subjects.LifecyclePostProcessor;
 import com.gluonhq.jfxapps.core.api.subjects.NetworkManager;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
+import com.gluonhq.jfxapps.core.api.task.TaskService;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockNameHelper;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewController;
@@ -111,7 +112,7 @@ public class ApiExtension implements RootExtension {
                 FxmlControllerBeanPostProcessor.class,
                 I18N.class,
                 JavafxThreadBootstrapper.class,
-                JavafxThreadClassloader.class,
+                ApplicationClassloader.class,
                 JavafxThreadClassloaderDispatcherImpl.class,
                 JfxAppPlatformImpl.class,
                 JobExtensionFactory.class,
@@ -122,6 +123,7 @@ public class ApiExtension implements RootExtension {
                 ObjectSelectionGroup.Factory.class,
                 SearchController.class,
                 SelectionGroupFactoryRegistry.class,
+                TaskService.class,
                 ViewController.class,
                 ViewManager.ViewManagerImpl.class
         );

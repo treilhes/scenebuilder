@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,7 +44,8 @@ import com.gluonhq.jfxapps.boot.maven.client.type.Nexus;
 public class MavenPresets {
 
     public static final String MAVEN = "Maven Central";
-    public static final String SONATYPE = "Sonatype";
+    public static final String SONATYPE_RELEASES = "Sonatype releases";
+    public static final String SONATYPE_SNAPSHOTS = "Sonatype snaphotss";
     public static final String GLUON_NEXUS = "Gluon Nexus";
     public static final String LOCAL = "Local";
 
@@ -52,13 +53,15 @@ public class MavenPresets {
             Repository.builder().id(MAVEN).type(Maven.class)
                     .url("https://repo1.maven.org/maven2/")
                     .build(),
-            Repository.builder().id(SONATYPE).type(Nexus.class)
+            Repository.builder().id(SONATYPE_SNAPSHOTS).type(Nexus.class)
                     .url("https://oss.sonatype.org/content/repositories/snapshots")
                     .contentType(Content.SNAPSHOT).build(),
-            Repository.builder().id(SONATYPE).type(Nexus.class)
+            Repository.builder().id(SONATYPE_RELEASES).type(Nexus.class)
                     .url("https://oss.sonatype.org/content/repositories/releases")
                     .contentType(Content.RELEASE)
                     .build(),
+
+            // FIXME: This is a Gluon Nexus repository, so it should be moved to the gluon plugin
             Repository.builder().id(GLUON_NEXUS).type(Nexus.class)
                     .url("https://nexus.gluonhq.com/nexus/content/repositories/releases")
                     .contentType(Content.RELEASE).build());

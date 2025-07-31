@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -152,6 +152,7 @@ public class JavaGeneratorImpl implements ClassCustomization {
         context.setPropertyNamesClassSimpleName("PropertyNames");
         context.setRequiredModules(javaGenerationContext.getModuleRequires());
         context.setTargetPackage(javaGenerationContext.getTargetPackage());
+        context.setParentUuid(javaGenerationContext.getParentUuid().toString());
         context.setUuid(javaGenerationContext.getUuid().toString());
         context.setValuePropertyCustomizationClassName(
                 javaGenerationContext.getTargetValuePropertyCustomizationClass());

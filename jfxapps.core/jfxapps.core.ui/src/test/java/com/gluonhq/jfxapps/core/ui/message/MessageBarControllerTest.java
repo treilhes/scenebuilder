@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -80,8 +80,11 @@ class MessageBarControllerTest {
         Mockito.when(messageLogger.revisionProperty()).thenReturn(revisionProperty);
         Mockito.when(messageLogger.numOfWarningMessagesProperty()).thenReturn(numOfWarningMessagesProperty);
 
-        var controller = builder.controller(MessageBarController.class).show().getController();
-        assertNotNull(controller.getRoot());
+        try (var testStage = builder.controller(MessageBarController.class).show()){
+            var controller = testStage.getController();
+            assertNotNull(controller.getRoot());
+        }
+
     }
 
     @Test
@@ -93,17 +96,17 @@ class MessageBarControllerTest {
         Mockito.when(messageLogger.revisionProperty()).thenReturn(revisionProperty);
         Mockito.when(messageLogger.numOfWarningMessagesProperty()).thenReturn(numOfWarningMessagesProperty);
 
-        MessageBarController controller = builder.controller(MessageBarController.class)
+        try (var testStage = builder.controller(MessageBarController.class)
                 .setup(StageType.Fill)
                 .size(800, 600)
-                .show().getController();
+                .show()){
+            MessageBarController controller = testStage.getController();
 
+            robot.interact(() -> {
+                controller.setDocumentDirty(true);
+            });
 
-        robot.interact(() -> {
-            controller.setDocumentDirty(true);
-        });
-
-        assertNotNull(controller.getRoot());
+            assertNotNull(controller.getRoot());
+        }
     }
-
 }
