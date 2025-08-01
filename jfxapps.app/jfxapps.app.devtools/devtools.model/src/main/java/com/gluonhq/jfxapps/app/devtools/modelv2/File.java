@@ -35,14 +35,45 @@ package com.gluonhq.jfxapps.app.devtools.modelv2;
 
 import java.nio.file.Path;
 
+/**
+ * Represents a file in the filesystem watcher model.
+ * This class encapsulates the properties and behaviors of a file,
+ * including its location, type, and refresh capabilities.
+ */
 public class File {
+
+    /**
+     * Flag to enable or disable virtual threading for refresh operations.
+     * If true, refresh operations will run on virtual threads; otherwise, they will run on the current thread.
+     */
     private static final boolean ENABLE_VIRTUAL_THREADING = true;
 
+    /**
+     * The parent folder of this file.
+     */
     private final Folder parent;
+
+    /**
+     * The location of the file in the filesystem.
+     */
     private final Path location;
+    /**
+     * The type of the file, defining its extensions and creation logic.
+     */
     private final FileType fileType;
+    /**
+     * Indicates whether the file is currently being refreshed.
+     * This prevents multiple refresh requests from being processed simultaneously.
+     */
     private boolean refreshing;
 
+    /**
+     * Constructs a File instance with the specified parent folder, location, and file type.
+     *
+     * @param parent the parent folder of this file
+     * @param location the path to the file in the filesystem
+     * @param fileType the type of the file, defining its extensions and creation logic
+     */
     public File(Folder parent, Path location, FileType fileType) {
         super();
         this.parent = parent;
@@ -50,6 +81,11 @@ public class File {
         this.fileType = fileType;
     }
 
+    /**
+     * Returns the parent folder of this file.
+     *
+     * @return the parent folder
+     */
     public Path getLocation() {
         return location;
     }
@@ -59,6 +95,11 @@ public class File {
         return "File [location=" + location + "]";
     }
 
+    /**
+     * Returns the type of this file.
+     *
+     * @return the file type
+     */
     public final void requestRefresh() {
         if (refreshing) {
             return; // already refreshing
@@ -82,11 +123,18 @@ public class File {
         }
     }
 
+    /**
+     * Called when an update to the file has been done.
+     * This method should be overridden to implement the actual internal state refresh logic.
+     */
     public void refresh() {
-        // TODO Auto-generated method stub
 
     }
 
+    /**
+     * Called when the file is removed from the filesystem.
+     * This method should be overridden to implement the actual removal logic.
+     */
     public void onRemove() {
 
     }

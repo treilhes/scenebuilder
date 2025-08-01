@@ -33,42 +33,11 @@
  */
 package com.gluonhq.jfxapps.app.devtools.modelv2;
 
-import java.io.File;
-
-import org.junit.jupiter.api.Test;
-
-import com.gluonhq.jfxapps.app.devtools.modelv2.FolderType.Default;
-
-class CrawlerTest {
-
-    @Test
-    void must_crawl_to_current_project() {
-        var root = new File(".");
-        var rootPath = root.toPath();
-        var watcher = new Watcher();
-        watcher.startWatch();
-
-        var rootFolder = Root.INSTANCE.createFolder(watcher, null, rootPath);
-        rootFolder.addExclusionPattern("docs");
-        rootFolder.addExclusionPattern("\\..*");
-        rootFolder.refresh();
-
-        watcher.stopWatch();
-    }
-
-    public static class Root extends Default {
-
-        public static final FolderType INSTANCE = new Root();
-
-        private Factory localFolderTypeFactory = Factory.of(
-                MavenProject.INSTANCE,
-                Default.INSTANCE
-                );
-
-        @Override
-        public Factory getFactory() {
-            return localFolderTypeFactory;
-        }
-    }
-
-}
+/**
+ * Provides a package-level documentation for the watcher model.
+ *
+ * This package contains classes and interfaces that define the structure and behavior
+ * of a filesystem watcher able to populate a custom file and folder model according to filesystem modifications.
+ * The watcher can monitor directories for changes, handle file creation, modification, and deletion events,
+ * and manage a hierarchy of folders and files according to specified rules and patterns.
+ */

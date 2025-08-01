@@ -37,15 +37,45 @@ import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.util.function.Consumer;
 
+/**
+ * Interface for handling file system watch events.
+ * This interface allows for the handling of various types of file and directory events,
+ * such as creation, modification, deletion, and overflow.
+ */
 public interface WatchEventHandler {
+
+    /**
+     * Handles a file system watch event.
+     * @param event the watch event to handle
+     */
     void handleEvent(WatchEvent<?> event);
 
+    /**
+     * Adds a consumer to handle file creation events.
+     * @param consumer the consumer to handle the event
+     * @return this WatchEventHandler instance for method chaining
+     */
     WatchEventHandler addOnFileCreated(Consumer<Path> consumer);
 
+    /**
+     * Adds a consumer to handle file modification events.
+     * @param consumer the consumer to handle the event
+     * @return this WatchEventHandler instance for method chaining
+     */
     WatchEventHandler addOnFileModified(Consumer<Path> consumer);
 
+    /**
+     * Adds a consumer to handle directory creation events.
+     * @param consumer the consumer to handle the event
+     * @return this WatchEventHandler instance for method chaining
+     */
     WatchEventHandler addOnDirectoryCreated(Consumer<Path> consumer);
 
+    /**
+     * Adds a consumer to handle directory modification events.
+     * @param consumer the consumer to handle the event
+     * @return this WatchEventHandler instance for method chaining
+     */
     WatchEventHandler addOnDirectoryModified(Consumer<Path> consumer);
 
     /**
@@ -55,5 +85,11 @@ public interface WatchEventHandler {
      */
     WatchEventHandler addOnDeleted(Consumer<Path> consumer);
 
+    /**
+     * Adds a consumer to handle overflow events, which occur when the watch service
+     * cannot deliver all events due to system limitations.
+     * @param consumer the consumer to handle the overflow event
+     * @return this WatchEventHandler instance for method chaining
+     */
     WatchEventHandler addOnOverflow(Consumer<Object> consumer);
 }

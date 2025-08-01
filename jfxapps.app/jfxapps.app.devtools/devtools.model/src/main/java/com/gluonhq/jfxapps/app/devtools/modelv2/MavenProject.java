@@ -44,188 +44,126 @@ import com.gluonhq.jfxapps.app.devtools.modelv2.FolderType.Default;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 
+/**
+ * A Maven project structure representation dedicated to javafx project
+ * This class defines the folder and file types typically found in a Maven project,
+ * including source code, resources, and their respective file types.
+ *
+ * It extends the {@link Default} class to provide a default implementation
+ * for folder handling and file type definitions.
+ *
+ * The structure includes:
+ * <ul>
+ * <li>Java source files (.java)</li>
+ * <li>FXML files (.fxml)</li>
+ * <li>Properties files (.properties)</li>
+ * <li>Java packages organized in a source directory</li>
+ * <li>Resource packages organized in a resources directory</li>
+ * <li>A main source directory containing both Java and resource packages</li>
+ * <li>A test source directory mirroring the main structure</li>
+ * <li>A top-level Maven project folder that includes the main and test directories</li>
+ * </ul>
+ * * The folder structure is designed to be flexible and extensible, allowing for
+ * additional folder types and file types to be added as needed.
+ * * The MavenProject2 class provides static methods to create package folders
+ * and check folder conditions,
+ * and it uses the {@link FolderType} and {@link FileType} classes
+ * to define the structure and behavior of the project.
+ * * <p>
+ *
+ */
 public class MavenProject extends Default {
 
-    public static final FolderType INSTANCE = new MavenProject();
+    /**
+     * Java file type definition.
+     */
+    public static final FileType JAVA_FILE = FileType.of(List.of("java"), JavaFile::new);
+    /**
+     * FXML file type definition.
+     */
+    public static final FileType FXML_FILE = FileType.of(List.of("fxml"), FxmlFile::new);
+    /**
+     * Properties file type definition.
+     */
+    public static final FileType PROPERTIES_FILE = FileType.of(List.of("properties"), PropertiesFile::new);
 
-    private static final Factory localFolderTypeFactory = Factory.of(
-            MavenProject.INSTANCE,
-            Source.INSTANCE,
-            Default.INSTANCE
-            );
+    /**
+     * A folder type representing a Java package.
+     * It is applicable to any path and creates a package folder.
+     * It includes Java files and excludes other file types.
+     */
+    public static final FolderType JAVA_PACKAGE = FolderType.of(
+            MavenProject::any,
+            MavenProject::createPackageFolder,
+            List.of(),
+            List.of(JAVA_FILE), true);
 
-    @Override
-    public boolean isDefinitionApplicable(Path path) {
+    public static final FolderType RESOURCE_PACKAGE = FolderType.of(
+            MavenProject::any,
+            MavenProject::createPackageFolder,
+            List.of(),
+            List.of(FXML_FILE, PROPERTIES_FILE), true);
+
+    public static final FolderType JAVA_SRC = FolderType.of(
+            p -> checkFolderIs(p, "scr"),
+            MavenProject::createPackageFolder,
+            List.of(JAVA_PACKAGE),
+            List.of(JAVA_FILE), false);
+
+    public static final FolderType RESOURCES = FolderType.of(
+            p -> checkFolderIs(p, "resources"),
+            MavenProject::createPackageFolder,
+            List.of(RESOURCE_PACKAGE),
+            List.of(FXML_FILE, PROPERTIES_FILE), false);
+
+    public static final FolderType MAVEN_PROJECT = FolderType.builder()
+            .withIsApplicable(MavenProject::hasPomFile)
+            .withThisFolderType()// to handle sub project
+            .withFolderType(FolderType.builder()
+                    .withIsApplicable(path -> checkFolderIs(path, "src"))
+                    .withFolderType(FolderType.builder()
+                        .withIsApplicable(path -> checkFolderIs(path, "main"))
+                        .withFolderType(JAVA_SRC)
+                        .withFolderType(RESOURCES)
+                        .build())
+                    .withFolderType(FolderType.builder()
+                        .withIsApplicable(path -> checkFolderIs(path, "test"))
+                        .withFolderType(JAVA_SRC)
+                        .withFolderType(RESOURCES)
+                        .build())
+                    .build())
+            .withFolderSupplier((watcher, parent, path, type) -> {
+                var folder = new Folder(watcher, parent, path, type);
+                folder.addExclusionPattern("\\..*");
+                folder.addExclusionPattern("target");
+                return folder;
+            })
+            .build();
+
+    private static boolean any(Path path) {
+        return true;
+    }
+
+    private static boolean checkFolderIs(Path path, String folderName) {
+        return path != null && path.getFileName().toString().equals(folderName);
+    }
+
+    private static boolean hasPomFile(Path path) {
         return path != null && Files.exists(path.resolve("pom.xml"));
     }
 
-    @Override
-    public Folder createFolder(Watcher watcher, Folder parent, Path path) {
-        var folder = new Folder(watcher,parent, path, this);
-        folder.addExclusionPattern("\\..*");
-        folder.addExclusionPattern("target");
-        return folder;
+    public static PackageFolder createPackageFolder(Watcher watcher, Folder parent, Path path, FolderType type) {
+        return new PackageFolder(watcher, parent, path, type);
     }
 
-    @Override
-    public Factory getFactory() {
-        return localFolderTypeFactory;
-    }
-
-
-    public static class Source extends Default {
-
-        public static final FolderType INSTANCE = new Source();
-
-        private static final Factory localFolderTypeFactory = Factory.of(
-                MainSource.INSTANCE,
-                TestSource.INSTANCE,
-                Default.INSTANCE
-                );
-
-        @Override
-        public boolean isDefinitionApplicable(Path path) {
-            return path != null && path.getFileName().toString().equals("src");
+    public static class PackageFolder extends Folder {
+        public PackageFolder(Watcher watcher, Folder parent, Path location, FolderType type) {
+            super(watcher, parent, location, type);
         }
 
         @Override
-        public Folder createFolder(Watcher watcher, Folder parent, Path path) {
-            return new Folder(watcher,parent, path, this);
-        }
-
-        @Override
-        public Factory getFactory() {
-            return localFolderTypeFactory;
-        }
-    }
-
-    public static class MainSource extends Default {
-
-        public static final FolderType INSTANCE = new MainSource();
-
-        private static final Factory localFolderTypeFactory = Factory.of(
-                JavaSource.INSTANCE,
-                Resource.INSTANCE,
-                Default.INSTANCE
-                );
-
-        @Override
-        public boolean isDefinitionApplicable(Path path) {
-            return path != null && path.getFileName().toString().equals("main");
-        }
-
-        @Override
-        public Folder createFolder(Watcher watcher, Folder parent, Path path) {
-            return new Folder(watcher, parent, path, this);
-        }
-
-        @Override
-        public Factory getFactory() {
-            return localFolderTypeFactory;
-        }
-    }
-
-    public static class TestSource extends Default {
-
-        public static final FolderType INSTANCE = new TestSource();
-
-        private static final Factory localFolderTypeFactory = Factory.of(
-                JavaSource.INSTANCE,
-                Resource.INSTANCE,
-                Default.INSTANCE
-                );
-
-        @Override
-        public boolean isDefinitionApplicable(Path path) {
-            return path != null && path.getFileName().toString().equals("test");
-        }
-
-        @Override
-        public Folder createFolder(Watcher watcher, Folder parent, Path path) {
-            return new Folder(watcher, parent, path, this);
-        }
-
-        @Override
-        public Factory getFactory() {
-            return localFolderTypeFactory;
-        }
-    }
-
-    public static class JavaSource extends Package {
-
-        public static final FolderType INSTANCE = new JavaSource();
-
-        @Override
-        public boolean isDefinitionApplicable(Path path) {
-            return path != null && path.getFileName().toString().equals("java");
-        }
-
-    }
-
-    public static class Resource extends Package {
-
-        public static final FolderType INSTANCE = new Resource();
-
-        @Override
-        public boolean isDefinitionApplicable(Path path) {
-            return path != null && path.getFileName().toString().equals("resources");
-        }
-
-    }
-
-    public static class Package extends Default {
-
-        public static final FolderType INSTANCE = new Package();
-
-        private static final Factory localFolderTypeFactory = Factory.of(
-                Package.INSTANCE
-                );
-
-        public Package() {
-            super();
-            addFileType(new JavaFileType());
-            addFileType(new FxmlFileType());
-            addFileType(new PropertiesFileType());
-        }
-
-        @Override
-        public boolean isDefinitionApplicable(Path path) {
-            return true;
-        }
-
-        @Override
-        public Folder createFolder(Watcher watcher, Folder parent, Path path ) {
-            return new Package.PackageFolder(watcher, parent, path, this);
-        }
-
-        @Override
-        public Factory getFactory() {
-            return localFolderTypeFactory;
-        }
-
-        public static class PackageFolder extends Folder {
-            public PackageFolder(Watcher watcher, Folder parent, Path location, FolderType type) {
-                super(watcher, parent, location, type);
-            }
-
-            @Override
-            public String toString() {
-                return "PackageFolder [getLocation()=" + getLocation() + "]";
-            }
-
-        }
-    }
-
-    public static class JavaFileType implements FileType {
-
-        @Override
-        public List<String> getExtensions() {
-            return List.of("java");
-        }
-
-        @Override
-        public File createFile(Folder parent, Path path) {
-            return new JavaFile(parent, path, this);
+        public String toString() {
+            return "PackageFolder [getLocation()=" + getLocation() + "]";
         }
 
     }
@@ -243,20 +181,6 @@ public class MavenProject extends Default {
 
     }
 
-    public static class FxmlFileType implements FileType {
-
-        @Override
-        public List<String> getExtensions() {
-            return List.of("fxml");
-        }
-
-        @Override
-        public File createFile(Folder parent, Path path) {
-            return new FxmlFile(parent, path, this);
-        }
-
-    }
-
     public static class FxmlFile extends File {
 
         public FxmlFile(Folder parent, Path location, FileType fileType) {
@@ -266,20 +190,6 @@ public class MavenProject extends Default {
         @Override
         public String toString() {
             return "FxmlFile [getLocation()=" + getLocation() + "]";
-        }
-
-    }
-
-    public static class PropertiesFileType implements FileType {
-
-        @Override
-        public List<String> getExtensions() {
-            return List.of("properties");
-        }
-
-        @Override
-        public File createFile(Folder parent, Path path) {
-            return new PropertiesFile(parent, path, this);
         }
 
     }

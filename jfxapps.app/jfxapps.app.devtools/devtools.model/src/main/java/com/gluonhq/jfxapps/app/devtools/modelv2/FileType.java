@@ -37,13 +37,37 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a type of file in the filesystem, defining its extensions and how to create it.
+ * This interface allows for flexible file type definitions and creation logic.
+ */
 public interface FileType {
 
+    /**
+     * Returns a list of file extensions associated with this file type.
+     *
+     * @return a list of file extensions, or null if no specific extensions are defined
+     */
     List<String> getExtensions();
+
+    /**
+     * Creates a new file of this type in the specified parent folder at the given path.
+     *
+     * @param parent the parent folder where the file will be created
+     * @param path the path where the file will be created
+     * @return a new File instance representing the created file
+     */
     File createFile(Folder parent, Path path);
 
+    /**
+     * Default implementation of the FileType interface, which does not define any specific extensions.
+     * It provides a basic file creation logic that creates a File instance with the given parent and path.
+     */
     public static class Default implements FileType {
 
+        /**
+         * Singleton instance of the Default FileType.
+         */
         public static final FileType INSTANCE = new Default();
 
         @Override
@@ -57,36 +81,84 @@ public interface FileType {
         }
     }
 
+    /**
+     * Creates a FileType with the specified extensions and a custom file supplier.
+     *
+     * @param extensions the list of file extensions associated with this file type
+     * @param fileSupplier the supplier that creates files of this type
+     * @return a new FileType instance with the specified extensions and file supplier
+     */
     public static FileType of(List<String> extensions, FileSupplier fileSupplier) {
         return builder()
                 .withFileSupplier(fileSupplier)
                 .withExtensions(extensions)
                 .build();
     }
+
+     /**
+     * Creates a FileType builder to construct a FileType instance.
+     *
+     * @return a new Builder instance for creating a FileType
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Builder class for constructing FileType instances.
+     * It allows adding extensions and setting a custom file supplier.
+     */
     public static class Builder {
 
+        /**
+         * List of file extensions associated with this FileType.
+         */
         private final List<String> extensions = new ArrayList<>();
+
+        /**
+         * Supplier that creates files of this FileType.
+         * The default implementation creates a File instance with the given parent and path.
+         */
         private FileSupplier fileSupplier = (parent, path, type) -> new File(parent, path, type);
 
+        /**
+         * Adds a file extension to this FileType.
+         *
+         * @param extension the file extension to add
+         * @return this Builder instance for method chaining
+         */
         public Builder withExtension(String extension) {
             extensions.add(extension);
             return this;
         }
 
+        /**
+         * Adds multiple file extensions to this FileType.
+         *
+         * @param extensions the list of file extensions to add
+         * @return this Builder instance for method chaining
+         */
         public Builder withExtensions(List<String> extensions) {
             this.extensions.addAll(extensions);
             return this;
         }
 
+        /**
+         * Sets a custom file supplier for this FileType.
+         *
+         * @param fileSupplier the supplier that creates files of this type
+         * @return this Builder instance for method chaining
+         */
         public Builder withFileSupplier(FileSupplier fileSupplier) {
             this.fileSupplier = fileSupplier;
             return this;
         }
 
+        /**
+         * Builds and returns a new FileType instance with the specified properties.
+         *
+         * @return a new FileType instance
+         */
         public FileType build() {
 
             return new FileType() {
@@ -103,6 +175,10 @@ public interface FileType {
         }
     }
 
+    /**
+     * Functional interface for creating files of a specific type.
+     * This allows for custom file creation logic when implementing the FileType interface.
+     */
     @FunctionalInterface
     public interface FileSupplier {
         File createFile(Folder parent, Path path, FileType type);
