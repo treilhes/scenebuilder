@@ -37,38 +37,30 @@ import java.io.File;
 
 import org.junit.jupiter.api.Test;
 
-import com.gluonhq.jfxapps.app.devtools.modelv2.FolderType.Default;
+import com.gluonhq.jfxapps.core.api.fs.watcher.FilteredView;
+import com.gluonhq.jfxapps.core.api.fs.watcher.Watcher;
 
 class CrawlerTest {
 
     @Test
     void must_crawl_to_current_project() {
-        var root = new File(".");
+        //var root = new File(".");
+        var root = new File("C:\\Users\\ptreilhes\\workspaces\\SBX\\scenebuilder");
         var rootPath = root.toPath();
         var watcher = new Watcher();
         watcher.startWatch();
 
-        var rootFolder = Root.INSTANCE.createFolder(watcher, null, rootPath);
-        rootFolder.addExclusionPattern("docs");
-        rootFolder.addExclusionPattern("\\..*");
-        rootFolder.refresh();
+        var rootType = FolderDefinitions.MAVEN_PROJECT.copy()
+                .withName("ROOT")
+                .withExclusionPatterns("docs")
+                .build();
 
+        var rootFolder = rootType.createFolder(watcher, null, rootPath);
+        var pomFilesFilter = new FilteredView(rootFolder, true, f -> f.getPath().getFileName().toString().equalsIgnoreCase("pom.xml"));
+        pomFilesFilter.refresh();
+
+        rootFolder.requestRefresh(true);
         watcher.stopWatch();
-    }
-
-    public static class Root extends Default {
-
-        public static final FolderType INSTANCE = new Root();
-
-        private Factory localFolderTypeFactory = Factory.of(
-                MavenProject.INSTANCE,
-                Default.INSTANCE
-                );
-
-        @Override
-        public Factory getFactory() {
-            return localFolderTypeFactory;
-        }
     }
 
 }

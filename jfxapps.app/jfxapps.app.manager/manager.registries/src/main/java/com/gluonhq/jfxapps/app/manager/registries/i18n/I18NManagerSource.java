@@ -33,34 +33,15 @@
  */
 package com.gluonhq.jfxapps.app.manager.registries.i18n;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
 
 @Component
 public class I18NManagerSource implements BundleProvider {
-
-    private static final Logger logger = LoggerFactory.getLogger(I18NManagerSource.class);
-    private static ResourceBundle bundle;
-    private static Locale loadedLocale;
-
     @Override
-    public synchronized ResourceBundle getBundle() {
-        if (bundle == null || !loadedLocale.equals(Locale.getDefault())) {
-            final var packageName = I18NManagerSource.class.getPackage().getName();
-            var bundleName = packageName + ".ManagerSource"; //NOCHECK
-
-            logger.info("Loading bundle: {} {}", bundleName, Locale.getDefault());
-            bundle = ResourceBundle.getBundle(bundleName);
-            loadedLocale = Locale.getDefault();
-        }
-
-        return bundle;
+    public String getBundleName() {
+        return I18NManagerSource.class.getPackage().getName() + ".ManagerSource"; //NOCHECK
     }
 }
 

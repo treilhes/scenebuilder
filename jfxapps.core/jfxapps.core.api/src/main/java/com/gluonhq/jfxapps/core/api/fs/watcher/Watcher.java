@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.modelv2;
+package com.gluonhq.jfxapps.core.api.fs.watcher;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -42,7 +42,12 @@ import java.nio.file.WatchService;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Watcher {
+
+    private static final Logger logger = LoggerFactory.getLogger(Watcher.class);
 
     private final WatchService watchService;
     private Thread watcherThread;
@@ -91,8 +96,7 @@ public class Watcher {
                                 StandardWatchEventKinds.OVERFLOW);
             keys.put(key, eventHandler);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("Failed to register event handler for path: {}", path, e);
         }
     }
 

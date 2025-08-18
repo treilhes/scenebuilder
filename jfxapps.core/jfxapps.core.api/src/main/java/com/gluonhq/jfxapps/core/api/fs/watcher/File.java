@@ -31,13 +31,65 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.modelv2;
+package com.gluonhq.jfxapps.core.api.fs.watcher;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Objects;
 
 /**
- * Provides a package-level documentation for the watcher model.
- *
- * This package contains classes and interfaces that define the structure and behavior
- * of a filesystem watcher able to populate a custom file and folder model according to filesystem modifications.
- * The watcher can monitor directories for changes, handle file creation, modification, and deletion events,
- * and manage a hierarchy of folders and files according to specified rules and patterns.
+ * Represents a file in the filesystem watcher model.
+ * This class encapsulates the properties and behaviors of a file,
+ * including its location, type, and refresh capabilities.
  */
+public class File extends FsItem {
+
+    /**
+     * The type of the file, defining its extensions and creation logic.
+     */
+    private final FileType fileType;
+
+    /**
+     * Constructs a File instance with the specified parent folder, location, and file type.
+     *
+     * @param parent the parent folder of this file
+     * @param location the path to the file in the filesystem
+     * @param fileType the type of the file, defining its extensions and creation logic
+     */
+    public File(Folder parent, Path location, FileType fileType) {
+        super(parent, location);
+        Objects.requireNonNull(parent, "fileType can't be null");
+        if (!Files.exists(location) || !Files.isRegularFile(location)) {
+            throw new IllegalArgumentException("location does not exist or isn't a file: " + location);
+        }
+        this.fileType = fileType;
+    }
+
+
+    @Override
+    public String toString() {
+        return "File [location=" + getPath() + "]";
+    }
+
+    /**
+     * Called when an update to the file has been done.
+     * This method should be overridden to implement the actual internal state refresh logic.
+     */
+    @Override
+    public void refresh() {
+
+    }
+
+    /**
+     * Called when the file is removed from the filesystem.
+     * This method should be overridden to implement the actual removal logic.
+     */
+    @Override
+    public void onRemove() {
+
+    }
+
+    public FileType getFileType() {
+        return fileType;
+    }
+}

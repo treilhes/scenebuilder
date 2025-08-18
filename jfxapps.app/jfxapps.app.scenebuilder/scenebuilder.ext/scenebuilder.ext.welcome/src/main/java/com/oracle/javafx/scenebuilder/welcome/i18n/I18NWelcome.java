@@ -33,23 +33,14 @@
  */
 package com.oracle.javafx.scenebuilder.welcome.i18n;
 
-import java.util.ResourceBundle;
-
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
 
 @ApplicationSingleton
 public class I18NWelcome implements BundleProvider {
-
-    private static ResourceBundle bundle;
-
     @Override
-	public synchronized ResourceBundle getBundle() {
-        if (bundle == null) {
-            final String packageName = I18NWelcome.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderWelcome"); //NOCHECK
-        }
-        return bundle;
+    public String getBundleName() {
+        return I18NWelcome.class.getPackage().getName() + ".SceneBuilderWelcome"; //NOCHECK
     }
 }
 

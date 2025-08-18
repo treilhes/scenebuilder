@@ -34,9 +34,38 @@
 package com.gluonhq.jfxapps.core.api.i18n;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @FunctionalInterface
 public interface BundleProvider {
-    ResourceBundle getBundle() throws IOException;
+
+    public static BundleProvider of(Supplier<ResourceBundle> bundleSupplier) {
+
+        return new BundleProvider() {
+            @Override
+            public String getBundleName() {
+                return null;
+            }
+
+            @Override
+            public ResourceBundle getBundle() throws IOException {
+                return bundleSupplier.get();
+            }
+        };
+    }
+    static final Logger logger = LoggerFactory.getLogger(BundleProvider.class);
+
+    String getBundleName();
+
+    public default ResourceBundle getBundle() throws IOException {
+        var bundleName = getBundleName();
+        logger.info("Loading bundle: {} {}", bundleName, Locale.getDefault());
+        return ResourceBundle.getBundle(bundleName);
+    }
 }

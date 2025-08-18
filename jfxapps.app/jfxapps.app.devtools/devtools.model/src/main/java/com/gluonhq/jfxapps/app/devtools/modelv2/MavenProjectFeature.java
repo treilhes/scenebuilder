@@ -33,15 +33,8 @@
  */
 package com.gluonhq.jfxapps.app.devtools.modelv2;
 
-import java.nio.file.Path;
+import com.gluonhq.jfxapps.core.api.fs.watcher.Feature;
 
-public class FileUtils {
-    public static String getFileExtension(Path path) {
-        String fileName = path.getFileName().toString();
-        int dotIndex = fileName.lastIndexOf('.');
-        if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
-            return fileName.substring(dotIndex + 1);
-        }
-        return ""; // No extension
-    }
+public class MavenProjectFeature implements Feature{
+
 }

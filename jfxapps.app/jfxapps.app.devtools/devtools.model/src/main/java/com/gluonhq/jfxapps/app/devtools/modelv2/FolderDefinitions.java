@@ -33,16 +33,13 @@
  */
 package com.gluonhq.jfxapps.app.devtools.modelv2;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Properties;
 
-import com.gluonhq.jfxapps.app.devtools.modelv2.FolderType.Default;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
+import com.gluonhq.jfxapps.core.api.fs.watcher.FileType;
+import com.gluonhq.jfxapps.core.api.fs.watcher.Folder;
+import com.gluonhq.jfxapps.core.api.fs.watcher.FolderType;
 
 /**
  * A Maven project structure representation dedicated to javafx project
@@ -72,20 +69,37 @@ import javafx.collections.ObservableMap;
  * * <p>
  *
  */
-public class MavenProject extends Default {
+public class FolderDefinitions {
 
     /**
      * Java file type definition.
      */
-    public static final FileType JAVA_FILE = FileType.of(List.of("java"), JavaFile::new);
+    public static final FileType JAVA_FILE = FileType.builder()
+            .withExtension("java")
+            .withFileSupplier(JavaFile::new)
+            .build();
+
     /**
      * FXML file type definition.
      */
-    public static final FileType FXML_FILE = FileType.of(List.of("fxml"), FxmlFile::new);
+    public static final FileType FXML_FILE = FileType.builder()
+            .withExtension("fxml")
+            .withFileSupplier(FxmlFile::new)
+            .build();
+
     /**
      * Properties file type definition.
      */
-    public static final FileType PROPERTIES_FILE = FileType.of(List.of("properties"), PropertiesFile::new);
+    public static final FileType PROPERTIES_FILE = FileType.builder()
+            .withExtension("properties")
+            .withFileSupplier(PropertiesFile::new)
+            .build();
+
+    public static final FileType POM_FILE = FileType.builder()
+            .withName("POM_DEF")
+            .withNamePattern("pom\\.xml")
+            .withFileSupplier(PomFile::new)
+            .build();
 
     /**
      * A folder type representing a Java package.
@@ -93,139 +107,60 @@ public class MavenProject extends Default {
      * It includes Java files and excludes other file types.
      */
     public static final FolderType JAVA_PACKAGE = FolderType.of(
-            MavenProject::any,
-            MavenProject::createPackageFolder,
+            "JAVA_PACKAGE",
+            Folder::any,
+            PackageFolder::new,
             List.of(),
             List.of(JAVA_FILE), true);
 
     public static final FolderType RESOURCE_PACKAGE = FolderType.of(
-            MavenProject::any,
-            MavenProject::createPackageFolder,
+            "RESOURCE_PACKAGE",
+            Folder::any,
+            PackageFolder::new,
             List.of(),
             List.of(FXML_FILE, PROPERTIES_FILE), true);
 
     public static final FolderType JAVA_SRC = FolderType.of(
-            p -> checkFolderIs(p, "scr"),
-            MavenProject::createPackageFolder,
+            "JAVA_SRC",
+            p -> Folder.isNamed(p, "java"),
+            PackageFolder::new,
             List.of(JAVA_PACKAGE),
             List.of(JAVA_FILE), false);
 
     public static final FolderType RESOURCES = FolderType.of(
-            p -> checkFolderIs(p, "resources"),
-            MavenProject::createPackageFolder,
+            "RESOURCES",
+            p -> Folder.isNamed(p, "resources"),
+            PackageFolder::new,
             List.of(RESOURCE_PACKAGE),
             List.of(FXML_FILE, PROPERTIES_FILE), false);
 
     public static final FolderType MAVEN_PROJECT = FolderType.builder()
-            .withIsApplicable(MavenProject::hasPomFile)
+            .withName("MAVEN_PROJECT")
+            .withIsApplicable(FolderDefinitions::hasPomFile)
             .withThisFolderType()// to handle sub project
-            .withFolderType(FolderType.builder()
-                    .withIsApplicable(path -> checkFolderIs(path, "src"))
+            .withFileType(POM_FILE)
+            .withFolderType(
+                    FolderType.builder()
+                    .withName("SRC")
+                    .withIsApplicable(path -> Folder.isNamed(path, "src"))
                     .withFolderType(FolderType.builder()
-                        .withIsApplicable(path -> checkFolderIs(path, "main"))
+                        .withName("MAIN")
+                        .withIsApplicable(path -> Folder.isNamed(path, "main"))
                         .withFolderType(JAVA_SRC)
                         .withFolderType(RESOURCES)
                         .build())
                     .withFolderType(FolderType.builder()
-                        .withIsApplicable(path -> checkFolderIs(path, "test"))
+                        .withName("TEST")
+                        .withIsApplicable(path -> Folder.isNamed(path, "test"))
                         .withFolderType(JAVA_SRC)
                         .withFolderType(RESOURCES)
                         .build())
                     .build())
-            .withFolderSupplier((watcher, parent, path, type) -> {
-                var folder = new Folder(watcher, parent, path, type);
-                folder.addExclusionPattern("\\..*");
-                folder.addExclusionPattern("target");
-                return folder;
-            })
+            .withExclusionPatterns("\\..*","target")
             .build();
-
-    private static boolean any(Path path) {
-        return true;
-    }
-
-    private static boolean checkFolderIs(Path path, String folderName) {
-        return path != null && path.getFileName().toString().equals(folderName);
-    }
 
     private static boolean hasPomFile(Path path) {
         return path != null && Files.exists(path.resolve("pom.xml"));
     }
 
-    public static PackageFolder createPackageFolder(Watcher watcher, Folder parent, Path path, FolderType type) {
-        return new PackageFolder(watcher, parent, path, type);
-    }
-
-    public static class PackageFolder extends Folder {
-        public PackageFolder(Watcher watcher, Folder parent, Path location, FolderType type) {
-            super(watcher, parent, location, type);
-        }
-
-        @Override
-        public String toString() {
-            return "PackageFolder [getLocation()=" + getLocation() + "]";
-        }
-
-    }
-
-    public static class JavaFile extends File {
-
-        public JavaFile(Folder parent, Path location, FileType fileType) {
-            super(parent, location, fileType);
-        }
-
-        @Override
-        public String toString() {
-            return "JavaFile [getLocation()=" + getLocation() + "]";
-        }
-
-    }
-
-    public static class FxmlFile extends File {
-
-        public FxmlFile(Folder parent, Path location, FileType fileType) {
-            super(parent, location, fileType);
-        }
-
-        @Override
-        public String toString() {
-            return "FxmlFile [getLocation()=" + getLocation() + "]";
-        }
-
-    }
-
-    public static class PropertiesFile extends File {
-
-        private ObservableMap<String, String> properties = FXCollections.observableHashMap();
-
-        public PropertiesFile(Folder parent, Path location, FileType fileType) {
-            super(parent, location, fileType);
-        }
-
-
-        @Override
-        public void refresh() {
-            try {
-                Properties p = new Properties();
-                p.load(getLocation().toUri().toURL().openStream());
-
-                p.entrySet().forEach(entry -> {
-                    String key = entry.getKey().toString();
-                    String value = entry.getValue() != null ? entry.getValue().toString() : null;
-                    properties.put(key, value);
-                });
-
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-
-
-        @Override
-        public String toString() {
-            return "PropertiesFile [getLocation()=" + getLocation() + "]";
-        }
-
-    }
 }

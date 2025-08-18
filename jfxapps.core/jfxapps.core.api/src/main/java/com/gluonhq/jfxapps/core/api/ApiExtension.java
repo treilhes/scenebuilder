@@ -50,6 +50,7 @@ import com.gluonhq.jfxapps.core.api.fxom.gesture.DiscardGesture;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.dock.SearchController;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.i18n.I18NResourcePostProcessor;
 import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
 import com.gluonhq.jfxapps.core.api.javafx.internal.JavafxThreadBootstrapper;
 import com.gluonhq.jfxapps.core.api.javafx.internal.JavafxThreadClassloaderDispatcherImpl;
@@ -125,7 +126,8 @@ public class ApiExtension implements RootExtension {
                 SelectionGroupFactoryRegistry.class,
                 TaskService.class,
                 ViewController.class,
-                ViewManager.ViewManagerImpl.class
+                ViewManager.ViewManagerImpl.class,
+                I18NResourcePostProcessor.class
         );
     }
 

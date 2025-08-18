@@ -33,23 +33,14 @@
  */
 package com.gluonhq.jfxapps.core.accelerators.i18n;
 
-import java.util.ResourceBundle;
-
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
 
 @ApplicationSingleton
 public class I18NAccelerators implements BundleProvider {
-
-    private static ResourceBundle bundle;
-
     @Override
-	public synchronized ResourceBundle getBundle() {
-        if (bundle == null) {
-            final String packageName = I18NAccelerators.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderAccelerators"); //NOCHECK
-        }
-        return bundle;
+    public String getBundleName() {
+        return I18NAccelerators.class.getPackage().getName() + ".SceneBuilderAccelerators"; //NOCHECK
     }
 }
 

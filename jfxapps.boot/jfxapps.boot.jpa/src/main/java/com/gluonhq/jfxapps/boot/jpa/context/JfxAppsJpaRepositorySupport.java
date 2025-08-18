@@ -33,16 +33,9 @@
  */
 package com.gluonhq.jfxapps.boot.jpa.context;
 
-import static org.springframework.beans.factory.config.BeanDefinition.ROLE_INFRASTRUCTURE;
-
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,46 +44,24 @@ import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.RuntimeBeanReference;
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
-import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.ResourceLoaderAware;
-import org.springframework.context.annotation.AnnotationBeanNameGenerator;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.AnnotationMetadata;
-import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.SimpleMetadataReaderFactory;
-import org.springframework.data.config.ParsingUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.config.JpaRepositoryConfigExtension;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
-import org.springframework.data.repository.config.AnnotationRepositoryConfigurationSource;
-import org.springframework.data.repository.config.FragmentMetadata;
-import org.springframework.data.repository.config.ImplementationDetectionConfiguration;
-import org.springframework.data.repository.config.RepositoryConfiguration;
 import org.springframework.data.repository.config.RepositoryConfigurationDelegate;
-import org.springframework.data.repository.config.RepositoryConfigurationSource;
-import org.springframework.data.repository.core.support.RepositoryFragment;
-import org.springframework.data.repository.core.support.RepositoryFragmentsFactoryBean;
-import org.springframework.data.util.Optionals;
-import org.springframework.data.util.Streamable;
-import org.springframework.lang.Nullable;
 import org.springframework.orm.jpa.persistenceunit.PersistenceManagedTypes;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.StringUtils;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppBeanFactory;
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
@@ -220,13 +191,7 @@ public class JfxAppsJpaRepositorySupport
 
 
 
-        } catch (BeanDefinitionStoreException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NoSuchBeanDefinitionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (BeanDefinitionStoreException | NoSuchBeanDefinitionException | IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

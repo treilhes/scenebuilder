@@ -31,23 +31,19 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.modelv2;
+package com.gluonhq.jfxapps.core.api.fs.watcher;
 
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
-/**
- * Represents a file in the filesystem watcher model.
- * This class encapsulates the properties and behaviors of a file,
- * including its location, type, and refresh capabilities.
- */
-public class File {
-
+public abstract class FsItem {
     /**
      * Flag to enable or disable virtual threading for refresh operations.
      * If true, refresh operations will run on virtual threads; otherwise, they will run on the current thread.
      */
     private static final boolean ENABLE_VIRTUAL_THREADING = true;
-
     /**
      * The parent folder of this file.
      */
@@ -56,51 +52,42 @@ public class File {
     /**
      * The location of the file in the filesystem.
      */
-    private final Path location;
-    /**
-     * The type of the file, defining its extensions and creation logic.
-     */
-    private final FileType fileType;
+    private final Path path;
     /**
      * Indicates whether the file is currently being refreshed.
      * This prevents multiple refresh requests from being processed simultaneously.
      */
     private boolean refreshing;
 
-    /**
-     * Constructs a File instance with the specified parent folder, location, and file type.
-     *
-     * @param parent the parent folder of this file
-     * @param location the path to the file in the filesystem
-     * @param fileType the type of the file, defining its extensions and creation logic
-     */
-    public File(Folder parent, Path location, FileType fileType) {
+    private Map<Class<? extends Feature>, Feature> features = new HashMap<>();
+
+    public FsItem(Folder parent, Path location) {
         super();
+        Objects.requireNonNull(location, "location can't be null");
         this.parent = parent;
-        this.location = location;
-        this.fileType = fileType;
+        this.path = location;
     }
+
 
     /**
      * Returns the parent folder of this file.
      *
      * @return the parent folder
      */
-    public Path getLocation() {
-        return location;
+    public Path getPath() {
+        return path;
     }
 
-    @Override
-    public String toString() {
-        return "File [location=" + location + "]";
-    }
-
-    /**
-     * Returns the type of this file.
-     *
-     * @return the file type
-     */
     public final void requestRefresh() {
+        requestRefresh(ENABLE_VIRTUAL_THREADING);
+    }
+    /**
+     * Request the refresh of the internal state of this file.
+     *
+     * @param multithreaded if true, the refresh will be done on a virtual thread; otherwise, it will run on the current thread.
+     */
+    public final void requestRefresh(boolean multithreaded) {
+
         if (refreshing) {
             return; // already refreshing
         }
@@ -116,7 +103,7 @@ public class File {
             }
         };
 
-        if (ENABLE_VIRTUAL_THREADING) {
+        if (multithreaded) {
             Thread.startVirtualThread(refreshTask);
         } else {
             refreshTask.run();
@@ -124,18 +111,68 @@ public class File {
     }
 
     /**
-     * Called when an update to the file has been done.
      * This method should be overridden to implement the actual internal state refresh logic.
      */
-    public void refresh() {
+    public abstract void refresh();
 
+    /**
+     * This method should be overridden to implement the actual removal logic.
+     */
+    public abstract void onRemove();
+
+    /**
+     * Adds a feature to this FsItem.
+     *
+     * @param featureClass the class of the feature
+     * @param feature the feature instance
+     * @param <T> the type of the feature
+     */
+
+    public <T extends Feature> void addFeature(Class<T> featureClass, T feature) {
+        Objects.requireNonNull(featureClass, "featureClass can't be null");
+        Objects.requireNonNull(feature, "feature can't be null");
+        features.put(featureClass, feature);
+    }
+
+
+    /**
+     * Retrieves a feature of the specified class from this FsItem.
+     *
+     * @param featureClass the class of the feature to retrieve
+     * @param <T> the type of the feature
+     * @return the feature instance, or null if not found
+     */
+    public <T extends Feature> T getFeature(Class<T> featureClass) {
+        Objects.requireNonNull(featureClass, "featureClass can't be null");
+        return featureClass.cast(features.get(featureClass));
     }
 
     /**
-     * Called when the file is removed from the filesystem.
-     * This method should be overridden to implement the actual removal logic.
+     * removes a feature of the specified class from this FsItem.
+     * @param featureClass the class of the feature to remove
+     * @param <T> the type of the feature
+     * @return the feature instance, or null if not found
      */
-    public void onRemove() {
+    public <T extends Feature> T removeFeature(Class<T> featureClass) {
+        Objects.requireNonNull(featureClass, "featureClass can't be null");
+        return featureClass.cast(features.remove(featureClass));
+    }
 
+    /**
+     * Check if this FsItem has a feature of the specified class.
+     * @param featureClass the class of the feature to check
+     * @param <T> the type of the feature
+     * @return true if the feature exists, false otherwise
+     */
+    public <T extends Feature> boolean hasFeature(Class<T> featureClass) {
+        return features.containsKey(featureClass);
+    }
+
+    public Folder getParent() {
+        return parent;
+    }
+
+    public boolean isRefreshing() {
+        return refreshing;
     }
 }

@@ -35,6 +35,8 @@ package com.gluonhq.jfxapps.test;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -51,6 +53,7 @@ import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.application.ApplicationClassloader;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
+import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.UiController;
 import com.gluonhq.jfxapps.core.api.javafx.internal.FxmlControllerBeanPostProcessor;
@@ -175,7 +178,14 @@ public class UiControllerBuilder<T extends UiController> {
         var i18nInstance = context.getBean(I18N.class);
 
         if (i18n != null) {
-            i18nInstance.addBundleProvider(() -> new PropertyResourceBundle(new ByteArrayInputStream(i18n.getBytes())));
+            var provider =  BundleProvider.of(() -> {
+                try {
+                    return new PropertyResourceBundle(new ByteArrayInputStream(i18n.getBytes()));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            i18nInstance.addBundleProvider(provider);
         }
 
         if (i18nUrl != null) {
@@ -189,16 +199,21 @@ public class UiControllerBuilder<T extends UiController> {
                 if (!file.exists()) {
                     throw new IllegalArgumentException("Invalid i18n file: " + file);
                 }
-                i18nInstance.addBundleProvider(() -> {
-                    var parent = file.getParentFile();
-                    var fileName = file.toPath().getFileName().toString();
-                    var nameWithoutExt = fileName.replaceFirst("[.][^.]+$", ""); // Remove last dot + extension
 
-                    var urlClassLoader = new URLClassLoader(new URL[]{parent.toURI().toURL()});
+                var provider =  BundleProvider.of(() -> {
+                    try {
+                        var parent = file.getParentFile();
+                        var fileName = file.toPath().getFileName().toString();
+                        var nameWithoutExt = fileName.replaceFirst("[.][^.]+$", ""); // Remove last dot + extension
 
-                    return ResourceBundle.getBundle(nameWithoutExt, Locale.getDefault(), urlClassLoader);
+                        var urlClassLoader = new URLClassLoader(new URL[]{parent.toURI().toURL()});
 
+                        return ResourceBundle.getBundle(nameWithoutExt, Locale.getDefault(), urlClassLoader);
+                    } catch (MalformedURLException e) {
+                        throw new RuntimeException(e);
+                    }
                 });
+                i18nInstance.addBundleProvider(provider);
             }
         }
         i18nInstance.changeLocale(Locale.getDefault());

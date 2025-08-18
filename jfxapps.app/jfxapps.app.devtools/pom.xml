@@ -21,6 +21,7 @@
       <module>devtools.openapi</module>
       <module>devtools.jpms</module>
       <module>devtools.db</module>
+      <module>devtools.projects</module>
   </modules>
 
   <dependencyManagement>

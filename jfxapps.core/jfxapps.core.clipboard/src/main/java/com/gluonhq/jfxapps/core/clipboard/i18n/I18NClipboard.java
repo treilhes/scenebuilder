@@ -33,24 +33,15 @@
  */
 package com.gluonhq.jfxapps.core.clipboard.i18n;
 
-import java.util.ResourceBundle;
-
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
 
 @Component
 public class I18NClipboard implements BundleProvider {
-
-    private static ResourceBundle bundle;
-
     @Override
-    public synchronized ResourceBundle getBundle() {
-        if (bundle == null) {
-            final var packageName = I18NClipboard.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderClipboard"); //NOCHECK
-        }
-        return bundle;
+    public String getBundleName() {
+        return I18NClipboard.class.getPackage().getName() + ".SceneBuilderClipboard"; //NOCHECK
     }
 }
 

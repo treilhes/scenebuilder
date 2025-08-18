@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, 2021, Gluon and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,24 +33,15 @@
  */
 package com.gluonhq.jfxapps.core.error.i18n;
 
-import java.util.ResourceBundle;
-
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
 
 @Component
 public class I18NError implements BundleProvider {
-
-    private static ResourceBundle bundle;
-
     @Override
-	public synchronized ResourceBundle getBundle() {
-        if (bundle == null) {
-            final String packageName = I18NError.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderError"); //NOCHECK
-        }
-        return bundle;
+    public String getBundleName() {
+        return I18NError.class.getPackage().getName() + ".SceneBuilderError"; //NOCHECK
     }
 }
 

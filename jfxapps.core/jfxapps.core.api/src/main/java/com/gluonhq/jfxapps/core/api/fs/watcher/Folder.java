@@ -31,15 +31,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.modelv2;
+package com.gluonhq.jfxapps.core.api.fs.watcher;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
@@ -53,24 +52,17 @@ import javafx.collections.ObservableMap;
  * This class provides functionality to monitor changes in the folder, add inclusion/exclusion patterns,
  * and manage files and subfolders.
  */
-public class Folder {
+public class Folder extends FsItem {
 
     private static final Logger logger = LoggerFactory.getLogger(Folder.class);
-    /**
-     * Flag to enable or disable virtual threading for folder refresh operations.
-     * If set to true, folder refresh operations will run in a virtual thread.
-     * If set to false, they will run in the current thread.
-     */
-    private static final boolean ENABLE_VIRTUAL_THREADING = true;
 
-    /**
-     * The parent folder of this folder.
-     */
-    private final Folder parent;
-    /**
-     * The location of the folder in the file system.
-     */
-    private final Path location;
+    public static boolean any(Path path) {
+        return true;
+    }
+
+    public static boolean isNamed(Path path, String folderName) {
+        return path != null && path.getFileName().toString().equals(folderName);
+    }
     /**
      * The Watcher instance used to monitor file system events in this folder.
      */
@@ -87,17 +79,6 @@ public class Folder {
     private final FolderType folderType;
 
     /**
-     * List of inclusion patterns for files and folders in this folder.
-     * Only files and folders matching these patterns will be processed.
-     */
-    private final List<Pattern> inclusionPattens = new ArrayList<>();
-    /**
-     * List of exclusion patterns for files and folders in this folder.
-     * Files and folders matching these patterns will not be processed.
-     */
-    private final List<Pattern> exclusionPattens = new ArrayList<>();
-
-    /**
      * Observable map of files in this folder, mapping file paths to File instances.
      * This allows for dynamic updates and monitoring of files in the folder.
      */
@@ -110,12 +91,6 @@ public class Folder {
     private final ObservableMap<Path, Folder> folders = FXCollections.observableHashMap();
 
     /**
-     * Indicates whether the folder is currently being refreshed.
-     * This prevents multiple refresh requests from being processed simultaneously.
-     */
-    private boolean refreshing;
-
-    /**
      * Creates a Folder instance that monitors the specified location for changes.
      *
      * @param watcher the Watcher instance to use for monitoring file system events
@@ -123,56 +98,22 @@ public class Folder {
      * @param contentRules the FolderType rules to apply for content management, can be null
      */
     public Folder(Watcher watcher, Folder parent, Path location, FolderType folderType) {
-        super();
-        if (!Files.exists(location) && !Files.isDirectory(location)) {
+        super(parent, location);
+        Objects.requireNonNull(watcher, "watcher can't be null");
+        if (!Files.exists(location) || !Files.isDirectory(location)) {
             throw new IllegalArgumentException("Workspace location does not exist or isn't a directory: " + location);
         }
-        this.parent = parent;
-        this.location = location;
         this.watcher = watcher;
         this.watchKeyEventHandler = new WatchEventHandlerImpl(location);
-        this.folderType = folderType != null ? folderType : FolderType.Default.INSTANCE;
+        this.folderType = folderType != null ? folderType : FolderType.generic();
 
         watcher.registerEventHandler(location, watchKeyEventHandler);
-
-        watchKeyEventHandler.addOnDirectoryCreated(System.out::println);
-        watchKeyEventHandler.addOnFileCreated(System.out::println);
-        watchKeyEventHandler.addOnDeleted(System.out::println);
 
         watchKeyEventHandler.addOnDirectoryCreated(this::addDirectory);
         watchKeyEventHandler.addOnFileCreated(this::addFile);
         watchKeyEventHandler.addOnFileModified(this::refreshFile);
         watchKeyEventHandler.addOnDeleted(this::remove);
 
-    }
-
-    /**
-     * Returns the parent folder of this folder.
-     *
-     * @return the parent folder
-     */
-    public Path getLocation() {
-        return location;
-    }
-
-    /**
-     * Adds an inclusion pattern for files and folders in this folder.
-     * Files and folders matching this pattern will be processed.
-     *
-     * @param pattern the inclusion pattern to add
-     */
-    public void addInclusionPattern(String pattern) {
-        inclusionPattens.add(Pattern.compile(pattern));
-    }
-
-    /**
-     * Adds an exclusion pattern for files and folders in this folder.
-     * Files and folders matching this pattern will not be processed.
-     *
-     * @param pattern the exclusion pattern to add
-     */
-    public void addExclusionPattern(String pattern) {
-        exclusionPattens.add(Pattern.compile(pattern));
     }
 
     /**
@@ -192,48 +133,22 @@ public class Folder {
         return watchKeyEventHandler;
     }
 
-
-    /**
-     * Requests a refresh of the folder's contents.
-     */
-    public final void requestRefresh() {
-        if (refreshing) {
-            return; // already refreshing
-        }
-        refreshing = true;
-        Runnable refreshTask = () -> {
-            try {
-                refresh();
-            } catch (Exception e) {
-                logger.error("Error refreshing folder: " + location, e);
-            } finally {
-                refreshing = false;
-            }
-        };
-
-        if (ENABLE_VIRTUAL_THREADING) {
-            Thread.startVirtualThread(refreshTask);
-        } else {
-            refreshTask.run();
-        }
-
-    }
-
     /**
      * Refreshes the contents of the folder by listing all files and directories in the location.
      * It processes each file and directory according to the inclusion and exclusion patterns.
      */
+    @Override
     public void refresh() {
 
         try {
-            Files.list(location).forEach(p -> {
+            Files.list(getPath()).forEach(p -> {
                 if (canProcess(p)) {
                     WatchEvent<Path> event = toWatchEvent(p.getFileName());
                     watchKeyEventHandler.handleEvent(event);
                 }
             });
         } catch (IOException e) {
-            logger.error("Error listing files in folder: " + location, e);
+            logger.error("Error listing files in folder: " + getPath(), e);
         }
     }
 
@@ -241,6 +156,7 @@ public class Folder {
      * Called when the folder is removed or deleted.
      * This method can be overridden to perform cleanup actions when the folder is no longer needed.
      */
+    @Override
     public void onRemove() {
 
     }
@@ -251,9 +167,16 @@ public class Folder {
         }
 
         var type = folderType.getFactory().findFolderType(path);
-        var folder = type.createFolder(getWatcher(), this, path);
+
+        if (type.isEmpty()) {
+            logger.trace("No folder type found for path: {} by folder of : {}", path, getPath());
+            return;
+        }
+
+        var folder = type.get().createFolder(getWatcher(), this, path);
         if (folder != null && !folders.containsKey(path)) {
             folders.put(path, folder);
+            logger.debug("Adding folder: {}", path);
             folder.refresh();
         }
     }
@@ -267,6 +190,7 @@ public class Folder {
 
         if (file != null && !files.containsKey(path)) {
             files.put(path, file);
+            logger.debug("Adding file: {}", path);
             file.requestRefresh();
         }
 
@@ -280,6 +204,7 @@ public class Folder {
         var file = files.get(path);
 
         if (file != null) {
+            logger.debug("Refreshing file: {}", path);
             file.requestRefresh();
         }
 
@@ -290,27 +215,34 @@ public class Folder {
         if (folder == null) {
             var file = files.remove(path);
             if (file != null) {
+                logger.debug("Removing file: {}", path);
                 file.onRemove();
             }
         } else {
+            logger.debug("Removing folder: {}", path);
             folder.onRemove();
         }
     }
 
     private boolean canProcess(Path path) {
-        boolean canProcess = inclusionPattens.isEmpty();
+        var inclusionPatterns = folderType.getInclusionPatterns();
+        var exclusionPatterns = folderType.getExclusionPatterns();
+
+        boolean canProcess = inclusionPatterns.isEmpty();
 
         String lastSegment = path.getFileName().toString();
 
-        for (Pattern pattern : inclusionPattens) {
+        for (Pattern pattern : inclusionPatterns) {
             if (pattern.matcher(lastSegment).matches()) {
+                logger.trace("Including path: {} due to pattern: {}", path, pattern);
                 canProcess = true;
                 break;
             }
         }
 
-        for (Pattern pattern : exclusionPattens) {
+        for (Pattern pattern : exclusionPatterns) {
             if (pattern.matcher(lastSegment).matches()) {
+                logger.trace("Excluding path: {} due to pattern: {}", path, pattern);
                 canProcess = false;
                 break;
             }
@@ -340,8 +272,19 @@ public class Folder {
 
     @Override
     public String toString() {
-        return "Folder [location=" + location + "]";
+        return "Folder [location=" + getPath() + "]";
     }
 
+    protected ObservableMap<Path, File> getFiles() {
+        return files;
+    }
+
+    protected ObservableMap<Path, Folder> getFolders() {
+        return folders;
+    }
+
+    public FolderType getFolderType() {
+        return folderType;
+    }
 
 }

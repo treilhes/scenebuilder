@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2022, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2022, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,24 +33,15 @@
  */
 package com.oracle.javafx.scenebuilder.imagelibrary.i18n;
 
-import java.util.ResourceBundle;
-
-import org.graalvm.compiler.lir.CompositeValue.Component;
+import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
 
 @Component
 public class I18NImageLibrary implements BundleProvider {
-
-    private static ResourceBundle bundle;
-
     @Override
-	public synchronized ResourceBundle getBundle() {
-        if (bundle == null) {
-            final String packageName = I18NImageLibrary.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderImageLibrary"); //NOCHECK
-        }
-        return bundle;
+    public String getBundleName() {
+        return I18NImageLibrary.class.getPackage().getName() + ".SceneBuilderImageLibrary"; //NOCHECK
     }
 }
 

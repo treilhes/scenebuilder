@@ -31,17 +31,30 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.modelv2;
+package com.gluonhq.jfxapps.core.api.fs.watcher;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Represents a type of file in the filesystem, defining its extensions and how to create it.
  * This interface allows for flexible file type definitions and creation logic.
  */
 public interface FileType {
+
+    /**
+     * The default implementation creates a File instance with the given parent and path.
+     */
+    public FileSupplier DEFAULT_FILE_SUPPLIER = (parent, path, type) -> new File(parent, path, type);
+
+    boolean isApplicable(Path path);
+
+    String getName();
+
+    List<Pattern> getPatterns();
+
 
     /**
      * Returns a list of file extensions associated with this file type.
@@ -59,39 +72,10 @@ public interface FileType {
      */
     File createFile(Folder parent, Path path);
 
-    /**
-     * Default implementation of the FileType interface, which does not define any specific extensions.
-     * It provides a basic file creation logic that creates a File instance with the given parent and path.
-     */
-    public static class Default implements FileType {
 
-        /**
-         * Singleton instance of the Default FileType.
-         */
-        public static final FileType INSTANCE = new Default();
-
-        @Override
-        public List<String> getExtensions() {
-            return null;
-        }
-
-        @Override
-        public File createFile(Folder parent, Path path) {
-            return new File(parent, path, this);
-        }
-    }
-
-    /**
-     * Creates a FileType with the specified extensions and a custom file supplier.
-     *
-     * @param extensions the list of file extensions associated with this file type
-     * @param fileSupplier the supplier that creates files of this type
-     * @return a new FileType instance with the specified extensions and file supplier
-     */
-    public static FileType of(List<String> extensions, FileSupplier fileSupplier) {
+    public static FileType generic() {
         return builder()
-                .withFileSupplier(fileSupplier)
-                .withExtensions(extensions)
+                .withFileSupplier(DEFAULT_FILE_SUPPLIER)
                 .build();
     }
 
@@ -110,6 +94,10 @@ public interface FileType {
      */
     public static class Builder {
 
+        private String name;
+
+        private final List<String> patterns = new ArrayList<>();
+
         /**
          * List of file extensions associated with this FileType.
          */
@@ -119,7 +107,7 @@ public interface FileType {
          * Supplier that creates files of this FileType.
          * The default implementation creates a File instance with the given parent and path.
          */
-        private FileSupplier fileSupplier = (parent, path, type) -> new File(parent, path, type);
+        private FileSupplier fileSupplier = DEFAULT_FILE_SUPPLIER;
 
         /**
          * Adds a file extension to this FileType.
@@ -143,6 +131,16 @@ public interface FileType {
             return this;
         }
 
+        public Builder withNamePattern(String pattern) {
+            patterns.add(pattern);
+            return this;
+        }
+
+        public Builder withNamePatterns(List<String> patterns) {
+            this.patterns.addAll(patterns);
+            return this;
+        }
+
         /**
          * Sets a custom file supplier for this FileType.
          *
@@ -155,23 +153,81 @@ public interface FileType {
         }
 
         /**
+         * Sets the name of this FileType.
+         *
+         * @param name the name to set for this FileType
+         * @return this Builder instance for method chaining
+         */
+        public Builder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        /**
          * Builds and returns a new FileType instance with the specified properties.
          *
          * @return a new FileType instance
          */
         public FileType build() {
+            return new InternalFileType(this);
+        }
 
-            return new FileType() {
-                @Override
-                public List<String> getExtensions() {
-                    return extensions;
+        private static class InternalFileType implements FileType {
+            private final String name;
+            private final List<Pattern> patterns = new ArrayList<>();
+            private final List<String> extensions = new ArrayList<>();
+            private FileSupplier fileSupplier = DEFAULT_FILE_SUPPLIER;
+
+            public InternalFileType(Builder builder) {
+                this.name = builder.name;
+                this.extensions.addAll(builder.extensions);
+                this.fileSupplier = builder.fileSupplier;
+
+                if (builder.patterns != null) {
+                    for (String pattern : builder.patterns) {
+                        this.patterns.add(Pattern.compile(pattern));
+                    }
+                }
+            }
+
+            @Override
+            public boolean isApplicable(Path path) {
+                var patternMatch = patterns.stream().anyMatch(pattern -> pattern.matcher(path.getFileName().toString()).matches());
+
+                if (patternMatch) {
+                    return true;
                 }
 
-                @Override
-                public File createFile(Folder parent, Path path) {
-                    return fileSupplier.createFile(parent, path, this);
+                // Check if the file has an extension that matches any of the defined extensions
+                var extension = FileUtils.getFileExtension(path);
+                for (String ext : extensions) {
+                    if (ext.equalsIgnoreCase(ext)) {
+                        return true;
+                    }
                 }
-            };
+                // If no patterns are defined, we consider the file type applicable if it has no extensions
+                return patterns.isEmpty() && extensions.isEmpty();
+            }
+
+            @Override
+            public List<String> getExtensions() {
+                return extensions;
+            }
+
+            @Override
+            public File createFile(Folder parent, Path path) {
+                return fileSupplier.createFile(parent, path, this);
+            }
+
+            @Override
+            public List<Pattern> getPatterns() {
+                return this.patterns;
+            }
+
+            @Override
+            public String getName() {
+                return name != null ? name : this.getClass().getName();
+            }
         }
     }
 
