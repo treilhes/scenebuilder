@@ -121,7 +121,7 @@ public class JpaExtensionConfig {
      * Mainly here to propagate the classloader
      */
     @Bean(name = "transactionManager")
-    //@ConditionalOnMissingBean(TransactionManager.class)
+    @ConditionalOnLocalBeanAnnotation(Entity.class)
     PlatformTransactionManager localTransactionManager(EntityManagerFactory factory, DataSource dataSource, @LocalContextOnly Extension extension) {
         JpaTransactionManager tm = new JpaTransactionManager();
         //tm.setTransactionManagerName(extension.getId().toString());

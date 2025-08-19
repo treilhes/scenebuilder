@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -75,14 +75,14 @@ import javafx.util.Callback;
 
 @ApplicationInstanceSingleton
 @ViewAttachment(
-        name = "Resource Locations",
+        name = "Css",
         id = "6b999162-bce3-455e-8898-fd759f986369",
         prefDockId = Docks.CENTER_DOCK_ID,
         openOnStart = false,
         selectOnStart = false,
         order = 3000,
-        icon = "i18n_tool.png",
-        iconX2 = "i18n_tool@2x.png"
+        icon = "css_tool.png",
+        iconX2 = "css_tool@2x.png"
         )
 public class ResourceLocationsController extends AbstractFxmlViewController {
 

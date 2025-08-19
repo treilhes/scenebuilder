@@ -31,46 +31,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.projects;
+package com.gluonhq.jfxapps.app.devtools.api.project;
 
-import java.util.List;
-import java.util.UUID;
+import java.io.File;
 
-import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.app.devtools.projects.action.LoadProjectAction;
-import com.gluonhq.jfxapps.app.devtools.projects.action.OpenProjectAction;
-import com.gluonhq.jfxapps.app.devtools.projects.action.ProjectActionFactoryImpl;
-import com.gluonhq.jfxapps.app.devtools.projects.controller.ProjectController;
-import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.core.api.action.Action;
 
-public class DevtoolsProjectsExtension implements OpenExtension  {
+public interface ProjectActionFactory {
+    Action open();
 
-    public final static UUID ID = UUID.fromString("b73748f8-703c-4f4a-8e1e-253fbf328167");
-
-
-    @Override
-    public UUID getParentId() {
-        return DevtoolsApiExtension.ID;
-    }
-
-    @Override
-    public UUID getId() {
-        return ID;
-    }
-
-    @Override
-    public List<Class<?>> exportedContextClasses() {
-        return List.of(
-                LoadProjectAction.class,
-                OpenProjectAction.class,
-                ProjectActionFactoryImpl.class,
-                ProjectController.class
-                );
-    }
-
-    @Override
-    public List<Class<?>> localContextClasses() {
-        return List.of();
-    }
-
+    Action load(File projectFolder);
 }

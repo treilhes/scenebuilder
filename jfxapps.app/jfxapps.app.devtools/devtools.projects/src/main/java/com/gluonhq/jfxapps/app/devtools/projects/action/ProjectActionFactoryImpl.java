@@ -31,36 +31,32 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.modelv2;
+package com.gluonhq.jfxapps.app.devtools.projects.action;
 
 import java.io.File;
 
-import org.junit.jupiter.api.Test;
+import com.gluonhq.jfxapps.app.devtools.api.project.ProjectActionFactory;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.action.Action;
+import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 
-import com.gluonhq.jfxapps.core.api.fs.watcher.FilteredView;
-import com.gluonhq.jfxapps.core.api.fs.watcher.Watcher;
+@ApplicationSingleton
+public class ProjectActionFactoryImpl implements ProjectActionFactory {
 
-class CrawlerTest {
+    private final ActionFactory actionFactory;
 
-    @Test
-    void must_crawl_to_current_project() {
-        //var root = new File(".");
-        var root = new File("C:\\Users\\ptreilhes\\workspaces\\SBX\\scenebuilder");
-        var rootPath = root.toPath();
-        var watcher = new Watcher();
-        watcher.startWatch();
+    public ProjectActionFactoryImpl(ActionFactory actionFactory) {
+            this.actionFactory = actionFactory;
+        }
 
-        var rootType = FolderDefinitions.MAVEN_PROJECT.copy()
-                .withName("ROOT")
-                .withExclusionPatterns("docs")
-                .build();
+    @Override
+    public Action open() {
+        return actionFactory.create(OpenProjectAction.class);
+    }
 
-        var rootFolder = rootType.createFolder(watcher, null, rootPath);
-        var pomFilesFilter = new FilteredView(rootFolder, true, f -> f.getPath().getFileName().toString().equalsIgnoreCase("pom.xml"));
-        pomFilesFilter.refresh();
-
-        rootFolder.requestRefresh(true);
-        watcher.stopWatch();
+    @Override
+    public Action load(File projectFolder) {
+        return actionFactory.create(LoadProjectAction.class, a -> a.setProjectFolder(projectFolder));
     }
 
 }

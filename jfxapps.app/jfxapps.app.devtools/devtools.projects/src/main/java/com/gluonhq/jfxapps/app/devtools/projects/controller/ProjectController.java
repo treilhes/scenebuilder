@@ -31,46 +31,48 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.projects;
+package com.gluonhq.jfxapps.app.devtools.projects.controller;
 
-import java.util.List;
-import java.util.UUID;
+import java.io.File;
 
-import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.app.devtools.projects.action.LoadProjectAction;
-import com.gluonhq.jfxapps.app.devtools.projects.action.OpenProjectAction;
-import com.gluonhq.jfxapps.app.devtools.projects.action.ProjectActionFactoryImpl;
-import com.gluonhq.jfxapps.app.devtools.projects.controller.ProjectController;
-import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.app.devtools.api.project.Project;
+import com.gluonhq.jfxapps.app.devtools.api.project.ProjectEvents;
+import com.gluonhq.jfxapps.app.devtools.projects.watcher.FolderDefinitions;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.fs.watcher.Watcher;
 
-public class DevtoolsProjectsExtension implements OpenExtension  {
+@ApplicationInstanceSingleton
+public class ProjectController {
 
-    public final static UUID ID = UUID.fromString("b73748f8-703c-4f4a-8e1e-253fbf328167");
+    private final ProjectEvents projectEvents;
 
-
-    @Override
-    public UUID getParentId() {
-        return DevtoolsApiExtension.ID;
+    public ProjectController(ProjectEvents projectEvents) {
+        super();
+        this.projectEvents = projectEvents;
     }
 
-    @Override
-    public UUID getId() {
-        return ID;
-    }
+    public void loadProject(File projectFolder) {
 
-    @Override
-    public List<Class<?>> exportedContextClasses() {
-        return List.of(
-                LoadProjectAction.class,
-                OpenProjectAction.class,
-                ProjectActionFactoryImpl.class,
-                ProjectController.class
-                );
-    }
+        var previous = projectEvents.project().get();
+        var rootPath = projectFolder.getParentFile().toPath();
+        var watcher = new Watcher();
 
-    @Override
-    public List<Class<?>> localContextClasses() {
-        return List.of();
+        var rootType = FolderDefinitions.MAVEN_PROJECT.copy()
+                .withName("ROOT")
+                .withExclusionPatterns("docs")
+                .build();
+
+        var folder = rootType.createFolder(watcher, null, rootPath);
+
+        if (previous != null) {
+            previous.getWatcher().stopWatch();
+        }
+
+        var project = new Project(watcher, rootPath.getFileName().toString(), folder);
+
+        watcher.startWatch();
+        projectEvents.project().set(project);
+        folder.requestRefresh();
     }
 
 }

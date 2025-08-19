@@ -31,15 +31,36 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.api.i18n;
+package com.gluonhq.jfxapps.app.devtools.projects.watcher;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.io.File;
 
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface I18NResource {
-    public String value();
+import org.junit.jupiter.api.Test;
+
+import com.gluonhq.jfxapps.app.devtools.projects.watcher.FolderDefinitions;
+import com.gluonhq.jfxapps.core.api.fs.watcher.FilteredView;
+import com.gluonhq.jfxapps.core.api.fs.watcher.Watcher;
+
+class CrawlerTest {
+
+    @Test
+    void must_crawl_to_current_project() {
+        var root = new File(".");
+        var rootPath = root.toPath();
+        var watcher = new Watcher();
+        watcher.startWatch();
+
+        var rootType = FolderDefinitions.MAVEN_PROJECT.copy()
+                .withName("ROOT")
+                .withExclusionPatterns("docs")
+                .build();
+
+        var rootFolder = rootType.createFolder(watcher, null, rootPath);
+        var pomFilesFilter = new FilteredView(rootFolder, true, f -> f.getPath().getFileName().toString().equalsIgnoreCase("pom.xml"));
+        pomFilesFilter.refresh();
+
+        rootFolder.requestRefresh(true);
+        watcher.stopWatch();
+    }
+
 }

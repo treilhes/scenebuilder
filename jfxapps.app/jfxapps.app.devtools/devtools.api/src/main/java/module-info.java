@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,6 +38,7 @@ open module devtools.api {
     exports com.gluonhq.jfxapps.app.devtools.api;
     exports com.gluonhq.jfxapps.app.devtools.api.menu;
     exports com.gluonhq.jfxapps.app.devtools.api.ui;
+    exports com.gluonhq.jfxapps.app.devtools.api.project;
 
     requires transitive jfxapps.core.api;
     requires transitive devtools.model;

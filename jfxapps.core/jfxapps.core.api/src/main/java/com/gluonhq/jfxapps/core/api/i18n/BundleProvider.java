@@ -66,6 +66,6 @@ public interface BundleProvider {
     public default ResourceBundle getBundle() throws IOException {
         var bundleName = getBundleName();
         logger.info("Loading bundle: {} {}", bundleName, Locale.getDefault());
-        return ResourceBundle.getBundle(bundleName);
+        return ResourceBundle.getBundle(bundleName, this.getClass().getModule());
     }
 }

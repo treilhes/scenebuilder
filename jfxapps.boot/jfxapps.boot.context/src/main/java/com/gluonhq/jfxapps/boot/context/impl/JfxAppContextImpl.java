@@ -48,8 +48,11 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.ProxyFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
@@ -148,7 +151,7 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
     }
 
     public JfxAppContextImpl(UUID contextId, ClassLoader loader, WebApplicationType webApplicationType) {
-        super(new SbBeanFactoryImpl(), webApplicationType);
+        super(new SbBeanFactoryImpl(contextId), webApplicationType);
 
         this.id = contextId;
         this.beanFactory = (SbBeanFactoryImpl) getBeanFactory();
@@ -318,13 +321,13 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
     }
 
     public static class SbBeanFactoryImpl extends DefaultListableBeanFactory implements JfxAppBeanFactory {
-
+        private static final Logger logger = LoggerFactory.getLogger(SbBeanFactoryImpl.class);
         private final ApplicationScope applicationScope;
         private final ApplicationInstanceScope applicationInstanceScope;
-
-        public SbBeanFactoryImpl() {
+        private final UUID id;
+        public SbBeanFactoryImpl(UUID contextId) {
             super();
-
+            this.id = contextId;
             this.applicationScope = new ApplicationScope(this, JfxAppContextImpl.applicationScope);
             this.applicationInstanceScope = new ApplicationInstanceScope(this, JfxAppContextImpl.applicationInstanceScope);
 
@@ -333,6 +336,19 @@ public class JfxAppContextImpl extends JfxAnnotationConfigServletWebApplicationC
 
             // addBeanPostProcessor(new FxmlControllerBeanPostProcessor());
             setAutowireCandidateResolver(new SbContextAnnotationAutowireCandidateResolver());
+        }
+
+        @Override
+        protected <T> T doGetBean(String name, @Nullable Class<T> requiredType, @Nullable Object[] args,
+                boolean typeCheckOnly) throws BeansException {
+
+            try {
+                return super.doGetBean(name, requiredType, args, typeCheckOnly);
+            } catch (BeansException e) {
+                logger.error("Error getting bean: {} with type: {} from module {} in extension {}", name, requiredType,
+                        requiredType != null ? requiredType.getModule() : null, id);
+                throw e;
+            }
         }
 
         public void cleanScopedBeans() {

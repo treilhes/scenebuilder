@@ -31,46 +31,50 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.projects;
+package com.gluonhq.jfxapps.app.devtools.projects.action;
 
-import java.util.List;
-import java.util.UUID;
+import java.io.File;
 
-import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.app.devtools.projects.action.LoadProjectAction;
-import com.gluonhq.jfxapps.app.devtools.projects.action.OpenProjectAction;
-import com.gluonhq.jfxapps.app.devtools.projects.action.ProjectActionFactoryImpl;
 import com.gluonhq.jfxapps.app.devtools.projects.controller.ProjectController;
-import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
+import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
+import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 
-public class DevtoolsProjectsExtension implements OpenExtension  {
+@ApplicationInstancePrototype("com.gluonhq.jfxapps.app.devtools.projects.action.LoadProjectAction")
+@ActionMeta(
+        nameKey = "action.name.save",
+        descriptionKey = "action.description.save")
+public class LoadProjectAction extends AbstractAction {
 
-    public final static UUID ID = UUID.fromString("b73748f8-703c-4f4a-8e1e-253fbf328167");
+    private ProjectController projectController;
+    private File projectFolder;
 
-
-    @Override
-    public UUID getParentId() {
-        return DevtoolsApiExtension.ID;
+    public LoadProjectAction(
+    // @formatter:off
+            I18N i18n,
+            ActionExtensionFactory extensionFactory,
+            ProjectController projectController) {
+    // @formatter:on
+        super(i18n, extensionFactory);
+        this.projectController = projectController;
     }
 
     @Override
-    public UUID getId() {
-        return ID;
+    public boolean canPerform() {
+        return true;
     }
 
     @Override
-    public List<Class<?>> exportedContextClasses() {
-        return List.of(
-                LoadProjectAction.class,
-                OpenProjectAction.class,
-                ProjectActionFactoryImpl.class,
-                ProjectController.class
-                );
+    public ActionStatus doPerform() {
+        projectController.loadProject(projectFolder);
+
+        return ActionStatus.DONE;
     }
 
-    @Override
-    public List<Class<?>> localContextClasses() {
-        return List.of();
+    public void setProjectFolder(File projectFolder) {
+        this.projectFolder = projectFolder;
     }
 
 }

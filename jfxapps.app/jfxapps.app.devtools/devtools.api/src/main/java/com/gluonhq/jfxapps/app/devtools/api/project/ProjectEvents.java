@@ -31,46 +31,51 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.projects;
+package com.gluonhq.jfxapps.app.devtools.api.project;
 
-import java.util.List;
-import java.util.UUID;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.subjects.SubjectItem;
+import com.gluonhq.jfxapps.core.api.subjects.SubjectManager;
 
-import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.app.devtools.projects.action.LoadProjectAction;
-import com.gluonhq.jfxapps.app.devtools.projects.action.OpenProjectAction;
-import com.gluonhq.jfxapps.app.devtools.projects.action.ProjectActionFactoryImpl;
-import com.gluonhq.jfxapps.app.devtools.projects.controller.ProjectController;
-import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import io.reactivex.rxjava3.subjects.ReplaySubject;
 
-public class DevtoolsProjectsExtension implements OpenExtension  {
+/**
+ * This interface describe events related to the currently edited document
+ *
+ */
+public interface ProjectEvents {
+    SubjectItem<Project> project();
 
-    public final static UUID ID = UUID.fromString("b73748f8-703c-4f4a-8e1e-253fbf328167");
+    @ApplicationInstanceSingleton
+    public class ProjectEventsImpl implements ProjectEvents {
 
+        private ProjectSubjects subjects;
 
-    @Override
-    public UUID getParentId() {
-        return DevtoolsApiExtension.ID;
+        private final SubjectItem<Project> project;
+
+        public ProjectEventsImpl() {
+            subjects = new ProjectSubjects();
+            project = new SubjectItem<>(subjects.getProject());
+        }
+
+        @Override
+        public SubjectItem<Project> project() {
+            return project;
+        }
+
     }
 
-    @Override
-    public UUID getId() {
-        return ID;
-    }
+    public class ProjectSubjects extends SubjectManager {
 
-    @Override
-    public List<Class<?>> exportedContextClasses() {
-        return List.of(
-                LoadProjectAction.class,
-                OpenProjectAction.class,
-                ProjectActionFactoryImpl.class,
-                ProjectController.class
-                );
-    }
+        private ReplaySubject<Project> project;
 
-    @Override
-    public List<Class<?>> localContextClasses() {
-        return List.of();
-    }
+        public ProjectSubjects() {
+            project = wrap(ProjectSubjects.class, "project", ReplaySubject.create(1)); // NOI18N
+        }
 
+        public ReplaySubject<Project> getProject() {
+            return project;
+        }
+
+    }
 }

@@ -31,46 +31,34 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.projects;
+package com.gluonhq.jfxapps.app.devtools.api.project;
 
-import java.util.List;
-import java.util.UUID;
+import com.gluonhq.jfxapps.core.api.fs.watcher.Folder;
+import com.gluonhq.jfxapps.core.api.fs.watcher.Watcher;
 
-import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.app.devtools.projects.action.LoadProjectAction;
-import com.gluonhq.jfxapps.app.devtools.projects.action.OpenProjectAction;
-import com.gluonhq.jfxapps.app.devtools.projects.action.ProjectActionFactoryImpl;
-import com.gluonhq.jfxapps.app.devtools.projects.controller.ProjectController;
-import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+public class Project {
 
-public class DevtoolsProjectsExtension implements OpenExtension  {
+    private final String name;
 
-    public final static UUID ID = UUID.fromString("b73748f8-703c-4f4a-8e1e-253fbf328167");
+    private final Folder folder;
 
+    private final Watcher watcher;
 
-    @Override
-    public UUID getParentId() {
-        return DevtoolsApiExtension.ID;
+    public Project(Watcher watcher, String name, Folder folder) {
+        super();
+        this.name = name;
+        this.folder = folder;
+        this.watcher = watcher;
     }
 
-    @Override
-    public UUID getId() {
-        return ID;
+    public String getName() {
+        return name;
     }
 
-    @Override
-    public List<Class<?>> exportedContextClasses() {
-        return List.of(
-                LoadProjectAction.class,
-                OpenProjectAction.class,
-                ProjectActionFactoryImpl.class,
-                ProjectController.class
-                );
+    public Folder getFolder() {
+        return folder;
     }
-
-    @Override
-    public List<Class<?>> localContextClasses() {
-        return List.of();
+    public Watcher getWatcher() {
+        return watcher;
     }
-
 }

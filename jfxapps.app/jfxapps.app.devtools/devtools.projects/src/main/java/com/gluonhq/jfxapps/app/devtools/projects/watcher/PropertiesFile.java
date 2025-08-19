@@ -1,4 +1,4 @@
-package com.gluonhq.jfxapps.app.devtools.modelv2;
+package com.gluonhq.jfxapps.app.devtools.projects.watcher;
 
 import java.io.IOException;
 import java.nio.file.Path;
