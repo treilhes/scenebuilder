@@ -99,7 +99,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpRequest;
 import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.AsyncAnnotationBeanPostProcessor;
 import org.springframework.util.MimeType;
@@ -260,7 +259,7 @@ public class WebExtensionConfig {
 
         @Bean
         @Order(Ordered.HIGHEST_PRECEDENCE)
-        AsyncAnnotationBeanPostProcessor asyncAnnotationBeanPostProcessor() {
+        static AsyncAnnotationBeanPostProcessor asyncAnnotationBeanPostProcessor() {
             final var processor = new MyAsyncAnnotationBeanPostProcessor();
             return processor;
 
@@ -490,12 +489,7 @@ public class WebExtensionConfig {
         @Lazy
         @Bean
         ServerBaseUrlCustomizer serverBaseUrlCustomizer() {
-            return new ServerBaseUrlCustomizer() {
-                @Override
-                public String customize(String serverBaseUrl, HttpRequest request) {
-                    return "";
-                }
-            };
+            return (serverBaseUrl, request) -> "";
         }
 
     }

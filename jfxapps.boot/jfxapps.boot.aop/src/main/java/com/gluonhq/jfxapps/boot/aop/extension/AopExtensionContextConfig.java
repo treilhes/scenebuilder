@@ -35,6 +35,7 @@ package com.gluonhq.jfxapps.boot.aop.extension;
 
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -60,10 +61,10 @@ public class AopExtensionContextConfig {
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    AnnotationAwareAspectJAutoProxyCreator annotationAwareAspectJAutoProxyCreator() {
+    static AnnotationAwareAspectJAutoProxyCreator annotationAwareAspectJAutoProxyCreator(ConfigurableListableBeanFactory beanFactory) {
         final var processor = new MyAnnotationAwareAspectJAutoProxyCreator();
         processor.setProxyTargetClass(true);
-        processor.setBeanClassLoader(context.getBeanClassLoader());
+        processor.setBeanClassLoader(beanFactory.getBeanClassLoader());
         return processor;
 
     }
