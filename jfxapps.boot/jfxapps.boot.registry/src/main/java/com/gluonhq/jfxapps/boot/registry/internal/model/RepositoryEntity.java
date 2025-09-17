@@ -43,7 +43,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
-@Entity(name = "Repository")
+@Entity(name = "RegistryRepository")
 public class RepositoryEntity {
 
     @Id
