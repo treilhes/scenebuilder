@@ -44,7 +44,6 @@ import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifactManager;
-import com.gluonhq.jfxapps.boot.api.registry.RegistryConfig;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryManager;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryUpdateListener;
 import com.gluonhq.jfxapps.boot.api.registry.model.ApplicationInfo;
@@ -58,10 +57,7 @@ import com.gluonhq.jfxapps.boot.registry.internal.mapper.RegistryModelMappers;
 import com.gluonhq.jfxapps.boot.registry.internal.model.ApplicationEntity;
 import com.gluonhq.jfxapps.boot.registry.internal.model.RegistryEntity;
 import com.gluonhq.jfxapps.boot.registry.internal.service.RegistryService;
-import com.gluonhq.jfxapps.boot.registry.internal.service.RegistryUpdateService;
 import com.gluonhq.jfxapps.boot.registry.internal.util.BinaryCache;
-
-import jakarta.annotation.PostConstruct;
 
 /**
  * The Class RegistryManagerImpl.
@@ -72,8 +68,6 @@ public class RegistryManagerImpl implements RegistryManager, RegistryArtifactMan
 
     private final static Logger logger = LoggerFactory.getLogger(RegistryManagerImpl.class);
 
-    private final RegistryConfig config;
-    private final RegistryUpdateService updateService;
     private final RegistryService registryGlobalService;
     private final RegistryDtoMappers infoMappers;
     private final RegistryModelMappers mappers;
@@ -86,47 +80,16 @@ public class RegistryManagerImpl implements RegistryManager, RegistryArtifactMan
      * @param moduleLayerManager the module layer manager
      */
     public RegistryManagerImpl(
-            RegistryConfig config,
             RegistryService registryGlobalService,
             RegistryDtoMappers infoMappers,
             RegistryModelMappers mappers,
-            BinaryCache binaryCache,
-    		@Lazy RegistryUpdateService updateService
+            BinaryCache binaryCache
     		) {
         super();
-        this.config = config;
         this.registryGlobalService = registryGlobalService;
-        this.updateService = updateService;
         this.infoMappers = infoMappers;
         this.mappers = mappers;
         this.binaryCache = binaryCache;
-    }
-
-    @PostConstruct
-    // FIXME: this method only handles initialization but do not handle new installations
-    protected void init() {
-
-        for (RegistryArtifact artifact : config.getDefaults().values()) {
-
-            var source = mappers.map(artifact);
-            var savedSource = registryGlobalService.findSource(source.getGroupId(), source.getArtifactId());
-
-            if (savedSource.isEmpty()) {
-                registryGlobalService.saveSource(source);
-
-                if (source.isMandatory()) {
-                    registryGlobalService.updateRegistryFromSource(source);
-                    var registry = registryGlobalService.findRegistry(source);
-
-                    registry.orElseThrow();
-
-                    registry.ifPresent(r -> {
-                        r.getApplications().forEach(a -> a.setInstalled(true));
-                        registryGlobalService.save(r);
-                    });
-                }
-            }
-        }
     }
 
     @Override

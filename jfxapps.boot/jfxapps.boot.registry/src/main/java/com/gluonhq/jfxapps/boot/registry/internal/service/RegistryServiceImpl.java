@@ -48,6 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gluonhq.jfxapps.boot.api.maven.Repository;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryManager;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryConfig;
+import com.gluonhq.jfxapps.boot.api.registry.model.RegistryArtifact;
 import com.gluonhq.jfxapps.boot.registry.internal.mapper.RegistryModelMappers;
 import com.gluonhq.jfxapps.boot.registry.internal.model.ApplicationEntity;
 import com.gluonhq.jfxapps.boot.registry.internal.model.ExtensionEntity;
@@ -62,6 +63,7 @@ import com.gluonhq.jfxapps.boot.registry.internal.repository.PluginRepository;
 import com.gluonhq.jfxapps.boot.registry.internal.repository.RegistryRepository;
 import com.gluonhq.jfxapps.boot.registry.internal.repository.RegistrySourceRepository;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 
 @Service
@@ -98,6 +100,33 @@ public class RegistryServiceImpl implements RegistryService {
         this.registryUpdateService = registryUpdateService;
         this.repositoryManager = repositoryManager;
         this.mappers = mappers;
+    }
+
+    @PostConstruct
+    // FIXME: this method only handles initialization but do not handle new installations
+    protected void init() {
+
+        for (RegistryArtifact artifact : config.getDefaults().values()) {
+
+            var source = mappers.map(artifact);
+            var savedSource = findSource(source.getGroupId(), source.getArtifactId());
+
+            if (savedSource.isEmpty()) {
+                saveSource(source);
+
+                if (source.isMandatory()) {
+                    updateRegistryFromSource(source);
+                    var registry = findRegistry(source);
+
+                    registry.orElseThrow();
+
+                    registry.ifPresent(r -> {
+                        r.getApplications().forEach(a -> a.setInstalled(true));
+                        save(r);
+                    });
+                }
+            }
+        }
     }
 
     @Override
