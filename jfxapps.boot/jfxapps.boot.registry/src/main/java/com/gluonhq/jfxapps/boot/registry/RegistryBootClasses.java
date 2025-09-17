@@ -46,6 +46,7 @@ import com.gluonhq.jfxapps.boot.registry.internal.model.FeatureEntity;
 import com.gluonhq.jfxapps.boot.registry.internal.model.PluginEntity;
 import com.gluonhq.jfxapps.boot.registry.internal.model.RegistryEntity;
 import com.gluonhq.jfxapps.boot.registry.internal.model.RegistrySourceEntity;
+import com.gluonhq.jfxapps.boot.registry.internal.model.RepositoryEntity;
 import com.gluonhq.jfxapps.boot.registry.internal.repository.ApplicationRepository;
 import com.gluonhq.jfxapps.boot.registry.internal.repository.ExtensionRepository;
 import com.gluonhq.jfxapps.boot.registry.internal.repository.FeatureRepository;
@@ -81,6 +82,7 @@ public class RegistryBootClasses implements BootContextConfigClasses {
                 PluginRepository.class,
                 RegistryRepository.class,
                 RegistrySourceRepository.class,
+                RepositoryEntity.class,
 
 
                 //model
