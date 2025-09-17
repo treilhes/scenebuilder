@@ -38,8 +38,8 @@ import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifact;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifactManager;
+import com.gluonhq.jfxapps.boot.api.registry.model.RegistryArtifact;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 
 import javafx.collections.FXCollections;

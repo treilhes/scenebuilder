@@ -31,28 +31,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.api.registry;
+package com.gluonhq.jfxapps.boot.registry.internal.service;
 
-import java.util.List;
-import java.util.Set;
+import com.gluonhq.jfxapps.boot.registry.internal.model.RegistryEntity;
+import com.gluonhq.jfxapps.boot.registry.internal.model.RegistrySourceEntity;
 
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistryArtifact;
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistrySourceInfo;
+public interface RegistryUpdateService {
 
-public interface RegistryArtifactManager {
-
-    List<RegistryArtifact> list();
-
-    void add(RegistryArtifact source);
-    void update(RegistryArtifact artifact);
-    void remove(RegistryArtifact source);
-
-
-    Set<RegistrySourceInfo> listRegistrySourceInfo();
-    RegistrySourceInfo getRegistrySourceInfo(String groupId, String artifactId);
-    RegistrySourceInfo getRegistrySourceInfo(RegistryArtifact registryArtifact);
-    RegistrySourceInfo loadLatestRegistrySourceInfo(String groupId, String artifactId);
-
-
+    RegistryEntity loadLatest(RegistrySourceEntity src);
 
 }

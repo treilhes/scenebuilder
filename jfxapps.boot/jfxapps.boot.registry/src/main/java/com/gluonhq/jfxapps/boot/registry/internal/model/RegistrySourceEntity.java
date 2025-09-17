@@ -31,28 +31,84 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.api.registry;
+package com.gluonhq.jfxapps.boot.registry.internal.model;
 
-import java.util.List;
-import java.util.Set;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistryArtifact;
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistrySourceInfo;
+@Entity(name = "RegistrySource")
+@IdClass(RegistrySourceEntity.RegistrySourceId.class)
+public class RegistrySourceEntity {
 
-public interface RegistryArtifactManager {
+    public static class RegistrySourceId {
+        private String groupId;
+        private String artifactId;
+        public String getGroupId() {
+            return groupId;
+        }
+        public void setGroupId(String groupId) {
+            this.groupId = groupId;
+        }
+        public String getArtifactId() {
+            return artifactId;
+        }
+        public void setArtifactId(String artifactId) {
+            this.artifactId = artifactId;
+        }
 
-    List<RegistryArtifact> list();
+    }
 
-    void add(RegistryArtifact source);
-    void update(RegistryArtifact artifact);
-    void remove(RegistryArtifact source);
+    @Id
+    private String groupId;
 
+    @Id
+    private String artifactId;
 
-    Set<RegistrySourceInfo> listRegistrySourceInfo();
-    RegistrySourceInfo getRegistrySourceInfo(String groupId, String artifactId);
-    RegistrySourceInfo getRegistrySourceInfo(RegistryArtifact registryArtifact);
-    RegistrySourceInfo loadLatestRegistrySourceInfo(String groupId, String artifactId);
+    private String version;
 
+    private boolean mandatory;
 
+    public RegistrySourceEntity() {
+    }
+
+    public RegistrySourceEntity(String groupId, String artifactId, String version) {
+        super();
+        this.groupId = groupId;
+        this.artifactId = artifactId;
+        this.version = version;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getArtifactId() {
+        return artifactId;
+    }
+
+    public void setArtifactId(String artifactId) {
+        this.artifactId = artifactId;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public boolean isMandatory() {
+        return mandatory;
+    }
+
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
+    }
 
 }

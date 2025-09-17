@@ -50,6 +50,7 @@ public class Registry {
     private Set<Application> applications = new HashSet<>();
     private Set<Plugin> plugins = new HashSet<>();
     private Set<Registry> registries = new HashSet<>();
+    private Set<Repository> repositories = new HashSet<>();
 
     public Registry(UUID uuid, Dependency dependency, Set<Application> applications, Set<Plugin> plugins, Set<Registry> registries) {
         this.uuid = uuid;
@@ -108,6 +109,14 @@ public class Registry {
 
     public void setRegistries(Set<Registry> registries) {
         this.registries = registries;
+    }
+
+    public Set<Repository> getRepositories() {
+        return repositories;
+    }
+
+    public void setRepositories(Set<Repository> repositories) {
+        this.repositories = repositories;
     }
 
     @Override

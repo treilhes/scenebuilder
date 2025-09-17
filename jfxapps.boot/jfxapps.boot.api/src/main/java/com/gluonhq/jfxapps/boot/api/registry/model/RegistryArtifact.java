@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2023, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2023, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,28 +31,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.api.registry;
+package com.gluonhq.jfxapps.boot.api.registry.model;
 
-import java.util.List;
-import java.util.Set;
-
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistryArtifact;
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistrySourceInfo;
-
-public interface RegistryArtifactManager {
-
-    List<RegistryArtifact> list();
-
-    void add(RegistryArtifact source);
-    void update(RegistryArtifact artifact);
-    void remove(RegistryArtifact source);
-
-
-    Set<RegistrySourceInfo> listRegistrySourceInfo();
-    RegistrySourceInfo getRegistrySourceInfo(String groupId, String artifactId);
-    RegistrySourceInfo getRegistrySourceInfo(RegistryArtifact registryArtifact);
-    RegistrySourceInfo loadLatestRegistrySourceInfo(String groupId, String artifactId);
-
-
-
+public record RegistryArtifact(
+        String groupId,
+        String artifactId,
+        String version,
+        boolean mandatory
+        ) {
 }

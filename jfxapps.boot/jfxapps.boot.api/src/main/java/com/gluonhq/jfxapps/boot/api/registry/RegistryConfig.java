@@ -39,9 +39,10 @@ import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import com.gluonhq.jfxapps.boot.api.registry.model.RegistryArtifact;
+
 @Configuration
 @ConfigurationProperties(prefix = "jfxapps.registry")
-//@Profile("!it")
 public class RegistryConfig {
 
     private boolean snapshotsAllowed;

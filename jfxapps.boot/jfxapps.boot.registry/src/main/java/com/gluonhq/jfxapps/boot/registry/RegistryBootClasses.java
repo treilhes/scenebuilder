@@ -37,26 +37,24 @@ import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryConfig;
-import com.gluonhq.jfxapps.boot.registry.internal.BinaryCache;
-import com.gluonhq.jfxapps.boot.registry.internal.RegistryEntityMappersImpl;
-import com.gluonhq.jfxapps.boot.registry.internal.RegistryInfoMappersImpl;
 import com.gluonhq.jfxapps.boot.registry.internal.RegistryManagerImpl;
-import com.gluonhq.jfxapps.boot.registry.internal.RegistrySourceManagerImpl;
-import com.gluonhq.jfxapps.boot.registry.model.ApplicationEntity;
-import com.gluonhq.jfxapps.boot.registry.model.ExtensionEntity;
-import com.gluonhq.jfxapps.boot.registry.model.FeatureEntity;
-import com.gluonhq.jfxapps.boot.registry.model.PluginEntity;
-import com.gluonhq.jfxapps.boot.registry.model.RegistryEntity;
-import com.gluonhq.jfxapps.boot.registry.model.RegistrySourceEntity;
-import com.gluonhq.jfxapps.boot.registry.repository.ApplicationRepository;
-import com.gluonhq.jfxapps.boot.registry.repository.ExtensionRepository;
-import com.gluonhq.jfxapps.boot.registry.repository.FeatureRepository;
-import com.gluonhq.jfxapps.boot.registry.repository.PluginRepository;
-import com.gluonhq.jfxapps.boot.registry.repository.RegistryRepository;
-import com.gluonhq.jfxapps.boot.registry.repository.RegistrySourceRepository;
-import com.gluonhq.jfxapps.boot.registry.service.RegistryService;
-import com.gluonhq.jfxapps.boot.registry.service.RegistrySourceService;
-import com.gluonhq.jfxapps.boot.registry.service.RegistryUpdateService;
+import com.gluonhq.jfxapps.boot.registry.internal.mapper.RegistryDtoMappersImpl;
+import com.gluonhq.jfxapps.boot.registry.internal.mapper.RegistryModelMappersImpl;
+import com.gluonhq.jfxapps.boot.registry.internal.model.ApplicationEntity;
+import com.gluonhq.jfxapps.boot.registry.internal.model.ExtensionEntity;
+import com.gluonhq.jfxapps.boot.registry.internal.model.FeatureEntity;
+import com.gluonhq.jfxapps.boot.registry.internal.model.PluginEntity;
+import com.gluonhq.jfxapps.boot.registry.internal.model.RegistryEntity;
+import com.gluonhq.jfxapps.boot.registry.internal.model.RegistrySourceEntity;
+import com.gluonhq.jfxapps.boot.registry.internal.repository.ApplicationRepository;
+import com.gluonhq.jfxapps.boot.registry.internal.repository.ExtensionRepository;
+import com.gluonhq.jfxapps.boot.registry.internal.repository.FeatureRepository;
+import com.gluonhq.jfxapps.boot.registry.internal.repository.PluginRepository;
+import com.gluonhq.jfxapps.boot.registry.internal.repository.RegistryRepository;
+import com.gluonhq.jfxapps.boot.registry.internal.repository.RegistrySourceRepository;
+import com.gluonhq.jfxapps.boot.registry.internal.service.RegistryServiceImpl;
+import com.gluonhq.jfxapps.boot.registry.internal.service.RegistryUpdateServiceImpl;
+import com.gluonhq.jfxapps.boot.registry.internal.util.BinaryCache;
 
 
 /**
@@ -70,12 +68,11 @@ public class RegistryBootClasses implements BootContextConfigClasses {
         return List.of(
                 RegistryConfig.class,
                 RegistryManagerImpl.class,
-                RegistrySourceManagerImpl.class,
                 BinaryCache.class,
 
                 //mappers
-                RegistryEntityMappersImpl.class,
-                RegistryInfoMappersImpl.class,
+                RegistryModelMappersImpl.class,
+                RegistryDtoMappersImpl.class,
 
                 //jpa repositories
                 ApplicationRepository.class,
@@ -95,9 +92,8 @@ public class RegistryBootClasses implements BootContextConfigClasses {
                 RegistrySourceEntity.class,
 
                 //service
-                RegistrySourceService.class,
-                RegistryService.class,
-                RegistryUpdateService.class
+                RegistryServiceImpl.class,
+                RegistryUpdateServiceImpl.class
                 );
         // @formatter:on
     }

@@ -31,28 +31,77 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.api.registry;
+package com.gluonhq.jfxapps.boot.registry.internal.model;
 
-import java.util.List;
-import java.util.Set;
+import org.hibernate.validator.constraints.Length;
 
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistryArtifact;
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistrySourceInfo;
+import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotNull;
 
-public interface RegistryArtifactManager {
+@Embeddable
+public class Description {
 
-    List<RegistryArtifact> list();
+    //    @NotNull
+    //    @Length(max = 255)
+    //    private String image;
+    //
+    //    private String i18n;
 
-    void add(RegistryArtifact source);
-    void update(RegistryArtifact artifact);
-    void remove(RegistryArtifact source);
+    /** The title. */
+    @NotNull
+    @Length(max = 255)
+    private String title;
 
+    /** The text. */
+    @NotNull
+    @Length(max = 2000)
+    private String text;
 
-    Set<RegistrySourceInfo> listRegistrySourceInfo();
-    RegistrySourceInfo getRegistrySourceInfo(String groupId, String artifactId);
-    RegistrySourceInfo getRegistrySourceInfo(RegistryArtifact registryArtifact);
-    RegistrySourceInfo loadLatestRegistrySourceInfo(String groupId, String artifactId);
+    /** The changelog. */
+    private String changelog;
 
+    public Description() {
+        super();
+    }
 
+    //	public String getImage() {
+    //		return image;
+    //	}
+    //
+    //	public void setImage(String image) {
+    //		this.image = image;
+    //	}
+    //
+    //	public String getI18n() {
+    //		return i18n;
+    //	}
+    //
+    //	public void setI18n(String i18n) {
+    //		this.i18n = i18n;
+    //	}
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getChangelog() {
+        return changelog;
+    }
+
+    public void setChangelog(String changelog) {
+        this.changelog = changelog;
+    }
 
 }

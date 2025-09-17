@@ -35,8 +35,6 @@ package com.gluonhq.jfxapps.boot.api.registry.model;
 
 import java.util.Objects;
 
-import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifact;
-
 public class RegistrySourceInfo {
 
     private RegistryArtifact artifact;

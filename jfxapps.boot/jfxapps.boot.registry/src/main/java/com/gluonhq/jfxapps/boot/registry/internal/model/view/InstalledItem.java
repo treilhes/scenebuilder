@@ -31,28 +31,51 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.api.registry;
+package com.gluonhq.jfxapps.boot.registry.internal.model.view;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistryArtifact;
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistrySourceInfo;
+public class InstalledItem {
 
-public interface RegistryArtifactManager {
+    private final UUID id;
+    private final UUID parentId;
+    private final String groupId;
+    private final String artifactId;
+    private final String version;
+    private final Set<InstalledItem> children = new HashSet<>();
 
-    List<RegistryArtifact> list();
+    public InstalledItem(UUID parentId, UUID id, String groupId, String artifactId, String version) {
+    	this.parentId = parentId;
+        this.id = id;
+        this.groupId = groupId;
+        this.artifactId = artifactId;
+        this.version = version;
+    }
 
-    void add(RegistryArtifact source);
-    void update(RegistryArtifact artifact);
-    void remove(RegistryArtifact source);
+    public UUID getId() {
+        return id;
+    }
 
+    public UUID getParentId() {
+		return parentId;
+	}
 
-    Set<RegistrySourceInfo> listRegistrySourceInfo();
-    RegistrySourceInfo getRegistrySourceInfo(String groupId, String artifactId);
-    RegistrySourceInfo getRegistrySourceInfo(RegistryArtifact registryArtifact);
-    RegistrySourceInfo loadLatestRegistrySourceInfo(String groupId, String artifactId);
+	public String getGroupId() {
+        return groupId;
+    }
 
+    public String getArtifactId() {
+        return artifactId;
+    }
 
+    public String getVersion() {
+        return version;
+    }
+
+    public Set<InstalledItem> getChildren() {
+        return children;
+    }
 
 }

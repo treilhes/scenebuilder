@@ -31,28 +31,66 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.api.registry;
+package com.gluonhq.jfxapps.boot.registry.internal.model;
 
-import java.util.List;
-import java.util.Set;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistryArtifact;
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistrySourceInfo;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
-public interface RegistryArtifactManager {
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
-    List<RegistryArtifact> list();
+@Entity(name = "Repository")
+public class RepositoryEntity {
 
-    void add(RegistryArtifact source);
-    void update(RegistryArtifact artifact);
-    void remove(RegistryArtifact source);
+    @Id
+    private String id;
 
+    private String name;
 
-    Set<RegistrySourceInfo> listRegistrySourceInfo();
-    RegistrySourceInfo getRegistrySourceInfo(String groupId, String artifactId);
-    RegistrySourceInfo getRegistrySourceInfo(RegistryArtifact registryArtifact);
-    RegistrySourceInfo loadLatestRegistrySourceInfo(String groupId, String artifactId);
+    private String url;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @NotFound(action = NotFoundAction.IGNORE)
+    private RegistryEntity registry;
 
+    public RepositoryEntity() {
+        super();
+    }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public RegistryEntity getRegistry() {
+        return registry;
+    }
+
+    public void setRegistry(RegistryEntity registry) {
+        this.registry = registry;
+    }
 }

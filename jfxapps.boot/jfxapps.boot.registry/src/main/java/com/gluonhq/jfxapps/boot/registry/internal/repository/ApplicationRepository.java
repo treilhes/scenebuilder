@@ -31,28 +31,34 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.api.registry;
+package com.gluonhq.jfxapps.boot.registry.internal.repository;
 
-import java.util.List;
-import java.util.Set;
+import java.util.Optional;
+import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistryArtifact;
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistrySourceInfo;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-public interface RegistryArtifactManager {
+import com.gluonhq.jfxapps.boot.registry.internal.model.ApplicationEntity;
 
-    List<RegistryArtifact> list();
+@Repository
+@Transactional
+public interface ApplicationRepository extends JpaRepository<ApplicationEntity, UUID> {
+    Optional<ApplicationEntity> findByInstalledTrueAndId(UUID id);
 
-    void add(RegistryArtifact source);
-    void update(RegistryArtifact artifact);
-    void remove(RegistryArtifact source);
+    @Modifying
+    @Query("update Application a set a.installed = true where a.id = :id")
+    void install(@Param(value = "id") UUID id);
 
+    @Modifying
+    @Query("update Application a set a.installed = false where a.id = :id")
+    void uninstall(@Param(value = "id") UUID id);
 
-    Set<RegistrySourceInfo> listRegistrySourceInfo();
-    RegistrySourceInfo getRegistrySourceInfo(String groupId, String artifactId);
-    RegistrySourceInfo getRegistrySourceInfo(RegistryArtifact registryArtifact);
-    RegistrySourceInfo loadLatestRegistrySourceInfo(String groupId, String artifactId);
-
-
-
+    @Modifying
+    @Query("update Application a set a.version = a.nextVersion where a.id = :id")
+    void update(@Param(value = "id") UUID uuid);
 }

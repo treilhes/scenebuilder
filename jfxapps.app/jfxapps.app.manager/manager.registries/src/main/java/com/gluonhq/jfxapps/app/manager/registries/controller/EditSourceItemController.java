@@ -46,7 +46,7 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceProtot
 import com.gluonhq.jfxapps.boot.api.maven.Artifact;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
 import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
-import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifact;
+import com.gluonhq.jfxapps.boot.api.registry.model.RegistryArtifact;
 import com.gluonhq.jfxapps.boot.api.registry.model.RegistrySourceInfo;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;

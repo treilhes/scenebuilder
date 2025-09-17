@@ -31,27 +31,62 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.api.registry;
+package com.gluonhq.jfxapps.boot.registry.internal.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistryArtifact;
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistrySourceInfo;
+import com.gluonhq.jfxapps.boot.registry.internal.model.ApplicationEntity;
+import com.gluonhq.jfxapps.boot.registry.internal.model.PluginEntity;
+import com.gluonhq.jfxapps.boot.registry.internal.model.RegistryEntity;
+import com.gluonhq.jfxapps.boot.registry.internal.model.RegistrySourceEntity;
+import com.gluonhq.jfxapps.boot.registry.internal.model.view.InstalledItem;
 
-public interface RegistryArtifactManager {
+import jakarta.validation.Valid;
 
-    List<RegistryArtifact> list();
+public interface RegistryService {
 
-    void add(RegistryArtifact source);
-    void update(RegistryArtifact artifact);
-    void remove(RegistryArtifact source);
+    void saveSource(RegistrySourceEntity artifact);
 
+    void deleteSource(@Valid RegistrySourceEntity source);
 
-    Set<RegistrySourceInfo> listRegistrySourceInfo();
-    RegistrySourceInfo getRegistrySourceInfo(String groupId, String artifactId);
-    RegistrySourceInfo getRegistrySourceInfo(RegistryArtifact registryArtifact);
-    RegistrySourceInfo loadLatestRegistrySourceInfo(String groupId, String artifactId);
+    List<RegistrySourceEntity> findAllSources();
+
+    Optional<RegistrySourceEntity> findSource(String groupId, String artifactId);
+
+    Optional<RegistryEntity> findRegistry(String groupId, String artifactId);
+
+    Optional<RegistryEntity> findRegistry(RegistrySourceEntity source);
+
+    void save(@Valid RegistryEntity registry);
+
+    void updateRegistryFromSource(String groupId, String artifactId);
+
+    void updateRegistryFromSource(@Valid RegistrySourceEntity source);
+
+    Optional<ApplicationEntity> findApplication(UUID applicationId);
+
+    Optional<PluginEntity> pluginInfo(UUID pluginId);
+
+    List<ApplicationEntity> listApplicationsInfo();
+
+    Set<PluginEntity> listApplicationPluginsInfo(UUID applicationId);
+
+    void installPlugin(UUID pluginId);
+
+    void uninstallPlugin(UUID pluginId);
+
+    void updatePluginToLatestVersion(UUID pluginId);
+
+    void installApplication(UUID applicationId);
+
+    void uninstallApplication(UUID applicationId);
+
+    void updateApplicationToLatestVersion(UUID applicationId);
+
+    InstalledItem computeInstallTree(UUID applicationId);
 
 
 

@@ -41,6 +41,7 @@
             <artifactId>jfxapps.boot.starter.test</artifactId>
             <scope>test</scope>
         </dependency>
+        
     </dependencies>
 
     <build>

@@ -57,8 +57,8 @@ import com.gluonhq.jfxapps.app.manager.registries.controller.SourceItemControlle
 import com.gluonhq.jfxapps.app.manager.registries.model.SourceModelController;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
 import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
-import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifact;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifactManager;
+import com.gluonhq.jfxapps.boot.api.registry.model.RegistryArtifact;
 import com.gluonhq.jfxapps.boot.api.registry.model.RegistryInfo;
 import com.gluonhq.jfxapps.boot.api.registry.model.RegistrySourceInfo;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;

@@ -31,28 +31,39 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.api.registry;
+package com.gluonhq.jfxapps.registry.model;
 
-import java.util.List;
-import java.util.Set;
+public class Repository {
+    /*
+     <repositories>
+        <repository>
+            <name>atlassian public Repository</name>
+            <url>https://maven.artifacts.atlassian.com/</url>
+        </repository>
+    </repositories>
+     */
 
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistryArtifact;
-import com.gluonhq.jfxapps.boot.api.registry.model.RegistrySourceInfo;
+    private String id;
+    private String url;
+    private boolean loginRequired = false;
 
-public interface RegistryArtifactManager {
-
-    List<RegistryArtifact> list();
-
-    void add(RegistryArtifact source);
-    void update(RegistryArtifact artifact);
-    void remove(RegistryArtifact source);
-
-
-    Set<RegistrySourceInfo> listRegistrySourceInfo();
-    RegistrySourceInfo getRegistrySourceInfo(String groupId, String artifactId);
-    RegistrySourceInfo getRegistrySourceInfo(RegistryArtifact registryArtifact);
-    RegistrySourceInfo loadLatestRegistrySourceInfo(String groupId, String artifactId);
-
-
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+    public String getUrl() {
+        return url;
+    }
+    public void setUrl(String url) {
+        this.url = url;
+    }
+    public boolean isLoginRequired() {
+        return loginRequired;
+    }
+    public void setLoginRequired(boolean loginRequired) {
+        this.loginRequired = loginRequired;
+    }
 
 }
