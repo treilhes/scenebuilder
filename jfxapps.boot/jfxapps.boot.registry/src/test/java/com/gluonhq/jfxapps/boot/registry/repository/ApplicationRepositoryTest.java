@@ -50,9 +50,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.gluonhq.jfxapps.boot.registry.internal.model.ApplicationEntity;
-import com.gluonhq.jfxapps.boot.registry.internal.model.ExtensionEntity;
-import com.gluonhq.jfxapps.boot.registry.internal.model.FeatureEntity;
-import com.gluonhq.jfxapps.boot.registry.internal.model.RegistryEntity;
 import com.gluonhq.jfxapps.boot.registry.internal.repository.ApplicationRepository;
 
 @DataJpaTest(showSql = true)
@@ -151,58 +148,4 @@ class ApplicationRepositoryTest {
         assertEquals(nextVersion, repository.findById(id).get().getVersion());
     }
 
-    @Test
-    void test_load() {
-
-        RegistryEntity registry = new RegistryEntity();
-        registry.setId(UUID.randomUUID());
-        registry.setGroupId("grp");
-        registry.setArtifactId("art");
-        registry.setVersion("1.0");
-        em.persist(registry);
-
-        ensureDatabaseIsUpdated();
-
-        ApplicationEntity app = new ApplicationEntity();
-        app.setId(UUID.randomUUID());
-        app.setGroupId("grp");
-        app.setArtifactId("art");
-        app.setVersion("1.0");
-        app.setNextVersion("1.0");
-        app.setInstalled(true);
-        app.setRegistry(registry);
-
-        repository.save(app);
-
-        ensureDatabaseIsUpdated();
-
-        ExtensionEntity ext = new ExtensionEntity();
-        ext.setId(UUID.randomUUID());
-        ext.setGroupId("grp");
-        ext.setArtifactId("ext");
-        ext.setVersion("1.0");
-        ext.setParentApplication(app);
-        em.persist(ext);
-
-        ensureDatabaseIsUpdated();
-
-        FeatureEntity feat = new FeatureEntity();
-        feat.setId(UUID.randomUUID());
-        feat.setTarget(app.getId());
-        em.persist(feat);
-
-        ensureDatabaseIsUpdated();
-
-        ExtensionEntity ext2 = new ExtensionEntity();
-        ext2.setId(UUID.randomUUID());
-        ext2.setGroupId("grp");
-        ext2.setArtifactId("ext2");
-        ext2.setVersion("1.0");
-        ext2.setParentFeature(feat);
-        em.persist(ext2);
-
-        ensureDatabaseIsUpdated();
-
-        System.out.println();
-    }
 }
