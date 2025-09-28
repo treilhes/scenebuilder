@@ -31,11 +31,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.projects.watcher;
+package com.gluonhq.jfxapps.app.devtools.api.project.fs;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 import com.gluonhq.jfxapps.core.api.fs.watcher.FileType;
 import com.gluonhq.jfxapps.core.api.fs.watcher.Folder;
@@ -106,51 +105,57 @@ public class FolderDefinitions {
      * It is applicable to any path and creates a package folder.
      * It includes Java files and excludes other file types.
      */
-    public static final FolderType JAVA_PACKAGE = FolderType.of(
-            "JAVA_PACKAGE",
-            Folder::any,
-            PackageFolder::new,
-            List.of(),
-            List.of(JAVA_FILE), true);
+    public static final FolderType JAVA_PACKAGE = FolderType.builder()
+            .withId("JAVA_PACKAGE")
+            .withIsApplicable(Folder::any)
+            .withFolderSupplier(PackageFolder::new)
+            .withFileType(JAVA_FILE)
+            .withThisFolderType()
+            .build();
 
-    public static final FolderType RESOURCE_PACKAGE = FolderType.of(
-            "RESOURCE_PACKAGE",
-            Folder::any,
-            PackageFolder::new,
-            List.of(),
-            List.of(FXML_FILE, PROPERTIES_FILE), true);
+    public static final FolderType RESOURCE_PACKAGE = FolderType.builder()
+            .withId("RESOURCE_PACKAGE")
+            .withIsApplicable(Folder::any)
+            .withFolderSupplier(PackageFolder::new)
+            .withFileType(FXML_FILE)
+            .withFileType(PROPERTIES_FILE)
+            .withThisFolderType()
+            .build();
 
-    public static final FolderType JAVA_SRC = FolderType.of(
-            "JAVA_SRC",
-            p -> Folder.isNamed(p, "java"),
-            PackageFolder::new,
-            List.of(JAVA_PACKAGE),
-            List.of(JAVA_FILE), false);
+    public static final FolderType JAVA_SRC = FolderType.builder()
+            .withId("JAVA_SRC")
+            .withIsApplicable(p -> Folder.isNamed(p, "java"))
+            .withFolderSupplier(PackageFolder::new)
+            .withFolderType(JAVA_PACKAGE)
+            .withFileType(JAVA_FILE)
+            .build();
 
-    public static final FolderType RESOURCES = FolderType.of(
-            "RESOURCES",
-            p -> Folder.isNamed(p, "resources"),
-            PackageFolder::new,
-            List.of(RESOURCE_PACKAGE),
-            List.of(FXML_FILE, PROPERTIES_FILE), false);
+    public static final FolderType RESOURCES = FolderType.builder()
+            .withId("RESOURCES")
+            .withIsApplicable(p -> Folder.isNamed(p, "resources"))
+            .withFolderSupplier(PackageFolder::new)
+            .withFolderType(RESOURCE_PACKAGE)
+            .withFileType(FXML_FILE)
+            .withFileType(PROPERTIES_FILE)
+            .build();
 
     public static final FolderType MAVEN_PROJECT = FolderType.builder()
-            .withName("MAVEN_PROJECT")
+            .withId("MAVEN_PROJECT")
             .withIsApplicable(FolderDefinitions::hasPomFile)
             .withThisFolderType()// to handle sub project
             .withFileType(POM_FILE)
             .withFolderType(
                     FolderType.builder()
-                    .withName("SRC")
+                    .withId("SRC")
                     .withIsApplicable(path -> Folder.isNamed(path, "src"))
                     .withFolderType(FolderType.builder()
-                        .withName("MAIN")
+                        .withId("MAIN")
                         .withIsApplicable(path -> Folder.isNamed(path, "main"))
                         .withFolderType(JAVA_SRC)
                         .withFolderType(RESOURCES)
                         .build())
                     .withFolderType(FolderType.builder()
-                        .withName("TEST")
+                        .withId("TEST")
                         .withIsApplicable(path -> Folder.isNamed(path, "test"))
                         .withFolderType(JAVA_SRC)
                         .withFolderType(RESOURCES)

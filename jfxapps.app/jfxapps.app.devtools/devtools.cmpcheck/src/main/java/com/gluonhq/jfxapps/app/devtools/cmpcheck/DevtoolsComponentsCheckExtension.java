@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,6 +38,7 @@ import java.util.UUID;
 
 import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
 import com.gluonhq.jfxapps.app.devtools.cmpcheck.controller.ComponentDeclarationsController;
+import com.gluonhq.jfxapps.app.devtools.cmpcheck.watcher.WatcherConfiguration;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 
 public class DevtoolsComponentsCheckExtension implements OpenExtension  {
@@ -58,7 +59,8 @@ public class DevtoolsComponentsCheckExtension implements OpenExtension  {
     @Override
     public List<Class<?>> exportedContextClasses() {
         return List.of(
-                ComponentDeclarationsController.class
+                ComponentDeclarationsController.class,
+                WatcherConfiguration.class
                 );
     }
 

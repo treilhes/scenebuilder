@@ -34,10 +34,12 @@
 package com.gluonhq.jfxapps.app.devtools.projects.controller;
 
 import java.io.File;
+import java.util.List;
 
 import com.gluonhq.jfxapps.app.devtools.api.project.Project;
 import com.gluonhq.jfxapps.app.devtools.api.project.ProjectEvents;
-import com.gluonhq.jfxapps.app.devtools.projects.watcher.FolderDefinitions;
+import com.gluonhq.jfxapps.app.devtools.api.project.fs.FolderDefinitions;
+import com.gluonhq.jfxapps.app.devtools.api.project.fs.WatcherInitializer;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fs.watcher.Watcher;
 
@@ -45,10 +47,12 @@ import com.gluonhq.jfxapps.core.api.fs.watcher.Watcher;
 public class ProjectController {
 
     private final ProjectEvents projectEvents;
+    private final List<WatcherInitializer> watcherInitializers;
 
-    public ProjectController(ProjectEvents projectEvents) {
+    public ProjectController(ProjectEvents projectEvents, List<WatcherInitializer> watcherInitializers) {
         super();
         this.projectEvents = projectEvents;
+        this.watcherInitializers = watcherInitializers;
     }
 
     public void loadProject(File projectFolder) {
@@ -58,11 +62,14 @@ public class ProjectController {
         var watcher = new Watcher();
 
         var rootType = FolderDefinitions.MAVEN_PROJECT.copy()
-                .withName("ROOT")
+                .withId("ROOT")
                 .withExclusionPatterns("docs")
                 .build();
 
+        watcherInitializers.forEach(WatcherInitializer::initialize);
+
         var folder = rootType.createFolder(watcher, null, rootPath);
+        folder.requestRefresh();
 
         if (previous != null) {
             previous.getWatcher().stopWatch();
@@ -72,7 +79,6 @@ public class ProjectController {
 
         watcher.startWatch();
         projectEvents.project().set(project);
-        folder.requestRefresh();
     }
 
 }

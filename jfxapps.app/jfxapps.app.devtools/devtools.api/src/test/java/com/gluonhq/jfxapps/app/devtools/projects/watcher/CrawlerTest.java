@@ -31,26 +31,36 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+package com.gluonhq.jfxapps.app.devtools.projects.watcher;
 
-open module devtools.api {
-    exports com.gluonhq.jfxapps.app.devtools.api;
-    exports com.gluonhq.jfxapps.app.devtools.api.project.fs;
-    exports com.gluonhq.jfxapps.app.devtools.api.project.fs.content;
-    exports com.gluonhq.jfxapps.app.devtools.api.project.fs.feature;
-    exports com.gluonhq.jfxapps.app.devtools.api.menu;
-    exports com.gluonhq.jfxapps.app.devtools.api.ui;
-    exports com.gluonhq.jfxapps.app.devtools.api.project;
+import java.io.File;
 
-    requires transitive jfxapps.core.api;
-    requires transitive devtools.model;
-    requires transitive devtools.starter;
+import org.junit.jupiter.api.Test;
 
-    requires maven.model;
-    requires plexus.utils;
+import com.gluonhq.jfxapps.app.devtools.api.project.fs.FolderDefinitions;
+import com.gluonhq.jfxapps.core.api.fs.watcher.FilteredView;
+import com.gluonhq.jfxapps.core.api.fs.watcher.Watcher;
 
+class CrawlerTest {
 
+    @Test
+    void must_crawl_to_current_project() {
+        var root = new File(".");
+        var rootPath = root.toPath();
+        var watcher = new Watcher();
+        watcher.startWatch();
 
-    provides Extension with DevtoolsApiExtension;
+        var rootType = FolderDefinitions.MAVEN_PROJECT.copy()
+                .withId("ROOT")
+                .withExclusionPatterns("docs")
+                .build();
+
+        var rootFolder = rootType.createFolder(watcher, null, rootPath);
+        var pomFilesFilter = new FilteredView(rootFolder, true, f -> f.getPath().getFileName().toString().equalsIgnoreCase("pom.xml"));
+        pomFilesFilter.refresh();
+
+        rootFolder.requestRefresh(true);
+        watcher.stopWatch();
+    }
+
 }

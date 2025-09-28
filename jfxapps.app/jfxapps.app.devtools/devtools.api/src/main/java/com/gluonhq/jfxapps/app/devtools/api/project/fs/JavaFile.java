@@ -31,27 +31,25 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.projects.watcher;
+package com.gluonhq.jfxapps.app.devtools.api.project.fs;
 
 import java.nio.file.Path;
+import java.util.List;
 
 import com.gluonhq.jfxapps.core.api.fs.watcher.File;
+import com.gluonhq.jfxapps.core.api.fs.watcher.FileFeatureHandler;
 import com.gluonhq.jfxapps.core.api.fs.watcher.FileType;
 import com.gluonhq.jfxapps.core.api.fs.watcher.Folder;
 
-public class PomFile extends File{
+public class JavaFile extends File {
 
-    private MavenProjectFeature mavenProjectFeature;
-
-    public PomFile(Folder parent, Path location, FileType fileType) {
-        super(parent, location, fileType);
-        mavenProjectFeature = new MavenProjectFeature();
-        parent.addFeature(MavenProjectFeature.class, mavenProjectFeature);
+    public JavaFile(Folder parent, Path location, List<FileFeatureHandler> handlers, FileType fileType) {
+        super(parent, location, handlers, fileType);
     }
 
     @Override
-    public void onRemove() {
-        getParent().removeFeature(MavenProjectFeature.class);
+    public String toString() {
+        return "JavaFile [getLocation()=" + getPath() + "]";
     }
 
 }

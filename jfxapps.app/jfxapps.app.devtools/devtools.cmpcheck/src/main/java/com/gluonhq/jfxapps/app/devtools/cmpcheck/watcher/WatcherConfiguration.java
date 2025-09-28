@@ -31,26 +31,21 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+package com.gluonhq.jfxapps.app.devtools.cmpcheck.watcher;
 
-open module devtools.api {
-    exports com.gluonhq.jfxapps.app.devtools.api;
-    exports com.gluonhq.jfxapps.app.devtools.api.project.fs;
-    exports com.gluonhq.jfxapps.app.devtools.api.project.fs.content;
-    exports com.gluonhq.jfxapps.app.devtools.api.project.fs.feature;
-    exports com.gluonhq.jfxapps.app.devtools.api.menu;
-    exports com.gluonhq.jfxapps.app.devtools.api.ui;
-    exports com.gluonhq.jfxapps.app.devtools.api.project;
+import com.gluonhq.jfxapps.app.devtools.api.project.fs.FolderDefinitions;
+import com.gluonhq.jfxapps.app.devtools.api.project.fs.WatcherInitializer;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 
-    requires transitive jfxapps.core.api;
-    requires transitive devtools.model;
-    requires transitive devtools.starter;
+@ApplicationSingleton
+public class WatcherConfiguration implements WatcherInitializer{
 
-    requires maven.model;
-    requires plexus.utils;
+    @Override
+    public void initialize() {
+        var handler = new ComponentFeature.Handler();
+        var javaFile = FolderDefinitions.JAVA_FILE;
+        javaFile.registerFeatureHandler(handler);
 
+    }
 
-
-    provides Extension with DevtoolsApiExtension;
 }

@@ -31,36 +31,54 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.app.devtools.projects.watcher;
+package com.oracle.javafx.scenebuilder.devutils.cmpchk.preference;
 
-import java.io.File;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups;
+import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
+import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
+import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
+import com.gluonhq.jfxapps.core.api.preference.UserPreference;
 
-import org.junit.jupiter.api.Test;
+import javafx.scene.Parent;
 
-import com.gluonhq.jfxapps.app.devtools.projects.watcher.FolderDefinitions;
-import com.gluonhq.jfxapps.core.api.fs.watcher.FilteredView;
-import com.gluonhq.jfxapps.core.api.fs.watcher.Watcher;
+@ApplicationSingleton
+@PreferenceContext( //
+        id = "69bc112a-8b20-43c9-8978-f8aa4206716c", //
+        name = ExtensionClassesPreference.PREFERENCE_KEY, //
+        defaultValueProvider = ExtensionClassesPreference.DefaultProvider.class)
+public interface ExtensionClassesPreference
+        extends Preference<Double>, ManagedGlobalPreference, UserPreference<Double> {
 
-class CrawlerTest {
+    public static final String PREFERENCE_KEY = "extension.classes";// NOCHECK
+    public static final Double PREFERENCE_DEFAULT_VALUE = 600.0; // NOCHECK
 
-    @Test
-    void must_crawl_to_current_project() {
-        var root = new File(".");
-        var rootPath = root.toPath();
-        var watcher = new Watcher();
-        watcher.startWatch();
-
-        var rootType = FolderDefinitions.MAVEN_PROJECT.copy()
-                .withName("ROOT")
-                .withExclusionPatterns("docs")
-                .build();
-
-        var rootFolder = rootType.createFolder(watcher, null, rootPath);
-        var pomFilesFilter = new FilteredView(rootFolder, true, f -> f.getPath().getFileName().toString().equalsIgnoreCase("pom.xml"));
-        pomFilesFilter.refresh();
-
-        rootFolder.requestRefresh(true);
-        watcher.stopWatch();
+    @Override
+    default String getLabelI18NKey() {
+        return PREFERENCE_KEY;
     }
 
+    @Override
+    default Parent getEditor() {
+        return getPreferenceEditorFactory().newDoubleFieldEditor(this);
+    }
+
+    @Override
+    default PreferenceGroup getGroup() {
+        return DefaultPreferenceGroups.GLOBAL_GROUP_A;
+    }
+
+    @Override
+    default String getOrderKey() {
+        return getGroup().getOrderKey() + "_A";
+    }
+
+    public static class DefaultProvider implements DefaultValueProvider<Double> {
+        @Override
+        public Double get() {
+            return PREFERENCE_DEFAULT_VALUE;
+        }
+    }
 }

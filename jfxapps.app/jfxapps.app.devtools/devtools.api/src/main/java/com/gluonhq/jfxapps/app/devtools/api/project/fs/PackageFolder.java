@@ -31,26 +31,25 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+package com.gluonhq.jfxapps.app.devtools.api.project.fs;
 
-open module devtools.api {
-    exports com.gluonhq.jfxapps.app.devtools.api;
-    exports com.gluonhq.jfxapps.app.devtools.api.project.fs;
-    exports com.gluonhq.jfxapps.app.devtools.api.project.fs.content;
-    exports com.gluonhq.jfxapps.app.devtools.api.project.fs.feature;
-    exports com.gluonhq.jfxapps.app.devtools.api.menu;
-    exports com.gluonhq.jfxapps.app.devtools.api.ui;
-    exports com.gluonhq.jfxapps.app.devtools.api.project;
+import java.nio.file.Path;
+import java.util.List;
 
-    requires transitive jfxapps.core.api;
-    requires transitive devtools.model;
-    requires transitive devtools.starter;
+import com.gluonhq.jfxapps.core.api.fs.watcher.Folder;
+import com.gluonhq.jfxapps.core.api.fs.watcher.FolderFeatureHandler;
+import com.gluonhq.jfxapps.core.api.fs.watcher.FolderType;
+import com.gluonhq.jfxapps.core.api.fs.watcher.Watcher;
 
-    requires maven.model;
-    requires plexus.utils;
+public class PackageFolder extends Folder {
+    public PackageFolder(Watcher watcher, Folder parent, Path location, List<FolderFeatureHandler> handlers,
+            FolderType type) {
+        super(watcher, parent, location, handlers, type);
+    }
 
+    @Override
+    public String toString() {
+        return "PackageFolder [getLocation()=" + getPath() + "]";
+    }
 
-
-    provides Extension with DevtoolsApiExtension;
 }

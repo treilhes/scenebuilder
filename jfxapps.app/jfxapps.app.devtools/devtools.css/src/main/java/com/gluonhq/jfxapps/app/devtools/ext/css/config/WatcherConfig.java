@@ -31,26 +31,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.app.devtools.api.DevtoolsApiExtension;
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+package com.gluonhq.jfxapps.app.devtools.ext.css.config;
 
-open module devtools.api {
-    exports com.gluonhq.jfxapps.app.devtools.api;
-    exports com.gluonhq.jfxapps.app.devtools.api.project.fs;
-    exports com.gluonhq.jfxapps.app.devtools.api.project.fs.content;
-    exports com.gluonhq.jfxapps.app.devtools.api.project.fs.feature;
-    exports com.gluonhq.jfxapps.app.devtools.api.menu;
-    exports com.gluonhq.jfxapps.app.devtools.api.ui;
-    exports com.gluonhq.jfxapps.app.devtools.api.project;
+import com.gluonhq.jfxapps.app.devtools.api.project.fs.WatcherInitializer;
 
-    requires transitive jfxapps.core.api;
-    requires transitive devtools.model;
-    requires transitive devtools.starter;
+public class WatcherConfig implements WatcherInitializer {
 
-    requires maven.model;
-    requires plexus.utils;
+    @Override
+    public void initialize() {
+        // TODO Auto-generated method stub
 
+    }
 
-
-    provides Extension with DevtoolsApiExtension;
 }

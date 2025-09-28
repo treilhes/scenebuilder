@@ -41,12 +41,15 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import com.gluonhq.jfxapps.app.devtools.api.project.ProjectEvents;
+import com.gluonhq.jfxapps.app.devtools.api.project.fs.PomFile;
 import com.gluonhq.jfxapps.app.devtools.api.ui.Docks;
 import com.gluonhq.jfxapps.app.devtools.ext.css.config.Config;
 import com.gluonhq.jfxapps.app.devtools.ext.css.loader.ProjectLoader;
 import com.gluonhq.jfxapps.app.devtools.model.Project;
 import com.gluonhq.jfxapps.app.devtools.model.config.CommonConfig;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.fs.watcher.FilteredView;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
@@ -73,10 +76,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
 
-@ApplicationInstanceSingleton
+@ApplicationInstanceSingleton("xxxx")
 @ViewAttachment(
         name = "Css",
-        id = "6b999162-bce3-455e-8898-fd759f986369",
+        id = "6ad63390-89a4-4304-b0a5-45817d00a5cd",
         prefDockId = Docks.CENTER_DOCK_ID,
         openOnStart = false,
         selectOnStart = false,
@@ -141,16 +144,22 @@ public class ResourceLocationsController extends AbstractFxmlViewController {
 
     private int lastIndex;
 
+    private final ProjectEvents projectEvents;
+
     protected ResourceLocationsController(
             I18N i18n,
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
-            ViewMenu viewMenu) {
+            ViewMenu viewMenu,
+            ProjectEvents projectEvents) {
         super(i18n, scenebuilderManager, documentManager, viewMenu, ResourceLocationsController.class.getResource("ResourceLocations.fxml"));
+        this.projectEvents = projectEvents;
     }
 
     @FXML
     public void initialize() {
+        projectEvents.project().subscribe(this::newProject);
+
         valuesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE );
 
         projectColumn.setCellValueFactory(new PropertyValueFactory<>("projectName"));
@@ -336,6 +345,19 @@ public class ResourceLocationsController extends AbstractFxmlViewController {
     public void onHidden() {
         // TODO Auto-generated method stub
 
+    }
+
+    private void newProject(com.gluonhq.jfxapps.app.devtools.api.project.Project project) {
+        FilteredView view = new FilteredView(project.getFolder(), true, f -> f instanceof PomFile);
+        view.refresh();
+
+        System.out.println();
+
+        view.getFiles().values().forEach(l -> l.forEach(p -> {
+            System.out.println("Pom: " + p.getPath());
+            //var oc = DoubleQuotedStringOccurenceContent.supplier(p, "<groupId>", "</groupId>", null);
+            System.out.println();
+        }));
     }
 
 }

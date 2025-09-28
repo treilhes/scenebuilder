@@ -11,10 +11,12 @@
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.ext.about.api</artifactId>
+            <version>${jfxapps.version}</version>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.ext.scenicview.api</artifactId>
+            <version>${jfxapps.version}</version>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
@@ -23,14 +25,10 @@
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.api</artifactId>
+            <artifactId>devtools.starter</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.starter</artifactId>
-            <scope>provided</scope>
-        </dependency>
+        
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps.core.starter.test</artifactId>
