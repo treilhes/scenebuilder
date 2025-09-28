@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "[macOS] Post-install: Installation completed successfully!"
+exit 0

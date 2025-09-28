@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "[macOS] Pre-install: Preparing installation..."
+exit 0

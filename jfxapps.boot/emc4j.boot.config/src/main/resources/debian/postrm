@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "[DEB] Post-remove: App removed."
+exit 0

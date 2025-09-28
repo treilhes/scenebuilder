@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "[DEB] Pre-install: Checking environment..."
+exit 0

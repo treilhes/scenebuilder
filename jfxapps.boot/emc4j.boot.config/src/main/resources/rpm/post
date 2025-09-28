@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "[DEB] Post-install: App installed successfully!"
+exit 0
