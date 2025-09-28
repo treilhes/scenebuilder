@@ -31,87 +31,31 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.maven.client.model;
+package com.gluonhq.jfxapps.core.api.fs.content;
 
-import com.gluonhq.jfxapps.boot.api.maven.RepositoryType;
+import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import com.gluonhq.jfxapps.core.api.fs.watcher.File;
 
-@Entity
-public class Repository {
+/**
+ * A {@link Content} implementation to find all occurrences of double-quoted strings in a file.
+ */
+public class DoubleQuotedStringOccurenceContent extends AbstractStringOccurenceContent {
 
-    public enum Content {
-        SNAPSHOT, RELEASE, SNAPSHOT_RELEASE
+    public static DoubleQuotedStringOccurenceContent supplier(File file, List<String> excludeSuffixes) {
+
+        LinesContent linesContent = file.getContent(LinesContent.class, LinesContent::supplier);
+
+        if (linesContent == null) {
+            return null;
+        }
+
+        return new DoubleQuotedStringOccurenceContent(linesContent.getContent(), excludeSuffixes);
     }
 
-    @Id
-    private String id;
-    private Class<? extends RepositoryType> type;
-    private String url;
-    private String login;
-    private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Content contentType = Content.SNAPSHOT_RELEASE;
-
-    public Repository() {
-        super();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Class<? extends RepositoryType> getType() {
-        return type;
-    }
-
-    public void setType(Class<? extends RepositoryType> type) {
-        this.type = type;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Content getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(Content contentType) {
-        this.contentType = contentType;
-    }
-
-    @Override
-    public String toString() {
-        return "Repository [id=" + id + ", url=" + url + ", login=" + login + "]";
+    public DoubleQuotedStringOccurenceContent(List<String> lines, List<String> excludeSuffixes) {
+        super(lines, "\"", "\"", excludeSuffixes);
     }
 
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -370,15 +370,17 @@ public class MavenRepositorySystem {
             DefaultArtifact localArtifact = new DefaultArtifact(groupId, artefactId, def.getClassifier(),
                     def.getExtension(), version);
 
-            DependencyFilter classpathFlter = DependencyFilterUtils.classpathFilter(JavaScopes.COMPILE);
+            String requestScope = JavaScopes.RUNTIME;
+            DependencyFilter classpathFlter = DependencyFilterUtils.classpathFilter(requestScope);
+
             CollectRequest collectRequest = new CollectRequest();
-            collectRequest.setRoot(new Dependency(localArtifact, JavaScopes.COMPILE));
+            collectRequest.setRoot(new Dependency(localArtifact, requestScope));
             collectRequest.setRepositories(getRepositories());
 
             DependencyRequest dependencyRequest = new DependencyRequest(collectRequest, classpathFlter);
             try {
-                List<ArtifactResult> artifactResults = system.resolveDependencies(session, dependencyRequest)
-                        .getArtifactResults();
+                var dependencyResults = system.resolveDependencies(session, dependencyRequest);
+                var artifactResults = dependencyResults.getArtifactResults();
 
                 ArtifactResult main = artifactResults.get(0);
 

@@ -39,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,15 +57,15 @@ class FileTest {
 
     @Test
     void must_throw_when_file_path_dont_exists() {
-        var parent = new Folder(watcher, null, Path.of("."), FolderType.generic());
-        assertThrows(IllegalArgumentException.class, () -> new File(parent, Path.of("/donotexists"), FileType.generic()));
+        var parent = new Folder(watcher, null, Path.of("."), List.of(),FolderType.generic());
+        assertThrows(IllegalArgumentException.class, () -> new File(parent, Path.of("/donotexists"), List.of(), FileType.generic()));
     }
 
     @Test
     void must_throw_when_parent_folder_of_file_is_null() throws URISyntaxException {
         var fileUri = FolderTypeTest.class.getResource(FolderTypeTest.class.getSimpleName() + ".somefile").toURI();
         assertTrue(Files.isRegularFile(Path.of(fileUri)));
-        assertThrows(NullPointerException.class, () -> new File(null, Path.of(fileUri), FileType.generic()));
+        assertThrows(NullPointerException.class, () -> new File(null, Path.of(fileUri), List.of(), FileType.generic()));
     }
 
 

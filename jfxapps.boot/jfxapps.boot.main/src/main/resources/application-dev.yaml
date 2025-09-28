@@ -113,7 +113,7 @@ server:
 spring:
   h2:
     console:
-      enabled: true
+      enabled: false
   jpa:
     show-sql: true
 

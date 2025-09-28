@@ -63,7 +63,6 @@ import com.gluonhq.jfxapps.boot.registry.internal.repository.PluginRepository;
 import com.gluonhq.jfxapps.boot.registry.internal.repository.RegistryRepository;
 import com.gluonhq.jfxapps.boot.registry.internal.repository.RegistrySourceRepository;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 
 @Service
@@ -102,10 +101,8 @@ public class RegistryServiceImpl implements RegistryService {
         this.mappers = mappers;
     }
 
-    @PostConstruct
-    // FIXME: this method only handles initialization but do not handle new installations
-    protected void init() {
-
+    @Override
+    public void initializeFromConfig() {
         for (RegistryArtifact artifact : config.getDefaults().values()) {
 
             var source = mappers.map(artifact);

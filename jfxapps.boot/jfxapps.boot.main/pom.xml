@@ -67,14 +67,17 @@
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>java.base.patch</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>spring.core.patch</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>org.hibernate.orm.core.patch</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -199,17 +202,6 @@
                             ${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

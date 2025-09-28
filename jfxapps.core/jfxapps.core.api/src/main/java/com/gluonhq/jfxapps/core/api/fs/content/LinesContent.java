@@ -31,87 +31,40 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.maven.client.model;
+package com.gluonhq.jfxapps.core.api.fs.content;
 
-import com.gluonhq.jfxapps.boot.api.maven.RepositoryType;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Entity
-public class Repository {
+import com.gluonhq.jfxapps.core.api.fs.watcher.File;
 
-    public enum Content {
-        SNAPSHOT, RELEASE, SNAPSHOT_RELEASE
+public class LinesContent implements Content<List<String>> {
+
+    private static final Logger logger = LoggerFactory.getLogger(LinesContent.class);
+
+    private List<String> content;
+
+    public static LinesContent supplier(File file) {
+
+        try {
+            return new LinesContent(Files.readAllLines(file.getPath()));
+        } catch (IOException e) {
+            logger.error("Error reading file content: " + file.getPath(), e);
+            return null;
+        }
     }
 
-    @Id
-    private String id;
-    private Class<? extends RepositoryType> type;
-    private String url;
-    private String login;
-    private String password;
-
-    @Enumerated(EnumType.STRING)
-    private Content contentType = Content.SNAPSHOT_RELEASE;
-
-    public Repository() {
+    public LinesContent(List<String> content) {
         super();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Class<? extends RepositoryType> getType() {
-        return type;
-    }
-
-    public void setType(Class<? extends RepositoryType> type) {
-        this.type = type;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Content getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(Content contentType) {
-        this.contentType = contentType;
+        this.content = content;
     }
 
     @Override
-    public String toString() {
-        return "Repository [id=" + id + ", url=" + url + ", login=" + login + "]";
+    public List<String> getContent() {
+        return content;
     }
-
 }

@@ -35,19 +35,25 @@ package com.gluonhq.jfxapps.core.api.fs.watcher;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * Represents a file in the filesystem watcher model.
  * This class encapsulates the properties and behaviors of a file,
  * including its location, type, and refresh capabilities.
  */
-public class File extends FsItem {
+public class File extends FileSystemItem<File, FileFeature, FileFeatureHandler> {
 
     /**
      * The type of the file, defining its extensions and creation logic.
      */
     private final FileType fileType;
+
+    private volatile Map<Class<?>, Object> contentCache = new ConcurrentHashMap<>();
 
     /**
      * Constructs a File instance with the specified parent folder, location, and file type.
@@ -56,8 +62,8 @@ public class File extends FsItem {
      * @param location the path to the file in the filesystem
      * @param fileType the type of the file, defining its extensions and creation logic
      */
-    public File(Folder parent, Path location, FileType fileType) {
-        super(parent, location);
+    public File(Folder parent, Path location, List<FileFeatureHandler> handlers, FileType fileType) {
+        super(parent, location, handlers);
         Objects.requireNonNull(parent, "fileType can't be null");
         if (!Files.exists(location) || !Files.isRegularFile(location)) {
             throw new IllegalArgumentException("location does not exist or isn't a file: " + location);
@@ -91,5 +97,18 @@ public class File extends FsItem {
 
     public FileType getFileType() {
         return fileType;
+    }
+
+    public <T> T getContent(Class<T> contentType, Function<File, T> contentSupplier) {
+        var result = contentCache.computeIfAbsent(contentType, k -> contentSupplier.apply(this));
+        return contentType.cast(result);
+    }
+
+    /**
+     * Clears the content cache of this file.
+     * This method can be used to reset the cached content, forcing a reload on the next request.
+     */
+    public void clearCache() {
+        contentCache.clear();
     }
 }

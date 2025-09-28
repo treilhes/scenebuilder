@@ -28,13 +28,6 @@
             <artifactId>jfxapps.boot.starter.test</artifactId>
         </dependency>
 
-        <!--
-        https://mvnrepository.com/artifact/org.mock-server/mockserver-junit-jupiter -->
-        <dependency>
-            <groupId>org.mock-server</groupId>
-            <artifactId>mockserver-junit-jupiter</artifactId>
-            <version>5.15.0</version>
-        </dependency>
         <dependency>
             <groupId>net.raumzeitfalle.fx</groupId>
             <artifactId>scenic-view</artifactId>

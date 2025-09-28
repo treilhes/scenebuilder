@@ -170,6 +170,13 @@
 		<dependency>
 			<groupId>org.apache.maven.resolver</groupId>
 			<artifactId>maven-resolver-transport-http</artifactId>
+			<exclusions>
+				<!-- duplicate package name with sprin-jcl -->
+            	<exclusion>
+            		<groupId>org.slf4j</groupId>
+            		<artifactId>jcl-over-slf4j</artifactId>
+            	</exclusion>
+            </exclusions>
 		</dependency>
 	</dependencies>
 

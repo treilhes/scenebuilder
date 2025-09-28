@@ -34,11 +34,16 @@
 package com.gluonhq.jfxapps.core.api.fs.watcher;
 
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 
-public abstract class FsItem {
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+
+public abstract class FileSystemItem<I extends FileSystemItem, F extends Feature, H extends FeatureHandler<F, I>> {
     /**
      * Flag to enable or disable virtual threading for refresh operations.
      * If true, refresh operations will run on virtual threads; otherwise, they will run on the current thread.
@@ -59,13 +64,47 @@ public abstract class FsItem {
      */
     private boolean refreshing;
 
-    private Map<Class<? extends Feature>, Feature> features = new HashMap<>();
+    private final ObservableList<H> featureHandlers = FXCollections.observableArrayList();
 
-    public FsItem(Folder parent, Path location) {
+    private final ObservableMap<Class<? extends F>, F> features = FXCollections.observableHashMap();
+
+    private ListChangeListener<H> handlerListener = change -> {
+        if (change.wasRemoved()) {
+            var removedFeature = change.getRemoved();
+            removedFeature.forEach(f -> features.remove(f.getFeatureClass()));
+        }
+        if (change.wasAdded()) {
+            var addedFeature = change.getAddedSubList();
+            addedFeature.stream()
+                    .filter(h -> h.isApplicable((I) this))
+                    .map(h -> h.createFeature((I) this))
+                    .forEach(f -> features.put((Class<? extends F>) f.getClass(), f));
+        }
+    };
+
+    private MapChangeListener<Class<? extends F>, F> listener = change -> {
+        if (change.wasRemoved()) {
+            F removedFeature = change.getValueRemoved();
+            if (removedFeature != null) {
+                removedFeature.onRemove();
+            }
+        }
+        if (change.wasAdded()) {
+            F addedFeature = change.getValueAdded();
+            if (addedFeature != null) {
+                addedFeature.refresh(this);
+            }
+        }
+    };
+
+    public FileSystemItem(Folder parent, Path location, List<H> initialFeatureHandlers) {
         super();
         Objects.requireNonNull(location, "location can't be null");
         this.parent = parent;
         this.path = location;
+        this.featureHandlers.addAll(initialFeatureHandlers);
+        this.featureHandlers.addListener(handlerListener);
+        this.features.addListener(listener);
     }
 
 
@@ -95,7 +134,7 @@ public abstract class FsItem {
 
         Runnable refreshTask = () -> {
             try {
-                this.refresh();
+                this.refreshInternal();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -110,10 +149,19 @@ public abstract class FsItem {
         }
     }
 
+    protected void refreshInternal() {
+        refresh();
+    }
+
     /**
      * This method should be overridden to implement the actual internal state refresh logic.
      */
     public abstract void refresh();
+
+    protected void onRemoveInternal() {
+        features.removeListener(listener);
+        onRemove();
+    }
 
     /**
      * This method should be overridden to implement the actual removal logic.
@@ -125,10 +173,9 @@ public abstract class FsItem {
      *
      * @param featureClass the class of the feature
      * @param feature the feature instance
-     * @param <T> the type of the feature
      */
 
-    public <T extends Feature> void addFeature(Class<T> featureClass, T feature) {
+    public void addFeature(Class<? extends F> featureClass, F feature) {
         Objects.requireNonNull(featureClass, "featureClass can't be null");
         Objects.requireNonNull(feature, "feature can't be null");
         features.put(featureClass, feature);
@@ -142,7 +189,7 @@ public abstract class FsItem {
      * @param <T> the type of the feature
      * @return the feature instance, or null if not found
      */
-    public <T extends Feature> T getFeature(Class<T> featureClass) {
+    public <V extends F> V getFeature(Class<V> featureClass) {
         Objects.requireNonNull(featureClass, "featureClass can't be null");
         return featureClass.cast(features.get(featureClass));
     }
@@ -153,7 +200,7 @@ public abstract class FsItem {
      * @param <T> the type of the feature
      * @return the feature instance, or null if not found
      */
-    public <T extends Feature> T removeFeature(Class<T> featureClass) {
+    public <T extends F> T removeFeature(Class<T> featureClass) {
         Objects.requireNonNull(featureClass, "featureClass can't be null");
         return featureClass.cast(features.remove(featureClass));
     }
@@ -164,8 +211,25 @@ public abstract class FsItem {
      * @param <T> the type of the feature
      * @return true if the feature exists, false otherwise
      */
-    public <T extends Feature> boolean hasFeature(Class<T> featureClass) {
+    public <T extends F> boolean hasFeature(Class<T> featureClass) {
         return features.containsKey(featureClass);
+    }
+
+    public void addFeatureHandler(H handler) {
+        Objects.requireNonNull(handler, "handler can't be null");
+        featureHandlers.add(handler);
+    }
+
+    public boolean removeFeatureHandler(H handler) {
+        return featureHandlers.remove(handler);
+    }
+
+    public void applyFeatures() {
+        featureHandlers.stream()
+                .filter(h -> h.isApplicable((I) this))
+                .map(h -> h.createFeature((I) this))
+                .peek(f -> f.refresh(this))
+                .forEach(f -> addFeature((Class<F>) f.getClass(), f));
     }
 
     public Folder getParent() {

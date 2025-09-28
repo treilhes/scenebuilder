@@ -47,6 +47,7 @@ import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith({MockitoExtension.class})
@@ -54,6 +55,12 @@ class FolderTypeTest {
 
     @Mock
     Watcher watcher;
+
+    @Mock
+    FolderFeature mockFeature;
+
+    @Mock
+    FolderFeatureHandler mockFeatureHandler;
 
     /**
      * Test that the folder type is applicable only for paths that match the given predicate.
@@ -83,8 +90,8 @@ class FolderTypeTest {
     }
 
     class CustomFolder extends Folder {
-        public CustomFolder(Watcher watcher, Folder parent, Path path, FolderType type) {
-            super(watcher, parent, path, type);
+        public CustomFolder(Watcher watcher, Folder parent, Path path, List<FolderFeatureHandler> handlers, FolderType type) {
+            super(watcher, parent, path, handlers, type);
         }
     }
 
@@ -167,5 +174,39 @@ class FolderTypeTest {
         List<Pattern> patterns = folderType.getExclusionPatterns();
         assertEquals(1, patterns.size());
         assertTrue(patterns.get(0).matcher("should_exclude_this").matches());
+    }
+
+    @Test
+    void created_folder_must_contains_feature() {
+
+        Mockito.when(mockFeatureHandler.isApplicable(Mockito.any(Folder.class))).thenReturn(true);
+        Mockito.when(mockFeatureHandler.createFeature(Mockito.any(Folder.class))).thenReturn(mockFeature);
+
+        var folderType = FolderType.builder()
+                .withIsApplicable(Folder::any)
+                .withFeatureHandler(mockFeatureHandler)
+                .build();
+
+        var folder =folderType.createFolder(watcher, null, Path.of("."));
+        folder.applyFeatures();
+        assertNotNull(folder);
+        assertTrue(folder.hasFeature(mockFeature.getClass()));
+    }
+
+    @Test
+    void created_folder_musnt_contains_feature() {
+
+        Mockito.when(mockFeatureHandler.isApplicable(Mockito.any(Folder.class))).thenReturn(false);
+        //Mockito.when(mockFeatureHandler.createFeature(Mockito.any(Folder.class))).thenReturn(mockFeature);
+
+        var folderType = FolderType.builder()
+                .withIsApplicable(Folder::any)
+                .withFeatureHandler(mockFeatureHandler)
+                .build();
+
+        var folder =folderType.createFolder(watcher, null, Path.of("."));
+        folder.applyFeatures();
+        assertNotNull(folder);
+        assertFalse(folder.hasFeature(mockFeature.getClass()));
     }
 }

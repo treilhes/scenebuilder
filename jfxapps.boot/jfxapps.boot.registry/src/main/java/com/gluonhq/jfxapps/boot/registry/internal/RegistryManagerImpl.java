@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.api.registry.RegistryArtifactManager;
@@ -58,6 +59,8 @@ import com.gluonhq.jfxapps.boot.registry.internal.model.ApplicationEntity;
 import com.gluonhq.jfxapps.boot.registry.internal.model.RegistryEntity;
 import com.gluonhq.jfxapps.boot.registry.internal.service.RegistryService;
 import com.gluonhq.jfxapps.boot.registry.internal.util.BinaryCache;
+
+import jakarta.annotation.PostConstruct;
 
 /**
  * The Class RegistryManagerImpl.
@@ -90,6 +93,14 @@ public class RegistryManagerImpl implements RegistryManager, RegistryArtifactMan
         this.infoMappers = infoMappers;
         this.mappers = mappers;
         this.binaryCache = binaryCache;
+    }
+
+
+    @PostConstruct
+    @Transactional
+    // FIXME: this method only handles initialization but do not handle new installations
+    protected void init() {
+        registryGlobalService.initializeFromConfig();
     }
 
     @Override

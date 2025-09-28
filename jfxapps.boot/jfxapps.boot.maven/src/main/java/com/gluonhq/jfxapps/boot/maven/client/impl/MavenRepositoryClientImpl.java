@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -86,6 +86,9 @@ public class MavenRepositoryClientImpl implements RepositoryClient {
         this.repositoryManager = repositoryManager;
         this.startup = startup == null ? Optional.empty() : startup;
         this.searchService = new SearchService();
+
+        log.info("Using maven repository at {}", this.repositoryFolder.getAbsolutePath());
+
         // FIXME: offline mode should be set to true when no connection is available
         // when no connection is available, the client wait for some timeouts which cause an extremely slow startup
         // i think it must be some automatic detection of the connection status and the status must be periodicaly checked

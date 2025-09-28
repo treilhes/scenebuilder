@@ -88,6 +88,8 @@ public interface RegistryService {
 
     InstalledItem computeInstallTree(UUID applicationId);
 
+    void initializeFromConfig();
+
 
 
 }

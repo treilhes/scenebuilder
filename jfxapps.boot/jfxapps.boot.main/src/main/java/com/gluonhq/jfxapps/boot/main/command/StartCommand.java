@@ -47,17 +47,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.WebApplicationType;
 
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.api.splash.ContextLoadingAdapter;
 import com.gluonhq.jfxapps.boot.context.boot.BootContext;
 import com.gluonhq.jfxapps.boot.main.config.BootHandler;
 import com.gluonhq.jfxapps.boot.main.util.MessageBox;
 import com.gluonhq.jfxapps.boot.main.util.MessageBoxMessage;
 import com.gluonhq.jfxapps.boot.platform.internal.DefaultFolders;
-import com.gluonhq.jfxapps.boot.splash.impl.BootLoadingProgress;
 import com.gluonhq.jfxapps.boot.splash.impl.BootSplashScreen;
-import com.gluonhq.jfxapps.boot.splash.impl.LoadingProgress;
-import com.gluonhq.jfxapps.boot.splash.impl.SplashScreenProviderImpl;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;

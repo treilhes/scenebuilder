@@ -77,12 +77,13 @@ public class TestFolderDefinitions {
      * It is applicable to any path and creates a package folder.
      * It includes Java files and excludes other file types.
      */
-    public static final FolderType TYPED_FOLDER = FolderType.of(
-            "TYPED_FOLDER",
-            Folder::any,
-            TypedFolder::new,
-            List.of(),
-            List.of(TYPED_FILE), true);
+    public static final FolderType TYPED_FOLDER = FolderType.builder()
+            .withId("TYPED_FOLDER")
+            .withIsApplicable(Folder::any)
+            .withFolderSupplier(TypedFolder::new)
+            .withFileType(TYPED_FILE)
+            .withThisFolderType()
+            .build();
 
     public static final FolderType TEST_FOLDER_DEFINITION = FolderType.builder()
             .withIsApplicable(TestFolderDefinitions::hasMarkerFile)
@@ -104,14 +105,14 @@ public class TestFolderDefinitions {
     }
 
     public static class TypedFile extends File{
-        public TypedFile(Folder parent, Path location, FileType fileType) {
-            super(parent, location, fileType);
+        public TypedFile(Folder parent, Path location, List<FileFeatureHandler> handlers, FileType fileType) {
+            super(parent, location, handlers, fileType);
         }
     }
 
     public static class TypedFolder extends Folder{
-        public TypedFolder(Watcher watcher, Folder parent, Path location, FolderType folderType) {
-            super(watcher, parent, location, folderType);
+        public TypedFolder(Watcher watcher, Folder parent, Path location, List<FolderFeatureHandler> handlers, FolderType folderType) {
+            super(watcher, parent, location, handlers, folderType);
         }
     }
 }

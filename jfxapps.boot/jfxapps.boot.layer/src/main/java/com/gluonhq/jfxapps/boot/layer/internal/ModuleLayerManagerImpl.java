@@ -276,7 +276,7 @@ public class ModuleLayerManagerImpl implements ModuleLayerManager {
                     }
                 });
             }
-System.out.println();
+
             layerContent.resolvePatchRequests();
             var content = layerContent.getPaths().toArray(Path[]::new);
             var patches = layerContent.getPatches();

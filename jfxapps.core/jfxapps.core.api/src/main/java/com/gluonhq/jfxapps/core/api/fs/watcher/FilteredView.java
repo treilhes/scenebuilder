@@ -34,14 +34,14 @@
 package com.gluonhq.jfxapps.core.api.fs.watcher;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener.Change;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 public class FilteredView {
 
@@ -51,7 +51,11 @@ public class FilteredView {
 
     private final Predicate<File> fileFilter;
 
-    private final Map<Folder, List<File>> files = new HashMap<>();
+    private final ObservableMap<Folder, ObservableList<File>> files = FXCollections.observableHashMap();
+
+    private Consumer<File> onFileAdded;
+
+    private Consumer<File> onFileRemoved;
 
     public FilteredView(Folder root, boolean recursive, Predicate<File> fileFilter) {
         Objects.requireNonNull(root, "Root folder cannot be null");
@@ -65,6 +69,13 @@ public class FilteredView {
         handleFolder(root);
     }
 
+    /**
+     * Process a folder: if recursive, process sub-folders, then filter files and
+     * add them to the map if any. Finally, add listeners to folders and files
+     * changes.
+     *
+     * @param folder the folder to process
+     */
     private void handleFolder(Folder folder) {
 
         if (recursive) {
@@ -73,7 +84,11 @@ public class FilteredView {
 
         var folderFiles = folder.getFiles().values().stream()
                 .filter(fileFilter)
-                .toList();
+                .collect(() -> {
+                    ObservableList<File> newList = FXCollections.observableArrayList();
+                    return newList;
+                }, ObservableList::add, ObservableList::addAll);
+
 
         if (!folderFiles.isEmpty()) {
             files.put(folder, folderFiles);
@@ -82,13 +97,34 @@ public class FilteredView {
         folder.getFiles().addListener(this::handleFileChange);
     }
 
+    /**
+     * Handle changes in the folders of a folder: if a folder is added, process it
+     * (handleFolder). If a folder is removed, remove listeners on it and its
+     * sub-folders, and remove it from the map if it is present.
+     *
+     * @param change the change to handle
+     */
     private void handleFolderChange(Change<? extends Path,? extends Folder> change) {
         if (change.wasAdded()) {
             Folder newFolder = change.getValueAdded();
             handleFolder(newFolder);
         } else if (change.wasRemoved()) {
             Folder removedFolder = change.getValueRemoved();
+
+            if (recursive) {
+                removeListenersOnFolder(removedFolder);
+            }
+
             files.remove(removedFolder);
+        }
+    }
+
+    private void removeListenersOnFolder(Folder removedFolder) {
+        removedFolder.getFolders().removeListener(this::handleFolderChange);
+        removedFolder.getFiles().removeListener(this::handleFileChange);
+
+        if (recursive) {
+            removedFolder.getFolders().values().forEach(this::removeListenersOnFolder);
         }
     }
 
@@ -96,17 +132,27 @@ public class FilteredView {
         if (change.wasAdded()) {
             File newFile = change.getValueAdded();
             if (fileFilter.test(newFile)) {
-                files.computeIfAbsent(newFile.getParent(), k -> new ArrayList<>()).add(newFile);
+                files.computeIfAbsent(newFile.getParent(), k -> FXCollections.observableArrayList()).add(newFile);
+                if (onFileAdded != null) {
+                    onFileAdded.accept(newFile);
+                }
             }
         } else if (change.wasRemoved()) {
             File removedFile = change.getValueRemoved();
             var list = files.get(removedFile.getParent());
             if (list != null) {
                 list.remove(removedFile);
+
+                if (list.isEmpty()) {
+                    files.remove(removedFile.getParent());
+                }
+
+                if (onFileRemoved != null) {
+                    onFileRemoved.accept(removedFile);
+                }
             }
         }
     }
-
 
     public Folder getRoot() {
         return root;
@@ -120,4 +166,20 @@ public class FilteredView {
         return fileFilter;
     }
 
+    public ObservableMap<Folder, ObservableList<File>> getFiles() {
+        return files;
+    }
+
+    public void onFileAdded(Consumer<File> consumer) {
+        this.onFileAdded = consumer;
+    }
+
+    public void onFileRemoved(Consumer<File> consumer) {
+        this.onFileRemoved = consumer;
+    }
+
+    public void close() {
+        removeListenersOnFolder(root);
+        files.clear();
+    }
 }

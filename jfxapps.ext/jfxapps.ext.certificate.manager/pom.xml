@@ -26,6 +26,14 @@
             <artifactId>jfxapps.core.starter.test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!--
+        https://mvnrepository.com/artifact/org.mock-server/mockserver-junit-jupiter -->
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-junit-jupiter</artifactId>
+            <version>5.15.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

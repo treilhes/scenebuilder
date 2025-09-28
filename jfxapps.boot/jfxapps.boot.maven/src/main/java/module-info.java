@@ -54,5 +54,8 @@ open module jfxapps.boot.maven {
     requires org.apache.maven.resolver.util;
     requires java.compiler;
 
+    requires transitive maven.model;
+    //requires maven.model.builder;
+
     provides BootContextConfigClasses with MavenBootClasses;
 }

@@ -38,6 +38,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -45,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableMap;
 
 /**
@@ -52,7 +54,7 @@ import javafx.collections.ObservableMap;
  * This class provides functionality to monitor changes in the folder, add inclusion/exclusion patterns,
  * and manage files and subfolders.
  */
-public class Folder extends FsItem {
+public class Folder extends FileSystemItem<Folder, FolderFeature, FolderFeatureHandler> {
 
     private static final Logger logger = LoggerFactory.getLogger(Folder.class);
 
@@ -90,6 +92,41 @@ public class Folder extends FsItem {
      */
     private final ObservableMap<Path, Folder> folders = FXCollections.observableHashMap();
 
+    private final ListChangeListener<FileType> fileTypeListener = change -> {
+        while (change.next()) {
+            if (change.wasAdded()) {
+                change.getAddedSubList().forEach(fileType -> {
+                    logger.debug("Adding file type: {}", fileType);
+                    this.onFileTypeAdded(fileType);
+                });
+            }
+            if (change.wasRemoved()) {
+                change.getRemoved().forEach(fileType -> {
+                    logger.debug("Removing file type: {}", fileType);
+                    this.onFileTypeRemoved(fileType);
+                });
+            }
+        }
+    };
+
+    private final ListChangeListener<FolderType> folderTypeListener = change -> {
+
+        while (change.next()) {
+            if (change.wasAdded()) {
+                change.getAddedSubList().forEach(folderType -> {
+                    logger.debug("Adding folder type: {}", folderType);
+                    this.onFolderTypeAdded(folderType);
+                });
+            }
+            if (change.wasRemoved()) {
+                change.getRemoved().forEach(folderType -> {
+                    logger.debug("Removing folder type: {}", folderType);
+                    this.onFolderTypeRemoved(folderType);
+                });
+            }
+        }
+
+    };
     /**
      * Creates a Folder instance that monitors the specified location for changes.
      *
@@ -97,23 +134,27 @@ public class Folder extends FsItem {
      * @param location the File location to monitor
      * @param contentRules the FolderType rules to apply for content management, can be null
      */
-    public Folder(Watcher watcher, Folder parent, Path location, FolderType folderType) {
-        super(parent, location);
+    public Folder(Watcher watcher, Folder parent, Path location, List<FolderFeatureHandler> handlers, FolderType folderType) {
+        super(parent, location, handlers);
+
         Objects.requireNonNull(watcher, "watcher can't be null");
+        Objects.requireNonNull(folderType, "folderType can't be null");
+
         if (!Files.exists(location) || !Files.isDirectory(location)) {
             throw new IllegalArgumentException("Workspace location does not exist or isn't a directory: " + location);
         }
+
         this.watcher = watcher;
         this.watchKeyEventHandler = new WatchEventHandlerImpl(location);
         this.folderType = folderType != null ? folderType : FolderType.generic();
-
-        watcher.registerEventHandler(location, watchKeyEventHandler);
 
         watchKeyEventHandler.addOnDirectoryCreated(this::addDirectory);
         watchKeyEventHandler.addOnFileCreated(this::addFile);
         watchKeyEventHandler.addOnFileModified(this::refreshFile);
         watchKeyEventHandler.addOnDeleted(this::remove);
 
+        watcher.registerEventHandler(location, watchKeyEventHandler);
+        folderType.addFileTypeListener(fileTypeListener);
     }
 
     /**
@@ -220,8 +261,14 @@ public class Folder extends FsItem {
             }
         } else {
             logger.debug("Removing folder: {}", path);
-            folder.onRemove();
+            folder.onRemoveInternal();
         }
+    }
+
+    @Override
+    protected void onRemoveInternal() {
+        folderType.removeFileTypeListener(fileTypeListener);
+        super.onRemoveInternal();
     }
 
     private boolean canProcess(Path path) {
@@ -250,6 +297,44 @@ public class Folder extends FsItem {
 
         return canProcess;
     }
+
+
+    private void onFileTypeRemoved(FileType fileType) {
+        files.entrySet().removeIf(e -> e.getValue().getFileType() == fileType);
+    }
+
+    private void onFileTypeAdded(FileType fileType) {
+        try {
+            Files.list(getPath())
+                .filter(Files::isRegularFile)
+                .filter(p -> !files.containsKey(p))
+                .filter(fileType::isApplicable)
+                .map(p -> fileType.createFile(this, p))
+                .forEach(f -> files.put(f.getPath(), f));
+        } catch (IOException e) {
+            logger.error("Error while creating files from new fileType {} in folder: {}", fileType.getId(), getPath(),
+                    e);
+        }
+    }
+
+    private void onFolderTypeRemoved(FolderType folderType) {
+        folders.entrySet().removeIf(e -> e.getValue().getFolderType() == folderType);
+    }
+
+    private void onFolderTypeAdded(FolderType folderType) {
+        try {
+            Files.list(getPath())
+                .filter(Files::isDirectory)
+                .filter(p -> !folders.containsKey(p))
+                .filter(folderType::isDefinitionApplicable)
+                .map(p -> folderType.createFolder(watcher, this, p))
+                .forEach(f -> folders.put(f.getPath(), f));
+        } catch (IOException e) {
+            logger.error("Error while creating folders from new folderType {} in folder: {}", folderType.getId(), getPath(),
+                    e);
+        }
+    }
+
     private WatchEvent<Path> toWatchEvent(Path p) {
         WatchEvent<Path> event = new WatchEvent<>() {
             @Override

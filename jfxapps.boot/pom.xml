@@ -9,6 +9,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>emc4j-maven-plugin</module>
     <module>jfxapps.boot.loader</module>
     <module>jfxapps.boot.context</module>
     <module>jfxapps.boot.maven</module>
@@ -28,5 +29,6 @@
     <module>jfxapps.boot.splash</module>
     <module>jfxapps.boot.runtime</module>
     <module>jfxapps.boot.package</module>
+    <module>emc4j.boot.config</module>
   </modules>
 </project>

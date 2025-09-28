@@ -38,6 +38,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+
 /**
  * Represents a type of file in the filesystem, defining its extensions and how to create it.
  * This interface allows for flexible file type definitions and creation logic.
@@ -47,11 +51,11 @@ public interface FileType {
     /**
      * The default implementation creates a File instance with the given parent and path.
      */
-    public FileSupplier DEFAULT_FILE_SUPPLIER = (parent, path, type) -> new File(parent, path, type);
+    public FileSupplier DEFAULT_FILE_SUPPLIER = (parent, path, handlers, type) -> new File(parent, path, handlers, type);
 
     boolean isApplicable(Path path);
 
-    String getName();
+    String getId();
 
     List<Pattern> getPatterns();
 
@@ -72,6 +76,10 @@ public interface FileType {
      */
     File createFile(Folder parent, Path path);
 
+    void registerFeatureHandler(FileFeatureHandler handler);
+    void unregisterFeatureHandler(FileFeatureHandler handler);
+    void addFeatureHandlerListener(ListChangeListener<FileFeatureHandler> handlerListener);
+    void removeFeatureHandlerListener(ListChangeListener<FileFeatureHandler> handlerListener);
 
     public static FileType generic() {
         return builder()
@@ -94,7 +102,7 @@ public interface FileType {
      */
     public static class Builder {
 
-        private String name;
+        private String id;
 
         private final List<String> patterns = new ArrayList<>();
 
@@ -108,6 +116,8 @@ public interface FileType {
          * The default implementation creates a File instance with the given parent and path.
          */
         private FileSupplier fileSupplier = DEFAULT_FILE_SUPPLIER;
+
+        private List<FileFeatureHandler> featureHandlers = new ArrayList<>();
 
         /**
          * Adds a file extension to this FileType.
@@ -155,11 +165,16 @@ public interface FileType {
         /**
          * Sets the name of this FileType.
          *
-         * @param name the name to set for this FileType
+         * @param id the name to set for this FileType
          * @return this Builder instance for method chaining
          */
-        public Builder withName(String name) {
-            this.name = name;
+        public Builder withName(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withFeatureHandler(FileFeatureHandler featureHandler) {
+            this.featureHandlers.add(featureHandler);
             return this;
         }
 
@@ -173,14 +188,17 @@ public interface FileType {
         }
 
         private static class InternalFileType implements FileType {
-            private final String name;
+
+            private final String id;
             private final List<Pattern> patterns = new ArrayList<>();
             private final List<String> extensions = new ArrayList<>();
+            private final ObservableList<FileFeatureHandler> featureHandlers = FXCollections.observableArrayList();
             private FileSupplier fileSupplier = DEFAULT_FILE_SUPPLIER;
 
             public InternalFileType(Builder builder) {
-                this.name = builder.name;
+                this.id = builder.id;
                 this.extensions.addAll(builder.extensions);
+                this.featureHandlers.addAll(builder.featureHandlers);
                 this.fileSupplier = builder.fileSupplier;
 
                 if (builder.patterns != null) {
@@ -201,7 +219,7 @@ public interface FileType {
                 // Check if the file has an extension that matches any of the defined extensions
                 var extension = FileUtils.getFileExtension(path);
                 for (String ext : extensions) {
-                    if (ext.equalsIgnoreCase(ext)) {
+                    if (ext.equalsIgnoreCase(extension)) {
                         return true;
                     }
                 }
@@ -216,7 +234,8 @@ public interface FileType {
 
             @Override
             public File createFile(Folder parent, Path path) {
-                return fileSupplier.createFile(parent, path, this);
+                var file = fileSupplier.createFile(parent, path, featureHandlers, this);
+                return file;
             }
 
             @Override
@@ -225,8 +244,28 @@ public interface FileType {
             }
 
             @Override
-            public String getName() {
-                return name != null ? name : this.getClass().getName();
+            public String getId() {
+                return id != null ? id : this.getClass().getName();
+            }
+
+            @Override
+            public void registerFeatureHandler(FileFeatureHandler handler) {
+                featureHandlers.add(handler);
+            }
+
+            @Override
+            public void unregisterFeatureHandler(FileFeatureHandler handler) {
+                featureHandlers.remove(handler);
+            }
+
+            @Override
+            public void addFeatureHandlerListener(ListChangeListener<FileFeatureHandler> handlerListener) {
+                featureHandlers.addListener(handlerListener);
+            }
+
+            @Override
+            public void removeFeatureHandlerListener(ListChangeListener<FileFeatureHandler> handlerListener) {
+                featureHandlers.removeListener(handlerListener);
             }
         }
     }
@@ -237,6 +276,6 @@ public interface FileType {
      */
     @FunctionalInterface
     public interface FileSupplier {
-        File createFile(Folder parent, Path path, FileType type);
+        File createFile(Folder parent, Path path, List<FileFeatureHandler> handlers, FileType type);
     }
 }

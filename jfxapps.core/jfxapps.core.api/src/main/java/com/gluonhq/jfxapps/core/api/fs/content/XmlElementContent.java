@@ -31,87 +31,35 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.maven.client.model;
+package com.gluonhq.jfxapps.core.api.fs.content;
 
-import com.gluonhq.jfxapps.boot.api.maven.RepositoryType;
+import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import com.gluonhq.jfxapps.core.api.fs.watcher.File;
 
-@Entity
-public class Repository {
+/**
+ * Content implementation to extract XML element content from a file.
+ * It uses a StringContent instance to read the file content as a String,
+ * and then extracts the content of the specified XML element.
+ * It supports multi-line elements but does not support nested elements with the same name.
+ *
+ */
+public class XmlElementContent extends AbstractStringOccurenceContent {
 
-    public enum Content {
-        SNAPSHOT, RELEASE, SNAPSHOT_RELEASE
+    public static XmlElementContent supplier(File file, String element) {
+
+        StringContent stringContent = file.getContent(StringContent.class, StringContent::supplier);
+
+        if (stringContent == null) {
+            return null;
+        }
+
+        return new XmlElementContent(List.of(stringContent.getContent()), element);
     }
 
-    @Id
-    private String id;
-    private Class<? extends RepositoryType> type;
-    private String url;
-    private String login;
-    private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Content contentType = Content.SNAPSHOT_RELEASE;
-
-    public Repository() {
-        super();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Class<? extends RepositoryType> getType() {
-        return type;
-    }
-
-    public void setType(Class<? extends RepositoryType> type) {
-        this.type = type;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Content getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(Content contentType) {
-        this.contentType = contentType;
-    }
-
-    @Override
-    public String toString() {
-        return "Repository [id=" + id + ", url=" + url + ", login=" + login + "]";
+    public XmlElementContent(List<String> lines, String element) {
+        super(lines, "<" + element + "[\\s\\S]*?>", "</" + element + ">", null);
     }
 
 }

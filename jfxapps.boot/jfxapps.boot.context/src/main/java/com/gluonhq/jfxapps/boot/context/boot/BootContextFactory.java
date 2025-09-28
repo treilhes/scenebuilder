@@ -37,7 +37,6 @@ import org.springframework.boot.ApplicationContextFactory;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.context.impl.JfxAppContextImpl;
 

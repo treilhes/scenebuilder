@@ -33,76 +33,63 @@
  */
 package com.gluonhq.jfxapps.core.api.fs.watcher;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith({MockitoExtension.class})
-class FolderTest {
-    /**
-     * A mock watcher to be used in tests.
-     */
+class FileTypeTest {
+
     @Mock
-    Watcher watcher;
+    Folder mockFolder;
+
+    @Mock
+    FileFeature mockFeature;
+
+    @Mock
+    FileFeatureHandler mockFeatureHandler;
 
     @Test
-    void must_throw_when_watcher_param_is_null() {
-        assertThrows(NullPointerException.class, () -> new Folder(null, null, Path.of("."), List.of(), FolderType.generic()));
+    void created_file_must_contains_feature() throws URISyntaxException {
+
+        Mockito.when(mockFeatureHandler.isApplicable(Mockito.any(File.class))).thenReturn(true);
+        Mockito.when(mockFeatureHandler.createFeature(Mockito.any(File.class))).thenReturn(mockFeature);
+
+        var fileType = FileType.builder()
+                .withFeatureHandler(mockFeatureHandler)
+                .build();
+
+        var fileUri = FileTypeTest.class.getResource(FileTypeTest.class.getSimpleName() + ".somefile").toURI();
+        var file = fileType.createFile(mockFolder, Path.of(fileUri));
+        file.applyFeatures();
+        assertNotNull(file);
+        assertTrue(file.hasFeature(mockFeature.getClass()));
     }
 
     @Test
-    void must_throw_when_folder_path_dont_exists() {
-        assertThrows(IllegalArgumentException.class, () -> new Folder(watcher, null, Path.of("./not/exists"), List.of(), FolderType.generic()));
+    void created_file_musnt_contains_feature() throws URISyntaxException {
+
+        Mockito.when(mockFeatureHandler.isApplicable(Mockito.any(File.class))).thenReturn(false);
+        //Mockito.when(mockFeatureHandler.createFeature(Mockito.any(File.class))).thenReturn(mockFeature);
+
+        var fileType = FileType.builder()
+                .withFeatureHandler(mockFeatureHandler)
+                .build();
+
+        var fileUri = FileTypeTest.class.getResource(FileTypeTest.class.getSimpleName() + ".somefile").toURI();
+        var file = fileType.createFile(mockFolder, Path.of(fileUri));
+        file.applyFeatures();
+        assertNotNull(file);
+        assertFalse(file.hasFeature(mockFeature.getClass()));
     }
 
-    @Test
-    void must_throw_when_folder_path_is_a_file() throws URISyntaxException {
-        var fileUri = FolderTest.class.getResource(FolderTest.class.getSimpleName() + ".somefile").toURI();
-        assertTrue(Files.isRegularFile(Path.of(fileUri)));
-        assertThrows(IllegalArgumentException.class, () -> new Folder(watcher, null, Path.of(fileUri), List.of(), FolderType.generic()));
-    }
-
-    @Test
-    void must_add_files_when_registering_new_file_type() {
-        var fileType = FileType.generic();
-        var folderType = FolderType.builder()
-            .withThisFolderType()
-            .build();
-
-        var folder = new Folder(watcher, null, Path.of("."), List.of(), folderType);
-        folder.requestRefresh(false);
-
-        assertTrue(folder.getFiles().isEmpty(), "The folder should not contain any files at this point");
-
-        folderType.registerFileType(fileType);
-
-        assertTrue(!folder.getFiles().isEmpty(), "The folder should contain files at this point");
-    }
-
-    @Test
-    void must_remove_files_when_file_type_is_unregistered() {
-        var fileType = FileType.generic();
-        var folderType = FolderType.builder()
-            .withFileType(fileType)
-            .withThisFolderType()
-            .build();
-
-        var folder = new Folder(watcher, null, Path.of("."), List.of(), folderType);
-        folder.requestRefresh(false);
-
-        assertTrue(!folder.getFiles().isEmpty(), "The folder should contain files at this point");
-
-        folderType.unregisterFileType(fileType);
-
-        assertTrue(folder.getFiles().isEmpty(), "The folder should not contain any files at this point");
-    }
 }

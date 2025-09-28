@@ -33,8 +33,6 @@
  */
 package com.gluonhq.jfxapps.core.api.fs.watcher;
 
-import static com.gluonhq.jfxapps.core.api.fs.watcher.FolderType.builder;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +45,10 @@ import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 
 /*
  * This interface defines the contract for a FolderType, which is responsible for determining
@@ -76,7 +78,7 @@ import org.slf4j.LoggerFactory;
  */
 public interface FolderType {
 
-    String getName();
+    String getId();
 
     /**
      * Checks if this FolderType is applicable to the given path.
@@ -123,8 +125,18 @@ public interface FolderType {
      */
     List<Pattern> getExclusionPatterns();
 
-
     Builder copy();
+
+
+    void registerFileType(FileType fileType);
+    void unregisterFileType(FileType fileType);
+    void addFileTypeListener(ListChangeListener<FileType> fileTypeListener);
+    void removeFileTypeListener(ListChangeListener<FileType> fileTypeListener);
+
+    void registerFolderType(FolderType folderType);
+    void unregisterFolderType(FolderType folderType);
+    void addFolderTypeListener(ListChangeListener<FolderType> folderTypeListener);
+    void removeFolderTypeeListener(ListChangeListener<FolderType> folderTypeListener);
 
     /**
      * Factory interface for creating FolderType instances.
@@ -208,47 +220,11 @@ public interface FolderType {
     }
 
     public static FolderType generic() {
-        return builder()
-                .withName("GENERIC")
+        return FolderType.builder()
+                .withId("GENERIC")
                 .withFileType(FileType.generic())
                 .withThisFolderType()
                 .build();
-    }
-
-    /**
-     * Creates a FolderType instance based on the provided applicability predicate,
-     * folder supplier, folder types, and file types.
-     *
-     * @param isApplicable the predicate to check if this FolderType applies to a given path
-     * @param folderSupplier the supplier for creating folders of this type
-     * @param folderTypes the list of FolderTypes that this FolderType can contain
-     * @param fileTypes the list of FileTypes that this FolderType can handle
-     * @return a new FolderType instance
-     */
-    public static FolderType of(String name, Predicate<Path> isApplicable, FolderSupplier folderSupplier, List<FolderType> folderTypes, List<FileType> fileTypes) {
-        return of(name, isApplicable, folderSupplier, folderTypes, fileTypes, false);
-    }
-
-    /**
-     * Creates a FolderType instance based on the provided applicability predicate,
-     * folder supplier, folder types, file types, and whether it is a recursive type.
-     *
-     * @param isApplicable the predicate to check if this FolderType applies to a given path
-     * @param folderSupplier the supplier for creating folders of this type
-     * @param folderTypes the list of FolderTypes that this FolderType can contain
-     * @param fileTypes the list of FileTypes that this FolderType can handle
-     * @param recursiveType whether this FolderType should be recursive
-     * @return a new FolderType instance
-     */
-    public static FolderType of(String name, Predicate<Path> isApplicable, FolderSupplier folderSupplier, List<FolderType> folderTypes, List<FileType> fileTypes, boolean recursiveType) {
-        var builder = builder()
-                .withName(name)
-                .withIsApplicable(isApplicable)
-                .withFolderSupplier(folderSupplier)
-                .withFolderTypes(folderTypes)
-                .withFileTypes(fileTypes);
-
-        return recursiveType ? builder.withThisFolderType().build() : builder.build();
     }
 
     /**
@@ -268,7 +244,7 @@ public interface FolderType {
     public static class Builder {
 
 
-        private String name = null;
+        private String id = null;
 
         /**
          * Indicates whether this FolderType should be added as the first type in the list.
@@ -286,8 +262,9 @@ public interface FolderType {
          * A supplier for creating Folder instances of this type.
          * By default, it creates a new Folder with the provided parameters.
          */
-        private FolderSupplier folderSupplier = (watcher, parent, path, type) -> new Folder(watcher, parent, path, type);
+        private FolderSupplier folderSupplier = (watcher, parent, path, handlers, type) -> new Folder(watcher, parent, path, handlers, type);
 
+        private List<FolderFeatureHandler> featureHandlers = new ArrayList<>();
         /**
          * Lists to hold the FolderTypes and FileTypes associated with this FolderType.
          * These will be used to create folders and files of the specified types.
@@ -310,8 +287,8 @@ public interface FolderType {
          */
         private final List<Pattern> exclusionPattens = new ArrayList<>();
 
-        public Builder withName(String name) {
-            this.name = name;
+        public Builder withId(String id) {
+            this.id = id;
             return this;
         }
 
@@ -329,7 +306,7 @@ public interface FolderType {
         /**
          * Adds a FolderType to the list of folder types for this FolderType.
          * This allows for the definition of nested folder types.
-         *
+         * Types are checked in the order they are added,
          * @param folderType the FolderType to add
          * @return this Builder instance for method chaining
          */
@@ -341,7 +318,7 @@ public interface FolderType {
         /**
          * Adds a list of FolderTypes to the list of folder types for this FolderType.
          * This allows for the definition of multiple nested folder types at once.
-         *
+         * Types are checked in the order they are added,
          * @param folderTypes the list of FolderTypes to add
          * @return this Builder instance for method chaining
          */
@@ -437,6 +414,11 @@ public interface FolderType {
             return this;
         }
 
+        public <T extends FolderFeature> Builder withFeatureHandler(FolderFeatureHandler handler) {
+            this.featureHandlers.add(handler);
+            return this;
+        }
+
         /**
          * Builds and returns a new FolderType instance based on the configured properties.
          * It creates a FolderType that applies to the specified paths, creates folders and files,
@@ -455,26 +437,29 @@ public interface FolderType {
 
             private static final Logger logger = LoggerFactory.getLogger(FolderType.class);
 
-            private String name;
+            private String id;
 
             private Predicate<Path> isApplicable;
 
             private FolderSupplier folderSupplier;
 
-            private List<FolderType> folderTypes = new ArrayList<>();
+            private final ObservableList<FolderType> folderTypes = FXCollections.observableArrayList();
 
-            private List<FileType> fileTypes = new ArrayList<>();
+            private final ObservableList<FileType> fileTypes = FXCollections.observableArrayList();
+
+            private final ObservableList<FolderFeatureHandler> featureHandlers = FXCollections.observableArrayList();
 
             private List<Pattern> inclusionPattens = new ArrayList<>();
 
             private List<Pattern> exclusionPattens = new ArrayList<>();
 
             private InternalFolderType(Builder builder) {
-                this.name = builder.name;
+                this.id = builder.id;
                 this.isApplicable = builder.isApplicable;
                 this.folderSupplier = builder.folderSupplier;
                 this.folderTypes.addAll(builder.folderTypes);
                 this.fileTypes.addAll(builder.fileTypes);
+                this.featureHandlers.addAll(builder.featureHandlers);
                 this.inclusionPattens.addAll(builder.inclusionPattens);
                 this.exclusionPattens.addAll(builder.exclusionPattens);
 
@@ -484,8 +469,8 @@ public interface FolderType {
             }
 
             @Override
-            public String getName() {
-                return name != null ? name : this.getClass().getName();
+            public String getId() {
+                return id != null ? id : this.getClass().getName();
             }
 
             @Override
@@ -495,10 +480,9 @@ public interface FolderType {
 
             @Override
             public Folder createFolder(Watcher watcher, Folder parent, Path path) {
-                var folder = folderSupplier.createFolder(watcher, parent, path, this);
-
-                logger.trace("Handling folder: {} with type: {}", path, this.getName());
-
+                logger.trace("Handling folder: {} with type: {}", path, this.getId());
+                var folder = folderSupplier.createFolder(watcher, parent, path, featureHandlers, this);
+                folder.applyFeatures();
                 return folder;
             }
 
@@ -507,12 +491,14 @@ public interface FolderType {
 
                 for (var fileType : fileTypes) {
                     if (fileType.isApplicable(path)) {
-                        logger.trace("File type {} is applicable for path: {}", fileType.getName(), path);
-                        return fileType.createFile(parent, path);
+                        logger.trace("File type {} is applicable for path: {}", fileType.getId(), path);
+                        var file = fileType.createFile(parent, path);
+                        file.applyFeatures();
+                        return file;
                     }
                 }
 
-                logger.trace("Folder type {} has no file type for: {} , returning null", getName(), path);
+                logger.trace("Folder type {} has no file type for: {} , returning null", getId(), path);
                 return null;
             }
 
@@ -533,14 +519,64 @@ public interface FolderType {
 
             @Override
             public Builder copy() {
-                return builder()
-                        .withName(name)
+                return FolderType.builder()
+                        .withId(id)
                         .withIsApplicable(isApplicable)
                         .withFolderSupplier(folderSupplier)
                         .withFolderTypes(folderTypes)
                         .withFileTypes(fileTypes)
                         .withInclusionPatterns(inclusionPattens.stream().map(Pattern::pattern).toList())
                         .withExclusionPatterns(exclusionPattens.stream().map(Pattern::pattern).toList());
+            }
+
+            @Override
+            public void registerFileType(FileType fileType) {
+                if (fileType != null && !fileTypes.contains(fileType)) {
+                    fileTypes.add(fileType);
+                    logger.debug("Registered new file type: {} for folder type: {}", fileType.getId(), getId());
+                } else {
+                    logger.warn("File type {} is already registered for folder type: {}", fileType, getId());
+                }
+            }
+
+            @Override
+            public void unregisterFileType(FileType fileType) {
+                fileTypes.remove(fileType);
+            }
+
+            @Override
+            public void addFileTypeListener(ListChangeListener<FileType> fileTypeListener) {
+                fileTypes.addListener(fileTypeListener);
+            }
+
+            @Override
+            public void removeFileTypeListener(ListChangeListener<FileType> fileTypeListener) {
+                fileTypes.removeListener(fileTypeListener);
+            }
+
+            @Override
+            public void registerFolderType(FolderType folderType) {
+                if (folderType != null && !folderTypes.contains(folderType)) {
+                    folderTypes.add(folderType);
+                    logger.debug("Registered new folder type: {} for folder type: {}", folderType.getId(), getId());
+                } else {
+                    logger.warn("Folder type {} is already registered for folder type: {}", folderType, getId());
+                }
+            }
+
+            @Override
+            public void unregisterFolderType(FolderType folderType) {
+                folderTypes.remove(folderType);
+            }
+
+            @Override
+            public void addFolderTypeListener(ListChangeListener<FolderType> folderTypeListener) {
+                folderTypes.addListener(folderTypeListener);
+            }
+
+            @Override
+            public void removeFolderTypeeListener(ListChangeListener<FolderType> folderTypeListener) {
+                folderTypes.removeListener(folderTypeListener);
             }
         }
     }
@@ -552,7 +588,9 @@ public interface FolderType {
      */
     @FunctionalInterface
     public interface FolderSupplier {
-        Folder createFolder(Watcher watcher, Folder parent, Path path, FolderType type);
+        Folder createFolder(Watcher watcher, Folder parent, Path path, List<FolderFeatureHandler> handlers, FolderType type);
     }
+
+
 
 }

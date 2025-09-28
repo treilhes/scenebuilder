@@ -2,7 +2,7 @@ jfxapps:
   loader:
     defaultLoadType: LastSuccessfull #default
   platform:
-    rootPath: .
+    rootPath: ./data
   repository:
     directory: ${jfxapps.platform.rootPath}/.m2/repository
   registry:

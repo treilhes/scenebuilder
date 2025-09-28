@@ -31,87 +31,56 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.maven.client.model;
+package com.gluonhq.jfxapps.core.api.fs.content;
 
-import com.gluonhq.jfxapps.boot.api.maven.RepositoryType;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
-@Entity
-public class Repository {
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-    public enum Content {
-        SNAPSHOT, RELEASE, SNAPSHOT_RELEASE
-    }
+import com.gluonhq.jfxapps.core.api.fs.watcher.File;
+import com.gluonhq.jfxapps.core.api.fs.watcher.FileType;
+import com.gluonhq.jfxapps.core.api.fs.watcher.Folder;
+import com.gluonhq.jfxapps.core.api.fs.watcher.FolderType;
+import com.gluonhq.jfxapps.core.api.fs.watcher.Watcher;
 
-    @Id
-    private String id;
-    private Class<? extends RepositoryType> type;
-    private String url;
-    private String login;
-    private String password;
+@ExtendWith({MockitoExtension.class})
+class XmlAttributeContentTest {
 
-    @Enumerated(EnumType.STRING)
-    private Content contentType = Content.SNAPSHOT_RELEASE;
+    @Mock
+    Watcher watcher;
 
-    public Repository() {
-        super();
-    }
+    @TempDir
+    Path tempDir;
 
-    public String getId() {
-        return id;
-    }
+    @Test
+    void test() throws IOException {
+        var filePath = tempDir.resolve("test.xml");
+        var content = """
+                <someElement myAttribute="Some Value" otherAttribute="Other Value">
+                    <childElement myAttribute="Some Value" otherAttribute="Other Value">Some Value</childElement>
+                </someElement>
+                """;
+        Files.write(filePath, content.getBytes());
 
-    public void setId(String id) {
-        this.id = id;
-    }
+        var folder = new Folder(watcher, null, tempDir, List.of(), FolderType.generic());
+        var file = new File(folder, filePath, List.of(), FileType.generic());
 
-    public Class<? extends RepositoryType> getType() {
-        return type;
-    }
+        var xmlAttributeContent = XmlAttributeContent.supplier(file, "myAttribute");
 
-    public void setType(Class<? extends RepositoryType> type) {
-        this.type = type;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Content getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(Content contentType) {
-        this.contentType = contentType;
-    }
-
-    @Override
-    public String toString() {
-        return "Repository [id=" + id + ", url=" + url + ", login=" + login + "]";
+        assertNotNull(xmlAttributeContent);
+        assertTrue(xmlAttributeContent.getContent().size() == 2);
+        assertEquals("Some Value", xmlAttributeContent.getContent().get(0).getValue().trim());
     }
 
 }
