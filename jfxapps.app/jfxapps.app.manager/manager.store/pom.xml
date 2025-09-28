@@ -41,4 +41,5 @@
 			<artifactId>ikonli-fontawesome5-pack</artifactId>
 		</dependency>
 	</dependencies>
+	
 </project>
