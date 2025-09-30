@@ -228,7 +228,11 @@ public class ReloadableX509TrustManager extends X509ExtendedTrustManager impleme
 
     @Override
     public void checkServerTrusted(X509Certificate[] x509Certificates, String s, SSLEngine sslEngine) throws CertificateException {
-        serverCertsTrustManager.checkServerTrusted(x509Certificates, s, sslEngine);
+        try {
+        	serverCertsTrustManager.checkServerTrusted(x509Certificates, s, sslEngine);
+        } catch (CertificateException e) {
+            handleNewCertificates(x509Certificates, e);
+        }
     }
 
     private void handleNewCertificates(X509Certificate[] x509Certificates, CertificateException originalException) throws CertificateException {

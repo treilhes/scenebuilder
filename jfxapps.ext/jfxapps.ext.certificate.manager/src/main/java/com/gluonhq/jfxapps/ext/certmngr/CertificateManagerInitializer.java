@@ -34,19 +34,23 @@
 package com.gluonhq.jfxapps.ext.certmngr;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithApplication;
+import com.gluonhq.jfxapps.ext.certmngr.controller.CertificateManagerWindowController;
 
-@Singleton
+@ApplicationSingleton
 public class CertificateManagerInitializer implements InitWithApplication {
 
-       public CertificateManagerInitializer(
-            JfxAppContext context
-        ) {
-        super();
-    }
+	private JfxAppContext context;
 
-    @Override
-    public void init() {
-    }
+	public CertificateManagerInitializer(JfxAppContext context) {
+		super();
+		this.context = context;
+	}
+
+	@Override
+	public void init() {
+		// ensure window is loaded and listen for trust events
+		context.getBean(CertificateManagerWindowController.class);
+	}
 }

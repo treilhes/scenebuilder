@@ -40,6 +40,7 @@ import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 import org.springframework.context.annotation.Lazy;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
@@ -55,8 +56,7 @@ import javafx.scene.control.TextArea;
 /**
  *
  */
-@Singleton
-@Lazy
+@ApplicationSingleton
 public class CertificateManagerWindowController extends AbstractFxmlWindowController {
 
     @FXML
@@ -72,11 +72,11 @@ public class CertificateManagerWindowController extends AbstractFxmlWindowContro
 
     public CertificateManagerWindowController(
             I18N i18n,
-            ApplicationEvents sceneBuilderManager,
+            ApplicationEvents applicationEvents,
             IconSetting iconSetting,
             NetworkManager networManager,
             JfxAppContext context) {
-        super(i18n, sceneBuilderManager, iconSetting, CertificateManagerWindowController.class.getResource("CertificateManagerWindow.fxml"), null); // NOI18N
+        super(i18n, applicationEvents, iconSetting, CertificateManagerWindowController.class.getResource("CertificateManagerWindow.fxml"), null); // NOI18N
         this.networkManager = networManager;
         this.context = context;
     }

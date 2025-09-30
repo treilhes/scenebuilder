@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.ext.certmngr.controller.CertificateManagerController;
 import com.gluonhq.jfxapps.ext.certmngr.controller.CertificateManagerMenuController;
@@ -52,7 +53,7 @@ public class CertificateManagerExtension implements OpenExtension {
 
     @Override
     public UUID getParentId() {
-        return OpenExtension.ROOT_ID;
+        return Extension.ROOT_ID;
     }
 
     @Override

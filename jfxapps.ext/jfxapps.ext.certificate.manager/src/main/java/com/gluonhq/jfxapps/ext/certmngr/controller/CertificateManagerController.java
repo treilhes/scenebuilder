@@ -45,9 +45,9 @@ import com.gluonhq.jfxapps.ext.certmngr.tls.ReloadableTrustManagerProvider;
 @Component
 public class CertificateManagerController {
 
-    protected final static String KEYSTORE_PASSWORD = "scenebuilder";
-    protected final static String KEYSTORE_FILENAME = "truststore.jks";
-    protected final static long USER_TIMEOUT = 30;// seconds
+    protected static final String KEYSTORE_PASSWORD = "scenebuilder";
+    protected static final String KEYSTORE_FILENAME = "truststore.jks";
+    protected static final long USER_TIMEOUT = 30;// seconds
     private final JfxAppsPlatform platform;
 
     public CertificateManagerController(JfxAppsPlatform platform, NetworkManager networkManager) {

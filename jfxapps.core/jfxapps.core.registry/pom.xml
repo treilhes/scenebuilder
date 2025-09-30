@@ -157,6 +157,15 @@
                                             <version>${jfxapps.version}</version>
                                         </dependency>
                                     </extension>
+                                    
+                                    <extension>
+                                        <uuid>81595bd2-372c-43ca-91af-f5cf7a80d808</uuid>
+                                        <dependency>
+                                            <groupId>com.gluonhq.jfxapps</groupId>
+                                            <artifactId>jfxapps.ext.certificate.manager</artifactId>
+                                            <version>${jfxapps.version}</version>
+                                        </dependency>
+                                    </extension>
                                 </extensions>
                             </application>
                         </applications>
