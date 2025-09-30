@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,6 +33,7 @@
  */
 package com.gluonhq.jfxapps.boot.maven.client.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,7 @@ import org.springframework.core.metrics.StartupStep;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
+import com.gluonhq.jfxapps.boot.api.maven.MavenConfig;
 import com.gluonhq.jfxapps.boot.api.maven.Repository;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryManager;
 import com.gluonhq.jfxapps.boot.maven.client.preset.MavenPresets;
@@ -52,12 +54,20 @@ import jakarta.annotation.PostConstruct;
 @Lazy
 public class RepositoryManagerImpl implements RepositoryManager {
 
+    private final MavenConfig config;
     private final RepositoryRepository jpaRepository;
     private final RepositoryMapper mapper;
     private final Optional<ApplicationStartup> startup;
 
-    public RepositoryManagerImpl(RepositoryRepository jpaRepository, RepositoryMapper mapper, Optional<ApplicationStartup> startup) {
+    // @formatter:off
+    public RepositoryManagerImpl(
+            MavenConfig config,
+            RepositoryRepository jpaRepository,
+            RepositoryMapper mapper,
+            Optional<ApplicationStartup> startup) {
+        // @formatter:on
         super();
+        this.config = config;
         this.jpaRepository = jpaRepository;
         this.mapper = mapper;
         this.startup = startup;
@@ -74,7 +84,19 @@ public class RepositoryManagerImpl implements RepositoryManager {
 
     @Override
     public List<Repository> repositories() {
-        return mapper.map(jpaRepository.findAll());
+
+        var repositories = new ArrayList<Repository>();
+        var dbRepositories = mapper.map(jpaRepository.findAll());
+        var configRepositories = config.getRepository();
+
+        repositories.addAll(dbRepositories);
+
+        if (configRepositories != null) {
+            var configRepo = mapper.mapConfigRepositories(configRepositories);
+            repositories.addAll(configRepo);
+        }
+
+        return repositories;
     }
 
     @Override

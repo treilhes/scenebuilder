@@ -55,7 +55,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.gluonhq.jfxapps.boot.api.maven.Artifact;
 import com.gluonhq.jfxapps.boot.api.maven.Classifier;
-import com.gluonhq.jfxapps.boot.api.maven.RepositoryConfig;
+import com.gluonhq.jfxapps.boot.api.maven.MavenConfig;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryManager;
 import com.gluonhq.jfxapps.boot.api.maven.ResolvedArtifact;
 import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
@@ -87,7 +87,7 @@ class MavenRepositoryClientImplTest {
     JfxAppsPlatform platform;
 
     @Mock
-    RepositoryConfig config;
+    MavenConfig config;
 
     @BeforeEach
     public void beforeEach() {

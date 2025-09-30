@@ -5,9 +5,13 @@ jfxapps:
     rootPath: ./target/devapp
   registry:
     snapshotsAllowed: true
-  repository:
+  maven:
     directory: ${user.home}/.m2/repository
     redirectionsEnabled: true
+    repository:
+      - url: https://XXXXXXX.gluonhq.com/nexYYYus/content/repositories/releases/
+        user: XXXXXXXXX
+        password: YYYY
     redirect:
       - groupId: com.gluonhq.jfxapps
         artifactId: jfxapps.core.api

@@ -40,14 +40,19 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = RepositoryConfig.PREFIX)
+@ConfigurationProperties(prefix = MavenConfig.PREFIX)
 //@Profile("!it")
-public class RepositoryConfig {
+public class MavenConfig {
 
-    public static final String PREFIX = "jfxapps.repository";
+    public static final String PREFIX = "jfxapps.maven";
 
     public static record Redirect(String groupId, String artifactId, File path) {
     }
+
+    public static record Repository(String url, String user, String password) {
+    }
+
+    private List<Repository> repository;
 
     private List<Redirect> redirect;
 
@@ -79,4 +84,10 @@ public class RepositoryConfig {
         this.directory = directory;
     }
 
+    public List<Repository> getRepository() {
+        return repository;
+    }
+    public void setRepository(List<Repository> repository) {
+        this.repository = repository;
+    }
 }

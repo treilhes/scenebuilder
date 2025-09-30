@@ -51,9 +51,9 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.api.maven.Artifact;
 import com.gluonhq.jfxapps.boot.api.maven.Classifier;
+import com.gluonhq.jfxapps.boot.api.maven.MavenConfig;
 import com.gluonhq.jfxapps.boot.api.maven.Repository;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
-import com.gluonhq.jfxapps.boot.api.maven.RepositoryConfig;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryManager;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryType;
 import com.gluonhq.jfxapps.boot.api.maven.ResolvedArtifact;
@@ -68,7 +68,7 @@ public class MavenRepositoryClientImpl implements RepositoryClient {
 
     private static final Logger log = LoggerFactory.getLogger(MavenRepositoryClientImpl.class);
     private final RepositoryManager repositoryManager;
-    private final RepositoryConfig config;
+    private final MavenConfig config;
     private final SearchService searchService;
     private final Optional<ApplicationStartup> startup;
 
@@ -80,7 +80,7 @@ public class MavenRepositoryClientImpl implements RepositoryClient {
 
 
     @Autowired
-    protected MavenRepositoryClientImpl(JfxAppsPlatform platform, RepositoryManager repositoryManager, RepositoryConfig config, Optional<ApplicationStartup> startup) {
+    protected MavenRepositoryClientImpl(JfxAppsPlatform platform, RepositoryManager repositoryManager, MavenConfig config, Optional<ApplicationStartup> startup) {
         this.config = config;
         this.repositoryFolder = config.getDirectory() != null ? config.getDirectory() : platform.defaultUserM2Repository();
         this.repositoryManager = repositoryManager;

@@ -3,7 +3,7 @@ jfxapps:
     defaultLoadType: LastSuccessfull #default
   platform:
     rootPath: ./data
-  repository:
+  maven:
     directory: ${jfxapps.platform.rootPath}/.m2/repository
   registry:
 #    snapshotsAllowed: true

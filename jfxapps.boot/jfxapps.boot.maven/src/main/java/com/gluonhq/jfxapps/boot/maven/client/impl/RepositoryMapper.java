@@ -41,7 +41,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import com.gluonhq.jfxapps.boot.api.maven.RepositoryConfig.Redirect;
+import com.gluonhq.jfxapps.boot.api.maven.MavenConfig;
+import com.gluonhq.jfxapps.boot.api.maven.MavenConfig.Redirect;
 import com.gluonhq.jfxapps.boot.api.maven.ResolvedArtifact;
 import com.gluonhq.jfxapps.boot.maven.client.model.Repository;
 
@@ -70,4 +71,7 @@ public interface RepositoryMapper {
     public static Path fileToPath(File file) {
         return file.toPath();
     }
+
+    com.gluonhq.jfxapps.boot.api.maven.Repository mapConfigRepository(MavenConfig.Repository repository);
+    List<com.gluonhq.jfxapps.boot.api.maven.Repository> mapConfigRepositories(List<MavenConfig.Repository> repository);
 }

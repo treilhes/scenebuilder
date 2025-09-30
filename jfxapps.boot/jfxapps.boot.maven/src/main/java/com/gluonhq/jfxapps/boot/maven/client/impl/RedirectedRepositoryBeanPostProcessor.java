@@ -41,7 +41,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
-import com.gluonhq.jfxapps.boot.api.maven.RepositoryConfig;
+import com.gluonhq.jfxapps.boot.api.maven.MavenConfig;
 
 /**
  * When the property jfxapps.repository.redirect is provided, this component is
@@ -49,15 +49,15 @@ import com.gluonhq.jfxapps.boot.api.maven.RepositoryConfig;
  *
  */
 @Component
-@ConditionalOnProperty(prefix = RepositoryConfig.PREFIX, name = "redirectionsEnabled")
+@ConditionalOnProperty(prefix = MavenConfig.PREFIX, name = "redirectionsEnabled")
 public class RedirectedRepositoryBeanPostProcessor implements BeanPostProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RedirectedRepositoryBeanPostProcessor.class);
 
-    private final RepositoryConfig config;
+    private final MavenConfig config;
     private final RepositoryMapper mappers;
 
-    public RedirectedRepositoryBeanPostProcessor(RepositoryConfig config, RepositoryMapper mappers) {
+    public RedirectedRepositoryBeanPostProcessor(MavenConfig config, RepositoryMapper mappers) {
         super();
         this.config = config;
         this.mappers = mappers;

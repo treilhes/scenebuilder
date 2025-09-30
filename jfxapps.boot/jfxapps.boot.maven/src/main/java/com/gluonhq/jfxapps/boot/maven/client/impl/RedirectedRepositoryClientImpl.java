@@ -45,20 +45,20 @@ import com.gluonhq.jfxapps.boot.api.maven.Artifact;
 import com.gluonhq.jfxapps.boot.api.maven.Classifier;
 import com.gluonhq.jfxapps.boot.api.maven.Repository;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryClient;
-import com.gluonhq.jfxapps.boot.api.maven.RepositoryConfig;
+import com.gluonhq.jfxapps.boot.api.maven.MavenConfig;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryType;
 import com.gluonhq.jfxapps.boot.api.maven.ResolvedArtifact;
 import com.gluonhq.jfxapps.boot.api.maven.UniqueArtifact;
-import com.gluonhq.jfxapps.boot.api.maven.RepositoryConfig.Redirect;
+import com.gluonhq.jfxapps.boot.api.maven.MavenConfig.Redirect;
 
 
 public class RedirectedRepositoryClientImpl implements RepositoryClient {
 
     private final RepositoryClient client;
-    private final RepositoryConfig config;
+    private final MavenConfig config;
     private final RepositoryMapper mappers;
 
-    public RedirectedRepositoryClientImpl(RepositoryConfig config, RepositoryMapper mappers,
+    public RedirectedRepositoryClientImpl(MavenConfig config, RepositoryMapper mappers,
             RepositoryClient client) {
         super();
         this.config = config;

@@ -7,7 +7,7 @@ jfxapps:
 #        artifactId: manager.registry
 #        mandatory: true
 
-  repository:
+  maven:
     directory: ${user.home}/.m2/repository
 #    redirectionsEnabled: true
 #    redirect:

@@ -36,7 +36,7 @@ package com.gluonhq.jfxapps.boot.maven;
 import java.util.List;
 
 import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
-import com.gluonhq.jfxapps.boot.api.maven.RepositoryConfig;
+import com.gluonhq.jfxapps.boot.api.maven.MavenConfig;
 import com.gluonhq.jfxapps.boot.maven.client.impl.MavenRepositoryClientImpl;
 import com.gluonhq.jfxapps.boot.maven.client.impl.RedirectedRepositoryBeanPostProcessor;
 import com.gluonhq.jfxapps.boot.maven.client.impl.RepositoryManagerImpl;
@@ -51,7 +51,7 @@ public class MavenBootClasses implements BootContextConfigClasses {
     @Override
     public List<Class<?>> classes() {
         return List.of(
-                RepositoryConfig.class,
+                MavenConfig.class,
                 MavenRepositoryClientImpl.class,
                 RedirectedRepositoryBeanPostProcessor.class,
                 RepositoryManagerImpl.class,
