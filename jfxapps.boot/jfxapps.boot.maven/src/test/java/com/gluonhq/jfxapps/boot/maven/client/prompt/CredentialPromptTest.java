@@ -31,63 +31,49 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.boot.api.maven;
+package com.gluonhq.jfxapps.boot.maven.client.prompt;
 
-import java.io.File;
-import java.util.List;
+import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
-@Configuration
-@ConfigurationProperties(prefix = MavenConfig.PREFIX)
-//@Profile("!it")
-public class MavenConfig {
+import org.junit.jupiter.api.Test;
 
-    public static final String PREFIX = "jfxapps.maven";
+class CredentialPromptTest {
 
-    public static record Redirect(String groupId, String artifactId, File path) {
+    @Test
+    void must_return_credentials_on_validate() throws MalformedURLException, InterruptedException, ExecutionException {
+
+        var prompt = CredentialPrompt.promptFor(new URL("https://www.google.com"));
+        var future = prompt.show();
+
+        prompt.getUsernameField().setText("myusername");
+        prompt.getPasswordField().setText("mypassword");
+        prompt.getLoginBtn().doClick();
+
+        var cred = future.get();
+
+        assertEquals("myusername", cred.getUsername());
+        assertEquals("mypassword", cred.getPassword());
+
     }
 
-    public static record Repository(String url, String user, String password, boolean requestCredentials) {
+    @Test
+    void must_return_null_on_cancel() throws MalformedURLException, InterruptedException, ExecutionException {
+
+        var prompt = CredentialPrompt.promptFor(new URL("https://www.google.com"));
+        var future = prompt.show();
+
+        prompt.getCancelBtn().doClick();
+
+        var cred = future.get();
+
+        assertNull(cred);
+
     }
 
-    private List<Repository> repository;
-
-    private List<Redirect> redirect;
-
-    private boolean redirectionsEnabled;
-
-    private File directory;
-
-    public List<Redirect> getRedirect() {
-        return redirect;
-    }
-
-    public void setRedirect(List<Redirect> redirect) {
-        this.redirect = redirect;
-    }
-
-    public boolean isRedirectionsEnabled() {
-        return redirectionsEnabled;
-    }
-
-    public void setRedirectionsEnabled(boolean redirectionsEnabled) {
-        this.redirectionsEnabled = redirectionsEnabled;
-    }
-
-    public File getDirectory() {
-        return directory;
-    }
-
-    public void setDirectory(File directory) {
-        this.directory = directory;
-    }
-
-    public List<Repository> getRepository() {
-        return repository;
-    }
-    public void setRepository(List<Repository> repository) {
-        this.repository = repository;
-    }
 }
+

@@ -33,6 +33,9 @@
  */
 package com.gluonhq.jfxapps.boot.maven.client.impl;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,8 +48,11 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.boot.api.maven.MavenConfig;
 import com.gluonhq.jfxapps.boot.api.maven.Repository;
 import com.gluonhq.jfxapps.boot.api.maven.RepositoryManager;
+import com.gluonhq.jfxapps.boot.maven.client.model.Repository.Content;
 import com.gluonhq.jfxapps.boot.maven.client.preset.MavenPresets;
+import com.gluonhq.jfxapps.boot.maven.client.prompt.CredentialPrompt;
 import com.gluonhq.jfxapps.boot.maven.client.repository.RepositoryRepository;
+import com.gluonhq.jfxapps.boot.maven.client.type.Maven;
 
 import jakarta.annotation.PostConstruct;
 
@@ -76,27 +82,52 @@ public class RepositoryManagerImpl implements RepositoryManager {
     @PostConstruct
     protected void init() {
         var step = startup.map(s -> s.start("repository.manager.init"));
-        if (jpaRepository.count() == 0) {
-            jpaRepository.saveAll(mapper.mapApi(MavenPresets.getPresetRepositories()));
+
+        var dbRepositories = mapper.map(jpaRepository.findAll());
+        if (dbRepositories.size() == 0) { // Initialize with default repositories
+
+            var repositories = new ArrayList<com.gluonhq.jfxapps.boot.maven.client.model.Repository>();
+            var presets = mapper.mapApi(MavenPresets.getPresetRepositories());
+            repositories.addAll(presets);
+
+            var configRepositories = config.getRepository();
+            if (configRepositories != null) {
+
+                for (var configRepository : configRepositories) {
+                    if (configRepository.requestCredentials()) {
+                        // If requestCredentials is true, prompt the user for credentials
+                        try {
+                            var url = new URI(configRepository.url()).toURL();
+                            var credentials = CredentialPrompt.requestCredentialsFor(url);
+                            if (credentials != null) {
+
+                                var authenticatedRepository = new com.gluonhq.jfxapps.boot.maven.client.model.Repository();
+
+                                authenticatedRepository.setId(url.getHost());
+                                authenticatedRepository.setType(Maven.class);
+                                authenticatedRepository.setUrl(configRepository.url());
+                                authenticatedRepository.setLogin(credentials.getUsername());
+                                authenticatedRepository.setPassword(credentials.getPassword());
+                                authenticatedRepository.setContentType(Content.SNAPSHOT_RELEASE);
+
+                                repositories.add(authenticatedRepository);
+                            }
+
+                        } catch (MalformedURLException | URISyntaxException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            jpaRepository.saveAll(repositories);
         }
         step.ifPresent(StartupStep::end);
     }
 
     @Override
     public List<Repository> repositories() {
-
-        var repositories = new ArrayList<Repository>();
-        var dbRepositories = mapper.map(jpaRepository.findAll());
-        var configRepositories = config.getRepository();
-
-        repositories.addAll(dbRepositories);
-
-        if (configRepositories != null) {
-            var configRepo = mapper.mapConfigRepositories(configRepositories);
-            repositories.addAll(configRepo);
-        }
-
-        return repositories;
+        return mapper.map(jpaRepository.findAll());
     }
 
     @Override
