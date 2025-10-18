@@ -24,6 +24,7 @@
         <module>jfxapps.registry</module>
 
         <module>jfxapps.utils</module>
+        <module>jfxapps.delivery</module>
     </modules>
 
     <properties>
