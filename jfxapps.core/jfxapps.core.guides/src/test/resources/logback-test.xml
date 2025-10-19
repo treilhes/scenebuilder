@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!-- Define the default log level for the root logger -->
-    <root level="DEBUG">
+    <root level="INFO">
         <!-- Attach a console appender to the root logger -->
         <appender-ref ref="CONSOLE" />
     </root>
