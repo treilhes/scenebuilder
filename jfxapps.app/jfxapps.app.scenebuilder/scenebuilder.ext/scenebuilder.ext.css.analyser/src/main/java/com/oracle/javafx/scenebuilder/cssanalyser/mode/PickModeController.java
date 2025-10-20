@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -38,8 +38,8 @@ import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
 import com.gluonhq.jfxapps.core.api.fxom.content.mode.AbstractModeController;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
@@ -60,18 +60,18 @@ import javafx.scene.input.MouseEvent;
 public class PickModeController extends AbstractModeController {
 
     private final SbDriver driver;
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents fxomEvents;
     private final Selection selection;
     //private HitNodeChrome hitNodeChrome;
 
     public PickModeController(
             SbDriver driver,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents fxomEvents,
             Selection selection,
-    		@Lazy Workspace contentPanelController) {
-        super(contentPanelController);
+    		@Lazy Workspace workspace) {
+        super(workspace);
         this.driver = driver;
-        this.documentManager = documentManager;
+        this.fxomEvents = fxomEvents;
         this.selection = selection;
 
         newLayer(HitNodeChrome.class, false, selection,
@@ -163,7 +163,7 @@ public class PickModeController extends AbstractModeController {
 
     private void mousePressedOnGlassLayer(MouseEvent e) {
 
-        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        final FXOMDocument fxomDocument = fxomEvents.fxomDocument().get();
 
         final FXOMObject hitObject;
         final Node hitNode;
@@ -225,7 +225,7 @@ public class PickModeController extends AbstractModeController {
                 assert closestNodeObject.getSceneGraphObject().isInstanceOf(Node.class);
                 final Node closestNode = closestNodeObject.getSceneGraphObject().getAs(Node.class);
                 if (closestNode.getScene() == getWorkspace().getRoot().getScene()) {
-                    result = new HitNodeChrome(getWorkspace(), documentManager, hitNode);
+                    result = new HitNodeChrome(getWorkspace(), fxomEvents, hitNode);
                     result.setFxomObject(hitItem);
                     result.initialize();
                 } else {
