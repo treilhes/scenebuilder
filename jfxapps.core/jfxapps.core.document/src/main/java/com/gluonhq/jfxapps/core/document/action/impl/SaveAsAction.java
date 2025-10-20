@@ -54,8 +54,8 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow.ButtonID;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 import javafx.stage.FileChooser;
@@ -140,13 +140,15 @@ public class SaveAsAction extends AbstractAction {
                         }
 
                         d.setDetails(details);
-                        d.setOKButtonVisible(true);
-                        d.setOKButtonTitle(getI18n().getString("alert.save.noextension.savewith"));
-                        d.setDefaultButtonID(ButtonID.OK);
-                        d.setShowDefaultButton(true);
-                        d.setActionButtonDisable(false);
-                        d.setActionButtonVisible(true);
-                        d.setActionButtonTitle(getI18n().getString("alert.save.noextension.savewithout"));
+
+                        var modalWindow = d.getModalWindow();
+                        modalWindow.setOKButtonVisible(true);
+                        modalWindow.setOKButtonTitle(getI18n().getString("alert.save.noextension.savewith"));
+                        modalWindow.setDefaultButtonID(ButtonID.OK);
+                        modalWindow.setShowDefaultButton(true);
+                        modalWindow.setActionButtonDisable(false);
+                        modalWindow.setActionButtonVisible(true);
+                        modalWindow.setActionButtonTitle(getI18n().getString("alert.save.noextension.savewithout"));
 
                         switch (d.showAndWait()) {
                         case ACTION:

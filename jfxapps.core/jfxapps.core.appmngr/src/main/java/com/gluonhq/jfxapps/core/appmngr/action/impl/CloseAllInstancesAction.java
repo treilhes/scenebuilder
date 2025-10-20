@@ -119,9 +119,11 @@ public class CloseAllInstancesAction extends AbstractAction {
             final Alert d = dialog.customAlert();
             d.setMessage(getI18n().getString("alert.review.question.message", pendingDocs.size()));
             d.setDetails(getI18n().getString("alert.review.question.details"));
-            d.setOKButtonTitle(getI18n().getString("label.review.changes"));
-            d.setActionButtonTitle(getI18n().getString("label.discard.changes"));
-            d.setActionButtonVisible(true);
+
+            var modalWindow = d.getModalWindow();
+            modalWindow.setOKButtonTitle(getI18n().getString("label.review.changes"));
+            modalWindow.setActionButtonTitle(getI18n().getString("label.discard.changes"));
+            modalWindow.setActionButtonVisible(true);
 
             switch (d.showAndWait()) {
             default:

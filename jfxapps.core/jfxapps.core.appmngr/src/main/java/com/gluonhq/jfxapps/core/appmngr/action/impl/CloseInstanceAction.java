@@ -109,9 +109,11 @@ public class CloseInstanceAction extends AbstractAction {
             final Alert d = dialog.customAlert(documentWindow.getStage());
             d.setMessage(getI18n().getString("alert.save.question.message", documentWindow.getStage().getTitle()));
             d.setDetails(getI18n().getString("alert.save.question.details"));
-            d.setOKButtonTitle(getI18n().getString("label.save"));
-            d.setActionButtonTitle(getI18n().getString("label.do.not.save"));
-            d.setActionButtonVisible(true);
+
+            var modalWindow = d.getModalWindow();
+            modalWindow.setOKButtonTitle(getI18n().getString("label.save"));
+            modalWindow.setActionButtonTitle(getI18n().getString("label.do.not.save"));
+            modalWindow.setActionButtonVisible(true);
 
             closeConfirmed = switch (d.showAndWait()) {
             default:
