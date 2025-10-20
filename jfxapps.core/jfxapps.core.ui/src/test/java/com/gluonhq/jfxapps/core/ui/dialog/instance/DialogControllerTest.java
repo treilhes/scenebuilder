@@ -34,6 +34,7 @@
 package com.gluonhq.jfxapps.core.ui.dialog.instance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
 
 import java.util.Optional;
 
@@ -94,11 +95,9 @@ class DialogControllerTest {
 
         assertThat(optButton.isPresent());
 
-        robot.clickOn(optButton.get());
+        robot.interact(() -> robot.clickOn(optButton.get()));
 
-        optButton = robot.lookup("#cancelButton").tryQueryAs(Button.class);
-        System.out.println("optButton: "+ robot.lookup("#cancelButton").queryAllAs(Button.class).size());
-        assertThat(optButton).isEmpty();
+        assertFalse(optButton.get().getScene().getWindow().isShowing());
 
         robot.interact(() -> stage.close());
     }
@@ -117,11 +116,9 @@ class DialogControllerTest {
 
         assertThat(optButton.isPresent());
 
-        robot.clickOn(optButton.get());
+        robot.interact(() -> robot.clickOn(optButton.get()));
 
-        optButton = robot.lookup("#cancelButton").tryQueryAs(Button.class);
-        System.out.println("optButton: "+ robot.lookup("#cancelButton").queryAllAs(Button.class).size());
-        assertThat(optButton).isEmpty();
+        assertFalse(optButton.get().getScene().getWindow().isShowing());
 
         robot.interact(() -> stage.close());
 
@@ -168,11 +165,9 @@ class DialogControllerTest {
 
         assertThat(optButton.isPresent());
 
-        robot.clickOn(optButton.get());
+        robot.interact(() -> robot.clickOn(optButton.get()));
 
-        optButton = robot.lookup("#cancelButton").tryQueryAs(Button.class);
-        System.out.println("optButton: "+ robot.lookup("#cancelButton").queryAllAs(Button.class).size());
-        assertThat(optButton).isEmpty();
+        assertFalse(optButton.get().getScene().getWindow().isShowing());
 
         robot.interact(() -> stage.close());
     }
