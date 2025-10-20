@@ -38,12 +38,12 @@ import java.io.StringWriter;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
-
-import javafx.stage.Window;
+import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow;
 
 /**
  *
@@ -58,26 +58,29 @@ public class ErrorDialog extends AlertDialog {
 
     //@formatter:off
     protected ErrorDialog(
-            JfxAppsPlatform platform,
+            JfxAppPlatform jfxAppPlatform,
             I18N i18n,
-            ApplicationEvents sceneBuilderManager,
+            ApplicationEvents applicationEvents,
+            ApplicationInstanceEvents instanceEvents,
             IconSetting iconSetting,
-            JfxAppContext context,
-            Window owner) {
+            ModalWindow modalWindow,
+            JfxAppContext context) {
       //@formatter:on
-        super(platform, i18n, sceneBuilderManager, iconSetting, owner);
+        super(jfxAppPlatform, i18n, applicationEvents, instanceEvents, iconSetting, modalWindow);
         this.context = context;
     }
 
     @Override
     public void controllerDidLoadFxml() {
         super.controllerDidLoadFxml();
-        setOKButtonVisible(false);
-        setShowDefaultButton(true);
-        setDefaultButtonID(AlertDialog.ButtonID.CANCEL);
-        setCancelButtonTitle(getI18n().getString("label.close"));
-        setActionButtonTitle(getI18n().getString("error.dialog.label.details"));
-        setActionButtonVisible(true);
+
+        var modalWindow = getModalWindow();
+        modalWindow.setOKButtonVisible(false);
+        modalWindow.setShowDefaultButton(true);
+        modalWindow.setDefaultButtonID(ModalWindow.ButtonID.CANCEL);
+        modalWindow.setCancelButtonTitle(getI18n().getString("label.close"));
+        modalWindow.setActionButtonTitle(getI18n().getString("error.dialog.label.details"));
+        modalWindow.setActionButtonVisible(true);
         setActionRunnable(() -> showDetailsDialog());
         updateActionButtonVisibility(); // not visible by default
     }
@@ -111,7 +114,7 @@ public class ErrorDialog extends AlertDialog {
      */
 
     private void updateActionButtonVisibility() {
-        setActionButtonVisible(debugInfo != null);
+        getModalWindow().setActionButtonVisible(debugInfo != null);
     }
 
     private void showDetailsDialog() {

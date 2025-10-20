@@ -47,7 +47,8 @@ import org.testfx.api.FxRobot;
 
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
+import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow.ButtonID;
+import com.gluonhq.jfxapps.core.ui.dialog.ModalWindowImpl;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 
 import javafx.scene.Node;
@@ -59,7 +60,8 @@ import javafx.stage.Stage;
         DialogControllerTest.Config.class,
         DialogController.class,
         AlertDialog.class,
-        ErrorDialog.class
+        ErrorDialog.class,
+        ModalWindowImpl.class
         })
 //FIXME: even when closed the dialog is not removed from the stage, this completely defeat the lookup as we don't have any root to search in
 class DialogControllerTest {
@@ -133,27 +135,29 @@ class DialogControllerTest {
 
         Runnable runnable = () -> robot.interactNoWait(() -> {
             var alert = controller.customAlert();
-            alert.setTitle("title");
+
             alert.setMessage("message");
             alert.setDetails("detail");
 
-            alert.setActionButtonTitle("action");
-            alert.setActionButtonVisible(true);
-            alert.setActionButtonDisable(true);
+            var modalWindow = alert.getModalWindow();
+            modalWindow.setTitle("title");
+            modalWindow.setActionButtonTitle("action");
+            modalWindow.setActionButtonVisible(true);
+            modalWindow.setActionButtonDisable(true);
 
-            alert.setOKButtonTitle("ok");
-            alert.setOKButtonVisible(true);
-            alert.setOKButtonDisable(false);
+            modalWindow.setOKButtonTitle("ok");
+            modalWindow.setOKButtonVisible(true);
+            modalWindow.setOKButtonDisable(false);
 
-            alert.setCancelButtonTitle("cancel");
+            modalWindow.setCancelButtonTitle("cancel");
 
-            alert.setImageViewVisible(true);
+            modalWindow.setImageViewVisible(true);
             //alert.setImageViewImage(null);
 
-            alert.setShowDefaultButton(true);
-            alert.setDefaultButtonID(ButtonID.CANCEL);
+            modalWindow.setShowDefaultButton(true);
+            modalWindow.setDefaultButtonID(ButtonID.CANCEL);
 
-            alert.setButtonsFocusTraversable();
+            modalWindow.setButtonsFocusTraversable();
 
             alert.showAndWait();
         });

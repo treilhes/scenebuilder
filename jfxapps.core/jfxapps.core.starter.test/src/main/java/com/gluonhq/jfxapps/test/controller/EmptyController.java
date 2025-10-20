@@ -31,89 +31,33 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.api.ui.dialog;
+package com.gluonhq.jfxapps.test.controller;
 
-import java.util.function.Consumer;
+import com.gluonhq.jfxapps.core.api.javafx.UiController;
 
-import javafx.event.ActionEvent;
 import javafx.scene.Parent;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
-import javafx.stage.Window;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 
-public interface ModalWindow {
+public class EmptyController implements UiController {
 
-    public enum ButtonID {
-        OK, CANCEL, ACTION
+    Parent root;
+
+    public EmptyController() {
+        super();
+        Pane pane = new Pane();
+        pane.getChildren().add(new Label("Empty Controller"));
+        this.root = pane;
     }
 
-    ButtonID showAndWait();
+    @Override
+    public void setRoot(Parent root) {
+        this.root = root;
+    }
 
-    void show();
+    @Override
+    public Parent getRoot() {
+        return root;
+    }
 
-    void setOwner(Window owner);
-
-    Window getOwner();
-
-    String getTitle();
-
-    void setTitle(String title);
-
-    String getOKButtonTitle();
-
-    void setOKButtonTitle(String title);
-
-    String getCancelButtonTitle();
-
-    void setCancelButtonTitle(String title);
-
-    String getActionButtonTitle();
-
-    void setActionButtonTitle(String title);
-
-    boolean isOKButtonVisible();
-
-    void setOKButtonVisible(boolean visible);
-
-    boolean isActionButtonVisible();
-
-    void setActionButtonVisible(boolean visible);
-
-    void setOKButtonDisable(boolean disable);
-
-    void setActionButtonDisable(boolean disable);
-
-    void setShowDefaultButton(boolean show);
-
-    void setDefaultButtonID(ButtonID buttonID);
-
-    boolean isImageViewVisible();
-
-    void setImageViewVisible(boolean visible);
-
-    Image getImageViewImage();
-
-    void setImageViewImage(Image image);
-
-    // On Mac the FXML defines the 3 buttons as non focus traversable.
-    // However for complex dialogs such a Preferences, Code Skeleton and
-    // Preview Background Color we'd better have them focus traversable hence
-    // this method.
-    void setButtonsFocusTraversable();
-
-    void setContent(Parent content);
-
-    void onCloseRequest();
-
-    void onFocus();
-
-    void setOnOkButtonPressed(Consumer<ActionEvent> onOkButtonPressed);
-
-    void setOnCancelButtonPressed(Consumer<ActionEvent> onCancelButtonPressed);
-
-    void setOnActionButtonPressed(Consumer<ActionEvent> onActionButtonPressed);
-
-    void close();
-
-    Stage getStage();
 }

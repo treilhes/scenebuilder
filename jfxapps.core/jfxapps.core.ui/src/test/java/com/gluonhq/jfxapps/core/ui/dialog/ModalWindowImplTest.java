@@ -31,22 +31,59 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.jfxapps.core.api.ui.dialog;
+package com.gluonhq.jfxapps.core.ui.dialog;
 
-import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow.ButtonID;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public interface Alert {
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.ContextConfiguration;
+import org.testfx.api.FxRobot;
 
-    ModalWindow getModalWindow();
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
+import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow;
+import com.gluonhq.jfxapps.test.JfxAppsTest;
+import com.gluonhq.jfxapps.test.StageBuilder;
+import com.gluonhq.jfxapps.test.StageType;
 
-    void setMessage(String message);
+@JfxAppsTest
+@ContextConfiguration(classes = { ModalWindowImplTest.Config.class, ModalWindowImpl.class })
+class ModalWindowImplTest {
 
-    void setDetails(String details);
 
-    ButtonID showAndWait();
+    @TestConfiguration
+    static class Config {
+        @Bean
+        IconSetting iconSetting() {
+            return Mockito.mock(IconSetting.class);
+        }
 
-    void show();
+        @Bean
+        JfxAppsPlatform jfxAppsPlatform() {
+            var mock = Mockito.mock(JfxAppsPlatform.class);
+            Mockito.when(mock.isWindows()).thenReturn(true);
+            return mock;
+        }
+    }
 
-    void close();
+    @Test
+    void must_show_the_modal_window(StageBuilder builder, FxRobot robot, JfxAppContext context) {
+        try (var testStage = builder.controller().setup(StageType.Center).size(800, 600).show()) {
+
+            ModalWindow modal = context.getBean(ModalWindow.class);
+
+            robot.interact(() -> {
+                modal.setOwner(testStage.getStage());
+                modal.show();
+                assertEquals(true, modal.getStage().isFocused());
+                modal.close();
+            });
+        }
+    }
+
 
 }

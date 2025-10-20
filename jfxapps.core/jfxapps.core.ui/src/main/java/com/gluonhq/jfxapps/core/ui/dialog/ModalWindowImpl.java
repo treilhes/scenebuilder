@@ -43,7 +43,6 @@ import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
 import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow;
 
 import javafx.event.ActionEvent;
@@ -141,12 +140,9 @@ public class ModalWindowImpl extends AbstractFxmlWindowController implements Mod
     }
 
     @Override
-    public final ButtonID show() {
-//      center();
-        clickedButtonID = ButtonID.CANCEL;
+    public final void show() {
         initStage();
         getStage().show();
-        return clickedButtonID;
     }
 
     @Override

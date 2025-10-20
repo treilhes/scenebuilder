@@ -33,76 +33,62 @@
  */
 package com.gluonhq.jfxapps.core.ui.dialog.instance;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.Mockito;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
-import org.testfx.framework.junit5.ApplicationExtension;
-import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
-import com.gluonhq.jfxapps.test.FxmlControllerLoader;
+import com.gluonhq.jfxapps.core.ui.dialog.ModalWindowImpl;
+import com.gluonhq.jfxapps.test.JfxAppsTest;
+import com.gluonhq.jfxapps.test.StageBuilder;
+import com.gluonhq.jfxapps.test.StageType;
 
-import javafx.scene.Parent;
-import javafx.stage.Stage;
-
-@ExtendWith({ApplicationExtension.class, MockitoExtension.class})
+@JfxAppsTest
+@ContextConfiguration(classes = { TextViewDialogTest.Config.class, TextViewDialog.class, ModalWindowImpl.class })
 class TextViewDialogTest {
 
-    private I18N i18n = new I18N(List.of(), true);
 
-    private ApplicationEvents sbm = new ApplicationEvents.ApplicationEventsImpl();
+    @TestConfiguration
+    static class Config {
+        @Bean
+        IconSetting iconSetting() {
+            return Mockito.mock(IconSetting.class);
+        }
 
-    @Mock
-    private JfxAppsPlatform platform;
-
-    @Mock
-    private IconSetting is;
-
-    @Mock
-    private JfxAppContext context;
-
-    private Stage stage;
-
-
-    /**
-     * Will be called with {@code @Before} semantics, i. e. before each test method.
-     *
-     * @param stage - Will be injected by the test runner.
-     */
-    @Start
-    private void start(Stage stage) {
-        this.stage = stage;
+        @Bean
+        JfxAppsPlatform jfxAppsPlatform() {
+            var mock = Mockito.mock(JfxAppsPlatform.class);
+            Mockito.when(mock.isWindows()).thenReturn(true);
+            return mock;
+        }
     }
 
     @Test
-    void should_load_the_hud_fxml(FxRobot robot) {
-        Parent ui = FxmlControllerLoader.controller(new TextViewDialog(platform, i18n, sbm, is)).loadFxml();
-        assertNotNull(ui);
-        robot.interact(() -> stage.close());
-    }
+    void must_show_the_text_view_dialog(StageBuilder builder, FxRobot robot, JfxAppContext context) {
+        try (var testStage = builder.controller().setup(StageType.Center).size(800, 600).show()) {
 
-    @Test
-    void test(FxRobot robot) {
+            TextViewDialog textView = context.getBean(TextViewDialog.class);
 
-        robot.interact(() -> {
-            TextViewDialog dialog = FxmlControllerLoader.controller(new TextViewDialog(platform, i18n, sbm, is)).load();
-            //stage.show();
-            dialog.openWindow();
-            dialog.closeWindow();
-        });
+            robot.interact(() -> {
+                textView.setText("""
+                        Some text to display in the TextViewDialog
+                        Some text to display in the TextViewDialog
+                        Some text to display in the TextViewDialog
+                        Some text to display in the TextViewDialog
+                        """);
+                textView.show();
+                assertEquals(true, textView.getModalWindow().getStage().isFocused());
+            });
 
-        System.out.println();
-        robot.interact(() -> stage.close());
+            robot.interact(textView::close);
+        }
     }
 
 }
