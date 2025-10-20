@@ -39,12 +39,12 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.ui.dialog.ModalWindowImpl;
@@ -74,11 +74,13 @@ class ApplicationDialogControllerTest {
         }
     }
 
-    @Autowired
-    ApplicationDialogController controller;
+//    @Autowired
+//    ApplicationDialogController controller;
 
     @Test
-    void must_show_the_alert_dialog_and_close_it_on_cancel_button_click(Stage stage, FxRobot robot) {
+    void must_show_the_alert_dialog_and_close_it_on_cancel_button_click(Stage stage, FxRobot robot, JfxAppContext context) {
+
+        ApplicationDialogController controller = context.getBean(ApplicationDialogController.class);
 
         robot.interact(() -> controller.addInfo("Info message", "Info details"));
 
@@ -92,7 +94,8 @@ class ApplicationDialogControllerTest {
 
         // Thread.startVirtualThread(runnable);
 
-        var optButton = lookupWithAttempts(robot, 10, 100, Button.class, "cancelButton");
+        //var optButton = lookupWithAttempts(robot, 10, 100, Button.class, "cancelButton");
+        var optButton = robot.lookup("#cancelButton").tryQueryAs(Button.class);
 
         assertThat(optButton.isPresent());
 

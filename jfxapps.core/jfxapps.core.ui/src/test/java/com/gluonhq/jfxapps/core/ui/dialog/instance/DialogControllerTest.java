@@ -39,12 +39,12 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow.ButtonID;
@@ -80,14 +80,10 @@ class DialogControllerTest {
         }
     }
 
-    @Autowired
-    DialogController controller;
-
-    @Autowired
-    JfxAppsPlatform platform;
-
     @Test
-    void must_show_the_alert_dialog_and_close_it_on_cancel_button_click(Stage stage, FxRobot robot) {
+    void must_show_the_alert_dialog_and_close_it_on_cancel_button_click(Stage stage, FxRobot robot, JfxAppContext context) {
+
+        DialogController controller = context.getBean(DialogController.class);
 
         Runnable showAlert = () -> controller.showAlertAndWait("title", "message", "detail");
         Runnable interaction = () -> robot.interactNoWait(showAlert);
@@ -109,7 +105,9 @@ class DialogControllerTest {
 
 
     @Test
-    void must_show_the_error_dialog_and_close_it_on_cancel_button_click(Stage stage, FxRobot robot) {
+    void must_show_the_error_dialog_and_close_it_on_cancel_button_click(Stage stage, FxRobot robot, JfxAppContext context) {
+
+        DialogController controller = context.getBean(DialogController.class);
 
         Runnable runnable = () -> robot.interactNoWait(() -> controller.showErrorAndWait("title", "message", "detail"));
 
@@ -131,7 +129,9 @@ class DialogControllerTest {
 
 
     @Test
-    void must_show_a_custom_alert_dialog_and_close_it_on_cancel_button_click(Stage stage, FxRobot robot) {
+    void must_show_a_custom_alert_dialog_and_close_it_on_cancel_button_click(Stage stage, FxRobot robot, JfxAppContext context) {
+
+        DialogController controller = context.getBean(DialogController.class);
 
         Runnable runnable = () -> robot.interactNoWait(() -> {
             var alert = controller.customAlert();
