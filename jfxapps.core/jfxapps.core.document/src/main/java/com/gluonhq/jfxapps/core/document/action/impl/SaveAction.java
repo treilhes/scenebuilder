@@ -52,8 +52,8 @@ import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow.ButtonID;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 
 @ApplicationInstancePrototype("com.gluonhq.jfxapps.core.fs.action.impl.SaveAction")
@@ -125,10 +125,12 @@ public class SaveAction extends AbstractAction {
                     final Alert d = dialog.customAlert(documentWindow.getStage());
                     d.setMessage(getI18n().getString("alert.overwrite.message", fileName));
                     d.setDetails(getI18n().getString("alert.overwrite.details"));
-                    d.setOKButtonVisible(true);
-                    d.setOKButtonTitle(getI18n().getString("label.overwrite"));
-                    d.setDefaultButtonID(ButtonID.CANCEL);
-                    d.setShowDefaultButton(true);
+
+                    var modalWindow = d.getModalWindow();
+                    modalWindow.setOKButtonVisible(true);
+                    modalWindow.setOKButtonTitle(getI18n().getString("label.overwrite"));
+                    modalWindow.setDefaultButtonID(ButtonID.CANCEL);
+                    modalWindow.setShowDefaultButton(true);
                     saveConfirmed = (d.showAndWait() == ButtonID.OK);
                 }
 

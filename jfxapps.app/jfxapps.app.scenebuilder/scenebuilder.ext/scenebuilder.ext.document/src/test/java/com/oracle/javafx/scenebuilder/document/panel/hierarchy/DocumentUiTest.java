@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,7 +44,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.TestContext;
 import org.testfx.framework.junit5.ApplicationExtension;
@@ -57,13 +56,11 @@ import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.ContextMenu;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
-import com.gluonhq.jfxapps.core.dnd.source.DocumentDragSource;
-import com.gluonhq.jfxapps.core.dnd.source.ExternalDragSource;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.job.editor.reference.UpdateReferencesJob;
 import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyCellAssignment;
@@ -99,10 +96,10 @@ class DocumentUiTest {
     }
 
     @Spy
-    ApplicationEvents scenebuilderManager = new ApplicationEvents.SceneBuilderManagerImpl();
+    ApplicationEvents scenebuilderManager = new ApplicationEvents.ApplicationEventsImpl();
 
     @Spy
-    ApplicationInstanceEvents documentManager = new ApplicationInstanceEvents.DocumentManagerImpl();
+    ApplicationInstanceEvents documentManager = new ApplicationInstanceEvents.ApplicationInstanceEventsImpl();
 
     @Mock
     UpdateReferencesJob.Factory updateReferencesJobFactory;

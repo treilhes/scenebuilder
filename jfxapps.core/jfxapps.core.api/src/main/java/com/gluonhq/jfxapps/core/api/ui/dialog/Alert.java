@@ -33,48 +33,20 @@
  */
 package com.gluonhq.jfxapps.core.api.ui.dialog;
 
-import javafx.scene.image.Image;
+import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow.ButtonID;
 
 public interface Alert {
 
-    public enum ButtonID {
-        OK, CANCEL, ACTION
-    }
-
-    /**
-     * Set the window title of the dialog.
-     * @param title
-     */
-    void setTitle(String title);
+    ModalWindow getModalWindow();
 
     void setMessage(String message);
 
     void setDetails(String details);
 
-    void setActionButtonTitle(String title);
-
-    void setActionButtonVisible(boolean b);
-
-    void setActionButtonDisable(boolean b);
-
-    void setOKButtonTitle(String title);
-
-    void setOKButtonVisible(boolean visible);
-
-    void setOKButtonDisable(boolean disable);
-
-    void setCancelButtonTitle(String title);
-
-    void setImageViewVisible(boolean visible);
-
-    void setImageViewImage(Image image);
-
-    void setShowDefaultButton(boolean show);
-
-    void setDefaultButtonID(ButtonID buttonID);
-
-    void setButtonsFocusTraversable();
-
     ButtonID showAndWait();
+
+    void show();
+
+    void close();
 
 }

@@ -35,10 +35,7 @@ package com.gluonhq.jfxapps.core.ui.dialog.instance;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 
@@ -47,22 +44,13 @@ import javafx.stage.Window;
 @ApplicationInstanceSingleton
 public class DialogController implements Dialog {
 
-    private final JfxAppsPlatform platform;
     private final I18N i18n;
     private final JfxAppContext context;
-    private final ApplicationEvents applicationEvents;
-    private final IconSetting iconSetting;
 
     public DialogController(
-            JfxAppsPlatform platform,
             I18N i18n,
-            ApplicationEvents applicationEvents,
-            IconSetting iconSetting,
             JfxAppContext context) {
-        this.platform = platform;
         this.i18n = i18n;
-	    this.applicationEvents = applicationEvents;
-	    this.iconSetting = iconSetting;
 	    this.context = context;
 	}
 
@@ -70,12 +58,16 @@ public class DialogController implements Dialog {
     @Override
     public void showErrorAndWait(Window owner, String title, String message, String detail, Throwable cause) {
 
-        final ErrorDialog errorDialog = (ErrorDialog)context.getBean("errorDialog", platform, i18n, applicationEvents, iconSetting, context, owner);
+        final var errorDialog = context.getBean(ErrorDialog.class);
 
-        errorDialog.setTitle(title);
         errorDialog.setMessage(message);
         errorDialog.setDetails(detail);
         errorDialog.setDebugInfoWithThrowable(cause);
+
+        var modalWindow = errorDialog.getModalWindow();
+        modalWindow.setOwner(owner);
+        modalWindow.setTitle(title);
+
         errorDialog.showAndWait();
     }
     @Override
@@ -97,20 +89,25 @@ public class DialogController implements Dialog {
     }
     @Override
     public Alert customAlert(Window owner) {
-        return (Alert)context.getBean("alertDialog", platform, i18n, applicationEvents, iconSetting, owner);
+        Alert alert = (Alert)context.getBean("alertDialog");
+        alert.getModalWindow().setOwner(owner);
+        return alert;
     }
 
 	@Override
     public void showAlertAndWait(Window owner, String title, String message, String detail) {
         Alert alert = customAlert();
-        alert.setTitle(title);
         alert.setMessage(message);
         alert.setDetails(detail);
-        alert.setActionButtonDisable(true);
-        alert.setActionButtonVisible(false);
-        alert.setOKButtonDisable(true);
-        alert.setOKButtonVisible(false);
-        alert.setCancelButtonTitle(i18n.getString("label.close"));
+
+        var modalWindow = alert.getModalWindow();
+        modalWindow.setTitle(title);
+        modalWindow.setActionButtonDisable(true);
+        modalWindow.setActionButtonVisible(false);
+        modalWindow.setOKButtonDisable(true);
+        modalWindow.setOKButtonVisible(false);
+        modalWindow.setCancelButtonTitle(i18n.getString("label.close"));
+
         alert.showAndWait();
     }
 

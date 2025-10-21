@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -54,6 +54,7 @@ import com.gluonhq.jfxapps.core.api.fxom.clipboard.ClipboardHandler;
 import com.gluonhq.jfxapps.core.api.fxom.css.CssInternal;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.LoadInFxThread;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
@@ -220,6 +221,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     private final CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference;
 
     private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents fxomEvents;
     private final FileSystem fileSystem;
 
     private final Drag drag;
@@ -247,6 +249,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
             I18N i18n,
             ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
+            FxomEvents fxomEvents,
             SbMetadata metadata,
             Selection selection,
             SbEditor editor,
@@ -262,6 +265,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         this.editor = editor;
         this.selection = selection;
         this.documentManager = documentManager;
+        this.fxomEvents = fxomEvents;
         this.metadata = metadata;
         this.applicationDelegate = delegate;
         this.drag = drag;
@@ -280,10 +284,10 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     @FXML
     public void initialize() {
 
-        documentManager.fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
-        documentManager.sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
-        documentManager.cssRevisionDidChange().subscribe(c -> cssRevisionDidChange());
-        documentManager.selectionDidChange().subscribe(c -> editorSelectionDidChange());
+        fxomEvents.fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
+        fxomEvents.sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
+        fxomEvents.cssRevisionDidChange().subscribe(c -> cssRevisionDidChange());
+        fxomEvents.selectionDidChange().subscribe(c -> editorSelectionDidChange());
 
         setTableColumnsOrderingReversed(cssTableColumnsOrderingReversedPreference.getValue());
 
@@ -370,7 +374,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
 
         // editorController.themeProperty().addListener((ChangeListener<Theme>) (ov, t,
         // t1) -> refresh());
-        documentManager.stylesheetConfig().subscribe(s -> refresh());
+        fxomEvents.stylesheetConfig().subscribe(s -> refresh());
 
         cssStateProperty
                 .addListener((ChangeListener<NodeCssState>) (arg0, oldValue, newValue) -> fillPropertiesTable());
@@ -768,7 +772,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     }
 
     private boolean hasFxomDocument() {
-        return documentManager.fxomDocument().get() != null;
+        return fxomEvents.fxomDocument().get() != null;
     }
 
     private boolean isPickMode() {
@@ -807,7 +811,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     }
 
     private void addSubStructure(Node componentRootNode, Item parentItem, Node node) {
-        FXOMDocument fxomDoc = documentManager.fxomDocument().get();
+        FXOMDocument fxomDoc = fxomEvents.fxomDocument().get();
         assert fxomDoc != null;
         Node enclosingNode = getEnclosingNode(fxomDoc, node);
         // The componentRootNode can be a skin structure (Tab, Column), in this case the
@@ -826,8 +830,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
             parentItem.getChildren().add(ni);
             parentItem = ni;
         }
-        if (node instanceof Parent && !isOtherComponentNode) {
-            Parent parentNode = (Parent) node;
+        if (node instanceof Parent parentNode && !isOtherComponentNode) {
             for (Node child : parentNode.getChildrenUnmodifiable()) {
                 addSubStructure(componentRootNode, parentItem, child);
             }
@@ -886,8 +889,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     private void attachProperty(TreeItem<Node> parent, PropertyState ss) {
         boolean hasSubs = !ss.getSubProperties().isEmpty();
         if (hasSubs) {
-            if (ss instanceof CssPropertyState) {
-                CssPropertyState cssProp = (CssPropertyState) ss;
+            if (ss instanceof CssPropertyState cssProp) {
                 if (cssProp.getStyle() != null) {
                     // Need to add the container, not the sub properties
                     Node content = getContent(ss.getCssProperty(), ss.getCssValue(), ss.getFxValue(), true);
@@ -905,12 +907,10 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
             Node content = getContent(ss.getCssProperty(), ss.getCssValue(), ss.getFxValue(), true);
             TreeItem<Node> ti = newTreeItem(content, ss);
             parent.getChildren().add(ti);
-            if (ss instanceof CssPropertyState) {
-                CssPropertyState css = (CssPropertyState) ss;
+            if (ss instanceof CssPropertyState css) {
                 attachStyles(css, ti);
             } else {
-                if (ss instanceof BeanPropertyState) {
-                    BeanPropertyState beanProp = (BeanPropertyState) ss;
+                if (ss instanceof BeanPropertyState beanProp) {
                     String source = beanProp.getPropertyMeta().getName().toString();
                     StringBuilder contentBuilder = new StringBuilder();
                     contentBuilder.append(source);

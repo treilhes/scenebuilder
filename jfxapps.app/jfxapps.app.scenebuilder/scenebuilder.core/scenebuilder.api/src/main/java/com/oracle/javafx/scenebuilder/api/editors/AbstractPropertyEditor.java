@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -44,8 +44,8 @@ import com.gluonhq.jfxapps.core.api.fxom.css.CssPropAuthorInfo;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow.ButtonID;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.Documentation;
@@ -343,11 +343,9 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
         } else {
             removeCssVisual();
         }
-        if (!(value instanceof String)) {
+        if (!(value instanceof String val)) {
             return;
         }
-        String val = (String) value;
-
         // Handle generic binding case
         if (isBindingExpression(val)) {
             binding = true;
@@ -642,16 +640,19 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
         }
 
         Alert alertDialog = dialog.customAlert(source.getScene().getWindow());
-        alertDialog.setTitle(i18n.getString("inspector.error.title"));
+
         alertDialog.setMessage(i18n.getString("inspector.error.message"));
         alertDialog.setDetails(i18n.getString("inspector.error.details", value, getPropertyNameText()));
+
+        var modalWindow = alertDialog.getModalWindow();
+        modalWindow.setTitle(i18n.getString("inspector.error.title"));
         // OK button is "Previous value"
-        alertDialog.setOKButtonVisible(true);
-        alertDialog.setOKButtonTitle(i18n.getString("inspector.error.previousvalue"));
+        modalWindow.setOKButtonVisible(true);
+        modalWindow.setOKButtonTitle(i18n.getString("inspector.error.previousvalue"));
         // Cancel button
-        alertDialog.setDefaultButtonID(ButtonID.CANCEL);
-        alertDialog.setShowDefaultButton(true);
-        alertDialog.setCancelButtonTitle(i18n.getString("inspector.error.cancel"));
+        modalWindow.setDefaultButtonID(ButtonID.CANCEL);
+        modalWindow.setShowDefaultButton(true);
+        modalWindow.setCancelButtonTitle(i18n.getString("inspector.error.cancel"));
 
         ButtonID buttonClicked = alertDialog.showAndWait();
         if (buttonClicked == ButtonID.OK) {
@@ -774,11 +775,10 @@ public abstract class AbstractPropertyEditor extends AbstractEditor {
             if (event.getCode() != KeyCode.UP && event.getCode() != KeyCode.DOWN) {
                 return;
             }
-            if (!(control instanceof TextField)) {
+            if (!(control instanceof TextField textField)) {
                 // Apply only for text field based controls
                 return;
             }
-            TextField textField = (TextField) control;
             int incDecVal = 1;
             boolean shiftDown = event.isShiftDown();
             if (shiftDown) {

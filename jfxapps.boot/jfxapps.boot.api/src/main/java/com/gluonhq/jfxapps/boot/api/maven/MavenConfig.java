@@ -49,7 +49,7 @@ public class MavenConfig {
     public static record Redirect(String groupId, String artifactId, File path) {
     }
 
-    public static record Repository(String url, String user, String password) {
+    public static record Repository(String url, String user, String password, boolean requestCredentials) {
     }
 
     private List<Repository> repository;

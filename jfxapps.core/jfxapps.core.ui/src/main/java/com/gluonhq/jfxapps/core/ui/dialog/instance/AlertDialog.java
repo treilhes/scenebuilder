@@ -36,26 +36,29 @@ package com.gluonhq.jfxapps.core.ui.dialog.instance;
 import java.net.URL;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractInstanceUiController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
-import com.gluonhq.jfxapps.core.api.ui.dialog.AbstractModalDialog;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
+import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow;
+import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow.ButtonID;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.stage.Window;
 
 /**
  *
  *
  */
 @Prototype("alertDialog")
-public class AlertDialog extends AbstractModalDialog implements Alert {
+public class AlertDialog extends AbstractInstanceUiController implements Alert {
 
+    private final ModalWindow modalWindow;
     @FXML
     protected Label messageLabel;
     @FXML
@@ -65,22 +68,36 @@ public class AlertDialog extends AbstractModalDialog implements Alert {
 
     //@formatter:off
     public AlertDialog(
-            JfxAppsPlatform appsPlatform,
+            JfxAppPlatform jfxAppPlatform,
             I18N i18n,
-            ApplicationEvents sceneBuilderManager,
+            ApplicationEvents applicationEvents,
+            ApplicationInstanceEvents instanceEvents,
             IconSetting iconSetting,
-            Window owner) {
+            ModalWindow modalWindow) {
         //@formatter:on
-        super(appsPlatform, i18n, sceneBuilderManager, iconSetting, AlertDialog.class.getResource("AlertDialog.fxml"),
-                owner);
+        super(i18n, applicationEvents, instanceEvents, AlertDialog.class.getResource("AlertDialog.fxml"));
+        this.modalWindow = modalWindow;
     }
 
     @Override
     public void controllerDidLoadFxml() {
-        super.controllerDidLoadFxml();
-        getStage().setResizable(false);
-        setImageViewVisible(true);
-        setImageViewImage(getDialogImage());
+        //modalWindow..setResizable(false);
+
+        // Sanity checks
+        assert messageLabel != null;
+        assert detailsLabel != null;
+
+        // Remove label text (inserted for design purpose)
+        messageLabel.setText(null);
+        detailsLabel.setText(null);
+
+        modalWindow.setImageViewImage(getDialogImage());
+        modalWindow.setImageViewVisible(true);
+
+        modalWindow.setContent(this.getRoot());
+        modalWindow.setOnOkButtonPressed(this::okButtonPressed);
+        modalWindow.setOnCancelButtonPressed(this::cancelButtonPressed);
+        modalWindow.setOnActionButtonPressed(this::actionButtonPressed);
     }
 
     public String getMessage() {
@@ -105,52 +122,52 @@ public class AlertDialog extends AbstractModalDialog implements Alert {
         this.actionRunnable = runnable;
     }
 
-    /*
-     * AbstractModalDialog
-     */
 
     @Override
-    public void controllerDidLoadContentFxml() {
-
-        // Sanity checks
-        assert messageLabel != null;
-        assert detailsLabel != null;
-
-        // Remove label text (inserted for design purpose)
-        messageLabel.setText(null);
-        detailsLabel.setText(null);
+    public ButtonID showAndWait() {
+        return modalWindow.showAndWait();
     }
 
     @Override
-    public void okButtonPressed(ActionEvent e) {
-        getStage().close();
+    public void show() {
+        modalWindow.show();
     }
 
     @Override
-    public void cancelButtonPressed(ActionEvent e) {
-        getStage().close();
+    public void close() {
+        modalWindow.close();
     }
 
     @Override
-    public void actionButtonPressed(ActionEvent e) {
-        if (actionRunnable != null) {
-            actionRunnable.run();
-        } else {
-            getStage().close();
-        }
+    public ModalWindow getModalWindow() {
+        return modalWindow;
     }
 
     /*
      * Private
      */
 
+    private void okButtonPressed(ActionEvent e) {
+        modalWindow.close();
+    }
+
+    private void cancelButtonPressed(ActionEvent e) {
+        modalWindow.close();
+    }
+
+    private void actionButtonPressed(ActionEvent e) {
+        if (actionRunnable != null) {
+            actionRunnable.run();
+        } else {
+            modalWindow.close();
+        }
+    }
+
     private Label getMessageLabel() {
-        getContentRoot(); // Force content fxml loading
         return messageLabel;
     }
 
     private Label getDetailsLabel() {
-        getContentRoot(); // Force content fxml loading
         return detailsLabel;
     }
 
@@ -163,4 +180,5 @@ public class AlertDialog extends AbstractModalDialog implements Alert {
         }
         return dialogImage;
     }
+
 }

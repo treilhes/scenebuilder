@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.gluonhq.jfxapps</groupId>
+		<artifactId>jfxapps.delivery</artifactId>
+		<version>${jfxapps.version}</version>
+	</parent>
+	<packaging>jlink</packaging>
+	<artifactId>jfxapps.delivery.runtime</artifactId>
+
+	<build>
+		<plugins>
+			<!-- Distribution -->
+			<plugin>
+				<artifactId>maven-jlink-plugin</artifactId>
+				<version>3.2.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<addModules>
+						<addModule>java.base</addModule>
+						<addModule>java.desktop</addModule>
+						<addModule>java.logging</addModule>
+						<addModule>java.naming</addModule>
+						<addModule>java.net.http</addModule>
+						<addModule>java.prefs</addModule>
+						<addModule>java.security.jgss</addModule>
+						<addModule>java.se</addModule><!-- include all java modules-->
+						
+						
+					
+						<addModule>jdk.xml.dom</addModule>
+						<addModule>jdk.compiler</addModule>
+						<addModule>jdk.internal.vm.compiler</addModule>
+						<addModule>jdk.dynalink</addModule>
+						<addModule>jdk.jsobject</addModule>
+						<addModule>jdk.unsupported</addModule>
+						<addModule>jdk.unsupported.desktop</addModule>
+					</addModules>
+					<compress>zip-6</compress>
+					<stripDebug>true</stripDebug>
+					<noHeaderFiles>true</noHeaderFiles>
+					<noManPages>true</noManPages>
+
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

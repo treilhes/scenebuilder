@@ -40,14 +40,12 @@ import java.util.Map;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractApplicationUiController;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
 import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow;
+import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow.ButtonID;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -83,11 +81,9 @@ public class ApplicationMessageDialog extends AbstractApplicationUiController {
     private final ModalWindow modalWindow;
 
     protected ApplicationMessageDialog(
-            JfxAppsPlatform jfxAppsPlatform,
             JfxAppPlatform jfxAppPlatform,
             I18N i18n,
             ApplicationEvents sceneBuilderManager,
-            IconSetting iconSetting,
             JfxAppContext context,
             ModalWindow modalWindow) {
         super(i18n, sceneBuilderManager, ApplicationMessageDialog.class.getResource("ApplicationMessageDialog.fxml"));

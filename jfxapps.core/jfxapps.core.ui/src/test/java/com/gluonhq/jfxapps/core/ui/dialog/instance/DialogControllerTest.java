@@ -34,20 +34,22 @@
 package com.gluonhq.jfxapps.core.ui.dialog.instance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
 
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
+import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow.ButtonID;
+import com.gluonhq.jfxapps.core.ui.dialog.ModalWindowImpl;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 
 import javafx.scene.Node;
@@ -59,7 +61,8 @@ import javafx.stage.Stage;
         DialogControllerTest.Config.class,
         DialogController.class,
         AlertDialog.class,
-        ErrorDialog.class
+        ErrorDialog.class,
+        ModalWindowImpl.class
         })
 //FIXME: even when closed the dialog is not removed from the stage, this completely defeat the lookup as we don't have any root to search in
 class DialogControllerTest {
@@ -78,14 +81,10 @@ class DialogControllerTest {
         }
     }
 
-    @Autowired
-    DialogController controller;
-
-    @Autowired
-    JfxAppsPlatform platform;
-
     @Test
-    void must_show_the_alert_dialog_and_close_it_on_cancel_button_click(Stage stage, FxRobot robot) {
+    void must_show_the_alert_dialog_and_close_it_on_cancel_button_click(Stage stage, FxRobot robot, JfxAppContext context) {
+
+        DialogController controller = context.getBean(DialogController.class);
 
         Runnable showAlert = () -> controller.showAlertAndWait("title", "message", "detail");
         Runnable interaction = () -> robot.interactNoWait(showAlert);
@@ -96,18 +95,18 @@ class DialogControllerTest {
 
         assertThat(optButton.isPresent());
 
-        robot.clickOn(optButton.get());
+        robot.interact(() -> robot.clickOn(optButton.get()));
 
-        optButton = robot.lookup("#cancelButton").tryQueryAs(Button.class);
-        System.out.println("optButton: "+ robot.lookup("#cancelButton").queryAllAs(Button.class).size());
-        assertThat(optButton).isEmpty();
+        assertFalse(optButton.get().getScene().getWindow().isShowing());
 
         robot.interact(() -> stage.close());
     }
 
 
     @Test
-    void must_show_the_error_dialog_and_close_it_on_cancel_button_click(Stage stage, FxRobot robot) {
+    void must_show_the_error_dialog_and_close_it_on_cancel_button_click(Stage stage, FxRobot robot, JfxAppContext context) {
+
+        DialogController controller = context.getBean(DialogController.class);
 
         Runnable runnable = () -> robot.interactNoWait(() -> controller.showErrorAndWait("title", "message", "detail"));
 
@@ -117,11 +116,9 @@ class DialogControllerTest {
 
         assertThat(optButton.isPresent());
 
-        robot.clickOn(optButton.get());
+        robot.interact(() -> robot.clickOn(optButton.get()));
 
-        optButton = robot.lookup("#cancelButton").tryQueryAs(Button.class);
-        System.out.println("optButton: "+ robot.lookup("#cancelButton").queryAllAs(Button.class).size());
-        assertThat(optButton).isEmpty();
+        assertFalse(optButton.get().getScene().getWindow().isShowing());
 
         robot.interact(() -> stage.close());
 
@@ -129,31 +126,35 @@ class DialogControllerTest {
 
 
     @Test
-    void must_show_a_custom_alert_dialog_and_close_it_on_cancel_button_click(Stage stage, FxRobot robot) {
+    void must_show_a_custom_alert_dialog_and_close_it_on_cancel_button_click(Stage stage, FxRobot robot, JfxAppContext context) {
+
+        DialogController controller = context.getBean(DialogController.class);
 
         Runnable runnable = () -> robot.interactNoWait(() -> {
             var alert = controller.customAlert();
-            alert.setTitle("title");
+
             alert.setMessage("message");
             alert.setDetails("detail");
 
-            alert.setActionButtonTitle("action");
-            alert.setActionButtonVisible(true);
-            alert.setActionButtonDisable(true);
+            var modalWindow = alert.getModalWindow();
+            modalWindow.setTitle("title");
+            modalWindow.setActionButtonTitle("action");
+            modalWindow.setActionButtonVisible(true);
+            modalWindow.setActionButtonDisable(true);
 
-            alert.setOKButtonTitle("ok");
-            alert.setOKButtonVisible(true);
-            alert.setOKButtonDisable(false);
+            modalWindow.setOKButtonTitle("ok");
+            modalWindow.setOKButtonVisible(true);
+            modalWindow.setOKButtonDisable(false);
 
-            alert.setCancelButtonTitle("cancel");
+            modalWindow.setCancelButtonTitle("cancel");
 
-            alert.setImageViewVisible(true);
+            modalWindow.setImageViewVisible(true);
             //alert.setImageViewImage(null);
 
-            alert.setShowDefaultButton(true);
-            alert.setDefaultButtonID(ButtonID.CANCEL);
+            modalWindow.setShowDefaultButton(true);
+            modalWindow.setDefaultButtonID(ButtonID.CANCEL);
 
-            alert.setButtonsFocusTraversable();
+            modalWindow.setButtonsFocusTraversable();
 
             alert.showAndWait();
         });
@@ -164,11 +165,9 @@ class DialogControllerTest {
 
         assertThat(optButton.isPresent());
 
-        robot.clickOn(optButton.get());
+        robot.interact(() -> robot.clickOn(optButton.get()));
 
-        optButton = robot.lookup("#cancelButton").tryQueryAs(Button.class);
-        System.out.println("optButton: "+ robot.lookup("#cancelButton").queryAllAs(Button.class).size());
-        assertThat(optButton).isEmpty();
+        assertFalse(optButton.get().getScene().getWindow().isShowing());
 
         robot.interact(() -> stage.close());
     }

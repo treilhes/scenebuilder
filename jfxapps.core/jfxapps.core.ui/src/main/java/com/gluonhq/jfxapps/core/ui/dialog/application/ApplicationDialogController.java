@@ -33,65 +33,36 @@
  */
 package com.gluonhq.jfxapps.core.ui.dialog.application;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.api.ui.dialog.ApplicationDialog;
 
 @ApplicationSingleton
 public class ApplicationDialogController implements ApplicationDialog {
 
-    private final I18N i18n;
-    private final JfxAppContext context;
-    private final ApplicationEvents applicationEvents;
-    private final IconSetting iconSetting;
-
-    // FIXME this should be injected but it is not working because of the fxthread not loaded, the issue seems to occur only during test but is annoying
-    //private final ApplicationMessageDialog applicationMessageDialog;
-    private ApplicationMessageDialog applicationMessageDialog;
+    private final ApplicationMessageDialog applicationMessageDialog;
 
     //@formatter:off
     public ApplicationDialogController(
-            I18N i18n,
-            ApplicationEvents applicationEvents,
-            IconSetting iconSetting,
-            JfxAppContext context
-            //,
-            //ApplicationMessageDialog applicationMessageDialog
+            ApplicationMessageDialog applicationMessageDialog
             ) {
         // @formatter:on
-        this.i18n = i18n;
-        this.applicationEvents = applicationEvents;
-        this.iconSetting = iconSetting;
-        this.context = context;
-        //this.applicationMessageDialog = applicationMessageDialog;
-    }
-
-    private void ensureDialogInitialized() {
-        if (applicationMessageDialog == null) {
-            applicationMessageDialog = context.getBean(ApplicationMessageDialog.class);
-        }
+        this.applicationMessageDialog = applicationMessageDialog;
     }
 
     @Override
     public void addError(String message, String detail, Throwable cause) {
-        ensureDialogInitialized();
         applicationMessageDialog
                 .showMessage(new ApplicationMessage(ApplicationMessage.Level.ERROR, message, detail, cause));
     }
 
     @Override
     public void addWarning(String message, String detail, Throwable cause) {
-        ensureDialogInitialized();
         applicationMessageDialog
                 .showMessage(new ApplicationMessage(ApplicationMessage.Level.WARNING, message, detail, cause));
     }
 
     @Override
     public void addInfo(String message, String detail) {
-        ensureDialogInitialized();
         applicationMessageDialog
                 .showMessage(new ApplicationMessage(ApplicationMessage.Level.INFO, message, detail, null));
     }

@@ -35,18 +35,21 @@ package com.gluonhq.jfxapps.core.api.ui.dialog;
 
 import java.util.function.Consumer;
 
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
-
 import javafx.event.ActionEvent;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 
 public interface ModalWindow {
 
+    public enum ButtonID {
+        OK, CANCEL, ACTION
+    }
+
     ButtonID showAndWait();
 
-    ButtonID show();
+    void show();
 
     void setOwner(Window owner);
 
@@ -112,4 +115,5 @@ public interface ModalWindow {
 
     void close();
 
+    Stage getStage();
 }

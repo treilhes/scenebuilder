@@ -37,11 +37,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractInstanceUiController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
-import com.gluonhq.jfxapps.core.api.ui.dialog.AbstractModalDialog;
+import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -56,7 +58,9 @@ import javafx.scene.input.DataFormat;
  *
  */
 @Prototype
-public class TextViewDialog extends AbstractModalDialog {
+public class TextViewDialog extends AbstractInstanceUiController {
+
+    private final ModalWindow modalWindow;
 
     @FXML
     private TextArea textArea;
@@ -66,11 +70,14 @@ public class TextViewDialog extends AbstractModalDialog {
      */
 
     protected TextViewDialog(
-            JfxAppsPlatform platform,
+            JfxAppPlatform jfxAppPlatform,
             I18N i18n,
-            ApplicationEvents sceneBuilderManager,
-            IconSetting iconSetting) {
-        super(platform, i18n, sceneBuilderManager, iconSetting, TextViewDialog.class.getResource("TextViewDialog.fxml"), null);
+            ApplicationEvents applicationEvents,
+            ApplicationInstanceEvents instanceEvents,
+            IconSetting iconSetting,
+            ModalWindow modalWindow) {
+        super(i18n, applicationEvents, instanceEvents, TextViewDialog.class.getResource("TextViewDialog.fxml"));
+        this.modalWindow = modalWindow;
     }
 
     public void setText(String text) {
@@ -81,35 +88,54 @@ public class TextViewDialog extends AbstractModalDialog {
         return textArea.getText();
     }
 
-    /*
-     * AbstractModalDialog
-     */
-
     @Override
-    protected void controllerDidLoadContentFxml() {
+    public void controllerDidLoadFxml() {
+        //modalWindow..setResizable(false);
+
+        // Sanity checks
         assert textArea != null;
-        setOKButtonVisible(false);
-        setActionButtonVisible(true);
-        setCancelButtonTitle(getI18n().getString("label.close"));
-        setActionButtonTitle(getI18n().getString("label.copy"));
+
+        modalWindow.setContent(this.getRoot());
+
+        modalWindow.setOKButtonVisible(false);
+        modalWindow.setActionButtonVisible(true);
+        modalWindow.setCancelButtonTitle(getI18n().getString("label.close"));
+        modalWindow.setActionButtonTitle(getI18n().getString("label.copy"));
+
+        modalWindow.setOnOkButtonPressed(this::okButtonPressed);
+        modalWindow.setOnCancelButtonPressed(this::cancelButtonPressed);
+        modalWindow.setOnActionButtonPressed(this::actionButtonPressed);
     }
 
-    @Override
-    protected void okButtonPressed(ActionEvent e) {
+    private void okButtonPressed(ActionEvent e) {
         // Should not be called because ok button is hidden
         throw new IllegalStateException();
     }
 
-    @Override
-    protected void cancelButtonPressed(ActionEvent e) {
-        getStage().close();
+    private void cancelButtonPressed(ActionEvent e) {
+        modalWindow.close();
     }
 
-    @Override
-    protected void actionButtonPressed(ActionEvent e) {
+    private void actionButtonPressed(ActionEvent e) {
         final Map<DataFormat, Object> content = new HashMap<>();
         content.put(DataFormat.PLAIN_TEXT, getText());
         Clipboard.getSystemClipboard().setContent(content);
+    }
+
+    public void showAndWait() {
+        modalWindow.showAndWait();
+    }
+
+    public void show() {
+        modalWindow.show();
+    }
+
+    public ModalWindow getModalWindow() {
+        return modalWindow;
+    }
+
+    public void close() {
+        modalWindow.close();
     }
 
 }

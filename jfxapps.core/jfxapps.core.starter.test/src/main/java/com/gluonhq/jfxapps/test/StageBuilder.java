@@ -43,6 +43,7 @@ import com.gluonhq.jfxapps.core.api.application.ApplicationClassloader;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.javafx.UiController;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.test.controller.EmptyController;
 
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -76,6 +77,12 @@ public class StageBuilder {
     public <T extends UiController> UiControllerBuilder<T> controller(T controllerInstance) {
         return new UiControllerBuilder<T>(context, classloader, events, instanceEvents)
                 .stage(stage).controller(controllerInstance);
+    }
+
+    public <T extends UiController> UiControllerBuilder<T> controller() {
+        T ctrlInstance = (T) new EmptyController();
+        return new UiControllerBuilder<T>(context, classloader, events, instanceEvents)
+                .stage(stage).controller(ctrlInstance);
     }
 
     protected StageBuilder stage(Stage stage) {

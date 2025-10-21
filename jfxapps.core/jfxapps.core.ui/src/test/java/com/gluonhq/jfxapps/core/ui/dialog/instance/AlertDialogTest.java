@@ -33,101 +33,95 @@
  */
 package com.gluonhq.jfxapps.core.ui.dialog.instance;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.testfx.api.FxAssert;
+import org.mockito.Mockito;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
-import org.testfx.framework.junit5.ApplicationExtension;
-import org.testfx.framework.junit5.Start;
-import org.testfx.matcher.control.LabeledMatchers;
 
 import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
-import com.gluonhq.jfxapps.test.FxmlControllerLoader;
-import com.gluonhq.jfxapps.test.TestStages;
+import com.gluonhq.jfxapps.core.ui.dialog.ModalWindowImpl;
+import com.gluonhq.jfxapps.test.JfxAppsTest;
+import com.gluonhq.jfxapps.test.StageBuilder;
+import com.gluonhq.jfxapps.test.StageType;
 
-import javafx.scene.Parent;
-import javafx.stage.Stage;
-
-@ExtendWith({ApplicationExtension.class, MockitoExtension.class})
+@JfxAppsTest
+@ContextConfiguration(classes = { AlertDialogTest.Config.class, AlertDialog.class, ModalWindowImpl.class })
 class AlertDialogTest {
 
-    private I18N i18n = new I18N(List.of(), true);
 
-    private ApplicationEvents sbm = new ApplicationEvents.ApplicationEventsImpl();
+    @TestConfiguration
+    static class Config {
+        @Bean
+        IconSetting iconSetting() {
+            return Mockito.mock(IconSetting.class);
+        }
 
-    @Mock
-    private JfxAppsPlatform platform;
-
-    @Mock
-    private IconSetting is;
-
-    @Mock
-    private JfxAppContext context;
-
-    private Stage stage;
-
-
-    /**
-     * Will be called with {@code @Before} semantics, i. e. before each test method.
-     *
-     * @param stage - Will be injected by the test runner.
-     */
-    @Start
-    private void start(Stage stage) {
-        this.stage = stage;
-        TestStages.emptyPane(stage);
-
-        //stage.getScene().getStylesheets().add("file:///C:/SSDDrive/git/scenebuilder/scenebuilder.ext.sb/src/main/resources/com/oracle/javafx/scenebuilder/sb/css/ThemeDark.css");
-        //stage.getScene().getStylesheets().add("file:///D:/Dev/eclipse/scenebuilderx/scenebuilder/scenebuilder.core.ext/scenebuilder.ext.sb/src/main/resources/com/oracle/javafx/scenebuilder/sb/css/ThemeDark.css");
+        @Bean
+        JfxAppsPlatform jfxAppsPlatform() {
+            var mock = Mockito.mock(JfxAppsPlatform.class);
+            Mockito.when(mock.isWindows()).thenReturn(true);
+            return mock;
+        }
     }
 
     @Test
-    void should_load_alert_fxml(FxRobot robot) {
-        Parent ui = FxmlControllerLoader.controller(new AlertDialog(platform, i18n, sbm, is, stage)).loadFxml();
-        assertNotNull(ui);
-        robot.interact(() -> stage.close());
+    void must_show_the_alert_dialog(StageBuilder builder, FxRobot robot, JfxAppContext context) {
+        try (var testStage = builder.controller().setup(StageType.Center).size(800, 600).show()) {
+
+            AlertDialog alert = context.getBean(AlertDialog.class);
+
+            robot.interact(() -> {
+                alert.show();
+                assertEquals(true, alert.getModalWindow().getStage().isFocused());
+            });
+
+            robot.interact(alert::close);
+        }
     }
 
     @Test
-    void should_load_ui(FxRobot robot) {
-        String message = "jfhgjkdh fgjkdhfgkh jfgkjdhf";
-        String detailsLabel = "detailfgdfg df g   ggdfg";
+    void must_show_the_alert_dialog_message(StageBuilder builder, FxRobot robot, JfxAppContext context) {
+        final String message = "This is an alert message";
+        try (var testStage = builder.controller().setup(StageType.Center).size(800, 600).show()) {
 
-        AlertDialog dialog = new AlertDialog(platform, i18n, sbm, is, stage);
+            AlertDialog alert = context.getBean(AlertDialog.class);
 
-        robot.interact(() -> {
-            FxmlControllerLoader.controller(dialog).darkTheme(sbm).load();
+            robot.interact(() -> {
+                alert.setMessage(message);
+                alert.show();
 
-            dialog.setTitle("sometitle");
-            dialog.setMessage(message);
-            dialog.setDetails(detailsLabel);
-            dialog.setActionButtonDisable(true);
-            dialog.setActionButtonVisible(false);
-            dialog.setOKButtonDisable(true);
-            dialog.setOKButtonVisible(false);
-            dialog.setCancelButtonTitle(i18n.getString("label.close"));
+                var messageLabel = robot.from(alert.getRoot()).lookup("#messageLabel").queryLabeled();
+                assertEquals(message, messageLabel.getText());
+            });
 
-            dialog.openWindow();
-        });
-
-        robot.sleep(1000); // wait for the dialog to be displayed
-        robot.interact(() -> {
-            FxAssert.verifyThat("#messageLabel" , LabeledMatchers.hasText(message));
-            FxAssert.verifyThat("#detailsLabel" , LabeledMatchers.hasText(detailsLabel));
-            dialog.closeWindow();
-        });
-
-        robot.interact(() -> stage.close());
+            robot.interact(alert::close);
+        }
     }
+
+    @Test
+    void must_show_the_alert_dialog_details(StageBuilder builder, FxRobot robot, JfxAppContext context) {
+        final String details = "These are alert details";
+        try (var testStage = builder.controller().setup(StageType.Center).size(800, 600).show()) {
+
+            AlertDialog alert = context.getBean(AlertDialog.class);
+
+            robot.interact(() -> {
+                alert.setDetails(details);
+                alert.show();
+
+                var detailsLabel = robot.from(alert.getRoot()).lookup("#detailsLabel").queryLabeled();
+                assertEquals(details, detailsLabel.getText());
+            });
+
+            robot.interact(alert::close);
+        }
+    }
+
 
 }

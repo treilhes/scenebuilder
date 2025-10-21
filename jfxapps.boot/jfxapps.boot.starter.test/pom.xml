@@ -10,7 +10,7 @@
     <artifactId>jfxapps.boot.starter.test</artifactId>
 
     <properties>
-        <testfx-junit5.version>4.0.16-alpha</testfx-junit5.version>
+        <testfx-junit5.version>4.0.18</testfx-junit5.version>
         <junit.version>5.10.1</junit.version>
     </properties>
     <dependencies>

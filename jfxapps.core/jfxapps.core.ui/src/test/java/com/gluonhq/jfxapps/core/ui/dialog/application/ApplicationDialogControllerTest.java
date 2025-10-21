@@ -34,23 +34,21 @@
 package com.gluonhq.jfxapps.core.ui.dialog.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Optional;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
+import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
 import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.gluonhq.jfxapps.core.ui.dialog.ModalWindowImpl;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
@@ -74,11 +72,10 @@ class ApplicationDialogControllerTest {
         }
     }
 
-    @Autowired
-    ApplicationDialogController controller;
-
     @Test
-    void must_show_the_alert_dialog_and_close_it_on_cancel_button_click(Stage stage, FxRobot robot) {
+    void must_show_the_alert_dialog_and_close_it_on_cancel_button_click(Stage stage, FxRobot robot, JfxAppContext context) {
+
+        ApplicationDialogController controller = context.getBean(ApplicationDialogController.class);
 
         robot.interact(() -> controller.addInfo("Info message", "Info details"));
 
@@ -90,52 +87,16 @@ class ApplicationDialogControllerTest {
         robot.interact(() -> controller.addError("Error message with exception", "Error message details",
                 new Exception("Error Exception message")));
 
-        // Thread.startVirtualThread(runnable);
-
-        var optButton = lookupWithAttempts(robot, 10, 100, Button.class, "cancelButton");
+        var optButton = robot.lookup("#cancelButton").tryQueryAs(Button.class);
 
         assertThat(optButton.isPresent());
 
-        robot.clickOn(optButton.get());
+        System.out.println("Clicking on cancel button");
+        robot.interact(() -> robot.clickOn(optButton.get()));
+        System.out.println("After Clicking on cancel button");
 
-        optButton = robot.lookup("#cancelButton").tryQueryAs(Button.class);
+        assertFalse(optButton.get().getScene().getWindow().isShowing());
 
-        assertThat(optButton).isEmpty();
-    }
-
-//    @Test
-//    void must_show_the_error_dialog_and_close_it_on_cancel_button_click(Stage stage, FxRobot robot) {
-//
-//        Runnable runnable = () -> robot.interactNoWait(() -> controller.showErrorAndWait("title", "message", "detail"));
-//
-//        Thread.startVirtualThread(runnable);
-//
-//        var optButton = lookupWithAttempts(robot, 10, 100, Button.class, "cancelButton");
-//
-//        assertThat(optButton.isPresent());
-//
-//        robot.clickOn(optButton.get());
-//
-//        optButton = robot.lookup("#cancelButton").tryQueryAs(Button.class);
-//
-//        assertThat(optButton).isEmpty();
-//    }
-//
-    private <T extends Node> Optional<T> lookupWithAttempts(FxRobot robot, int maxAttempts, int waitBeetweenAttempts,
-            Class<T> clazz, String buttonId) {
-
-        Optional<T> optButton = Optional.ofNullable(null);
-        while (!optButton.isPresent() && maxAttempts > 0) {
-            try {
-                Thread.sleep(waitBeetweenAttempts);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-            optButton = robot.lookup("#" + buttonId).tryQueryAs(clazz);
-            System.out.println("optButton not present yet, waiting...");
-            maxAttempts--;
-        }
-        return optButton;
     }
 
 }
