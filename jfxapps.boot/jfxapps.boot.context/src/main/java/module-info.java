@@ -48,6 +48,7 @@ open module jfxapps.boot.context {
     requires jfxapps.boot.api;
     requires jfxapps.boot.starter;
 
+    requires spring.jcl;
     provides BootContextConfigClasses with ContextBootClasses;
     provides ExtensionContextConfigClasses with ContextExtensionClasses;
 
