@@ -202,12 +202,12 @@ public class CredentialPrompt {
             panel.add(target);
             panel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-            JLabel username = new JLabel("       Username:");
-            username.setFont(new Font("Arial", Font.PLAIN, 12));
-            username.setAlignmentX(Component.RIGHT_ALIGNMENT);
-            username.setPreferredSize(new Dimension(250, 20));
-            username.setMaximumSize(new Dimension(250, 20));
-            panel.add(username);
+            JLabel usernameLabel = new JLabel("       Username:");
+            usernameLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+            usernameLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+            usernameLabel.setPreferredSize(new Dimension(250, 20));
+            usernameLabel.setMaximumSize(new Dimension(250, 20));
+            panel.add(usernameLabel);
 
             // Username field
             usernameField = new JTextField();
@@ -221,15 +221,12 @@ public class CredentialPrompt {
             panel.add(usernameField);
             panel.add(Box.createRigidArea(new Dimension(0, 15)));
 
-            JLabel password = new JLabel("       Password:");
-            password.setFont(new Font("Arial", Font.PLAIN, 12));
-            password.setAlignmentX(Component.RIGHT_ALIGNMENT);
-            password.setPreferredSize(new Dimension(250, 20));
-            password.setMaximumSize(new Dimension(250, 20));
-            if (password != null) {
-                password.setText(this.password);
-            }
-            panel.add(password);
+            JLabel passwordLabel = new JLabel("       Password:");
+            passwordLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+            passwordLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+            passwordLabel.setPreferredSize(new Dimension(250, 20));
+            passwordLabel.setMaximumSize(new Dimension(250, 20));
+            panel.add(passwordLabel);
 
             // Password field with eye toggle
             JLayeredPane passwordPane = new JLayeredPane();
@@ -240,6 +237,9 @@ public class CredentialPrompt {
             passwordField.setBorder(new CompoundBorder(new RoundedBorder(10), new EmptyBorder(0, 10, 0, 30)));
             passwordField.setFont(new Font("Arial", Font.PLAIN, 14));
             passwordField.setBounds(0, 0, 250, 35);
+            if (password != null) {
+            	passwordField.setText(this.password);
+            }
 
             JLabel eyeLabel = new JLabel(eyeClosedIcon);
             eyeLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -294,6 +294,7 @@ public class CredentialPrompt {
             panel.add(buttonPanel);
 
             frame.setContentPane(panel);
+            frame.getRootPane().setDefaultButton(loginBtn);
             frame.setVisible(true);
 
             return future;

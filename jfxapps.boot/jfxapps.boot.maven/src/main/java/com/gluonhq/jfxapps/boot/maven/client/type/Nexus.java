@@ -84,10 +84,13 @@ public class Nexus implements RepositoryType {
 
         final HttpClient httpClient = newClientBuilder(repository).build();
         String s = null;
+        String uriString = base + URL_PREFIX + query + (first ? "" : URL_SUFFIX + iteration * ITEMS_ITERATION);
         try {
+        	
+        	URI uri = URI.create(uriString);
             HttpRequest request = HttpRequest.newBuilder()
                     .GET()
-                    .uri(URI.create(base + URL_PREFIX + query + (first ? "" : URL_SUFFIX + iteration * ITEMS_ITERATION)))//NOCHECK
+                    .uri(uri)//NOCHECK
                     .setHeader("Accept", "application/json") // NOCHECK
                     .build();
 
@@ -118,7 +121,7 @@ public class Nexus implements RepositoryType {
                 return processRequest(obj);
             }
         } catch (Exception ex) {
-            logger.error("error during search", ex);
+            logger.error("error during search on {}", uriString, ex);
         }
         return null;
     }

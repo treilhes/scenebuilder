@@ -41,14 +41,15 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.boot.api.context.annotation.DeportedSingleton;
 import com.gluonhq.jfxapps.boot.api.maven.Artifact;
@@ -57,7 +58,9 @@ import com.gluonhq.jfxapps.boot.api.maven.RepositoryType;
 
 @DeportedSingleton
 public class Maven implements RepositoryType {
-
+	
+	private static final Logger logger = LoggerFactory.getLogger(Maven.class);
+	
     // maven
     private static final String URL_PREFIX = "https://search.maven.org/solrsearch/select?q=";
     private static final String URL_SUFFIX = "&rows=200&wt=json";
@@ -70,11 +73,11 @@ public class Maven implements RepositoryType {
         final HttpClient httpClient = newClientBuilder(repository).build();
 
         String searchUrl = toApiUrl(repository.getUrl());
-
+        String uriString = searchUrl + query + URL_SUFFIX;
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .GET()
-                    .uri(URI.create(searchUrl + query + URL_SUFFIX))
+                    .uri(URI.create(uriString))
                     .build();
 
             HttpResponse<InputStream> response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
@@ -96,7 +99,7 @@ public class Maven implements RepositoryType {
                 }
             }
         } catch (Exception ex) {
-            Logger.getLogger(Maven.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.error("error during search on {}", uriString, ex);
         }
         return null;
     }

@@ -32,4 +32,33 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    
+    <build>
+    	
+    	<plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <useModulePath>false</useModulePath>
+                    <argLine>
+                        --patch-module
+                        maven.model=${org.apache.maven:maven-model-builder:jar}
+                    </argLine>
+                </configuration>
+            </plugin>
+    	</plugins>
+    </build>
 </project>
