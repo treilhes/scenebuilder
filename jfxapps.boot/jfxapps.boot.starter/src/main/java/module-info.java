@@ -73,8 +73,14 @@ module jfxapps.boot.starter {
     requires transitive spring.aop;
     requires transitive spring.aspects;
     requires transitive spring.beans;
+
     requires transitive spring.boot;
+    requires transitive spring.boot.jdbc;
     requires transitive spring.boot.autoconfigure;
+    requires transitive spring.boot.hibernate;
+    requires transitive spring.boot.validation;
+    requires transitive spring.boot.web.server;
+
     requires transitive spring.core;
     requires transitive spring.context;
     requires transitive spring.data.jpa;
@@ -84,7 +90,12 @@ module jfxapps.boot.starter {
     requires transitive spring.tx;
     requires transitive spring.web;
     requires transitive spring.webmvc;
-    //requires transitive spring.jcl;
+
+    requires transitive org.apache.tomcat.embed.el;
+
+    //requires transitive spring.boot.tomcat;
+    //requires transitive spring.boot.tomcat.runtime;
+    requires transitive org.apache.commons.logging;
 
     requires transitive thymeleaf;
     requires transitive thymeleaf.spring6;

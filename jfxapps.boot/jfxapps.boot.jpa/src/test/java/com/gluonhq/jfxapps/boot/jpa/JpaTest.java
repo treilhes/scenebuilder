@@ -37,6 +37,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -49,6 +50,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.boot.api.jpa.RepositoryFragment;
+import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
 import com.gluonhq.jfxapps.boot.context.boot.BootContext;
 import com.gluonhq.jfxapps.boot.context.impl.ExtensionContext;
 import com.gluonhq.jfxapps.boot.jpa.context.JfxAppsJpaRepositorySupport;
@@ -59,7 +61,35 @@ import jakarta.persistence.Id;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.NotNull;
 
-class JpaTestIT {
+class JpaTest {
+
+    public static class FakeExtension implements OpenExtension {
+
+        @Override
+        public UUID getId() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public UUID getParentId() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public List<Class<?>> localContextClasses() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public List<Class<?>> exportedContextClasses() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+    }
 
     @Test
     void must_load_repository_and_entity_without_any_scan_from_boot_context() {
@@ -153,6 +183,7 @@ class JpaTestIT {
         var bootClasses = new ArrayList<Class<?>>();
 
         var extensionClasses = new ArrayList<Class<?>>();
+        extensionClasses.add(FakeExtension.class);
         extensionClasses.add(JfxAppsJpaRepositorySupport.class);
         extensionClasses.add(JpaExtensionConfig.class);
         extensionClasses.add(ExtensionEntity.class);
@@ -161,7 +192,7 @@ class JpaTestIT {
         var bootContext = BootContext.create(bootClasses, new String[0]);
 
         var extensionContext = ExtensionContext.create(bootContext, UUID.randomUUID(), extensionClasses,
-                JpaTestIT.class.getClassLoader());
+                JpaTest.class.getClassLoader());
         extensionContext.refresh();
 
         var repository = extensionContext.getBean(ExtensionRepository.class);
@@ -181,6 +212,7 @@ class JpaTestIT {
         var bootClasses = new ArrayList<Class<?>>();
 
         var extensionClasses = new ArrayList<Class<?>>();
+        extensionClasses.add(FakeExtension.class);
         extensionClasses.add(JfxAppsJpaRepositorySupport.class);
         extensionClasses.add(JpaExtensionConfig.class);
         extensionClasses.add(ExtensionEntity.class);
@@ -190,7 +222,7 @@ class JpaTestIT {
         var bootContext = BootContext.create(bootClasses, new String[0]);
 
         var extensionContext = ExtensionContext.create(bootContext, UUID.randomUUID(), extensionClasses,
-                JpaTestIT.class.getClassLoader());
+                JpaTest.class.getClassLoader());
         extensionContext.refresh();
 
         var repository = extensionContext.getBean(ExtensionRepositoryCustomized.class);
@@ -206,6 +238,7 @@ class JpaTestIT {
         var bootClasses = new ArrayList<Class<?>>();
 
         var extensionClasses = new ArrayList<Class<?>>();
+        extensionClasses.add(FakeExtension.class);
         extensionClasses.add(JfxAppsJpaRepositorySupport.class);
         extensionClasses.add(JpaExtensionConfig.class);
         extensionClasses.add(ExtensionEntity.class);
@@ -215,7 +248,7 @@ class JpaTestIT {
         var bootContext = BootContext.create(bootClasses, new String[0]);
 
         var extensionContext = ExtensionContext.create(bootContext, UUID.randomUUID(), extensionClasses,
-                JpaTestIT.class.getClassLoader());
+                JpaTest.class.getClassLoader());
         extensionContext.refresh();
 
         var repository = extensionContext.getBean(ExtensionRepositoryWithFragment.class);
@@ -231,6 +264,7 @@ class JpaTestIT {
         var bootClasses = new ArrayList<Class<?>>();
 
         var extensionClasses = new ArrayList<Class<?>>();
+        extensionClasses.add(FakeExtension.class);
         extensionClasses.add(JfxAppsJpaRepositorySupport.class);
         extensionClasses.add(JpaExtensionConfig.class);
         extensionClasses.add(ExtensionEntity.class);
@@ -241,7 +275,7 @@ class JpaTestIT {
         var bootContext = BootContext.create(bootClasses, new String[0]);
 
         var extensionContext = ExtensionContext.create(bootContext, UUID.randomUUID(), extensionClasses,
-                JpaTestIT.class.getClassLoader());
+                JpaTest.class.getClassLoader());
         extensionContext.refresh();
 
         var repository = extensionContext.getBean(ExtensionRepositoryWithFragment.class);

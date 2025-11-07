@@ -46,6 +46,7 @@
 				<artifactId>flatten-maven-plugin</artifactId>
 				<version>${flatten-maven-plugin.version}</version>
 				<configuration>
+				    <flattenDependencyMode>all</flattenDependencyMode>
 					<flattenMode>bom</flattenMode> <!-- Resolve properties like
 					${jfxapps.version} -->
 					<!--<updatePomFile>true</updatePomFile>   Ensures the POM file is updated -->
@@ -152,6 +153,22 @@
 	            <artifactId>jfxapps.core.starter.test</artifactId>
 	            <version>${jfxapps.version}</version>
 	        </dependency>
+	        
+	        <!-- 
+				dependencies below are required due to their version missing from spring boot dependencies RC
+            	must be removed when a final version is released
+            -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-aop</artifactId>
+    			<version>4.0.0-M2</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework/spring-aop -->
+			<dependency>
+			    <groupId>org.springframework</groupId>
+			    <artifactId>spring-aop</artifactId>
+			    <version>7.0.0-RC3</version>
+			</dependency>
         </dependencies>
     </dependencyManagement>
 </project>

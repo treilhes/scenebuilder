@@ -47,8 +47,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import javax.inject.Inject;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,11 +62,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationContextFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.test.context.SpringBootContextLoader;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.web.server.autoconfigure.ServerProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
@@ -97,6 +95,8 @@ import com.gluonhq.jfxapps.boot.loader.content.FileExtensionProvider;
 import com.gluonhq.jfxapps.boot.loader.internal.jpa.model.Extension;
 import com.gluonhq.jfxapps.boot.loader.model.LoadableContent;
 
+import jakarta.inject.Inject;
+
 /**
  * Those integration test ensure the following features are available. Impacted
  * module packages must be open to spring.core/spring.beans or module must be
@@ -105,7 +105,7 @@ import com.gluonhq.jfxapps.boot.loader.model.LoadableContent;
  * - Jpa - Validation - Aspect
  */
 @ExtendWith({ SpringExtension.class, MockitoExtension.class })
-@SpringBootTest(classes = { AvailableFeaturesTestIT.Configuration.class }, webEnvironment = WebEnvironment.DEFINED_PORT, properties = {
+@SpringBootTest(classes = { AvailableFeaturesTestIT.Configuration.class }, webEnvironment = WebEnvironment.RANDOM_PORT, properties = {
                 "spring.mvc.servlet.path=/app", "server.servlet.context-path=/jfx",
                 "jfxapps.repository.directory=./target/it", "debug=true" })
 @ContextConfiguration(loader = AvailableFeaturesTestIT.TestContextLoader.class)
@@ -287,13 +287,15 @@ public class AvailableFeaturesTestIT {
         appManager.start();
         appManager.startApplication(APP1_ID);
 
-        internalClient = boot.getBean(InternalRestClient.class);
+
     }
 
     @BeforeEach
     public void initEach() throws BootException {
         // This is a mock of the server properties to be able to inject the random port
         Mockito.when(serverProperties.getPort()).thenReturn(port);
+
+        internalClient = boot.getBean(InternalRestClient.class);
     }
 
     private static Stream<UUID> allContextIds() {

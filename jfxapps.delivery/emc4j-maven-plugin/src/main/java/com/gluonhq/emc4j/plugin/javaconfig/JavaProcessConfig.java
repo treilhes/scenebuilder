@@ -57,7 +57,6 @@ public class JavaProcessConfig {
 
     private List<String> jvmArgs;
     private List<String> appArgs;
-    private File workingDir;
 
     public JavaProcessConfig() {
         this.modules = new ArrayList<>();
@@ -148,12 +147,6 @@ public class JavaProcessConfig {
     }
     public void addAppArg(String appArg) {
         this.appArgs.add(appArg);
-    }
-    public File getWorkingDir() {
-        return workingDir;
-    }
-    public void setWorkingDir(File workingDir) {
-        this.workingDir = workingDir;
     }
 
     public List<String> toCommand() {

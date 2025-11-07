@@ -2,7 +2,7 @@
 
 	<debug>true</debug>
 	<!-- <profile>dev</profile> -->
-	
+
 	<java-option>-Djava.util.PropertyResourceBundle.encoding=UTF-8</java-option>
 
 	<patch-module module="java.base">
@@ -22,15 +22,14 @@
 
 	<add-exports module="java.base" package="javapatch.lang.module" to-module="java.base.patch.link"/>
 	
-    <add-reads module="spring.core" to-module="jfxapps.boot.layer"/>
-    
-    <add-opens module="java.base" package="java.lang" to-module="ALL-UNNAMED"/>
-    
-    <force-as-module groupId="org.apache.maven" artifactId="maven-resolver-provider"/>
-    <force-as-module groupId="org.apache.maven" artifactId="maven-model"/>
-        
-    
-    
+	<add-reads module="spring.core" to-module="jfxapps.boot.layer"/>
+
+	<add-opens module="java.base" package="java.lang" to-module="ALL-UNNAMED"/>
+
+	<force-as-module groupId="org.apache.maven" artifactId="maven-resolver-provider"/>
+	<force-as-module groupId="org.apache.maven" artifactId="maven-model"/>
+	<force-as-module groupId="javax.inject" artifactId="javax.inject"/>
+
 	<force-as-classpath groupId="com.fasterxml.woodstox" artifactId="woodstox-core"/>
 	<force-as-classpath groupId="org.springframework.boot" artifactId="spring-boot-starter"/>
 	<force-as-classpath groupId="org.springframework.boot" artifactId="spring-boot-starter-logging"/>
@@ -78,7 +77,7 @@
 	<force-as-classpath groupId="org.ow2.asm" artifactId="asm"/>
 	<force-as-classpath groupId="org.apache.maven" artifactId="maven-repository-metadata"/>
 	<force-as-classpath groupId="org.codehaus.plexus" artifactId="plexus-utils"/>
-	<force-as-classpath groupId="javax.inject" artifactId="javax.inject"/>
+	<!-- <force-as-classpath groupId="javax.inject" artifactId="javax.inject"/> -->
 	<force-as-classpath groupId="org.apache.maven.resolver" artifactId="maven-resolver-named-locks"/>
 	<force-as-classpath groupId="com.google.code.gson" artifactId="gson"/>
 	<force-as-classpath groupId="com.google.errorprone" artifactId="error_prone_annotations"/>
@@ -87,10 +86,9 @@
 	<force-as-classpath groupId="commons-codec" artifactId="commons-codec"/>
 	<force-as-classpath groupId="jakarta.xml.bind" artifactId="jakarta.xml.bind-api"/>
 	<force-as-classpath groupId="jakarta.activation" artifactId="jakarta.activation-api"/>
-	
-	    
-    <exclude-dependency groupId="org.slf4j" artifactId="jcl-over-slf4j"/>
-    <!-- used as patch for maven.model -->
-    <exclude-dependency groupId="org.apache.maven" artifactId="maven-model-builder"/>
-    
+
+	<exclude-dependency groupId="org.slf4j" artifactId="jcl-over-slf4j"/>
+	<!-- used as patch for maven.model -->
+	<exclude-dependency groupId="org.apache.maven" artifactId="maven-model-builder"/>
+
 </boot-config>

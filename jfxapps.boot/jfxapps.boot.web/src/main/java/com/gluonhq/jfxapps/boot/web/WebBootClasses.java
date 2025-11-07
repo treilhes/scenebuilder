@@ -35,7 +35,7 @@ package com.gluonhq.jfxapps.boot.web;
 
 import java.util.List;
 
-import org.springframework.boot.autoconfigure.web.embedded.EmbeddedWebServerFactoryCustomizerAutoConfiguration.TomcatWebServerFactoryCustomizerConfiguration;
+import org.springframework.boot.tomcat.autoconfigure.servlet.TomcatServletWebServerAutoConfiguration;
 
 import com.gluonhq.jfxapps.boot.api.loader.BootContextConfigClasses;
 import com.gluonhq.jfxapps.boot.web.client.InternalRestClientImpl;
@@ -49,17 +49,18 @@ public class WebBootClasses implements BootContextConfigClasses {
     public List<Class<?>> classes() {
         return List.of(
 
-                //tomcat
-                TomcatWebServerFactoryCustomizerConfiguration.class,
-                org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration.class,
-                org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration.class,
-                org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration.class,
-                org.springframework.boot.autoconfigure.web.servlet.HttpEncodingAutoConfiguration.class,
-                org.springframework.boot.autoconfigure.web.servlet.MultipartAutoConfiguration.class,
-                org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.class,
+                //tomcatTomcatServletWebServerFactory
+                TomcatServletWebServerAutoConfiguration.class,
+                org.springframework.boot.webmvc.autoconfigure.DispatcherServletAutoConfiguration.class,
+                //org.springframework.boot.webmvc.autoconfigure.ServletWebServerFactoryAutoConfiguration.class,
+                org.springframework.boot.web.server.autoconfigure.servlet.ServletWebServerConfiguration.class,
+                org.springframework.boot.webmvc.autoconfigure.error.ErrorMvcAutoConfiguration.class,
+                org.springframework.boot.servlet.autoconfigure.HttpEncodingAutoConfiguration.class,
+                org.springframework.boot.servlet.autoconfigure.MultipartAutoConfiguration.class,
+                org.springframework.boot.webmvc.autoconfigure.WebMvcAutoConfiguration.class,
 
                 //thymeleaf
-                org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration.class,
+                org.springframework.boot.thymeleaf.autoconfigure.ThymeleafAutoConfiguration.class,
 
                 //springdoc
                 org.springdoc.webmvc.core.configuration.SpringDocWebMvcConfiguration.class,
@@ -84,8 +85,8 @@ public class WebBootClasses implements BootContextConfigClasses {
                 org.springdoc.core.configuration.SpringDocUIConfiguration.class,
 
                 //tmp
-                org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration.class,
-                org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration.class,
+                org.springframework.boot.data.autoconfigure.web.DataWebAutoConfiguration.class,
+                org.springframework.boot.validation.autoconfigure.ValidationAutoConfiguration.class,
                 //end tmp
 
                 //jfxapps

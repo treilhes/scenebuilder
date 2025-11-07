@@ -117,7 +117,7 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <useModulePath>true</useModulePath>
+                    <useModulePath>false</useModulePath>
                     <argLine>
                         --patch-module
                         spring.core=${com.gluonhq.jfxapps:spring.core.patch:jar}
@@ -151,6 +151,14 @@
                                 java.base/javapatch.lang.module=java.base.patch.link
                                 --add-exports
                         		java.base/javapatch.lang.module=ALL-UNNAMED
+                        		--add-reads
+								org.hibernate.validator=org.apache.tomcat.embed.el
+								--add-exports
+								org.hibernate.validator/org.hibernate.validator.internal.engine=spring.core
+								--add-exports
+								org.hibernate.validator/org.hibernate.validator.internal.constraintvalidators.bv=spring.beans
+								--add-exports
+								org.hibernate.validator/org.hibernate.validator.internal.constraintvalidators.hv=spring.beans
                             </argLine>
                         </configuration>
                         <goals>

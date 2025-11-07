@@ -35,7 +35,7 @@ package com.gluonhq.jfxapps.boot.web;
 
 import java.util.List;
 
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
 
 import com.gluonhq.jfxapps.boot.api.loader.ExtensionContextConfigClasses;
 import com.gluonhq.jfxapps.boot.web.controller.extension.WebExtensionConfig;

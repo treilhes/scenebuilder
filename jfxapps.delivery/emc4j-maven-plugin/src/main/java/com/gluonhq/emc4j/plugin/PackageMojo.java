@@ -267,10 +267,10 @@ public class PackageMojo extends Emc4jAbstractMojo {
 
             String appImageSrc = appImageFolder.getAbsolutePath().replace("\\", "/");
 
-            generateConfigFile(jcfg, new File(appImageApp, "options.config"));
+            //generateConfigFile(jcfg, new File(appImageApp, "options.config"));
             generateJPackageConfig(jcfg, new File(appImageApp, "DebgLaunch.cfg"));
             generateJPackageConfig(jcfg, new File(appImageApp, name + ".cfg"));
-            preparePackage(jcfg, appImageApp);
+            copyDependencies(jcfg, appImageApp);
 
             Xpp3Dom packagingConfiguration = configuration(
                     // folder structure
@@ -333,34 +333,6 @@ public class PackageMojo extends Emc4jAbstractMojo {
         Files.copy(jcfg.getMainJar().toPath(), mainDir.toPath().resolve(jcfg.getMainJar().getName()));
 
         return inputDir;
-    }
-
-    private void preparePackage(JavaProcessConfig jcfg, File generatedAppFolder) throws Exception {
-
-        File modulesDir = new File(generatedAppFolder, "mp");
-        modulesDir.mkdirs();
-
-        for (File module:jcfg.getModules()) {
-            Files.copy(module.toPath(), modulesDir.toPath().resolve(module.getName()));
-        }
-        for (File automod:jcfg.getAutomaticModules()) {
-            Files.copy(automod.toPath(), modulesDir.toPath().resolve(automod.getName()));
-        }
-
-        File cpDir = new File(generatedAppFolder, "cp");
-        cpDir.mkdirs();
-
-        for (File cpjar:jcfg.getClasspath()) {
-            Files.copy(cpjar.toPath(), cpDir.toPath().resolve(cpjar.getName()));
-        }
-
-        File patchDir = new File(generatedAppFolder, "patch");
-        patchDir.mkdirs();
-        for (Entry<String, List<File>> patch : jcfg.getPatchModules().entrySet()) {
-            for (File f : patch.getValue()) {
-                Files.copy(f.toPath(), patchDir.toPath().resolve(f.getName()));
-            }
-        }
     }
 
     private File prepareRuntime() throws Exception {

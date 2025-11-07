@@ -33,46 +33,32 @@
  */
 package com.gluonhq.jfxapps.boot.jpa.def;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sql.DataSource;
-
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
-import org.springframework.context.annotation.Bean;
+//import org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceTransactionManagerAutoConfiguration;
+import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.JpaVendorAdapter;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.gluonhq.jfxapps.boot.jpa.JpaBootClasses;
-
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Id;
 
-class DefaultSpringBootJpaTestIT {
+class DefaultSpringBootJpaTest {
 
     public static void main(String[] args) {
-        new DefaultSpringBootJpaTestIT().test();
+        new DefaultSpringBootJpaTest().test();
     }
     @SpringBootApplication(exclude = { DataSourceTransactionManagerAutoConfiguration.class })
     @EnableTransactionManagement
@@ -105,7 +91,7 @@ class DefaultSpringBootJpaTestIT {
     @Test
     void test() {
         var bootClasses = new ArrayList<>();//new JpaBootClasses().bootClasses());
-        bootClasses.add(DefaultSpringBootJpaTestIT.Config.class);
+        bootClasses.add(DefaultSpringBootJpaTest.Config.class);
         bootClasses.add(SimpleTestRepository.class);
         bootClasses.add(TestEntity.class);
 
@@ -113,7 +99,7 @@ class DefaultSpringBootJpaTestIT {
         application.setWebApplicationType(WebApplicationType.SERVLET);
 
         var bootContext = application.run(new String[] {
-                //"--spring.main.allow-bean-definition-overriding=true",
+                "--server.port=0",
                 "--spring.jpa.hibernate.ddl-auto=update",
                 "--spring.jpa.open-in-view=false",
                 "--spring.h2.console.enabled=true",
@@ -139,7 +125,9 @@ class DefaultSpringBootJpaTestIT {
             System.out.println(e.getId() + " " + e.getValue());
         }
         System.out.println("XXXXXXXXXXXXXXXXXXXX");
-        H2ConsoleAutoConfiguration h2ConsoleAutoConfiguration = null;
+
+        //FIXME reactivate the H2 console asap
+        //H2ConsoleAutoConfiguration h2ConsoleAutoConfiguration = null;
 
     }
 

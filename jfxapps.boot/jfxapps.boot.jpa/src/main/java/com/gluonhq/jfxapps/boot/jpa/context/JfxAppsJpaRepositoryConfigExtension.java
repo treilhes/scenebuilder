@@ -54,7 +54,6 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReader;
@@ -102,6 +101,9 @@ public class JfxAppsJpaRepositoryConfigExtension extends JpaRepositoryConfigExte
         // the bean definition in builder
         String repositoryInterface = builder.getRawBeanDefinition().getConstructorArgumentValues()
                 .getIndexedArgumentValue(0, String.class).getValue().toString();
+
+        builder.addPropertyValue("queryEnhancerSelector",
+                source.getAttribute("queryEnhancerSelector", Class.class).orElse(null));
 
         String fragmentsBeanName = registerRepositoryFragments(source, repositoryInterface);
         builder.addPropertyValue("repositoryFragments", new RuntimeBeanReference(fragmentsBeanName));

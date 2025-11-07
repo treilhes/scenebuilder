@@ -34,7 +34,6 @@
 package com.gluonhq.jfxapps.boot.jpa.context;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.config.BeanDefinition;

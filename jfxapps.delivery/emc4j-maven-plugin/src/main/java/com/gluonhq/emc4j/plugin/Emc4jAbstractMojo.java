@@ -113,7 +113,7 @@ public abstract class Emc4jAbstractMojo extends AbstractMojo {
     @Parameter(property = "bootConfig", required = false, defaultValue = "boot-config.xml")
     private String bootConfiguration;
 
-    @Parameter(property = "outputDirectory", required = false, defaultValue = "target/binaries")
+    @Parameter(property = "outputDirectory", required = false, defaultValue = "target/emc4j-maven-plugin")
     private String outputDirectory;
 
     @Parameter(property = "profile", required = true)
@@ -193,7 +193,6 @@ public abstract class Emc4jAbstractMojo extends AbstractMojo {
         var javaProcessConfig = new JavaProcessConfig();
 
         javaProcessConfig.setJavaBin(javaBin);
-        javaProcessConfig.setWorkingDir(getOutputDirectory());
         javaProcessConfig.setMainModule(BOOT_MODULE);
         javaProcessConfig.setMainClass(BOOT_CLASS);
         javaProcessConfig.setMainJar(appMainArtifact.getFile());
@@ -335,50 +334,6 @@ public abstract class Emc4jAbstractMojo extends AbstractMojo {
         }
     }
 
-    public void generateConfigFile(JavaProcessConfig jcfg, File targetFile) throws Exception {
-        String patchFormat = "--patch-module %s=%s";
-        String addReadFormat = "--add-reads %s";
-        String addOpensFormat = "--add-opens %s";
-        String addExportsFormat = "--add-exports %s";
-
-        StringBuilder sb = new StringBuilder();
-
-        String joinedModulesPaths = FsUtil.toPathesString(jcfg.getModules(), jcfg.getAutomaticModules());
-        sb.append("--module-path ").append("\"" + joinedModulesPaths + "\"").append("\n");
-
-        String joinedClasspathPaths = FsUtil.toPathesString(jcfg.getClasspath());
-        sb.append("--class-path ").append("\"" + joinedClasspathPaths + "\"").append("\n");
-
-        for (String addRead : jcfg.getAddReads()) {
-            sb.append(String.format(addReadFormat, addRead)).append("\n");
-        }
-        for (String addOpen : jcfg.getAddOpens()) {
-            sb.append(String.format(addOpensFormat, addOpen)).append("\n");
-        }
-        for (String addExport : jcfg.getAddExports()) {
-            sb.append(String.format(addExportsFormat, addExport)).append("\n");
-        }
-
-        for (Entry<String, List<File>> patch : jcfg.getPatchModules().entrySet()) {
-            for (File f : patch.getValue()) {
-                sb.append(String.format(patchFormat, patch.getKey(), f.getAbsolutePath())).append("\n");
-            }
-        }
-
-        for (String arg : jcfg.getJvmArgs()) {
-            sb.append(arg).append("\n");
-        }
-
-        sb.append("-m").append(" ").append(jcfg.getMainModule()).append("/").append(jcfg.getMainClass()).append("\n");
-
-        for (String arg : jcfg.getAppArgs()) {
-            sb.append(arg).append("\n");
-        }
-
-        Files.writeString(targetFile.toPath(), sb);
-    }
-
-
     private File findJavaBin() {
         String javaHome = System.getProperty("java.home");
         String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
@@ -387,6 +342,35 @@ public abstract class Emc4jAbstractMojo extends AbstractMojo {
     protected void cleanOutputDirectory() throws IOException {
         if (getOutputDirectory().exists()) {
             FsUtil.deleteDirectory(getOutputDirectory());
+        }
+    }
+
+
+    protected void copyDependencies(JavaProcessConfig jcfg, File targetFolder) throws Exception {
+
+        File modulesDir = new File(targetFolder, "mp");
+        modulesDir.mkdirs();
+
+        for (File module:jcfg.getModules()) {
+            Files.copy(module.toPath(), modulesDir.toPath().resolve(module.getName()));
+        }
+        for (File automod:jcfg.getAutomaticModules()) {
+            Files.copy(automod.toPath(), modulesDir.toPath().resolve(automod.getName()));
+        }
+
+        File cpDir = new File(targetFolder, "cp");
+        cpDir.mkdirs();
+
+        for (File cpjar:jcfg.getClasspath()) {
+            Files.copy(cpjar.toPath(), cpDir.toPath().resolve(cpjar.getName()));
+        }
+
+        File patchDir = new File(targetFolder, "patch");
+        patchDir.mkdirs();
+        for (Entry<String, List<File>> patch : jcfg.getPatchModules().entrySet()) {
+            for (File f : patch.getValue()) {
+                Files.copy(f.toPath(), patchDir.toPath().resolve(f.getName()));
+            }
         }
     }
 }

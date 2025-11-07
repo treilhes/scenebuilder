@@ -45,17 +45,19 @@ public class JpaBootClasses implements BootContextConfigClasses {
     @Override
     public List<Class<?>> classes() {
         return List.of(
-                org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration.class,
-                org.springframework.boot.autoconfigure.jdbc.JdbcClientAutoConfiguration.class,
-                org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration.class,
+                org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration.class,
+                org.springframework.boot.jdbc.autoconfigure.JdbcClientAutoConfiguration.class,
+                org.springframework.boot.jdbc.autoconfigure.JdbcTemplateAutoConfiguration.class,
                 //org.springframework.boot.autoconfigure.jdbc.JndiDataSourceAutoConfiguration.class,
-                org.springframework.boot.autoconfigure.jdbc.XADataSourceAutoConfiguration.class,
+                org.springframework.boot.jdbc.autoconfigure.XADataSourceAutoConfiguration.class,
                 //org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration.class,
 
-                org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration.class,
+                org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration.class,
                 //org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration.class,
 
-                org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration.class,
+                //FIXME reactivate the H2 console asap
+                //org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration.class,
+                //FIXME reactivate the H2 console asap
 
                 //tmp
                 //org.springframework.boot.autoconfigure.dao.PersistenceExceptionTranslationAutoConfiguration.class,

@@ -41,6 +41,14 @@ open module jfxapps.boot.web {
 
     requires jfxapps.boot.api;
     requires jfxapps.boot.starter;
+    requires spring.boot.webmvc;
+    requires spring.boot.servlet;
+    requires spring.boot.thymeleaf;
+    requires spring.boot.jackson;
+    requires spring.boot.web.server;
+    requires spring.boot.validation;
+    requires spring.boot.data.commons;
+    requires spring.boot.tomcat;
 
     provides BootContextConfigClasses with WebBootClasses;
     provides ExtensionContextConfigClasses with WebExtensionClasses;

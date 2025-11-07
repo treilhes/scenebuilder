@@ -41,6 +41,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -50,34 +51,53 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import com.gluonhq.emc4j.plugin.javaconfig.JavaProcessConfig;
+import com.gluonhq.emc4j.plugin.util.FsUtil;
 
 @Mojo(name = "run", requiresDependencyResolution = ResolutionScope.TEST, defaultPhase = LifecyclePhase.NONE, threadSafe = true)
 public class RunMojo extends Emc4jAbstractMojo {
+
+    private static final String RUN_DIRECTORY = "run";
 
     private static final String BOOT_CONFIG_FILENAME = "boot.config";
 
     private static final String DEBUG_OPTION = "-agentlib:jdwp=transport=dt_socket,server=y,suspend=%s,address=0.0.0.0:%s";
 
+    /**
+     * The application identifier to run.
+     * The application identifier must be contained in one of the provided registry dependencies.
+     */
     @Parameter(property = "applicationId", required = true)
     private String applicationId;
 
+    /**
+     * If true, the JVM will be started in debug mode, allowing a debugger to attach.
+     * The default value is false.
+     */
     @Parameter(property = "debug", defaultValue = "false")
     private boolean debug;
-
+    /**
+     * If true, the JVM will wait for a debugger to attach before starting execution.
+     * The default value is true.
+     */
     @Parameter(property = "debugSuspend", defaultValue = "true")
     private boolean debugSuspend;
 
+    /**
+     * The debug port to use when starting the JVM in debug mode.
+     * The default port is 8000.
+     */
     @Parameter(property = "debugPort", defaultValue = "8000")
     private int debugPort;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
-            File configFile = new File(getOutputDirectory(), BOOT_CONFIG_FILENAME);
 
-            cleanOutputDirectory();
+            cleanRunDirectory();
 
             var javaProcessConfig = initializeJavaProcessConfig();
+
+            copyDependencies(javaProcessConfig, getRunDirectory());
 
             if (debug) {
                 javaProcessConfig.addJvmArg(String.format(DEBUG_OPTION, debugSuspend ? "y" : "n", String.valueOf(debugPort)));
@@ -91,7 +111,7 @@ public class RunMojo extends Emc4jAbstractMojo {
             javaProcessConfig.addAppArg("-a");
             javaProcessConfig.addAppArg(applicationId);
 
-            generateConfigFile(javaProcessConfig, configFile);
+            generateConfigFile(javaProcessConfig, getRunDirectory());
 
             copyProfileToTarget();
 
@@ -112,12 +132,12 @@ public class RunMojo extends Emc4jAbstractMojo {
             command.add("@" + BOOT_CONFIG_FILENAME);
 
             String cmd = "Running command: %s, working directory: %s";
-            getLog().info(String.format(cmd, String.join(" ", command), jcfg.getWorkingDir()));
+            getLog().info(String.format(cmd, String.join(" ", command), getRunDirectory().getAbsolutePath()));
 
             // Start process
             ProcessBuilder pb = new ProcessBuilder(command);
             pb.redirectErrorStream(true);
-            pb.directory(jcfg.getWorkingDir());
+            pb.directory(getRunDirectory());
 
             Process process = pb.start();
 
@@ -144,12 +164,66 @@ public class RunMojo extends Emc4jAbstractMojo {
     private void copyProfileToTarget() throws IOException {
         if (getProfile() != null && getProfileFile() != null) {
             String extension = getProfileFile().getName().substring(getProfileFile().getName().lastIndexOf('.'));
-            File targetProfile = new File(getOutputDirectory(), "application-" + getProfile() + extension);
+            File targetProfile = new File(getRunDirectory(), "application-" + getProfile() + extension);
             Files.copy(getProfileFile().toPath(), targetProfile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
+    protected void cleanRunDirectory() throws IOException {
+        File runFolder = getRunDirectory();
+        if (runFolder.exists()) {
+            FsUtil.deleteDirectory(runFolder);
+        }
+    }
+
+    public File getRunDirectory() {
+        return new File(getOutputDirectory(), RUN_DIRECTORY);
+    }
 
 
 
+    public void generateConfigFile(JavaProcessConfig jcfg, File targetFolder) throws Exception {
+
+        File configFile = new File(targetFolder, BOOT_CONFIG_FILENAME);
+
+        String patchFormat = "--patch-module %s=%s";
+        String addReadFormat = "--add-reads %s";
+        String addOpensFormat = "--add-opens %s";
+        String addExportsFormat = "--add-exports %s";
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("--module-path ./mp").append("\n");
+
+        sb.append("--class-path ./cp/*").append("\n");
+
+        for (String addRead : jcfg.getAddReads()) {
+            sb.append(String.format(addReadFormat, addRead)).append("\n");
+        }
+        for (String addOpen : jcfg.getAddOpens()) {
+            sb.append(String.format(addOpensFormat, addOpen)).append("\n");
+        }
+        for (String addExport : jcfg.getAddExports()) {
+            sb.append(String.format(addExportsFormat, addExport)).append("\n");
+        }
+
+        for (Entry<String, List<File>> patch : jcfg.getPatchModules().entrySet()) {
+            for (File f : patch.getValue()) {
+                String patchPath = targetFolder.getAbsolutePath() + File.separator + "patch" + File.separator + f.getName();
+                sb.append(String.format(patchFormat, patch.getKey(), patchPath)).append("\n");
+            }
+        }
+
+        for (String arg : jcfg.getJvmArgs()) {
+            sb.append(arg).append("\n");
+        }
+
+        sb.append("-m").append(" ").append(jcfg.getMainModule()).append("/").append(jcfg.getMainClass()).append("\n");
+
+        for (String arg : jcfg.getAppArgs()) {
+            sb.append(arg).append("\n");
+        }
+
+        Files.writeString(configFile.toPath(), sb);
+    }
 }

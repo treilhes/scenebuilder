@@ -34,3 +34,4 @@ dist/
 package/
 /build/
 .flattened-pom.xml
+.interpolated-pom.xml
