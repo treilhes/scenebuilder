@@ -57,6 +57,8 @@ module jfxapps.boot.starter {
     requires transitive jakarta.inject;
     requires transitive jakarta.persistence;
     requires transitive jakarta.validation;
+    requires transitive jakarta.activation;
+    //requires transitive jakarta.transaction;
 
     requires transitive net.bytebuddy;
 

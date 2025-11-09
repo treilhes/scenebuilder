@@ -21,74 +21,222 @@
 	</patch-module>
 
 	<add-exports module="java.base" package="javapatch.lang.module" to-module="java.base.patch.link"/>
+    <add-exports module="org.hibernate.validator" package="org.hibernate.validator.internal.engine" to-module="spring.core"/>
 	
 	<add-reads module="spring.core" to-module="jfxapps.boot.layer"/>
+    <add-reads module="org.hibernate.validator" to-module="org.apache.tomcat.embed.el"/>
 
 	<add-opens module="java.base" package="java.lang" to-module="ALL-UNNAMED"/>
 
-	<force-as-module groupId="org.apache.maven" artifactId="maven-resolver-provider"/>
-	<force-as-module groupId="org.apache.maven" artifactId="maven-model"/>
-	<force-as-module groupId="javax.inject" artifactId="javax.inject"/>
+    <modules>
+        <dependency groupId="com.gluonhq.jfxapps" artifactId="jfxapps.boot.main" classifier="jar" />
+        <dependency groupId="com.gluonhq.jfxapps" artifactId="jfxapps.boot.api" classifier="jar" />
+        <dependency groupId="com.gluonhq.jfxapps" artifactId="spring.core.patch.link" classifier="jar" />
+        <dependency groupId="com.gluonhq.jfxapps" artifactId="org.hibernate.orm.core.patch.link" classifier="jar" />
+        <dependency groupId="com.gluonhq.jfxapps" artifactId="jfxapps.boot.aop" classifier="jar" />
+        <dependency groupId="com.gluonhq.jfxapps" artifactId="jfxapps.boot.jpa" classifier="jar" />
+        <dependency groupId="com.gluonhq.jfxapps" artifactId="jfxapps.boot.loader" classifier="jar" />
+        <dependency groupId="com.gluonhq.jfxapps" artifactId="jfxapps.boot.context" classifier="jar" />
+        <dependency groupId="com.gluonhq.jfxapps" artifactId="jfxapps.boot.layer" classifier="jar" />
+        <dependency groupId="com.gluonhq.jfxapps" artifactId="java.base.patch.link" classifier="jar" />
+        <dependency groupId="com.gluonhq.jfxapps" artifactId="jfxapps.boot.maven" classifier="jar" />
+        <dependency groupId="com.gluonhq.jfxapps" artifactId="jfxapps.boot.platform" classifier="jar" />
+        <dependency groupId="com.gluonhq.jfxapps" artifactId="jfxapps.boot.registry" classifier="jar" />
+        <dependency groupId="com.gluonhq.jfxapps" artifactId="jfxapps.boot.splash" classifier="jar" />
+        <dependency groupId="com.gluonhq.jfxapps" artifactId="jfxapps.boot.web" classifier="jar" />
+        <dependency groupId="com.gluonhq.jfxapps" artifactId="jfxapps.registry.model" classifier="jar" />
+        <dependency groupId="com.gluonhq.jfxapps" artifactId="jfxapps.boot.starter" classifier="jar" />
+        
+        <dependency groupId="org.slf4j" artifactId="slf4j-api" classifier="jar" />
+        <dependency groupId="info.picocli" artifactId="picocli" classifier="jar" />
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-web-server" classifier="jar" />
+        <dependency groupId="org.aspectj" artifactId="aspectjweaver" classifier="jar" />
+        <dependency groupId="org.springframework" artifactId="spring-context" classifier="jar" />
+        <dependency groupId="org.springframework" artifactId="spring-orm" classifier="jar" />
+        <dependency groupId="org.springframework" artifactId="spring-tx" classifier="jar" />
+        <dependency groupId="org.springframework" artifactId="spring-aspects" classifier="jar" />
+        <dependency groupId="org.springframework" artifactId="spring-jdbc" classifier="jar" />
+        <dependency groupId="org.springframework" artifactId="spring-web" classifier="jar" />
+        <dependency groupId="org.springframework" artifactId="spring-webmvc" classifier="jar" />
+        <dependency groupId="org.springframework" artifactId="spring-expression" classifier="jar" />
+        <dependency groupId="org.springframework" artifactId="spring-aop" classifier="jar" />
+        <dependency groupId="org.springframework" artifactId="spring-beans" classifier="jar" />
+        <dependency groupId="org.springframework" artifactId="spring-core" classifier="jar" />
+        
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-autoconfigure" classifier="jar" />
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-jdbc" classifier="jar" />
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-hibernate" classifier="jar" />
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-validation" classifier="jar" />
+        
+        
+        <dependency groupId="org.springframework.data" artifactId="spring-data-commons" classifier="jar" />
+        <dependency groupId="org.springframework.data" artifactId="spring-data-jpa" classifier="jar" />
+        
+        <dependency groupId="org.apache.commons" artifactId="commons-lang3" classifier="jar" />
+        
+        <dependency groupId="org.apache.maven" artifactId="maven-resolver-provider" classifier="jar" />
+        <dependency groupId="org.apache.maven" artifactId="maven-model" classifier="jar" />
+        
+        <dependency groupId="org.apache.maven.resolver" artifactId="maven-resolver-impl" classifier="jar" />
+        <dependency groupId="org.apache.maven.resolver" artifactId="maven-resolver-connector-basic" classifier="jar" />
+        <dependency groupId="org.apache.maven.resolver" artifactId="maven-resolver-transport-http" classifier="jar" />
+        <dependency groupId="org.apache.maven.resolver" artifactId="maven-resolver-transport-file" classifier="jar" />
+        <dependency groupId="org.apache.maven.resolver" artifactId="maven-resolver-spi" classifier="jar" />
+        <dependency groupId="org.apache.maven.resolver" artifactId="maven-resolver-api" classifier="jar" />
+        <dependency groupId="org.apache.maven.resolver" artifactId="maven-resolver-util" classifier="jar" />
+        
+        
+        <dependency groupId="org.apache.tomcat.embed" artifactId="tomcat-embed-core" classifier="jar" />
+        <dependency groupId="org.apache.tomcat.embed" artifactId="tomcat-embed-websocket" classifier="jar" />
+        <dependency groupId="org.apache.tomcat.embed" artifactId="tomcat-embed-el" classifier="jar" />
+        
+        
+        <dependency groupId="com.fasterxml" artifactId="classmate" classifier="jar" />
+        
+        <dependency groupId="org.hibernate.orm" artifactId="hibernate-core" classifier="jar" />
+        <dependency groupId="org.hibernate.validator" artifactId="hibernate-validator" classifier="jar" />
+        
+        <dependency groupId="org.jboss.logging" artifactId="jboss-logging" classifier="jar" />
+        
+        <dependency groupId="org.mapstruct" artifactId="mapstruct" classifier="jar" />
+        
+        <dependency groupId="org.springdoc" artifactId="springdoc-openapi-starter-common" classifier="jar" />
+        <dependency groupId="org.springdoc" artifactId="springdoc-openapi-starter-webmvc-api" classifier="jar" />
+        <dependency groupId="org.springdoc" artifactId="springdoc-openapi-starter-webmvc-ui" classifier="jar" />
+        
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot" classifier="jar" />
+        
+        <dependency groupId="org.thymeleaf" artifactId="thymeleaf-spring6" classifier="jar" />
+        <dependency groupId="org.thymeleaf" artifactId="thymeleaf" classifier="jar" />
+        
+        <dependency groupId="jakarta.inject" artifactId="jakarta.inject-api" classifier="jar" />
+        <dependency groupId="jakarta.persistence" artifactId="jakarta.persistence-api" classifier="jar" />
+        <dependency groupId="jakarta.annotation" artifactId="jakarta.annotation-api" classifier="jar" />
+        <dependency groupId="jakarta.validation" artifactId="jakarta.validation-api" classifier="jar" />
+        
+        <dependency groupId="javax.inject" artifactId="javax.inject" classifier="jar" />
+        <dependency groupId="javax.json" artifactId="javax.json-api" classifier="jar" />
+        
+        <dependency groupId="com.fasterxml.jackson.core" artifactId="jackson-core" classifier="jar" />
+        <dependency groupId="com.fasterxml.jackson.core" artifactId="jackson-databind" classifier="jar" />
+        <dependency groupId="com.fasterxml.jackson.core" artifactId="jackson-annotations" classifier="jar" />
+        <dependency groupId="com.fasterxml.jackson.dataformat" artifactId="jackson-dataformat-xml" classifier="jar" />
+        <dependency groupId="com.fasterxml.jackson.dataformat" artifactId="jackson-dataformat-yaml" classifier="jar" />
+        
+        <dependency groupId="commons-logging" artifactId="commons-logging" classifier="jar" />
+        
+        <dependency groupId="io.swagger.core.v3" artifactId="swagger-core-jakarta" classifier="jar" />
+        <dependency groupId="io.swagger.core.v3" artifactId="swagger-models-jakarta" classifier="jar" />
+        <dependency groupId="io.swagger.core.v3" artifactId="swagger-core-jakarta" classifier="jar" />
+        <dependency groupId="io.swagger.core.v3" artifactId="swagger-annotations-jakarta" classifier="jar" />
+        <dependency groupId="io.swagger.core.v3" artifactId="swagger-models-jakarta" classifier="jar" />
+        
+        <dependency groupId="net.bytebuddy" artifactId="byte-buddy" classifier="jar" />
+        
+        <dependency groupId="org.codehaus.woodstox" artifactId="stax2-api" classifier="jar" />
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-tomcat" classifier="jar" />
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-webmvc" classifier="jar" />
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-data-commons" classifier="jar" />
+        <dependency groupId="org.yaml" artifactId="snakeyaml" classifier="jar" />
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-thymeleaf" classifier="jar" />
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-jackson" classifier="jar" />
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-servlet" classifier="jar" />
+        
+        <!-- Temp: required by jira on app boot -->
+        <dependency groupId="jakarta.activation" artifactId="jakarta.activation-api" classifier="jar" />
+    </modules>
+    <classpath>
+        <dependency groupId="ch.qos.logback" artifactId="logback-classic" classifier="jar" />
+        <dependency groupId="ch.qos.logback" artifactId="logback-core" classifier="jar" />
+        
+        <dependency groupId="com.fasterxml.jackson.datatype" artifactId="jackson-datatype-jsr310" classifier="jar" />
+        <dependency groupId="tools.jackson.core" artifactId="jackson-databind" classifier="jar" />
+        <dependency groupId="com.fasterxml.woodstox" artifactId="woodstox-core" classifier="jar" />
+        <dependency groupId="com.google.code.gson" artifactId="gson" classifier="jar" />
+        <dependency groupId="com.google.errorprone" artifactId="error_prone_annotations" classifier="jar" />
+        <dependency groupId="com.h2database" artifactId="h2" classifier="jar" />
+        <dependency groupId="com.sun.istack" artifactId="istack-commons-runtime" classifier="jar" />
+        <dependency groupId="com.zaxxer" artifactId="HikariCP" classifier="jar" />
+        <dependency groupId="commons-codec" artifactId="commons-codec" classifier="jar" />
+        
+        <dependency groupId="io.micrometer" artifactId="micrometer-observation" classifier="jar" />
+        <dependency groupId="io.micrometer" artifactId="micrometer-commons" classifier="jar" />
+        
+        
+        <dependency groupId="jakarta.transaction" artifactId="jakarta.transaction-api" classifier="jar" />
+        
+        <dependency groupId="jakarta.xml.bind" artifactId="jakarta.xml.bind-api" classifier="jar" />
+        <dependency groupId="javax.annotation" artifactId="javax.annotation-api" classifier="jar" />
+        
+        <dependency groupId="org.antlr" artifactId="antlr4-runtime" classifier="jar" />
+        
+        <dependency groupId="org.apache.httpcomponents" artifactId="httpclient" classifier="jar" />
+        <dependency groupId="org.apache.httpcomponents" artifactId="httpcore" classifier="jar" />
+        <dependency groupId="org.apache.logging.log4j" artifactId="log4j-to-slf4j" classifier="jar" />
+        <dependency groupId="org.apache.logging.log4j" artifactId="log4j-api" classifier="jar" />
+                
+        <dependency groupId="org.apache.maven.resolver" artifactId="maven-resolver-named-locks" classifier="jar" />
+        
+        <dependency groupId="org.attoparser" artifactId="attoparser" classifier="jar" />
+        
+        <dependency groupId="org.eclipse.angus" artifactId="angus-activation" classifier="jar" />
+        <dependency groupId="org.glassfish" artifactId="javax.json" classifier="jar" />
+        <dependency groupId="org.glassfish.jaxb" artifactId="jaxb-runtime" classifier="jar" />
+        <dependency groupId="org.glassfish.jaxb" artifactId="jaxb-core" classifier="jar" />
+        <dependency groupId="org.glassfish.jaxb" artifactId="txw2" classifier="jar" />
+        <dependency groupId="org.hibernate.models" artifactId="hibernate-models" classifier="jar" />
+        
+        <dependency groupId="org.jspecify" artifactId="jspecify" classifier="jar" />
+        
+        <dependency groupId="org.ow2.asm" artifactId="asm" classifier="jar" />
+        <dependency groupId="org.slf4j" artifactId="jul-to-slf4j" classifier="jar" />
+        
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-starter" classifier="jar" />
+        
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-starter-logging" classifier="jar" />
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-starter-data-jpa" classifier="jar" />
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-starter-jdbc" classifier="jar" />
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-data-jpa" classifier="jar" />
+        
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-persistence" classifier="jar" />
+        
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-jpa" classifier="jar" />
+        
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-sql" classifier="jar" />
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-transaction" classifier="jar" />
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-starter-web" classifier="jar" />
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-starter-jackson" classifier="jar" />
+        
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-starter-tomcat" classifier="jar" />
+        
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-tomcat-runtime" classifier="jar" />
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-http-converter" classifier="jar" />
+        
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-starter-validation" classifier="jar" />
+        
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-starter-thymeleaf" classifier="jar" />
+        
+        <dependency groupId="org.springframework.boot" artifactId="spring-boot-starter-aop" classifier="jar" />
+        
+        <dependency groupId="org.unbescape" artifactId="unbescape" classifier="jar" />
+        <dependency groupId="org.webjars" artifactId="webjars-locator-lite" classifier="jar" />
+        
+        <dependency groupId="tools.jackson.core" artifactId="jackson-core" classifier="jar" />
+        
+        <dependency groupId="org.apache.maven" artifactId="maven-artifact" classifier="jar" />
+        <dependency groupId="org.apache.maven" artifactId="maven-builder-support" classifier="jar" />
+        <dependency groupId="org.apache.maven" artifactId="maven-repository-metadata" classifier="jar" />
+        <dependency groupId="org.codehaus.plexus" artifactId="plexus-interpolation" classifier="jar" />
+        <dependency groupId="org.codehaus.plexus" artifactId="plexus-utils" classifier="jar" />
+        <dependency groupId="org.eclipse.sisu" artifactId="org.eclipse.sisu.inject" classifier="jar" />
+        <dependency groupId="org.webjars" artifactId="swagger-ui" classifier="jar" />
+    </classpath>
 
-	<force-as-classpath groupId="com.fasterxml.woodstox" artifactId="woodstox-core"/>
-	<force-as-classpath groupId="org.springframework.boot" artifactId="spring-boot-starter"/>
-	<force-as-classpath groupId="org.springframework.boot" artifactId="spring-boot-starter-logging"/>
-	<force-as-classpath groupId="org.apache.logging.log4j" artifactId="log4j-to-slf4j"/>
-	<force-as-classpath groupId="org.apache.logging.log4j" artifactId="log4j-api"/>
-	<force-as-classpath groupId="org.slf4j" artifactId="jul-to-slf4j"/>
-	<force-as-classpath groupId="org.springframework.boot" artifactId="spring-boot-starter-data-jpa"/>
-	<force-as-classpath groupId="org.springframework.boot" artifactId="spring-boot-starter-jdbc"/>
-	<force-as-classpath groupId="com.zaxxer" artifactId="HikariCP"/>
-	<force-as-classpath groupId="org.springframework" artifactId="spring-jdbc"/>
-	<force-as-classpath groupId="jakarta.transaction" artifactId="jakarta.transaction-api"/>
-	<force-as-classpath groupId="org.jboss.logging" artifactId="jboss-logging"/>
-	<force-as-classpath groupId="org.hibernate.common" artifactId="hibernate-commons-annotations"/>
-	<force-as-classpath groupId="io.smallrye" artifactId="jandex"/>
-	<force-as-classpath groupId="com.fasterxml" artifactId="classmate"/>
-	<force-as-classpath groupId="org.glassfish.jaxb" artifactId="jaxb-runtime"/>
-	<force-as-classpath groupId="org.glassfish.jaxb" artifactId="jaxb-core"/>
-	<force-as-classpath groupId="org.eclipse.angus" artifactId="angus-activation"/>
-	<force-as-classpath groupId="org.glassfish.jaxb" artifactId="txw2"/>
-	<force-as-classpath groupId="com.sun.istack" artifactId="istack-commons-runtime"/>
-	<force-as-classpath groupId="org.antlr" artifactId="antlr4-runtime"/>
-	<force-as-classpath groupId="org.springframework.boot" artifactId="spring-boot-starter-web"/>
-	<force-as-classpath groupId="org.springframework.boot" artifactId="spring-boot-starter-json"/>
-	<force-as-classpath groupId="org.springframework.boot" artifactId="spring-boot-starter-tomcat"/>
-	<force-as-classpath groupId="org.apache.tomcat.embed" artifactId="tomcat-embed-websocket"/>
-	<force-as-classpath groupId="io.micrometer" artifactId="micrometer-observation"/>
-	<force-as-classpath groupId="io.micrometer" artifactId="micrometer-commons"/>
-	<force-as-classpath groupId="org.springframework.boot" artifactId="spring-boot-starter-validation"/>
-	<force-as-classpath groupId="org.apache.tomcat.embed" artifactId="tomcat-embed-el"/>
-	<force-as-classpath groupId="org.springframework.boot" artifactId="spring-boot-starter-thymeleaf"/>
-	<force-as-classpath groupId="org.attoparser" artifactId="attoparser"/>
-	<force-as-classpath groupId="org.unbescape" artifactId="unbescape"/>
-	<force-as-classpath groupId="org.springframework.boot" artifactId="spring-boot-starter-aop"/>
-	<force-as-classpath groupId="javax.annotation" artifactId="javax.annotation-api"/>
-	<force-as-classpath groupId="io.swagger.core.v3" artifactId="swagger-annotations-jakarta"/>
-	<force-as-classpath groupId="org.webjars" artifactId="swagger-ui"/>
-	<force-as-classpath groupId="org.webjars" artifactId="webjars-locator-lite"/>
-	<force-as-classpath groupId="org.jspecify" artifactId="jspecify"/>
-	<force-as-classpath groupId="com.h2database" artifactId="h2"/>
-	<force-as-classpath groupId="org.apache.maven" artifactId="maven-model-builder"/>
-	<force-as-classpath groupId="org.codehaus.plexus" artifactId="plexus-interpolation"/>
-	<force-as-classpath groupId="org.apache.maven" artifactId="maven-artifact"/>
-	<force-as-classpath groupId="org.apache.maven" artifactId="maven-builder-support"/>
-	<force-as-classpath groupId="org.eclipse.sisu" artifactId="org.eclipse.sisu.inject"/>
-	<force-as-classpath groupId="org.ow2.asm" artifactId="asm"/>
-	<force-as-classpath groupId="org.apache.maven" artifactId="maven-repository-metadata"/>
-	<force-as-classpath groupId="org.codehaus.plexus" artifactId="plexus-utils"/>
-	<!-- <force-as-classpath groupId="javax.inject" artifactId="javax.inject"/> -->
-	<force-as-classpath groupId="org.apache.maven.resolver" artifactId="maven-resolver-named-locks"/>
-	<force-as-classpath groupId="com.google.code.gson" artifactId="gson"/>
-	<force-as-classpath groupId="com.google.errorprone" artifactId="error_prone_annotations"/>
-	<force-as-classpath groupId="org.apache.httpcomponents" artifactId="httpclient"/>
-	<force-as-classpath groupId="org.apache.httpcomponents" artifactId="httpcore"/>
-	<force-as-classpath groupId="commons-codec" artifactId="commons-codec"/>
-	<force-as-classpath groupId="jakarta.xml.bind" artifactId="jakarta.xml.bind-api"/>
-	<force-as-classpath groupId="jakarta.activation" artifactId="jakarta.activation-api"/>
-
-	<exclude-dependency groupId="org.slf4j" artifactId="jcl-over-slf4j"/>
-	<!-- used as patch for maven.model -->
-	<exclude-dependency groupId="org.apache.maven" artifactId="maven-model-builder"/>
+<excluded>
+    <dependency groupId="org.slf4j" artifactId="jcl-over-slf4j"/>
+    <!-- used as patch for maven.model -->
+    <dependency groupId="org.apache.maven" artifactId="maven-model-builder"/>
+</excluded>
+	
 
 </boot-config>

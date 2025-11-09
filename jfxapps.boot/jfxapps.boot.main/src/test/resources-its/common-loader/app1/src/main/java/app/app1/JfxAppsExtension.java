@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -45,6 +45,7 @@ import _test.TestConfig;
 import app.app1.aspect.JfxAppsAspect;
 import app.app1.controller.ExtensionController;
 import app.app1.controller.RootExportedController;
+import app.app1.el.ExpressionLanguageSupport;
 import app.app1.internal.JfxAppsLocalService;
 import app.app1.model.JfxAppsModel;
 import app.app1.repository.JfxAppsRepository;
@@ -89,7 +90,8 @@ public class JfxAppsExtension implements SealedExtension {
                 RootExportedController.class,
                 JfxAppsModel.class,
                 JfxAppsRepository.class,
-                JfxAppsRepositoryCustomImpl.class);
+                JfxAppsRepositoryCustomImpl.class,
+                ExpressionLanguageSupport.class);
     }
 
     @Bean

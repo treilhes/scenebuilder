@@ -38,6 +38,8 @@ import java.io.InputStream;
 
 import javax.xml.transform.stream.StreamSource;
 
+import org.eclipse.aether.artifact.Artifact;
+
 import com.gluonhq.emc4j.plugin.bootconfig.BootConfig;
 
 import jakarta.xml.bind.JAXBContext;
@@ -67,15 +69,19 @@ public class BootConfigMask {
         return config;
     }
 
-    public boolean isForcedAsModule(File f) {
+    public boolean isForcedAsModule(Artifact artifact) {
+        File f = artifact.getFile();
         return getConfig().getForceAsModules().stream()
-                .anyMatch(d -> f.getName().startsWith(d.getArtifactId() + "-")
+                .anyMatch(d -> artifact.getArtifactId().equals(d.getArtifactId())
+                        && artifact.getGroupId().equals(d.getGroupId())
                         && f.getName().endsWith(".jar"));
     }
 
-    public boolean isForcedAsClasspath(File f) {
+    public boolean isForcedAsClasspath(Artifact artifact) {
+        File f = artifact.getFile();
         return getConfig().getForceAsClasspaths().stream()
-                .anyMatch(d -> f.getName().startsWith(d.getArtifactId() + "-")
+                .anyMatch(d -> artifact.getArtifactId().equals(d.getArtifactId())
+                        && artifact.getGroupId().equals(d.getGroupId())
                         && f.getName().endsWith(".jar"));
     }
 
@@ -97,6 +103,6 @@ public class BootConfigMask {
             return element.getValue();
         }
     }
-    
-    
+
+
 }

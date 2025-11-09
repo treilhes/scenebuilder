@@ -272,30 +272,38 @@ public abstract class Emc4jAbstractMojo extends AbstractMojo {
                     addExport.getToModule())));
         }
 
-        Map<ModuleType, List<File>> moduleMap = artifacts.stream()
-                .map(Artifact::getFile)
-                .collect(java.util.stream.Collectors.groupingBy(f -> {
+        Map<ModuleType, List<Artifact>> moduleMap = artifacts.stream()
+                .collect(java.util.stream.Collectors.groupingBy(a -> {
+                    File f = a.getFile();
                     if (configMask.isExcludedDependency(f)) {
                         return ModuleType.EXCLUDED;
                     } else if (jpmsHelper.isModular(f)) {
-                        boolean force = configMask.isForcedAsClasspath(f);
+                        boolean force = configMask.isForcedAsClasspath(a);
                         return force ? ModuleType.UNNAMED : ModuleType.NAMED;
                     } else if (jpmsHelper.isAutomaticModule(f)) {
-                        boolean force = configMask.isForcedAsClasspath(f);
+                        boolean force = configMask.isForcedAsClasspath(a);
                         return force ? ModuleType.UNNAMED : ModuleType.AUTOMATIC;
                     } else {
                         // here we check forced modules (=simple jars without automatic module name but
                         // still "required" in the code, this only works if the jar name use default
                         // maven naming convention)
 
-                        boolean force = configMask.isForcedAsModule(f);
+                        boolean force = configMask.isForcedAsModule(a);
                         return force ? ModuleType.AUTOMATIC : ModuleType.UNNAMED;
                     }
                 }));
 
-        javaConfig.getModules().addAll(moduleMap.get(ModuleType.NAMED));
-        javaConfig.getAutomaticModules().addAll(moduleMap.get(ModuleType.AUTOMATIC));
-        javaConfig.getClasspath().addAll(moduleMap.get(ModuleType.UNNAMED));
+        if (moduleMap.containsKey(ModuleType.NAMED)) {
+            javaConfig.getModules().addAll(moduleMap.get(ModuleType.NAMED).stream().map(Artifact::getFile).toList());
+        }
+
+        if (moduleMap.containsKey(ModuleType.AUTOMATIC)) {
+            javaConfig.getAutomaticModules().addAll(moduleMap.get(ModuleType.AUTOMATIC).stream().map(Artifact::getFile).toList());
+        }
+
+        if (moduleMap.containsKey(ModuleType.UNNAMED)) {
+            javaConfig.getClasspath().addAll(moduleMap.get(ModuleType.UNNAMED).stream().map(Artifact::getFile).toList());
+        }
 
     }
 

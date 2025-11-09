@@ -31,55 +31,26 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.emc4j.plugin.bootconfig;
+package app.app1.el;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
+import org.springframework.beans.factory.annotation.Value;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-public class Dependency {
-    @XmlAttribute
-    private String groupId;
-    @XmlAttribute
-    private String artifactId;
-    @XmlAttribute
-    private String version;
-    @XmlAttribute
-    private String classifier = "jar";
+import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
 
-    public Dependency() {
+import jakarta.annotation.PostConstruct;
+
+@Singleton
+public class ExpressionLanguageSupport {
+
+    @Value("${value1} + ${value2}")
+    private String elValue;
+
+    public String getElValue() {
+        return elValue;
     }
 
-    public String getGroupId() {
-        return groupId;
+    @PostConstruct
+    private void init() {
+        System.out.println("ExpressionLanguageSupport initialized with elValue = " + elValue);
     }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
-
-    public String getArtifactId() {
-        return artifactId;
-    }
-
-    public void setArtifactId(String artifactId) {
-        this.artifactId = artifactId;
-    }
-
-    public String getClassifier() {
-        return classifier;
-    }
-
-    public void setClassifier(String classifier) {
-        this.classifier = classifier;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
 }

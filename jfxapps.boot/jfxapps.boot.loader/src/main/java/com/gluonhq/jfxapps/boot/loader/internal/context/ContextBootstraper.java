@@ -295,6 +295,7 @@ public class ContextBootstraper {
             return loader.loadService(layer, Extension.class).stream()
                     .filter(OpenExtension.class::isInstance)
                     .map(OpenExtension.class::cast)
+                    //FIXME this method is called twice, once here and once in findLocalClasses
                     .peek(e -> e.initializeModule(layer))
                     .peek(e -> validateExtension(e, extensionId, parentId))
                     .flatMap(e -> e.exportedContextClasses().stream())

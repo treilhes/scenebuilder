@@ -33,11 +33,13 @@
  */
 package com.gluonhq.emc4j.plugin.bootconfig;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "boot-config")
@@ -46,26 +48,29 @@ public class BootConfig {
     @XmlElement(name = "debug")
     private boolean debug;
     @XmlElement(name = "profile")
-    private List<String> profiles;
+    private List<String> profiles = new ArrayList<>();
     @XmlElement(name = "java-option")
-    private List<String> javaOptions;
+    private List<String> javaOptions = new ArrayList<>();
     @XmlElement(name = "add-reads")
-    private List<AddReads> addReads;
+    private List<AddReads> addReads = new ArrayList<>();
     @XmlElement(name = "add-exports")
-    private List<AddExports> addExports;
+    private List<AddExports> addExports = new ArrayList<>();
     @XmlElement(name = "add-opens")
-    private List<AddOpens> addOpens;
+    private List<AddOpens> addOpens = new ArrayList<>();
     @XmlElement(name = "patch-module")
-    private List<PatchModule> patchModules;
+    private List<PatchModule> patchModules = new ArrayList<>();
 
-    @XmlElement(name = "force-as-module")
-    private List<Dependency> forceAsModules;
+    @XmlElementWrapper(name = "modules")
+    @XmlElement(name = "dependency")
+    private List<Dependency> forceAsModules = new ArrayList<>();
 
-    @XmlElement(name = "force-as-classpath")
-    private List<Dependency> forceAsClasspaths;
+    @XmlElementWrapper(name = "classpath")
+    @XmlElement(name = "dependency")
+    private List<Dependency> forceAsClasspaths = new ArrayList<>();
 
-    @XmlElement(name = "exclude-dependency")
-    private List<Dependency> excludedDependencies;
+    @XmlElementWrapper(name = "excluded")
+    @XmlElement(name = "dependency")
+    private List<Dependency> excludedDependencies = new ArrayList<>();
 
     public List<AddReads> getAddReads() {
         return addReads;
