@@ -36,15 +36,18 @@ package com.gluonhq.jfxapps.boot.maven.client.prompt;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.awt.GraphicsEnvironment;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 
 class CredentialPromptTest {
 
     @Test
+    @DisabledIfSystemProperty(named = "java.awt.headless", matches = "true", disabledReason = "Requires a display")
     void must_return_credentials_on_validate() throws MalformedURLException, InterruptedException, ExecutionException {
 
         var prompt = CredentialPrompt.promptFor(new URL("https://www.google.com"));
@@ -62,8 +65,9 @@ class CredentialPromptTest {
     }
 
     @Test
+    @DisabledIfSystemProperty(named = "java.awt.headless", matches = "true", disabledReason = "Requires a display")
     void must_return_null_on_cancel() throws MalformedURLException, InterruptedException, ExecutionException {
-
+        GraphicsEnvironment.isHeadless();
         var prompt = CredentialPrompt.promptFor(new URL("https://www.google.com"));
         var future = prompt.show();
 

@@ -13,8 +13,8 @@
     <properties>
         <javafx.version>16</javafx.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <integration.testing.framework.version>0.13.1</integration.testing.framework.version>
 
         <logback.version>1.5.3</logback.version>
@@ -140,7 +140,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
@@ -149,7 +148,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.12.0</version>
+                <version>3.15.2</version>
                 <configuration>
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
                 </configuration>
@@ -190,15 +189,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.2.5</version>
                 <configuration>
                     <skip>false</skip>
-                    <systemProperties>
-                        <maven.version>${maven.version}</maven.version>
-                        <maven.home>${maven.home}</maven.home>
+                    <systemPropertyVariables>
                         <!-- ITF_DEBUG enable remote debug on port 8000-->
                         <!--<ITF_DEBUG>true</ITF_DEBUG>-->
-                    </systemProperties>
+                    </systemPropertyVariables>
                 </configuration>
                 <executions>
                     <execution>

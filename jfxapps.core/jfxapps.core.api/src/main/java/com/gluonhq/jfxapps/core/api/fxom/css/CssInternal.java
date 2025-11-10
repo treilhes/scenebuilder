@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2025, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2025, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -55,12 +55,10 @@ import com.sun.javafx.scene.NodeHelper;
 
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.collections.FXCollections;
-import javafx.css.CompoundSelector;
 import javafx.css.CssMetaData;
 import javafx.css.CssParser;
 import javafx.css.Rule;
 import javafx.css.Selector;
-import javafx.css.SimpleSelector;
 import javafx.css.Style;
 import javafx.css.StyleOrigin;
 import javafx.css.Styleable;
@@ -224,10 +222,9 @@ public class CssInternal {
     static Map<String, String> getFxObjectClassesMap(Object fxObject, Object fxRoot) {
         Map<String, String> classesMap = new HashMap<>();
         classesMap.putAll(getSingleFxObjectClassesMap(fxObject));
-        if (!(fxObject instanceof Node)) {
+        if (!(fxObject instanceof Node node)) {
             return classesMap;
         }
-        Node node = (Node) fxObject;
         if (node == fxRoot) {
             return classesMap;
         }
@@ -267,29 +264,16 @@ public class CssInternal {
         try {
             s = new CssParser().parse(url);
         } catch (IOException ex) {
-            System.out.println("Warning: Invalid Stylesheet " + url); // NOI18N
+            System.out.println("Warning: Invalid Stylesheet " + url); //NOI18N
             return styleClasses;
         }
         if (s == null) {
-            // The parsed CSS file was empty. No parsing occured.
+            // The parsed CSS file was empty. No parsing occurred.
             return styleClasses;
         }
         for (Rule r : s.getRules()) {
             for (Selector ss : r.getSelectors()) {
-                if (ss instanceof SimpleSelector) {
-                    SimpleSelector simple = (SimpleSelector) ss;
-                    styleClasses.addAll(simple.getStyleClasses());
-                } else {
-                    if (ss instanceof CompoundSelector) {
-                        CompoundSelector cs = (CompoundSelector) ss;
-                        for (Selector selector : cs.getSelectors()) {
-                            if (selector instanceof SimpleSelector) {
-                                SimpleSelector simple = (SimpleSelector) selector;
-                                styleClasses.addAll(simple.getStyleClasses());
-                            }
-                        }
-                    }
-                }
+                styleClasses.addAll(ss.getStyleClassNames());
             }
         }
         return styleClasses;
@@ -337,7 +321,7 @@ public class CssInternal {
         if (fxObject instanceof Node) {
             node = (Node) fxObject;
         } else {
-            Styleable styleable = fxObject instanceof Styleable ? (Styleable) fxObject : null;
+            Styleable styleable = fxObject instanceof Styleable s ? s : null;
             if (styleable != null) {
                 node = styleable.getStyleableNode();
             }

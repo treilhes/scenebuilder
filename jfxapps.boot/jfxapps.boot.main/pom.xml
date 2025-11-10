@@ -181,6 +181,12 @@
                     <pomIncludes>
                         <pomInclude>common-loader/pom.xml</pomInclude>
                     </pomIncludes>
+                    <properties>
+                    	<parent.jfxapps.version>${jfxapps.version}</parent.jfxapps.version>
+                    	<parent.maven.compiler.plugin.version>${maven.compiler.plugin.version}</parent.maven.compiler.plugin.version>
+                    	<parent.maven.compiler.source>${maven.compiler.source}</parent.maven.compiler.source>
+                    	<parent.maven.compiler.target>${maven.compiler.target}</parent.maven.compiler.target>
+                    </properties>
                     <streamLogs>true</streamLogs>
                     <goals>
                         <goal>clean</goal>
@@ -206,8 +212,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
-                        <manifestFile>
-                            ${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+                        <manifestFile>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
                 </configuration>
             </plugin>

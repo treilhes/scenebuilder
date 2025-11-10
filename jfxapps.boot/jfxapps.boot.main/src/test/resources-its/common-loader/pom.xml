@@ -17,12 +17,12 @@
     </modules>
 
 	<properties>
-        <jfxapps.version>1.0.0-SNAPSHOT</jfxapps.version>
+        <jfxapps.version>${parent.jfxapps.version}</jfxapps.version>
         <!-- compiler -->
-        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
-        <maven.compiler.release>21</maven.compiler.release>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.plugin.version>${parent.maven.compiler.plugin.version}</maven.compiler.plugin.version>
+        <maven.compiler.release>${parent.maven.compiler.source}</maven.compiler.release>
+        <maven.compiler.source>${parent.maven.compiler.source}</maven.compiler.source>
+        <maven.compiler.target>${parent.maven.compiler.target}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 	

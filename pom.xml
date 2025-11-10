@@ -29,15 +29,16 @@
 
 	<properties>
 		<jfxapps.version>1.0.0-SNAPSHOT</jfxapps.version>
+		<java.version>25</java.version>
+		
+		<!-- exporting a package from system module java.base is not allowed with release -->
+		<!--<maven.compiler.release>24</maven.compiler.release>-->
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
 
-		<!-- compiler -->
-		<maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
-		<!--<maven.compiler.release>21</maven.compiler.release>-->
-		<maven.compiler.source>21</maven.compiler.source>
-		<maven.compiler.target>21</maven.compiler.target>
-
+		<maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
 		<maven-dependency-plugin.version>3.6.1</maven-dependency-plugin.version>
-		<maven-failsafe-plugin.version>3.5.2</maven-failsafe-plugin.version>
+		<maven-failsafe-plugin.version>3.5.4</maven-failsafe-plugin.version>
 		<maven-surefire-plugin.version>${maven-failsafe-plugin.version}</maven-surefire-plugin.version>
 		<flatten-maven-plugin.version>1.7.4-SNAPSHOT</flatten-maven-plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -645,10 +646,14 @@
 					<version>${maven-surefire-plugin.version}</version>
 					<configuration>
 						<systemPropertyVariables>
+							<maven.version>${maven.version}</maven.version>
+							<maven.home>${maven.home}</maven.home>
+							<java.awt.headless>true</java.awt.headless>
+							<glass.platform>Headless</glass.platform>
 							<javafx.allowjs>true</javafx.allowjs>
 						</systemPropertyVariables>
 						<useModulePath>false</useModulePath>
-						<argLine></argLine>
+						<jvm>${java.home}/bin/java</jvm>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -657,8 +662,13 @@
 					<version>${maven-failsafe-plugin.version}</version>
 					<configuration>
 						<systemPropertyVariables>
+							<maven.version>${maven.version}</maven.version>
+							<maven.home>${maven.home}</maven.home>
+							<java.awt.headless>true</java.awt.headless>
+							<glass.platform>Headless</glass.platform>
 							<javafx.allowjs>true</javafx.allowjs>
 						</systemPropertyVariables>
+						<jvm>${java.home}/bin/java</jvm>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -671,6 +681,9 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-invoker-plugin</artifactId>
 					<version>3.8.0</version>
+					<configuration>
+						<javaHome>${java.home}</javaHome>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>

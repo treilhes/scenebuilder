@@ -32,7 +32,6 @@
 					
 						<addModule>jdk.xml.dom</addModule>
 						<addModule>jdk.compiler</addModule>
-						<addModule>jdk.internal.vm.compiler</addModule>
 						<addModule>jdk.dynalink</addModule>
 						<addModule>jdk.jsobject</addModule>
 						<addModule>jdk.unsupported</addModule>

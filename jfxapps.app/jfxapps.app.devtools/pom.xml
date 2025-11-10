@@ -12,9 +12,14 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<jfxapps.version>1.0.0-SNAPSHOT</jfxapps.version>
 		<devtools.version>1.0.0-SNAPSHOT</devtools.version>
+		<java.version>25</java.version>
+		
+		<!-- exporting a package from system module java.base is not allowed with release -->
+		<!--<maven.compiler.release>24</maven.compiler.release>-->
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		
 		<maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
-		<maven.compiler.source>21</maven.compiler.source>
-		<maven.compiler.target>21</maven.compiler.target>
 		<flatten-maven-plugin.version>1.7.4-SNAPSHOT</flatten-maven-plugin.version>
 	</properties>
 
