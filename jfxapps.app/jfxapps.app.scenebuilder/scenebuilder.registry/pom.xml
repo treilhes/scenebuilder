@@ -12,14 +12,14 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>com.gluonhq.jfxapps</groupId>
-				<artifactId>jfxapps-registry-maven-plugin</artifactId>
+				<groupId>com.treilhes.emc4j</groupId>
+				<artifactId>emc4j-registry-maven-plugin</artifactId>
 				<executions>
 					<execution>
 						<id>generate-registry-resources</id>
 						<phase>generate-resources</phase>
 						<goals>
-							<goal>jfxappsRegistry</goal>
+							<goal>emc4jRegistry</goal>
 						</goals>
 					</execution>
 				</executions>

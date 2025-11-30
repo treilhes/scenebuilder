@@ -23,7 +23,7 @@
         <module>scenebuilder.ext.welcome</module>
         <module>scenebuilder.ext.theme</module>
         
-		<!-- no ok
+		<!-- no ok -->
 		<module>scenebuilder.ext.script.graalvm-javascript</module>
         <module>scenebuilder.ext.controls.tooling</module>
         <module>scenebuilder.ext.controls</module>
@@ -44,6 +44,6 @@
         <module>scenebuilder.ext.script</module>
         <module>scenebuilder.ext.i18n</module>
         
-        -->
+        
     </modules>
 </project>

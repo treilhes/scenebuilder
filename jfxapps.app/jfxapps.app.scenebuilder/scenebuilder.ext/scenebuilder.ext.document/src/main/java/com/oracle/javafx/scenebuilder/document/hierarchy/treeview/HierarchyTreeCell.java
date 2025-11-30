@@ -39,9 +39,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
 import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
 import com.gluonhq.jfxapps.core.api.fxom.error.ErrorReport;
@@ -582,7 +582,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
     @ApplicationInstanceSingleton
     @SuppressWarnings({"unchecked", "rawtypes"})
     public final static class Factory extends AbstractFactory<HierarchyTreeCell> {
-        public Factory(JfxAppContext sbContext) {
+        public Factory(EmContext sbContext) {
             super(sbContext);
         }
 

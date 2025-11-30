@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.ext.theme;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeGroup;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeManager;

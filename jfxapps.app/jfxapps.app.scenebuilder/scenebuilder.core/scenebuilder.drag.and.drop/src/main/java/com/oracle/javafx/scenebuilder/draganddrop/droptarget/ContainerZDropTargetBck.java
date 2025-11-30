@@ -35,9 +35,9 @@ package com.oracle.javafx.scenebuilder.draganddrop.droptarget;
 
 import java.util.Objects;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.AbstractDropTarget;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTargetFactory;
@@ -213,7 +213,7 @@ public final class ContainerZDropTargetBck extends AbstractDropTarget {
 
     @ApplicationInstanceSingleton
     public static class Factory extends DropTargetFactory<ContainerZDropTargetBck> {
-        public Factory(JfxAppContext sbContext) {
+        public Factory(EmContext sbContext) {
             super(sbContext);
         }
 

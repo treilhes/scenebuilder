@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.document.hierarchy;
 
 import java.util.Optional;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DefaultDragSourceFactory;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DefaultDropTargetFactory;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;

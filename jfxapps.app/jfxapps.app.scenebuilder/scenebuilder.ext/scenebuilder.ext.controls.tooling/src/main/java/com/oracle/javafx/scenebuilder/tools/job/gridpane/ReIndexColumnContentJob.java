@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.tools.job.gridpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchJob;
 import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
@@ -159,7 +159,7 @@ public final class ReIndexColumnContentJob extends AbstractJob {
 
     @ApplicationInstanceSingleton
     public static class Factory extends JobFactory<ReIndexColumnContentJob> {
-        public Factory(JfxAppContext sbContext) {
+        public Factory(EmContext sbContext) {
             super(sbContext);
         }
 

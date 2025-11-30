@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractMouseGesture;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
@@ -116,7 +116,7 @@ public class DebugMouseGesture extends AbstractMouseGesture {
 
     @ApplicationInstanceSingleton
     public static class Factory extends GestureFactory<DebugMouseGesture> {
-        public Factory(JfxAppContext sbContext) {
+        public Factory(EmContext sbContext) {
             super(sbContext);
         }
         public DebugMouseGesture getGesture(String title) {

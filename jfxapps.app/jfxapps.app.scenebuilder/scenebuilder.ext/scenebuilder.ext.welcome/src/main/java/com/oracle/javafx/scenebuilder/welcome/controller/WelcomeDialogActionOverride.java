@@ -35,9 +35,9 @@ package com.oracle.javafx.scenebuilder.welcome.controller;
 
 import java.util.function.Consumer;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.boot.api.context.annotation.OverrideBean;
-import com.gluonhq.jfxapps.boot.api.context.annotation.OverridedBeanAware;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.OverrideBean;
+import com.treilhes.emc4j.boot.api.context.annotation.OverridedBeanAware;
 import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.application.ApplicationActionFactory;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;

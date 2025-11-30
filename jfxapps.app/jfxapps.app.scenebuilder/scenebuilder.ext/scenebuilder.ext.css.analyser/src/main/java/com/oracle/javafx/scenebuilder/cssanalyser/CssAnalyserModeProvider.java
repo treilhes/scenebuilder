@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.cssanalyser;
 import java.util.Arrays;
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.content.mode.ModeDescriptor;
 import com.gluonhq.jfxapps.core.api.fxom.content.mode.ModeProvider;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;

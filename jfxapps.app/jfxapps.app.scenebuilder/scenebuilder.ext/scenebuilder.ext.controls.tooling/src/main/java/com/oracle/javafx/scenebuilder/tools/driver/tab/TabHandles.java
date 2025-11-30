@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.tab;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.DiscardGesture;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;

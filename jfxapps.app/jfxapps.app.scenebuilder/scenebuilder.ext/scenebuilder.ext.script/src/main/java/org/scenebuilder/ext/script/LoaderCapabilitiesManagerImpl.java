@@ -39,8 +39,8 @@ import org.scenebuilder.ext.script.preference.global.StaticLoadPreference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.api.context.annotation.PreferedConstructor;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.PreferedConstructor;
 import com.gluonhq.jfxapps.core.api.fxom.FxomDocumentFactory;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;

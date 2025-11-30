@@ -42,7 +42,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.content.mode.AbstractModeController;
 import com.gluonhq.jfxapps.core.api.fxom.content.mode.Layer;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;

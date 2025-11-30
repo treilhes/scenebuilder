@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.selection.extension;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.api.context.annotation.OverrideBean;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.OverrideBean;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
@@ -45,7 +45,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 @OverrideBean(SelectionJobsFactory.class)
 public class SelectionJobsFactoryOverrides extends JobFactory<Job> {
 
-    public SelectionJobsFactoryOverrides(JfxAppContext sbContext) {
+    public SelectionJobsFactoryOverrides(EmContext sbContext) {
         super(sbContext);
     }
 

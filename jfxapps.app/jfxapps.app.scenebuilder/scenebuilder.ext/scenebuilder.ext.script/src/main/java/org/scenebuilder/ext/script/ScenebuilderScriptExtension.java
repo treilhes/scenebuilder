@@ -40,7 +40,7 @@ import java.util.UUID;
 import org.scenebuilder.ext.script.i18n.I18NScenebuilderScript;
 import org.scenebuilder.ext.script.preference.global.StaticLoadPreference;
 
-import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import com.treilhes.emc4j.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.api.SbApiExtension;
 
 public class ScenebuilderScriptExtension implements OpenExtension {

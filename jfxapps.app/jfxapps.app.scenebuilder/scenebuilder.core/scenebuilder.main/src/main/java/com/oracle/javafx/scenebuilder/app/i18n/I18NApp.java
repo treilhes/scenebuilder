@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.app.i18n;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
 
 @ApplicationSingleton

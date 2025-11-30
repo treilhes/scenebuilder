@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractMouseDragGesture;
@@ -130,7 +130,7 @@ public class SelectWithPringGesture extends AbstractMouseDragGesture {
 
     @ApplicationSingleton
     public static class Factory extends GestureFactory<SelectWithPringGesture> {
-        public Factory(JfxAppContext sbContext) {
+        public Factory(EmContext sbContext) {
             super(sbContext);
         }
         public SelectWithPringGesture getGesture(FXOMInstance fxomInstance) {

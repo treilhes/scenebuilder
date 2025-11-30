@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.selection;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Primary;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.Primary;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.TargetSelectionGeneric;
 import com.oracle.javafx.scenebuilder.api.mask.SbAccessory;
 import com.oracle.javafx.scenebuilder.api.selection.SbTargetSelection;

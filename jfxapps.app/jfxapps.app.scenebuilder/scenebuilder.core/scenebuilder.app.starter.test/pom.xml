@@ -9,8 +9,8 @@
   
   <dependencies>
       <dependency>
-          <groupId>com.gluonhq.jfxapps</groupId>
-          <artifactId>jfxapps.core.starter.test</artifactId>
+          <groupId>com.treilhes.jfxplace</groupId>
+          <artifactId>jfxplace.core.starter.test</artifactId>
       </dependency>
   </dependencies>
 </project>

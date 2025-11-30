@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.gluonhq.jfxapps</groupId>
         <artifactId>jfxapps.metadata</artifactId>
-        <version>${jfxapps.version}</version>
+        <version>${scenebuilder.version}</version>
     </parent>
     <artifactId>jfxapps-metadata-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
@@ -17,8 +17,6 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <integration.testing.framework.version>0.13.1</integration.testing.framework.version>
 
-        <logback.version>1.5.3</logback.version>
-        <slf4j.version>2.0.12</slf4j.version>
     </properties>
 
     <dependencies>
@@ -40,6 +38,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-properties</artifactId>
+            <version>${jackson-dataformat-properties.version}</version>
         </dependency>
 
         <dependency>

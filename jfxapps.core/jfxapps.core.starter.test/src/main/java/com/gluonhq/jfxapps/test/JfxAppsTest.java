@@ -44,12 +44,12 @@ import org.springframework.test.context.BootstrapWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import com.gluonhq.jfxapps.boot.api.context.Application;
-import com.gluonhq.jfxapps.boot.api.context.ApplicationInstance;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Primary;
 import com.gluonhq.jfxapps.test.JfxAppsExtension.JfxAppsTestContextBootstrapper;
+import com.treilhes.emc4j.boot.api.context.Application;
+import com.treilhes.emc4j.boot.api.context.ApplicationInstance;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.Primary;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})

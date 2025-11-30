@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import com.treilhes.emc4j.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.api.SbApiExtension;
 import com.oracle.javafx.scenebuilder.ext.i18n.actions.ApplyI18nContentAction;
 import com.oracle.javafx.scenebuilder.ext.i18n.actions.ApplyI18nContentResourceExtension;

@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.tab;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.inlineedit.AbstractInlineEditorBounds;
 import com.oracle.javafx.scenebuilder.tools.driver.tabpane.TabPaneDesignInfoX;

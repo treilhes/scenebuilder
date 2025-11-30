@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.gluonhq.jfxapps</groupId>
         <artifactId>jfxapps.app</artifactId>
-        <version>${jfxapps.version}</version>
+        <version>${scenebuilder.version}</version>
     </parent>
     <artifactId>jfxapps.app.scenebuilder</artifactId>
     <version>${scenebuilder.version}</version>
@@ -13,8 +13,8 @@
 
     <modules>
         <module>scenebuilder.core</module>
-        <!--<module>scenebuilder.ext</module>-->
-        <!--<module>scenebuilder.gluon</module>-->
+        <module>scenebuilder.ext</module>
+        <module>scenebuilder.gluon</module>
         <module>scenebuilder.registry</module>
     </modules>
 

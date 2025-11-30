@@ -34,7 +34,7 @@ open module scenebuilder.ext.gluon {
 //    requires org.slf4j;
     requires scenebuilder.ext.library.control;
     requires scenebuilder.ext.controls;
-    requires transitive jfxapps.core.api;
+    requires transitive jfxplace.core.api;
     requires scenebuilder.ext.defaultx;
     requires scenebuilder.core.extension.api;
 //    requires spring.beans;

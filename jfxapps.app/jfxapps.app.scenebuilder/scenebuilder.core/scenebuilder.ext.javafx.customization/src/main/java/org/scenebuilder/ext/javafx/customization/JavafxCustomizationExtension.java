@@ -41,7 +41,7 @@ import org.scenebuilder.ext.javafx.customization.anchorpane.AnchorPaneConstraint
 import org.scenebuilder.ext.javafx.customization.anchorpane.AnchorPaneEditorProvider;
 import org.scenebuilder.ext.javafx.customization.i18n.I18NJavafxCustomization;
 
-import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import com.treilhes.emc4j.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.api.SbApiExtension;
 import com.oracle.javafx.scenebuilder.metadata.custom.addon.NodeMetadataAddin;
 

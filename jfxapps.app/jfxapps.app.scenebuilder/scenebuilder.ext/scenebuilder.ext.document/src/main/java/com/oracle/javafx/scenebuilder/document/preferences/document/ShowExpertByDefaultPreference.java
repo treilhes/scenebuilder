@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.document.preferences.document;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
 import com.gluonhq.jfxapps.core.api.preference.ManagedDocumentPreference;
 import com.gluonhq.jfxapps.core.api.preference.Preference;

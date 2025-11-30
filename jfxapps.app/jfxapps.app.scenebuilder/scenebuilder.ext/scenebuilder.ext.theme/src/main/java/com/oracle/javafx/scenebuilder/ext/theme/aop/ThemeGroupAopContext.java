@@ -41,10 +41,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 
-import com.gluonhq.jfxapps.boot.api.aop.AopContext;
-import com.gluonhq.jfxapps.boot.api.aop.AopFactoryBean;
-import com.gluonhq.jfxapps.boot.api.aop.AopMetadata;
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.treilhes.emc4j.boot.api.aop.AopContext;
+import com.treilhes.emc4j.boot.api.aop.AopFactoryBean;
+import com.treilhes.emc4j.boot.api.aop.AopMetadata;
+import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeGroup;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeGroupContext;
 
@@ -60,7 +60,7 @@ public class ThemeGroupAopContext extends AopContext<ThemeGroup, ThemeGroupConte
     }
 
     @Override
-    public ThemeGroup createTarget(JfxAppContext context, ThemeGroupMetadata metadata) {
+    public ThemeGroup createTarget(EmContext context, ThemeGroupMetadata metadata) {
 
         var id = metadata.getId();
         var name = metadata.getName();

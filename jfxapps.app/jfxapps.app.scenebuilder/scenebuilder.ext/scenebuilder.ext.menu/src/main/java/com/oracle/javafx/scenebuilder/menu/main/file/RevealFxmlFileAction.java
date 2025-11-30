@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.menu.main.file;
 import java.io.File;
 import java.net.URL;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
+import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
+import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
+import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
@@ -122,12 +122,12 @@ public class RevealFxmlFileAction extends AbstractAction {
          * Setup title of the Reveal menu item according the underlying o/s.
          */
         final String revealMenuKey;
-        if (JfxAppsPlatform.IS_MAC) {
+        if (EmcPlatform.IS_MAC) {
             revealMenuKey = "menu.title.reveal.mac";
-        } else if (JfxAppsPlatform.IS_WINDOWS) {
+        } else if (EmcPlatform.IS_WINDOWS) {
             revealMenuKey = "menu.title.reveal.win.mnemonic";
         } else {
-            assert JfxAppsPlatform.IS_LINUX;
+            assert EmcPlatform.IS_LINUX;
             revealMenuKey = "menu.title.reveal.linux";
         }
         return getI18n().getString(revealMenuKey);

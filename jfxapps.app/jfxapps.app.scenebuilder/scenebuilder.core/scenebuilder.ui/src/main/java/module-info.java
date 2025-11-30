@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+import com.treilhes.emc4j.boot.api.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.core.ui.ScenebuilderUiExtension;
 
 open module scenebuilder.core.ui {
@@ -39,9 +39,9 @@ open module scenebuilder.core.ui {
     //exports com.oracle.javafx.scenebuilder.core.ui.template;
     exports com.oracle.javafx.scenebuilder.core.ui.i18n;
 
-    requires transitive jfxapps.core.api;
+    requires transitive jfxplace.core.api;
     requires transitive scenebuilder.api;
-    requires jfxapps.core.utils;
+    requires jfxplace.core.utils;
     requires scenebuilder.app.starter;
     requires spring.beans;
 

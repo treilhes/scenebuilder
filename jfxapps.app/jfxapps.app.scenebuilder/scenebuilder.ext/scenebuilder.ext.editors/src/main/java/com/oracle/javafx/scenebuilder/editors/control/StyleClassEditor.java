@@ -48,7 +48,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
+import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -498,7 +498,7 @@ public class StyleClassEditor extends InlineListEditor {
                 revealMi.setVisible(true);
                 String stylesheet = EditorUtils.getSimpleFileName(stylesheetUrl);
                 openMi.setText(I18N.getString("inspector.list.open", stylesheet));
-                if (JfxAppsPlatform.IS_MAC) {
+                if (EmcPlatform.IS_MAC) {
                     revealMi.setText(I18N.getString("inspector.list.reveal.finder", stylesheet));
                 } else {
                     revealMi.setText(I18N.getString("inspector.list.reveal.explorer", stylesheet));

@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.inspector.actions;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 import javafx.scene.control.ToggleGroup;
 

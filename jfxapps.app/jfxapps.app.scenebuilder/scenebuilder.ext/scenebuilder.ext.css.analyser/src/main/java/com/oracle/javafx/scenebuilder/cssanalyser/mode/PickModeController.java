@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.cssanalyser.mode;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Lazy;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
 import com.gluonhq.jfxapps.core.api.fxom.content.mode.AbstractModeController;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;

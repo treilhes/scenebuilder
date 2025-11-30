@@ -37,7 +37,7 @@ package com.oracle.javafx.scenebuilder.job.internal.reference;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.fxom.job.base.InlineDocumentJob;
 import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;

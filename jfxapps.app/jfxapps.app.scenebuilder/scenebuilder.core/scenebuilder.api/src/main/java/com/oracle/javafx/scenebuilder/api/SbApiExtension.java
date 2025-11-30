@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.api.loader.extension.ApplicationExtension;
+import com.treilhes.emc4j.boot.api.loader.extension.ApplicationExtension;
 import com.gluonhq.jfxapps.core.api.application.annotation.EditorDescriptor;
 import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
 import com.oracle.javafx.scenebuilder.api.control.driver.SbDriverImpl;

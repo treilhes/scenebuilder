@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.controllibrary.action;
 
 import java.io.IOException;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
@@ -101,12 +101,12 @@ public class RevealControlFolderAction extends AbstractAction {
 
     public String getTitle() {
         final String revealMenuKey;
-        if (JfxAppsPlatform.IS_MAC) {
+        if (EmcPlatform.IS_MAC) {
             revealMenuKey = "menu.title.reveal.mac";
-        } else if (JfxAppsPlatform.IS_WINDOWS) {
+        } else if (EmcPlatform.IS_WINDOWS) {
             revealMenuKey = "menu.title.reveal.win";
         } else {
-            assert JfxAppsPlatform.IS_LINUX;
+            assert EmcPlatform.IS_LINUX;
             revealMenuKey = "menu.title.reveal.linux";
         }
         return I18N.getStringOrDefault(revealMenuKey, revealMenuKey);

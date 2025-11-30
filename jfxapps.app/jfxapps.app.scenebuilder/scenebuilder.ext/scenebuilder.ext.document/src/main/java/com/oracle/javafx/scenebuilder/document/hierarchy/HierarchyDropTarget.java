@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.document.hierarchy;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.AbstractDropTarget;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTargetFactory;
@@ -248,7 +248,7 @@ public final class HierarchyDropTarget extends AbstractDropTarget {
 
     @ApplicationSingleton
     public static class Factory extends DropTargetFactory<HierarchyDropTarget> {
-        public Factory(JfxAppContext sbContext) {
+        public Factory(EmContext sbContext) {
             super(sbContext);
         }
 

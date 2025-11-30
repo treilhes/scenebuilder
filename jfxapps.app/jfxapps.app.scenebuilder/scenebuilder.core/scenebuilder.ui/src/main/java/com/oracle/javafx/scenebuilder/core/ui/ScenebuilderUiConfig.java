@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.core.ui;
 
 import org.springframework.context.annotation.Configuration;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationConfiguration;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationConfiguration;
 
 @ApplicationConfiguration
 @Configuration

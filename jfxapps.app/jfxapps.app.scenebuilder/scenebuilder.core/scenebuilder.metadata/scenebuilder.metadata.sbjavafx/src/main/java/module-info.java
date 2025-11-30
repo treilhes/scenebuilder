@@ -4,6 +4,6 @@ module scenebuilder.metadata.sbjavafx {
     requires transitive scenebuilder.metadata.javafx;
     requires transitive scenebuilder.metadata.javafx.fx;
     requires transitive scenebuilder.metadata.customization;
-    requires jfxapps.core.starter;
+    requires jfxplace.core.starter;
 
 }

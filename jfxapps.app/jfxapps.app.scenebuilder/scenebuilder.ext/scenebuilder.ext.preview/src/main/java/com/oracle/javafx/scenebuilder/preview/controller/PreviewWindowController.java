@@ -44,7 +44,7 @@ import java.util.TimerTask;
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.css.StylesheetProvider;
 import com.gluonhq.jfxapps.core.api.fxom.util.FXOMDocumentUtils;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;

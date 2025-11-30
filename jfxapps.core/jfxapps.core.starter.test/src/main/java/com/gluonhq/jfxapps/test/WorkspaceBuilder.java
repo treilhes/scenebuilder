@@ -37,8 +37,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.testfx.api.FxRobot;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.application.ApplicationClassloader;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.javafx.UiController;
@@ -47,6 +45,8 @@ import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.util.URLUtils;
+import com.treilhes.emc4j.boot.api.context.JfxAppContext;
+import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
 
 import javafx.scene.Group;
 import javafx.scene.Node;

@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.tools.driver.splitpane;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.content.mode.Layer;
 import com.gluonhq.jfxapps.core.api.fxom.content.mode.ModeManager;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractMouseGesture;
@@ -221,7 +221,7 @@ public class AdjustDividerGesture extends AbstractMouseGesture {
 
     @ApplicationSingleton
     public static class Factory extends GestureFactory<AdjustDividerGesture> {
-        public Factory(JfxAppContext sbContext) {
+        public Factory(EmContext sbContext) {
             super(sbContext);
         }
         public AdjustDividerGesture getGesture(FXOMInstance splitPaneInstance, int dividerIndex) {

@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;

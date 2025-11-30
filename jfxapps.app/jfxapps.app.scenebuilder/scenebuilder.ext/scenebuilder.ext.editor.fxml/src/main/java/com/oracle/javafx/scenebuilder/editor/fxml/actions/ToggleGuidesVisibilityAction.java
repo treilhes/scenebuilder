@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;

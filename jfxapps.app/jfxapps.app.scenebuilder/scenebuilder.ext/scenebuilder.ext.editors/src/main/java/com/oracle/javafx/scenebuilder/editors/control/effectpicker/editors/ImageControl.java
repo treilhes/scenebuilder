@@ -44,7 +44,7 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
+import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPickerController;
 
@@ -80,7 +80,7 @@ public class ImageControl extends GridPane {
             String labelString, Image initVal) {
         this.effectPickerController = effectPickerController;
         initialize(labelString, initVal);
-        if (JfxAppsPlatform.IS_MAC) {
+        if (EmcPlatform.IS_MAC) {
             editor_button.setManaged(false);
             editor_button.setVisible(false);
         }

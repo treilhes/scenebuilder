@@ -49,7 +49,7 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.fxom.error.ErrorReport;
 import com.gluonhq.jfxapps.core.api.fxom.error.ErrorReportEntry;
@@ -94,7 +94,7 @@ class HierarchyTreeCellTest {
     @Mock
     private DisplayOption displayOption;
     @Mock
-    private JfxAppContext context;
+    private EmContext context;
     @Mock
     private HierarchyController panelController;
     @InjectMocks

@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.tools.driver.gridpane;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.AbstractDropTarget;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTargetFactory;
@@ -313,7 +313,7 @@ public final class GridPaneDropTarget extends AbstractDropTarget {
 
     @ApplicationInstanceSingleton
     public static class Factory extends DropTargetFactory<GridPaneDropTarget> {
-        public Factory(JfxAppContext sbContext) {
+        public Factory(EmContext sbContext) {
             super(sbContext);
         }
 

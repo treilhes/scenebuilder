@@ -44,9 +44,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroupFactory;
@@ -368,7 +368,7 @@ public final class GridSelectionGroup implements SelectionGroup {
     @ApplicationInstanceSingleton
     public static class Factory extends SelectionGroupFactory<GridSelectionGroup> {
 
-        public Factory(JfxAppContext sbContext, SelectionGroupFactoryRegistry registry) {
+        public Factory(EmContext sbContext, SelectionGroupFactoryRegistry registry) {
             super(sbContext, registry);
             // we register the ObjectSelectionGroup factory for Object
             // it will be the default factory

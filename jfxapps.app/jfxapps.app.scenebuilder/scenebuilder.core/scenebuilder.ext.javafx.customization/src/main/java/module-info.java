@@ -33,13 +33,13 @@
  */
 import org.scenebuilder.ext.javafx.customization.JavafxCustomizationExtension;
 
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+import com.treilhes.emc4j.boot.api.loader.extension.Extension;
 
 open module scenebuilder.ext.javafx.customization {
     exports org.scenebuilder.ext.javafx.customization;
     exports org.scenebuilder.ext.javafx.customization.i18n;
 
-//    requires transitive jfxapps.core.api;
+//    requires transitive jfxplace.core.api;
     requires transitive scenebuilder.app.starter;
     requires scenebuilder.api;
 

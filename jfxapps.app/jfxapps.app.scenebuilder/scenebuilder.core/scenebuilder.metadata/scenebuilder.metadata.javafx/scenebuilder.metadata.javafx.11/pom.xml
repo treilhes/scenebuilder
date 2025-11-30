@@ -40,7 +40,7 @@
             <plugin>
                 <groupId>com.gluonhq.jfxapps</groupId>
                 <artifactId>jfxapps-metadata-maven-plugin</artifactId>
-                <version>${jfxapps.version}</version>
+                <version>${scenebuilder.version}</version>
                 <executions>
                     <execution>
                         <id>generate-class-sources</id>

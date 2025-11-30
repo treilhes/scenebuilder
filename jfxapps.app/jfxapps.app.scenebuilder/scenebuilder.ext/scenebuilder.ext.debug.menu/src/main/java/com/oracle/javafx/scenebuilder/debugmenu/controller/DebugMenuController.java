@@ -39,7 +39,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.api.job.Job;
@@ -87,7 +87,7 @@ public class DebugMenuController implements DebugMenu {
         /*
          * User Library Folder
          */
-        final File applicationDataFolder = fileSystem.getApplicationDataFolder();
+        final File applicationDataFolder = fileSystem.getDataFolder();
         final MenuItem libraryFolderMenuItem
                 = new MenuItem();
         libraryFolderMenuItem.setText(applicationDataFolder.getAbsolutePath());

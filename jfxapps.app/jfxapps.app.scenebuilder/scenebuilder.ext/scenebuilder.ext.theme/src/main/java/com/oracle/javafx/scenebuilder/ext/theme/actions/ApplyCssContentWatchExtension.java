@@ -42,8 +42,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.AbstractActionExtension;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem.WatchingCallback;
@@ -58,12 +58,12 @@ public class ApplyCssContentWatchExtension extends AbstractActionExtension<Apply
     private final UserStylesheetsPreference userStylesheetsPreference;
     private final FileSystem fileSystem;
     private final SceneStyleSheetMenuController sceneStyleSheetMenuController;
-    private final JfxAppContext context;
+    private final EmContext context;
 
     //@formatter:off
     public ApplyCssContentWatchExtension(
             @Autowired FileSystem fileSystem,
-            @Autowired JfxAppContext context,
+            @Autowired EmContext context,
             @Autowired SceneStyleSheetMenuController sceneStyleSheetMenuController,
             @Autowired @Lazy UserStylesheetsPreference userStylesheetsPreference) {
         //@formatter:on

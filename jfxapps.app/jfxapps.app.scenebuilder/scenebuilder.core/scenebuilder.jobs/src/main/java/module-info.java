@@ -31,16 +31,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+import com.treilhes.emc4j.boot.api.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.job.SbJobsExtension;
 
 open module scenebuilder.fxml.core.jobs {
     exports com.oracle.javafx.scenebuilder.job;
     exports com.oracle.javafx.scenebuilder.job.preference;
 
-    requires transitive jfxapps.core.api;
+    requires transitive jfxplace.core.api;
     requires transitive scenebuilder.api;
-    requires jfxapps.core.utils;
+    requires jfxplace.core.utils;
     requires scenebuilder.app.starter;
 
     provides Extension with SbJobsExtension;

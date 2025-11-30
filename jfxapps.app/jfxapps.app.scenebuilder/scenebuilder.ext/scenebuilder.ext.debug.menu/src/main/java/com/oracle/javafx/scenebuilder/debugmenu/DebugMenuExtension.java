@@ -38,7 +38,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.api.loader.extension.OpenExtension;
+import com.treilhes.emc4j.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.api.SbApiExtension;
 import com.oracle.javafx.scenebuilder.debugmenu.action.ToggleDebugViewVisibilityAction;
 import com.oracle.javafx.scenebuilder.debugmenu.controller.DebugMenuController;

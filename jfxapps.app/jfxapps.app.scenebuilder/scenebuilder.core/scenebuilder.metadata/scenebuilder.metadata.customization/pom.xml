@@ -11,13 +11,18 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.starter</artifactId>
+            <groupId>com.treilhes.jfxplace</groupId>
+            <artifactId>jfxplace.core.api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.starter.test</artifactId>
+            <groupId>com.treilhes.jfxplace</groupId>
+            <artifactId>jfxplace.core.starter</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.treilhes.jfxplace</groupId>
+            <artifactId>jfxplace.core.starter.test</artifactId>
             <scope>test</scope>
         </dependency>
         <!-- The goal for this dependency is to force the build of
@@ -25,7 +30,6 @@
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>jfxapps-metadata-maven-plugin</artifactId>
-            <version>${jfxapps.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

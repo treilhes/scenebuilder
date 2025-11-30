@@ -37,8 +37,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
@@ -119,7 +119,7 @@ public class IncludedRevealFxmlAction extends AbstractAction {
         String title = getI18n().getString("menu.title.reveal.included.default");
         final File file = editor.getIncludedFile();
         if (file != null) {
-            if (JfxAppsPlatform.IS_MAC) {
+            if (EmcPlatform.IS_MAC) {
                 title = getI18n().getString("menu.title.reveal.included.finder", file.getName());
             } else {
                 title = getI18n().getString("menu.title.reveal.included.explorer", file.getName());

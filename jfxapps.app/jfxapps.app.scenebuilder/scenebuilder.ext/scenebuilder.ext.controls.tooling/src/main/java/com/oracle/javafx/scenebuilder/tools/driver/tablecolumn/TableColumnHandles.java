@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.tools.driver.tablecolumn;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractGesture;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.DiscardGesture;
 import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;

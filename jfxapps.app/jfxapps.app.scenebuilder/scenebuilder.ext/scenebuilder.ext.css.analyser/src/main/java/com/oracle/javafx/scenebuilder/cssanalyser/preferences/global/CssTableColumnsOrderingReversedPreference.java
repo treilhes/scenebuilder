@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.cssanalyser.preferences.global;
 
 import java.util.function.Function;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups;
 import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
 import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;

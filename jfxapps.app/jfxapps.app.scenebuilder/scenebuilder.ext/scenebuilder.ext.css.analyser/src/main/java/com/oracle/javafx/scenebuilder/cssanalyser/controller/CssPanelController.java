@@ -47,8 +47,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.clipboard.ClipboardHandler;
 import com.gluonhq.jfxapps.core.api.fxom.css.CssInternal;
@@ -1281,7 +1281,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
                         // Stylesheets column
                         navigationMenuButton.getItems().add(openStylesheetMenuItem);
                         navigationMenuButton.getItems().add(revealInFileBrowserMenuItem);
-                        revealInFileBrowserMenuItem.setText(JfxAppsPlatform.IS_MAC
+                        revealInFileBrowserMenuItem.setText(EmcPlatform.IS_MAC
                                 ? MessageFormat.format(getI18n().getString("csspanel.reveal.finder"), nav)
                                 : MessageFormat.format(getI18n().getString("csspanel.reveal.explorer"), nav));
                         revealInFileBrowserMenuItem

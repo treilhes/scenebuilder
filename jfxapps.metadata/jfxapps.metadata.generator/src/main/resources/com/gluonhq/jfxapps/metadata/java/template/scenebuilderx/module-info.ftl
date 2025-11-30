@@ -1,4 +1,4 @@
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
+import com.treilhes.emc4j.boot.api.loader.extension.Extension;
 import ${context.targetPackage}.${context.extensionClassSimpleName};
 
 open module ${context.moduleName} {
@@ -7,10 +7,10 @@ open module ${context.moduleName} {
     exports ${subPackage};
     </#list>
 
-    requires jfxapps.boot.api;
-    requires jfxapps.boot.starter;
-    requires transitive jfxapps.core.metadata;
-    requires transitive jfxapps.core.fxom;
+    requires emc4j.boot.api;
+    requires emc4j.boot.starter;
+    requires transitive jfxplace.core.metadata;
+    requires transitive jfxplace.core.fxom;
 
     <#list context.requiredModules as requiredModule>
     requires transitive ${requiredModule};

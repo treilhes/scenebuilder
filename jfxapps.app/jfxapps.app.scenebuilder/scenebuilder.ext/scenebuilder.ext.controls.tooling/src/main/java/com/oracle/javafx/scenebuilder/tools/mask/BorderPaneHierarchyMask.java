@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.tools.mask;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
+import com.treilhes.emc4j.boot.api.context.annotation.Singleton;
 import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
 import com.gluonhq.jfxapps.core.api.fxom.mask.Accessory;
 import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
@@ -112,7 +112,7 @@ public class BorderPaneHierarchyMask {
 
     @Singleton
     public static final class Factory extends AbstractFactory<BorderPaneHierarchyMask> {
-        public Factory(JfxAppContext sbContext) {
+        public Factory(EmContext sbContext) {
             super(sbContext);
         }
 

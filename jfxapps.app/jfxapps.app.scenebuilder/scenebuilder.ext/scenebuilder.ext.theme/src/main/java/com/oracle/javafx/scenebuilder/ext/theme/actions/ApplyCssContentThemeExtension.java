@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.ext.theme.actions;
 
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractActionExtension;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.ext.theme.preference.ThemeDocumentPreference;
@@ -45,9 +45,9 @@ import com.oracle.javafx.scenebuilder.ext.theme.preference.ThemeDocumentPreferen
 public class ApplyCssContentThemeExtension extends AbstractActionExtension<ApplyCssContentAction> {
 
     private final ThemeDocumentPreference themePreference;
-    private final JfxAppContext context;
+    private final EmContext context;
 
-    public ApplyCssContentThemeExtension(JfxAppContext context, @Lazy ThemeDocumentPreference themePreference) {
+    public ApplyCssContentThemeExtension(EmContext context, @Lazy ThemeDocumentPreference themePreference) {
         super();
         this.context = context;
         this.themePreference = themePreference;

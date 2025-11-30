@@ -40,8 +40,8 @@ import java.util.List;
 import java.util.Stack;
 import java.util.function.Consumer;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
@@ -61,10 +61,10 @@ public class PropertyEditorFactoryImpl implements PropertyEditorFactory {
     private final HashMap<Class<? extends PropertyEditor>, Stack<PropertyEditor>> editorPools;
 
     /** The spring context. */
-    private final JfxAppContext context;
+    private final EmContext context;
 
     public PropertyEditorFactoryImpl(
-            JfxAppContext context,
+            EmContext context,
             List<EditorMapProvider> editorMapProviders
             ) {
         this.editorPools = new HashMap<>();

@@ -37,13 +37,13 @@ import java.util.concurrent.TimeoutException;
 
 import org.testfx.api.FxToolkit;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.application.ApplicationClassloader;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.javafx.UiController;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.test.controller.EmptyController;
+import com.treilhes.emc4j.boot.api.context.JfxAppContext;
+import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
 
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;

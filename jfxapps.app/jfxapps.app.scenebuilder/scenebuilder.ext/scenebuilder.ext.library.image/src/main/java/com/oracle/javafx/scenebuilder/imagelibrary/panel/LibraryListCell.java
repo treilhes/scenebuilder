@@ -34,7 +34,7 @@ package com.oracle.javafx.scenebuilder.imagelibrary.panel;
 
 import java.net.URL;
 
-import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
+import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
 import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
 import com.gluonhq.jfxapps.core.api.fxom.library.LibraryItem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -131,7 +131,7 @@ public class LibraryListCell extends ListCell<LibraryListItem> {
 
     private Cursor getOpenHandCursor() {
         // DTL-6477
-        if (JfxAppsPlatform.IS_WINDOWS) {
+        if (EmcPlatform.IS_WINDOWS) {
             return ImageUtils.getOpenHandCursor();
         } else {
             return Cursor.OPEN_HAND;
@@ -140,7 +140,7 @@ public class LibraryListCell extends ListCell<LibraryListItem> {
 
     private Cursor getClosedHandCursor() {
         // DTL-6477
-        if (JfxAppsPlatform.IS_WINDOWS) {
+        if (EmcPlatform.IS_WINDOWS) {
             return ImageUtils.getClosedHandCursor();
         } else {
             return Cursor.CLOSED_HAND;

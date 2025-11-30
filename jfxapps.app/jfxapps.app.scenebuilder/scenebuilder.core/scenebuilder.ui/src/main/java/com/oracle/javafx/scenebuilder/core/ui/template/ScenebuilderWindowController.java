@@ -37,8 +37,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.boot.api.platform.JfxAppsPlatform;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.fxom.util.FXOMDocumentUtils;
@@ -238,7 +238,7 @@ public class ScenebuilderWindowController extends AbstractFxmlWindowController i
 
         // Add a border to the Windows app, because of the specific window decoration on
         // Windows.
-        if (JfxAppsPlatform.IS_WINDOWS) {
+        if (EmcPlatform.IS_WINDOWS) {
             getRoot().getStyleClass().add("windows-document-decoration");// NOI18N
         }
 
@@ -377,7 +377,7 @@ public class ScenebuilderWindowController extends AbstractFxmlWindowController i
             super.openWindow();
         }
 
-        if (!JfxAppsPlatform.IS_MAC) {
+        if (!EmcPlatform.IS_MAC) {
             // TODO uncomment or better add a Maximized preference to the document
             // getStage().setMaximized(true);
         }

@@ -36,8 +36,8 @@ package com.oracle.javafx.scenebuilder.template.aop;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
-import com.gluonhq.jfxapps.boot.api.aop.AopBeanDefinitionRegistryPostProcessor;
-import com.gluonhq.jfxapps.boot.api.context.annotation.DeportedSingleton;
+import com.treilhes.emc4j.boot.api.aop.AopBeanDefinitionRegistryPostProcessor;
+import com.treilhes.emc4j.boot.api.context.annotation.DeportedSingleton;
 
 @DeportedSingleton
 @Order(Ordered.HIGHEST_PRECEDENCE)

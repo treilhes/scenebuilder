@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.selection.job;
 
 import java.io.File;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -46,7 +46,7 @@ import com.oracle.javafx.scenebuilder.selection.extension.SetDocumentRootJob;
 
 @ApplicationInstanceSingleton
 public class SbSelectionJobsFactoryImpl extends JobFactory<Job> implements SbSelectionJobsFactory {
-    public SbSelectionJobsFactoryImpl(JfxAppContext context) {
+    public SbSelectionJobsFactoryImpl(EmContext context) {
         super(context);
     }
 

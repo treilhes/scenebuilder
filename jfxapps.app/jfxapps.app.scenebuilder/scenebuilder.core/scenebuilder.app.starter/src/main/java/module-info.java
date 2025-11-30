@@ -1,4 +1,4 @@
 module scenebuilder.app.starter {
-    requires transitive jfxapps.core.api;
-    requires transitive jfxapps.core.starter;
+    requires transitive jfxplace.core.api;
+    requires transitive jfxplace.core.starter;
 }

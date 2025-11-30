@@ -43,9 +43,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
@@ -85,11 +85,11 @@ public class ToggleDebugViewVisibilityAction extends AbstractToggleViewVisibilit
         private final MenuBuilder menuBuiler;
 
         private final ActionFactory actionFactory;
-        private final JfxAppContext context;
+        private final EmContext context;
 
         public ViewMenuProvider(
                 ActionFactory actionFactory,
-                JfxAppContext context,
+                EmContext context,
                 @Lazy DockViewController dockViewController,
                 MenuBuilder menuBuiler
                 ) {

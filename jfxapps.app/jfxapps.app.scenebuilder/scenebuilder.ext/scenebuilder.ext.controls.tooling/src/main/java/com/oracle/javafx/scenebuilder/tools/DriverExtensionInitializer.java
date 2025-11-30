@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.ui.tool.DriverExtensionRegistry;
 import com.gluonhq.jfxapps.core.api.fxom.ui.tool.PickRefiner;
 import com.oracle.javafx.scenebuilder.api.control.CurveEditor;

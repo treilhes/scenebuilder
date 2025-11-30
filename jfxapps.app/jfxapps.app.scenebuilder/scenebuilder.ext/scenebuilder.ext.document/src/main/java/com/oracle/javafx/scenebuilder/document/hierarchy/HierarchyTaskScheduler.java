@@ -37,7 +37,7 @@ import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.mask.Accessory;
 import com.gluonhq.jfxapps.core.api.fxom.mask.HierarchyMask;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;

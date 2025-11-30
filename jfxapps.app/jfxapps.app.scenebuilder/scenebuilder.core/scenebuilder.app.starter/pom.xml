@@ -9,12 +9,12 @@
   
   <dependencies>
       <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.api</artifactId>
+            <groupId>com.treilhes.jfxplace</groupId>
+            <artifactId>jfxplace.core.api</artifactId>
       </dependency>
       <dependency>
-          <groupId>com.gluonhq.jfxapps</groupId>
-          <artifactId>jfxapps.core.starter</artifactId>
+            <groupId>com.treilhes.jfxplace</groupId>
+            <artifactId>jfxplace.core.starter</artifactId>
       </dependency>
   </dependencies>
 </project>

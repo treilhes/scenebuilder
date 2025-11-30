@@ -28,8 +28,8 @@
     </pluginRepositories>
     <dependencies>
         <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.metadata</artifactId>
+            <groupId>com.treilhes.jfxplace</groupId>
+            <artifactId>jfxplace.core.metadata</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>org.openjfx</groupId>

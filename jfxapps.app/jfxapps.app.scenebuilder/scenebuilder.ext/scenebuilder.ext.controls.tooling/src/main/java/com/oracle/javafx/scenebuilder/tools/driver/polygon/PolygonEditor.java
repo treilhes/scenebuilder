@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.Tunable;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.api.control.curve.AbstractCurveEditor;

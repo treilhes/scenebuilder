@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.template.templates;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateContext;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;

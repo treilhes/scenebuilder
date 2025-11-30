@@ -43,10 +43,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 
-import com.gluonhq.jfxapps.boot.api.aop.AopContext;
-import com.gluonhq.jfxapps.boot.api.aop.AopFactoryBean;
-import com.gluonhq.jfxapps.boot.api.aop.AopMetadata;
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
+import com.treilhes.emc4j.boot.api.aop.AopContext;
+import com.treilhes.emc4j.boot.api.aop.AopFactoryBean;
+import com.treilhes.emc4j.boot.api.aop.AopMetadata;
+import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.oracle.javafx.scenebuilder.api.template.NoTemplateBean;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateContext;
@@ -67,7 +67,7 @@ public class TemplateAopContext extends AopContext<Template, TemplateContext, Te
     }
 
     @Override
-    public Template createTarget(JfxAppContext context, TemplateMetadata metadata) {
+    public Template createTarget(EmContext context, TemplateMetadata metadata) {
 
 
         var id = metadata.getId();

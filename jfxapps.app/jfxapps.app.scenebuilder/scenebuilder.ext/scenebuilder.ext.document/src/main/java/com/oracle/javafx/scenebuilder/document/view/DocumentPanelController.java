@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.document.view;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
@@ -78,7 +78,7 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
     private final HierarchyController hierarchyController;
     private final InfoPanelController infoPanelController;
     private final DisplayOptionPreference displayOptionPreference;
-    private final JfxAppContext context;
+    private final EmContext context;
 
     @FXML
     private StackPane hierarchyPanelHost;
@@ -115,7 +115,7 @@ public class DocumentPanelController extends AbstractFxmlViewController implemen
             InfoPanelController infoPanelController,
             DisplayOptionPreference displayOptionPreference,
             ViewMenu viewMenuController,
-            JfxAppContext context) {
+            EmContext context) {
         //@formatter:on
         super(i18n, scenebuilderManager, documentManager, viewMenuController,
                 DocumentPanelController.class.getResource("DocumentPanel.fxml"));

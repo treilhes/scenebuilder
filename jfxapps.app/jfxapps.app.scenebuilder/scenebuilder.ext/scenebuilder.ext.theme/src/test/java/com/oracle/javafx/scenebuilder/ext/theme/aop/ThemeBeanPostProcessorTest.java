@@ -41,8 +41,8 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ContextConfiguration;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.Singleton;
 import com.gluonhq.jfxapps.test.JfxAppsTest;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeContext;
@@ -59,7 +59,7 @@ class ThemeBeanPostProcessorTest {
     private static final String NAME = "some.name.global";
 
     @Test
-    void must_load_theme(JfxAppContext context) {
+    void must_load_theme(EmContext context) {
         var theme = context.getBean(SimpleTheme.class);
         assertNotNull(theme);
         assertEquals(theme.getId(), UUID.fromString(ID));

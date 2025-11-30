@@ -72,12 +72,6 @@ import org.springframework.test.context.MergedContextConfiguration;
 import org.springframework.test.context.support.AbstractContextLoader;
 import org.testfx.api.FxToolkit;
 
-import com.gluonhq.jfxapps.boot.api.context.JfxAppContext;
-import com.gluonhq.jfxapps.boot.api.layer.Layer;
-import com.gluonhq.jfxapps.boot.api.layer.ModuleLayerManager;
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
-import com.gluonhq.jfxapps.boot.api.loader.extension.RootExtension;
-import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
 import com.gluonhq.jfxapps.boot.context.impl.ContextManagerImpl;
 import com.gluonhq.jfxapps.boot.context.impl.JfxAppContextImpl;
 import com.gluonhq.jfxapps.boot.loader.internal.context.ContextBootstraper;
@@ -95,6 +89,12 @@ import com.gluonhq.jfxapps.core.api.subjects.LifecyclePostProcessor;
 import com.gluonhq.jfxapps.core.api.subjects.ViewManager;
 import com.gluonhq.jfxapps.core.api.task.TaskService;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewController;
+import com.treilhes.emc4j.boot.api.context.JfxAppContext;
+import com.treilhes.emc4j.boot.api.layer.Layer;
+import com.treilhes.emc4j.boot.api.layer.ModuleLayerManager;
+import com.treilhes.emc4j.boot.api.loader.extension.Extension;
+import com.treilhes.emc4j.boot.api.loader.extension.RootExtension;
+import com.treilhes.emc4j.boot.api.loader.extension.SealedExtension;
 
 import javafx.stage.Stage;
 
