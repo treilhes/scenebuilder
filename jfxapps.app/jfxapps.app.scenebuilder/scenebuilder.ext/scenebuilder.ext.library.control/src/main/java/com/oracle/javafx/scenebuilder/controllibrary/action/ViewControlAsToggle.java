@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.controllibrary.action;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 import javafx.scene.control.ToggleGroup;
 

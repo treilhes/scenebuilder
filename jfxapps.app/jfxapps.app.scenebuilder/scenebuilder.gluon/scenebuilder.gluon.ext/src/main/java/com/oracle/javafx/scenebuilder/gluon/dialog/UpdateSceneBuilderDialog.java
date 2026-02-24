@@ -35,17 +35,13 @@ package com.oracle.javafx.scenebuilder.gluon.dialog;
 
 import java.time.LocalDate;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.treilhes.emc4j.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.IgnoreVersionPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.ShowUpdateDialogDatePreference;
 import com.oracle.javafx.scenebuilder.gluon.setting.VersionSetting;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.application.HostServices;
 import javafx.scene.control.ButtonBar;
@@ -59,29 +55,30 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class UpdateSceneBuilderDialog extends Dialog<ButtonType> {
-	
+
     private String latestVersion;
-    
+
+    //@formatter:off
     public UpdateSceneBuilderDialog(
-    		@Autowired HostServices hostServices,
-    		@Autowired ShowUpdateDialogDatePreference showUpdateDialogDate,
-    		@Autowired IgnoreVersionPreference ignoreVersion,
-    		@Autowired VersionSetting versionSetting,
-    		@Autowired IconSetting windowIconSetting,
-    		@Autowired ApplicationInstanceWindow owner
-    		) {
-    	
-    	versionSetting.getLatestVersion((v) -> latestVersion = v);
-    	String latestVersionTextString = versionSetting.getLatestVersionText();
-    	String announcementURL = versionSetting.getLatestVersionAnnouncementURL();
+            HostServices hostServices,
+            I18N i18n,
+            ShowUpdateDialogDatePreference showUpdateDialogDate,
+            IgnoreVersionPreference ignoreVersion,
+            VersionSetting versionSetting,
+            IconSetting windowIconSetting,
+            MainInstanceWindow owner
+            ) {
+        //@formatter:on
+        versionSetting.getLatestVersion((v) -> latestVersion = v);
+        String latestVersionTextString = versionSetting.getLatestVersionText();
+        String announcementURL = versionSetting.getLatestVersionAnnouncementURL();
         initOwner(owner.getStage());
-        setTitle(I18N.getString("download.scene.builder.title"));
-        Label header = new Label(I18N.getString("download.scene.builder.header.label"));
-        Label currentVersionTextLabel = new Label(I18N.getString("download.scene.builder.current.version.label"));
-        Label latestVersionTextLabel = new Label(I18N.getString("download.scene.builder.last.version.number.label"));
+        setTitle(i18n.getString("download.scene.builder.title"));
+        Label header = new Label(i18n.getString("download.scene.builder.header.label"));
+        Label currentVersionTextLabel = new Label(i18n.getString("download.scene.builder.current.version.label"));
+        Label latestVersionTextLabel = new Label(i18n.getString("download.scene.builder.last.version.number.label"));
         Label currentVersionLabel = new Label(versionSetting.getSceneBuilderVersion());
         Label latestVersionLabel = new Label(latestVersion);
         GridPane gridPane = new GridPane();
@@ -110,10 +107,10 @@ public class UpdateSceneBuilderDialog extends Dialog<ButtonType> {
         header.getStyleClass().add("header");
         latestVersionText.getStyleClass().add("latest-version-text");
 
-        ButtonType downloadButton = new ButtonType(I18N.getString("download.scene.builder.download.label"), ButtonBar.ButtonData.OK_DONE);
-        ButtonType ignoreThisUpdate = new ButtonType(I18N.getString("download.scene.builder.ignore.label"));
-        ButtonType remindLater = new ButtonType(I18N.getString("download.scene.builder.remind.later.label"), ButtonBar.ButtonData.CANCEL_CLOSE);
-        ButtonType learnMore = new ButtonType(I18N.getString("download.scene.builder.learn.mode.label"));
+        ButtonType downloadButton = new ButtonType(i18n.getString("download.scene.builder.download.label"), ButtonBar.ButtonData.OK_DONE);
+        ButtonType ignoreThisUpdate = new ButtonType(i18n.getString("download.scene.builder.ignore.label"));
+        ButtonType remindLater = new ButtonType(i18n.getString("download.scene.builder.remind.later.label"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType learnMore = new ButtonType(i18n.getString("download.scene.builder.learn.mode.label"));
         getDialogPane().getButtonTypes().addAll(learnMore, downloadButton, ignoreThisUpdate, remindLater);
 
         getDialogPane().getStylesheets().add(UpdateSceneBuilderDialog.class.getResource("css/UpdateSceneBuilderDialog.css").toString());

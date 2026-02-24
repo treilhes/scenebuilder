@@ -36,13 +36,10 @@ package com.oracle.javafx.scenebuilder.editors.control;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMFxIdIndex;
@@ -51,6 +48,7 @@ import com.gluonhq.jfxapps.core.fxom.util.JavaLanguage;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.core.editors.AutoSuggestEditor;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -61,7 +59,6 @@ import javafx.event.EventHandler;
  *
  */
 @ApplicationInstancePrototype
-@Lazy
 public class ToggleGroupEditor extends AutoSuggestEditor {
 
     List<String> suggestedTgs;
@@ -69,11 +66,12 @@ public class ToggleGroupEditor extends AutoSuggestEditor {
     private final ApplicationInstanceEvents documentManager;
 
     public ToggleGroupEditor(
+            I18N i18n,
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem,
             ApplicationInstanceEvents documentManager) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
         this.documentManager = documentManager;
         initialize(new ArrayList<>());
     }

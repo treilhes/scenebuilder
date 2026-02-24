@@ -41,29 +41,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.application.ApplicationInstanceWindow;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.gluonhq.jfxapps.core.selection.job.ModifySelectionJob;
 import com.oracle.javafx.scenebuilder.api.SbEditor;
 import com.oracle.javafx.scenebuilder.api.control.effect.EffectProvider;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
@@ -76,28 +75,29 @@ public class SetEffectAction extends AbstractAction {
 
     private static Logger logger = LoggerFactory.getLogger(SetEffectAction.class);
 
-    private final ApplicationInstanceWindow documentWindow;
+    private final MainInstanceWindow documentWindow;
     private final JobManager jobManager;
-    private final Selection selection;
-    private final ModifySelectionJob.Factory modifySelectionJobFactory;
-    private final IMetadata metadata;
+    private final FxomSelection selection;
+    private final SelectionJobsFactory selectionJobsFactory;
+    private final SbMetadata metadata;
 
     private Class<? extends Effect> effectClass;
 
     public SetEffectAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             JobManager jobManager,
-            Selection selection,
-            IMetadata metadata,
-            ModifySelectionJob.Factory modifySelectionJobFactory,
+            FxomSelection selection,
+            SbMetadata metadata,
+            SelectionJobsFactory selectionJobsFactory,
             @Autowired SbEditor editor,
 
-            @Autowired @Lazy ApplicationInstanceWindow documentWindow) {
-        super(extensionFactory);
+            @Autowired @Lazy MainInstanceWindow documentWindow) {
+        super(i18n, extensionFactory);
         this.jobManager = jobManager;
         this.selection = selection;
         this.metadata = metadata;
-        this.modifySelectionJobFactory = modifySelectionJobFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
         this.documentWindow = documentWindow;
     }
 
@@ -144,19 +144,17 @@ public class SetEffectAction extends AbstractAction {
 
             final PropertyName pn = new PropertyName("effect"); // NOCHECK
 
-            final PropertyMetadata pm = metadata.queryProperty(Node.class, pn);
+            final var pm = metadata.queryProperty(Node.class, pn);
             assert pm instanceof ValuePropertyMetadata;
             final ValuePropertyMetadata vpm = (ValuePropertyMetadata) pm;
-            final AbstractJob job = modifySelectionJobFactory.getJob(vpm, effect);
+            final var job = selectionJobsFactory.modifySelection(vpm, effect);
             jobManager.push(job);
         } catch (Exception e) {
             logger.error("Error applying effect {}", effectClass, e);
         }
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-    @Lazy
+    @ApplicationInstanceSingleton
     public class MenuProvider implements MenuItemProvider {
 
         private final static String SET_EFFECTS_MENU_ID = "setEffect";
@@ -177,7 +175,7 @@ public class SetEffectAction extends AbstractAction {
         @Override
         public List<MenuItemAttachment> menuItems() {
             return Arrays.asList(
-                    MenuItemAttachment.create(menuBuilder.separator().build(), DefaultMenu.MODIFY_MENU_ID, PositionRequest.AsLastChild),
+                    MenuItemAttachment.create(menuBuilder.separator().build(), DefaultMenu.Modify.ID, PositionRequest.AsLastChild),
                     new SetEffectsMenuItemAttachment());
         }
 
@@ -191,7 +189,7 @@ public class SetEffectAction extends AbstractAction {
 
             @Override
             public String getTargetId() {
-                return DefaultMenu.MODIFY_MENU_ID;
+                return DefaultMenu.Modify.ID;
             }
 
             @Override

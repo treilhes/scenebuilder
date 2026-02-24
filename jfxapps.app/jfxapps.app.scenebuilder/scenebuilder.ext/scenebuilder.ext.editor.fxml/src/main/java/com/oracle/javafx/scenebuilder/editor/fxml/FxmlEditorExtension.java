@@ -37,9 +37,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.treilhes.emc4j.boot.api.loader.extension.OpenExtension;
-import com.gluonhq.jfxapps.core.ui.controller.ContentPanelController;
-import com.gluonhq.jfxapps.core.ui.controller.ContextMenuController;
 import com.oracle.javafx.scenebuilder.api.SbApiExtension;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.BringForwardAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.BringToFrontAction;
@@ -61,6 +58,7 @@ import com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse.SelectAndMoveGes
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse.SelectWithMarqueeGesture;
 import com.oracle.javafx.scenebuilder.editor.fxml.i18n.I18NContentEditor;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key.MoveWithKeyGesture;
+import com.treilhes.emc4j.boot.api.loader.extension.OpenExtension;
 
 public class FxmlEditorExtension implements OpenExtension {
 
@@ -88,8 +86,8 @@ public class FxmlEditorExtension implements OpenExtension {
                 BringForwardAction.class,
                 BringToFrontAction.class,
                 ContentModeProvider.class,
-                ContentPanelController.class,
-                ContextMenuController.class,
+//                ContentPanelController.class,
+//                ContextMenuController.class,
                 DebugMouseGesture.class,
                 DebugMouseGesture.Factory.class,
                 DragGesture.class,

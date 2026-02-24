@@ -33,16 +33,16 @@
  */
 package com.oracle.javafx.scenebuilder.menu.main.file;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fs.FileSystemActionFactory;
+import com.gluonhq.jfxapps.core.api.document.DocumentActionFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
@@ -57,23 +57,23 @@ public class SaveOrSaveAsAction extends AbstractAction {
 
     public final static String MENU_ID = DefaultMenu.File.SAVE_AS_ID;
 
-    private final FileSystemActionFactory fileSystemActionFactory;
+    private final DocumentActionFactory documentActionFactory;
 
     public SaveOrSaveAsAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            FileSystemActionFactory fileSystemActionFactory) {
+            DocumentActionFactory documentActionFactory) {
         super(i18n, extensionFactory);
-        this.fileSystemActionFactory = fileSystemActionFactory;
+        this.documentActionFactory = documentActionFactory;
     }
 
     @Override
     public boolean canPerform() {
-        return fileSystemActionFactory.saveOrSaveAs().canPerform();
+        return documentActionFactory.saveOrSaveAs().canPerform();
     }
 
     @Override
     public ActionStatus doPerform() {
-        return fileSystemActionFactory.saveOrSaveAs().perform();
+        return documentActionFactory.saveOrSaveAs().perform();
     }
 }

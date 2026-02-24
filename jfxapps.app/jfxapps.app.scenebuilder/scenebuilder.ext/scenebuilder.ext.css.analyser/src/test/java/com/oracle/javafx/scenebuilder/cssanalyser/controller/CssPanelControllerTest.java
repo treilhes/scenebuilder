@@ -53,8 +53,8 @@ import org.testfx.api.FxRobot;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSource;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelectionGroup;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
@@ -89,8 +89,8 @@ class CssPanelControllerTest {
         }
 
         @Bean
-        Selection selection() {
-            return Mockito.mock(Selection.class);
+        FxomSelection selection() {
+            return Mockito.mock(FxomSelection.class);
         }
 
         @Bean
@@ -142,10 +142,10 @@ class CssPanelControllerTest {
     Drag drag;
 
     @Autowired
-    Selection selection;
+    FxomSelection selection;
 
     @Mock
-    SelectionGroup group;
+    FxomSelectionGroup group;
 
     @Autowired
     ApplicationInstanceEvents instanceEvents;

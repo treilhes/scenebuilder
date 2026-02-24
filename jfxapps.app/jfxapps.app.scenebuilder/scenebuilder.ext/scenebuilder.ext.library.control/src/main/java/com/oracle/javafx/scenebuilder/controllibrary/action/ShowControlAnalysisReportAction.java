@@ -33,19 +33,19 @@
  */
 package com.oracle.javafx.scenebuilder.controllibrary.action;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.JarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
 
 @ApplicationInstanceSingleton
-@Lazy
 @ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report")
 @ViewMenuItemAttachment(
         id = ShowControlAnalysisReportAction.MENU_ID,
@@ -61,9 +61,10 @@ public class ShowControlAnalysisReportAction extends AbstractAction {
     private final JarAnalysisReportController jarAnalysisReportController;
 
     public ShowControlAnalysisReportAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             @Lazy JarAnalysisReportController jarAnalysisReportController) {
-        super(extensionFactory);
+        super(i18n, extensionFactory);
         this.jarAnalysisReportController = jarAnalysisReportController;
     }
 

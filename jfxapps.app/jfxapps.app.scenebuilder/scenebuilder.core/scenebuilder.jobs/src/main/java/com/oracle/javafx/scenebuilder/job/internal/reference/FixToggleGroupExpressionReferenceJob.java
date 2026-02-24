@@ -37,8 +37,6 @@ package com.oracle.javafx.scenebuilder.job.internal.reference;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.fxom.job.base.InlineDocumentJob;
 import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
@@ -53,6 +51,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.api.util.ToggleGroupHelper;
+import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
 
 import javafx.scene.control.ToggleGroup;
 
@@ -72,12 +71,11 @@ public final class FixToggleGroupExpressionReferenceJob extends InlineDocumentJo
     // @formatter:off
     protected FixToggleGroupExpressionReferenceJob(
             JobExtensionFactory extensionFactory,
-            FxomEvents documentManager,
-            Selection selection,
+            FxomEvents fxomEvents,
             FxomJobsFactory fxomJobsFactory) {
     // @formatter:on
-        super(extensionFactory, documentManager);
-        this.fxomDocument = documentManager.fxomDocument().get();
+        super(extensionFactory, fxomEvents);
+        this.fxomDocument = fxomEvents.fxomDocument().get();
         this.fxomJobsFactory = fxomJobsFactory;
     }
 

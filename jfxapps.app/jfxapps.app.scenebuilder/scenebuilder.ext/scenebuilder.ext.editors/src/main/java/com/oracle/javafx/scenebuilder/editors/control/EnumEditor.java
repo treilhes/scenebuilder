@@ -34,17 +34,16 @@
 
 package com.oracle.javafx.scenebuilder.editors.control;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.EnumerationPropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.beans.InvalidationListener;
 import javafx.collections.ObservableList;
@@ -54,10 +53,12 @@ import javafx.scene.control.ComboBox;
 public class EnumEditor extends AbstractPropertyEditor {
     private ComboBox<String> comboBox;
 
-    public EnumEditor(Dialog dialog,
+    public EnumEditor(
+            I18N i18n,
+            Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
         comboBox = new ComboBox<String>();
         comboBox.disableProperty().bind(disableProperty());
         EditorUtils.makeWidthStretchable(comboBox);
@@ -127,14 +128,15 @@ public class EnumEditor extends AbstractPropertyEditor {
         EditorUtils.doNextFrame(() -> comboBox.requestFocus());
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+    @ApplicationInstancePrototype
     public static class GenericEnumEditor extends EnumEditor {
 
-        public GenericEnumEditor(Dialog dialog,
+        public GenericEnumEditor(
+                I18N i18n,
+                Dialog dialog,
                 Documentation documentation,
                 FileSystem fileSystem) {
-            super(dialog, documentation, fileSystem);
+            super(i18n, dialog, documentation, fileSystem);
         }
     }
 

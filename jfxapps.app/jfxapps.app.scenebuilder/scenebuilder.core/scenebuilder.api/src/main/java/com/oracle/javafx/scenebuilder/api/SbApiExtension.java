@@ -35,9 +35,9 @@ package com.oracle.javafx.scenebuilder.api;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
-import com.treilhes.emc4j.boot.api.loader.extension.ApplicationExtension;
 import com.gluonhq.jfxapps.core.api.application.annotation.EditorDescriptor;
 import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
 import com.oracle.javafx.scenebuilder.api.control.driver.SbDriverImpl;
@@ -47,6 +47,7 @@ import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 import com.oracle.javafx.scenebuilder.api.preference.ParentRingColorPreference;
 import com.oracle.javafx.scenebuilder.api.util.FileHelper;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
+import com.treilhes.emc4j.boot.api.loader.extension.ApplicationExtension;
 
 @EditorDescriptor(
             label = "scenebuilder.app.label",
@@ -72,6 +73,14 @@ public class SbApiExtension implements ApplicationExtension  {
     public UUID getParentId() {
         return ApplicationExtension.ROOT_ID;
     }
+
+
+
+    @Override
+    public Set<UUID> getMergedExtensions() {
+        return Set.of(UUID.fromString("1619a4bc-e5f7-413a-a93e-eae379adf56b"));
+    }
+
 
     @Override
     public List<Class<?>> localContextClasses() {

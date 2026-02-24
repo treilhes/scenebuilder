@@ -32,36 +32,37 @@
  */
 package com.oracle.javafx.scenebuilder.gluon.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.treilhes.emc4j.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationEmailPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationHashPreference;
 import com.oracle.javafx.scenebuilder.gluon.registration.RegistrationWindowController;
+import com.treilhes.emc4j.boot.api.context.EmContext;
 
 @Component
 @Lazy
 public class RegistrationController {
 
-    private SceneBuilderBeanFactory context;
+    private final EmContext context;
     private final RegistrationEmailPreference registrationEmailPreference;
     private final RegistrationHashPreference registrationHashPreference;
 
+    //@formatter:off
     public RegistrationController(
-            @Autowired SceneBuilderBeanFactory context,
-            @Autowired RegistrationEmailPreference registrationEmailPreference,
-            @Autowired RegistrationHashPreference registrationHashPreference
+            EmContext context,
+            RegistrationEmailPreference registrationEmailPreference,
+            RegistrationHashPreference registrationHashPreference
             ) {
+        //@formatter:on
         this.context = context;
         this.registrationEmailPreference = registrationEmailPreference;
         this.registrationHashPreference = registrationHashPreference;
 
     }
 
-    public void showRegistrationDialogIfRequired(ApplicationInstanceWindow dwc) {
+    public void showRegistrationDialogIfRequired(MainInstanceWindow dwc) {
         String registrationHash = getRegistrationHash();
 
         if (registrationHash == null) {

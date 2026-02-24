@@ -41,17 +41,15 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -80,11 +78,12 @@ public class ResourceFileEditor extends InlineListEditor {
     private final ApplicationInstanceEvents documentManager;
 
     public ResourceFileEditor(
+            I18N i18n,
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem,
             ApplicationInstanceEvents documentManager) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
         this.fileSystem = fileSystem;
         this.documentManager = documentManager;
         initialize();

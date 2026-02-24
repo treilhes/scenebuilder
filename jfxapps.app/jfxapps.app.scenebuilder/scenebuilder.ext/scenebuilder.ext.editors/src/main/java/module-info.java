@@ -32,17 +32,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import com.oracle.javafx.scenebuilder.editors.DefaultEditorsExtension;
+import com.treilhes.emc4j.boot.api.loader.extension.Extension;
 
 open module scenebuilder.ext.editors {
-    exports com.gluonhq.jfxapps.core.editors.control;
+    exports com.oracle.javafx.scenebuilder.editors.control;
     exports com.oracle.javafx.scenebuilder.editors.control.effectpicker.editors;
-    exports com.gluonhq.jfxapps.core.editors;
+    exports com.oracle.javafx.scenebuilder.editors;
     exports com.oracle.javafx.scenebuilder.editors.popupeditors;
     exports com.oracle.javafx.scenebuilder.editors.control.effectpicker;
 
     requires transitive scenebuilder.api;
-    requires scenebuilder.core.jobs;
-    requires scenebuilder.core.selection;
+    //requires scenebuilder.core.jobs;
+    //requires scenebuilder.core.selection;
 
     provides Extension with DefaultEditorsExtension;
 }

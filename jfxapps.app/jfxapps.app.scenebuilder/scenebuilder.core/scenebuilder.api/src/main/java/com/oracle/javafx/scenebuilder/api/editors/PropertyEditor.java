@@ -138,6 +138,8 @@ public interface PropertyEditor {
 
     ObjectProperty<Object> valueProperty();
 
-    ObservableValue<Boolean> focusedProperty();
+    default ObservableValue<Boolean> focusedProperty() {
+        return getValueEditor().focusedProperty();
+    }
 
 }

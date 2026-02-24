@@ -9,8 +9,7 @@ open module ${context.moduleName} {
 
     requires emc4j.boot.api;
     requires emc4j.boot.starter;
-    requires transitive jfxplace.core.metadata;
-    requires transitive jfxplace.core.fxom;
+    requires transitive jfxplace.fxom.api;
 
     <#list context.requiredModules as requiredModule>
     requires transitive ${requiredModule};

@@ -36,11 +36,8 @@ package com.oracle.javafx.scenebuilder.editors.popupeditors;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.controls.paintpicker.PaintPicker;
@@ -48,6 +45,7 @@ import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.control.effect.EffectProvider;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.EffectPicker;
 import com.oracle.javafx.scenebuilder.editors.control.effectpicker.Utils;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
@@ -58,7 +56,6 @@ import javafx.scene.effect.Effect;
  * Popup editor for the Effect property.
  */
 @ApplicationInstancePrototype
-@Lazy
 public class EffectPopupEditor extends PopupEditor {
 
     private final MessageLogger messageLogger;
@@ -68,13 +65,14 @@ public class EffectPopupEditor extends PopupEditor {
     private List<Class<? extends Effect>> effects;
 
     public EffectPopupEditor(
+            I18N i18n,
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem,
             MessageLogger messageLogger,
             List<EffectProvider> effectProviders
             ) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
         this.messageLogger = messageLogger;
         this.effects = effectProviders.stream().flatMap(p -> p.effects().stream()).collect(Collectors.toList());
     }

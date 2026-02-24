@@ -33,16 +33,17 @@
  */
 package com.oracle.javafx.scenebuilder.menu.main.file;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fs.FileSystemActionFactory;
+import com.gluonhq.jfxapps.core.api.application.ApplicationActionFactory;
+import com.gluonhq.jfxapps.core.api.document.DocumentActionFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 @ApplicationInstancePrototype
 @ActionMeta(
@@ -59,16 +60,19 @@ public class NewAction extends AbstractAction {
 
     public final static String NEWFILE_MENU_ID = DefaultMenu.File.NEW_ID;
 
-    private final FileSystemActionFactory fileSystemActionFactory;
+    private final ApplicationActionFactory applicationActionFactory;
+    private final DocumentActionFactory documentActionFactory;
 
     public NewAction(
     // @formatter:off
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            FileSystemActionFactory fileSystemActionFactory) {
+            ApplicationActionFactory applicationActionFactory,
+            DocumentActionFactory documentActionFactory) {
     // @formatter:on
         super(i18n, extensionFactory);
-        this.fileSystemActionFactory = fileSystemActionFactory;
+        this.applicationActionFactory = applicationActionFactory;
+        this.documentActionFactory = documentActionFactory;
     }
 
     @Override
@@ -78,7 +82,7 @@ public class NewAction extends AbstractAction {
 
     @Override
     public ActionStatus doPerform() {
-        return fileSystemActionFactory.newInstance().perform();
+        return applicationActionFactory.newInstance((_) -> documentActionFactory.loadBlank()).perform();
     }
 
 }

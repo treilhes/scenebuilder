@@ -42,10 +42,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -55,6 +51,7 @@ import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -80,7 +77,6 @@ import javafx.util.StringConverter;
  *
  */
 @ApplicationInstancePrototype
-@Lazy
 public class KeyCombinationPopupEditor extends PopupEditor {
 
     @FXML
@@ -111,12 +107,13 @@ public class KeyCombinationPopupEditor extends PopupEditor {
     private final FileSystem fileSystem;
 
     public KeyCombinationPopupEditor(
+            I18N i18n,
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem,
             MessageLogger messageLogger
             ) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
         this.dialog = dialog;
         this.documentation = documentation;
         this.fileSystem = fileSystem;

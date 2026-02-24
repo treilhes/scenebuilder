@@ -38,9 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
 import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
@@ -52,6 +50,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 
 /**
@@ -68,7 +67,7 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
     private static final PropertyName cacheHintPN = new PropertyName("cacheHint"); //NOCHECK
 
     private final I18N i18n;
-    private final Selection selection;
+    private final FxomSelection selection;
     private final FxomJobsFactory fxomJobsFactory;
     private final SbMetadata metadata;
 
@@ -83,7 +82,7 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
             I18N i18n,
             JobExtensionFactory extensionFactory,
             FxomEvents documentManager,
-            Selection selection,
+            FxomSelection selection,
             SbMetadata metadata,
             FxomJobsFactory fxomJobsFactory) {
         super(extensionFactory, documentManager);
@@ -106,7 +105,7 @@ public final class ModifyCacheHintJob extends BatchDocumentJob {
         final Set<FXOMInstance> candidates = new HashSet<>();
 
         if (selection.getGroup() != null) {
-            final SelectionGroup osg = selection.getGroup();
+            final var osg = selection.getGroup();
             for (FXOMObject fxomObject : osg.getItems()) {
                 if (fxomObject instanceof FXOMInstance) {
                     candidates.add((FXOMInstance) fxomObject);

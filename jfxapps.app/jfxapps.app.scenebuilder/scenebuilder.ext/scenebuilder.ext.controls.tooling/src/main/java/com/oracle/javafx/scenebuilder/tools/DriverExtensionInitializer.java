@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.tools;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.ui.tool.DriverExtensionRegistry;
+import com.gluonhq.jfxapps.core.api.fxom.ui.tool.NoPickRefiner;
 import com.gluonhq.jfxapps.core.api.fxom.ui.tool.PickRefiner;
 import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
 import com.oracle.javafx.scenebuilder.api.control.DropTargetProvider;
@@ -50,7 +50,6 @@ import com.oracle.javafx.scenebuilder.api.control.Tring;
 import com.oracle.javafx.scenebuilder.api.control.inlineedit.SimilarInlineEditorBounds;
 import com.oracle.javafx.scenebuilder.api.control.intersect.IntersectsBoundsCheck;
 import com.oracle.javafx.scenebuilder.api.control.outline.Outline;
-import com.oracle.javafx.scenebuilder.api.control.pickrefiner.NoPickRefiner;
 import com.oracle.javafx.scenebuilder.tools.driver.anchorpane.AnchorPaneRelocater;
 import com.oracle.javafx.scenebuilder.tools.driver.arc.ArcResizer;
 import com.oracle.javafx.scenebuilder.tools.driver.borderpane.BorderPaneDropTargetProvider;
@@ -126,6 +125,7 @@ import com.oracle.javafx.scenebuilder.tools.driver.webview.WebViewResizer;
 import com.oracle.javafx.scenebuilder.tools.driver.window.WindowHandles;
 import com.oracle.javafx.scenebuilder.tools.driver.window.WindowIntersectsBoundsCheck;
 import com.oracle.javafx.scenebuilder.tools.driver.window.WindowPring;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 
 import javafx.scene.Node;
 import javafx.scene.Scene;

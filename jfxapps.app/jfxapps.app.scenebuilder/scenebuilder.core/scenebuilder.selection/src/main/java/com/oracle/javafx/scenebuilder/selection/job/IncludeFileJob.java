@@ -39,12 +39,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.treilhes.emc4j.boot.api.context.EmContext;
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
@@ -53,12 +49,16 @@ import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.api.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.util.URLUtils;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 /**
  * Cannot include in non saved document<br/>
@@ -86,7 +86,7 @@ public final class IncludeFileJob extends BatchSelectionJob {
             I18N i18n,
             JobExtensionFactory extensionFactory,
             FxomEvents documentManager,
-            Selection selection,
+            FxomSelection selection,
             SelectionJobsFactory selectionJobsFactory,
             FXOMObjectMask.Factory designMaskFactory,
             ObjectSelectionGroup.Factory objectSelectionGroupFactory,
@@ -128,7 +128,7 @@ public final class IncludeFileJob extends BatchSelectionJob {
                     if (rootObject != null) {
                         // We include the new object under the common parent
                         // of the selected objects.
-                        final Selection selection = getSelection();
+                        final var selection = getSelection();
                         if (selection.isEmpty() || selection.isSelected(rootObject)) {
                             // No selection or root is selected -> we insert below root
                             targetObject = rootObject;

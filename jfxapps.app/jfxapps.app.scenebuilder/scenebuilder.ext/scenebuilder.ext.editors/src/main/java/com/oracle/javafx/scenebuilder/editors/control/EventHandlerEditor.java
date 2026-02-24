@@ -38,20 +38,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.core.api.Glossary;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
+import com.gluonhq.jfxapps.core.api.glossary.Glossary;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.util.JavaLanguage;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.core.editors.AutoSuggestEditor;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -84,13 +82,14 @@ public class EventHandlerEditor extends AutoSuggestEditor {
     private final ApplicationInstanceEvents documentManager;
 
     public EventHandlerEditor(
+            I18N i18n,
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem,
             Glossary glossary,
             ApplicationInstanceEvents documentManager
             ) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
         this.glossary = glossary;
         this.documentManager = documentManager;
 

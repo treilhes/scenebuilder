@@ -39,10 +39,10 @@ import java.util.Collections;
 import java.util.List;
 
 import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.Glossary;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
+import com.gluonhq.jfxapps.core.api.glossary.Glossary;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;

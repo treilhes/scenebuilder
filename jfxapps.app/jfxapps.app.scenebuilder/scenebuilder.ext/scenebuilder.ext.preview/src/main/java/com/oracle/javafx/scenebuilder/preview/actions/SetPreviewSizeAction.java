@@ -33,14 +33,14 @@
  */
 package com.oracle.javafx.scenebuilder.preview.actions;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.css.Size;
 
@@ -49,7 +49,7 @@ import javafx.css.Size;
 public class SetPreviewSizeAction extends AbstractAction {
 
     private final PreviewWindowController previewWindowController;
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents fxomEvents;
 
     private Size size;
 
@@ -57,11 +57,11 @@ public class SetPreviewSizeAction extends AbstractAction {
     public SetPreviewSizeAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents fxomEvents,
             PreviewWindowController previewWindowController) {
         //@formatter:on
         super(i18n, extensionFactory);
-        this.documentManager = documentManager;
+        this.fxomEvents = fxomEvents;
         this.previewWindowController = previewWindowController;
     }
 
@@ -78,7 +78,7 @@ public class SetPreviewSizeAction extends AbstractAction {
         if (size == null) {
             return false;
         }
-        FXOMDocument fd = documentManager.fxomDocument().get();
+        FXOMDocument fd = fxomEvents.fxomDocument().get();
 
         boolean previewIsValid = previewWindowController.getStage().isShowing() && !fd.is3D() && fd.isNode()
                 && previewWindowController.sizeDoesFit(size);

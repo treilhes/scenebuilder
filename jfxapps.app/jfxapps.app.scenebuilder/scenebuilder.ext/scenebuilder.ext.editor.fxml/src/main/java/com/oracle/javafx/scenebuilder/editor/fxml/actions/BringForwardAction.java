@@ -33,19 +33,17 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.ctxmenu.annotation.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.annotation.ContextMenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionActionsFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 @ApplicationInstancePrototype
 @ActionMeta(
@@ -68,32 +66,26 @@ public class BringForwardAction extends AbstractAction {
     public final static String MENU_ID = "bringForwardMenuItem"; //NOCHECK
     public final static String TITLE = "menu.title.forward";
 
-    private final SelectionJobsFactory selectionJobsFactory;
-    private final JobManager jobManager;
+    private final SelectionActionsFactory selectionActionsFactory;
 
     // @formatter:off
     public BringForwardAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            JobManager jobManager,
-            SelectionJobsFactory selectionJobsFactory) {
+            SelectionActionsFactory selectionActionsFactory) {
      // @formatter:on
         super(i18n, extensionFactory);
-        this.jobManager = jobManager;
-        this.selectionJobsFactory = selectionJobsFactory;
+        this.selectionActionsFactory = selectionActionsFactory;
     }
 
     @Override
     public boolean canPerform() {
-        final Job job = selectionJobsFactory.bringForward();
-        return job.isExecutable();
+        return selectionActionsFactory.bringForward().canPerform();
     }
 
     @Override
     public ActionStatus doPerform() {
-        final Job job = selectionJobsFactory.bringForward();
-        jobManager.push(job);
-        return ActionStatus.DONE;
+        return selectionActionsFactory.bringForward().perform();
     }
 
 }

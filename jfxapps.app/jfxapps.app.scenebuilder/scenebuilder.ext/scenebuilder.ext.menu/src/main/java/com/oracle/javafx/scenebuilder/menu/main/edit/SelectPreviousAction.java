@@ -33,19 +33,16 @@
  */
 package com.oracle.javafx.scenebuilder.menu.main.edit;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionActionsFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 @ApplicationInstancePrototype
 @ActionMeta(
@@ -64,97 +61,23 @@ public class SelectPreviousAction extends AbstractAction {
 
     public final static String MENU_ID = DefaultMenu.Edit.SELECT_PREVIOUS_ID;
 
-    //private final MainInstanceWindow documentWindow;
-    //private final InlineEdit inlineEdit;
-    private final FxomEvents documentManager;
-    private final Selection selection;
+    private final SelectionActionsFactory selectionActionFactory;
 
     public SelectPreviousAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            //MainInstanceWindow documentWindow,
-            FxomEvents documentManager,
-            //InlineEdit inlineEdit,
-            Selection selection) {
+            SelectionActionsFactory selectionActionFactory) {
         super(i18n, extensionFactory);
-        //this.documentWindow = documentWindow;
-        this.documentManager = documentManager;
-        //this.inlineEdit = inlineEdit;
-        this.selection = selection;
+        this.selectionActionFactory = selectionActionFactory;
     }
 
-    /**
-     * Returns true if the selection is single and the container of the selected
-     * object container contains a child previous to the selected one.
-     *
-     * @return if the selection is single and the container of the selected object
-     *         container contains a child previous to the selected one.
-     */
     @Override
     public boolean canPerform() {
-        FXOMDocument fxomDocument = documentManager.fxomDocument().get();
-
-        if (fxomDocument == null || fxomDocument.getFxomRoot() == null || selection.isEmpty()) {
-            return false;
-        }
-        final SelectionGroup asg = selection.getGroup();
-        if (asg.getItems().size() != 1) {
-            return false;
-        }
-        return asg.getSiblings().size() > 1;
-//        if (asg instanceof ObjectSelectionGroup) {
-//            final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
-//            final Set<FXOMObject> items = osg.getItems();
-//            if (items.size() != 1) {
-//                return false;
-//            }
-//            final FXOMObject selectedObject = items.iterator().next();
-//            return selectedObject.getPreviousSlibing() != null;
-//        } else if (asg instanceof GridSelectionGroup) {
-//            final GridSelectionGroup gsg = (GridSelectionGroup) asg;
-//            final Set<Integer> indexes = gsg.getIndexes();
-//            if (indexes.size() != 1) {
-//                return false;
-//            }
-//            final int index = indexes.iterator().next();
-//            return index > 0;
-//        } else {
-//            assert selection.getGroup() == null : "Add implementation for " + selection.getGroup(); // NOCHECK
-//        }
-//        return false;
+        return selectionActionFactory.selectPrevious().canPerform();
     }
 
-    /**
-     * Performs the select previous control action.
-     */
     @Override
     public ActionStatus doPerform() {
-        assert canPerform(); // (1)
-
-        selection.selectPrevious();
-
-//        final AbstractSelectionGroup asg = selection.getGroup();
-//        if (asg instanceof ObjectSelectionGroup) {
-//            final ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
-//            final Set<FXOMObject> items = osg.getItems();
-//            assert items.size() == 1; // Because of (1)
-//            final FXOMObject selectedObject = items.iterator().next();
-//            final FXOMObject previousSibling = selectedObject.getPreviousSlibing();
-//            assert previousSibling != null; // Because of (1)
-//            selection.select(previousSibling);
-//        } else {
-//            assert asg instanceof GridSelectionGroup; // Because of (1)
-//            final GridSelectionGroup gsg = (GridSelectionGroup) asg;
-//            final FXOMObject gridPane = gsg.getHitItem();
-//            assert gridPane instanceof FXOMInstance;
-//            final Set<Integer> indexes = gsg.getIndexes();
-//            assert indexes.size() == 1; // Because of (1)
-//            int selectedIndex = indexes.iterator().next();
-//            int previousIndex = selectedIndex - 1;
-//            assert previousIndex >= 0; // Because of (1)
-//            selection.select(gridSelectionGroupFactory.getGroup(gridPane, gsg.getType(), previousIndex));
-//        }
-
-        return ActionStatus.DONE;
+        return selectionActionFactory.selectPrevious().perform();
     }
 }

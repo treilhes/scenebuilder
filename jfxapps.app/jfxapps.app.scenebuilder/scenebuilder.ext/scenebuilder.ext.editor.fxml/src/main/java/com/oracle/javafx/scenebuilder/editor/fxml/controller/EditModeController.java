@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2026, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2026, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,20 +42,19 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.ctxmenu.ContextMenu;
 import com.gluonhq.jfxapps.core.api.fxom.content.mode.AbstractModeController;
 import com.gluonhq.jfxapps.core.api.fxom.content.mode.Layer;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.Gesture;
 import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.ContextMenu;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.util.StringUtils;
@@ -81,6 +80,7 @@ import com.oracle.javafx.scenebuilder.editor.fxml.gesture.ZoomGesture;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse.SelectAndMoveGesture;
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse.SelectWithMarqueeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key.MoveWithKeyGesture;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -136,7 +136,7 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     private final MoveWithKeyGesture.Factory moveWithKeyGestureFactory;
 
-    private final Selection selection;
+    private final FxomSelection selection;
 
     private final DragGesture.Factory dragGestureFactory;
 
@@ -148,12 +148,12 @@ public class EditModeController extends AbstractModeController implements Gestur
 
     private final FxomJobsFactory fxomJobsFactory;
 
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents fxomEvents;
 
     // @formatter:off
     public EditModeController(
             Workspace workspace,
-            Selection selection,
+            FxomSelection selection,
             DragGesture.Factory dragGestureFactory,
             SbDriver driver,
             Drag drag,
@@ -162,7 +162,7 @@ public class EditModeController extends AbstractModeController implements Gestur
             InlineEdit inlineEdit,
             JobManager jobManager,
             SbFXOMObjectMask.Factory maskFactory,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents fxomEvents,
             SelectWithMarqueeGesture.Factory selectWithMarqueeGestureFactory,
             SelectAndMoveGesture.Factory selectAndMoveGestureFactory,
             ZoomGesture.Factory zoomGestureFactory,
@@ -179,7 +179,7 @@ public class EditModeController extends AbstractModeController implements Gestur
         this.driver = driver;
         this.jobManager = jobManager;
         this.maskFactory = maskFactory;
-        this.documentManager = documentManager;
+        this.fxomEvents = fxomEvents;
 
         this.selectWithMarqueeGestureFactory = selectWithMarqueeGestureFactory;
         this.selectAndMoveGestureFactory = selectAndMoveGestureFactory;
@@ -707,7 +707,7 @@ public class EditModeController extends AbstractModeController implements Gestur
         final Set<FXOMObject> result = new HashSet<>();
 
         final List<FXOMObject> candidates = new ArrayList<>();
-        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        final FXOMDocument fxomDocument = fxomEvents.fxomDocument().get();
 
         if ((fxomDocument != null) && (fxomDocument.getFxomRoot() != null)) {
             candidates.add(fxomDocument.getFxomRoot());

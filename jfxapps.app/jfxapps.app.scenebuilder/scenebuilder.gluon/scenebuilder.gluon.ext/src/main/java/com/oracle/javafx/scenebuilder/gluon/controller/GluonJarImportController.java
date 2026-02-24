@@ -39,10 +39,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.treilhes.emc4j.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.WelcomeDialog;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
-import com.gluonhq.jfxapps.core.api.editors.ApplicationInstance;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
@@ -51,19 +49,20 @@ import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;
 import com.oracle.javafx.scenebuilder.gluon.GluonConstants;
 import com.oracle.javafx.scenebuilder.gluon.alert.ImportingGluonControlsAlert;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.ImportedGluonJarsPreference;
+import com.treilhes.emc4j.boot.api.context.EmContext;
 
 @Component
 @Lazy
 public class GluonJarImportController {
 
     private final InstancesManager main;
-    private final SceneBuilderBeanFactory context;
+    private final EmContext context;
     private final ControlLibrary library;
     private final IconSetting iconSetting;
     private final ImportedGluonJarsPreference importedJarPreference;
 
     public GluonJarImportController(
-            @Autowired SceneBuilderBeanFactory context,
+            @Autowired EmContext context,
             @Autowired InstancesManager main,
             @Autowired ControlLibrary library,
             @Autowired IconSetting iconSetting,

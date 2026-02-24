@@ -33,17 +33,17 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.tableview;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.fxom.ui.tool.PickRefiner;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
-import com.oracle.javafx.scenebuilder.api.control.pickrefiner.AbstractPickRefiner;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 import javafx.scene.Node;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 @ApplicationInstanceSingleton
-public class TableViewPickRefiner extends AbstractPickRefiner {
+public class TableViewPickRefiner implements PickRefiner {
 
     @Override
     public FXOMObject refinePick(Node hitNode, double sceneX, double sceneY, FXOMObject fxomObject) {

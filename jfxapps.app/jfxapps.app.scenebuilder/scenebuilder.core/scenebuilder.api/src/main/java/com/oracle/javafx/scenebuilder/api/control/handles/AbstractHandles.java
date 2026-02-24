@@ -36,12 +36,12 @@ package com.oracle.javafx.scenebuilder.api.control.handles;
 import java.net.URL;
 
 import com.gluonhq.jfxapps.core.api.fxom.content.decoration.AbstractDecoration;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.DiscardGesture;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.DiscardGesture.Factory;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.Gesture;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
+import com.gluonhq.jfxapps.core.api.selection.SelectionGroup;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 
 import javafx.scene.Node;

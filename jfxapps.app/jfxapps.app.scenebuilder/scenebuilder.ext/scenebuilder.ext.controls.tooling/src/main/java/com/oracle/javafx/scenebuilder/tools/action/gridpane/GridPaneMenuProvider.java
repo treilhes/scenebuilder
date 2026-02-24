@@ -36,15 +36,15 @@ package com.oracle.javafx.scenebuilder.tools.action.gridpane;
 import java.util.Arrays;
 import java.util.List;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.ctxmenu.ContextMenuItemProvider;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.ContextMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.ContextMenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultContextMenu;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 import javafx.scene.control.Menu;
 
@@ -77,7 +77,7 @@ public class GridPaneMenuProvider implements MenuItemProvider, ContextMenuItemPr
     public List<ContextMenuItemAttachment> contextMenuItems() {
         Menu menu = menuBuilder.menu().id(MENU_ID).title(MENU_LABEL).build();
         ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(menu, ObjectSelectionGroup.class,
-                UseComputedSizeAction.MENU_ID, PositionRequest.AsNextSibling, ORDER_WEIGHT);
+                DefaultContextMenu.Modify.USE_COMPUTED_SIZE_ID, PositionRequest.AsNextSibling, ORDER_WEIGHT);
         return Arrays.asList(attachment);
     }
 

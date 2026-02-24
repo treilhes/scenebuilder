@@ -34,17 +34,18 @@ package com.oracle.javafx.scenebuilder.gluon.preferences.global;
 
 import java.time.LocalDate;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
 import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preference.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preference.type.LocalDatePreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 
-@Component
-public class ShowUpdateDialogDatePreference extends LocalDatePreference implements ManagedGlobalPreference {
-	    
-    /***************************************************************************
+@ApplicationSingleton
+@PreferenceContext(id = "1f36c759-7385-4f6c-a7f5-cec0de1f770c", // NO CHECK
+    name = ShowUpdateDialogDatePreference.PREFERENCE_KEY,
+    defaultValueProvider = ShowUpdateDialogDatePreference.DefaultProvider.class)
+public interface ShowUpdateDialogDatePreference extends Preference<LocalDate>, ManagedGlobalPreference {
+	 /***************************************************************************
      *                                                                         *
      * Static fields                                                           *
      *                                                                         *
@@ -52,8 +53,10 @@ public class ShowUpdateDialogDatePreference extends LocalDatePreference implemen
     public static final String PREFERENCE_KEY = "UPDATE_DIALOG_DATE"; //NOCHECK
     public static final LocalDate PREFERENCE_DEFAULT_VALUE = null;
 
-	public ShowUpdateDialogDatePreference(@Autowired PreferencesContext preferencesContext) {
-		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-	}
-	
+    public class DefaultProvider implements DefaultValueProvider<LocalDate> {
+        @Override
+        public LocalDate get() {
+            return PREFERENCE_DEFAULT_VALUE;
+        }
+    }
 }

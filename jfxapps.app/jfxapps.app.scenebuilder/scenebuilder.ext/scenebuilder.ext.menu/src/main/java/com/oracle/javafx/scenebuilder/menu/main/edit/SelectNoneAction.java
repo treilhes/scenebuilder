@@ -33,23 +33,16 @@
  */
 package com.oracle.javafx.scenebuilder.menu.main.edit;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionActionsFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
-
-import javafx.scene.Node;
-import javafx.scene.control.TextInputControl;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 @ApplicationInstancePrototype
 @ActionMeta(
@@ -68,65 +61,23 @@ public class SelectNoneAction extends AbstractAction {
 
     public final static String MENU_ID = DefaultMenu.Edit.SELECT_NONE_ID;
 
-    private final MainInstanceWindow documentWindow;
-    private final FxomEvents documentManager;
-    private final Selection selection;
-    private final InlineEdit inlineEdit;
+    private final SelectionActionsFactory selectionActionFactory;
 
     public SelectNoneAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            //FIXME the fact we need to add @Lazy is due to the instanciation of action
-            // in menu builder but why do we need to instanciate action before finishing to create
-            // the main instance window (same for all other actions)
-            // Solving this will allow faster boot time
-            @Lazy MainInstanceWindow documentWindow,
-            FxomEvents documentManager,
-            Selection selection,
-            InlineEdit inlineEdit) {
+            SelectionActionsFactory selectionActionFactory) {
         super(i18n, extensionFactory);
-        this.documentWindow = documentWindow;
-        this.documentManager = documentManager;
-        this.selection = selection;
-        this.inlineEdit = inlineEdit;
+        this.selectionActionFactory = selectionActionFactory;
     }
 
-    /**
-     * Returns true if the selection is not empty and no edition ongoing
-     *
-     * @return if the selection is not empty.
-     */
     @Override
     public boolean canPerform() {
-        boolean result;
-        final Node focusOwner = documentWindow.getScene().getFocusOwner();
-        if (inlineEdit.isPopupEditing(focusOwner)) {
-            return false;
-        } else if (inlineEdit.isTextInputControlEditing(focusOwner)) {
-            final TextInputControl tic = inlineEdit.getTextInputControl(focusOwner);
-            result = tic.getSelectedText() != null && !tic.getSelectedText().isEmpty();
-        } else {
-            result = selection.isEmpty() == false;
-        }
-        return result;
+        return selectionActionFactory.selectNone().canPerform();
     }
 
-    /**
-     * Performs the select all control action.
-     * Select all sub components of the selection common ancestor.
-     */
     @Override
     public ActionStatus doPerform() {
-        assert canPerform();
-        final Node focusOwner = documentWindow.getScene().getFocusOwner();
-        if (inlineEdit.isTextInputControlEditing(focusOwner)) {
-            final TextInputControl tic = inlineEdit.getTextInputControl(focusOwner);
-            tic.deselect();
-        } else {
-            assert canPerform();
-            Selection selection = documentManager.selectionDidChange().get().getSelection();
-            selection.clear();
-        }
-        return ActionStatus.DONE;
+        return selectionActionFactory.selectNone().perform();
     }
 }

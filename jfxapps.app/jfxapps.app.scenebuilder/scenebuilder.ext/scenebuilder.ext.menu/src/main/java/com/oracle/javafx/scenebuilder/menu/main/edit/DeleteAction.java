@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2026, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2026, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,33 +33,19 @@
  */
 package com.oracle.javafx.scenebuilder.menu.main.edit;
 
-import java.util.Map;
-
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionActionsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.annotation.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultContextMenu;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
-
-import javafx.scene.Node;
-import javafx.scene.control.TextInputControl;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 @ApplicationInstancePrototype
 @ActionMeta(
@@ -67,13 +53,13 @@ import javafx.scene.control.TextInputControl;
         descriptionKey = "action.description.show.about")
 
 @MenuItemAttachment(
-        id = DeleteAction.MENU_ID,
+        id = DefaultMenu.Edit.DELETE_ID,
         targetMenuId = DuplicateAction.MENU_ID,
         label = DeleteAction.TITLE,
         positionRequest = PositionRequest.AsNextSibling)
 @ContextMenuItemAttachment(
         selectionGroup = ObjectSelectionGroup.class,
-        id = DeleteAction.MENU_ID,
+        id = DefaultContextMenu.Edit.DELETE_ID,
         targetMenuId = DuplicateAction.MENU_ID,
         label = DeleteAction.TITLE,
         positionRequest = PositionRequest.AsNextSibling)
@@ -84,85 +70,23 @@ public class DeleteAction extends AbstractAction {
     public final static String MENU_ID = DefaultMenu.Edit.DELETE_ID;
     public final static String TITLE = "menu.title.delete";
 
-    private final MainInstanceWindow documentWindow;
-    private final InlineEdit inlineEdit;
-    private final Dialog dialog;
-    private final JobManager jobManager;
-    private final Selection selection;
-    private final SelectionJobsFactory selectionJobsFactory;
+    private final SelectionActionsFactory selectionActionFactory;
 
     public DeleteAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            @Lazy MainInstanceWindow documentWindow,
-            InlineEdit inlineEdit,
-            JobManager jobManager,
-            Selection selection,
-            Dialog dialog,
-            SelectionJobsFactory selectionJobsFactory) {
+            SelectionActionsFactory selectionActionFactory) {
         super(i18n, extensionFactory);
-        this.documentWindow = documentWindow;
-        this.inlineEdit = inlineEdit;
-        this.jobManager = jobManager;
-        this.dialog = dialog;
-        this.selection = selection;
-        this.selectionJobsFactory = selectionJobsFactory;
+        this.selectionActionFactory = selectionActionFactory;
     }
 
     @Override
     public boolean canPerform() {
-        boolean result;
-        final Node focusOwner = documentWindow.getScene().getFocusOwner();
-        if (inlineEdit.isTextInputControlEditing(focusOwner)) {
-            final TextInputControl tic = inlineEdit.getTextInputControl(focusOwner);
-            result = tic.getCaretPosition() < tic.getLength();
-        } else {
-            final var job = selectionJobsFactory.deleteSelection();
-            result = job.isExecutable();
-        }
-        return result;
+        return selectionActionFactory.delete().canPerform();
     }
 
     @Override
     public ActionStatus doPerform() {
-        assert canPerform();
-
-        final Node focusOwner = documentWindow.getScene().getFocusOwner();
-        if (inlineEdit.isTextInputControlEditing(focusOwner)) {
-            final TextInputControl tic = inlineEdit.getTextInputControl(focusOwner);
-            tic.deleteNextChar();
-        } else {
-            final Map<String, FXOMObject> fxIdMap = selection.collectSelectedFxIds();
-            // We filter out toggle groups because their fx:ids are managed automatically.
-            FXOMNodes.removeToggleGroups(fxIdMap);
-
-            // Checks if deleted objects have some fx:ids and ask for confirmation.
-            final boolean deleteConfirmed;
-            if (fxIdMap.isEmpty()) {
-                deleteConfirmed = true;
-            } else {
-                final String message;
-
-                if (fxIdMap.size() == 1) {
-                    message = getI18n().getString("alert.delete.fxid1ofN.message");
-                } else {
-                    message = getI18n().getString("alert.delete.fxidKofN.message");
-                }
-
-                final Alert d = dialog.customAlert(documentWindow.getStage());
-                d.setMessage(message);
-                d.setDetails(getI18n().getString("alert.delete.fxid.details"));
-                d.setOKButtonTitle(getI18n().getString("label.delete"));
-
-                deleteConfirmed = (d.showAndWait() == ButtonID.OK);
-            }
-
-            if (deleteConfirmed) {
-                final var job = selectionJobsFactory.deleteSelection();
-                jobManager.push(job);
-            }
-        }
-
-        return ActionStatus.DONE;
+        return selectionActionFactory.delete().perform();
     }
 }

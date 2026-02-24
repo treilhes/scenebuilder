@@ -36,16 +36,20 @@ package com.oracle.javafx.scenebuilder.editor.script.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
+import com.gluonhq.jfxapps.core.api.fxom.util.FXOMDocumentUtils;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.oracle.javafx.scenebuilder.api.editors.EditorInstanceWindow;
-import com.oracle.javafx.scenebuilder.api.ui.AbstractFxmlViewController;
-import com.oracle.javafx.scenebuilder.api.ui.ViewMenuController;
-import com.oracle.javafx.scenebuilder.api.ui.dock.ViewSearch;
-import com.oracle.javafx.scenebuilder.api.ui.dock.annotation.ViewAttachment;
-import com.oracle.javafx.scenebuilder.api.util.FXOMDocumentUtils;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 import eu.mihosoft.monacofx.MonacoFX;
 import javafx.beans.value.ChangeListener;
@@ -60,10 +64,14 @@ import javafx.scene.layout.StackPane;
 /**
  *
  */
+// @formatter:off
 @ApplicationInstanceSingleton
-@Lazy
-@ViewAttachment(name = ScriptEditorViewController.VIEW_NAME, id = ScriptEditorViewController.VIEW_ID,
-        icon = "ViewIconSkeleton.png", iconX2 = "ViewIconSkeleton@2x.png")
+@ViewAttachment(
+        name = ScriptEditorViewController.VIEW_NAME,
+        id = ScriptEditorViewController.VIEW_ID,
+        icon = "ViewIconSkeleton.png",
+        iconX2 = "ViewIconSkeleton@2x.png")
+// @formatter:on
 public class ScriptEditorViewController extends AbstractFxmlViewController {
 
     public final static String VIEW_ID = "05c449b9-8669-4a75-93ee-43d250136f7c";
@@ -84,15 +92,19 @@ public class ScriptEditorViewController extends AbstractFxmlViewController {
     private String documentName;
     private boolean dirty = true;
     private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents fxomEvents;
 
     public ScriptEditorViewController(
-            SceneBuilderManager scenebuilderManager,
+            I18N i18n,
+            ApplicationEvents scenebuilderManager,
             ApplicationInstanceEvents documentManager,
-            @Autowired EditorInstanceWindow document,
-            ViewMenuController viewMenuController) {
-        super(scenebuilderManager, documentManager, viewMenuController, ScriptEditorViewController.class.getResource("ScriptEditor.fxml"), I18N.getBundle());
+            FxomEvents fxomEvents,
+            @Autowired MainInstanceWindow document,
+            ViewMenu viewMenuController) {
+        super(i18n, scenebuilderManager, documentManager, viewMenuController, ScriptEditorViewController.class.getResource("ScriptEditor.fxml"));
 
         this.documentManager = documentManager;
+        this.fxomEvents = fxomEvents;
     }
 
     private void setFxomDocument(FXOMDocument fxomDocument) {
@@ -131,12 +143,12 @@ public class ScriptEditorViewController extends AbstractFxmlViewController {
 
         formatCheckBox.selectedProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> update());
 
-        documentManager.fxomDocument().subscribe(fx -> setFxomDocument(fx));
-        documentManager.sceneGraphRevisionDidChange().subscribe(fx -> update());
+        fxomEvents.fxomDocument().subscribe(fx -> setFxomDocument(fx));
+        fxomEvents.sceneGraphRevisionDidChange().subscribe(fx -> update());
     }
 
     private void updateTitle() {
-        final String title = I18N.getString("skeleton.window.title", documentName);
+        final String title = getI18n().getString("skeleton.window.title", documentName);
         setName(title);
     }
 

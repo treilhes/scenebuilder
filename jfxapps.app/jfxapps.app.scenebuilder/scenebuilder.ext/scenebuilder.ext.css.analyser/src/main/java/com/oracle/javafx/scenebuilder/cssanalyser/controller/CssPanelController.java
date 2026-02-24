@@ -47,13 +47,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.clipboard.ClipboardHandler;
 import com.gluonhq.jfxapps.core.api.fxom.css.CssInternal;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.LoadInFxThread;
@@ -84,6 +82,8 @@ import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssValuePresenterFa
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.NodeCssState.CssProperty;
 import com.oracle.javafx.scenebuilder.cssanalyser.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.property.ObjectProperty;
@@ -213,7 +213,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     }
 
     private Object selectedObject; // Can be either an FXOMObject (selection mode), or a Node (pick mode)
-    private final Selection selection;
+    private final FxomSelection selection;
     private final SbEditor editor;
     private final Delegate applicationDelegate;
     private final ObjectProperty<NodeCssState> cssStateProperty = new SimpleObjectProperty<>();
@@ -251,7 +251,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
             ApplicationInstanceEvents documentManager,
             FxomEvents fxomEvents,
             SbMetadata metadata,
-            Selection selection,
+            FxomSelection selection,
             SbEditor editor,
             Delegate delegate,
             CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
@@ -1606,7 +1606,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
      * Private static
      *
      */
-    private static FXOMInstance getFXOMInstance(Selection selection) {
+    private static FXOMInstance getFXOMInstance(FxomSelection selection) {
         FXOMInstance fxomInstance = null;
         if (selection == null) {
             return null;

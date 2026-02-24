@@ -43,16 +43,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.fxom.css.CssInternal;
+import com.gluonhq.jfxapps.core.api.fxom.css.StylesheetProvider;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.theme.StylesheetProvider;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
@@ -62,6 +58,8 @@ import com.gluonhq.jfxapps.util.URLUtils;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -86,7 +84,6 @@ import javafx.scene.layout.StackPane;
  *
  */
 @ApplicationInstancePrototype
-@Lazy
 public class StyleClassEditor extends InlineListEditor {
 
 
@@ -107,12 +104,13 @@ public class StyleClassEditor extends InlineListEditor {
     private final FileSystem fileSystem;
 
     public StyleClassEditor(
+            I18N i18n,
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem,
             MessageLogger messageLogger,
             ApplicationInstanceEvents documentManager) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
         this.dialog = dialog;
         this.documentation = documentation;
         this.fileSystem = fileSystem;

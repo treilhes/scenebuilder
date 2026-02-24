@@ -33,19 +33,13 @@
  */
 package com.oracle.javafx.scenebuilder.gluon.editor.job;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.treilhes.emc4j.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJobExtension;
-import com.gluonhq.jfxapps.core.job.editor.atomic.AddPropertyValueJob;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
-@Component
-@Scope(SceneBuilderBeanFactory.SCOPE_PROTOTYPE)
+@ApplicationInstancePrototype
 public class AddPropertyValueJobExtension extends AbstractJobExtension<AddPropertyValueJob> {
 
     private final ApplicationInstanceWindow window;

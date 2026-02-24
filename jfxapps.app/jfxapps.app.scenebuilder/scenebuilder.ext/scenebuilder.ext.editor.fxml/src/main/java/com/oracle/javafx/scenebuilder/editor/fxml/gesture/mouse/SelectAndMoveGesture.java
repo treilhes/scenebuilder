@@ -38,15 +38,12 @@ import java.net.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
-import com.treilhes.emc4j.boot.api.context.EmContext;
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.action.editor.EditorPlatform;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DefaultDragSourceFactory;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSource;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractMouseDragGesture;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Content;
@@ -55,6 +52,9 @@ import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -73,14 +73,14 @@ public class SelectAndMoveGesture extends AbstractMouseDragGesture {
     private final Workspace workspace;
     private final Drag drag;
     private final DefaultDragSourceFactory defaultDragSourceFactory;
-    private final Selection selection;
+    private final FxomSelection selection;
     private final SbFXOMObjectMask.Factory objectMaskFactory;
 
     protected SelectAndMoveGesture(
             Workspace workspace,
             @Autowired @Lazy Content contentPanelController,
             @Autowired Drag drag,
-            Selection selection,
+            FxomSelection selection,
             DefaultDragSourceFactory defaultDragSourceFactory,
             SbFXOMObjectMask.Factory objectMaskFactory) {
         super();

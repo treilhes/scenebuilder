@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2026, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2026, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -39,9 +39,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.treilhes.emc4j.boot.api.context.EmContext;
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.content.mode.Layer;
 import com.gluonhq.jfxapps.core.api.fxom.content.mode.ModeManager;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DefaultDragSourceFactory;
@@ -51,9 +48,9 @@ import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractGesture;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.GestureFactory;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.guide.MovingGuide;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.util.MathUtils;
@@ -61,6 +58,9 @@ import com.gluonhq.jfxapps.util.javafx.BoundsUtils;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 
 import javafx.event.EventType;
 import javafx.geometry.Bounds;
@@ -106,7 +106,7 @@ public class DragGesture extends AbstractGesture {
     private final DefaultDragSourceFactory defaultDragSourceFactory;
     private final DefaultDropTargetFactory defaultDropTargetFactory;
 
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents fxomEvents;
 
     protected DragGesture(
             Workspace workspace,
@@ -114,7 +114,7 @@ public class DragGesture extends AbstractGesture {
             ModeManager modeManager,
             MovingGuide movingGuideController,
             SbDriver driver,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents fxomEvents,
             SbFXOMObjectMask.Factory maskFactory,
             DefaultDragSourceFactory defaultDragSourceFactory,
             DefaultDropTargetFactory defaultDropTargetFactory) {
@@ -123,7 +123,7 @@ public class DragGesture extends AbstractGesture {
         this.dragController = dragController;
         this.movingGuideController = movingGuideController;
         this.driver = driver;
-        this.documentManager = documentManager;
+        this.fxomEvents = fxomEvents;
         this.maskFactory = maskFactory;
         this.defaultDragSourceFactory = defaultDragSourceFactory;
         this.defaultDropTargetFactory = defaultDropTargetFactory;
@@ -242,7 +242,7 @@ public class DragGesture extends AbstractGesture {
         final double hitY = lastDragEvent.getSceneY();
         FXOMObject hitObject = workspace.pick(hitX, hitY, pickExcludes);
         if (hitObject == null) {
-            final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+            final FXOMDocument fxomDocument = fxomEvents.fxomDocument().get();
             hitObject = fxomDocument.getFxomRoot();
         }
 
@@ -265,7 +265,7 @@ public class DragGesture extends AbstractGesture {
 
         logger.debug("dragOverHitObject {}", hitObject == null ? "null" : hitObject.getSceneGraphObject().getObjectClass().getName());
 
-        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        final FXOMDocument fxomDocument = fxomEvents.fxomDocument().get();
         final DragSource dragSource = dragController.getDragSource();
         final double hitX = lastDragEvent.getSceneX();
         final double hitY = lastDragEvent.getSceneY();

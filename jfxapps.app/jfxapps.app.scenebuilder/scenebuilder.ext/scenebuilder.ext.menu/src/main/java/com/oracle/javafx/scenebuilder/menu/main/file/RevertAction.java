@@ -33,23 +33,23 @@
  */
 package com.oracle.javafx.scenebuilder.menu.main.file;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
-import com.gluonhq.jfxapps.core.api.fs.FileSystemActionFactory;
+import com.gluonhq.jfxapps.core.api.document.DocumentActionFactory;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
+import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
@@ -62,7 +62,7 @@ public class RevertAction extends AbstractAction {
 
     public final static String MENU_ID = DefaultMenu.File.REVERT_TO_SAVED_ID;
 
-    private final FileSystemActionFactory fileSystemActionFactory;
+    private final DocumentActionFactory documentActionFactory;
 
     private final FxomEvents applicationInstanceEvents;
 
@@ -76,12 +76,12 @@ public class RevertAction extends AbstractAction {
             I18N i18n,
             ActionExtensionFactory extensionFactory,
             FxomEvents applicationInstanceEvents,
-            FileSystemActionFactory fileSystemActionFactory,
+            DocumentActionFactory documentActionFactory,
             Dialog dialog,
             @Lazy ApplicationInstance instance,
             @Lazy MainInstanceWindow instanceWindow) {
         super(i18n, extensionFactory);
-        this.fileSystemActionFactory = fileSystemActionFactory;
+        this.documentActionFactory = documentActionFactory;
         this.applicationInstanceEvents = applicationInstanceEvents;
         this.dialog = dialog;
         this.instance = instance;
@@ -93,7 +93,7 @@ public class RevertAction extends AbstractAction {
         final FXOMDocument omDocument = applicationInstanceEvents.fxomDocument().get();
         boolean locationSet = omDocument != null && omDocument.getLocation() != null;
         boolean dirty = applicationInstanceEvents.dirty().get();
-        return locationSet && dirty && fileSystemActionFactory.reload().canPerform();
+        return locationSet && dirty && documentActionFactory.reload().canPerform();
     }
 
     @Override
@@ -106,10 +106,10 @@ public class RevertAction extends AbstractAction {
         final Alert d = dialog.customAlert(stage);
         d.setMessage(getI18n().getString("alert.revert.question.message", stage.getTitle()));
         d.setDetails(getI18n().getString("alert.revert.question.details"));
-        d.setOKButtonTitle(getI18n().getString("label.revert"));
+        d.getModalWindow().setOKButtonTitle(getI18n().getString("label.revert"));
 
-        if (d.showAndWait() == ButtonID.OK) {
-            ActionStatus result = fileSystemActionFactory.reload().perform();
+        if (d.showAndWait() == ModalWindow.ButtonID.OK) {
+            ActionStatus result = documentActionFactory.reload().perform();
             if (result == ActionStatus.FAILED) {
                 instance.close();
             }

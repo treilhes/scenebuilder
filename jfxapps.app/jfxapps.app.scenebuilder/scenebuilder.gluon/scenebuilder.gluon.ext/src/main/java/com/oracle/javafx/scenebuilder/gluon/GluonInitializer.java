@@ -32,39 +32,43 @@
  */
 package com.oracle.javafx.scenebuilder.gluon;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.treilhes.emc4j.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.WelcomeDialog;
-import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.lifecycle.InitWithApplication;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.oracle.javafx.scenebuilder.gluon.controller.GluonJarImportController;
 import com.oracle.javafx.scenebuilder.gluon.controller.RegistrationController;
 import com.oracle.javafx.scenebuilder.gluon.controller.TrackingController;
 import com.oracle.javafx.scenebuilder.gluon.controller.UpdateController;
+import com.treilhes.emc4j.boot.api.context.EmContext;
 
 import javafx.application.Platform;
 
 @Component
 public class GluonInitializer implements InitWithApplication {
 
+    private final EmContext context;
+    private final JfxAppPlatform jfxAppPlatform;
     private final GluonJarImportController gluonJarImportController;
     private final RegistrationController registrationController;
     private final TrackingController trackingController;
     private final UpdateController updateController;
-    private SceneBuilderBeanFactory context;
 
+    //@formatter:off
     public GluonInitializer(
-            @Autowired SceneBuilderBeanFactory context,
-            @Autowired GluonJarImportController gluonJarImportController,
-            @Autowired RegistrationController registrationController,
-            @Autowired TrackingController trackingController,
-            @Autowired UpdateController updateController
+            EmContext context,
+            JfxAppPlatform jfxAppPlatform,
+            GluonJarImportController gluonJarImportController,
+            RegistrationController registrationController,
+            TrackingController trackingController,
+            UpdateController updateController
         ) {
+        //@formatter:on
         super();
         this.context = context;
+        this.jfxAppPlatform = jfxAppPlatform;
         this.gluonJarImportController = gluonJarImportController;
         this.registrationController = registrationController;
         this.trackingController = trackingController;
@@ -76,13 +80,14 @@ public class GluonInitializer implements InitWithApplication {
         gluonJarImportController.startListeningLibrary();
         trackingController.sendTrackingStartupInfo();
 
-        JfxAppPlatform.runOnFxThread(() -> {
+        jfxAppPlatform.runOnFxThread(() -> {
             context.getBean(WelcomeDialog.class).getStage().setOnHidden(event -> {
-                updateController.showUpdateDialogIfRequired(context.getBean(ApplicationInstanceWindow.class), () -> {
+                var instanceWindow = context.getBean(MainInstanceWindow.class);
+                updateController.showUpdateDialogIfRequired(instanceWindow, () -> {
                     if (!Platform.isFxApplicationThread()) {
-                        JfxAppPlatform.runOnFxThread(() -> registrationController.showRegistrationDialogIfRequired(context.getBean(ApplicationInstanceWindow.class)));
+                        jfxAppPlatform.runOnFxThread(() -> registrationController.showRegistrationDialogIfRequired(instanceWindow));
                     } else {
-                        registrationController.showRegistrationDialogIfRequired(context.getBean(ApplicationInstanceWindow.class));
+                        registrationController.showRegistrationDialogIfRequired(instanceWindow);
                     }
                 });
             });

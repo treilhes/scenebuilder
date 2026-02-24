@@ -32,26 +32,25 @@
  */
 package com.oracle.javafx.scenebuilder.gluon.preferences.global;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
 import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preference.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preference.type.BooleanPreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 
-@Component
-public class RegistrationOptInPreference extends BooleanPreference implements ManagedGlobalPreference {
-	    
-    /***************************************************************************
-     *                                                                         *
-     * Static fields                                                           *
-     *                                                                         *
-     **************************************************************************/
-    public static final String PREFERENCE_KEY = "REGISTRATION_OPT_IN"; //NOCHECK
-    public static final boolean PREFERENCE_DEFAULT_VALUE = false;
+@ApplicationSingleton
+@PreferenceContext(id = "81b71014-804e-41f4-b5b3-ab990c3854b5", // NOCHECK
+    name = RegistrationOptInPreference.PREFERENCE_KEY,
+    defaultValueProvider = RegistrationOptInPreference.DefaultProvider.class)
+public interface RegistrationOptInPreference extends Preference<Boolean>, ManagedGlobalPreference {
+    public static final String PREFERENCE_KEY = "REGISTRATION_OPT_IN"; // NOCHECK
+    public static final Boolean PREFERENCE_DEFAULT_VALUE = null;
 
-	public RegistrationOptInPreference(@Autowired PreferencesContext preferencesContext) {
-		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-	}
-	
+    public class DefaultProvider implements DefaultValueProvider<Boolean> {
+        @Override
+        public Boolean get() {
+            return PREFERENCE_DEFAULT_VALUE;
+        }
+    }
 }
+

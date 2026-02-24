@@ -33,9 +33,10 @@
  */
 package com.oracle.javafx.scenebuilder.preview.actions;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-
+import com.gluonhq.jfxapps.core.api.action.AbstractActionExtension;
+import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.SetRootSizeAction;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 @ApplicationInstancePrototype
 public class SetRootSizeExtension extends AbstractActionExtension<SetRootSizeAction> {

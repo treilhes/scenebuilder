@@ -35,18 +35,18 @@ package com.oracle.javafx.scenebuilder.menu.main.edit;
 
 import org.springframework.context.annotation.Lazy;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fxom.clipboard.Clipboard;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionActionsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.annotation.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 @ApplicationInstancePrototype
 @Lazy
@@ -71,24 +71,23 @@ public class CutAction extends AbstractAction {
 
     public final static String MENU_ID = DefaultMenu.Edit.CUT_ID;
 
-    private final Clipboard clipboard;
+    private final SelectionActionsFactory selectionActionFactory;
 
     public CutAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            Clipboard clipboard) {
+            SelectionActionsFactory selectionActionFactory) {
         super(i18n, extensionFactory);
-        this.clipboard = clipboard;
+        this.selectionActionFactory = selectionActionFactory;
     }
 
     @Override
     public boolean canPerform() {
-        return clipboard.canPerformCut();
+        return selectionActionFactory.cut().canPerform();
     }
 
     @Override
     public ActionStatus doPerform() {
-        clipboard.performCut();
-        return ActionStatus.DONE;
+        return selectionActionFactory.cut().perform();
     }
 }

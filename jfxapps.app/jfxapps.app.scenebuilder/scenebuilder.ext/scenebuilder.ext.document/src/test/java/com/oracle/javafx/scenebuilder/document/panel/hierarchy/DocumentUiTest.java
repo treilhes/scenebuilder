@@ -50,9 +50,8 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.ExternalDragSource;
 import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.ContextMenu;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
@@ -61,7 +60,6 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyCellAssignment;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyController;
@@ -70,6 +68,7 @@ import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyParentRing;
 import com.oracle.javafx.scenebuilder.document.hierarchy.display.MetadataInfoDisplayOption;
 import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell;
 import com.oracle.javafx.scenebuilder.document.preferences.document.ShowExpertByDefaultPreference;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXMLLoader;
@@ -153,13 +152,14 @@ class DocumentUiTest {
     HierarchyParentRing parentRing;
 
     @Mock
-    IMetadata metadata;
+    SbMetadata metadata;
 
     //@Test
     void testForTest() {
 
         //metadata for mask
-        Mockito.when(metadata.queryComponentMetadata(Pane.class)).thenReturn(ccm);
+        Mockito.doReturn(ccm).when(metadata).queryComponentMetadata(Pane.class);
+        //Mockito.when(metadata.queryComponentMetadata(Pane.class)).thenReturn(ccm);
         Mockito.when(ccm.getAllSubComponentProperties()).thenReturn(Collections.emptySet());
 
         //setup

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2026, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2026, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,23 +40,23 @@ import java.util.Set;
 
 import org.springframework.context.annotation.Lazy;
 
-import com.treilhes.emc4j.boot.api.context.EmContext;
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.content.mode.Layer;
 import com.gluonhq.jfxapps.core.api.fxom.content.mode.ModeManager;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractMouseGesture;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.api.control.Pring;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
+import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.editor.fxml.controller.EditModeController;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Point2D;
@@ -79,18 +79,18 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
     private Layer<Rudder> rudderLayer;
     private ModeManager modeManager;
     private final FXOMObjectMask.Factory maskFactory;
-    private final Selection selection;
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomSelection selection;
+    private final FxomEvents fxomEvents;
 
     protected SelectWithMarqueeGesture(
-            ApplicationInstanceEvents documentManager,
+            FxomEvents fxomEvents,
             SbDriver driver,
-            Selection selection,
+            FxomSelection selection,
             FXOMObjectMask.Factory maskFactory,
             @Lazy Workspace workspace,
             @Lazy EditModeController editMode) {
         super(workspace);
-        this.documentManager = documentManager;
+        this.fxomEvents = fxomEvents;
         this.driver = driver;
         this.selection = selection;
         this.maskFactory = maskFactory;
@@ -248,7 +248,7 @@ public class SelectWithMarqueeGesture extends AbstractMouseGesture {
     private void collectCandidates() {
         if (scopeObject == null) {
             // Only one candidate : the root object
-            final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+            final FXOMDocument fxomDocument = fxomEvents.fxomDocument().get();
             if ((fxomDocument != null) && (fxomDocument.getFxomRoot() != null)) {
                 candidates.add(fxomDocument.getFxomRoot());
             }

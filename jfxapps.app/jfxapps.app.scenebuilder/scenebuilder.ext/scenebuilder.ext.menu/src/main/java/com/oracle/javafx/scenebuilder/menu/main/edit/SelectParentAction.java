@@ -33,21 +33,18 @@
  */
 package com.oracle.javafx.scenebuilder.menu.main.edit;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionActionsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.annotation.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 @ApplicationInstancePrototype
 @ActionMeta(
@@ -73,46 +70,23 @@ public class SelectParentAction extends AbstractAction {
     public final static String MENU_ID = DefaultMenu.Edit.SELECT_PARENT_ID;
     public final static String TITLE = "menu.title.select.parent";
 
-    private final FxomEvents documentManager;
-    private final Selection selection;
+    private final SelectionActionsFactory selectionActionFactory;
 
     public SelectParentAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            FxomEvents documentManager,
-            Selection selection) {
+            SelectionActionsFactory selectionActionFactory) {
         super(i18n, extensionFactory);
-        this.documentManager = documentManager;
-        this.selection = selection;
+        this.selectionActionFactory = selectionActionFactory;
     }
 
-    /**
-     * Returns true if the selection is not empty and the root object is not
-     * selected.
-     *
-     * @return if the selection is not empty and the root object is not selected.
-     */
     @Override
     public boolean canPerform() {
-        FXOMDocument fxomDocument = documentManager.fxomDocument().get();
-
-        if (fxomDocument == null || fxomDocument.getFxomRoot() == null) {
-            return false;
-        }
-        final FXOMObject rootObject = fxomDocument.getFxomRoot();
-        return !selection.isEmpty() && !selection.isSelected(rootObject);
+        return selectionActionFactory.selectParent().canPerform();
     }
 
-    /**
-     * Performs the select parent control action. If the selection is multiple, we
-     * select the common ancestor.
-     */
     @Override
     public ActionStatus doPerform() {
-        assert canPerform(); // (1)
-        final FXOMObject ancestor = selection.getAncestor();
-        assert ancestor != null; // Because of (1)
-        selection.select(ancestor);
-        return ActionStatus.DONE;
+        return selectionActionFactory.selectParent().perform();
     }
 }

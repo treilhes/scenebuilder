@@ -35,9 +35,6 @@ package com.oracle.javafx.scenebuilder.editors.control;
 
 import java.util.Set;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -48,8 +45,8 @@ import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.StringPropertyMetadata.I18nStringPropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor;
-import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor.LayoutFormat;
 import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -87,10 +84,12 @@ public class I18nStringEditor extends AbstractPropertyEditor {
     private boolean i18nMode = false;
     private boolean multiLineMode = false;
 
-    public I18nStringEditor(Dialog dialog,
+    public I18nStringEditor(
+            I18N i18n,
+            Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
         initialize(true);
     }
 

@@ -33,27 +33,16 @@
  */
 package com.oracle.javafx.scenebuilder.menu.main.edit;
 
-import java.util.List;
-
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionActionsFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
-
-import javafx.scene.Node;
-import javafx.scene.control.TextInputControl;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 @ApplicationInstancePrototype
 @ActionMeta(
@@ -71,189 +60,23 @@ public class SelectAllAction extends AbstractAction {
 
     public final static String MENU_ID = DefaultMenu.Edit.SELECT_ALL_ID;
 
-    private final MainInstanceWindow documentWindow;
-    private final InlineEdit inlineEdit;
-    private final FxomEvents documentManager;
-    private final Selection selection;
+    private final SelectionActionsFactory selectionActionFactory;
 
     public SelectAllAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            @Lazy MainInstanceWindow documentWindow,
-            FxomEvents documentManager,
-            InlineEdit inlineEdit,
-            Selection selection) {
+            SelectionActionsFactory selectionActionFactory) {
         super(i18n, extensionFactory);
-        this.documentWindow = documentWindow;
-        this.documentManager = documentManager;
-        this.inlineEdit = inlineEdit;
-        this.selection = selection;
+        this.selectionActionFactory = selectionActionFactory;
     }
 
     @Override
     public boolean canPerform() {
-        final boolean result;
-        final Node focusOwner = documentWindow.getScene().getFocusOwner();
-        if (inlineEdit.isPopupEditing(focusOwner)) {
-            return false;
-        } else if (inlineEdit.isTextInputControlEditing(focusOwner)) {
-            final TextInputControl tic = inlineEdit.getTextInputControl(focusOwner);
-            final String text = tic.getText();
-            final String selectedText = tic.getSelectedText();
-            if (text == null || text.isEmpty()) {
-                result = false;
-            } else {
-                // Check if the TextInputControl is not already ALL selected
-                result = selectedText == null || selectedText.length() < tic.getText().length();
-            }
-        } else {
-            FXOMDocument fd = documentManager.fxomDocument().get();
-
-            if (fd == null || fd.getFxomRoot() == null) {
-                return false;
-            }
-            if (selection.isEmpty()) { // (1)
-                return true;
-            } else {
-                  final FXOMObject rootObject = fd.getFxomRoot();
-                  // Cannot select all if root is selected
-                  if (selection.isSelected(rootObject)) { // (1)
-                      return false;
-                  } else {
-                      List<FXOMObject> siblings = selection.getGroup().getSiblings();
-                      return !siblings.isEmpty() && selection.getGroup().getItems().stream().anyMatch(i -> selection.isSelected(i));
-                  }
-            }
-//            } else if (selection.getGroup() instanceof ObjectSelectionGroup) {
-//                final FXOMObject rootObject = fd.getFxomRoot();
-//                // Cannot select all if root is selected
-//                if (selection.isSelected(rootObject)) { // (1)
-//                    return false;
-//                } else {
-//                    // Cannot select all if all sub components are already selected
-//                    final FXOMObject ancestor = selection.getAncestor();
-//                    assert ancestor != null; // Because of (1)
-//                    final BorderPaneHierarchyMask mask = borderPaneMaskFactory.getMask(ancestor);
-//                    // BorderPane special case : use accessories
-//                    // TODO find a way to remove this special case
-//                    if (mask.getFxomObject().getSceneGraphObject().isInstanceOf(BorderPane.class)) {
-//                        final FXOMObject top = mask.getAccessory(mask.getTopAccessory());
-//                        final FXOMObject left = mask.getAccessory(mask.getLeftAccessory());
-//                        final FXOMObject center = mask.getAccessory(mask.getCenterAccessory());
-//                        final FXOMObject right = mask.getAccessory(mask.getRightAccessory());
-//                        final FXOMObject bottom = mask.getAccessory(mask.getBottomAccessory());
-//                        for (FXOMObject bpAccessoryObject : new FXOMObject[] {
-//                            top, left, center, right, bottom}) {
-//                            if (bpAccessoryObject != null
-//                                    && selection.isSelected(bpAccessoryObject) == false) {
-//                                return true;
-//                            }
-//                        }
-//                    } else if (mask.isAcceptingSubComponent()) {
-//                        for (FXOMObject subComponentObject : mask.getSubComponents()) {
-//                            if (selection.isSelected(subComponentObject) == false) {
-//                                return true;
-//                            }
-//                        }
-//                    }
-//                }
-//            } else if (selection.getGroup() != null) {
-//                // GridSelectionGroup => at least 1 row/column is selected
-//                // SelectionGroup => at least 1 item is selected
-//                return selection.getGroup().getItems().stream().anyMatch(i -> selection.isSelected(i));
-//            } else {
-//                assert selection.getGroup() == null :
-//                        "Add implementation for " + selection.getGroup(); //NOCHECK
-//            }
-//            return false;
-
-        }
-        return result;
+        return selectionActionFactory.selectAll().canPerform();
     }
 
-    /**
-     * Performs the select all control action.
-     * Select all sub components of the selection common ancestor.
-     */
     @Override
     public ActionStatus doPerform() {
-        assert canPerform();
-        final Node focusOwner = documentWindow.getScene().getFocusOwner();
-        if (inlineEdit.isTextInputControlEditing(focusOwner)) {
-            final TextInputControl tic = inlineEdit.getTextInputControl(focusOwner);
-            tic.selectAll();
-        } else {
-            selection.selectAll();
-//
-//            FXOMDocument fd = documentManager.fxomDocument().get();
-//            Selection selection = documentManager.selectionDidChange().get().getSelection();
-//
-//            final FXOMObject rootObject = fd.getFxomRoot();
-//            if (selection.isEmpty()) { // (1)
-//                // If the current selection is empty, we select the root object
-//                selection.select(rootObject);
-//            } else {
-//                List<FXOMObject> siblings = selection.getGroup().getSiblings();
-//                if (!siblings.isEmpty()) {
-//                    selection.select(siblings);
-//                }
-//            }
-//            } else if (selection.getGroup() instanceof ObjectSelectionGroup) {
-//                // Otherwise, select all sub components of the common ancestor ??
-//                final FXOMObject ancestor = selection.getAncestor();
-//                assert ancestor != null; // Because of (1)
-//                final BorderPaneHierarchyMask mask = borderPaneMaskFactory.getMask(ancestor);
-//                final Set<FXOMObject> selectableObjects = new HashSet<>();
-//                // BorderPane special case : use accessories
-//                // TODO find a way to remove this special case
-//                if (mask.getFxomObject().getSceneGraphObject().isInstanceOf(BorderPane.class)) {
-//                    final FXOMObject top = mask.getAccessory(mask.getTopAccessory());
-//                    final FXOMObject left = mask.getAccessory(mask.getLeftAccessory());
-//                    final FXOMObject center = mask.getAccessory(mask.getCenterAccessory());
-//                    final FXOMObject right = mask.getAccessory(mask.getRightAccessory());
-//                    final FXOMObject bottom = mask.getAccessory(mask.getBottomAccessory());
-//                    for (FXOMObject accessoryObject : new FXOMObject[]{
-//                        top, left, center, right, bottom}) {
-//                        if (accessoryObject != null) {
-//                            selectableObjects.add(accessoryObject);
-//                        }
-//                    }
-//                } else {
-//                    assert mask.isAcceptingSubComponent(); // Because of (1)
-//                    selectableObjects.addAll(mask.getSubComponents());
-//                }
-//                selection.select(selectableObjects);
-//            } else if (selection.getGroup() instanceof GridSelectionGroup) {
-//                // Select ALL rows / columns
-//                final GridSelectionGroup gsg = (GridSelectionGroup) selection.getGroup();
-//                final FXOMObject gridPane = gsg.getHitItem();
-//                assert gridPane instanceof FXOMInstance;
-//                final GridPaneHierarchyMask gridPaneMask = gridMaskFactory.getMask(gridPane);
-//                int size = 0;
-//                switch (gsg.getType()) {
-//                    case ROW:
-//                        size = gridPaneMask.getRowsSize();
-//                        break;
-//                    case COLUMN:
-//                        size = gridPaneMask.getColumnsSize();
-//                        break;
-//                    default:
-//                        assert false;
-//                        break;
-//                }
-//                // Select first index
-//                selection.select((FXOMInstance) gridPane, gsg.getType(), 0);
-//                for (int index = 1; index < size; index++) {
-//                    selection.toggleSelection((FXOMInstance) gridPane, gsg.getType(), index);
-//                }
-//            } else {
-//                assert selection.getGroup() == null :
-//                        "Add implementation for " + selection.getGroup(); //NOCHECK
-//
-//            }
-
-        }
-
-        return ActionStatus.DONE;
+        return selectionActionFactory.selectAll().perform();
     }
 }

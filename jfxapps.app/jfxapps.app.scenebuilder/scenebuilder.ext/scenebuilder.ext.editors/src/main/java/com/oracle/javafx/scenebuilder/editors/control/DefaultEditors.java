@@ -78,6 +78,7 @@ import com.gluonhq.jfxapps.core.metadata.property.value.list.StringListPropertyM
 import com.gluonhq.jfxapps.core.metadata.property.value.paint.ColorPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.paint.PaintPropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.editors.EditorMapProvider;
+import com.oracle.javafx.scenebuilder.api.editors.PropertyEditor;
 import com.oracle.javafx.scenebuilder.editors.control.EnumEditor.GenericEnumEditor;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.BoundsPopupEditor;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.EffectPopupEditor;

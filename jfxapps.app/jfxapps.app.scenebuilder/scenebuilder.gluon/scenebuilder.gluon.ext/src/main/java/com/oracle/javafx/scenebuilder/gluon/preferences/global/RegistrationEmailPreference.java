@@ -32,26 +32,26 @@
  */
 package com.oracle.javafx.scenebuilder.gluon.preferences.global;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
 import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preference.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preference.type.StringPreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 
-@Component
-public class RegistrationEmailPreference extends StringPreference implements ManagedGlobalPreference {
-	    
-    /***************************************************************************
-     *                                                                         *
-     * Static fields                                                           *
-     *                                                                         *
-     **************************************************************************/
+@ApplicationSingleton
+@PreferenceContext(id = "5c10e650-db8a-4304-9e5a-c217b49bbe55", // NO CHECK
+    name = RegistrationEmailPreference.PREFERENCE_KEY,
+    defaultValueProvider = RegistrationEmailPreference.DefaultProvider.class)
+public interface RegistrationEmailPreference extends Preference<String>, ManagedGlobalPreference {
+
     public static final String PREFERENCE_KEY = "REGISTRATION_EMAIL"; //NOCHECK
     public static final String PREFERENCE_DEFAULT_VALUE = null;
 
-	public RegistrationEmailPreference(@Autowired PreferencesContext preferencesContext) {
-		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-	}
-	
+    public class DefaultProvider implements DefaultValueProvider<String> {
+        @Override
+        public String get() {
+            return PREFERENCE_DEFAULT_VALUE;
+        }
+    }
 }
+

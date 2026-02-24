@@ -33,27 +33,23 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Content;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewMenuProvider;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
 @MenuItemAttachment(
         id = FocusContentAction.MENU_ID,
         //targetMenuId = ToggleMinimizeLeftDockAction.MENU_ID,
-        targetMenuId = ViewMenuProvider.MENU_ID,
+        targetMenuId = DefaultMenu.View.ID,
         label = "menu.title.content",
         positionRequest = PositionRequest.AsNextSibling,
         separatorBefore = true)

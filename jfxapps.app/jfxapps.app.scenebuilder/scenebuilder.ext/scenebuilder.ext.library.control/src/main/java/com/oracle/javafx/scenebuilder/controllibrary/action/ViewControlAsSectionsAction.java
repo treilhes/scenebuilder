@@ -33,19 +33,19 @@
  */
 package com.oracle.javafx.scenebuilder.controllibrary.action;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController;
 import com.oracle.javafx.scenebuilder.controllibrary.preferences.global.DisplayModePreference;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
 
 @ApplicationInstanceSingleton
-@Lazy
 @ActionMeta(nameKey = "action.name.view.as.sections", descriptionKey = "action.description.view.as.sections")
 @ViewMenuItemAttachment(
         id = ViewControlAsSectionsAction.MENU_ID,
@@ -64,10 +64,11 @@ public class ViewControlAsSectionsAction extends AbstractAction {
     private final DisplayModePreference displayModePreference;
 
     public ViewControlAsSectionsAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             @Lazy LibraryPanelController libraryPanelController,
             @Lazy DisplayModePreference displayModePreference) {
-        super(extensionFactory);
+        super(i18n, extensionFactory);
         this.libraryPanelController = libraryPanelController;
         this.displayModePreference = displayModePreference;
     }

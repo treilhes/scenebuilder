@@ -33,13 +33,12 @@
  */
 package com.oracle.javafx.scenebuilder.editors.popupeditors;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 /**
  * Popup editor for the Paint property.
@@ -47,11 +46,13 @@ import com.oracle.javafx.scenebuilder.api.Documentation;
 @ApplicationInstancePrototype
 public class GenericPaintPopupEditor extends PaintPopupEditor {
 
-    public GenericPaintPopupEditor(Dialog dialog,
+    public GenericPaintPopupEditor(
+            I18N i18n,
+            Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem,
             MessageLogger messageLogger) {
-        super(dialog, documentation, fileSystem, messageLogger);
+        super(i18n, dialog, documentation, fileSystem, messageLogger);
     }
 
 }

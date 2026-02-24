@@ -33,11 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.cssanalyser.mode;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
 import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
 import com.gluonhq.jfxapps.core.api.fxom.content.mode.AbstractModeController;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -45,6 +43,8 @@ import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
 import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
 import com.oracle.javafx.scenebuilder.api.control.SbDriver;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
 
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -61,13 +61,13 @@ public class PickModeController extends AbstractModeController {
 
     private final SbDriver driver;
     private final FxomEvents fxomEvents;
-    private final Selection selection;
+    private final FxomSelection selection;
     //private HitNodeChrome hitNodeChrome;
 
     public PickModeController(
             SbDriver driver,
             FxomEvents fxomEvents,
-            Selection selection,
+            FxomSelection selection,
     		@Lazy Workspace workspace) {
         super(workspace);
         this.driver = driver;

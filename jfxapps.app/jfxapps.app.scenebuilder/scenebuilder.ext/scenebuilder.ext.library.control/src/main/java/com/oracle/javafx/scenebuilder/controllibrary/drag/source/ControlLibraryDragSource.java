@@ -37,27 +37,28 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
-
 import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.AbstractDragSource;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSourceFactory;
 import com.gluonhq.jfxapps.core.api.fxom.library.LibraryItem;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.TransferMode;
 
 /**
  *
@@ -65,14 +66,20 @@ import javafx.scene.input.ClipboardContent;
 @ApplicationInstancePrototype
 public final class ControlLibraryDragSource extends AbstractDragSource {
 
+    private final I18N i18n;
     private final FXOMDocument targetDocument;
     private LibraryItem libraryItem;
     private FXOMObject libraryItemObject; // Populated lazily
     private List<FXOMObject> draggedObjects; // Opmization
 
-    protected ControlLibraryDragSource(ApplicationInstanceEvents documentManager, ApplicationInstanceWindow ownerWindow) {
+
+    protected ControlLibraryDragSource(
+            I18N i18n,
+            FxomEvents fxomEvents,
+            MainInstanceWindow ownerWindow) {
         super(ownerWindow.getScene().getWindow());
-        this.targetDocument = documentManager.fxomDocument().get();
+        this.i18n = i18n;
+        this.targetDocument = fxomEvents.fxomDocument().get();
         assert targetDocument != null;
     }
 
@@ -145,7 +152,7 @@ public final class ControlLibraryDragSource extends AbstractDragSource {
         final FXOMObject hitObject = getHitObject();
         if (hitObject == null) {
             result = Double.NaN;
-        } else if (hitObject.isNode()) {
+        } else if (hitObject.getSceneGraphObject().isNode()) {
             final Node hitNode = hitObject.getSceneGraphObject().getAs(Node.class);
             final Bounds b = hitNode.getLayoutBounds();
             result = (b.getMinX() + b.getMaxX()) / 2.0;
@@ -163,7 +170,7 @@ public final class ControlLibraryDragSource extends AbstractDragSource {
         final FXOMObject hitObject = getHitObject();
         if (hitObject == null) {
             result = Double.NaN;
-        } else if (hitObject.isNode()) {
+        } else if (hitObject.getSceneGraphObject().isNode()) {
             final Node hitNode = hitObject.getSceneGraphObject().getAs(Node.class);
             final Bounds b = hitNode.getLayoutBounds();
             result = (b.getMinY() + b.getMaxY()) / 2.0;
@@ -229,54 +236,79 @@ public final class ControlLibraryDragSource extends AbstractDragSource {
 
     @Override
     public String makeDropJobDescription() {
-        return I18N.getString("drop.job.insert.library.item",
+        return i18n.getString("drop.job.insert.library.item",
                 getLibraryItem().getName());
     }
 
+//    @Override
+//    public boolean isNodeOnly() {
+//        return getLibraryItemObject().getSceneGraphObject().isNode();
+//    }
+//
+//    @Override
+//    public boolean isSingleImageViewOnly() {
+//        final boolean result;
+//
+//        if (getLibraryItemObject() instanceof FXOMInstance) {
+//            result = getLibraryItemObject().getSceneGraphObject().isInstanceOf(ImageView.class);
+//        } else {
+//            result = false;
+//        }
+//
+//        return result;
+//    }
+//
+//    @Override
+//    public boolean isSingleTooltipOnly() {
+//        final boolean result;
+//
+//        if (getLibraryItemObject() instanceof FXOMInstance) {
+//            result = getLibraryItemObject().getSceneGraphObject().isInstanceOf(Tooltip.class);
+//        } else {
+//            result = false;
+//        }
+//
+//        return result;
+//    }
+//
+//    @Override
+//    public boolean isSingleContextMenuOnly() {
+//        final boolean result;
+//
+//        if (getLibraryItemObject() instanceof FXOMInstance) {
+//            result = getLibraryItemObject().getSceneGraphObject().isInstanceOf(ContextMenu.class);
+//        } else {
+//            result = false;
+//        }
+//
+//        return result;
+//    }
+
+
     @Override
-    public boolean isNodeOnly() {
-        return getLibraryItemObject().isNode();
+    public boolean isEmpty() {
+        return getLibraryItemObject() == null || !getLibraryItemObject().getSceneGraphObject().isPresent();
     }
 
     @Override
-    public boolean isSingleImageViewOnly() {
-        final boolean result;
-
-        if (getLibraryItemObject() instanceof FXOMInstance) {
-            result = getLibraryItemObject().getSceneGraphObject().isInstanceOf(ImageView.class);
-        } else {
-            result = false;
-        }
-
-        return result;
+    public boolean isSingle() {
+        return true;
     }
 
     @Override
-    public boolean isSingleTooltipOnly() {
-        final boolean result;
-
-        if (getLibraryItemObject() instanceof FXOMInstance) {
-            result = getLibraryItemObject().getSceneGraphObject().isInstanceOf(Tooltip.class);
-        } else {
-            result = false;
-        }
-
-        return result;
+    public boolean isSingleType() {
+        return true;
     }
 
     @Override
-    public boolean isSingleContextMenuOnly() {
-        final boolean result;
-
-        if (getLibraryItemObject() instanceof FXOMInstance) {
-            result = getLibraryItemObject().getSceneGraphObject().isInstanceOf(ContextMenu.class);
-        } else {
-            result = false;
-        }
-
-        return result;
+    public boolean isSingleType(Class<?> type) {
+        return !isEmpty() && getLibraryItemObject().getSceneGraphObject().isInstanceOf(type);
     }
 
+    @Override
+    public TransferMode getTransferMode() {
+        return TransferMode.COPY;
+    }
 
 
     /*
@@ -288,12 +320,10 @@ public final class ControlLibraryDragSource extends AbstractDragSource {
         return getClass().getSimpleName() + ": libraryItem=(" + libraryItem + ")"; //NOCHECK
     }
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
-    @Lazy
+    @ApplicationSingleton
     public static class Factory extends DragSourceFactory<ControlLibraryDragSource> {
-        public Factory(SceneBuilderBeanFactory sbContext) {
-            super(sbContext);
+        public Factory(EmContext context) {
+            super(context);
         }
 
         public ControlLibraryDragSource getDragSource(LibraryItem libraryItem) {
@@ -301,4 +331,5 @@ public final class ControlLibraryDragSource extends AbstractDragSource {
         }
 
     }
+
 }

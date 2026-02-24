@@ -44,14 +44,14 @@ import java.util.TimerTask;
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.Size;
 import com.gluonhq.jfxapps.core.api.fxom.css.StylesheetProvider;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.util.FXOMDocumentUtils;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
 import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.AbstractWindowController;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
@@ -59,11 +59,11 @@ import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
 import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.api.SbEditor;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.css.Size;
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
@@ -111,7 +111,7 @@ public class PreviewWindowController extends AbstractWindowController implements
 	private StylesheetProvider stylesheetConfig;
     private I18nResourceProvider resourceConfig;
     private FXOMDocument fxomDocument;
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents fxomEvents;
     private final JfxAppPlatform jfxAppPlatform;
     /**
      * The type of Camera used by the Preview panel.
@@ -129,12 +129,12 @@ public class PreviewWindowController extends AbstractWindowController implements
             IconSetting iconSetting,
             SbEditor editorController,
             InstanceWindow document,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents fxomEvents,
             FXOMDocumentFactory fxomDocumentFactory) {
         //@formatter:on
         super(sceneBuilderManager, iconSetting, document);
         this.editorController = editorController;
-        this.documentManager = documentManager;
+        this.fxomEvents = fxomEvents;
         this.fxomDocumentFactory = fxomDocumentFactory;
         this.jfxAppPlatform = jfxAppPlatform;
         this.i18n = i18n;
@@ -145,27 +145,27 @@ public class PreviewWindowController extends AbstractWindowController implements
     public void afterPropertiesSet() throws Exception {
         makeRoot();
 
-        documentManager.dirty().subscribe(dirty -> isDirty |= dirty);
+        fxomEvents.dirty().subscribe(dirty -> isDirty |= dirty);
 
-        documentManager.fxomDocument().subscribe(fd -> {
+        fxomEvents.fxomDocument().subscribe(fd -> {
             fxomDocument = fd;
         });
 
-        documentManager.sceneGraphRevisionDidChange().subscribe(rev -> {
+        fxomEvents.sceneGraphRevisionDidChange().subscribe(rev -> {
             // requestUpdate(DELAYED);
             requestUpdate(IMMEDIATE);
         });
 
-        documentManager.cssRevisionDidChange().subscribe(rev -> {
+        fxomEvents.cssRevisionDidChange().subscribe(rev -> {
             requestUpdate(IMMEDIATE);
         });
 
-        documentManager.stylesheetConfig().observeOn(JavaFxScheduler.platform()).subscribe(s -> {
+        fxomEvents.stylesheetConfig().observeOn(JavaFxScheduler.platform()).subscribe(s -> {
             stylesheetConfig = s;
             requestUpdate(DELAYED);
         });
 
-        documentManager.i18nResourceConfig().observeOn(JavaFxScheduler.platform()).subscribe(s -> {
+        fxomEvents.i18nResourceConfig().observeOn(JavaFxScheduler.platform()).subscribe(s -> {
             resourceConfig = s;
             requestUpdate(DELAYED);
         });

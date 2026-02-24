@@ -36,10 +36,9 @@ package com.oracle.javafx.scenebuilder.preview.menu;
 import java.util.Arrays;
 import java.util.List;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
+import com.gluonhq.jfxapps.core.api.Size;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
@@ -48,8 +47,9 @@ import com.gluonhq.jfxapps.core.api.util.StringUtils;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.preview.actions.ShowPreviewDialogAction;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
 
-import javafx.css.Size;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
@@ -61,19 +61,19 @@ public class PreviewMenuProvider implements MenuItemProvider {
 
     private final I18N i18n;
     private final MenuBuilder menuBuilder;
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents fxomEvents;
     private final PreviewWindowController previewWindowController;
 
     //@formatter:off
     public PreviewMenuProvider(
             I18N i18n,
             MenuBuilder menuBuilder,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents fxomEvents,
             @Lazy PreviewWindowController previewWindowController) {
         //@formatter:on
         this.i18n = i18n;
         this.menuBuilder = menuBuilder;
-        this.documentManager = documentManager;
+        this.fxomEvents = fxomEvents;
         this.previewWindowController = previewWindowController;
     }
 
@@ -94,7 +94,7 @@ public class PreviewMenuProvider implements MenuItemProvider {
 
         @Override
         public String getTargetId() {
-            return DefaultMenu.PREVIEW_MENU_ID;
+            return DefaultMenu.Preview.ID;
         }
 
         @Override
@@ -131,7 +131,7 @@ public class PreviewMenuProvider implements MenuItemProvider {
                         StringUtils.getStringFromDouble(previewWindowController.getRoot().prefHeight(-1))));
             });
 
-            documentManager.fxomDocument().subscribe(fd -> {
+            fxomEvents.fxomDocument().subscribe(fd -> {
                 boolean disabled = fd == null;
 
                 if (disabled) {

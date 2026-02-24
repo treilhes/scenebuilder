@@ -32,22 +32,14 @@
  */
 package com.oracle.javafx.scenebuilder.editor.script.i18n;
 
-import java.util.ResourceBundle;
+import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-
-@Component
+@ApplicationSingleton
 public class I18NScriptEditor implements BundleProvider {
 
-    private static ResourceBundle bundle;
-
     @Override
-	public synchronized ResourceBundle getBundle() {
-        if (bundle == null) {
-            final String packageName = I18NScriptEditor.class.getPackage().getName();
-            bundle = ResourceBundle.getBundle(packageName + ".SceneBuilderScriptEditor"); //NOCHECK
-        }
-        return bundle;
+    public String getBundleName() {
+        return I18NScriptEditor.class.getPackage().getName() + ".SceneBuilderScriptEditor"; //NOCHECK
     }
 }
-

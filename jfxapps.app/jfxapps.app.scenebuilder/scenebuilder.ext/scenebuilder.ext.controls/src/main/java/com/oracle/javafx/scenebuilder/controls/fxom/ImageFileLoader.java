@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2026, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2026, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -42,14 +42,30 @@ import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.gluonhq.jfxapps.core.fxom.ext.FileLoader;
 import com.gluonhq.jfxapps.core.fxom.util.DesignImage;
+import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.ImagePropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.oracle.javafx.scenebuilder.metadata.javafx.javafx.scene.image.ImageViewMetadata;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class ImageFileLoader implements FileLoader {
+
+
+    private final ImagePropertyMetadata imageMeta = ImageViewMetadata.imagePropertyMetadata;
+    private final DoublePropertyMetadata fitWidthMeta = ImageViewMetadata.fitWidthPropertyMetadata;
+    private final DoublePropertyMetadata fitHeightMeta = ImageViewMetadata.fitHeightPropertyMetadata;
+
+    public ImageFileLoader(SbMetadata metadata) {
+        super();
+
+        //imageMeta = ImageViewMetadata.imagePropertyMetadata;
+        imageMeta = metadata.queryComponentProperty(ImageView.class, PropertyName.);
+        fitWidthMeta = ImageViewMetadata.fitWidthPropertyMetadata;
+        fitHeightMeta = ImageViewMetadata.fitHeightPropertyMetadata;
+    }
 
     @Override
     public boolean canLoad(File file) {

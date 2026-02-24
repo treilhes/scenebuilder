@@ -32,17 +32,18 @@
  */
 package com.oracle.javafx.scenebuilder.gluon.preferences.global;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
 import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preference.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preference.type.StringPreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 
-@Component
-public class RegistrationHashPreference extends StringPreference implements ManagedGlobalPreference {
-	    
-    /***************************************************************************
+@ApplicationSingleton
+@PreferenceContext(id = "4bc53ca7-ed1a-449a-92e8-64bb7685129a", // NO CHECK
+    name = RegistrationHashPreference.PREFERENCE_KEY,
+    defaultValueProvider = RegistrationHashPreference.DefaultProvider.class)
+public interface RegistrationHashPreference extends Preference<String>, ManagedGlobalPreference {
+     /***************************************************************************
      *                                                                         *
      * Static fields                                                           *
      *                                                                         *
@@ -50,8 +51,11 @@ public class RegistrationHashPreference extends StringPreference implements Mana
     public static final String PREFERENCE_KEY = "REGISTRATION_HASH"; //NOCHECK
     public static final String PREFERENCE_DEFAULT_VALUE = null;
 
-	public RegistrationHashPreference(@Autowired PreferencesContext preferencesContext) {
-		super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-	}
-	
+    public class DefaultProvider implements DefaultValueProvider<String> {
+        @Override
+        public String get() {
+            return PREFERENCE_DEFAULT_VALUE;
+        }
+    }
 }
+

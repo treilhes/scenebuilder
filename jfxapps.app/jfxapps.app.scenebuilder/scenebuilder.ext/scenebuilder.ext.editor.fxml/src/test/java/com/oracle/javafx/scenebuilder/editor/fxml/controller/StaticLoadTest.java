@@ -48,7 +48,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
 import com.gluonhq.jfxapps.core.api.fxom.error.ErrorReport;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
@@ -57,7 +57,6 @@ import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.ui.controller.EditorController;
 
 /**
  * Unit test for {@link com.gluonhq.jfxapps.core.fxom.util.Deprecation#setStaticLoad(javafx.fxml.FXMLLoader, boolean) }
@@ -85,7 +84,7 @@ public class StaticLoadTest {
     @Mock
     MessageLogger messageLogger;
     @Mock
-    Selection selection;
+    FxomSelection selection;
     @Mock
     ErrorReport errorReport;
     @Mock

@@ -33,23 +33,19 @@
  */
 package com.oracle.javafx.scenebuilder.editors.control;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.controls.paintpicker.PaintPicker;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.editors.popupeditors.PaintPopupEditor;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 /**
  * The editor is shown as a MenuButton. This button then shows a popup
  * to select a {@link javafx.scene.paint.Color}.
  */
 @ApplicationInstancePrototype
-@Lazy
 public class ColorPopupEditor extends PaintPopupEditor {
 
     private MessageLogger messageLogger;

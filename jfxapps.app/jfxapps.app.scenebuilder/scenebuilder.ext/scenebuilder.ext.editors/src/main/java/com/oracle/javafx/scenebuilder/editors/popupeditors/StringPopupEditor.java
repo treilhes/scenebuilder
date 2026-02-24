@@ -33,14 +33,12 @@
  */
 package com.oracle.javafx.scenebuilder.editors.popupeditors;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.api.Documentation;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -51,7 +49,6 @@ import javafx.scene.control.TextField;
  * Simple string popup editor.
  */
 @ApplicationInstancePrototype
-@Lazy
 public class StringPopupEditor extends PopupEditor {
 
     @FXML
@@ -60,11 +57,12 @@ public class StringPopupEditor extends PopupEditor {
     private Parent root;
 
     public StringPopupEditor(
+            I18N i18n,
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem
             ) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
     }
 
     //

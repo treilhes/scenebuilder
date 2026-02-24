@@ -41,12 +41,11 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.ContextMenu;
+import com.gluonhq.jfxapps.core.api.ctxmenu.ContextMenu;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -57,6 +56,7 @@ import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
 import com.oracle.javafx.scenebuilder.document.hierarchy.display.MetadataInfoDisplayOption;
 import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeViewController;
 import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.TreeItemFactory;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.beans.property.ObjectProperty;
@@ -82,8 +82,8 @@ public class HierarchyController implements Hierarchy {
     public static final String CSS_CLASS_HIERARCHY_PROMPT_LABEL = "hierarchy-prompt-label";
 
     private final I18N i18n;
-    private final ApplicationInstanceEvents documentManager;
-    private final Selection selection;
+    private final FxomEvents fxomEvents;
+    private final FxomSelection selection;
     private final InlineEdit inlineEdit;
     private final TreeItemFactory rootTreeItemFactory;
 
@@ -111,7 +111,7 @@ public class HierarchyController implements Hierarchy {
     public HierarchyController(
             I18N i18n,
             ContextMenu contextMenu,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents fxomEvents,
             HierarchyCellAssignment cellAssignments,
             HierarchyDNDController dndController,
             HierarchyParentRing parentRing,
@@ -119,14 +119,14 @@ public class HierarchyController implements Hierarchy {
             InlineEdit inlineEdit,
             JobManager jobManager,
             MetadataInfoDisplayOption defaultDisplayOptions,
-            Selection selection,
+            FxomSelection selection,
             TreeItemFactory rootTreeItemFactory
             ) {
         this.i18n = i18n;
         this.cellAssignments = cellAssignments;
         this.contextMenu = contextMenu;
         this.dndController = dndController;
-        this.documentManager = documentManager;
+        this.fxomEvents = fxomEvents;
         this.hierarchyTreeView = hierarchyTreeView;
         this.inlineEdit = inlineEdit;
         this.parentRing = parentRing;
@@ -135,9 +135,9 @@ public class HierarchyController implements Hierarchy {
 
         displayOptionProperty = new SimpleObjectProperty<>(defaultDisplayOptions);
 
-        documentManager.fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
-        documentManager.sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
-        documentManager.cssRevisionDidChange().subscribe(c -> cssRevisionDidChange());
+        fxomEvents.fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
+        fxomEvents.sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
+        fxomEvents.cssRevisionDidChange().subscribe(c -> cssRevisionDidChange());
         jobManager.revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
 
 
@@ -223,7 +223,7 @@ public class HierarchyController implements Hierarchy {
     }
 
     private void startListeningToEditorSelection() {
-        selectionSubscription = documentManager.selectionDidChange().subscribe(c -> editorSelectionDidChange());
+        selectionSubscription = fxomEvents.selectionDidChange().subscribe(c -> editorSelectionDidChange());
     }
 
     private void stopListeningToEditorSelection() {
@@ -362,7 +362,7 @@ public class HierarchyController implements Hierarchy {
         final Parent parent = hierarchyTreeView.getTreeView().getParent();
         assert parent instanceof Pane;
         final Pane pane = (Pane) parent;
-        final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        final FXOMDocument fxomDocument = fxomEvents.fxomDocument().get();
 
         final Label label = getPromptLabel();
         if (fxomDocument == null || fxomDocument.getFxomRoot() == null) {

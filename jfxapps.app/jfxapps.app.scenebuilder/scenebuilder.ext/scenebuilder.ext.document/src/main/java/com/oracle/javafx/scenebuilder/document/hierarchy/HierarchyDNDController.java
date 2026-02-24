@@ -35,15 +35,13 @@ package com.oracle.javafx.scenebuilder.document.hierarchy;
 
 import java.util.Optional;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DefaultDragSourceFactory;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DefaultDropTargetFactory;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSource;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroup;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMElement;
@@ -57,6 +55,7 @@ import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
 import com.oracle.javafx.scenebuilder.document.hierarchy.item.HierarchyItemAccessory;
 import com.oracle.javafx.scenebuilder.document.hierarchy.item.HierarchyItemBase;
 import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeViewController;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
@@ -92,12 +91,12 @@ public class HierarchyDNDController implements HierarchyDND {
 
     private final HierarchyTreeViewController hierarchyTreeView;
     private HierarchyTaskScheduler scheduler;
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents fxomEvents;
     private final HierarchyAnimationScheduler animationScheduler;
     private final HierarchyInsertLine insertLine;
     private final HierarchyParentRing parentRing;
     private final HierarchyCellAssignment cellAssignments;
-    private final Selection selection;
+    private final FxomSelection selection;
     private final InlineEdit inlineEdit;
 
 
@@ -116,8 +115,8 @@ public class HierarchyDNDController implements HierarchyDND {
 
     protected HierarchyDNDController(
             Drag drag,
-            ApplicationInstanceEvents documentManager,
-            Selection selection,
+            FxomEvents fxomEvents,
+            FxomSelection selection,
             InlineEdit inlineEdit,
             HierarchyTreeViewController hierarchyTreeView,
             HierarchyAnimationScheduler animationScheduler,
@@ -130,7 +129,7 @@ public class HierarchyDNDController implements HierarchyDND {
             SbFXOMObjectMask.Factory designHierarchyMaskFactory
             ) {
         this.drag = drag;
-        this.documentManager = documentManager;
+        this.fxomEvents = fxomEvents;
         this.animationScheduler = animationScheduler;
         this.hierarchyTreeView = hierarchyTreeView;
         this.scheduler = taskScheduler;
@@ -414,7 +413,7 @@ public class HierarchyDNDController implements HierarchyDND {
         SbAccessory accessory = null; // Used if we insert as accessory (drop over a place holder)
         int targetIndex = -1; // Used if we insert as sub components
 
-        final FXOMDocument document = documentManager.fxomDocument().get();
+        final FXOMDocument document = fxomEvents.fxomDocument().get();
         if (document == null || document.getFxomRoot() == null) {
             return defaultDropTargetFactory.root();
         }
@@ -697,7 +696,7 @@ public class HierarchyDNDController implements HierarchyDND {
     public void handleTreeOnDragDropped(final DragEvent event) {
         // If there is no document loaded
         // Should we allow to start with empty document in SB 2.0 ?
-        if (documentManager.fxomDocument().get() == null) {
+        if (fxomEvents.fxomDocument().get() == null) {
             return;
         }
 
@@ -793,7 +792,7 @@ public class HierarchyDNDController implements HierarchyDND {
 
         if (selection.isEmpty() == false) {
             // A set of regular component (ie fxom objects) are selected
-            final SelectionGroup osg = selection.getGroup();
+            final var osg = selection.getGroup();
 
             // Abort dragging an empty place holder
             for (TreeItem<HierarchyItem> selectedTreeItem : selectedTreeItems) {

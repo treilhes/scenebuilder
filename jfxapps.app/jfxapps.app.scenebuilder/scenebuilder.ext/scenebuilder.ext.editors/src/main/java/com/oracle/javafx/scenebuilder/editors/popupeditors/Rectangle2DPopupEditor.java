@@ -33,10 +33,6 @@
  */
 package com.oracle.javafx.scenebuilder.editors.popupeditors;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
@@ -44,6 +40,7 @@ import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.gluonhq.jfxapps.core.controls.DoubleField;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -56,7 +53,6 @@ import javafx.scene.Parent;
  * Rectangle2D popup editor. Used for ImageView/MediaView viewPort property.
  */
 @ApplicationInstancePrototype
-@Lazy
 public class Rectangle2DPopupEditor extends PopupEditor {
 
     @FXML
@@ -73,11 +69,12 @@ public class Rectangle2DPopupEditor extends PopupEditor {
     private Rectangle2D rectangle2D;
 
     public Rectangle2DPopupEditor(
+            I18N i18n,
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem
             ) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
     }
 
     @Override
@@ -123,7 +120,7 @@ public class Rectangle2DPopupEditor extends PopupEditor {
     @Override
     public String getPreviewString(Object value) {
         if (value == null) {
-            return I18N.getString("inspector.rectangle2D.not.defined");
+            return getI18n().getString("inspector.rectangle2D.not.defined");
         }
         assert value instanceof Rectangle2D;
         Rectangle2D rectangle2DVal = (Rectangle2D) value;

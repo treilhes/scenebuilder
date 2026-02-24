@@ -1,20 +1,16 @@
 package org.scenebuilder.ext.script.preference.global;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups;
+import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
 import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preference.PreferenceEditorFactory;
-import com.gluonhq.jfxapps.core.api.preference.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preference.UserPreference;
-import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
-import com.gluonhq.jfxapps.core.api.preference.type.BooleanPreference;
+import com.gluonhq.jfxapps.core.api.preference.Preference;
+import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 
-import javafx.scene.Parent;
-
-@Component
-public class StaticLoadPreference extends BooleanPreference implements ManagedGlobalPreference, UserPreference<Boolean> {
+@ApplicationSingleton
+@PreferenceContext(id = "18e02c42-8a76-4c22-8c4f-7bc4be53d131", // NO CHECK
+        name = StaticLoadPreference.PREFERENCE_KEY,
+        defaultValueProvider = StaticLoadPreference.DefaultProvider.class)
+public interface StaticLoadPreference extends Preference<Boolean>, ManagedGlobalPreference {
 
     /***************************************************************************
      *                                                                         *
@@ -23,33 +19,10 @@ public class StaticLoadPreference extends BooleanPreference implements ManagedGl
      **************************************************************************/
     public static final String PREFERENCE_KEY = "STATIC_LOAD"; //NOCHECK
     public static final boolean PREFERENCE_DEFAULT_VALUE = true;
-    private final PreferenceEditorFactory preferenceEditorFactory;
-
-    public StaticLoadPreference(
-            @Autowired PreferencesContext preferencesContext,
-            @Autowired PreferenceEditorFactory preferenceEditorFactory) {
-        super(preferencesContext, PREFERENCE_KEY, PREFERENCE_DEFAULT_VALUE);
-        this.preferenceEditorFactory = preferenceEditorFactory;
-    }
-
-    @Override
-    public String getLabelI18NKey() {
-        return "pref.script.staticload";
-    }
-
-    @Override
-    public Parent getEditor() {
-        return preferenceEditorFactory.newBooleanFieldEditor(this);
-    }
-
-
-    @Override
-    public PreferenceGroup getGroup() {
-        return DefaultPreferenceGroups.GLOBAL_GROUP_G;
-    }
-
-    @Override
-    public String getOrderKey() {
-        return getGroup().getOrderKey() + "_A";
+    public static class DefaultProvider implements DefaultValueProvider<Boolean> {
+        @Override
+        public Boolean get() {
+            return PREFERENCE_DEFAULT_VALUE;
+        }
     }
 }

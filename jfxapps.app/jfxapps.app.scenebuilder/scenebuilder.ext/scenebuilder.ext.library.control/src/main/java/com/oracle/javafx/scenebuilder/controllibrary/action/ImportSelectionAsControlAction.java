@@ -36,20 +36,21 @@ package com.oracle.javafx.scenebuilder.controllibrary.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 @ApplicationInstanceSingleton
-@Lazy
 @ActionMeta(nameKey = "action.name.import.selection", descriptionKey = "action.description.import.selection")
 @ViewMenuItemAttachment(
         id = ImportSelectionAsControlAction.MENU_ID,
@@ -67,10 +68,11 @@ public class ImportSelectionAsControlAction extends AbstractAction {
     private final LibraryPanelController libraryPanelController;
 
     public ImportSelectionAsControlAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             Selection selection,
             LibraryPanelController libraryPanelController) {
-        super(extensionFactory);
+        super(i18n, extensionFactory);
         this.selection = selection;
         this.libraryPanelController = libraryPanelController;
     }
@@ -84,7 +86,7 @@ public class ImportSelectionAsControlAction extends AbstractAction {
             return false;
         }
 
-        AbstractSelectionGroup asg = selection.getGroup();
+        SelectionGroup asg = selection.getGroup();
 
         if (asg instanceof ObjectSelectionGroup) {
             if (((ObjectSelectionGroup) asg).getItems().size() >= 1) {
@@ -97,7 +99,7 @@ public class ImportSelectionAsControlAction extends AbstractAction {
 
     @Override
     public ActionStatus doPerform() {
-        AbstractSelectionGroup asg = selection.getGroup();
+        SelectionGroup asg = selection.getGroup();
         ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
         assert !osg.getItems().isEmpty();
         List<FXOMObject> selection = new ArrayList<>(osg.getItems());

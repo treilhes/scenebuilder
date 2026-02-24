@@ -1,4 +1,5 @@
-import com.gluonhq.jfxapps.core.extension.Extension;
+import java.security.cert.Extension;
+
 import com.oracle.javafx.scenebuilder.gluon.GluonExtension;
 
 open module scenebuilder.ext.gluon {
@@ -20,7 +21,8 @@ open module scenebuilder.ext.gluon {
     //opens com.oracle.javafx.scenebuilder.gluon.metadata to spring.core;
     //opens com.oracle.javafx.scenebuilder.gluon.theme to spring.core;
 
-    requires scenebuilder.starter;
+    requires scenebuilder.api;
+    requires scenebuilder.app.starter;
     requires charm.glisten;
 //    requires io.reactivex.rxjava2;
 //    requires java.prefs;
@@ -29,14 +31,14 @@ open module scenebuilder.ext.gluon {
 //    requires javafx.fxml;
 //    requires javafx.graphics;
 //    requires javax.json.api;
-    requires scenebuilder.core.jobs;
-    requires scenebuilder.core.library;
+//    requires scenebuilder.core.jobs;
+    //    requires scenebuilder.core.library;
 //    requires org.slf4j;
-    requires scenebuilder.ext.library.control;
-    requires scenebuilder.ext.controls;
+    //requires scenebuilder.ext.library.control;
+    //requires scenebuilder.ext.controls;
     requires transitive jfxplace.core.api;
-    requires scenebuilder.ext.defaultx;
-    requires scenebuilder.core.extension.api;
+    //    requires scenebuilder.ext.defaultx;
+    //requires scenebuilder.core.extension.api;
 //    requires spring.beans;
 //    requires spring.context;
 //    requires spring.core;

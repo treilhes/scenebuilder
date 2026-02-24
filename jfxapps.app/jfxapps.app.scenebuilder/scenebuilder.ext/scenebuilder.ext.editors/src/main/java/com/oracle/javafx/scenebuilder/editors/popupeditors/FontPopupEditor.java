@@ -53,6 +53,7 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
@@ -62,6 +63,7 @@ import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
 import com.oracle.javafx.scenebuilder.editors.control.BoundedDoubleEditor;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -123,6 +125,7 @@ public class FontPopupEditor extends PopupEditor {
     private final FontFamilyEditor.Factory fontFamilyEditorFactory;
 
     public FontPopupEditor(
+            I18N i18n,
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem,
@@ -131,7 +134,7 @@ public class FontPopupEditor extends PopupEditor {
             FontStyleEditor.Factory fontStyleEditorFactory,
             FontFamilyEditor.Factory fontFamilyEditorFactory
             ) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
         this.messageLogger = messageLogger;
         this.sizeEditor = sizeEditor;
         this.fontStyleEditorFactory = fontStyleEditorFactory;

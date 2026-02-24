@@ -32,11 +32,11 @@
  */
 package com.oracle.javafx.scenebuilder.gluon;
 
-import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibraryFilter;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
-@Component
+@ApplicationInstanceSingleton
 public class GluonControlLibraryFilter implements ControlLibraryFilter {
 
     @Override

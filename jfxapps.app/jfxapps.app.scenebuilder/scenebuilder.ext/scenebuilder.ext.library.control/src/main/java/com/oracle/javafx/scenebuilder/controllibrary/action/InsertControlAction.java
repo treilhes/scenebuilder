@@ -40,8 +40,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
@@ -49,11 +49,11 @@ import com.gluonhq.jfxapps.core.api.action.ActionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.fxom.library.LibraryItem;
+import com.gluonhq.jfxapps.core.api.fxom.mask.Accessory;
 import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.fxom.mask.HierarchyMask.Accessory;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuAttachment;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuProvider;
@@ -61,10 +61,14 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
+import com.oracle.javafx.scenebuilder.api.selection.SbSelectionJobsFactory;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryListCell;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -77,7 +81,7 @@ public class InsertControlAction extends AbstractAction {
 
     private static Logger logger = LoggerFactory.getLogger(InsertControlAction.class);
 
-    private final SetDocumentRootJob.Factory setDocumentRootJobFactory;
+    private final SbSelectionJobsFactory selectionJobsFactory;
     private final InsertAsAccessoryJob.Factory insertAsAccessoryJobFactory;
     private final JobManager jobManager;
     private final ApplicationInstanceEvents documentManager;
@@ -92,10 +96,11 @@ public class InsertControlAction extends AbstractAction {
             Selection selection,
             JobManager jobManager,
             FXOMObjectMask.Factory designMaskFactory,
+            SbSelectionJobsFactory selectionJobsFactory,
             SetDocumentRootJob.Factory setDocumentRootJobFactory,
             InsertAsAccessoryJob.Factory insertAsAccessoryJobFactory) {
         super(extensionFactory);
-        this.setDocumentRootJobFactory = setDocumentRootJobFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
         this.insertAsAccessoryJobFactory = insertAsAccessoryJobFactory;
         this.documentManager = documentManager;
         this.selection = selection;
@@ -139,7 +144,8 @@ public class InsertControlAction extends AbstractAction {
                 assert newItemDocument.getFxomRoot() == null;
                 final FXOMObject rootObject = fxomDocument.getFxomRoot();
                 if (rootObject == null) { // Empty document
-                    final AbstractJob job = setDocumentRootJobFactory.getJob(newItemRoot, true /* usePredefinedSize */, "unused"); // NOI18N
+                    final Job job = selectionJobsFactory.setDocumentRoot(newItemRoot, true /* usePredefinedSize */);
+                    job.setDescription("unused"); // NOI18N
                     result = job.isExecutable();
                 } else {
 
@@ -158,7 +164,7 @@ public class InsertControlAction extends AbstractAction {
                     }
 
 System.out.println();
-                    final AbstractJob job = insertAsAccessoryJobFactory.getJob(newItemRoot, targetCandidate, targetAccessory);
+                    final Job job = insertAsAccessoryJobFactory.getJob(newItemRoot, targetCandidate, targetAccessory);
                     result = job.isExecutable();
                 }
             }
@@ -175,7 +181,7 @@ System.out.println();
      */
     @Override
     public ActionStatus doPerform() {
-        final AbstractJob job;
+        final Job job;
         final FXOMObject target;
 
         assert canPerform(); // (1)
@@ -190,8 +196,9 @@ System.out.println();
         newObject.moveToFxomDocument(fxomDocument);
         final FXOMObject rootObject = fxomDocument.getFxomRoot();
         if (rootObject == null) { // Empty document
-            final String description = I18N.getString("drop.job.insert.library.item", libraryItem.getName());
-            job = setDocumentRootJobFactory.getJob(newObject, true /* usePredefinedSize */, description);
+            final String description = getI18n().getString("drop.job.insert.library.item", libraryItem.getName());
+            job = selectionJobsFactory.setDocumentRoot(newObject, true /* usePredefinedSize */);
+            job.setDescription(description);
 
         } else {
             if (selection.isEmpty() || selection.isSelected(rootObject)) {
@@ -221,9 +228,7 @@ System.out.println();
     }
 
 
-    @Component
-    @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
-    @Lazy
+    @ApplicationInstanceSingleton
     // FIXME : need to implement the controls update on library update
     public class InsertMenuProvider implements MenuProvider {
 
@@ -252,7 +257,7 @@ System.out.println();
         public List<MenuAttachment> menus() {
             Menu insertMenu = menuBuilder.menu().id(MENU_ID).title("menu.title.insert").build();
             populate(insertMenu);
-            MenuAttachment attachment = MenuAttachment.create(insertMenu, DefaultMenu.VIEW_MENU_ID, PositionRequest.AsNextSibling);
+            MenuAttachment attachment = MenuAttachment.create(insertMenu, DefaultMenu.View.ID, PositionRequest.AsNextSibling);
             return Arrays.asList(attachment);
         }
 

@@ -39,12 +39,14 @@ import java.util.List;
 
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
 
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
@@ -58,10 +60,12 @@ public abstract class InlineListEditor extends AbstractPropertyEditor implements
     private final VBox vbox = new VBox(1);
     private final List<EditorItem> editorItems = new ArrayList<>();
 
-    public InlineListEditor(Dialog dialog,
+    public InlineListEditor(
+            I18N i18n,
+            Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
         setLayoutFormat(AbstractPropertyEditor.LayoutFormat.DOUBLE_LINE);
     }
 
@@ -231,6 +235,11 @@ public abstract class InlineListEditor extends AbstractPropertyEditor implements
                 item.getMoveDownMenuItem().setDisable(false);
             }
         }
+    }
+
+    @Override
+    public ObservableValue<Boolean> focusedProperty() {
+        return this.getValueEditor().focusedProperty();
     }
 
 }

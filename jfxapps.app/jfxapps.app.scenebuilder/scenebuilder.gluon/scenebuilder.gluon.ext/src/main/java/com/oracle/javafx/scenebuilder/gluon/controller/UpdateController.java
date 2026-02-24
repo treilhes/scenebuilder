@@ -34,39 +34,43 @@ package com.oracle.javafx.scenebuilder.gluon.controller;
 
 import java.time.LocalDate;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
-
-import com.treilhes.emc4j.boot.context.JfxAppContext;
 import com.gluonhq.jfxapps.core.api.application.InstancesManager;
-import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.alert.SBAlert;
 import com.oracle.javafx.scenebuilder.gluon.dialog.UpdateSceneBuilderDialog;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.IgnoreVersionPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.ShowUpdateDialogDatePreference;
 import com.oracle.javafx.scenebuilder.gluon.setting.VersionSetting;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 
-@Component
-@Lazy
+@ApplicationSingleton
 public class UpdateController {
 
     private final InstancesManager main;
-    private final SceneBuilderBeanFactory context;
+    private final EmContext context;
+    private final I18N i18n;
+    private final JfxAppPlatform jfxAppPlatform;
     private final VersionSetting versionSetting;
     private final IgnoreVersionPreference ignoreVersionPreference;
     private final ShowUpdateDialogDatePreference showUpdateDialogDatePreference;
 
+    //@formatter:off
     public UpdateController(
-            @Autowired SceneBuilderBeanFactory context,
-            @Autowired InstancesManager main,
-            @Autowired IgnoreVersionPreference ignoreVersionPreference,
-            @Autowired ShowUpdateDialogDatePreference showUpdateDialogDatePreference,
-            @Autowired VersionSetting versionSetting) {
+            I18N i18n,
+            EmContext context,
+            JfxAppPlatform jfxAppPlatform,
+            InstancesManager main,
+            IgnoreVersionPreference ignoreVersionPreference,
+            ShowUpdateDialogDatePreference showUpdateDialogDatePreference,
+            VersionSetting versionSetting) {
+        //@formatter:on
         super();
         this.context = context;
+        this.i18n = i18n;
+        this.jfxAppPlatform = jfxAppPlatform;
         this.main = main;
         this.ignoreVersionPreference = ignoreVersionPreference;
         this.showUpdateDialogDatePreference = showUpdateDialogDatePreference;
@@ -77,37 +81,37 @@ public class UpdateController {
     public void checkUpdates() {
         versionSetting.getLatestVersion(latestVersion -> {
             if (latestVersion == null) {
-                JfxAppPlatform.runOnFxThread(() -> {
+                jfxAppPlatform.runOnFxThread(() -> {
                     SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.ERROR,
                             main.getFrontInstance().getDocumentWindow().getStage());
-                    alert.setTitle(I18N.getString("check_for_updates.alert.error.title"));
-                    alert.setHeaderText(I18N.getString("check_for_updates.alert.headertext"));
-                    alert.setContentText(I18N.getString("check_for_updates.alert.error.message"));
+                    alert.setTitle(i18n.getString("check_for_updates.alert.error.title"));
+                    alert.setHeaderText(i18n.getString("check_for_updates.alert.headertext"));
+                    alert.setContentText(i18n.getString("check_for_updates.alert.error.message"));
                     alert.showAndWait();
                 });
             }
             try {
                 if (versionSetting.isCurrentVersionLowerThan(latestVersion)) {
                 //if (true) {
-                    JfxAppPlatform.runOnFxThread(() -> {
+                    jfxAppPlatform.runOnFxThread(() -> {
                         UpdateSceneBuilderDialog dialog = context.getBean(UpdateSceneBuilderDialog.class);
                         dialog.showAndWait();
                     });
                 } else {
                     SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.INFORMATION,
                             main.getFrontInstance().getDocumentWindow().getStage());
-                    alert.setTitle(I18N.getString("check_for_updates.alert.up_to_date.title"));
-                    alert.setHeaderText(I18N.getString("check_for_updates.alert.headertext"));
-                    alert.setContentText(I18N.getString("check_for_updates.alert.up_to_date.message"));
+                    alert.setTitle(i18n.getString("check_for_updates.alert.up_to_date.title"));
+                    alert.setHeaderText(i18n.getString("check_for_updates.alert.headertext"));
+                    alert.setContentText(i18n.getString("check_for_updates.alert.up_to_date.message"));
                     alert.showAndWait();
                 }
             } catch (NumberFormatException ex) {
-                JfxAppPlatform.runOnFxThread(() -> showVersionNumberFormatError(context.getBean(ApplicationInstanceWindow.class)));
+                jfxAppPlatform.runOnFxThread(() -> showVersionNumberFormatError(context.getBean(MainInstanceWindow.class)));
             }
         });
     }
 
-    public void showUpdateDialogIfRequired(ApplicationInstanceWindow dwc, Runnable runAfterUpdateDialog) {
+    public void showUpdateDialogIfRequired(MainInstanceWindow dwc, Runnable runAfterUpdateDialog) {
         versionSetting.getLatestVersion(latestVersion -> {
             if (latestVersion == null) {
                 // This can be because the url was not reachable so we don't show the update dialog.
@@ -128,7 +132,7 @@ public class UpdateController {
                 }
 
                 if (showUpdateDialog) {
-                    JfxAppPlatform.runOnFxThread(() -> {
+                    jfxAppPlatform.runOnFxThread(() -> {
                         UpdateSceneBuilderDialog dialog = context.getBean(UpdateSceneBuilderDialog.class);
                         dialog.setOnHidden(event -> runAfterUpdateDialog.run());
                         dialog.showAndWait();
@@ -137,7 +141,7 @@ public class UpdateController {
                     runAfterUpdateDialog.run();
                 }
             } catch (NumberFormatException ex) {
-                JfxAppPlatform.runOnFxThread(() -> showVersionNumberFormatError(dwc));
+                jfxAppPlatform.runOnFxThread(() -> showVersionNumberFormatError(dwc));
             }
         });
     }
@@ -158,12 +162,12 @@ public class UpdateController {
         }
     }
 
-    private void showVersionNumberFormatError(ApplicationInstanceWindow dwc) {
+    private void showVersionNumberFormatError(MainInstanceWindow dwc) {
         SBAlert alert = new SBAlert(javafx.scene.control.Alert.AlertType.ERROR, dwc.getStage());
         // The version number format is not supported and this is most probably only happening
         // in development so we don't localize the strings
         alert.setTitle("Error");
-        alert.setHeaderText(I18N.getString("check_for_updates.alert.headertext"));
+        alert.setHeaderText(i18n.getString("check_for_updates.alert.headertext"));
         alert.setContentText("Version number format not supported. Maybe using SNAPSHOT or RC versions.");
         alert.showAndWait();
     }

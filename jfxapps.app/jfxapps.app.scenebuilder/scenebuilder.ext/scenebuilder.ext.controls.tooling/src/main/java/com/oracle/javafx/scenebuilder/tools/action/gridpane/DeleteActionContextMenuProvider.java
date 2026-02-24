@@ -35,12 +35,12 @@ package com.oracle.javafx.scenebuilder.tools.action.gridpane;
 
 import java.util.List;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.ContextMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.ContextMenuItemProvider;
+import com.gluonhq.jfxapps.core.api.ctxmenu.ContextMenuItemProvider;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionActionsFactory;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 import javafx.scene.control.MenuItem;
 
@@ -50,21 +50,25 @@ import javafx.scene.control.MenuItem;
 @ApplicationInstanceSingleton
 public class DeleteActionContextMenuProvider implements ContextMenuItemProvider {
 
-    public final static String MENU_ID = DeleteAction.MENU_ID;
-    public final static String TITLE = DeleteAction.TITLE;
+    //public final static String MENU_ID = DefaultMenu.Edit.DELETE_ID;
+    public final static String MENU_ID = "ctxDeleteGrid";
+    public final static String TITLE = "menu.title.delete";
 
     private final MenuBuilder menuBuilder;
+    private final SelectionActionsFactory selectionActionsFactory;
 
     public DeleteActionContextMenuProvider(
-            MenuBuilder menuBuilder
+            MenuBuilder menuBuilder,
+            SelectionActionsFactory selectionActionsFactory
             ) {
         super();
         this.menuBuilder = menuBuilder;
+        this.selectionActionsFactory = selectionActionsFactory;
     }
 
     @Override
     public List<ContextMenuItemAttachment> contextMenuItems() {
-        MenuItem mi = menuBuilder.menuItem().actionClass(DeleteAction.class).id(MENU_ID).title(TITLE).build();
+        MenuItem mi = menuBuilder.menuItem().action(selectionActionsFactory.delete()).id(MENU_ID).title(TITLE).build();
         ContextMenuItemAttachment attachment = ContextMenuItemAttachment.create(mi, GridSelectionGroup.class, null, PositionRequest.AsFirstSibling);
         return List.of(attachment);
     }

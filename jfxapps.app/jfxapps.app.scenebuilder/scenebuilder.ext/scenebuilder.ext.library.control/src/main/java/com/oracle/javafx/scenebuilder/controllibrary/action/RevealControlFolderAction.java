@@ -35,22 +35,23 @@ package com.oracle.javafx.scenebuilder.controllibrary.action;
 
 import java.io.IOException;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
+import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
+import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
 
 @ApplicationInstanceSingleton
-@Lazy
 @ActionMeta(nameKey = "action.name.reveal.custom.folder", descriptionKey = "action.description.reveal.custom.folder")
 @ViewMenuItemAttachment(
         id = RevealControlFolderAction.MENU_ID,
@@ -63,18 +64,19 @@ public class RevealControlFolderAction extends AbstractAction {
 
     public final static String MENU_ID = "revealMenu";
 
-    private final ApplicationInstanceWindow documentWindowController;
+    private final MainInstanceWindow documentWindowController;
     private final ControlLibrary userLibrary;
     private final FileSystem fileSystem;
     private final Dialog dialog;
 
     public RevealControlFolderAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             FileSystem fileSystem,
             Dialog dialog,
             ControlLibrary userLibrary,
-            @Lazy ApplicationInstanceWindow documentWindowController) {
-        super(extensionFactory);
+            @Lazy MainInstanceWindow documentWindowController) {
+        super(i18n, extensionFactory);
         this.documentWindowController = documentWindowController;
         this.userLibrary = userLibrary;
         this.fileSystem = fileSystem;
@@ -92,8 +94,8 @@ public class RevealControlFolderAction extends AbstractAction {
             fileSystem.revealInFileBrowser(userLibrary.getPath());
         } catch (IOException x) {
             dialog.showErrorAndWait("",
-                    I18N.getString("alert.reveal.failure.message", documentWindowController.getStage().getTitle()),
-                    I18N.getString("alert.reveal.failure.details"), x);
+                    getI18n().getString("alert.reveal.failure.message", documentWindowController.getStage().getTitle()),
+                    getI18n().getString("alert.reveal.failure.details"), x);
             return ActionStatus.FAILED;
         }
         return ActionStatus.DONE;
@@ -109,6 +111,6 @@ public class RevealControlFolderAction extends AbstractAction {
             assert EmcPlatform.IS_LINUX;
             revealMenuKey = "menu.title.reveal.linux";
         }
-        return I18N.getStringOrDefault(revealMenuKey, revealMenuKey);
+        return getI18n().getStringOrDefault(revealMenuKey, revealMenuKey);
     }
 }

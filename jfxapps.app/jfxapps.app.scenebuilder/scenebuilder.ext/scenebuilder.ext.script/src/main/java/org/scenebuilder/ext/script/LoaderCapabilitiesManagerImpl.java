@@ -39,13 +39,14 @@ import org.scenebuilder.ext.script.preference.global.StaticLoadPreference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
+import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
+import com.gluonhq.jfxapps.core.fxom.ext.LoaderCapabilitiesManager;
+import com.gluonhq.jfxapps.core.fxom.transform.FXOMSerializer;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.emc4j.boot.api.context.annotation.PreferedConstructor;
-import com.gluonhq.jfxapps.core.api.fxom.FxomDocumentFactory;
-import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.ext.LoaderCapabilitiesManager;
 
 @ApplicationInstanceSingleton
 public class LoaderCapabilitiesManagerImpl implements LoaderCapabilitiesManager, InitWithDocument {
@@ -60,21 +61,23 @@ public class LoaderCapabilitiesManagerImpl implements LoaderCapabilitiesManager,
 
     @PreferedConstructor
     public LoaderCapabilitiesManagerImpl(
-            FxomDocumentFactory fxomDocumentFactory,
+            FXOMSerializer fxomSerializer,
+            FXOMDocumentFactory fxomDocumentFactory,
             StaticLoadPreference staticLoadPreference,
-            ApplicationInstanceEvents docManager) {
+            FxomEvents fxomEvents) {
 
         staticLoadPreference.getObservableValue().addListener((ob, o, n) -> {
             setStaticLoadingEnabled(n);
-            FXOMDocument fxomDocument = docManager.fxomDocument().get();
+            FXOMDocument fxomDocument = fxomEvents.fxomDocument().get();
 
             if (fxomDocument != null) {
                 try {
-                    FXOMDocument clone = fxomDocumentFactory.newDocument(fxomDocument.getFxmlText(false),
+                    var fxmlText = fxomSerializer.serialize(fxomDocument);
+                    FXOMDocument clone = fxomDocumentFactory.newDocument(fxmlText,
                                 fxomDocument.getLocation(),
                                 fxomDocument.getClassLoader(),
                                 fxomDocument.getResources());
-                    docManager.fxomDocument().set(clone);
+                    fxomEvents.fxomDocument().set(clone);
                 } catch (IOException e) {
                     logger.error("Unable to update document after changing loader capabilities" , e);
                 }

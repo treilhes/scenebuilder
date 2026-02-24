@@ -33,16 +33,15 @@
  */
 package com.oracle.javafx.scenebuilder.controllibrary.action;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.ext.menu.action.AbstractToggleViewVisibilityAction;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.ControlLibraryPanel;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
@@ -66,10 +65,11 @@ public class ToggleControlLibraryVisibilityAction extends AbstractToggleViewVisi
     public final static String MENU_ID = "toggleControlLibraryVisibilityMenuItem"; //NOCHECK
 
     public ToggleControlLibraryVisibilityAction(
+            I18N i18n,
             ActionExtensionFactory extensionFactory,
             DockViewController dockViewController,
             ControlLibraryPanel controlLibrary) {
-        super(extensionFactory, dockViewController);
+        super(i18n, extensionFactory, dockViewController);
         setView(controlLibrary);
     }
 

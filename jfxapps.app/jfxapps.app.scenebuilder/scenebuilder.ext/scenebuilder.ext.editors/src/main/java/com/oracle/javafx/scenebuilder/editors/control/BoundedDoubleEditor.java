@@ -46,17 +46,19 @@ import org.springframework.stereotype.Component;
 import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.IMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
 import com.oracle.javafx.scenebuilder.core.editors.AutoSuggestEditor;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
@@ -89,14 +91,15 @@ public class BoundedDoubleEditor extends AutoSuggestEditor {
     private int roundingFactor = 1; // no decimals
     private boolean updateFromTextField = false;
     private boolean updateFromSlider = false;
-    private final IMetadata metadata;
+    private final SbMetadata metadata;
 
     public BoundedDoubleEditor(
+            I18N i18n,
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem,
-            IMetadata metadata) {
-        super(dialog, documentation, fileSystem);
+            SbMetadata metadata) {
+        super(i18n, dialog, documentation, fileSystem);
         this.metadata = metadata;
         preInit(Type.DOUBLE, new ArrayList<>());
         initialize();
@@ -292,8 +295,9 @@ public class BoundedDoubleEditor extends AutoSuggestEditor {
 
     private void handleSpecificCases(PropertyMetadata propMeta, Set<FXOMInstance> selectedInstances) {
         //TODO handle using groups
-        if (true)
+        if (true) {
             return;
+        }
 
         // Specific case for ScrollPane hValue/vValue, that have their bounds
         // related to properties (hMin/hMax, vMin/Vmax)

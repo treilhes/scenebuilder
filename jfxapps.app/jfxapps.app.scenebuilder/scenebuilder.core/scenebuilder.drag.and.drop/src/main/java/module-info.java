@@ -31,8 +31,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.treilhes.emc4j.boot.api.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.draganddrop.DragAndDropExtension;
+import com.treilhes.emc4j.boot.api.loader.extension.Extension;
 
 open module scenebuilder.fxml.core.drag.and.drop{
     exports com.oracle.javafx.scenebuilder.draganddrop.droptarget;

@@ -35,9 +35,6 @@ package com.oracle.javafx.scenebuilder.editors.control;
 
 import java.util.Map;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -48,7 +45,9 @@ import com.gluonhq.jfxapps.core.metadata.property.value.CursorPropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -80,10 +79,12 @@ public class CursorEditor extends AbstractPropertyEditor {
     private Cursor cursor = Cursor.DEFAULT;
     private String inheritedText, inheritedParentText;
 
-    public CursorEditor(Dialog dialog,
+    public CursorEditor(
+            I18N i18n,
+            Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
         initialize();
     }
 
@@ -112,8 +113,8 @@ public class CursorEditor extends AbstractPropertyEditor {
         }
 
         // "inherited" menu item
-        inheritedText = I18N.getString("inspector.cursor.inherited");
-        inheritedParentText = I18N.getString("inspector.cursor.inheritedparent");
+        inheritedText = getI18n().getString("inspector.cursor.inherited");
+        inheritedParentText = getI18n().getString("inspector.cursor.inheritedparent");
         inheritedLb.setText(inheritedParentText);
     }
 
@@ -143,7 +144,7 @@ public class CursorEditor extends AbstractPropertyEditor {
             if (value instanceof ImageCursor) {
                 // Custom cursor
                 selectCursor(""); //NOCHECK
-                cursorMb.setText(I18N.getString("inspector.cursor.custom"));
+                cursorMb.setText(getI18n().getString("inspector.cursor.custom"));
             } else {
                 // predefined cursor
                 // select the corresponding menu item
@@ -200,5 +201,10 @@ public class CursorEditor extends AbstractPropertyEditor {
     @Override
     public void requestFocus() {
         EditorUtils.doNextFrame(() -> cursorMb.requestFocus());
+    }
+
+    @Override
+    public ObservableValue<Boolean> focusedProperty() {
+        return cursorMb.focusedProperty();
     }
 }

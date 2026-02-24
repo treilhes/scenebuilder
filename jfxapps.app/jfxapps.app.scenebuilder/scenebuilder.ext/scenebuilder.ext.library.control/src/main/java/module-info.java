@@ -32,6 +32,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import com.oracle.javafx.scenebuilder.controllibrary.ControlLibraryExtension;
+import com.treilhes.emc4j.boot.api.loader.extension.Extension;
 
 open module scenebuilder.ext.library.control {
     exports com.oracle.javafx.scenebuilder.controllibrary.action;
@@ -48,26 +49,30 @@ open module scenebuilder.ext.library.control {
     //opens com.oracle.javafx.scenebuilder.controllibrary.library.builtin to spring.core;
     //opens com.oracle.javafx.scenebuilder.controllibrary.library to spring.core;
 
-    requires scenebuilder.starter;
+    requires transitive scenebuilder.api;
+    requires scenebuilder.app.starter;
+
+//    requires scenebuilder.core.extension.store;
+//    requires scenebuilder.core.jobs;
+//    requires scenebuilder.core.selection;
+//    requires scenebuilder.core.library;
+//    requires scenebuilder.core.extension.api;
+//    requires scenebuilder.core.filesystem;
+//    requires scenebuilder.ext.menu;
+
 //    requires com.fasterxml.jackson.core;
 //    requires com.fasterxml.jackson.databind;
-    requires scenebuilder.core.extension.store;
 //    requires io.reactivex.rxjava2;
 //    requires java.prefs;
 //    requires javafx.base;
 //    requires javafx.controls;
 //    requires javafx.fxml;
 //    requires javafx.graphics;
-    requires scenebuilder.core.jobs;
-    requires scenebuilder.core.selection;
-    requires scenebuilder.core.library;
+
     //requires org.slf4j;
     //requires scenebuilder.ext.sb;
-    requires transitive scenebuilder.api;
 
-    requires scenebuilder.core.extension.api;
-    requires scenebuilder.core.filesystem;
-    requires scenebuilder.ext.menu;
+
 
 //    requires spring.beans;
 //    requires spring.context;

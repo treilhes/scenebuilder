@@ -37,11 +37,8 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.treilhes.emc4j.boot.api.context.EmContext;
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractKeyGesture;
 import com.gluonhq.jfxapps.core.api.fxom.gesture.GestureFactory;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
@@ -51,6 +48,9 @@ import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -62,7 +62,7 @@ import javafx.scene.input.InputEvent;
 @ApplicationInstancePrototype
 public class MoveWithKeyGesture extends AbstractKeyGesture {
 
-    private final Selection selection;
+    private final FxomSelection selection;
 	private final JobManager jobManager;
 	private final SbJobsFactory sbJobsFactory;
 	private final SbFXOMObjectMask.Factory sbFXOMObjectMaskFactory;
@@ -72,7 +72,7 @@ public class MoveWithKeyGesture extends AbstractKeyGesture {
 
     protected MoveWithKeyGesture(
             Workspace workspace,
-            Selection selection,
+            FxomSelection selection,
     		JobManager jobManager,
     		SbJobsFactory sbJobsFactory,
     		SbFXOMObjectMask.Factory sbFXOMObjectMaskFactory) {

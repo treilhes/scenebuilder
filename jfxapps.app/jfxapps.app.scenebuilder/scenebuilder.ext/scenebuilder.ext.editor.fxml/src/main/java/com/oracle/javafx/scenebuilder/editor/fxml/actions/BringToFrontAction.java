@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2026, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2026, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,20 +33,18 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.ctxmenu.annotation.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.annotation.ContextMenuItemAttachment;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionActionsFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 @ApplicationInstancePrototype
 @ActionMeta(
@@ -55,7 +53,7 @@ import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 @MenuItemAttachment(
         id = BringToFrontAction.MENU_ID,
-        targetMenuId = DefaultMenu.ARRANGE_MENU_ID,
+        targetMenuId = DefaultMenu.Arrange.ID,
         label = BringToFrontAction.TITLE,
         positionRequest = PositionRequest.AsFirstChild)
 @ContextMenuItemAttachment(
@@ -71,32 +69,26 @@ public class BringToFrontAction extends AbstractAction {
     public final static String MENU_ID = "bringToFrontMenuItem"; //NOCHECK
     public final static String TITLE = "menu.title.front";
 
-    private final SelectionJobsFactory selectionJobsFactory;
-    private final JobManager jobManager;
+    private final SelectionActionsFactory selectionActionsFactory;
 
     // @formatter:off
     public BringToFrontAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            JobManager jobManager,
-            SelectionJobsFactory selectionJobsFactory) {
+            SelectionActionsFactory selectionActionsFactory) {
      // @formatter:on
         super(i18n, extensionFactory);
-        this.jobManager = jobManager;
-        this.selectionJobsFactory = selectionJobsFactory;
+        this.selectionActionsFactory = selectionActionsFactory;
     }
 
     @Override
     public boolean canPerform() {
-        final Job job = selectionJobsFactory.bringToFront();
-        return job.isExecutable();
+        return selectionActionsFactory.bringToFront().canPerform();
     }
 
     @Override
     public ActionStatus doPerform() {
-        final Job job = selectionJobsFactory.bringToFront();
-        jobManager.push(job);
-        return ActionStatus.DONE;
+        return selectionActionsFactory.bringToFront().perform();
     }
 
 }

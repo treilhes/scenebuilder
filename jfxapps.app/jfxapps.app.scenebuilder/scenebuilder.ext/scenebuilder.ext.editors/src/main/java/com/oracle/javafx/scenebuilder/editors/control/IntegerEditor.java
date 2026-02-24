@@ -39,17 +39,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.value.IntegerPropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -61,7 +59,6 @@ import javafx.event.EventHandler;
  *
  */
 @ApplicationInstancePrototype
-@Lazy
 public class IntegerEditor extends AutoSuggestEditor {
 
     private Map<String, Object> constants;
@@ -69,11 +66,12 @@ public class IntegerEditor extends AutoSuggestEditor {
     private int max;
 
     public IntegerEditor(
+            I18N i18n,
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem
             ) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
         preInit(Type.INTEGER, new ArrayList<>());
         initialize(new HashMap<>(), -Integer.MAX_VALUE, Integer.MAX_VALUE);
     }

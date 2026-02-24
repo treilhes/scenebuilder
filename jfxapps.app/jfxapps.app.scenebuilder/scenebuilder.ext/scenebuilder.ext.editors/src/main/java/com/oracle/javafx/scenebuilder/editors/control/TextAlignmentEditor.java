@@ -33,18 +33,16 @@
  */
 package com.oracle.javafx.scenebuilder.editors.control;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor;
-import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor.LayoutFormat;
 import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -72,10 +70,12 @@ public class TextAlignmentEditor extends AbstractPropertyEditor {
 
     private final ToggleButton[] toggleButtons = new ToggleButton[4];
 
-    public TextAlignmentEditor(Dialog dialog,
+    public TextAlignmentEditor(
+            I18N i18n,
+            Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
         initialize();
     }
 

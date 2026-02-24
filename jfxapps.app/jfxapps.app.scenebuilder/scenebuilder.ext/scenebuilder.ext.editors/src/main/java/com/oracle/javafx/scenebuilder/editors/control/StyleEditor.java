@@ -39,10 +39,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.css.CssInternal;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
@@ -51,9 +47,9 @@ import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor.LayoutFormat;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -83,7 +79,6 @@ import javafx.scene.layout.StackPane;
  *
  */
 @ApplicationInstancePrototype
-@Lazy
 public class StyleEditor extends InlineListEditor {
 
     private List<String> cssProperties;
@@ -94,12 +89,13 @@ public class StyleEditor extends InlineListEditor {
     private final FileSystem fileSystem;
 
     public StyleEditor(
+            I18N i18n,
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem,
             MessageLogger messageLogger
             ) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
         this.dialog = dialog;
         this.documentation = documentation;
         this.fileSystem = fileSystem;

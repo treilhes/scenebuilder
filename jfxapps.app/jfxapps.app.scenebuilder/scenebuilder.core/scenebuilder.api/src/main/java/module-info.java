@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2026, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2026, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,8 +31,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.treilhes.emc4j.boot.api.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.api.SbApiExtension;
+import com.treilhes.emc4j.boot.api.loader.extension.Extension;
 
 open module scenebuilder.api {
     exports com.oracle.javafx.scenebuilder.api;
@@ -69,7 +69,8 @@ open module scenebuilder.api {
     exports com.oracle.javafx.scenebuilder.api.util;
 
     requires transitive jfxplace.core.api;
-    requires transitive jfxplace.core.fxom;
+    requires transitive jfxplace.fxom.api;
+    //requires transitive jfxplace.core.fxom;
     //requires transitive scenebuilder.metadata.sbjavafx;
     requires transitive jfxplace.core.starter;
     requires transitive scenebuilder.metadata.customization;

@@ -33,16 +33,15 @@
  */
 package com.oracle.javafx.scenebuilder.menu.main.edit;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.action.AbstractJobAction;
+import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionActionsFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 @ApplicationInstancePrototype
 @ActionMeta(
@@ -55,18 +54,29 @@ import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
         label = "menu.title.trim",
         positionRequest = PositionRequest.AsNextSibling,
         separatorBefore = true)
-public final class TrimAction extends AbstractJobAction {
+public final class TrimAction extends AbstractAction {
 
     public final static String MENU_ID = DefaultMenu.Edit.TRIM_DOC_ID;
+
+    private final SelectionActionsFactory selectionActionFactory;
 
     //@formatter:off
     public TrimAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            JobManager jobManager,
-            SelectionJobsFactory selectionJobsFactory) {
+            SelectionActionsFactory selectionActionFactory) {
         //@formatter:on
-        super(i18n, extensionFactory, jobManager, () -> selectionJobsFactory.trimSelection());
+        super(i18n, extensionFactory);
+        this.selectionActionFactory = selectionActionFactory;
     }
 
+    @Override
+    public boolean canPerform() {
+        return selectionActionFactory.trim().canPerform();
+    }
+
+    @Override
+    public ActionStatus doPerform() {
+        return selectionActionFactory.trim().perform();
+    }
 }

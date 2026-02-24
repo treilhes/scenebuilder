@@ -52,7 +52,6 @@ import java.util.stream.Collectors;
 
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.css.CssInternal;
 import com.gluonhq.jfxapps.core.api.fxom.css.CssPropAuthorInfo;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
@@ -61,6 +60,7 @@ import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
@@ -101,6 +101,7 @@ import com.oracle.javafx.scenebuilder.inspector.preference.InspectorSectionIdPre
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -230,6 +231,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     private final InspectorSectionIdPreference inspectorSectionIdPreference;
 
     private final ApplicationInstanceEvents documentManager;
+
     private final Drag drag;
     private final FxomJobsFactory fxomJobsFactory;
     private final SbSelectionJobsFactory sbSelectionJobsFactory;
@@ -241,14 +243,17 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     private final ViewSearch viewSearch;
     private final SbMetadata metadata;
 
+    private final FxomEvents fxomEvents;
+
     /*
      * Public
      */
  // @formatter:off
     public InspectorPanelController(
             I18N i18n,
-            ApplicationEvents scenebuilderManager,
-            ApplicationInstanceEvents documentManager,
+            ApplicationEvents applicationEvents,
+            ApplicationInstanceEvents instanceEvents,
+            FxomEvents fxomEvents,
             Selection selection,
             InlineEdit inlineEdit,
             JobManager jobManager,
@@ -263,13 +268,14 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             SelectionJobsFactory selectionJobsFactory,
             ViewMenu viewMenuController) {
      // @formatter:on
-        super(i18n, scenebuilderManager, documentManager, viewMenuController, InspectorPanelController.class.getResource(fxmlFile));
+        super(i18n, applicationEvents, instanceEvents, viewMenuController, InspectorPanelController.class.getResource(fxmlFile));
         this.drag = drag;
         this.selection = selection;
         this.inlineEdit = inlineEdit;
         this.jobManager = jobManager;
         this.messageLogger = messageLogger;
-        this.documentManager = documentManager;
+        this.documentManager = instanceEvents;
+        this.fxomEvents = fxomEvents;
         this.metadata = metadata;
         this.session = propertyEditorFactory.newSession();
 
@@ -290,11 +296,11 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         expandedSectionProperty.setValue(SectionId.PROPERTIES);
         expandedSectionProperty.addListener((obv, previousSectionId, sectionId) -> expandedSectionChanged());
 
-        documentManager.fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
-        documentManager.sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
-        documentManager.cssRevisionDidChange().subscribeOn(JavaFxScheduler.platform())
+        fxomEvents.fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
+        fxomEvents.sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
+        fxomEvents.cssRevisionDidChange().subscribeOn(JavaFxScheduler.platform())
                 .subscribe(c -> cssRevisionDidChange());
-        documentManager.selectionDidChange().subscribe(c -> editorSelectionDidChange());
+        fxomEvents.selectionDidChange().subscribe(c -> editorSelectionDidChange());
 
     }
 
@@ -528,9 +534,9 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         });
 
         // Listen the Scene stylesheets changes
-        documentManager.stylesheetConfig().subscribe(s -> updateInspector());
+        fxomEvents.stylesheetConfig().subscribe(s -> updateInspector());
 
-        selectionState = documentManager.selectionDidChange().get();
+        selectionState = fxomEvents.selectionDidChange().get();
 
         viewModeChanged(null, getViewMode());
         expandedSectionChanged();
@@ -551,7 +557,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
      */
     private void updateInspector() {
         if (isInspectorLoaded() && hasFxomDocument()) {
-            var newSelectionState = documentManager.selectionDidChange().get();
+            var newSelectionState = fxomEvents.selectionDidChange().get();
             if (isInspectorStateChanged(newSelectionState) || isEditedMode()) {
                 selectionState = newSelectionState;
                 rebuild();
@@ -1033,8 +1039,9 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             isRelevant = checkIfStaticPropertyRelevantForIntrinsic(propName);
         } else {
             // Check if the static property class is the common parent of the selection
-            if (getCommonParent() == null)
+            if (getCommonParent() == null) {
                 return false;
+            }
             isRelevant = getCommonParent() == propName.getResidenceClass();
         }
         return isRelevant;
@@ -1566,7 +1573,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     }
 
     private boolean hasFxomDocument() {
-        return documentManager.fxomDocument().get() != null;
+        return fxomEvents.fxomDocument().get() != null;
     }
 
     private void addMessage(GridPane gridPane, String mess) {

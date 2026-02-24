@@ -38,10 +38,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
@@ -50,6 +46,7 @@ import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -68,16 +65,16 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
 @ApplicationInstancePrototype
-@Lazy
 public class StringListEditor extends InlineListEditor {
 
 
     public StringListEditor(
+            I18N i18n,
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem
             ) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
         initialize();
     }
 

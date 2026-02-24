@@ -33,7 +33,6 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.Action;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
@@ -42,6 +41,7 @@ import com.gluonhq.jfxapps.core.api.guide.GuideActionFactory;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.toggle.guides.visibility", descriptionKey = "action.description.toggle.guides.visibility")

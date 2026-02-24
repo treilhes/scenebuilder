@@ -41,8 +41,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.Glossary;
 import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.glossary.Glossary;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;

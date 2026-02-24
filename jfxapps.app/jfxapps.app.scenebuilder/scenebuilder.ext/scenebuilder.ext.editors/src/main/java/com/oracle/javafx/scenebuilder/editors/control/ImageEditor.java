@@ -38,13 +38,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.core.api.fs.FileSystem;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
@@ -54,6 +51,7 @@ import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor;
 import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -93,11 +91,12 @@ public class ImageEditor extends AbstractPropertyEditor {
     private FXOMDocument fxomDocument;
 
     public ImageEditor(
+            I18N i18n,
             ApplicationInstanceEvents documentManager,
             Dialog dialog,
             Documentation documentation,
             FileSystem fileSystem) {
-        super(dialog, documentation, fileSystem);
+        super(i18n, dialog, documentation, fileSystem);
         this.fileSystem = fileSystem;
         documentManager.fxomDocument().subscribe(fxom -> this.fxomDocument = fxom);
         initialize(null);

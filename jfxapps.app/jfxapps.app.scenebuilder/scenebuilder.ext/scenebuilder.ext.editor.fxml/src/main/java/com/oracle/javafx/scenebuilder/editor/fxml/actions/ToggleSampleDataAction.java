@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2026, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2026, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -33,16 +33,16 @@
  */
 package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.SbEditor;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.toggle.dock", descriptionKey = "action.description.toggle.dock")
@@ -56,24 +56,24 @@ public class ToggleSampleDataAction extends AbstractAction {
 
     public final static String MENU_ID = "toggleSampleDataMenu";
 
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents fxomEvents;
     private final SbEditor editor;
 
     //@formatter:off
     public ToggleSampleDataAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents fxomEvents,
             SbEditor editor) {
         //@formatter:on
         super(i18n, extensionFactory);
-        this.documentManager = documentManager;
+        this.fxomEvents = fxomEvents;
         this.editor = editor;
     }
 
     @Override
     public boolean canPerform() {
-        return documentManager.fxomDocument().get() != null;
+        return fxomEvents.fxomDocument().get() != null;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class ToggleSampleDataAction extends AbstractAction {
     }
 
     public String getTitle() {
-        FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+        FXOMDocument fxomDocument = fxomEvents.fxomDocument().get();
 
         final String titleKey;
         if (fxomDocument != null && fxomDocument.isSampleDataEnabled()) {

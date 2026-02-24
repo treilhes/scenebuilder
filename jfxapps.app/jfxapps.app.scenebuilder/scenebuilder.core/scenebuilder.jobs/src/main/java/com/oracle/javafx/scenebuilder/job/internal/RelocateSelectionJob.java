@@ -41,8 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
 import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
@@ -52,6 +50,7 @@ import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 import com.oracle.javafx.scenebuilder.job.internal.atomic.RelocateNodeJob;
+import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
 
 import javafx.geometry.Point2D;
 
@@ -72,11 +71,10 @@ public final class RelocateSelectionJob extends BatchDocumentJob {
     protected RelocateSelectionJob(
             I18N i18n,
             JobExtensionFactory extensionFactory,
-            FxomEvents documentManager,
-            Selection selection,
+            FxomEvents fxomEvents,
             SbJobsFactory sbJobsFactory) {
     // @formatter:on
-        super(extensionFactory, documentManager);
+        super(extensionFactory, fxomEvents);
         this.i18n = i18n;
         this.sbJobsFactory = sbJobsFactory;
     }

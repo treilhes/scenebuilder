@@ -35,19 +35,18 @@ package com.oracle.javafx.scenebuilder.menu.main.edit;
 
 import org.springframework.context.annotation.Lazy;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionActionsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.annotation.ContextMenuItemAttachment;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 @ApplicationInstancePrototype
 @Lazy
@@ -71,29 +70,23 @@ public final class DuplicateAction extends AbstractAction {
 
     public final static String MENU_ID = DefaultMenu.Edit.DUPLICATE_ID;
 
-    private final SelectionJobsFactory selectionJobsFactory;
-    private final JobManager jobManager;
+    private final SelectionActionsFactory selectionActionFactory;
 
     public DuplicateAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            SelectionJobsFactory selectionJobsFactory,
-            JobManager jobManager) {
+            SelectionActionsFactory selectionActionFactory) {
         super(i18n, extensionFactory);
-        this.selectionJobsFactory = selectionJobsFactory;
-        this.jobManager = jobManager;
+        this.selectionActionFactory = selectionActionFactory;
     }
 
     @Override
     public boolean canPerform() {
-        final var job = selectionJobsFactory.duplicateSelection();
-        return job.isExecutable();
+        return selectionActionFactory.duplicate().canPerform();
     }
 
     @Override
     public ActionStatus doPerform() {
-        final var job = selectionJobsFactory.duplicateSelection();
-        jobManager.push(job);
-        return ActionStatus.DONE;
+        return selectionActionFactory.duplicate().perform();
     }
 }

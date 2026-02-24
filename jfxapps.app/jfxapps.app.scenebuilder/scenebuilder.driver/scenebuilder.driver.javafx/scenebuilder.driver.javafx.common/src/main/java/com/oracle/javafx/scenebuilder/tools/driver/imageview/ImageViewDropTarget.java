@@ -1,0 +1,147 @@
+/*
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
+ * All rights reserved. Use is subject to license terms.
+ *
+ * This file is available and licensed under the following license:
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  - Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *  - Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the distribution.
+ *  - Neither the name of Oracle Corporation and Gluon nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+package com.oracle.javafx.scenebuilder.tools.driver.imageview;
+
+import com.gluonhq.jfxapps.core.api.fxom.dnd.AbstractDropTarget;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSource;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTargetFactory;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.ExternalDragSource;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchJob;
+import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
+import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.metadata.property.value.ImagePropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+
+import javafx.scene.image.ImageView;
+
+/**
+ *
+ */
+@ApplicationInstancePrototype
+public final class ImageViewDropTarget extends AbstractDropTarget {
+
+    private final SbMetadata metadata;
+    private final BatchJob.Factory batchJobFactory;
+    private final SelectionJobsFactory selectionJobsFactory;
+    private final FxomJobsFactory fxomJobsFactory;
+
+    private FXOMInstance targetImageView;
+
+    // @formatter:off
+    protected ImageViewDropTarget(
+            SbMetadata metadata,
+            BatchJob.Factory batchJobFactory,
+            SelectionJobsFactory selectionJobsFactory,
+            FxomJobsFactory fxomJobsFactory) {
+     // @formatter:on
+        this.metadata = metadata;
+        this.batchJobFactory = batchJobFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
+    }
+
+    protected void setDropTargetParameters(FXOMObject targetImageView) {
+        assert targetImageView instanceof FXOMInstance;
+        assert targetImageView.getSceneGraphObject().isInstanceOf(ImageView.class);
+
+        this.targetImageView = (FXOMInstance) targetImageView;
+    }
+
+    /*
+     * ImageViewDropTarget
+     */
+
+    @Override
+    public FXOMObject getTargetObject() {
+        return targetImageView;
+    }
+
+    @Override
+    public boolean acceptDragSource(DragSource dragSource) {
+        assert dragSource != null;
+        return dragSource.isSingle() && dragSource.isSingleType(ImageView.class) && dragSource instanceof ExternalDragSource;
+    }
+
+    @Override
+    public AbstractJob makeDropJob(DragSource dragSource) {
+
+        assert dragSource != null;
+        assert dragSource.isSingle() && dragSource.isSingleType(ImageView.class); // (1)
+
+        final var draggedObject = dragSource.getDraggedObjects().get(0);
+        assert draggedObject instanceof FXOMInstance; // because (1)
+        final var draggedInstance = (FXOMInstance) draggedObject;
+        final var imageName = new PropertyName("image"); // NOCHECK
+        final var vpm = metadata.queryValueProperty(draggedInstance, imageName);
+        assert vpm instanceof ImagePropertyMetadata;
+        final var imageVPM = (ImagePropertyMetadata<?>) vpm;
+        final var image = imageVPM.getValue(draggedInstance);
+
+        final BatchJob result = batchJobFactory.getJob();
+        result.addSubJob(selectionJobsFactory.backupSelection());
+        result.addSubJob(fxomJobsFactory.modifyObject(targetImageView, imageVPM, image));
+        result.addSubJob(selectionJobsFactory.updateSelection(targetImageView));
+
+        return result;
+    }
+
+    @Override
+    public boolean isSelectRequiredAfterDrop() {
+        /*
+         * Unlike for other drop targets, AbstractDragSource.draggedObjects should not
+         * be selected after drop operation. It's targetImageView that must be selected.
+         * AbstractDragSource.draggedObjects() are not inserted in the scene graph.
+         */
+        return false;
+    }
+
+    @ApplicationInstanceSingleton
+    public static class Factory extends DropTargetFactory<ImageViewDropTarget> {
+        public Factory(EmContext sbContext) {
+            super(sbContext);
+        }
+
+        public ImageViewDropTarget getDropTarget(FXOMObject targetImageView) {
+            return create(ImageViewDropTarget.class, j -> j.setDropTargetParameters(targetImageView));
+        }
+    }
+}

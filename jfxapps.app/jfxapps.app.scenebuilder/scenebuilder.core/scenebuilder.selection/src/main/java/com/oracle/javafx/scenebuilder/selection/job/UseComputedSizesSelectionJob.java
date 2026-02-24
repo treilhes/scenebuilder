@@ -41,8 +41,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
 import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.job.Job;
@@ -50,6 +49,7 @@ import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 /**
  * This job apply the constant USE_COMPUTED_SIZE on width and height on the
@@ -60,14 +60,14 @@ public final class UseComputedSizesSelectionJob extends BatchDocumentJob {
 
     private static Logger logger = LoggerFactory.getLogger(UseComputedSizesSelectionJob.class);
 
-    private final Selection selection;
+    private final FxomSelection selection;
     private final SbJobsFactory sbJobsFactory;
 
     // @formatter:off
     protected UseComputedSizesSelectionJob(
             JobExtensionFactory extensionFactory,
             FxomEvents documentManager,
-            Selection selection,
+            FxomSelection selection,
             SbJobsFactory sbJobsFactory) {
     // @formatter:on
         super(extensionFactory, documentManager);

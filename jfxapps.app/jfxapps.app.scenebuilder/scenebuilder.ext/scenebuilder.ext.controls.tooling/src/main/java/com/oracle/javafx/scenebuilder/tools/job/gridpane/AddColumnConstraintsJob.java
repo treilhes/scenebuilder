@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
- * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2016, 2026, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2026, Pascal Treilhes and/or its affiliates.
  * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -40,9 +40,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.treilhes.emc4j.boot.api.context.EmContext;
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchDocumentJob;
 import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
@@ -58,6 +55,9 @@ import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.GridPaneJobUtils.Position;
 import com.oracle.javafx.scenebuilder.tools.mask.GridPaneHierarchyMask;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 
 import javafx.scene.layout.ColumnConstraints;
 

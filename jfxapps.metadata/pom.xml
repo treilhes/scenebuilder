@@ -24,5 +24,6 @@
     <modules>
         <module>jfxapps.metadata.generator</module>
         <module>jfxapps.metadata-maven-plugin</module>
+        <module>scenebuilder-source-override-maven-plugin</module>
     </modules>
 </project>

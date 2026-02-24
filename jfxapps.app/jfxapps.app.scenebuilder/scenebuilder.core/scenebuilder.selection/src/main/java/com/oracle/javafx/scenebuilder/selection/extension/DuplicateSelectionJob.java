@@ -38,10 +38,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.fxom.mask.Accessory;
@@ -50,12 +48,14 @@ import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
+import com.gluonhq.jfxapps.core.api.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.fxom.FXOMCollection;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 import javafx.scene.Node;
 
@@ -81,7 +81,7 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
             I18N i18n,
             JobExtensionFactory extensionFactory,
             FxomEvents documentManager,
-            Selection selection,
+            FxomSelection selection,
             SelectionJobsFactory selectionJobsFactory,
             SbJobsFactory sbJobsFactory,
             FXOMObjectMask.Factory fxomObjectMaskFactory,
@@ -190,7 +190,7 @@ public final class DuplicateSelectionJob extends BatchSelectionJob {
         if (fxomDocument == null) {
             return false;
         }
-        final Selection selection = getSelection();
+        final var selection = getSelection();
         if (selection.isEmpty()) {
             return false;
         }

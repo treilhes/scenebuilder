@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.core.extension.AbstractExtension;
+import com.oracle.javafx.scenebuilder.api.SbApiExtension;
 import com.oracle.javafx.scenebuilder.gluon.controller.AlertController;
 import com.oracle.javafx.scenebuilder.gluon.controller.GluonJarImportController;
 import com.oracle.javafx.scenebuilder.gluon.controller.RegistrationController;
@@ -62,8 +62,14 @@ import com.oracle.javafx.scenebuilder.gluon.registration.RegistrationWindowContr
 import com.oracle.javafx.scenebuilder.gluon.setting.VersionSetting;
 import com.oracle.javafx.scenebuilder.gluon.template.GluonTemplateList;
 import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
+import com.treilhes.emc4j.boot.api.loader.extension.OpenExtension;
 
-public class GluonExtension extends AbstractExtension {
+public class GluonExtension implements OpenExtension {
+
+    @Override
+    public UUID getParentId() {
+        return SbApiExtension.ID;
+    }
 
     @Override
     public UUID getId() {
@@ -71,7 +77,7 @@ public class GluonExtension extends AbstractExtension {
     }
 
     @Override
-    public List<Class<?>> explicitClassToRegister() {
+    public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
                 AddPropertyValueJobExtension.class,
@@ -105,5 +111,10 @@ public class GluonExtension extends AbstractExtension {
                 VersionSetting.class
             );
      // @formatter:on
+    }
+
+    @Override
+    public List<Class<?>> localContextClasses() {
+        return List.of();
     }
 }

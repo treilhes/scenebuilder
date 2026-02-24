@@ -38,10 +38,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
 import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchSelectionJob;
 import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
@@ -50,10 +48,12 @@ import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.job.Job;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
+import com.gluonhq.jfxapps.core.api.selection.SelectionGroup;
 import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
 import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 /**
  * Load the provided fxml {@link File}, if the current scoped document is empty
@@ -82,7 +82,7 @@ public final class ImportFileJob extends BatchSelectionJob {
             FxomJobsFactory fxomJobsFactory,
             SelectionJobsFactory selectionJobsFactory,
             FxomEvents documentManager,
-            Selection selection,
+            FxomSelection selection,
             FXOMObjectMask.Factory designMaskFactory,
             ObjectSelectionGroup.Factory objectSelectionGroupFactory,
             MessageLogger messageLogger) {
@@ -122,7 +122,7 @@ public final class ImportFileJob extends BatchSelectionJob {
                 if (rootObject == null) {
                     result.add(selectionJobsFactory.setDocumentRoot(newObject));
                 } else {
-                    final Selection selection = getSelection();
+                    final var selection = getSelection();
                     if (selection.isEmpty() || selection.isSelected(rootObject)) {
                         // No selection or root is selected -> we insert below root
                         targetObject = rootObject;

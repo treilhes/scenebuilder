@@ -33,17 +33,17 @@
  */
 package com.oracle.javafx.scenebuilder.preview.actions;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.gluonhq.jfxapps.core.api.action.AbstractAction;
 import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
 import com.gluonhq.jfxapps.core.api.action.ActionMeta;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
 import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 
 //@formatter:off
 @ApplicationInstancePrototype
@@ -59,7 +59,7 @@ public class ShowPreviewAction extends AbstractAction {
 
     public final static String SHOW_PREVIEW_IN_WINDOW_ID = "showPreviewInWindow";
 
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents fxomEvents;
     private final PreviewWindowController previewWindowController;
 
     //@formatter:off
@@ -67,16 +67,16 @@ public class ShowPreviewAction extends AbstractAction {
             I18N i18n,
             ActionExtensionFactory extensionFactory,
             PreviewWindowController previewWindowController,
-            ApplicationInstanceEvents documentManager) {
+            FxomEvents fxomEvents) {
         //@formatter:on
         super(i18n, extensionFactory);
-        this.documentManager = documentManager;
+        this.fxomEvents = fxomEvents;
         this.previewWindowController = previewWindowController;
     }
 
     @Override
     public boolean canPerform() {
-        return documentManager.fxomDocument().get() != null;
+        return fxomEvents.fxomDocument().get() != null;
     }
 
     @Override
