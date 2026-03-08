@@ -16,7 +16,7 @@
     <modules>
 
         <!--<module>fxml.serializer</module>-->
-        <module>jfxapps.app</module>
+        <module>scenebuilder</module>
         <!--<module>jfxapps.boot</module>-->
         <!--<module>jfxapps.core</module>-->
         <!--<module>jfxapps.ext</module>-->
