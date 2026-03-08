@@ -33,81 +33,84 @@
  */
 package com.oracle.javafx.scenebuilder.job.internal.atomic;
 
-import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
 import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
 import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.property.value.DoublePropertyMetadata;
 import com.gluonhq.jfxapps.util.MathUtils;
-import com.gluonhq.jfxapps.util.javafx.AnchorUtils;
+import com.oracle.javafx.scenebuilder.api.control.Relocater;
+import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
+import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
 
-import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.layout.AnchorPane;
 
 /**
  * Update the layout position of a given {@link FXOMObject}
  */
+// TODO test this new version of RelocateNodeJob and remove comments when done
 @Prototype
 public final class RelocateNodeJob extends AbstractJob {
 
-    private static final PropertyName layoutXName = new PropertyName("layoutX"); //NOCHECK
-    private static final PropertyName layoutYName = new PropertyName("layoutY"); //NOCHECK
-    private static final PropertyName leftAnchorName   = new PropertyName("leftAnchor",   AnchorPane.class); //NOCHECK
-    private static final PropertyName rightAnchorName  = new PropertyName("rightAnchor",  AnchorPane.class); //NOCHECK
-    private static final PropertyName topAnchorName    = new PropertyName("topAnchor",    AnchorPane.class); //NOCHECK
-    private static final PropertyName bottomAnchorName = new PropertyName("bottomAnchor", AnchorPane.class); //NOCHECK
+//    private static final PropertyName layoutXName = new PropertyName("layoutX"); //NOCHECK
+//    private static final PropertyName layoutYName = new PropertyName("layoutY"); //NOCHECK
+//    private static final PropertyName leftAnchorName   = new PropertyName("leftAnchor",   AnchorPane.class); //NOCHECK
+//    private static final PropertyName rightAnchorName  = new PropertyName("rightAnchor",  AnchorPane.class); //NOCHECK
+//    private static final PropertyName topAnchorName    = new PropertyName("topAnchor",    AnchorPane.class); //NOCHECK
+//    private static final PropertyName bottomAnchorName = new PropertyName("bottomAnchor", AnchorPane.class); //NOCHECK
 
 
-    private final SbMetadata metadata;
-
+//    private final SbMetadata metadata;
+    private final SbDriver driver;
+    private Relocater<?> relocater;
     private FXOMInstance fxomInstance;
-    private double oldLayoutX;
-    private double oldLayoutY;
-    private Double oldLeftAnchor;
-    private Double oldRightAnchor;
-    private Double oldTopAnchor;
-    private Double oldBottomAnchor;
 
+//    private double oldLayoutX;
+//    private double oldLayoutY;
+//    private Double oldLeftAnchor;
+//    private Double oldRightAnchor;
+//    private Double oldTopAnchor;
+//    private Double oldBottomAnchor;
+//
     private double newLayoutX;
     private double newLayoutY;
-    private Double newLeftAnchor;
-    private Double newRightAnchor;
-    private Double newTopAnchor;
-    private Double newBottomAnchor;
+//    private Double newLeftAnchor;
+//    private Double newRightAnchor;
+//    private Double newTopAnchor;
+//    private Double newBottomAnchor;
+//
+//    private DoublePropertyMetadata<?> layoutXMeta;
+//    private DoublePropertyMetadata<?> layoutYMeta;
+//    private DoublePropertyMetadata<?> leftAnchorMeta;
+//    private DoublePropertyMetadata<?> rightAnchorMeta;
+//    private DoublePropertyMetadata<?> topAnchorMeta;
+//    private DoublePropertyMetadata<?> bottomAnchorMeta;
 
-    private DoublePropertyMetadata<?> layoutXMeta;
-    private DoublePropertyMetadata<?> layoutYMeta;
-    private DoublePropertyMetadata<?> leftAnchorMeta;
-    private DoublePropertyMetadata<?> rightAnchorMeta;
-    private DoublePropertyMetadata<?> topAnchorMeta;
-    private DoublePropertyMetadata<?> bottomAnchorMeta;
 
     protected RelocateNodeJob(
             JobExtensionFactory extensionFactory,
-            SbMetadata metadata) {
+            SbMetadata metadata,
+            SbDriver driver) {
         super(extensionFactory);
-        this.metadata = metadata;
+//        this.metadata = metadata;
+        this.driver = driver;
     }
 
     public void setJobParameters(FXOMInstance fxomInstance, double newLayoutX, double newLayoutY) {
         assert fxomInstance != null;
         assert fxomInstance.getSceneGraphObject().isNode();
-
+        this.relocater = driver.makeRelocater(fxomInstance);
         this.fxomInstance = fxomInstance;
         this.newLayoutX = newLayoutX; // Root scene coordinates
         this.newLayoutY = newLayoutY; // Root scene coordinates
-
-        final Class<?> sgoClass = fxomInstance.getMetadataClass();
-        this.layoutXMeta = (DoublePropertyMetadata<?>) metadata.queryProperty(sgoClass, layoutXName);
-        this.layoutYMeta = (DoublePropertyMetadata<?>) metadata.queryProperty(sgoClass, layoutYName);
-        this.leftAnchorMeta   = (DoublePropertyMetadata<?>) metadata.queryProperty(sgoClass, leftAnchorName  );
-        this.rightAnchorMeta  = (DoublePropertyMetadata<?>) metadata.queryProperty(sgoClass, rightAnchorName );
-        this.topAnchorMeta    = (DoublePropertyMetadata<?>) metadata.queryProperty(sgoClass, topAnchorName   );
-        this.bottomAnchorMeta = (DoublePropertyMetadata<?>) metadata.queryProperty(sgoClass, bottomAnchorName);
+//
+//        final Class<?> sgoClass = fxomInstance.getMetadataClass();
+//        this.layoutXMeta = (DoublePropertyMetadata<?>) metadata.queryProperty(sgoClass, layoutXName);
+//        this.layoutYMeta = (DoublePropertyMetadata<?>) metadata.queryProperty(sgoClass, layoutYName);
+//        this.leftAnchorMeta   = (DoublePropertyMetadata<?>) metadata.queryProperty(sgoClass, leftAnchorName  );
+//        this.rightAnchorMeta  = (DoublePropertyMetadata<?>) metadata.queryProperty(sgoClass, rightAnchorName );
+//        this.topAnchorMeta    = (DoublePropertyMetadata<?>) metadata.queryProperty(sgoClass, topAnchorName   );
+//        this.bottomAnchorMeta = (DoublePropertyMetadata<?>) metadata.queryProperty(sgoClass, bottomAnchorName);
     }
 
     public FXOMInstance getFxomInstance() {
@@ -127,7 +130,7 @@ public final class RelocateNodeJob extends AbstractJob {
                && MathUtils.equals(this.newLayoutY, youngerJob.newLayoutY));
         this.newLayoutX = youngerJob.newLayoutX;
         this.newLayoutY = youngerJob.newLayoutY;
-        updateNewAnchors();
+        //updateNewAnchors();
     }
 
     /*
@@ -140,57 +143,62 @@ public final class RelocateNodeJob extends AbstractJob {
 
     @Override
     public void doExecute() {
-        this.oldLayoutX = layoutXMeta.getValue(fxomInstance);
-        this.oldLayoutY = layoutYMeta.getValue(fxomInstance);
-        this.oldLeftAnchor   = leftAnchorMeta.getValue(fxomInstance);
-        this.oldRightAnchor  = rightAnchorMeta.getValue(fxomInstance);
-        this.oldTopAnchor    = topAnchorMeta.getValue(fxomInstance);
-        this.oldBottomAnchor = bottomAnchorMeta.getValue(fxomInstance);
-
-        updateNewAnchors();
+//        this.oldLayoutX = layoutXMeta.getValue(fxomInstance);
+//        this.oldLayoutY = layoutYMeta.getValue(fxomInstance);
+//        this.oldLeftAnchor   = leftAnchorMeta.getValue(fxomInstance);
+//        this.oldRightAnchor  = rightAnchorMeta.getValue(fxomInstance);
+//        this.oldTopAnchor    = topAnchorMeta.getValue(fxomInstance);
+//        this.oldBottomAnchor = bottomAnchorMeta.getValue(fxomInstance);
+//
+//        updateNewAnchors();
 
         doRedo();
     }
 
     @Override
     public void doUndo() {
-        this.layoutXMeta.setValue(fxomInstance, oldLayoutX);
-        this.layoutYMeta.setValue(fxomInstance, oldLayoutY);
-        if (oldLeftAnchor != null) {
-            leftAnchorMeta.setValue(fxomInstance, oldLeftAnchor);
+
+        if (relocater != null) {
+            relocater.revertToOriginalLocation();
         }
-        if (oldRightAnchor != null) {
-            rightAnchorMeta.setValue(fxomInstance, oldRightAnchor);
-        }
-        if (oldTopAnchor != null) {
-            topAnchorMeta.setValue(fxomInstance, oldTopAnchor);
-        }
-        if (oldBottomAnchor != null) {
-            bottomAnchorMeta.setValue(fxomInstance, oldBottomAnchor);
-        }
+//        this.layoutXMeta.setValue(fxomInstance, oldLayoutX);
+//        this.layoutYMeta.setValue(fxomInstance, oldLayoutY);
+//        if (oldLeftAnchor != null) {
+//            leftAnchorMeta.setValue(fxomInstance, oldLeftAnchor);
+//        }
+//        if (oldRightAnchor != null) {
+//            rightAnchorMeta.setValue(fxomInstance, oldRightAnchor);
+//        }
+//        if (oldTopAnchor != null) {
+//            topAnchorMeta.setValue(fxomInstance, oldTopAnchor);
+//        }
+//        if (oldBottomAnchor != null) {
+//            bottomAnchorMeta.setValue(fxomInstance, oldBottomAnchor);
+//        }
     }
 
     @Override
     public void doRedo() {
-        this.layoutXMeta.setValue(fxomInstance, newLayoutX);
-        this.layoutYMeta.setValue(fxomInstance, newLayoutY);
-        if (newLeftAnchor != null) {
-            leftAnchorMeta.setValue(fxomInstance, newLeftAnchor);
+        if (relocater != null && fxomInstance.getSceneGraphObject().getAs(Node.class) != null) {
+            var node = fxomInstance.getSceneGraphObject().getAs(Node.class);
+            var bounds = node.getLayoutBounds();
+            relocater.moveToLayoutX(newLayoutX, bounds);
+            relocater.moveToLayoutY(newLayoutY, bounds);
         }
-        if (newRightAnchor != null) {
-            rightAnchorMeta.setValue(fxomInstance, newRightAnchor);
-        }
-        if (newTopAnchor != null) {
-            topAnchorMeta.setValue(fxomInstance, newTopAnchor);
-        }
-        if (newBottomAnchor != null) {
-            bottomAnchorMeta.setValue(fxomInstance, newBottomAnchor);
-        }
-    }
-
-    @Override
-    public String getDescription() {
-        return getClass().getSimpleName(); // Not expected to reach the user
+//        this.layoutXMeta.setValue(fxomInstance, newLayoutX);
+//        this.layoutYMeta.setValue(fxomInstance, newLayoutY);
+//        if (newLeftAnchor != null) {
+//            leftAnchorMeta.setValue(fxomInstance, newLeftAnchor);
+//        }
+//        if (newRightAnchor != null) {
+//            rightAnchorMeta.setValue(fxomInstance, newRightAnchor);
+//        }
+//        if (newTopAnchor != null) {
+//            topAnchorMeta.setValue(fxomInstance, newTopAnchor);
+//        }
+//        if (newBottomAnchor != null) {
+//            bottomAnchorMeta.setValue(fxomInstance, newBottomAnchor);
+//        }
     }
 
 
@@ -198,42 +206,42 @@ public final class RelocateNodeJob extends AbstractJob {
      * Private
      */
 
-    private void updateNewAnchors() {
-        if ((this.oldLeftAnchor == null) && (this.oldRightAnchor == null)) {
-            this.newLeftAnchor = null;
-            this.newRightAnchor = null;
-        } else {
-            final Node sceneGraphNode = fxomInstance.getSceneGraphObject().getAs(Node.class);
-            final Bounds nodeLayoutBounds = sceneGraphNode.getLayoutBounds();
-            final Bounds parentLayoutBounds = sceneGraphNode.getParent().getLayoutBounds();
-            if (this.oldLeftAnchor != null) {
-                this.newLeftAnchor = AnchorUtils.computeLeftAnchor(parentLayoutBounds, nodeLayoutBounds, newLayoutX);
-            } else {
-                this.newLeftAnchor = null;
-            }
-            if (this.oldRightAnchor != null) {
-                this.newRightAnchor = AnchorUtils.computeRightAnchor(parentLayoutBounds, nodeLayoutBounds, newLayoutX);
-            } else {
-                this.newRightAnchor = null;
-            }
-        }
-        if ((this.oldTopAnchor == null) && (this.oldBottomAnchor == null)) {
-            this.newTopAnchor = null;
-            this.newBottomAnchor = null;
-        } else {
-            final Node sceneGraphNode = fxomInstance.getSceneGraphObject().getAs(Node.class);
-            final Bounds nodeLayoutBounds = sceneGraphNode.getLayoutBounds();
-            final Bounds parentLayoutBounds = sceneGraphNode.getParent().getLayoutBounds();
-            if (this.oldTopAnchor != null) {
-                this.newTopAnchor = AnchorUtils.computeTopAnchor(parentLayoutBounds, nodeLayoutBounds, newLayoutY);
-            } else {
-                this.newTopAnchor = null;
-            }
-            if (this.oldBottomAnchor != null) {
-                this.newBottomAnchor = AnchorUtils.computeBottomAnchor(parentLayoutBounds, nodeLayoutBounds, newLayoutY);
-            } else {
-                this.newBottomAnchor = null;
-            }
-        }
-    }
+//    private void updateNewAnchors() {
+//        if ((this.oldLeftAnchor == null) && (this.oldRightAnchor == null)) {
+//            this.newLeftAnchor = null;
+//            this.newRightAnchor = null;
+//        } else {
+//            final Node sceneGraphNode = fxomInstance.getSceneGraphObject().getAs(Node.class);
+//            final Bounds nodeLayoutBounds = sceneGraphNode.getLayoutBounds();
+//            final Bounds parentLayoutBounds = sceneGraphNode.getParent().getLayoutBounds();
+//            if (this.oldLeftAnchor != null) {
+//                this.newLeftAnchor = AnchorUtils.computeLeftAnchor(parentLayoutBounds, nodeLayoutBounds, newLayoutX);
+//            } else {
+//                this.newLeftAnchor = null;
+//            }
+//            if (this.oldRightAnchor != null) {
+//                this.newRightAnchor = AnchorUtils.computeRightAnchor(parentLayoutBounds, nodeLayoutBounds, newLayoutX);
+//            } else {
+//                this.newRightAnchor = null;
+//            }
+//        }
+//        if ((this.oldTopAnchor == null) && (this.oldBottomAnchor == null)) {
+//            this.newTopAnchor = null;
+//            this.newBottomAnchor = null;
+//        } else {
+//            final Node sceneGraphNode = fxomInstance.getSceneGraphObject().getAs(Node.class);
+//            final Bounds nodeLayoutBounds = sceneGraphNode.getLayoutBounds();
+//            final Bounds parentLayoutBounds = sceneGraphNode.getParent().getLayoutBounds();
+//            if (this.oldTopAnchor != null) {
+//                this.newTopAnchor = AnchorUtils.computeTopAnchor(parentLayoutBounds, nodeLayoutBounds, newLayoutY);
+//            } else {
+//                this.newTopAnchor = null;
+//            }
+//            if (this.oldBottomAnchor != null) {
+//                this.newBottomAnchor = AnchorUtils.computeBottomAnchor(parentLayoutBounds, nodeLayoutBounds, newLayoutY);
+//            } else {
+//                this.newBottomAnchor = null;
+//            }
+//        }
+//    }
 }

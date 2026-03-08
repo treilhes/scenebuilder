@@ -57,8 +57,6 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
 import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.value.EnumerationPropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.value.InsetsPropertyMetadata;
 import com.gluonhq.jfxapps.metadata.bean.BeanMetaData;
 import com.gluonhq.jfxapps.metadata.bean.PropertyMetaData;
 import com.gluonhq.jfxapps.metadata.properties.api.PropertyGenerationContext;
@@ -66,7 +64,6 @@ import com.gluonhq.jfxapps.metadata.properties.api.PropertyGenerator;
 import com.gluonhq.jfxapps.metadata.properties.impl.PropertyGeneratorImpl;
 import com.gluonhq.jfxapps.metadata.properties.model.Component;
 import com.gluonhq.jfxapps.metadata.properties.model.ComponentProperty;
-import com.gluonhq.jfxapps.metadata.properties.model.ValueProperty;
 import com.gluonhq.jfxapps.metadata.sample.custo.ComponentCusto;
 import com.gluonhq.jfxapps.metadata.sample.custo.ComponentCusto.Qualifier;
 import com.gluonhq.jfxapps.metadata.sample.custo.ComponentPropertyCusto;
@@ -241,6 +238,7 @@ class PropertyGeneratorImplTest {
              valuePropertyCustoType
      );
 
+
      // and then read/write data as usual
      //var component = new Component<ComponentCusto, ComponentPropertyCusto, ValuePropertyCusto>();
      var component = new Component.Builder<ComponentCusto, ComponentPropertyCusto, ValuePropertyCusto>()
@@ -296,32 +294,35 @@ class PropertyGeneratorImplTest {
                              .imagex2("BorderPane-bottom@2x.png")
                              .build())
                      .build())
-             .staticProperty("alignment", new ValueProperty.Builder<ValuePropertyCusto>()
-                     .metadataClass(EnumerationPropertyMetadata.class)
-                     .customization(new ValuePropertyCusto.Builder()
-                             .order(0)
-                             .section("Layout")
-                             .subSection("Border Pane Constraints")
-                             .nullEquivalent("AUTOMATIC")
-                             .build())
-                     .build())
-             .staticProperty("margin", new ValueProperty.Builder<ValuePropertyCusto>()
-                     .metadataClass(InsetsPropertyMetadata.class)
-                     .customization(new ValuePropertyCusto.Builder()
-                             .order(1)
-                             .section("Layout")
-                             .subSection("Border Pane Constraints")
-                             .build())
-                     .build())
-             .valueProperty("contentBias", new ValueProperty.Builder<ValuePropertyCusto>()
-                     .metadataClass(EnumerationPropertyMetadata.class)
-                     .customization(new ValuePropertyCusto.Builder()
-                             .order(4)
-                             .section("Layout")
-                             .subSection("Extras")
-                             .nullEquivalent("NONE")
-                             .build())
-                     .build())
+
+             //FIXME type not accessible anymore since we moved the customizations to another module, update needed
+
+//             .staticProperty("alignment", new ValueProperty.Builder<ValuePropertyCusto>()
+//                     .metadataClass(EnumerationPropertyMetadata.class)
+//                     .customization(new ValuePropertyCusto.Builder()
+//                             .order(0)
+//                             .section("Layout")
+//                             .subSection("Border Pane Constraints")
+//                             .nullEquivalent("AUTOMATIC")
+//                             .build())
+//                     .build())
+//             .staticProperty("margin", new ValueProperty.Builder<ValuePropertyCusto>()
+//                     .metadataClass(InsetsPropertyMetadata.class)
+//                     .customization(new ValuePropertyCusto.Builder()
+//                             .order(1)
+//                             .section("Layout")
+//                             .subSection("Border Pane Constraints")
+//                             .build())
+//                     .build())
+//             .valueProperty("contentBias", new ValueProperty.Builder<ValuePropertyCusto>()
+//                     .metadataClass(EnumerationPropertyMetadata.class)
+//                     .customization(new ValuePropertyCusto.Builder()
+//                             .order(4)
+//                             .section("Layout")
+//                             .subSection("Extras")
+//                             .nullEquivalent("NONE")
+//                             .build())
+//                     .build())
              .build();
 
      String props = mapper.writeValueAsString(component);

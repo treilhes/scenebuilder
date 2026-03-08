@@ -13,11 +13,13 @@
 
     <modules>
         <module>scenebuilder.core</module>
+        <module>scenebuilder.registry</module>
+        <module>scenebuilder.launcher</module>
+        <module>scenebuilder.fxom</module>
+        <!--
         <module>scenebuilder.ext</module>
         <module>scenebuilder.gluon</module>
-        <module>scenebuilder.registry</module>
-        <module>scenebuilder.driver</module>
-        <module>scenebuilder.launcher</module>
+        -->
     </modules>
 
     <dependencyManagement>

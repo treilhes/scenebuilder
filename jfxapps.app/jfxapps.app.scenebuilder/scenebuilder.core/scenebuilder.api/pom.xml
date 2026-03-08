@@ -17,6 +17,7 @@
             <artifactId>jfxplace.fxom.api</artifactId>
         </dependency>
       
+        <!--
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>scenebuilder.metadata.customization</artifactId>
@@ -31,7 +32,7 @@
             <scope>provided</scope>
         </dependency>
         
-        <!--<dependency>
+        <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
             <artifactId>scenebuilder.metadata.sbjavafx</artifactId>
         </dependency>-->

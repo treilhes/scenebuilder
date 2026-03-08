@@ -42,12 +42,27 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 
 public interface Relocater<T> {
-    
+
+    /**
+     * @return the javafx object that is being relocated. This is the object that is
+     *         being manipulated by the relocater and that will be moved when the
+     *         relocater is executed.
+     */
     Node getSceneGraphObject();
+
+    /**
+     * @return the FXOM object that is being relocated. This is the object that is
+     *         being manipulated by the relocater and that will be moved when the
+     *         relocater is executed.
+     */
     FXOMObject getFxomObject();
-    
+
+    /**
+     * Initialize the relocater.
+     * Step executed before any move. This is the place to save the original location of the object and to initialize the change map.
+     */
     void initialize();
-    
+
     void moveToLayoutX(double newLayoutX, Bounds newLayoutBounds);
     void moveToLayoutY(double newLayoutY, Bounds newLayoutBounds);
     void revertToOriginalLocation();
@@ -56,5 +71,5 @@ public interface Relocater<T> {
     Object getValue(PropertyName propertyName);
     Map<PropertyName, Object> getChangeMap();
 
-    
+
 }

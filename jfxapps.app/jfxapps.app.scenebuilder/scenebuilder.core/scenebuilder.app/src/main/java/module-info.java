@@ -38,7 +38,6 @@ open module scenebuilder.core.app {
     exports com.oracle.javafx.scenebuilder.app;
     exports com.oracle.javafx.scenebuilder.app.i18n;
     exports com.oracle.javafx.scenebuilder.app.doc;
-    exports com.oracle.javafx.scenebuilder.app.editors;
 
     requires transitive jfxplace.core.api;
     requires transitive scenebuilder.api;

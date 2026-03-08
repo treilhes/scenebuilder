@@ -37,14 +37,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.treilhes.emc4j.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.api.SbApiExtension;
 import com.oracle.javafx.scenebuilder.app.doc.DocumentationImpl;
-import com.oracle.javafx.scenebuilder.app.editors.ControllerClassEditor;
-import com.oracle.javafx.scenebuilder.app.editors.CoreEditors;
-import com.oracle.javafx.scenebuilder.app.editors.FxIdEditor;
-import com.oracle.javafx.scenebuilder.app.editors.PropertyEditorFactoryImpl;
 import com.oracle.javafx.scenebuilder.app.i18n.I18NFxmlCoreExtension;
+import com.treilhes.emc4j.boot.api.loader.extension.OpenExtension;
 
 public class ScenebuilderAppExtension implements OpenExtension {
 
@@ -64,20 +60,8 @@ public class ScenebuilderAppExtension implements OpenExtension {
     public List<Class<?>> exportedContextClasses() {
      // @formatter:off
         return Arrays.asList(
-
-
-
-
                 I18NFxmlCoreExtension.class,
-                ControllerClassEditor.class,
-                CoreEditors.class,
-
-                DocumentationImpl.class,
-
-
-                FxIdEditor.class,
-
-                PropertyEditorFactoryImpl.class
+                DocumentationImpl.class
             );
      // @formatter:on
     }

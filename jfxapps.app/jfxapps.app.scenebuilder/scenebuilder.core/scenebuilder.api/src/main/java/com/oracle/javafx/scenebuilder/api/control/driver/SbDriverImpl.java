@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.api.control.driver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
+import com.gluonhq.jfxapps.core.api.driver.AbstractDriver;
+import com.gluonhq.jfxapps.core.api.driver.DriverRegistry;
 import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.fxom.ui.tool.DriverExtensionRegistry;
 import com.gluonhq.jfxapps.core.api.fxom.ui.tool.PickRefiner;
 import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.gluonhq.jfxapps.core.fxom.FXOMObject;
@@ -68,27 +68,25 @@ import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractResizer;
 import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractShadow;
 import com.oracle.javafx.scenebuilder.api.control.rudder.AbstractRudder;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractTring;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 
 @ApplicationSingleton
-public class SbDriverImpl implements SbDriver {
+public class SbDriverImpl extends AbstractDriver implements SbDriver {
 
     private static final Logger logger = LoggerFactory.getLogger(SbDriverImpl.class);
 
-    private final DriverExtensionRegistry registry;
-
-    public SbDriverImpl(DriverExtensionRegistry registry) {
-        super();
-        this.registry = registry;
+    public SbDriverImpl(DriverRegistry registry) {
+        super(registry);
     }
 
 
-    public <T> T make(Class<T> cls, FXOMObject fxomObject) {
+    private <T> T make(Class<T> cls, FXOMObject fxomObject) {
         assert fxomObject instanceof FXOMInstance;
         assert !fxomObject.getSceneGraphObject().isEmpty();
-        return registry.getImplementationInstance(cls, fxomObject.getSceneGraphObject().getObjectClass());
+        return make(cls, fxomObject.getSceneGraphObject().getObjectClass());
     }
 
     @Override

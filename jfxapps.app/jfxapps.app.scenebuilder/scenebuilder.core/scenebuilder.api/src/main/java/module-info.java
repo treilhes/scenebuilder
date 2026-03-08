@@ -67,13 +67,14 @@ open module scenebuilder.api {
     exports com.oracle.javafx.scenebuilder.api.theme;
     exports com.oracle.javafx.scenebuilder.api.ui;
     exports com.oracle.javafx.scenebuilder.api.util;
+    exports com.oracle.javafx.scenebuilder.metadata.custom;
 
     requires transitive jfxplace.core.api;
     requires transitive jfxplace.fxom.api;
     //requires transitive jfxplace.core.fxom;
     //requires transitive scenebuilder.metadata.sbjavafx;
     requires transitive jfxplace.core.starter;
-    requires transitive scenebuilder.metadata.customization;
+    //requires transitive scenebuilder.metadata.customization;
 
     provides Extension with SbApiExtension;
 }
