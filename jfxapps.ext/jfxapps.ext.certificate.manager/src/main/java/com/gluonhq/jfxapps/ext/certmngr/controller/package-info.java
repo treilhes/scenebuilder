@@ -1,1 +1,0 @@
-package com.gluonhq.jfxapps.ext.certmngr.controller;

@@ -1,3 +1,0 @@
-#!/bin/bash
-echo "[DEB] Pre-remove: Cleaning up before uninstall..."
-exit 0
