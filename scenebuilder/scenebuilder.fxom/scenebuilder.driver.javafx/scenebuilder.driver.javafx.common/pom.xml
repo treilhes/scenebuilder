@@ -9,9 +9,6 @@
     </parent>
     <artifactId>scenebuilder.driver.javafx.common</artifactId>
 
-    <properties>
-        <javafx.bottom.version>22</javafx.bottom.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
@@ -31,7 +28,7 @@
         
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>scenebuilder.metadata.javafx.${javafx.bottom.version}</artifactId>
+            <artifactId>scenebuilder.metadata.javafx.22</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>

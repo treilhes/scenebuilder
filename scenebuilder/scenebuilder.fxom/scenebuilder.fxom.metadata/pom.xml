@@ -10,5 +10,6 @@
   <modules>
   	<module>scenebuilder.fxom.metadata.base</module>
   	<module>scenebuilder.metadata.javafx.fx</module>
+  	<module>scenebuilder.metadata.javafx</module>
   </modules>
 </project>

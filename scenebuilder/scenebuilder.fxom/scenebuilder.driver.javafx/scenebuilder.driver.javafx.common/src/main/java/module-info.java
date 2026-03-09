@@ -53,6 +53,7 @@ module scenebuilder.driver.javafx.common {
     exports com.oracle.javafx.scenebuilder.tools.driver.gridpane.gesture;
 
     requires scenebuilder.api;
-    requires scenebuilder.metadata.javafx;
     requires scenebuilder.starter;
+    requires scenebuilder.metadata.javafx;
+
 }

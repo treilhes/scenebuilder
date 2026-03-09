@@ -11,5 +11,6 @@
   	<module>scenebuilder.fxom.editor</module>
   	<module>scenebuilder.fxom.metadata</module>
   	<module>scenebuilder.driver.javafx</module>
+  	<module>scenebuilder.fxom.merge</module>
   </modules>
 </project>

@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.gluonhq.jfxapps</groupId>
+        <artifactId>scenebuilder.fxom</artifactId>
+        <version>${scenebuilder.version}</version>
+    </parent>
+    <artifactId>scenebuilder.fxom.merge</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>scenebuilder.api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.jfxapps</groupId>
+            <artifactId>scenebuilder.starter</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.treilhes.jfxplace</groupId>
+            <artifactId>jfxplace.core.document</artifactId>
+            <version>${jfxplace.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.treilhes.jfxplace</groupId>
+            <artifactId>jfxplace.fxom.editor</artifactId>
+            <version>${jfxplace.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.treilhes.jfxplace</groupId>
+            <artifactId>jfxplace.core.jobs</artifactId>
+            <version>${jfxplace.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.treilhes.jfxplace</groupId>
+            <artifactId>jfxplace.core.drag.and.drop</artifactId>
+            <version>${jfxplace.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.treilhes.jfxplace</groupId>
+            <artifactId>jfxplace.fxom.selection</artifactId>
+            <version>${jfxplace.version}</version>
+        </dependency>
+    </dependencies>
+</project>

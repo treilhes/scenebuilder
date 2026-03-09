@@ -16,7 +16,7 @@
             <groupId>com.treilhes.jfxplace</groupId>
             <artifactId>jfxplace.fxom.api</artifactId>
         </dependency>
-      
+        
         <!--
         <dependency>
             <groupId>com.gluonhq.jfxapps</groupId>
@@ -42,12 +42,8 @@
             <artifactId>scenebuilder.starter</artifactId>
             <exclusions>
                 <exclusion>
-                    <groupId>com.treilhes.jfxplace</groupId>
-                    <artifactId>jfxplace.core.api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.treilhes.jfxplace</groupId>
-                    <artifactId>jfxplace.core.starter</artifactId>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

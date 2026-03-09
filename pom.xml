@@ -488,7 +488,7 @@
                                         <artifactId>scenebuilder-source-override-maven-plugin</artifactId>
                                         <versionRange>[0.0.0,)</versionRange>
                                         <goals>
-                                            <goal>properties</goal>
+                                            <goal>override</goal>
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>

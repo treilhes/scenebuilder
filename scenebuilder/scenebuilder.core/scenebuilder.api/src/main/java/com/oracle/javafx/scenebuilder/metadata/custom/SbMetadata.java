@@ -45,8 +45,9 @@ import com.gluonhq.jfxapps.core.metadata.AbstractMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
 import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPathComparator;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 
-//FIXME must define the scope for this component
+@ApplicationSingleton
 public class SbMetadata extends AbstractMetadata<
     ComponentClassMetadataCustomization,
     ComponentPropertyMetadata<ComponentPropertyMetadataCustomization, SbComponentClassMetadata<?>>,

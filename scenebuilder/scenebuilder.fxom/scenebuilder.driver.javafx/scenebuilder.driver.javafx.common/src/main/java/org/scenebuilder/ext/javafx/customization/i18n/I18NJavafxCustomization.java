@@ -33,11 +33,10 @@
  */
 package org.scenebuilder.ext.javafx.customization.i18n;
 
-import org.springframework.stereotype.Component;
-
 import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 
-@Component
+@ApplicationSingleton
 public class I18NJavafxCustomization implements BundleProvider {
 
     @Override

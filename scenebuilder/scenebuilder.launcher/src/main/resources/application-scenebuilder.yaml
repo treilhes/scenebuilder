@@ -1,0 +1,29 @@
+emc4j:
+  registry:
+    snapshotsAllowed: true
+    defaults:
+      devtools:
+        groupId: com.gluonhq.jfxapps
+        artifactId: scenebuilder.registry
+        mandatory: true
+
+  maven:
+    directory: ${user.home}/.m2/repository
+    redirectionsEnabled: true
+    redirect:
+      - groupId: com.gluonhq.jfxapps
+        artifactId: scenebuilder.app
+        path: ../../../../scenebuilder.core/scenebuilder.app/target/classes
+
+server:
+  port: 8080
+
+spring:
+  h2:
+    console:
+      enabled: false
+  jpa:
+    show-sql: true
+
+springdoc:
+  show-actuator: true

@@ -78,7 +78,9 @@ public class SbApiExtension implements ApplicationExtension  {
 
     @Override
     public Set<UUID> getMergedExtensions() {
-        return Set.of(UUID.fromString("1619a4bc-e5f7-413a-a93e-eae379adf56b"));
+        return Set.of(
+                UUID.fromString("1619a4bc-e5f7-413a-a93e-eae379adf56b") // fxom.api
+                );
     }
 
 
