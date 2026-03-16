@@ -14,13 +14,13 @@
     <url>https://github.com/gluonhq/scenebuilder</url>
 
     <modules>
-
+		<module>jfxapps.metadata</module>
         <!--<module>fxml.serializer</module>-->
         <module>scenebuilder</module>
         <!--<module>jfxapps.boot</module>-->
         <!--<module>jfxapps.core</module>-->
         <!--<module>jfxapps.ext</module>-->
-        <module>jfxapps.metadata</module>
+        
         <!--<module>jfxapps.registry</module>-->
 
         <!--<module>jfxapps.utils</module>-->
