@@ -1,3 +1,7 @@
+# Emc4j
+.mvn/maven.config
+.dev.yaml
+
 # Gradle
 .gradle/
 app/build/

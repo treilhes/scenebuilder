@@ -46,7 +46,7 @@
                     <clean>${clean}</clean>
                     <debug>${debug}</debug>
                     <profiles>
-                        <profile>scenebuilder</profile>
+                        <profile>devlookup,scenebuilder</profile>
                     </profiles>
                     <profileFiles>
                         <profileFile>
