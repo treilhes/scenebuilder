@@ -1,12 +1,4 @@
 emc4j:
-  registry:
-    snapshotsAllowed: true
-    defaults:
-      devtools:
-        groupId: com.gluonhq.jfxapps
-        artifactId: scenebuilder.registry
-        mandatory: true
-
   maven:
     directory: ${user.home}/.m2/repository
     redirectionsEnabled: true
