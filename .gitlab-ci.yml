@@ -14,7 +14,7 @@ before_script:
 
 build-job:
   tags:
-    - linux
+    - windows-gui 
   image: docker.treilhes.home/jfxapps/builder-linux:latest
   stage: build
   cache:
