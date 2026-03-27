@@ -92,7 +92,7 @@
                                 <goal>clean</goal>
                                 <goal>install</goal>
                             </goals>
-                            <mavenOpts>--add-opens java.base/java.lang=ALL-UNNAMED</mavenOpts>
+                            <mavenOpts>-Djava.awt.headless=${awt.headless} -Dglass.platform=${glass.platform} --add-opens java.base/java.lang=ALL-UNNAMED</mavenOpts>
                         </configuration>
                     </execution>
                     <!-- This execution is used to run javafx after javafxdata
@@ -115,7 +115,7 @@
                                 <goal>clean</goal>
                                 <goal>install</goal>
                             </goals>
-                            <mavenOpts>--add-opens java.base/java.lang=ALL-UNNAMED</mavenOpts>
+                            <mavenOpts>-Djava.awt.headless=${awt.headless} -Dglass.platform=${glass.platform} --add-opens java.base/java.lang=ALL-UNNAMED</mavenOpts>
                         </configuration>
                     </execution>
                 </executions>
