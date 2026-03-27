@@ -22,7 +22,7 @@ build-job:
       paths:
           - /repository
   script:
-    - mvn "-Dmaven.repo.local=/repository" -B -ntp clean deploy -P headless
+    - mvn "-Dmaven.repo.local=/repository" -B -ntp clean deploy
 
 build-sonar:
   tags:
@@ -41,7 +41,7 @@ build-sonar:
         - ~/repository
       
   script: 
-    - mvn -Dmaven.repo.local=/repository -ntp verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -P coverage,headless
+    - mvn -Dmaven.repo.local=/repository -ntp verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -P coverage
   allow_failure: true
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
