@@ -9,12 +9,7 @@ stages:
   - build-sonar
 
 before_script:
-  - |
-      if [ "$OS" = "Windows_NT" ]; then
-        powershell -Command "New-Item -ItemType Directory -Force -Path repository"
-      else
-        mkdir -p /repository
-      fi
+  - mkdir repository 2>/dev/null || true
   - echo "$MVN_SETTINGS_NEXUS" > ~/.m2/settings.xml
 
 build-job:
