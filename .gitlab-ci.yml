@@ -22,7 +22,7 @@ build-job:
       paths:
           - /repository
   script:
-    - mvn -Dmaven.repo.local=/repository -B -ntp clean deploy -P headless
+    - mvn "-Dmaven.repo.local=/repository" -B -ntp clean deploy -P headless
 
 build-sonar:
   tags:
