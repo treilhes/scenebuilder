@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>scenebuilder.ext</artifactId>
+        <groupId>com.treilhes.scenebuilder</groupId>
+        <version>${scenebuilder.version}</version>
+    </parent>
+    <artifactId>scenebuilder.ext.script.graalvm-javascript-rt</artifactId>
+
+    <properties>
+        <graaljs.version>25.0.1</graaljs.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.graalvm.polyglot</groupId>
+            <artifactId>polyglot</artifactId>
+            <version>${graaljs.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.graalvm.polyglot</groupId>
+            <artifactId>js</artifactId>
+            <version>${graaljs.version}</version>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+</project>

@@ -9,8 +9,8 @@
   
   <dependencies>
         <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.starter</artifactId>
+            <groupId>com.treilhes.jfxplace</groupId>
+            <artifactId>jfxplace.core.starter</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -32,8 +32,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.gluonhq.jfxapps</groupId>
-            <artifactId>jfxapps.core.starter.test</artifactId>
+            <groupId>com.treilhes.jfxplace</groupId>
+            <artifactId>jfxplace.core.starter.test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -14,43 +14,59 @@
     <url>https://github.com/gluonhq/scenebuilder</url>
 
     <modules>
-		<module>jfxapps.metadata</module>
         <!--<module>fxml.serializer</module>-->
-        <module>scenebuilder</module>
-        <!--<module>jfxapps.boot</module>-->
-        <!--<module>jfxapps.core</module>-->
-        <!--<module>jfxapps.ext</module>-->
-        
-        <!--<module>jfxapps.registry</module>-->
-
-        <!--<module>jfxapps.utils</module>-->
-        <!--<module>jfxapps.delivery</module>-->
+        <module>scenebuilder.core</module>
+        <module>scenebuilder.registry</module>
+        <module>scenebuilder.launcher</module>
+        <module>scenebuilder.fxom</module>
+        <!--
+        <module>scenebuilder.ext</module>
+        <module>scenebuilder.gluon</module>
+        -->
     </modules>
 
     <properties>
-        <scenebuilder.version>25.0.0-SNAPSHOT</scenebuilder.version>
-        <emc4j.version>1.0.0-SNAPSHOT</emc4j.version>
-        <jfxplace.version>1.0.0-SNAPSHOT</jfxplace.version>
-        <jfxapps.version>1.0.0-SNAPSHOT</jfxapps.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>25</java.version>
-
         <!-- exporting a package from system module java.base is not allowed
         with release -->
         <!--<maven.compiler.release>24</maven.compiler.release>-->
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
+        <scenebuilder.version>25.0.0-SNAPSHOT</scenebuilder.version>
+        <emc4j.version>1.0.0-SNAPSHOT</emc4j.version>
+        <jfxplace.version>1.0.0-SNAPSHOT</jfxplace.version>
+        
+
         <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
         <maven-dependency-plugin.version>3.6.1</maven-dependency-plugin.version>
         <maven-failsafe-plugin.version>3.5.4</maven-failsafe-plugin.version>
         <maven-surefire-plugin.version>${maven-failsafe-plugin.version}</maven-surefire-plugin.version>
+        <maven-clean-plugin.version>3.0.0</maven-clean-plugin.version>
+        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+        <maven-invoker-plugin.version>3.8.0</maven-invoker-plugin.version>
+        <versions-maven-plugin.version>2.9.0</versions-maven-plugin.version>
+        <maven-project-info-reports-plugin.version>2.6</maven-project-info-reports-plugin.version>
+        <maven-checkstyle-plugin.version>3.5.0</maven-checkstyle-plugin.version>
+        <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
+        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
+        
         <flatten-maven-plugin.version>1.7.4-SNAPSHOT</flatten-maven-plugin.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        
 
         <spring.boot.version>4.0.0-RC2</spring.boot.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <rxjavafx.version>3.0.2</rxjavafx.version>
         <ikonli.version>12.3.1</ikonli.version>
+        
+        <!-- internal -->
+        <sonar.projectKey>jfxapps_scenebuilder_aa4527b4-a246-4f94-a740-37433a483f61</sonar.projectKey>
+        <sonar.projectName>scenebuilder</sonar.projectName>
+        <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
+        <sonar.coverage.jacoco.xmlReportPaths>**/target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <repositories>
@@ -66,6 +82,248 @@
 
     <dependencyManagement>
         <dependencies>
+        
+            <!-- scenebuilder.core -->
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.api</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.app</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.starter</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.starter.test</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.drag.and.drop</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.javafx.customization</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.jobs</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.main</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.metadata.customization</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.metadata.javafx.fx</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.metadata.javafx</artifactId>
+                <version>${scenebuilder.version}</version>
+                <type>pom</type>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.metadata.javafx.11</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.metadata.javafx.15</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.metadata.javafx.21</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.metadata.javafx.22</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.metadata.sbjavafx</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.selection</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ui</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <!-- scenebuilder.ext -->
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.library.control</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.controls</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.controls.tooling</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.css.analyser</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.debug.menu</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.document</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.dummy</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.editor.fxml</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.editor.script</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.editors</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.exporter</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.glossary</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.help.features</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.i18n</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.library.image</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.inspector</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.preview</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.script</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.script.graalvm-javascript</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.script.graalvm-javascript-rt</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.source.gen</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.source.view</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.theme</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.templates</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.treilhes.scenebuilder</groupId>
+                <artifactId>scenebuilder.ext.welcome</artifactId>
+                <version>${scenebuilder.version}</version>
+            </dependency>
 
             <!-- jfxplace.core -->
             <dependency>
@@ -106,14 +364,14 @@
 
             <!-- jfxapps.metadata -->
             <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps.metadata.generator</artifactId>
-                <version>${scenebuilder.version}</version>
+                <groupId>com.treilhes.jfxplace</groupId>
+                <artifactId>jfxplace.fxom.metadata.generator</artifactId>
+                <version>${jfxplace.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.gluonhq.jfxapps</groupId>
-                <artifactId>jfxapps-metadata-maven-plugin</artifactId>
-                <version>${scenebuilder.version}</version>
+                <groupId>com.treilhes.jfxplace</groupId>
+                <artifactId>jfxplace-fxom-metadata-maven-plugin</artifactId>
+                <version>${jfxplace.version}</version>
             </dependency>
 
             <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
@@ -146,132 +404,175 @@
 
     <profiles>
         <profile>
-            <id>javadoc</id>
+            <id>delivery</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <build>
                 <plugins>
                     <plugin>
-                        <artifactId>maven-clean-plugin</artifactId>
-                        <version>3.0.0</version>
-                        <inherited>false</inherited>
-                        <configuration>
-                            <filesets>
-                                <fileset>
-                                    <directory>${basedir}/docs/apidocs</directory>
-                                </fileset>
-                            </filesets>
-                        </configuration>
-                    </plugin>
-                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <show>private</show>
-                            <additionalOptions>
-                                <option>--add-exports</option>
-                                <option>
-                                    javafx.graphics/com.sun.javafx.scene=scenebuilder.core</option>
-                                <option>--add-exports</option>
-                                <option>
-                                    javafx.graphics/com.sun.javafx.geometry=scenebuilder.core</option>
-                                <option>--add-exports</option>
-                                <option>
-                                    javafx.graphics/com.sun.javafx.scene=scenebuilder.ext.css.analyser</option>
-                            </additionalOptions>
-                            <!-- This property does not work for the aggregate
-                            goal, doc-files are not present in the generated
-                            javadoc, see workaround below -->
-                            <docfilessubdirs>true</docfilessubdirs>
-                            <javadocDirectory>${basedir}/src/main/java</javadocDirectory>
-                            <outputDirectory>${basedir}/docs/apidocs</outputDirectory>
-                            <reportOutputDirectory>${basedir}/docs/apidocs</reportOutputDirectory>
-                        </configuration>
                         <executions>
                             <execution>
-                                <id>aggregation</id>
+                                <id>attach-javadoc</id>
                                 <goals>
-                                    <goal>aggregate</goal>
+                                    <goal>jar</goal>
                                 </goals>
                                 <configuration>
-                                    <aggregate>true</aggregate>
+                                    <!-- FIXME allow missing javadoc comments, TEMPORARY-->
+                                    <failOnError>false</failOnError>
                                 </configuration>
                             </execution>
                         </executions>
                     </plugin>
                     <plugin>
-                        <!-- Workaround for docfilessubdirs: this script copy
-                        doc-files content into javadoc output directory
-                            in
-                        github_pages -->
-                        <groupId>org.codehaus.gmaven</groupId>
-                        <artifactId>groovy-maven-plugin</artifactId>
-                        <version>2.1.1</version>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
                         <executions>
                             <execution>
-                                <phase>generate-resources</phase>
+                                <id>attach-sources</id>
                                 <goals>
-                                    <goal>execute</goal>
+                                    <goal>jar</goal>
                                 </goals>
-                                <configuration>
-                                    <source>aggregated_javadoc_fix.groovy</source>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>prepare-agent-integration</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>prepare-agent-integration</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- Windows profile -->
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <glass.platform>win</glass.platform>
+                <awt.headless>false</awt.headless>
+            </properties>
+        </profile>
+
+        <!-- macOS profile -->
+        <profile>
+            <id>macos</id>
+            <activation>
+                <os>
+                    <family>Mac</family>
+                </os>
+            </activation>
+            <properties>
+                <glass.platform>mac</glass.platform>
+                <awt.headless>false</awt.headless>
+            </properties>
+        </profile>
+
+        <!-- Linux profile -->
+        <profile>
+            <id>linux</id>
+            <activation>
+                <os>
+                    <family>Unix</family>
+                    <name>Linux</name>
+                </os>
+            </activation>
+            <properties>
+                <glass.platform>gtk</glass.platform>
+                <awt.headless>false</awt.headless>
+            </properties>
+        </profile>
+        <profile>
+            <id>headless</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <glass.platform>Headless</glass.platform>
+                <awt.headless>true</awt.headless>
+            </properties>
+        </profile>
     </profiles>
     <build>
         <plugins>
             <plugin>
-                <!--
-                This plugin has 2 internal usages:
-                - generate a flattened version of the pom.xml in the repository, maven actions
-                will use the flattened pom.xml as the effective pom reducing the
-                number of roundtrip during dependency resolution and download
-                - manage a centralize version for the project
-                -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
-                <version>${flatten-maven-plugin.version}</version>
-                <configuration>
-                    <flattenDependencyMode>all</flattenDependencyMode>
-                    <flattenMode>bom</flattenMode> <!-- Resolve properties like
-					${jfxapps.version} -->
-                    <!--<updatePomFile>true</updatePomFile>   Ensures the POM file is updated -->
-                </configuration>
-                <executions>
-                    <!-- enable flattening -->
-                    <execution>
-                        <id>flatten</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>flatten</goal>
-                        </goals>
-                    </execution>
-                    <!-- ensure proper cleanup -->
-                    <execution>
-                        <id>flatten.clean</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
-            <!-- slow the build , so commented (at least for now)-->
-            <!--
-			<plugin>
-				<groupId>io.github.git-commit-id</groupId>
-			    <artifactId>git-commit-id-maven-plugin</artifactId>
-			</plugin>
-			-->
         </plugins>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <!--
+                    This plugin has 2 internal usages:
+                    - generate a flattened version of the pom.xml in the repository, maven actions
+                    will use the flattened pom.xml as the effective pom reducing the
+                    number of roundtrip during dependency resolution and download
+                    - manage a centralize version for the project
+                    -->
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>${flatten-maven-plugin.version}</version>
+                    <configuration>
+                        <flattenDependencyMode>direct</flattenDependencyMode>
+                        <flattenMode>bom</flattenMode> <!-- Resolve properties like
+                        ${jfxplace.version} -->
+                        <!--<updatePomFile>true</updatePomFile>   Ensures the POM file is updated -->
+                    </configuration>
+                    <executions>
+                        <!-- enable flattening -->
+                        <execution>
+                            <id>flatten</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>flatten</goal>
+                            </goals>
+                        </execution>
+                        <!-- ensure proper cleanup -->
+                        <execution>
+                            <id>flatten.clean</id>
+                            <phase>clean</phase>
+                            <goals>
+                                <goal>clean</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
                 <plugin>
                     <groupId>com.treilhes.emc4j</groupId>
                     <artifactId>emc4j-registry-maven-plugin</artifactId>
@@ -283,19 +584,6 @@
                     <version>${emc4j.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-maven-plugin</artifactId>
-                    <version>0.0.5</version>
-                    <configuration>
-                        <mainClass>${main.class.name}</mainClass>
-                        <options>
-                            <option>
-                                --add-opens=javafx.fxml/javafx.fxml=ALL-UNNAMED</option>
-                        </options>
-                    </configuration>
-                </plugin>
-
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
                     <version>${maven-dependency-plugin.version}</version>
@@ -306,7 +594,6 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven.compiler.plugin.version}</version>
                     <configuration>
-                        <!--<useIncrementalCompilation>false</useIncrementalCompilation>-->
                         <compilerArgs>
 
                             <arg>--add-exports</arg>
@@ -394,8 +681,8 @@
                         <systemPropertyVariables>
                             <maven.version>${maven.version}</maven.version>
                             <maven.home>${maven.home}</maven.home>
-                            <java.awt.headless>true</java.awt.headless>
-                            <glass.platform>Headless</glass.platform>
+                            <java.awt.headless>${awt.headless}</java.awt.headless>
+                            <glass.platform>${glass.platform}</glass.platform>
                             <javafx.allowjs>true</javafx.allowjs>
                         </systemPropertyVariables>
                         <useModulePath>false</useModulePath>
@@ -410,8 +697,8 @@
                         <systemPropertyVariables>
                             <maven.version>${maven.version}</maven.version>
                             <maven.home>${maven.home}</maven.home>
-                            <java.awt.headless>true</java.awt.headless>
-                            <glass.platform>Headless</glass.platform>
+                            <java.awt.headless>${awt.headless}</java.awt.headless>
+                            <glass.platform>${glass.platform}</glass.platform>
                             <javafx.allowjs>true</javafx.allowjs>
                         </systemPropertyVariables>
                         <jvm>${java.home}/bin/java</jvm>
@@ -444,6 +731,26 @@
                             <phase>prepare-package</phase>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${maven-checkstyle-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>${maven-project-info-reports-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>io.github.git-commit-id</groupId>
@@ -484,7 +791,7 @@
                                 
                                 <pluginExecution>
                                     <pluginExecutionFilter>
-                                        <groupId>com.gluonhq.jfxapps</groupId>
+                                        <groupId>com.treilhes.scenebuilder</groupId>
                                         <artifactId>scenebuilder-source-override-maven-plugin</artifactId>
                                         <versionRange>[0.0.0,)</versionRange>
                                         <goals>
@@ -572,9 +879,8 @@
 
                                 <pluginExecution>
                                     <pluginExecutionFilter>
-                                        <groupId>com.gluonhq.jfxapps</groupId>
-                                        <artifactId>
-                                            jfxapps-metadata-maven-plugin</artifactId>
+                                        <groupId>com.treilhes.jfxplace</groupId>
+                                        <artifactId>jfxplace-fxom-metadata-maven-plugin</artifactId>
                                         <versionRange>[0.0.0,)</versionRange>
                                         <goals>
                                             <goal>metadataSource</goal>
@@ -682,11 +988,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.6</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
             </plugin>
         </plugins>
     </reporting>
