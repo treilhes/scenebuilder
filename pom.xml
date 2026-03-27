@@ -422,6 +422,17 @@
                                 <configuration>
                                     <!-- FIXME allow missing javadoc comments, TEMPORARY-->
                                     <failOnError>false</failOnError>
+                                    <additionalOptions>
+                                        <option>--add-exports</option>
+                                        <option>
+                                            javafx.graphics/com.sun.javafx.scene=scenebuilder.core</option>
+                                        <option>--add-exports</option>
+                                        <option>
+                                            javafx.graphics/com.sun.javafx.geometry=scenebuilder.core</option>
+                                        <option>--add-exports</option>
+                                        <option>
+                                            javafx.graphics/com.sun.javafx.scene=scenebuilder.ext.css.analyser</option>
+                                    </additionalOptions>
                                 </configuration>
                             </execution>
                         </executions>
@@ -551,7 +562,7 @@
                     <configuration>
                         <flattenDependencyMode>direct</flattenDependencyMode>
                         <flattenMode>bom</flattenMode> <!-- Resolve properties like
-                        ${jfxplace.version} -->
+                        ${scenebuilder.version} -->
                         <!--<updatePomFile>true</updatePomFile>   Ensures the POM file is updated -->
                     </configuration>
                     <executions>
@@ -791,8 +802,8 @@
                                 
                                 <pluginExecution>
                                     <pluginExecutionFilter>
-                                        <groupId>com.treilhes.scenebuilder</groupId>
-                                        <artifactId>scenebuilder-source-override-maven-plugin</artifactId>
+                                        <groupId>com.treilhes.jfxplace</groupId>
+                                        <artifactId>jfxplace-source-override-maven-plugin</artifactId>
                                         <versionRange>[0.0.0,)</versionRange>
                                         <goals>
                                             <goal>override</goal>
