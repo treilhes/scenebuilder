@@ -14,14 +14,16 @@ before_script:
 
 build-job:
   tags:
-    - windows-gui 
-  #image: docker.treilhes.home/jfxapps/builder-linux:latest
+    - linux 
+  image: docker.treilhes.home/jfxapps/builder-linux:latest
   stage: build
   cache:
     - key: cache-$CI_COMMIT_REF_SLUG
       paths:
           - /repository
   script:
+    - export DISPLAY=:90
+    - Xvfb -ac :90 -screen 0 1280x1024x24 > /dev/null 2>&1 &
     - mvn "-Dmaven.repo.local=/repository" -B -ntp clean deploy
 
 build-sonar:
