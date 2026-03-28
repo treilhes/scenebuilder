@@ -14,8 +14,8 @@ before_script:
 
 build-job:
   tags:
-    - windows-bare 
-  image: docker.treilhes.home/jfxapps/builder-linux:latest
+    - windows-gui 
+  #image: docker.treilhes.home/jfxapps/builder-linux:latest
   stage: build
   cache:
     - key: cache-$CI_COMMIT_REF_SLUG
