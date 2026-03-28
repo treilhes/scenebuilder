@@ -493,7 +493,7 @@
                 </os>
             </activation>
             <properties>
-                <glass.platform>win</glass.platform>
+                <glass.platform>Win</glass.platform>
                 <awt.headless>false</awt.headless>
             </properties>
         </profile>
@@ -507,7 +507,7 @@
                 </os>
             </activation>
             <properties>
-                <glass.platform>mac</glass.platform>
+                <glass.platform>Mac</glass.platform>
                 <awt.headless>false</awt.headless>
             </properties>
         </profile>
@@ -518,11 +518,10 @@
             <activation>
                 <os>
                     <family>Unix</family>
-                    <name>Linux</name>
                 </os>
             </activation>
             <properties>
-                <glass.platform>gtk</glass.platform>
+                <glass.platform>Gtk</glass.platform>
                 <awt.headless>false</awt.headless>
             </properties>
         </profile>
