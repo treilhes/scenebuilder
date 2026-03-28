@@ -1,0 +1,50 @@
+image: maven:3.9-eclipse-temurin-25
+
+variables:
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+  GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+
+stages:
+  - build
+  - build-sonar
+
+before_script:
+  - mkdir repository || echo "exists"
+  - echo "$MVN_SETTINGS_NEXUS" > ~/.m2/settings.xml
+
+build-job:
+  tags:
+    - windows-gui 
+  #image: docker.treilhes.home/jfxapps/builder-linux:latest
+  stage: build
+  cache:
+    - key: cache-$CI_COMMIT_REF_SLUG
+      paths:
+          - /repository
+  script:
+    - mvn "-Dmaven.repo.local=/repository" -B -ntp clean deploy
+
+build-sonar:
+  tags:
+    - linux
+  image: docker.treilhes.home/jfxapps/builder-linux:latest
+  stage: build-sonar
+  
+  cache:
+    - key: "sonar-cache-$CI_COMMIT_REF_SLUG"
+      policy: pull-push
+      paths:
+        - "${SONAR_USER_HOME}/cache"
+        - sonar-scanner/
+    - key: cache-$CI_COMMIT_REF_SLUG
+      paths:
+        - ~/repository
+      
+  script: 
+    - mvn -Dmaven.repo.local=/repository -ntp verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -P coverage
+  allow_failure: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'main'
+    - if: $CI_COMMIT_BRANCH == 'develop'

@@ -1,0 +1,10 @@
+build-job:       # This job runs in the build stage, which runs first.
+  tags:
+    - linux
+  image: docker.treilhes.home/jfxapps/builder-linux:latest
+  stage: build
+  script:
+#    - mvn clean install
+    - export DISPLAY=:90
+    - Xvfb -ac :90 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+    - mvn -B -ntp clean install checkstyle:checkstyle

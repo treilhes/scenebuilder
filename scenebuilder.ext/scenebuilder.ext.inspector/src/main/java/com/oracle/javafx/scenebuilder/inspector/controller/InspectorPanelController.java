@@ -1,0 +1,2174 @@
+/*
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
+ * All rights reserved. Use is subject to license terms.
+ *
+ * This file is available and licensed under the following license:
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  - Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *  - Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the distribution.
+ *  - Neither the name of Oracle Corporation and Gluon nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package com.oracle.javafx.scenebuilder.inspector.controller;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.Stack;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
+import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
+
+import com.gluonhq.jfxapps.core.api.fxom.css.CssInternal;
+import com.gluonhq.jfxapps.core.api.fxom.css.CssPropAuthorInfo;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
+import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSource;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
+import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
+import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
+import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
+import com.gluonhq.jfxapps.core.api.job.Job;
+import com.gluonhq.jfxapps.core.api.job.JobManager;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
+import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
+import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
+import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
+import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
+import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
+import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
+import com.gluonhq.jfxapps.core.fxom.FXOMElement;
+import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
+import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.gluonhq.jfxapps.core.metadata.util.ValuePropertyMetadataClassComparator;
+import com.gluonhq.jfxapps.core.metadata.util.ValuePropertyMetadataNameComparator;
+import com.oracle.javafx.scenebuilder.api.Inspector;
+import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertiesEditor;
+import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor;
+import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor.LayoutFormat;
+import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
+import com.oracle.javafx.scenebuilder.api.editors.PropertyEditor;
+import com.oracle.javafx.scenebuilder.api.editors.PropertyEditorFactory;
+import com.oracle.javafx.scenebuilder.api.editors.PropertyEditorFactorySession;
+import com.oracle.javafx.scenebuilder.api.selection.SbSelectionJobsFactory;
+import com.oracle.javafx.scenebuilder.api.ui.Docks;
+import com.oracle.javafx.scenebuilder.core.editors.FxIdEditor;
+import com.oracle.javafx.scenebuilder.editors.control.GenericEditor;
+import com.oracle.javafx.scenebuilder.editors.control.ToggleGroupEditor;
+import com.oracle.javafx.scenebuilder.inspector.preference.InspectorSectionIdPreference;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
+import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.css.Style;
+import javafx.css.StyleableProperty;
+import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TitledPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+
+/**
+ *
+ *
+ */
+//@formatter:off
+@ApplicationInstanceSingleton
+@ViewAttachment(
+        name = InspectorPanelController.VIEW_NAME,
+        id = InspectorPanelController.VIEW_ID,
+        prefDockId = Docks.RIGHT_DOCK_ID,
+        openOnStart = true,
+        selectOnStart = true,
+        icon = "ViewIconInspector.png",
+        iconX2 = "ViewIconInspector@2x.png")
+//@formatter:on
+public class InspectorPanelController extends AbstractFxmlViewController implements Inspector {
+
+    public final static String VIEW_ID = "68a8c5dd-0b5f-4551-95d1-5b5bdf89ee4b";
+
+    public final static String VIEW_NAME = "inspector";
+
+    @FXML
+    private TitledPane propertiesTitledPane;
+    @FXML
+    private ScrollPane propertiesScroll;
+    @FXML
+    private GridPane propertiesSection;
+    @FXML
+    private TitledPane layoutTitledPane;
+    @FXML
+    private ScrollPane layoutScroll;
+    @FXML
+    private GridPane layoutSection;
+    @FXML
+    private TitledPane codeTitledPane;
+    @FXML
+    private ScrollPane codeScroll;
+    @FXML
+    private GridPane codeSection;
+    @FXML
+    private TitledPane allTitledPane;
+    @FXML
+    private ScrollPane allScroll;
+    @FXML
+    private GridPane allContent;
+    @FXML
+    private StackPane searchStackPane;
+    @FXML
+    private GridPane searchContent;
+    @FXML
+    private Accordion accordion;
+    @FXML
+    private SplitPane inspectorRoot;
+
+    public enum ViewMode {
+
+        SECTION, // View properties by section (default)
+        PROPERTY_NAME, // Flat view of all properties, ordered by name
+        PROPERTY_TYPE // Flat view of all properties, ordered by type
+    }
+
+    public enum ShowMode {
+
+        ALL, // Show all the properties (default)
+        EDITED // Show only the properties which have been set in the FXML
+    }
+
+    //
+    private static final String fxmlFile = "Inspector.fxml";
+    private static final String FXID_SUBSECTION_NAME = "Identity";
+    private String searchPattern;
+    private SectionId previousExpandedSection;
+    private PropertyEditor lastPropertyEditorValueChanged = null;
+    private boolean dragOnGoing = false;
+
+    // ...
+    //
+    // Subsection title pool
+    private final Stack<SubSectionTitle> subSectionTitlePool = new Stack<>();
+    //
+    // SubSectionTitles currently in use
+    private final List<SubSectionTitle> subSectionTitlesInUse = new ArrayList<>();
+    //
+    private final SectionId[] sections = { SectionId.PROPERTIES, SectionId.LAYOUT, SectionId.CODE };
+    //
+    // State variables
+    private final ObjectProperty<ViewMode> viewModeProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<ShowMode> showModeProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<SectionId> expandedSectionProperty = new SimpleObjectProperty<>();
+
+    // Inspector state
+    private SelectionState selectionState;
+    private double searchResultDividerPosition;
+
+    // Charsets for the properties of included elements
+//    private Map<String, Charset> availableCharsets;
+
+    private final Selection selection;
+    private final InlineEdit inlineEdit;
+    private final JobManager jobManager;
+    private final MessageLogger messageLogger;
+    private final InspectorSectionIdPreference inspectorSectionIdPreference;
+
+    private final ApplicationInstanceEvents documentManager;
+
+    private final Drag drag;
+    private final FxomJobsFactory fxomJobsFactory;
+    private final SbSelectionJobsFactory sbSelectionJobsFactory;
+    private final SelectionJobsFactory selectionJobsFactory;
+
+
+    private PropertyEditorFactorySession session;
+
+    private final ViewSearch viewSearch;
+    private final SbMetadata metadata;
+
+    private final FxomEvents fxomEvents;
+
+    /*
+     * Public
+     */
+ // @formatter:off
+    public InspectorPanelController(
+            I18N i18n,
+            ApplicationEvents applicationEvents,
+            ApplicationInstanceEvents instanceEvents,
+            FxomEvents fxomEvents,
+            Selection selection,
+            InlineEdit inlineEdit,
+            JobManager jobManager,
+            MessageLogger messageLogger,
+            SbMetadata metadata,
+            InspectorSectionIdPreference inspectorSectionIdPreference,
+            Drag drag,
+            PropertyEditorFactory propertyEditorFactory,
+            ViewSearch viewSearch,
+            FxomJobsFactory fxomJobsFactory,
+            SbSelectionJobsFactory sbSelectionJobsFactory,
+            SelectionJobsFactory selectionJobsFactory,
+            ViewMenu viewMenuController) {
+     // @formatter:on
+        super(i18n, applicationEvents, instanceEvents, viewMenuController, InspectorPanelController.class.getResource(fxmlFile));
+        this.drag = drag;
+        this.selection = selection;
+        this.inlineEdit = inlineEdit;
+        this.jobManager = jobManager;
+        this.messageLogger = messageLogger;
+        this.documentManager = instanceEvents;
+        this.fxomEvents = fxomEvents;
+        this.metadata = metadata;
+        this.session = propertyEditorFactory.newSession();
+
+        this.viewSearch = viewSearch;
+
+        this.inspectorSectionIdPreference = inspectorSectionIdPreference;
+
+        this.fxomJobsFactory = fxomJobsFactory;
+        this.sbSelectionJobsFactory = sbSelectionJobsFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
+
+        viewModeProperty.setValue(ViewMode.SECTION);
+        viewModeProperty.addListener((obv, previousMode, mode) -> viewModeChanged(previousMode, mode));
+
+        showModeProperty.setValue(ShowMode.ALL);
+        showModeProperty.addListener((obv, previousMode, mode) -> showModeChanged());
+
+        expandedSectionProperty.setValue(SectionId.PROPERTIES);
+        expandedSectionProperty.addListener((obv, previousSectionId, sectionId) -> expandedSectionChanged());
+
+        fxomEvents.fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
+        fxomEvents.sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
+        fxomEvents.cssRevisionDidChange().subscribeOn(JavaFxScheduler.platform())
+                .subscribe(c -> cssRevisionDidChange());
+        fxomEvents.selectionDidChange().subscribe(c -> editorSelectionDidChange());
+
+    }
+
+    @FXML
+    protected void initialize() {
+
+        // init preferences
+//        animateAccordion(accordionAnimationPreference.getValue());
+//        accordionAnimationPreference.getObservableValue().addListener((ob, o, n) -> animateAccordion(n));
+
+        // Add inspector accordion expanded pane listener
+        setExpandedSection(inspectorSectionIdPreference.getValue());
+        inspectorSectionIdPreference.getObservableValue().addListener((ob, o, n) -> setExpandedSection(n));
+        accordion.expandedPaneProperty()
+                .addListener((ov, t, t1) -> inspectorSectionIdPreference.setValue(getExpandedSectionId()));
+    }
+
+    public Accordion getAccordion() {
+        return accordion;
+    }
+
+    public SectionId getExpandedSectionId() {
+        if (!isInspectorLoaded()) {
+            return null;
+        }
+        final TitledPane expandedSection = accordion.getExpandedPane();
+        final InspectorPanelController.SectionId result;
+
+        if (expandedSection == null) {
+            // all sections are collapsed
+            result = InspectorPanelController.SectionId.NONE;
+        } else if (expandedSection == propertiesTitledPane) {
+            result = InspectorPanelController.SectionId.PROPERTIES;
+        } else if (expandedSection == layoutTitledPane) {
+            result = InspectorPanelController.SectionId.LAYOUT;
+        } else if (expandedSection == codeTitledPane) {
+            result = InspectorPanelController.SectionId.CODE;
+        } else {
+            // may happen if the view mode has been changed
+            return null;
+        }
+
+        return result;
+    }
+
+    public ViewMode getViewMode() {
+        return viewModeProperty.getValue();
+    }
+
+    public void setViewMode(ViewMode mode) {
+        assert mode != null;
+        viewModeProperty.setValue(mode);
+    }
+
+    private void viewModeChanged(ViewMode previousMode, ViewMode mode) {
+        if (!isInspectorLoaded()) {
+            return;
+        }
+        if (previousMode == ViewMode.SECTION) {
+            previousExpandedSection = getExpandedSectionId();
+        }
+        accordion.getPanes().clear();
+        switch (mode) {
+        case SECTION:
+            accordion.getPanes().addAll(propertiesTitledPane, layoutTitledPane, codeTitledPane);
+            if (previousExpandedSection != null) {
+                setExpandedSection(previousExpandedSection);
+            }
+            break;
+        case PROPERTY_NAME:
+        case PROPERTY_TYPE:
+            accordion.getPanes().add(allTitledPane);
+            allTitledPane.setExpanded(true);
+            rebuild();
+            break;
+        default:
+            throw new IllegalStateException("Unexpected view mode " + mode); // NOI18N
+        }
+        updateClassNameInSectionTitles();
+    }
+
+    public ShowMode getShowMode() {
+        return showModeProperty.getValue();
+    }
+
+    public void setShowMode(ShowMode mode) {
+        assert mode != null;
+        showModeProperty.setValue(mode);
+    }
+
+    private void showModeChanged() {
+        if (!isInspectorLoaded()) {
+            return;
+        }
+        rebuild();
+    }
+
+    public SectionId getExpandedSection() {
+        return expandedSectionProperty.getValue();
+    }
+
+    @Override
+    public void setExpandedSection(SectionId sectionId) {
+        assert sectionId != null;
+        expandedSectionProperty.setValue(sectionId);
+    }
+
+    private void expandedSectionChanged() {
+        if (!isInspectorLoaded()) {
+            return;
+        }
+        final TitledPane tp;
+
+        switch (getExpandedSection()) {
+        case NONE:
+            tp = null;
+            break;
+        case PROPERTIES:
+            tp = propertiesTitledPane;
+            break;
+        case LAYOUT:
+            tp = layoutTitledPane;
+            break;
+        case CODE:
+            tp = codeTitledPane;
+            break;
+        default:
+            throw new IllegalStateException("Unexpected section id " + getExpandedSection()); // NOI18N
+        }
+
+        accordion.setExpandedPane(tp);
+    }
+
+    public boolean isEditedMode() {
+        return getShowMode() == ShowMode.EDITED;
+    }
+
+    public String getSearchPattern() {
+        return searchPattern;
+    }
+
+    public void setSearchPattern(String searchPattern) {
+        this.searchPattern = searchPattern;
+        searchPatternDidChange();
+    }
+
+    public void animateAccordion(boolean animate) {
+        accordion.getPanes().forEach(tp -> tp.setAnimated(animate));
+    }
+
+    protected void fxomDocumentDidChange(FXOMDocument oldDocument) {
+//        System.out.println("FXOM Document changed : " + getEditorController().getFxomDocument());
+        if (isInspectorLoaded() && hasFxomDocument()) {
+            selectionState.initialize();
+            rebuild();
+        }
+    }
+
+    protected void sceneGraphRevisionDidChange() {
+//        System.out.println("Scene graph changed.");
+        if (!dragOnGoing) {
+            updateInspector();
+        }
+    }
+
+    protected void cssRevisionDidChange() {
+//        System.out.println("CSS changed.");
+        JfxAppPlatform.ensureFxThread(() -> {
+            if (!dragOnGoing) {
+                updateInspector();
+            }
+        });
+    }
+
+    protected void editorSelectionDidChange() {
+//        System.out.println("Selection changed.");
+        // DTL-6570 should be resolved before this assertion is back.
+//        assert !editorController.isTextEditingSessionOnGoing();
+        if (!dragOnGoing) {
+            updateInspector();
+        }
+    }
+
+    /*
+     * AbstractFxmlController
+     */
+    @Override
+    public void controllerDidLoadFxml() {
+
+        // Sanity checks
+        assert propertiesTitledPane != null;
+        assert propertiesScroll != null;
+        assert propertiesSection != null;
+        assert layoutTitledPane != null;
+        assert layoutScroll != null;
+        assert layoutSection != null;
+        assert codeTitledPane != null;
+        assert codeScroll != null;
+        assert codeSection != null;
+        assert allTitledPane != null;
+        assert allScroll != null;
+        assert allContent != null;
+        assert searchStackPane != null;
+        assert searchContent != null;
+        assert accordion != null;
+        assert inspectorRoot != null;
+
+        getSearchController().textProperty()
+                .addListener((ChangeListener<String>) (ov, oldStr, newStr) -> setSearchPattern(newStr));
+
+        propertiesTitledPane.expandedProperty().addListener((ChangeListener<Boolean>) (ov, wasExpanded,
+                expanded) -> handleTitledPane(wasExpanded, expanded, SectionId.PROPERTIES));
+        layoutTitledPane.expandedProperty().addListener((ChangeListener<Boolean>) (ov, wasExpanded,
+                expanded) -> handleTitledPane(wasExpanded, expanded, SectionId.LAYOUT));
+        codeTitledPane.expandedProperty().addListener((ChangeListener<Boolean>) (ov, wasExpanded,
+                expanded) -> handleTitledPane(wasExpanded, expanded, SectionId.CODE));
+
+        // Clean the potential nodes added for design purpose in fxml
+        clearSections();
+
+        // Listen the drag property changes
+        drag.dragSourceProperty().addListener((ChangeListener<DragSource>) (ov, oldVal, newVal) -> {
+            if (newVal != null) {
+//                    System.out.println("Drag started !");
+                dragOnGoing = true;
+            } else {
+//                    System.out.println("Drag finished.");
+                dragOnGoing = false;
+                updateInspector();
+            }
+        });
+
+        // Listen the Scene stylesheets changes
+        fxomEvents.stylesheetConfig().subscribe(s -> updateInspector());
+
+        selectionState = fxomEvents.selectionDidChange().get();
+
+        viewModeChanged(null, getViewMode());
+        expandedSectionChanged();
+
+        accordion.expandedPaneProperty().addListener((ChangeListener<TitledPane>) (ov, t, t1) -> {
+            expandedSectionProperty.setValue(getExpandedSectionId());
+        });
+
+        accordion.setPrefSize(300, 700);
+        buildExpandedSection();
+        updateClassNameInSectionTitles();
+        searchResultDividerPosition = inspectorRoot.getDividerPositions()[0];
+        searchPatternDidChange();
+    }
+
+    /*
+     * Private
+     */
+    private void updateInspector() {
+        if (isInspectorLoaded() && hasFxomDocument()) {
+            var newSelectionState = fxomEvents.selectionDidChange().get();
+            if (isInspectorStateChanged(newSelectionState) || isEditedMode()) {
+                selectionState = newSelectionState;
+                rebuild();
+            } else {
+                // we may have a property changed here.
+                selectionState = newSelectionState;
+                updateClassNamesExtraForIncludes();
+                reset();
+            }
+        }
+    }
+
+    private void updateClassNamesExtraForIncludes() {
+        if (!getSelectedIntrinsics().isEmpty()) {
+            updateClassNameInSectionTitles();
+        }
+    }
+
+    private boolean isInspectorStateChanged(SelectionState newSelectionState) {
+        // Inspector state change if one of the following is true:
+        // - selected classes change
+        // - common parent change
+        // - resolve state change
+        return (selectionState == null
+                || !newSelectionState.getSelectedClasses().equals(selectionState.getSelectedClasses())
+                || (newSelectionState.getCommonParentClass() != selectionState.getCommonParentClass())
+                || (!newSelectionState.getUnresolvedInstances().equals(selectionState.getUnresolvedInstances())));
+    }
+
+    private void searchPatternDidChange() {
+        if (isInspectorLoaded()) {
+            // Collapse/Expand the search result panel
+            if (hasSearchPattern()) {
+                if (!inspectorRoot.getItems().contains(searchStackPane)) {
+                    inspectorRoot.getItems().add(0, searchStackPane);
+                    inspectorRoot.setDividerPositions(searchResultDividerPosition);
+                }
+            } else {
+                // Save the divider position for next search
+                searchResultDividerPosition = inspectorRoot.getDividerPositions()[0];
+                if (inspectorRoot.getItems().contains(searchStackPane)) {
+                    inspectorRoot.getItems().remove(searchStackPane);
+                }
+            }
+
+            buildFlatContent(searchContent);
+        }
+    }
+
+    private void rebuild() {
+        selectionState.clearSelectionCssState();
+
+//        System.out.println("Inspector rebuild() called !");
+        // The inspector structure has changed :
+        // - selection changed
+        // - parent changed
+        // - search pattern changed
+        // - SceneGraphObject resolved state changed
+        // ==> the current section is to be fully rebuilt
+        // TBD: we could optimize this by only refreshing values if
+        // same element class + same container class + same search pattern.
+        clearSections();
+
+        if (getViewMode() == ViewMode.SECTION) {
+            buildExpandedSection();
+        } else {
+            buildFlatContent(allContent);
+        }
+        updateClassNameInSectionTitles();
+        if (hasSearchPattern()) {
+            buildFlatContent(searchContent);
+        }
+    }
+
+    private void reset() {
+//        System.out.println("Inspector reset() called !");
+        // A property has changed, a reference has changed (e.g. css file).
+        // or a selection of an identical node appears
+        // ==> For all the editors currently in use:
+        // - reset (state, suggested list, ...)
+        // - reset the value
+//        System.out.println("Refresh all the editors in use...");
+
+        if (session != null) {
+            session.forEach((e) -> {
+                e.reset(e.getPropertyMeta(), selectionState);
+                setEditorValueFromSelection(e);
+            }, lastPropertyEditorValueChanged);
+
+            lastPropertyEditorValueChanged = null;
+        }
+
+        // TODO below code is mandatory so uncomment fast
+
+//        for (AbstractEditor editor : editorsInUse) {
+//
+//            if (editor instanceof PropertyEditor) {
+//                if (editor == lastPropertyEditorValueChanged) {
+//                    // do not reset an editor that just changed its value and initiated the reset
+//                    lastPropertyEditorValueChanged = null;
+//                    continue;
+//                }
+//                resetPropertyEditor((PropertyEditor) editor);
+////                System.out.println("reset " + ((PropertyEditor) editor).getPropertyNameText());
+//            }
+//            setEditorValueFromSelection(editor);
+//        }
+    }
+
+    private void buildExpandedSection() {
+        buildSection(getExpandedSectionId());
+    }
+
+    /**
+     * Builds the section from the provided metadata list.
+     *
+     * @param sectionId the section id to build
+     */
+    private void buildSection(SectionId sectionId) {
+        if (sectionId == SectionId.NONE) {
+            return;
+        }
+//        System.out.println("\nBuilding section " + sectionId + " - Selection : " + selection.getEntries());
+        GridPane gridPane = getSectionContent(sectionId);
+        gridPane.getChildren().clear();
+        if (handleSelectionMessage(gridPane)) {
+            return;
+        }
+
+        // Get Metadata
+        var propMetaAll = getValuePropertyMetadata();
+
+        SortedMap<InspectorPath, ValuePropertyMetadata> propMetaSection = new TreeMap<>(
+                metadata.INSPECTOR_PATH_COMPARATOR);
+        assert propMetaAll != null;
+
+        for (var valuePropMeta : propMetaAll) {
+            InspectorPath inspectorPath = valuePropMeta.getCustomization().getInspectorPath();
+            // Check section
+            if (!isSameSection(inspectorPath.getSectionTag(), sectionId)) {
+                continue;
+            }
+            if (valuePropMeta.isStaticProperty() && !isStaticPropertyRelevant(valuePropMeta.getName())) {
+                continue;
+            }
+            if (isEditedMode()) {
+                if (!isPropertyEdited(valuePropMeta, propMetaAll)) {
+                    continue;
+                }
+            }
+            propMetaSection.put(valuePropMeta.getCustomization().getInspectorPath(), valuePropMeta);
+        }
+
+        String currentSubSection = ""; // NOI18N
+        int lineIndex = 0;
+        if (sectionId == SectionId.CODE) {
+            // add fx:id here, since it is not a property.
+            // It has its own sub section title
+            addSubSectionSeparator(gridPane, lineIndex, FXID_SUBSECTION_NAME);
+            lineIndex++;
+            currentSubSection = FXID_SUBSECTION_NAME;
+            lineIndex = addFxIdEditor(gridPane, lineIndex);
+        }
+
+        if (propMetaSection.isEmpty()) {
+            displayEmptyMessage(gridPane);
+            return;
+        }
+
+        if (lineIndex == 0 && propMetaSection.isEmpty()) {
+            displayEmptyMessage(gridPane);
+            return;
+        }
+
+        Iterator<Entry<InspectorPath, ValuePropertyMetadata>> iter = propMetaSection.entrySet().iterator();
+        // Set<PropertyName> groupProperties = new HashSet<>();
+
+        while (iter.hasNext()) {
+            // Loop on properties
+            Entry<InspectorPath, ValuePropertyMetadata> entry = iter.next();
+            InspectorPath inspectorPath = entry.getKey();
+            ValuePropertyMetadata propMeta = entry.getValue();
+            String newSubSection = inspectorPath.getSubSectionTag();
+//            System.out.println(inspectorPath.getSectionTag() + " - " + newSubSection + " - " + propMeta.getName());
+            if (!currentSubSection.equalsIgnoreCase(newSubSection)) {
+                addSubSectionSeparator(gridPane, lineIndex, newSubSection);
+                lineIndex++;
+                currentSubSection = newSubSection;
+            }
+//            if (isGroupedProperty(propMeta.getName())) {
+//                // Several properties are grouped in a single editor (e.g. AnchorPane constraints)
+//                if (groupProperties.contains(propMeta.getName())) {
+//                    continue;
+//                }
+//                PropertiesEditor propertiesEditor
+//                        = getInitializedPropertiesEditor(propMeta.getName(), propMetaSection.values(), groupProperties);
+//                if (propertiesEditor == null) {
+//                    continue;
+//                }
+//                lineIndex = addInGridPane(gridPane, propertiesEditor, lineIndex);
+//            } else {
+//                lineIndex = addInGridPane(gridPane, getInitializedPropertyEditor(propMeta), lineIndex);
+//            }
+            lineIndex = addInGridPane(gridPane, getInitializedPropertyEditor(propMeta), lineIndex);
+        }
+    }
+
+    private void addSubSectionSeparator(GridPane gridPane, int lineIndex, String titleStr) {
+        Node title = getSubSectionTitle(titleStr);
+        gridPane.add(title, 0, lineIndex);
+        GridPane.setColumnSpan(title, GridPane.REMAINING);
+        RowConstraints rowConstraint = new RowConstraints();
+        rowConstraint.setValignment(VPos.CENTER);
+        gridPane.getRowConstraints().add(rowConstraint);
+    }
+
+//    private PropertiesEditor getInitializedPropertiesEditor(PropertyName groupedPropName,
+//            Collection<ValuePropertyMetadata> propMetas, Set<PropertyName> groupProperties) {
+//        ValuePropertyMetadata[] propMetaGroup = getGroupedPropertiesMetadata(groupedPropName, propMetas, groupProperties);
+//        PropertiesEditor propertiesEditor = getPropertiesEditor(propMetaGroup);
+//        if (propertiesEditor == null) {
+//            return null;
+//        }
+//        for (AbstractPropertyEditor propertyEditor : propertiesEditor.getPropertyEditors()) {
+//            setEditorValueFromSelection(propertyEditor);
+//            handlePropertyEditorChanges(propertyEditor);
+//        }
+//        return propertiesEditor;
+//    }
+
+    private PropertyEditor getInitializedPropertyEditor(ValuePropertyMetadata propMeta) {
+        PropertyEditor propertyEditor = getPropertyEditor(propMeta);
+        setEditorValueFromSelection(propertyEditor);
+        handlePropertyEditorChanges(propertyEditor);
+        return propertyEditor;
+    }
+
+    private int addFxIdEditor(GridPane gridPane, int lineIndex) {
+        PropertyEditor propertyEditor = session.getFxIdEditor(selectionState);
+        setFxIdFromSelection(propertyEditor);
+        handlePropertyEditorChanges(propertyEditor);
+        return addInGridPane(gridPane, propertyEditor, lineIndex);
+    }
+
+    private void handlePropertyEditorChanges(PropertyEditor propertyEditor) {
+        handleValueChange(propertyEditor);
+        handleTransientValueChange(propertyEditor);
+        handleEditingChange(propertyEditor);
+        handleNavigateRequest(propertyEditor);
+    }
+
+//    private boolean isGroupedProperty(PropertyName propName) {
+//        // AnchorPane anchors only for now
+//        return isAnchorConstraintsProp(propName);
+//    }
+//
+//    private boolean isGroupEdited(Collection<ValuePropertyMetadata> propMetaAll) {
+//        // AnchorPane anchors only for now
+//        return isAnchorConstraintsEdited(propMetaAll);
+//    }
+
+    private boolean isPropertyEdited(ValuePropertyMetadata<ValuePropertyMetadataCustomization> valuePropMeta,
+            Collection<ValuePropertyMetadata<ValuePropertyMetadataCustomization>> propMetadatas) {
+        PropertyName propName = valuePropMeta.getName();
+        // boolean groupedProperty = isGroupedProperty(propName);
+        // if (!groupedProperty && !isPropertyEdited(valuePropMeta)) {
+        if (!isPropertyEdited(valuePropMeta)) {
+            return false;
+        }
+//        if (groupedProperty) {
+//            // We may have some properties edited in a group, some not.
+//            // In this case, we want to show all the goup properties.
+//            if (!isGroupEdited(new HashSet<>(propMetadatas))) {
+//                return false;
+//            }
+//        }
+        return true;
+    }
+
+//    private boolean isAnchorConstraintsEdited(Collection<ValuePropertyMetadata> propMetaAll) {
+//        for (ValuePropertyMetadata valuePropMeta : propMetaAll) {
+//            if (isAnchorConstraintsProp(valuePropMeta.getName())) {
+//                if (isPropertyEdited(valuePropMeta)) {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
+
+//    private ValuePropertyMetadata[] getGroupedPropertiesMetadata(PropertyName groupedPropName,
+//            Collection<ValuePropertyMetadata> propMetas, Set<PropertyName> groupProperties) {
+//        // For now, the SB metadata does NOT include this grouping information.
+//        // Since we have for now only AnchorPane constraints properties in this case,
+//        // this is handled at the inspector level.
+//        // We may include this in the metadata in the future if we have a sigificant number
+//        // of properties in this case (i.e. if we plan to implement editors for rotateX/Y/Z,
+//        // min/max/prefWidth, etc...)
+//
+//        //
+//        // AnchorPane anchors only for now
+//        //
+//        assert isAnchorConstraintsProp(groupedPropName);
+//        int anchorsNb = 4;
+//        ArrayList<ValuePropertyMetadata> propMetaGroup = new ArrayList<>();
+//        // Create an empty list, to be able to set the entries at the right index.
+//        for (int ii = 0; ii < anchorsNb; ii++) {
+//            propMetaGroup.add(null);
+//        }
+//
+//        // Loop on properties to find anchors properties
+//        for (ValuePropertyMetadata propMeta : propMetas) {
+//            PropertyName propName = propMeta.getName();
+//            if (!isAnchorConstraintsProp(propName)) {
+//                continue;
+//            }
+//            groupProperties.add(propName);
+//            switch (propName.toString()) {
+//                case AbstractEditor.topAnchorPropName:
+//                    propMetaGroup.set(0, propMeta);
+//                    break;
+//                case AbstractEditor.rightAnchorPropName:
+//                    propMetaGroup.set(1, propMeta);
+//                    break;
+//                case AbstractEditor.bottomAnchorPropName:
+//                    propMetaGroup.set(2, propMeta);
+//                    break;
+//                case AbstractEditor.leftAnchorPropName:
+//                    propMetaGroup.set(3, propMeta);
+//                    break;
+//                default:
+//                    assert false;
+//            }
+//        }
+//        return propMetaGroup.toArray(new ValuePropertyMetadata[propMetaGroup.size()]);
+//    }
+
+    private boolean isSameSection(String sectionStr, SectionId sectionId) {
+        return sectionStr.equalsIgnoreCase(sectionId.toString());
+    }
+
+    private boolean hasSelectedElement() {
+        return hasFxomDocument() && (!selectionState.isSelectionEmpty());
+    }
+
+    private boolean hasSelectedElementNothingForInspector() {
+        return hasFxomDocument() && getSelectedInstances().isEmpty();
+    }
+
+    private boolean hasSelectedIntrinsicNothingForInspector() {
+        return hasFxomDocument() && getSelectedIntrinsics().isEmpty();
+    }
+
+    private Set<FXOMIntrinsic> getSelectedIntrinsics() {
+        return selectionState.getSelectedIntrinsics();
+    }
+
+    private boolean hasMultipleSelection() {
+        return getSelectedInstances().size() > 1;
+    }
+
+    private boolean hasUnresolvedInstance() {
+        return getUnresolvedInstances().size() > 0;
+    }
+
+    private void buildFlatContent(GridPane gridPane) {
+//        System.out.println("\nBuilding Flat panel" + " - Selection : " + selection.getEntries());
+        gridPane.getChildren().clear();
+        gridPane.getRowConstraints().clear();
+        if (handleSelectionMessage(gridPane)) {
+            return;
+        }
+        if (isSearch(gridPane) && !hasSearchPattern()) {
+            addMessage(gridPane, getI18n().getString("inspector.message.searchpattern.empty"));
+            return;
+        }
+        boolean isOrderdByType = getViewMode() == ViewMode.PROPERTY_TYPE;
+
+        // Get Metadata
+        var propMetadatas = getValuePropertyMetadata();
+        if (propMetadatas.isEmpty()) {
+            addMessage(gridPane, getI18n().getString("inspector.message.no.properties"));
+            return;
+        }
+
+        var propMetadataList = new ArrayList<>(propMetadatas);
+
+        if (isOrderdByType) {
+            Collections.sort(propMetadataList, new ValuePropertyMetadataClassComparator());
+        } else {
+            Collections.sort(propMetadataList, new ValuePropertyMetadataNameComparator());
+        }
+
+        var orderedPropMetadatas = new ArrayList<ValuePropertyMetadata<ValuePropertyMetadataCustomization>>();
+
+        for (var valuePropMeta : propMetadataList) {
+            if (isSearch(gridPane) && !isSearchPatternMatch(valuePropMeta)) {
+                continue;
+            }
+            if (valuePropMeta.isStaticProperty() && !isStaticPropertyRelevant(valuePropMeta.getName())) {
+                continue;
+            }
+            if (isEditedMode()) {
+                if (!isPropertyEdited(valuePropMeta, propMetadataList)) {
+                    continue;
+                }
+            }
+            orderedPropMetadatas.add(valuePropMeta);
+        }
+
+        if (orderedPropMetadatas.isEmpty()) {
+            displayEmptyMessage(gridPane);
+            return;
+        }
+
+        int lineIndex = 0;
+        Set<PropertyName> groupProperties = new HashSet<>();
+        for (var propMeta : orderedPropMetadatas) {
+//            if (isGroupedProperty(propMeta.getName())) {
+//                if (groupProperties.contains(propMeta.getName())) {
+//                    continue;
+//                }
+//                // Several properties are grouped in a single editor (e.g. AnchorPane constraints)
+//                PropertiesEditor propertiesEditor
+//                        = getInitializedPropertiesEditor(propMeta.getName(), new HashSet<>(orderedPropMetadatas), groupProperties);
+//                if (propertiesEditor == null) {
+//                    continue;
+//                }
+//                lineIndex = addInGridPane(gridPane, propertiesEditor, lineIndex);
+//            } else {
+            lineIndex = addInGridPane(gridPane, getInitializedPropertyEditor(propMeta), lineIndex);
+            // }
+        }
+    }
+
+    private boolean handleSelectionMessage(GridPane gridPane) {
+        if (!hasSelectedElement()) {
+            addMessage(gridPane, getI18n().getString("inspector.message.no.selected"));
+            return true;
+        }
+        if (hasSelectedElementNothingForInspector() && hasSelectedIntrinsicNothingForInspector()) {
+            addMessage(gridPane, getI18n().getString("inspector.message.no.thingforinspector"));
+            return true;
+        }
+        if (hasUnresolvedInstance()) {
+            addMessage(gridPane, getI18n().getString("inspector.message.no.resolved"));
+            return true;
+        }
+        return false;
+    }
+
+    private void displayEmptyMessage(GridPane gridPane) {
+        String messKey;
+        if (isSearch(gridPane)) {
+            messKey = "label.search.noresults";
+        } else if (isEditedMode()) {
+            messKey = "inspector.message.no.propertiesedited";
+        } else {
+            messKey = "inspector.message.no.properties";
+        }
+        addMessage(gridPane, getI18n().getString(messKey));
+    }
+
+    private boolean isSearchPatternMatch(ValuePropertyMetadata propMeta) {
+        String propSimpleName = propMeta.getName().getName();
+        // Check model name
+        if (propSimpleName.toLowerCase(Locale.ENGLISH).contains(searchPattern.toLowerCase(Locale.ENGLISH))) {
+            return true;
+        }
+
+        // Check display name
+        return EditorUtils.toDisplayName(propSimpleName).toLowerCase(Locale.ENGLISH)
+                .contains(searchPattern.toLowerCase(Locale.ENGLISH));
+    }
+
+    private boolean isStaticPropertyRelevant(PropertyName propName) {
+        boolean isRelevant;
+        if (isIntrinsic()) {
+            isRelevant = checkIfStaticPropertyRelevantForIntrinsic(propName);
+        } else {
+            // Check if the static property class is the common parent of the selection
+            if (getCommonParent() == null) {
+                return false;
+            }
+            isRelevant = getCommonParent() == propName.getResidenceClass();
+        }
+        return isRelevant;
+    }
+
+    private boolean isIntrinsic() {
+        boolean result = false;
+        if (selectionState.getSelection().getHitItem() instanceof FXOMIntrinsic) {
+            result = true;
+        }
+        return result;
+    }
+
+    private boolean checkIfStaticPropertyRelevantForIntrinsic(PropertyName propName) {
+        FXOMIntrinsic fxomIntrinsic = (FXOMIntrinsic) selectionState.getSelection().getHitItem();
+        return fxomIntrinsic.getParentObject() != null && fxomIntrinsic.getParentProperty().getParentInstance()
+                .getSceneGraphObject().getObjectClass() == propName.getResidenceClass();
+    }
+
+    private boolean hasSearchPattern() {
+        return (searchPattern != null) && !searchPattern.isEmpty();
+    }
+
+    private boolean isSearch(GridPane gridPane) {
+        return gridPane == searchContent;
+    }
+
+    private int addInGridPane(GridPane gridPane, PropertyEditor editor, int lineIndex) {
+        RowConstraints row1Constraints = new RowConstraints();
+        LayoutFormat editorLayout;
+        HBox propNameNode;
+        String propNameText;
+
+        if (editor instanceof AbstractPropertyEditor) {
+            propNameNode = ((AbstractPropertyEditor) editor).getPropNameNode();
+            propNameText = ((AbstractPropertyEditor) editor).getPropertyNameText();
+            editorLayout = ((AbstractPropertyEditor) editor).getLayoutFormat();
+
+            // TODO check if the group code commented below is well handled
+        } else {
+            // PropertiesEditor
+            propNameNode = ((AbstractPropertiesEditor) editor).getNameNode();
+            propNameText = ((AbstractPropertiesEditor) editor).getPropertyNameText();
+            if (getViewMode() == ViewMode.SECTION) {
+                editorLayout = LayoutFormat.SIMPLE_LINE_NO_NAME;
+            } else {
+                editorLayout = LayoutFormat.DOUBLE_LINE;
+            }
+        }
+        propNameNode.setFocusTraversable(false);
+        MenuButton menu = editor.getMenu();
+        // For SQE tests
+        menu.setId(propNameText + " Menu"); // NOI18N
+        Node valueEditor = editor.getValueEditor();
+        // For SQE tests
+        valueEditor.setId(propNameText + " Value"); // NOI18N
+
+        if (editorLayout == LayoutFormat.DOUBLE_LINE) {
+            // We have to wrap the property name and the value editor in a VBox
+            row1Constraints.setValignment(VPos.TOP);
+            gridPane.getRowConstraints().add(row1Constraints);
+            VBox editorBox = new VBox();
+            editorBox.getChildren().addAll(propNameNode, valueEditor);
+            propNameNode.setAlignment(Pos.CENTER_LEFT);
+            GridPane.setColumnSpan(editorBox, 2);
+            gridPane.add(editorBox, 0, lineIndex);
+        } else {
+            // One row
+            gridPane.getRowConstraints().add(lineIndex, row1Constraints);
+            if (editorLayout != LayoutFormat.SIMPLE_LINE_NO_NAME) {
+                gridPane.add(propNameNode, 0, lineIndex);
+                if (editorLayout == LayoutFormat.SIMPLE_LINE_CENTERED) {
+                    // Property name, valued editor and cog menu are aligned, centered.
+                    propNameNode.setAlignment(Pos.CENTER_LEFT);
+                } else if (editorLayout == LayoutFormat.SIMPLE_LINE_TOP) {
+                    // Property name, valued editor and cog menu are aligned on top.
+                    propNameNode.setAlignment(Pos.TOP_LEFT);
+                    row1Constraints.setValignment(VPos.TOP);
+                } else if (editorLayout == LayoutFormat.SIMPLE_LINE_BOTTOM) {
+                    // Property name, valued editor and cog menu are aligned on the bottom.
+                    propNameNode.setAlignment(Pos.BOTTOM_LEFT);
+                    row1Constraints.setValignment(VPos.BOTTOM);
+                }
+                GridPane.setColumnSpan(propNameNode, 1);
+                GridPane.setColumnSpan(valueEditor, 1);
+                gridPane.add(valueEditor, 1, lineIndex);
+            } else {
+                // LayoutFormat.SIMPLE_LINE_NO_NAME
+                row1Constraints.setValignment(VPos.CENTER);
+                GridPane.setColumnSpan(valueEditor, 2);
+                gridPane.add(valueEditor, 0, lineIndex);
+            }
+        }
+
+        // Add cog menu
+        gridPane.add(menu, 2, lineIndex);
+
+        lineIndex++;
+        return lineIndex;
+    }
+
+    // TODO not used but, take a closer look to see what is the goal of this method
+    // used to get the CssId PropertyEditor to update the value while the
+    // SceneBuilder is running
+//    private StringEditor getCssIdEditor(){
+//        ValuePropertyMetadata metadataForCssIDEditor = new StringPropertyMetadata(new PropertyName("id"), true,
+//                null, new InspectorPath("Properties", "JavaFX CSS", 3));
+//        StringEditor cssIdEditor = (StringEditor) getPropertyEditor(metadataForCssIDEditor);
+//        handlePropertyEditorChanges(cssIdEditor);
+//        return cssIdEditor;
+//    }
+
+//    private Button createButtonForFxId(){
+//        Button button = new Button("Also set CSS-Id with fx:id");
+//        button.setOnAction((ActionEvent) -> {
+//            String fxId = getSelectedInstance().getFxId();
+//            if (fxId == null)
+//                return;
+//            setSelectedFXOMInstances(getCssIdEditor().getPropertyMeta(), fxId);
+//        });
+//        return button;
+//    }
+
+    private void handleValueChange(PropertyEditor propertyEditor) {
+        // Handle the value change
+        propertyEditor.addValueListener((ov, oldValue, newValue) -> {
+//                System.out.println("Value change : " + newValue);
+
+            if (!propertyEditor.isUpdateFromModel()) {
+                lastPropertyEditorValueChanged = propertyEditor;
+                updateValueInModel(propertyEditor, oldValue, newValue);
+            }
+            if (propertyEditor.isRuledByCss()) {
+                messageLogger.logWarningMessage("inspector.css.overridden",
+                        propertyEditor.getPropertyNameText());
+            }
+        });
+    }
+
+    private void handleTransientValueChange(PropertyEditor propertyEditor) {
+        // Handle the transient value change (no job here, only the scene graph is
+        // updated)
+        propertyEditor.addTransientValueListener((ov, oldValue, newValue) -> {
+//                System.out.println("Transient value change : " + newValue);
+            lastPropertyEditorValueChanged = propertyEditor;
+            for (FXOMElement fxomInstance : getSelectedInstances()) {
+                propertyEditor.getPropertyMeta().setValueInSceneGraphObject(fxomInstance, newValue);
+            }
+        });
+    }
+
+    private void updateValueInModel(PropertyEditor propertyEditor, Object oldValue, Object newValue) {
+        if (propertyEditor.isUpdateFromModel()) {
+            return;
+        }
+//        System.out.println("Property " + propertyEditor.getPropertyName() + ": Value changed from \"" + oldValue + "\" to \"" + newValue + "\"");
+        if (propertyEditor instanceof FxIdEditor) {
+            assert (newValue instanceof String) || (newValue == null);
+            setSelectedFXOMInstanceFxId(getSelectedObject(), (String) newValue);
+        } else if (propertyEditor instanceof ToggleGroupEditor) {
+            assert (newValue instanceof String) || (newValue == null);
+            setSelectionToggleGroup((String) newValue);
+        } else {
+            setSelectedFXOMInstances(propertyEditor.getPropertyMeta(), newValue);
+        }
+    }
+
+    private void handleEditingChange(PropertyEditor propertyEditor) {
+        // Handle the editing change
+        propertyEditor.addEditingListener((ov, oldValue, newValue) -> {
+            if (newValue) {
+                // Editing session starting
+//                    System.out.println("textEditingSessionDidBegin() called.");
+                inlineEdit.textEditingSessionDidBegin(p -> {
+                    // requestSessionEnd
+                    if (propertyEditor.getCommitListener() != null) {
+                        propertyEditor.getCommitListener().handle(null);
+                    }
+                    boolean hasError = propertyEditor.isInvalidValue();
+                    if (!hasError) {
+//                                System.out.println("textEditingSessionDidEnd() called (from callback).");
+                        if (inlineEdit.isTextEditingSessionOnGoing()) {
+                            inlineEdit.textEditingSessionDidEnd();
+                        }
+                    }
+//                            System.out.println("textEditingSessionDidBegin callback returns : " + !hasError);
+                    return !hasError;
+                });
+            } else {
+                // Editing session completed
+                if (inlineEdit.isTextEditingSessionOnGoing()) {
+//                        System.out.println("textEditingSessionDidEnd() called.");
+                    inlineEdit.textEditingSessionDidEnd();
+                    if (propertyEditor.getCommitListener() != null) {
+                        propertyEditor.getCommitListener().handle(null);
+                    }
+                }
+            }
+        });
+
+    }
+
+    private void handleNavigateRequest(PropertyEditor propertyEditor) {
+        // Handle a navigate request from an editor
+        propertyEditor.addNavigateListener((ov, oldStr, newStr) -> {
+            if (newStr != null) {
+                var vpm = getValuePropertyMetadata().stream()
+                        .filter(v -> v.getName().getName().equalsIgnoreCase(newStr)).findFirst();
+                if (vpm.isPresent()) {
+                    setFocusToEditor(vpm.get());
+                }
+            }
+        });
+    }
+
+    private void setSelectedFXOMInstances(ValuePropertyMetadata propMeta, Object value) {
+        final PropertyName cacheHintPN = new PropertyName("cacheHint"); // NOI18N
+        final Job job;
+        if (cacheHintPN.equals(propMeta.getName())) {
+            job = sbSelectionJobsFactory.modifyCacheHint(propMeta, value);
+        } else {
+            job = selectionJobsFactory.modifySelection(propMeta, value);
+        }
+//        System.out.println(job.getDescription());
+        pushJob(job);
+    }
+
+    private void setSelectedFXOMInstanceFxId(FXOMObject fxomObject, String fxId) {
+        final var job = fxomJobsFactory.modifyFxId(fxomObject, fxId);
+        pushJob(job);
+    }
+
+    private void setSelectionToggleGroup(String tgId) {
+        final var job = modifySelectionToggleGroupJobFactory.getJob(tgId);
+        pushJob(job);
+    }
+
+    private void pushJob(Job job) {
+        if (job.isExecutable()) {
+            jobManager.push(job);
+        } else {
+            System.out.println("Modify job not executable (because no value change?)");
+        }
+    }
+
+    // Check if a property is edited
+    private boolean isPropertyEdited(ValuePropertyMetadata propMeta) {
+        for (FXOMElement instance : getSelectedInstances()) {
+            if (!propMeta.isReadWrite()) {
+                continue;
+            }
+            Object value = propMeta.getValueObject(instance);
+            Object defaultValue = propMeta.getDefaultValueObject();
+            if (!EditorUtils.areEqual(value, defaultValue)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+//    // Set the editor value from selection
+//    private void setEditorValueFromSelection(AbstractEditor editor) {
+//        if (editor instanceof FxIdEditor) {
+//            setFxIdFromSelection(editor);
+//        } else if (isPropertyEditor(editor)) {
+//            setEditorValueFromSelection(editor);
+//        } else if (isPropertiesEditor(editor)) {
+//            for (AbstractPropertyEditor propertyEditor : ((PropertiesEditor) editor).getPropertyEditors()) {
+//                setEditorValueFromSelection(propertyEditor);
+//            }
+//        }
+//    }
+
+    // Set the fx:id from selection
+    private void setFxIdFromSelection(PropertyEditor editor) {
+        assert editor instanceof FxIdEditor;
+        FxIdEditor fxIdEditor = (FxIdEditor) editor;
+        if (hasMultipleSelection()) {
+            // multi-selection ==> indeterminate
+            fxIdEditor.setIndeterminate(true);
+            fxIdEditor.setDisable(true);
+        } else {
+            String instanceFxId = getSelectedObject().getFxId();
+            fxIdEditor.setDisable(false);
+            fxIdEditor.setUpdateFromModel(true);
+            fxIdEditor.reset(null, selectionState);
+            fxIdEditor.setValue(instanceFxId);
+            fxIdEditor.setUpdateFromModel(false);
+        }
+    }
+
+    // Set the editor value from selection
+    private void setEditorValueFromSelection(PropertyEditor propertyEditor) {
+
+        if (propertyEditor instanceof FxIdEditor) {
+            setFxIdFromSelection(propertyEditor);
+            return;
+        }
+
+        // Determine the property value
+        Object val = null;
+        boolean isIndeterminate = false;
+        boolean isReadWrite = true;
+        boolean isRuledByCss = false;
+        CssPropAuthorInfo cssInfo = null;
+        PropertyName propName = propertyEditor.getPropertyName();
+
+        // General case
+        boolean first = true;
+        for (FXOMElement instance : getSelectedInstances()) {
+            ValuePropertyMetadata propMeta = metadata.queryValueProperty(instance, propName);
+            assert propMeta != null;
+            Object newVal = propMeta.getValueObject(instance);
+//            System.out.println(propName + " value : " + newVal);
+            if (!propMeta.isReadWrite()) {
+                isReadWrite = false;
+            }
+            if (first) {
+                val = newVal;
+                first = false;
+            } else if (!EditorUtils.areEqual(newVal, val)) {
+                isIndeterminate = true;
+            }
+
+            Map<StyleableProperty, List<Style>> cssState = selectionState.getCssState(instance);
+            cssInfo = CssInternal.getCssInfo(cssState, propMeta);
+            if (cssInfo != null) {
+                isRuledByCss = true;
+            }
+        }
+
+        propertyEditor.setUpdateFromModel(true);
+        if (isRuledByCss && cssInfo != null) {
+            propertyEditor.setRuledByCss(true);
+            propertyEditor.setCssInfo(cssInfo);
+            if (propertyEditor.isDisablePropertyBound()) {
+                propertyEditor.unbindDisableProperty();
+            }
+            propertyEditor.setValue(cssInfo.getFxValue()); // adds CSS values to the ValueEditor
+            propertyEditor.getValueEditor().setDisable(true); // disables the ValueEditor when CSS is present
+        } else {
+            propertyEditor.setRuledByCss(false);
+            propertyEditor.setCssInfo(null);
+            if (propertyEditor.getValueEditor() != null && propertyEditor.getValueEditor().isDisabled()) {
+                // if ValueEditor is present and disabled it will enable it
+                // it happens when another component is clicked and a ValueEditor was disabled
+                if (!propertyEditor.isDisablePropertyBound()) {
+                    propertyEditor.getValueEditor().setDisable(false);
+                }
+            }
+            if (isIndeterminate) {
+                propertyEditor.setIndeterminate(true);
+            } else {
+                propertyEditor.setValue(val); // sets the default values or values from FXML tags
+            }
+        }
+        propertyEditor.setUpdateFromModel(false);
+
+        if (!(propertyEditor instanceof GenericEditor)) {
+            if (!isReadWrite) {
+                propertyEditor.setDisable(true);
+            } else {
+                propertyEditor.setDisable(false);
+            }
+        }
+    }
+
+    private PropertyEditor getPropertyEditor(ValuePropertyMetadata<ValuePropertyMetadataCustomization> propMeta) {
+        PropertyEditor propertyEditor = session.getEditor(propMeta, selectionState);
+
+        // Set all the "Code" properties a double line layout
+        if (isSameSection(propMeta.getCustomization().getInspectorPath().getSectionTag(), SectionId.CODE)) {
+            propertyEditor.setLayoutFormat(LayoutFormat.DOUBLE_LINE);
+        }
+        return propertyEditor;
+    }
+
+//    private PropertiesEditor getPropertiesEditor(ValuePropertyMetadata[] propMetas) {
+//        // AnchorPane only for now
+//        for (ValuePropertyMetadata propMeta : propMetas) {
+//            if (propMeta == null) {
+//                // may happen if search
+//                return null;
+//            }
+//            assert isAnchorConstraintsProp(propMeta.getName());
+//        }
+//        return makePropertiesEditor(AnchorPaneConstraintsEditor.class, propMetas);
+//    }
+
+//    private Map<String, Object> getConstants(DoublePropertyMetadata doublePropMeta) {
+//        Map<String, Object> constants = new TreeMap<>();
+//        String propNameStr = doublePropMeta.getName().getName();
+//
+//        // TODO this kind of details must be part of metadata
+//        if (propNameStr.contains("maxWidth") || propNameStr.contains("maxHeight")) { //NOCHECK
+//            constants.put("MAX_VALUE", Double.MAX_VALUE); //NOCHECK
+//        }
+//        if (doublePropMeta instanceof ComputedSizeDoublePropertyMetadata) {
+//            constants.put("USE_COMPUTED_SIZE", Region.USE_COMPUTED_SIZE);
+//        } else if (doublePropMeta instanceof ComputedAndPrefSizeDoublePropertyMetadata) {
+//            constants.put("USE_COMPUTED_SIZE", Region.USE_COMPUTED_SIZE);
+//            constants.put("USE_PREF_SIZE", Region.USE_PREF_SIZE);
+//        } else if (doublePropMeta instanceof NullableCoordinateDoublePropertyMetadata) {
+//            constants.put("NULL", null); //NOCHECK
+//        } else if (doublePropMeta instanceof ProgressDoublePropertyMetadata) {
+//            constants.put("INDETERMINATE", ProgressIndicator.INDETERMINATE_PROGRESS);
+//        }
+//        return constants;
+//    }
+
+//    private Map<String, Object> getConstants(IntegerPropertyMetadata integerPropMeta) {
+//        Map<String, Object> constants = new TreeMap<>();
+//        String propNameStr = integerPropMeta.getName().getName();
+//        if (propNameStr.contains("columnSpan") || propNameStr.contains("rowSpan")) { //NOCHECK
+//            constants.put("REMAINING", GridPane.REMAINING); //NOCHECK
+//        } else if (propNameStr.contains("prefColumnCount")) {
+//            if (getSelectedClasses().size() == 1) {
+//                if (getSelectedClass() == TextField.class || getSelectedClass() == PasswordField.class) {
+//                    constants.put("DEFAULT_PREF_COLUMN_COUNT", TextField.DEFAULT_PREF_COLUMN_COUNT); //NOCHECK
+//                } else if (getSelectedClass() == TextArea.class) {
+//                    constants.put("DEFAULT_PREF_COLUMN_COUNT", TextArea.DEFAULT_PREF_COLUMN_COUNT); //NOCHECK
+//                }
+//            }
+//        } else if (propNameStr.contains("prefRowCount")) {
+//            assert getSelectedClass() == TextArea.class;
+//            constants.put("DEFAULT_PREF_ROW_COUNT", TextArea.DEFAULT_PREF_ROW_COUNT); //NOCHECK
+//        }
+//        return constants;
+//    }
+
+//    private int getMax(IntegerPropertyMetadata integerPropMeta) {
+//        String propNameStr = integerPropMeta.getName().getName();
+//        if (propNameStr.contains("columnIndex") || propNameStr.contains("columnSpan")) { //NOCHECK
+//            GridPane gridPane = getGridPane(propNameStr);
+//            if (gridPane == null) {
+//                // multi-selection from different GridPanes: not supported for now
+//                return getMin(integerPropMeta);
+//            }
+//            int nbColumns = Deprecation.getGridPaneColumnCount(gridPane);
+//            if (propNameStr.contains("columnIndex")) {//NOCHECK
+//                // index start to 0
+//                return nbColumns - 1;
+//            }
+//            if (propNameStr.contains("columnSpan")) {//NOCHECK
+//                int maxIndex = getSpanPropertyMaxIndex(propNameStr);
+//                return nbColumns - maxIndex;
+//            }
+//        }
+//        if (propNameStr.contains("rowIndex") || propNameStr.contains("rowSpan")) { //NOCHECK
+//            GridPane gridPane = getGridPane(propNameStr);
+//            if (gridPane == null) {
+//                // multi-selection from different GridPanes: not supported for now
+//                return getMin(integerPropMeta);
+//            }
+//            int nbRow = Deprecation.getGridPaneRowCount(gridPane);
+//            if (propNameStr.contains("rowIndex")) {//NOCHECK
+//                // index start to 0
+//                return nbRow - 1;
+//            }
+//            if (propNameStr.contains("rowSpan")) {//NOCHECK
+//                int maxIndex = getSpanPropertyMaxIndex(propNameStr);
+//                return nbRow - maxIndex;
+//            }
+//        }
+//        return Integer.MAX_VALUE;
+//    }
+
+//    private int getMin(IntegerPropertyMetadata integerPropMeta) {
+//        String propNameStr = integerPropMeta.getName().getName();
+//        if (propNameStr.contains("columnSpan") || propNameStr.contains("rowSpan")) { //NOCHECK
+//            return 1;
+//        }
+//        return 0;
+//    }
+
+//    private boolean isMultiLinesSupported(Set<Class<?>> selectedClasses, ValuePropertyMetadata propMeta) {
+//        String propertyNameStr = propMeta.getName().getName();
+//        if (selectedClasses.contains(TextField.class) || selectedClasses.contains(PasswordField.class)) {
+//            if (propertyNameStr.equalsIgnoreCase("text")) {
+//                return false;
+//            }
+//        }
+//        if (propertyNameStr.equalsIgnoreCase("promptText")) {
+//            return false;
+//        }
+//
+//        if (propertyNameStr.equalsIgnoreCase("ellipsisString")) {
+//            return false;
+//        }
+//        return true;
+//    }
+
+//    private int getSpanPropertyMaxIndex(String propNameStr) {
+//        assert propNameStr.contains("columnSpan") || propNameStr.contains("rowSpan");
+//        int maxIndex = 0;
+//        for (FXOMInstance instance : getSelectedInstances()) {
+//            assert instance.getSceneGraphObject().isInstanceOf(Node.class);
+//            Integer index;
+//            Node node = instance.getSceneGraphObject().getAs(Node.class);
+//            if (propNameStr.contains("columnSpan")) {//NOCHECK
+//                index = GridPane.getColumnIndex(node);
+//            } else {
+//                index = GridPane.getRowIndex(node);
+//            }
+//            if (index == null) {
+//                index = 0;
+//            }
+//            if (index > maxIndex) {
+//                maxIndex = index;
+//            }
+//        }
+//        return maxIndex;
+//    }
+
+//    private GridPane getGridPane(String propNameStr) {
+//        assert propNameStr.contains("columnIndex") || propNameStr.contains("columnSpan") //NOCHECK
+//                || propNameStr.contains("rowIndex") || propNameStr.contains("rowSpan");//NOCHECK
+//            FXOMObject commonParent = selectionState.getCommonParentObject();
+//            if (commonParent == null) {
+//                return null;
+//            }
+//            Object parentObj = commonParent.getSceneGraphObject().get();
+//            assert parentObj instanceof GridPane;
+//            return (GridPane) parentObj;
+//    }
+
+    private boolean isInspectorLoaded() {
+        return accordion != null;
+    }
+
+    private boolean hasFxomDocument() {
+        return fxomEvents.fxomDocument().get() != null;
+    }
+
+    private void addMessage(GridPane gridPane, String mess) {
+        Label label = new Label(mess);
+        label.getStyleClass().add("inspector-message");
+        GridPane.setHalignment(label, HPos.LEFT);
+        gridPane.add(label, 0, 0, 3, 1);
+    }
+
+    private Set<ValuePropertyMetadata<ValuePropertyMetadataCustomization>> getValuePropertyMetadata() {
+        var values = metadata.queryValueProperties(getSelectedClasses());
+        var disabledProperties = getDisabledPropertiesFromMetadata();
+
+        return values.stream().filter(v -> !disabledProperties.contains(v.getName())).collect(Collectors.toSet());
+    }
+
+    private Set<PropertyName> getDisabledPropertiesFromMetadata() {
+        Set<PropertyName> disabled = new HashSet<>();
+        getSelectedInstances().stream().filter(fxi -> fxi.getParentObject() != null && fxi.getParentProperty() != null)
+                .forEach(fxi -> {
+                    var parent = fxi.getParentObject();
+                    var property = fxi.getParentProperty();
+                    var cpm = metadata.queryComponentProperty(parent.getMetadataClass(), property.getName());
+                    if (cpm != null) {
+                        disabled.addAll(cpm.getDisabledProperties());
+                    }
+                });
+        return disabled;
+    }
+
+    private void clearSections() {
+        // Put all the editors used in the editor pools
+        session.clear();
+
+        // Put all the subSectionTitles used in its pool
+        for (SubSectionTitle subSectionTitle : subSectionTitlesInUse) {
+            subSectionTitlePool.push(subSectionTitle);
+        }
+        subSectionTitlesInUse.clear();
+
+        // Clear section content
+        for (SectionId section : sections) {
+            GridPane content = getSectionContent(section);
+            if (content != null) {
+                getSectionContent(section).getChildren().clear();
+                getSectionContent(section).getRowConstraints().clear();
+            }
+        }
+        allContent.getChildren().clear();
+        allContent.getRowConstraints().clear();
+        searchContent.getChildren().clear();
+        searchContent.getRowConstraints().clear();
+
+        // Set the scrollbars in upper position
+//        propertiesScroll.setVvalue(0);
+//        layoutScroll.setVvalue(0);
+//        codeScroll.setVvalue(0);
+//        allScroll.setVvalue(0);
+//        searchScrollPane.setVvalue(0);
+    }
+
+    private GridPane getSectionContent(SectionId sectionId) {
+        assert sectionId != SectionId.NONE;
+        GridPane gp;
+        switch (sectionId) {
+        case PROPERTIES:
+            gp = propertiesSection;
+            break;
+        case LAYOUT:
+            gp = layoutSection;
+            break;
+        case CODE:
+            gp = codeSection;
+            break;
+        default:
+            throw new IllegalStateException("Unexpected section id " + sectionId); // NOI18N
+        }
+        return gp;
+    }
+
+    private void handleTitledPane(boolean wasExpanded, boolean expanded, SectionId sectionId) {
+        if (!wasExpanded && expanded) {
+            // TitledPane is expanded
+            if (getSectionContent(sectionId).getChildren().isEmpty()) {
+                buildSection(sectionId);
+            }
+        }
+    }
+
+    private Node getSubSectionTitle(String title) {
+        SubSectionTitle subSectionTitle;
+        if (subSectionTitlePool.isEmpty()) {
+//            System.out.println("Creating NEW subsection title...");
+            subSectionTitle = new SubSectionTitle(title);
+        } else {
+//            System.out.println("Getting subsection title from CACHE...");
+            subSectionTitle = subSectionTitlePool.pop();
+            subSectionTitle.setTitle(title);
+        }
+        subSectionTitlesInUse.add(subSectionTitle);
+        return subSectionTitle.getNode();
+    }
+
+//    private AbstractPropertyEditor makePropertyEditor(Class<? extends AbstractEditor> editorClass, ValuePropertyMetadata propMeta) {
+//        AbstractEditor editor;
+//        AbstractPropertyEditor propertyEditor = null;
+//        Stack<AbstractEditor> editorPool = editorPools.get(editorClass);
+//        if ((editorPool != null) && !editorPool.isEmpty()) {
+//            editor = editorPool.pop();
+//            assert isPropertyEditor(editor);
+//            propertyEditor = (AbstractPropertyEditor) editor;
+//        }
+//
+//        propertyEditor = makeOrResetPropertyEditor(editorClass, propMeta, propertyEditor);
+//
+//        editorsInUse.add(propertyEditor);
+//        return propertyEditor;
+//    }
+//
+//    private void resetPropertyEditor(AbstractPropertyEditor propertyEditor) {
+//        assert propertyEditor != null;
+//        makeOrResetPropertyEditor(propertyEditor.getClass(), propertyEditor.getPropertyMeta(), propertyEditor);
+//    }
+//
+//    private AbstractPropertyEditor makeOrResetPropertyEditor(
+//            Class<? extends AbstractEditor> editorClass, ValuePropertyMetadata propMeta, AbstractPropertyEditor propertyEditor) {
+//        AbstractPropertyEditor createdPropertyEditor = propertyEditor;
+//        if (createdPropertyEditor != null) {
+//            createdPropertyEditor.setUpdateFromModel(true);
+//        }
+//        Set<Class<?>> selectedClasses = getSelectedClasses();
+//        if (editorClass == I18nStringEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((I18nStringEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new I18nStringEditor(propMeta, selectedClasses);
+//            }
+//        } else if (editorClass == StringEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((StringEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new StringEditor(propMeta, selectedClasses);
+//            }
+//        } else if (editorClass == DoubleEditor.class) {
+//            assert propMeta instanceof DoublePropertyMetadata;
+//            if (createdPropertyEditor != null) {
+//                createdPropertyEditor.reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new DoubleEditor(propMeta, selectedClasses);
+//            }
+//        } else if (editorClass == IntegerEditor.class) {
+//            assert propMeta instanceof IntegerPropertyMetadata;
+//            IntegerPropertyMetadata integerPropMeta = (IntegerPropertyMetadata) propMeta;
+//            if (createdPropertyEditor != null) {
+//                ((IntegerEditor) createdPropertyEditor).reset(propMeta, selectedClasses,
+//                        getConstants(integerPropMeta), getMin(integerPropMeta), getMax(integerPropMeta));
+//            } else {
+//                createdPropertyEditor = new IntegerEditor(propMeta, selectedClasses,
+//                        getConstants(integerPropMeta), getMin(integerPropMeta), getMax(integerPropMeta));
+//            }
+//        } else if (editorClass == BooleanEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((BooleanEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new BooleanEditor(propMeta, selectedClasses);
+//            }
+//        } else if (editorClass == EnumEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((EnumEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new EnumEditor(propMeta, selectedClasses);
+//            }
+//        } else if (editorClass == InsetsEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((InsetsEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new InsetsEditor(propMeta, selectedClasses);
+//            }
+//        } else if (editorClass == BoundedDoubleEditor.class) {
+//            assert propMeta instanceof DoublePropertyMetadata;
+//            if (createdPropertyEditor != null) {
+//                ((BoundedDoubleEditor) createdPropertyEditor).reset(propMeta, selectedClasses, getSelectedInstances());
+//            } else {
+//                createdPropertyEditor = new BoundedDoubleEditor(propMeta, selectedClasses, getSelectedInstances());
+//            }
+//        } else if (editorClass == RotateEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((RotateEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new RotateEditor(propMeta, selectedClasses);
+//            }
+//        } else if (editorClass == StyleEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((StyleEditor) createdPropertyEditor).reset(propMeta, selectedClasses, getEditorController());
+//            } else {
+//                createdPropertyEditor = new StyleEditor(propMeta, selectedClasses, getEditorController());
+//            }
+//        } else if (editorClass == StyleClassEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((StyleClassEditor) createdPropertyEditor).reset(propMeta, selectedClasses, getSelectedInstances(), getEditorController());
+//            } else {
+//                createdPropertyEditor = new StyleClassEditor(documentManager, propMeta, selectedClasses, getSelectedInstances(), getEditorController());
+//            }
+//        } else if (editorClass == StylesheetEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((StylesheetEditor) createdPropertyEditor).reset(propMeta, selectedClasses, getEditorController().getFxmlLocation());
+//            } else {
+//                createdPropertyEditor = new StylesheetEditor(fileSystem, propMeta, selectedClasses, getEditorController().getFxmlLocation());
+//            }
+//        } else if (editorClass == StringListEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((StringListEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new StringListEditor(propMeta, selectedClasses);
+//            }
+//        } else if (editorClass == FxIdEditor.class) {
+//            String controllerClass = getControllerClass();
+//            if (createdPropertyEditor != null) {
+//                ((FxIdEditor) createdPropertyEditor).reset(getSuggestedFxIds(controllerClass), getEditorController());
+//            } else {
+//                createdPropertyEditor = new FxIdEditor(getSuggestedFxIds(controllerClass), getEditorController());
+//            }
+//        } else if (editorClass == CursorEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((CursorEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new CursorEditor(propMeta, selectedClasses);
+//            }
+//        } else if (editorClass == EventHandlerEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((EventHandlerEditor) createdPropertyEditor).reset(propMeta, selectedClasses, getSuggestedEventHandlers(getControllerClass()));
+//            } else {
+//                createdPropertyEditor = new EventHandlerEditor(propMeta, selectedClasses, getSuggestedEventHandlers(getControllerClass()));
+//            }
+//        } else if (editorClass == FunctionalInterfaceEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                // "getSuggestedEventHandlers" (a method that already existed in SB code) isn't working right. It simply
+//                // returns all the methods in the Controller class regardless of if they are good candidates for
+//                // EventHandlers. We use if because at least this way we'll present all the methods available as
+//                // auto-suggestions.
+//                ((FunctionalInterfaceEditor) createdPropertyEditor).reset(propMeta, selectedClasses, getSuggestedEventHandlers(getControllerClass()));
+//            } else {
+//                createdPropertyEditor = new FunctionalInterfaceEditor(propMeta, selectedClasses, getSuggestedEventHandlers(getControllerClass()));
+//            }
+//        } else if (editorClass == EffectPopupEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((EffectPopupEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new EffectPopupEditor(propMeta, selectedClasses, getEditorController());
+//            }
+//        } else if (editorClass == FontPopupEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((FontPopupEditor) createdPropertyEditor).reset(propMeta, selectedClasses, getEditorController());
+//            } else {
+//                createdPropertyEditor = new FontPopupEditor(propMeta, selectedClasses, getEditorController());
+//            }
+//        } else if (editorClass == PaintPopupEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((PaintPopupEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new PaintPopupEditor(propMeta, selectedClasses, getEditorController());
+//            }
+//        } else if (editorClass == ImageEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((ImageEditor) createdPropertyEditor).reset(propMeta, selectedClasses, getEditorController().getFxmlLocation());
+//            } else {
+//                createdPropertyEditor = new ImageEditor(fileSystem, propMeta, selectedClasses, getEditorController().getFxmlLocation());
+//            }
+//        } else if (editorClass == BoundsPopupEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((BoundsPopupEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new BoundsPopupEditor(propMeta, selectedClasses);
+//            }
+//        } else if (editorClass == Point3DEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((Point3DEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new Point3DEditor(propMeta, selectedClasses);
+//            }
+//        } else if (editorClass == DividerPositionsEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((DividerPositionsEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new DividerPositionsEditor(propMeta, selectedClasses);
+//            }
+//        } else if (editorClass == TextAlignmentEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((TextAlignmentEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new TextAlignmentEditor(propMeta, selectedClasses);
+//            }
+//        } else if (editorClass == KeyCombinationPopupEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((KeyCombinationPopupEditor) createdPropertyEditor).reset(propMeta, selectedClasses, getEditorController());
+//            } else {
+//                createdPropertyEditor = new KeyCombinationPopupEditor(propMeta, selectedClasses, getEditorController());
+//            }
+//        } else if (editorClass == ColumnResizePolicyEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((ColumnResizePolicyEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new ColumnResizePolicyEditor(propMeta, selectedClasses);
+//            }
+//        } else if (editorClass == Rectangle2DPopupEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((Rectangle2DPopupEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new Rectangle2DPopupEditor(propMeta, selectedClasses);
+//            }
+//        } else if (editorClass == ToggleGroupEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((ToggleGroupEditor) createdPropertyEditor).reset(propMeta, selectedClasses, getSuggestedToggleGroups());
+//            } else {
+//                createdPropertyEditor = new ToggleGroupEditor(propMeta, selectedClasses, getSuggestedToggleGroups());
+//            }
+//        } else if (editorClass == ButtonTypeEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((ButtonTypeEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new ButtonTypeEditor(propMeta, selectedClasses);
+//            }
+//        } else if (editorClass == DurationEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                ((DurationEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new DurationEditor(propMeta, selectedClasses);
+//            }
+//        }
+//        else if(editorClass == IncludeFxmlEditor.class) {
+//            createdPropertyEditor = createOrResetIncludeFxmlEditor(createdPropertyEditor, selectedClasses, propMeta);
+//        }
+//        else if(editorClass == CharsetEditor.class) {
+//            createdPropertyEditor = createOrResetCharsetEditor(createdPropertyEditor, selectedClasses, propMeta);
+//        } else if (editorClass == ColorPopupEditor.class) {
+//            if (createdPropertyEditor != null) {
+//                createdPropertyEditor.reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new ColorPopupEditor(propMeta, selectedClasses, getEditorController());
+//            }
+//        }
+//        else {
+//            if (createdPropertyEditor != null) {
+//                ((GenericEditor) createdPropertyEditor).reset(propMeta, selectedClasses);
+//            } else {
+//                createdPropertyEditor = new GenericEditor(propMeta, selectedClasses);
+//            }
+//        }
+//        if(createdPropertyEditor != null)
+//            createdPropertyEditor.setUpdateFromModel(false);
+//
+//        return createdPropertyEditor;
+//    }
+//
+//    private AbstractPropertyEditor createOrResetIncludeFxmlEditor(AbstractPropertyEditor propertyEditor, Set<Class<?>> selectedClasses, ValuePropertyMetadata propMeta) {
+//        AbstractPropertyEditor newPropertyEditor;
+//        if (propertyEditor != null) {
+//            newPropertyEditor = propertyEditor;
+//            propertyEditor.reset(propMeta, selectedClasses);
+//        }
+//        else {
+//            newPropertyEditor = new IncludeFxmlEditor(fileSystem, propMeta, selectedClasses, getEditorController());
+//        }
+//        return newPropertyEditor;
+//    }
+//
+//    private AbstractPropertyEditor createOrResetCharsetEditor(AbstractPropertyEditor propertyEditor, Set<Class<?>> selectedClasses, ValuePropertyMetadata propMeta) {
+//        AbstractPropertyEditor newPropertyEditor = null;
+//        if (propMeta instanceof StringPropertyMetadata) {
+//            if (propertyEditor != null) {
+//                newPropertyEditor = propertyEditor;
+//                ((CharsetEditor) propertyEditor).reset(propMeta, selectedClasses, this.availableCharsets);
+//            } else {
+//                newPropertyEditor = new CharsetEditor(propMeta, selectedClasses, this.availableCharsets);
+//            }
+//        }
+//        return newPropertyEditor;
+//    }
+//
+//    private PropertiesEditor makePropertiesEditor(Class<? extends AbstractEditor> editorClass, ValuePropertyMetadata[] propMetas) {
+//        AbstractEditor editor = null;
+//        PropertiesEditor propertiesEditor;
+//        Stack<AbstractEditor> editorPool = editorPools.get(editorClass);
+//        if ((editorPool != null) && !editorPool.isEmpty()) {
+//            editor = editorPool.pop();
+//            assert isPropertiesEditor(editor);
+//        }
+//
+//        // Only AnchorPane for now
+//        assert editorClass == AnchorPaneConstraintsEditor.class;
+//
+//        if (editor != null) {
+//            assert editor instanceof AnchorPaneConstraintsEditor;
+//            ((AnchorPaneConstraintsEditor) editor).reset(
+//                    propMetas[0], propMetas[1], propMetas[2], propMetas[3], getSelectedInstances());
+//        } else {
+//            editor = new AnchorPaneConstraintsEditor("AnchorPane Constraints", propMetas[0], propMetas[1], propMetas[2], propMetas[3], getSelectedInstances());
+//        }
+//        propertiesEditor = (AnchorPaneConstraintsEditor) editor;
+//
+//        editorsInUse.add(editor);
+//        return propertiesEditor;
+//    }
+
+    private static class SubSectionTitle {
+
+        @FXML
+        private Label titleLb;
+
+        private Parent root;
+
+        public SubSectionTitle(String title) {
+            initialize(title);
+        }
+
+        // Separate method to avoid FindBugs warning
+        private void initialize(String title) {
+//          System.out.println("Loading new SubSection.fxml...");
+            root = FXMLUtils.load(this, "SubSection.fxml");
+            titleLb.setText(title);
+        }
+
+        public void setTitle(String title) {
+            titleLb.setText(title);
+        }
+
+        public Node getNode() {
+            return root;
+        }
+    }
+
+    private void updateClassNameInSectionTitles() {
+        final String intrinsicClassName = "FXOMIntrinsic";
+        String selClass = ""; // NOI18N
+        if (getSelectedClasses().size() > 1) {
+            selClass = getI18n().getString("inspector.sectiontitle.multiple");
+        } else if (getSelectedClasses().size() == 1) {
+            selClass = getSelectedClass().getSimpleName();
+            if (intrinsicClassName.equals(selClass)) {
+                selClass = retrieveNameForIntrinsic();
+            }
+
+        }
+
+        for (TitledPane titledPane : accordion.getPanes()) {
+            Node graphic = titledPane.getGraphic();
+            assert graphic instanceof Label;
+            if (titledPane == allTitledPane) {
+                allTitledPane.setText(null);
+            } else {
+                if (!selClass.isEmpty() && !selClass.startsWith(" :")) { // NOI18N
+                    selClass = " : " + selClass; // NOI18N
+                }
+            }
+            ((Label) graphic).setText(selClass);
+        }
+    }
+
+    private String retrieveNameForIntrinsic() {
+        final String includeTagBinder = "fx:include - ";
+        String source = "";
+        if (getSelectedIntrinsics().iterator().hasNext()) {
+            FXOMIntrinsic fxomIntrinsic = getSelectedIntrinsics().iterator().next();
+            Path p = Paths.get(fxomIntrinsic.getSource());
+            source = includeTagBinder.concat(p.getFileName().toString());
+        }
+        return source;
+    }
+
+    //
+    // Helper methods for SelectionState class
+    //
+    private Set<FXOMElement> getSelectedInstances() {
+        return selectionState.getSelectedInstances();
+    }
+
+    private FXOMObject getSelectedObject() {
+        if (getSelectedInstances().size() == 1) {
+            return (FXOMInstance) getSelectedInstances().toArray()[0];
+        } else if (getSelectedIntrinsics().size() == 1) {
+            return (FXOMIntrinsic) getSelectedIntrinsics().toArray()[0];
+        }
+        return null;
+    }
+
+    private Set<FXOMElement> getUnresolvedInstances() {
+        return selectionState.getUnresolvedInstances();
+    }
+
+    private Set<Class<?>> getSelectedClasses() {
+        return selectionState.getSelectedClasses();
+    }
+
+    private Class<?> getSelectedClass() {
+        assert getSelectedClasses().size() == 1;
+        return (Class<?>) getSelectedClasses().toArray()[0];
+    }
+
+    private Class<?> getCommonParent() {
+        return selectionState.getCommonParentClass();
+    }
+
+    /*
+     * Set the focus to a given property value editor, and move the scrolllbar so
+     * that it is visible. Typically used by CSS analyzer.
+     */
+    @Override
+    public void setFocusToEditor(ValuePropertyMetadata<ValuePropertyMetadataCustomization> propMeta) {
+
+        // Expand the inspector section
+        String inspectorSection = propMeta.getCustomization().getInspectorPath().getSectionTag();
+        if (inspectorSection.equalsIgnoreCase("properties")) { // NOI18N
+            setExpandedSection(SectionId.PROPERTIES);
+        } else if (inspectorSection.equalsIgnoreCase("layout")) {// NOI18N
+            setExpandedSection(SectionId.LAYOUT);
+        } else if (inspectorSection.equalsIgnoreCase("code")) {// NOI18N
+            setExpandedSection(SectionId.CODE);
+        }
+
+        // Retrieve the editor
+        PropertyEditor editor = session.find(propMeta.getName());
+
+        if (editor == null) {
+            // editor not found
+            return;
+        }
+
+        final PropertyEditor editorToFocus = editor;
+
+        final Node valueEditorNode = editorToFocus.getValueEditor();
+        // Search the ScrollPane
+        ScrollPane sp = null;
+        Node node = valueEditorNode.getParent();
+        while (node != null) {
+            if (node instanceof ScrollPane) {
+                sp = (ScrollPane) node;
+                break;
+            }
+            node = node.getParent();
+        }
+        if (sp == null) {
+            return;
+        }
+
+        // Position the scrollBar such as the editor is centered in the TitledPane (when
+        // possible)
+        final ScrollPane scrollPane = sp;
+        double editorHeight = valueEditorNode.getLayoutBounds().getHeight();
+        final Point2D pt = CoordinateHelper.localToLocal(valueEditorNode, 0, 0, scrollPane.getContent());
+        // viewport height
+        double vpHeight = scrollPane.getViewportBounds().getHeight();
+        // Position of the editor in the scrollPane content
+        double selY = pt.getY();
+        // Height of the scrollPane content
+        double contentHeight = scrollPane.getContent().getLayoutBounds().getHeight();
+        // Position of the middle point of the scrollPane content
+        double contentMiddle = contentHeight / 2;
+        // Manage the editor height depending on its position
+        if (selY > contentMiddle) {
+            selY += editorHeight;
+        } else {
+            selY -= editorHeight;
+        }
+        // Compute the move to apply to position the editor on the middle of the
+        // scrollPane content
+        double moveContent = selY - contentMiddle;
+        // Size ratio between scrollPane content and viewport
+        double vpRatio = contentHeight / vpHeight;
+        // Move to apply to the editor to position it in the middle of the viewport
+        double moveVp = moveContent / vpRatio;
+        // Position of the editor in the viewport
+        double selYVp = (vpHeight / 2) + moveVp;
+        // Position in percent
+        double scrollPos = selYVp / vpHeight;
+        // Finally, set the scrollBar position
+        scrollPane.setVvalue(scrollPos);
+
+        // Set the focus to the editor
+        editorToFocus.requestFocus();
+    }
+
+    @Override
+    public ViewSearch getSearchController() {
+        return viewSearch;
+    }
+
+    @Override
+    public void onShow() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onHidden() {
+        // TODO Auto-generated method stub
+
+    }
+}

@@ -1,0 +1,154 @@
+/*
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
+ * All rights reserved. Use is subject to license terms.
+ *
+ * This file is available and licensed under the following license:
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  - Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *  - Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the distribution.
+ *  - Neither the name of Oracle Corporation and Gluon nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+package com.oracle.javafx.scenebuilder.tools.job.gridpane;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroup;
+import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchSelectionJob;
+import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
+import com.gluonhq.jfxapps.core.api.job.Job;
+import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
+import com.gluonhq.jfxapps.core.api.job.JobFactory;
+import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
+import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.gluonhq.jfxapps.core.metadata.property.value.list.ColumnConstraintsListPropertyMetadata;
+import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
+
+import javafx.scene.layout.GridPane;
+
+/**
+ * Insert "insertCount" columns into the provided {@link GridPane} at the
+ * specified "columnIndex"<br/>
+ * Specific to {@link GridPane}
+ */
+public final class InsertColumnJob extends BatchSelectionJob {
+
+    private static final ColumnConstraintsListPropertyMetadata<?> columnContraintsMeta = new ColumnConstraintsListPropertyMetadata.Builder<>()
+            .name(new PropertyName("columnConstraints")) // NOCHECK
+            .readWrite(true).defaultValue(Collections.emptyList()).build();
+
+    private FXOMInstance gridPaneObject;
+    private int columnIndex;
+    private int insertCount;
+
+    private final InsertColumnConstraintsJob.Factory insertColumnConstraintsJobFactory;
+    private final MoveColumnContentJob.Factory moveColumnContentJobFactory;
+    private final GridSelectionGroup.Factory griObjectSelectionGroup;
+
+    // @formatter:off
+    protected InsertColumnJob(
+            JobExtensionFactory extensionFactory,
+            FxomEvents documentManager,
+            Selection selection,
+            InsertColumnConstraintsJob.Factory insertColumnConstraintsJobFactory,
+            MoveColumnContentJob.Factory moveColumnContentJobFactory,
+            GridSelectionGroup.Factory griObjectSelectionGroup) {
+    // @formatter:on
+        super(extensionFactory, documentManager, selection);
+        this.insertColumnConstraintsJobFactory = insertColumnConstraintsJobFactory;
+        this.moveColumnContentJobFactory = moveColumnContentJobFactory;
+        this.griObjectSelectionGroup = griObjectSelectionGroup;
+    }
+
+    protected void setJobParameters(FXOMObject gridPaneObject, int columnIndex, int insertCount) {
+        assert gridPaneObject instanceof FXOMInstance;
+        assert gridPaneObject.getSceneGraphObject().isInstanceOf(GridPane.class);
+        assert columnIndex >= 0;
+        assert columnIndex <= columnContraintsMeta.getValue((FXOMInstance) gridPaneObject).size();
+        assert insertCount >= 1;
+
+        this.gridPaneObject = (FXOMInstance) gridPaneObject;
+        this.columnIndex = columnIndex;
+        this.insertCount = insertCount;
+    }
+
+    /*
+     * CompositeJob
+     */
+
+    @Override
+    protected List<Job> makeSubJobs() {
+        final List<Job> result = new ArrayList<>();
+
+        final Job insertJob = insertColumnConstraintsJobFactory.getJob(gridPaneObject, columnIndex, insertCount);
+        result.add(insertJob);
+
+        final int lastColumnIndex = columnContraintsMeta.getValue(gridPaneObject).size() - 1;
+        for (int c = lastColumnIndex; c >= columnIndex; c--) {
+            final Job moveJob = moveColumnContentJobFactory.getJob(gridPaneObject, c, insertCount);
+            if (moveJob.isExecutable()) {
+                result.add(moveJob);
+            } // else column is empty : no children to move
+        }
+
+        return result;
+    }
+
+    @Override
+    protected String makeDescription() {
+        return getClass().getSimpleName();
+    }
+
+    @Override
+    protected SelectionGroup getNewSelectionGroup() {
+        return griObjectSelectionGroup.getGroup(gridPaneObject, GridSelectionGroup.Type.COLUMN, columnIndex);
+    }
+
+    @ApplicationInstanceSingleton
+    public final static class Factory extends JobFactory<InsertColumnJob> {
+        public Factory(EmContext sbContext) {
+            super(sbContext);
+        }
+
+        /**
+         * Create an {@link InsertColumnJob} job.
+         *
+         * @param gridPaneObject the target grid pane object
+         * @param columnIndex    the column index where the insertion will take place
+         * @param insertCount    the number of column to insert
+         * @return the job to execute
+         */
+        public InsertColumnJob getJob(FXOMObject gridPaneObject, int columnIndex, int insertCount) {
+            return create(InsertColumnJob.class, j -> j.setJobParameters(gridPaneObject, columnIndex, insertCount));
+        }
+    }
+}

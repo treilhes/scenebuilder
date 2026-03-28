@@ -1,0 +1,36 @@
+name: Scene Builder PR Verify
+on:
+  pull_request:
+
+env:
+  JAVA_RELEASE: '24'
+  JAVA_VERSION: 'latest'
+
+jobs:
+  verify:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: oracle-actions/setup-java@v1.4.0
+        with:
+          website: jdk.java.net
+          release: ${{ env.JAVA_RELEASE }}
+          version: ${{ env.JAVA_VERSION }}
+
+      - name: Run Tests (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          export DISPLAY=:90
+          Xvfb -ac :90 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+          mvn clean verify checkstyle:checkstyle --no-transfer-progress -X
+      - name: Run Tests (MacOS / Windows)
+        if: runner.os != 'Linux'
+        run: |
+          mvn clean verify checkstyle:checkstyle --no-transfer-progress

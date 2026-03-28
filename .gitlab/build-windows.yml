@@ -1,0 +1,7 @@
+build-job:       # This job runs in the build stage, which runs first.
+  tags:
+    - windows-gui
+  stage: build
+  script:
+    - echo "$MVN_SETTINGS_NEXUS" > ~/.m2/settings.xml
+    - mvn -B -ntp clean deploy checkstyle:checkstyle
