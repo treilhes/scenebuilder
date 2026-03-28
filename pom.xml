@@ -529,9 +529,7 @@
         <profile>
             <id>headless</id>
             <activation>
-                <os>
-                    <family>Windows</family>
-                </os>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
                 <glass.platform>Headless</glass.platform>
