@@ -16,14 +16,6 @@
     </properties>
 
     <dependencies>
-        <!-- The goal for this dependency is to force the build of
-        scenebuilder.metadata-maven-plugin into the maven reactor -->
-        <dependency>
-            <groupId>com.treilhes.jfxplace</groupId>
-            <artifactId>jfxplace-fxom-metadata-maven-plugin</artifactId>
-            <version>${jfxplace.version}</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>com.treilhes.scenebuilder</groupId>
             <artifactId>scenebuilder.metadata.javafx.customization</artifactId>
