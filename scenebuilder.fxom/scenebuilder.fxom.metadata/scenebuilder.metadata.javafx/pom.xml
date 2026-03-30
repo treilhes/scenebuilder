@@ -12,7 +12,9 @@
     <module>scenebuilder.metadata.javafx.customization</module>
     <module>scenebuilder.metadata.javafx.data</module>
     <module>scenebuilder.metadata.javafx.11</module>
+    <module>scenebuilder.metadata.javafx.15</module>
     <module>scenebuilder.metadata.javafx.22</module>
+    <module>scenebuilder.metadata.javafx.26</module>
   </modules>
   
   <dependencies>
