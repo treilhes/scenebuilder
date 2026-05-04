@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.api.dnd;
 
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DropTarget;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
 
 public interface SbDropTargetFactory {
 

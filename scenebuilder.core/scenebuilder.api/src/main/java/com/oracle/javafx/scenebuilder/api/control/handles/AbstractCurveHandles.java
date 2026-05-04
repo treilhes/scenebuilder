@@ -33,10 +33,10 @@
  */
 package com.oracle.javafx.scenebuilder.api.control.handles;
 
-import com.gluonhq.jfxapps.core.api.fxom.gesture.DiscardGesture;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.api.fxom.gesture.DiscardGesture;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;

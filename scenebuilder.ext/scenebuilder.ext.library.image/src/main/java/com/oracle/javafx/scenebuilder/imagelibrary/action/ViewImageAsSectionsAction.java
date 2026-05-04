@@ -38,14 +38,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelController;
 import com.oracle.javafx.scenebuilder.imagelibrary.preferences.global.ImageDisplayModePreference;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
 
 @ApplicationInstanceSingleton
 @Lazy
@@ -63,7 +63,7 @@ import com.oracle.javafx.scenebuilder.imagelibrary.preferences.global.ImageDispl
 @Accelerator(accelerator = "CTRL+S", whenFocusing = ImageLibraryPanelController.class)
 public class ViewImageAsSectionsAction extends AbstractAction {
 
-    public final static String MENU_ID = "viewAsSectionMenu";
+    public static final String MENU_ID = "viewAsSectionMenu";
 
     private final ImageLibraryPanelController libraryPanelController;
     private final ImageDisplayModePreference displayModePreference;

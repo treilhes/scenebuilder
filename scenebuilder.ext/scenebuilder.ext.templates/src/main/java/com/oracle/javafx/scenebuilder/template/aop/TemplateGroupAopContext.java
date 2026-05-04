@@ -37,56 +37,26 @@ import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
+import org.springframework.core.annotation.AnnotationUtils;
 
-import com.treilhes.emc4j.boot.api.aop.AopContext;
-import com.treilhes.emc4j.boot.api.aop.AopFactoryBean;
-import com.treilhes.emc4j.boot.api.aop.AopMetadata;
-import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroupContext;
+import com.treilhes.emc4j.boot.api.aop.AopContext;
+import com.treilhes.emc4j.boot.api.aop.AopFactory;
+import com.treilhes.emc4j.boot.api.aop.AopFactoryBean;
+import com.treilhes.emc4j.boot.api.aop.AopMetadata;
+import com.treilhes.emc4j.boot.api.aop.DefaultMethodInterceptor;
+import com.treilhes.emc4j.boot.api.aop.ImplementationInterceptor;
+import com.treilhes.emc4j.boot.api.context.EmContext;
 
-public class TemplateGroupAopContext extends AopContext<TemplateGroup, TemplateGroupContext, TemplateGroupAopContext.TemplateGroupMetadata> {
+public class TemplateGroupAopContext extends AopContext<TemplateGroup> {
 
     public TemplateGroupAopContext() {
-        super(TemplateGroup.class, TemplateGroupContext.class);
+        super(TemplateGroup.class);
     }
 
-    @Override
-    public TemplateGroupAopContext.TemplateGroupMetadata loadMetadata(Class<?> clazz) {
-        return new TemplateGroupMetadata(getContexAnnotationClass(), getMarkerClass(), clazz);
-    }
-
-    @Override
-    public TemplateGroup createTarget(EmContext context, TemplateGroupMetadata metadata) {
-
-        var id = metadata.getId();
-        var name = metadata.getName();
-        var orderKey = metadata.getOrderKey();
-        return new BaseTemplateGroup(id, name, orderKey);
-    }
-
-    @Override
-    public Class<? extends AopFactoryBean<TemplateGroup, TemplateGroupMetadata>> factoryBeanClass() {
-        return TemplateGroupFactoryBean.class;
-    }
-
-
-    @Override
-    public <EX extends Annotation> Class<EX> getExclusionAnnotation() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public static class TemplateGroupFactoryBean extends AopFactoryBean<TemplateGroup, TemplateGroupMetadata> {
-
-        public TemplateGroupFactoryBean(Class<?> preferenceInterface) {
-            super(preferenceInterface, new TemplateGroupAopContext());
-        }
-
-    }
 
     @Override
     public boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
@@ -100,9 +70,59 @@ public class TemplateGroupAopContext extends AopContext<TemplateGroup, TemplateG
         return isPreference && isInterface && isNonPreferenceInterface && hasContextAnnotation;
     }
 
-    public class BaseTemplateGroup implements TemplateGroup {
+    @Override
+    public Class<? extends AopFactoryBean<TemplateGroup>> factoryBeanClass() {
+        return TemplateGroupFactoryBean.class;
+    }
 
-        private static final Logger logger = LoggerFactory.getLogger(BaseTemplateGroup.class);
+
+    @Override
+    public <E extends Annotation> Class<E> getExclusionAnnotation() {
+        // no exclusion annotation for template groups
+        return null;
+    }
+
+    @Override
+    public Object createProxy(AopFactory aopFactory, EmContext context, AopMetadata metadata) {
+        var templateInterface = metadata.getBeanClass();
+
+        aopFactory.addRead(templateInterface);
+
+        var preference = createTarget(templateInterface);
+
+        // Create proxy
+        var result = new ProxyFactory();
+        result.setTarget(preference);
+        result.setInterfaces(templateInterface);
+        result.addAdvice(new DefaultMethodInterceptor());
+        result.addAdvice(new ImplementationInterceptor(preference, templateInterface));
+
+        return result.getProxy(templateInterface.getClassLoader());
+    }
+
+    public TemplateGroup createTarget(Class<?> templateGroupInterface) {
+
+        var annotation = AnnotationUtils.findAnnotation(templateGroupInterface, TemplateGroupContext.class);
+
+        if (annotation == null) {
+            throw new IllegalStateException("Template group interface " + templateGroupInterface.getName() + " must be annotated with @TemplateGroupContext");
+        }
+
+        var id = UUID.fromString(annotation.id());
+        var name = annotation.name();
+        var orderKey = annotation.orderKey();
+
+        return new BaseTemplateGroup(id, name, orderKey);
+    }
+
+
+    public static class TemplateGroupFactoryBean extends AopFactoryBean<TemplateGroup> {
+        public TemplateGroupFactoryBean(Class<?> templateGroupInterface) {
+            super(templateGroupInterface, new TemplateGroupAopContext());
+        }
+    }
+
+    public class BaseTemplateGroup implements TemplateGroup {
 
         private final UUID id;
         private final String name;
@@ -130,42 +150,6 @@ public class TemplateGroupAopContext extends AopContext<TemplateGroup, TemplateG
         }
 
         @Override
-        public String getOrderKey() {
-            return orderKey;
-        }
-    }
-
-    public static class TemplateGroupMetadata extends AopMetadata<TemplateGroupContext, TemplateGroup> {
-
-        private UUID id;
-        private String name;
-        private String orderKey;
-
-        public TemplateGroupMetadata(Class<TemplateGroupContext> annotationClass, Class<TemplateGroup> markerClass, Class<?> preferenceInterface) {
-            super(annotationClass, markerClass, preferenceInterface);
-        }
-
-        @Override
-        protected void loadMetadata(TemplateGroupContext annotation) {
-            if (hasAnnotation()) {
-                this.id = UUID.fromString(annotation.id());
-                this.name = annotation.name();
-                this.orderKey = annotation.orderKey();
-            } else {
-                this.id = null;
-                this.name = null;
-                this.orderKey = null;
-            }
-        }
-
-        public UUID getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
         public String getOrderKey() {
             return orderKey;
         }

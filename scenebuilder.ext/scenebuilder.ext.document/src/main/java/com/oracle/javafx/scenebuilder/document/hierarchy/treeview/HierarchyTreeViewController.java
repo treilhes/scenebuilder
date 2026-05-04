@@ -45,19 +45,19 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.fxom.mask.Accessory;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyPanel;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyCellAssignment;
 import com.oracle.javafx.scenebuilder.document.hierarchy.display.MetadataInfoDisplayOption;
 import com.oracle.javafx.scenebuilder.document.hierarchy.item.HierarchyItemAccessory;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.fxom.mask.Accessory;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlController;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.collections.ObservableList;
 import javafx.event.EventTarget;
@@ -136,8 +136,7 @@ public class HierarchyTreeViewController extends AbstractFxmlController implemen
         final Control panelControl = getTreeView();
         final Set<Node> scrollBars = panelControl.lookupAll(".scroll-bar"); //NOCHECK
         for (Node node : scrollBars) {
-            if (node instanceof ScrollBar) {
-                final ScrollBar scrollBar = (ScrollBar) node;
+            if (node instanceof ScrollBar scrollBar) {
                 if (scrollBar.getOrientation() == orientation) {
                     return scrollBar;
                 }

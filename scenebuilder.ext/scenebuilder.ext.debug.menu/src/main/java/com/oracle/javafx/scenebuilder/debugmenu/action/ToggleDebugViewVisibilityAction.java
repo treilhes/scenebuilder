@@ -46,17 +46,17 @@ import org.springframework.context.annotation.Lazy;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.DockViewController;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.View;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.ViewAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBuilder;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -67,7 +67,7 @@ import javafx.scene.image.ImageView;
 @ActionMeta(nameKey = "action.name.toggle.view", descriptionKey = "action.description.toggle.view")
 public class ToggleDebugViewVisibilityAction extends AbstractToggleViewVisibilityAction {
 
-    private final static Logger logger = LoggerFactory.getLogger(ToggleDebugViewVisibilityAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(ToggleDebugViewVisibilityAction.class);
 
     public ToggleDebugViewVisibilityAction(
             ActionExtensionFactory extensionFactory,
@@ -78,8 +78,8 @@ public class ToggleDebugViewVisibilityAction extends AbstractToggleViewVisibilit
     @ApplicationInstanceSingleton
     public class ViewMenuProvider implements MenuItemProvider {
 
-        private final static String DEBUG_MENU_ID = "debugMenu";
-        private final static String SHOW_DEBUG_VIEW_MENU_ID = "showDebugViewMenuItem";
+        private static final String DEBUG_MENU_ID = "debugMenu";
+        private static final String SHOW_DEBUG_VIEW_MENU_ID = "showDebugViewMenuItem";
 
         private final DockViewController dockViewController;
         private final MenuBuilder menuBuiler;

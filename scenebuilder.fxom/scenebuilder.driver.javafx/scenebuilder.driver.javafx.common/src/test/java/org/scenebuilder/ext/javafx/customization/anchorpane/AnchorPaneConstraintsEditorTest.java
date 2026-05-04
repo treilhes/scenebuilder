@@ -49,12 +49,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.scenebuilder.ext.javafx.customization.anchorpane.AnchorPaneConstraintsEditor.ConstraintEditor;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.scenebuilder.metadata.property.value.DoublePropertyMetadata;
-import com.gluonhq.scenebuilder.metadata.property.value.DoublePropertyMetadata.NullableCoordinateDoublePropertyMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.addon.AnchorPropertyGroupMetadata;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.SelectionState;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.core.metadata.property.base.DoublePropertyMetadata;
+import com.treilhes.jfxplace.core.metadata.property.base.DoublePropertyMetadata.NullableCoordinateDoublePropertyMetadata;
 
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;

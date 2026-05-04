@@ -33,18 +33,18 @@
  */
 package com.oracle.javafx.scenebuilder.menu.main.modify;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.action.AbstractJobAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.annotation.ContextMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.selection.SbSelectionJobsFactory;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.action.AbstractJobAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.ctxmenu.annotation.ContextMenuItemAttachment;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.job.JobManager;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 
 @ApplicationInstancePrototype
 @ActionMeta(
@@ -65,8 +65,8 @@ import com.oracle.javafx.scenebuilder.api.selection.SbSelectionJobsFactory;
 @Accelerator(accelerator = "CTRL+SHIFT+K")
 public class UseComputedSizeAction extends AbstractJobAction {
 
-    public final static String MENU_ID = "useComputedSizesMenuItem";
-    public final static String TITLE = "menu.title.use.computed.sizes";
+    public static final String MENU_ID = "useComputedSizesMenuItem";
+    public static final String TITLE = "menu.title.use.computed.sizes";
 
     public UseComputedSizeAction(
             I18N i18n,

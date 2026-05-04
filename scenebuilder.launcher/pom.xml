@@ -61,7 +61,7 @@
     
     <profiles>
         <profile>
-            <id>local</id>
+            <id>minimal</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
@@ -83,7 +83,67 @@
                                 <groupId>com.gluonhq.jfxapps</groupId>
                                 <artifactId>scenebuilder.registry</artifactId>
                                 <version>${scenebuilder.version}</version>
-                                <localFolder>${basedir}/src/main/resources/registry</localFolder>
+                                <localFolder>${basedir}/src/main/resources/registries/minimal</localFolder>
+                            </registry>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>all-cores</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.treilhes.jfxplace</groupId>
+                        <artifactId>jfxplace-maven-plugin</artifactId>
+                        <version>${jfxplace.version}</version>
+                        <configuration>
+                            <jfxplaceVersion>${jfxplace.version}</jfxplaceVersion>
+                            <clean>${clean}</clean>
+                            <debug>${debug}</debug>
+                            <profiles>
+                                <profile>devlookup,scenebuilder</profile>
+                            </profiles>
+                            <applicationId>06ae1f67-a8aa-49e3-abb5-4f108534578c</applicationId>
+                            <registry>
+                                <groupId>com.gluonhq.jfxapps</groupId>
+                                <artifactId>scenebuilder.registry</artifactId>
+                                <version>${scenebuilder.version}</version>
+                                <localFolder>${basedir}/src/main/resources/registries/all-cores</localFolder>
+                            </registry>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>all-cores-and-extensions</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.treilhes.jfxplace</groupId>
+                        <artifactId>jfxplace-maven-plugin</artifactId>
+                        <version>${jfxplace.version}</version>
+                        <configuration>
+                            <jfxplaceVersion>${jfxplace.version}</jfxplaceVersion>
+                            <clean>${clean}</clean>
+                            <debug>${debug}</debug>
+                            <profiles>
+                                <profile>devlookup,scenebuilder</profile>
+                            </profiles>
+                            <applicationId>06ae1f67-a8aa-49e3-abb5-4f108534578c</applicationId>
+                            <registry>
+                                <groupId>com.gluonhq.jfxapps</groupId>
+                                <artifactId>scenebuilder.registry</artifactId>
+                                <version>${scenebuilder.version}</version>
+                                <localFolder>${basedir}/src/main/resources/registries/all-cores-and-extensions</localFolder>
                             </registry>
                         </configuration>
                     </plugin>

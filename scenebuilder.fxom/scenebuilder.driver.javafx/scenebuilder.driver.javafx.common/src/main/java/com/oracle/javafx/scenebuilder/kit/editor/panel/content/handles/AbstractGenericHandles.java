@@ -35,18 +35,18 @@ package com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractGesture;
-import com.gluonhq.jfxapps.core.api.fxom.gesture.CardinalPoint;
-import com.gluonhq.jfxapps.core.api.fxom.gesture.DiscardGesture;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture.Factory;
+import com.treilhes.jfxplace.core.api.fxom.gesture.AbstractGesture;
+import com.treilhes.jfxplace.core.api.fxom.gesture.CardinalPoint;
+import com.treilhes.jfxplace.core.api.fxom.gesture.DiscardGesture;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.util.MathUtils;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;

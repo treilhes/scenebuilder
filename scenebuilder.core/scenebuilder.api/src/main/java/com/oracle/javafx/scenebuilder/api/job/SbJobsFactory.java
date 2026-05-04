@@ -35,14 +35,14 @@ package com.oracle.javafx.scenebuilder.api.job;
 
 import java.util.Map;
 
-import com.gluonhq.jfxapps.core.api.Size;
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
-import com.gluonhq.jfxapps.core.fxom.FXOMNode;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
+import com.treilhes.jfxplace.core.api.Size;
+import com.treilhes.jfxplace.core.api.job.Job;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMIntrinsic;
+import com.treilhes.jfxplace.core.fxom.FXOMNode;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.FXOMPropertyT;
 
 import javafx.geometry.Point2D;
 import javafx.scene.control.ToggleGroup;

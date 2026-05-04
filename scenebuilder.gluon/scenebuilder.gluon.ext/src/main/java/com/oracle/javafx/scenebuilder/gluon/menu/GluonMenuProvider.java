@@ -42,11 +42,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.treilhes.emc4j.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.action.ActionFactory;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.action.ActionFactory;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
@@ -64,8 +64,8 @@ import javafx.scene.control.ToggleGroup;
 @Scope(SceneBuilderBeanFactory.SCOPE_DOCUMENT)
 public class GluonMenuProvider implements MenuItemProvider {
 
-    private final static String THEME_MENU_ID = "themeMenu";
-    private final static String ABOUT_MENU_ID = "aboutMenuItem";
+    private static final String THEME_MENU_ID = "themeMenu";
+    private static final String ABOUT_MENU_ID = "aboutMenuItem";
     private final GluonSwatchDocumentPreference gluonSwatchPreference;
     private final ThemeDocumentPreference themePreference;
     private final ActionFactory actionFactory;

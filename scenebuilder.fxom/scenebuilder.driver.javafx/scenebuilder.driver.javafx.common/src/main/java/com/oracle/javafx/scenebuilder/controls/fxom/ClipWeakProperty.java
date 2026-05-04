@@ -1,6 +1,6 @@
 package com.oracle.javafx.scenebuilder.controls.fxom;
 
-import com.gluonhq.jfxapps.core.fxom.ext.WeakProperty;
+import com.treilhes.jfxplace.core.fxom.ext.WeakProperty;
 
 import javafx.scene.Node;
 

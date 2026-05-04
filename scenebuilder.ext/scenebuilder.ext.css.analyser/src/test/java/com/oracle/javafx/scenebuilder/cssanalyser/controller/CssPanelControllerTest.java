@@ -35,6 +35,7 @@ package com.oracle.javafx.scenebuilder.cssanalyser.controller;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -50,24 +51,25 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
-import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSource;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelectionGroup;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.tooltheme.ToolStylesheetProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
-import com.gluonhq.jfxapps.test.JfxAppsTest;
-import com.gluonhq.jfxapps.test.StageBuilder;
-import com.gluonhq.jfxapps.test.StageType;
-import com.oracle.javafx.scenebuilder.api.SbEditor;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController.Delegate;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.NodeCssState.CssProperty;
+import com.oracle.javafx.scenebuilder.cssanalyser.mode.PickModeController;
 import com.oracle.javafx.scenebuilder.cssanalyser.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
+import com.treilhes.jfxplace.core.api.fs.FileSystem;
+import com.treilhes.jfxplace.core.api.fxom.content.mode.ModeManager;
+import com.treilhes.jfxplace.core.api.fxom.dnd.Drag;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DragSource;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelectionGroup;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
+import com.treilhes.jfxplace.core.api.tooltheme.ToolStylesheetProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.ViewSearch;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenu;
+import com.treilhes.jfxplace.core.fxom.pipeline.FXOMDocumentFactory;
+import com.treilhes.jfxplace.testold.JfxAppsTest;
+import com.treilhes.jfxplace.testold.StageBuilder;
+import com.treilhes.jfxplace.testold.StageType;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -76,6 +78,8 @@ import javafx.beans.property.SimpleStringProperty;
 @JfxAppsTest
 @ContextConfiguration(classes = { CssPanelControllerTest.Config.class, CssPanelController.class })
 class CssPanelControllerTest {
+
+
 
     @TestConfiguration
     static class Config {
@@ -92,11 +96,11 @@ class CssPanelControllerTest {
         FxomSelection selection() {
             return Mockito.mock(FxomSelection.class);
         }
-
-        @Bean
-        SbEditor editor() {
-            return Mockito.mock(SbEditor.class);
-        }
+//
+//        @Bean
+//        SbEditor editor() {
+//            return Mockito.mock(SbEditor.class);
+//        }
 
         @Bean
         Delegate delegate() {
@@ -127,6 +131,16 @@ class CssPanelControllerTest {
         ViewMenu viewMenuController() {
             return Mockito.mock(ViewMenu.class);
         }
+
+        @Bean
+        ModeManager modeManager() {
+            return Mockito.mock(ModeManager.class);
+        }
+
+        @Bean
+        PickModeController pickModeController() {
+            return Mockito.mock(PickModeController.class);
+        }
     }
 
     @Autowired
@@ -136,7 +150,10 @@ class CssPanelControllerTest {
     ViewSearch viewSearch;
 
     @Autowired
-    SbEditor editor;
+    PickModeController pickMode;
+
+    @Autowired
+    ModeManager modeManager;
 
     @Autowired
     Drag drag;
@@ -156,7 +173,8 @@ class CssPanelControllerTest {
         when(cssTableColumnsOrderingReversedPreference.getValue()).thenReturn(true);
         when(cssTableColumnsOrderingReversedPreference.getObservableValue()).thenReturn(new SimpleBooleanProperty(true));
         when(viewSearch.textProperty()).thenReturn(new SimpleStringProperty(""));
-        when(editor.pickModeEnabledProperty()).thenReturn(new SimpleBooleanProperty(false));
+        when(modeManager.isModeEnabled(any())).thenReturn(true);
+        when(pickMode.activeProperty()).thenReturn(new SimpleBooleanProperty(true));
         when(drag.dragSourceProperty()).thenReturn(new SimpleObjectProperty<DragSource>(null));
 
         var testStage = builder
@@ -185,7 +203,8 @@ class CssPanelControllerTest {
         when(cssTableColumnsOrderingReversedPreference.getValue()).thenReturn(true);
         when(cssTableColumnsOrderingReversedPreference.getObservableValue()).thenReturn(new SimpleBooleanProperty(true));
         when(viewSearch.textProperty()).thenReturn(new SimpleStringProperty(""));
-        when(editor.pickModeEnabledProperty()).thenReturn(new SimpleBooleanProperty(false));
+        when(modeManager.isModeEnabled(any())).thenReturn(false);
+        when(pickMode.activeProperty()).thenReturn(new SimpleBooleanProperty(false));
         when(drag.dragSourceProperty()).thenReturn(new SimpleObjectProperty<DragSource>(null));
         when(group.getItems()).thenReturn(Set.of(document.getFxomRoot()));
         when(selection.getGroup()).thenReturn(group);
@@ -219,7 +238,6 @@ class CssPanelControllerTest {
         // check that the builtin -fx-background-color property is defined
         assertTrue(fxBackgroundColor.get().builtinState().isNotNull().get());
 
-        System.out.println();
     }
 
 }

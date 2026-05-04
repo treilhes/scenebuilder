@@ -38,10 +38,10 @@ import java.util.function.Consumer;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.treilhes.emc4j.boot.api.context.annotation.OverrideBean;
 import com.treilhes.emc4j.boot.api.context.annotation.OverridedBeanAware;
-import com.gluonhq.jfxapps.core.api.action.Action;
-import com.gluonhq.jfxapps.core.api.application.ApplicationActionFactory;
-import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
-import com.gluonhq.jfxapps.core.api.application.InstancesManager;
+import com.treilhes.jfxplace.core.api.action.Action;
+import com.treilhes.jfxplace.core.api.application.ApplicationActionFactory;
+import com.treilhes.jfxplace.core.api.application.ApplicationInstance;
+import com.treilhes.jfxplace.core.api.application.InstancesManager;
 import com.oracle.javafx.scenebuilder.welcome.action.ShowWelcomeDialogAction;
 
 @ApplicationSingleton

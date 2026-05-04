@@ -40,11 +40,11 @@ import java.util.List;
 import org.springframework.context.annotation.Lazy;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.action.ActionFactory;
-import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
+import com.treilhes.jfxplace.core.api.action.ActionFactory;
+import com.treilhes.jfxplace.core.api.fs.FileSystem;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
+import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.ext.i18n.actions.ApplyI18nContentAction;
 import com.oracle.javafx.scenebuilder.ext.i18n.preference.I18NResourcePreference;
 

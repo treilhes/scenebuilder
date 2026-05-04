@@ -35,7 +35,7 @@ import com.oracle.javafx.scenebuilder.app.ScenebuilderAppExtension;
 import com.treilhes.emc4j.boot.api.loader.extension.Extension;
 
 open module scenebuilder.core.app {
-    exports com.oracle.javafx.scenebuilder.app;
+    exports com.oracle.javafx.scenebuilder.app.editors;
     exports com.oracle.javafx.scenebuilder.app.i18n;
     exports com.oracle.javafx.scenebuilder.app.doc;
 
@@ -46,6 +46,7 @@ open module scenebuilder.core.app {
 
     requires jakarta.inject;
     requires jfxplace.core.controls;
+    requires jfxplace.fxom.editors;
 
     provides Extension with ScenebuilderAppExtension;
 }

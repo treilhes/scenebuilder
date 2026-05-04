@@ -35,11 +35,10 @@ package com.oracle.javafx.scenebuilder.api.selection;
 
 import java.io.File;
 
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.treilhes.jfxplace.core.api.job.Job;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.FXOMProperty;
 
 import javafx.scene.layout.AnchorPane;
 
@@ -52,24 +51,6 @@ public interface SbSelectionJobsFactory {
      * @return the job to execute
      */
     Job fitToParentSelection();
-
-    /**
-     * This job set the property defined by the provided
-     * {@link ValuePropertyMetadata}<br/>
-     * but it handles only the cacheHint property or generate an assertion
-     * error<br/>
-     * This job links the modification of the cacheHint property to the cache
-     * property<br/>
-     * If the new value is not DEFAULT it sets cache to true<br/>
-     * FLAW: currently the modification of the cache property is not reflected in
-     * the inspector until you deselect adn reselect the object
-     *
-     * @param propertyMetadata the definition of property to set (expected to be
-     *                         cacheHint)
-     * @param newValue         the new value of the property to set
-     * @return the job to execute
-     */
-    Job modifyCacheHint(ValuePropertyMetadata propertyMetadata, Object newValue);
 
     /**
      * apply the constant USE_COMPUTED_SIZE on width and height on the currently

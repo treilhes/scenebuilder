@@ -35,14 +35,13 @@ package com.oracle.javafx.scenebuilder.selection.job;
 
 import java.io.File;
 
-import com.treilhes.emc4j.boot.api.context.EmContext;
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.selection.SbSelectionJobsFactory;
 import com.oracle.javafx.scenebuilder.selection.extension.SetDocumentRootJob;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.job.Job;
+import com.treilhes.jfxplace.core.api.job.JobFactory;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 @ApplicationInstanceSingleton
 public class SbSelectionJobsFactoryImpl extends JobFactory<Job> implements SbSelectionJobsFactory {
@@ -58,16 +57,6 @@ public class SbSelectionJobsFactoryImpl extends JobFactory<Job> implements SbSel
     @Override
     public Job fitToParentSelection() {
         return create(FitToParentSelectionJob.class, j -> j.setJobParameters());
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * Create an {@link ModifyCacheHintJob} job
-     */
-    @Override
-    public Job modifyCacheHint(ValuePropertyMetadata propertyMetadata, Object newValue) {
-        return create(ModifyCacheHintJob.class, j -> j.setJobParameters(propertyMetadata, newValue));
     }
 
     /**

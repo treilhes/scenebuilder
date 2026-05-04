@@ -33,16 +33,16 @@
  */
 package com.oracle.javafx.scenebuilder.preview.actions;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.Size;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
 
-import javafx.css.Size;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.set.preview.size", descriptionKey = "action.description.set.preview.size")

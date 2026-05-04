@@ -42,19 +42,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.util.FXOMDocumentUtils;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
-import com.gluonhq.jfxapps.core.fxom.transform.FXOMSerializer;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.fxom.util.FXOMDocumentUtils;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlViewController;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.ViewSearch;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenu;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.pipeline.FXOMDocumentFactory;
+import com.treilhes.jfxplace.core.fxom.pipeline.FXOMSerializer;
 
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
@@ -73,10 +73,10 @@ import javafx.util.Duration;
     icon = "ViewIconSource.png", iconX2 = "ViewIconSource@2x.png")
 public class SourceViewWindowController extends AbstractFxmlViewController {
 
-    public final static String VIEW_ID = "d7e4ec15-eabc-4e0c-a9b9-49ed9bb05eed";
-    public final static String VIEW_NAME = "view.name.fxml.source";
+    public static final String VIEW_ID = "d7e4ec15-eabc-4e0c-a9b9-49ed9bb05eed";
+    public static final String VIEW_NAME = "view.name.fxml.source";
 
-    private final static Logger logger = LoggerFactory.getLogger(SourceViewWindowController.class);
+    private static final Logger logger = LoggerFactory.getLogger(SourceViewWindowController.class);
 
     @FXML
     TextArea textArea;

@@ -38,24 +38,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
-import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchSelectionJob;
-import com.gluonhq.jfxapps.core.api.fxom.mask.Accessory;
-import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.selection.SelectionGroup;
-import com.gluonhq.jfxapps.core.fxom.FXOMCollection;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.SelectionJobsFactory;
+import com.treilhes.jfxplace.core.api.fxom.job.base.BatchSelectionJob;
+import com.treilhes.jfxplace.core.api.fxom.mask.Accessory;
+import com.treilhes.jfxplace.core.api.fxom.mask.FXOMObjectMask;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.job.Job;
+import com.treilhes.jfxplace.core.api.job.JobExtensionFactory;
+import com.treilhes.jfxplace.core.api.selection.SelectionGroup;
+import com.treilhes.jfxplace.core.fxom.FXOMCollection;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMNodes;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.scene.Node;
 
@@ -65,7 +65,7 @@ import javafx.scene.Node;
 @ApplicationInstancePrototype("com.oracle.javafx.scenebuilder.selection.extension.DuplicateSelectionJob")
 public final class DuplicateSelectionJob extends BatchSelectionJob {
 
-    private final static double offset = 10;
+    private static final double offset = 10;
 
     private final I18N i18n;
     private final SbJobsFactory sbJobsFactory;

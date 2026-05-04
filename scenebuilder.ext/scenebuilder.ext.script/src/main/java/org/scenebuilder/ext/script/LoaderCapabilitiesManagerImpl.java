@@ -39,14 +39,14 @@ import org.scenebuilder.ext.script.preference.global.StaticLoadPreference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
-import com.gluonhq.jfxapps.core.fxom.ext.LoaderCapabilitiesManager;
-import com.gluonhq.jfxapps.core.fxom.transform.FXOMSerializer;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.emc4j.boot.api.context.annotation.PreferedConstructor;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.lifecycle.InitWithDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.ext.LoaderCapabilitiesManager;
+import com.treilhes.jfxplace.core.fxom.pipeline.FXOMDocumentFactory;
+import com.treilhes.jfxplace.core.fxom.pipeline.FXOMSerializer;
 
 @ApplicationInstanceSingleton
 public class LoaderCapabilitiesManagerImpl implements LoaderCapabilitiesManager, InitWithDocument {

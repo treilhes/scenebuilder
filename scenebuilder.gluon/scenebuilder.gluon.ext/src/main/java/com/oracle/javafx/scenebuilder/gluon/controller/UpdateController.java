@@ -34,17 +34,17 @@ package com.oracle.javafx.scenebuilder.gluon.controller;
 
 import java.time.LocalDate;
 
-import com.gluonhq.jfxapps.core.api.application.InstancesManager;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
-import com.gluonhq.jfxapps.core.api.ui.controller.alert.SBAlert;
 import com.oracle.javafx.scenebuilder.gluon.dialog.UpdateSceneBuilderDialog;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.IgnoreVersionPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.ShowUpdateDialogDatePreference;
 import com.oracle.javafx.scenebuilder.gluon.setting.VersionSetting;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.jfxplace.core.api.application.InstancesManager;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
+import com.treilhes.jfxplace.core.api.ui.controller.alert.SBAlert;
 
 @ApplicationSingleton
 public class UpdateController {

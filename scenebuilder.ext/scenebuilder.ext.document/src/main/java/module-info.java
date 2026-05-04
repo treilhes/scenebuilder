@@ -44,6 +44,7 @@ open module scenebuilder.ext.document {
 
     requires scenebuilder.starter;
     requires transitive scenebuilder.api;
+    requires jfxplace.fxom.editors;
 
     provides Extension with DocumentExtension;
 }

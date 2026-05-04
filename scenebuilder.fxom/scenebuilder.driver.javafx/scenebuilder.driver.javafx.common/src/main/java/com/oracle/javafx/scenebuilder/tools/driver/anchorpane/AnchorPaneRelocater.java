@@ -38,11 +38,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.util.MathUtils;
-import com.gluonhq.jfxapps.util.javafx.AnchorUtils;
 import com.oracle.javafx.scenebuilder.api.control.relocater.AbstractRelocater;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.util.MathUtils;
+import com.treilhes.jfxplace.util.javafx.AnchorUtils;
 
 import javafx.geometry.Bounds;
 import javafx.scene.layout.AnchorPane;

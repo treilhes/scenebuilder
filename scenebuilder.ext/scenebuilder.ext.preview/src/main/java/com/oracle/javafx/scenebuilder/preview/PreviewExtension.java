@@ -71,7 +71,7 @@ public class PreviewExtension implements OpenExtension {
         return Arrays.asList(
                 PreviewWindowController.class,
                 PreviewMenuProvider.class,
-                SetRootSizeExtension.class,
+                //SetRootSizeExtension.class,
                 SetPreviewSizeAction.class,
                 ShowPreviewAction.class,
                 ShowPreviewDialogAction.class

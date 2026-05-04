@@ -38,8 +38,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.core.api.application.annotation.EditorDescriptor;
-import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
 import com.oracle.javafx.scenebuilder.api.control.driver.SbDriverImpl;
 import com.oracle.javafx.scenebuilder.api.control.inlineedit.SimilarInlineEditorBounds;
 import com.oracle.javafx.scenebuilder.api.i18n.I18NSceneBuilderApi;
@@ -48,6 +46,8 @@ import com.oracle.javafx.scenebuilder.api.preference.ParentRingColorPreference;
 import com.oracle.javafx.scenebuilder.api.util.FileHelper;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.treilhes.emc4j.boot.api.loader.extension.ApplicationExtension;
+import com.treilhes.jfxplace.core.api.application.annotation.EditorDescriptor;
+import com.treilhes.jfxplace.core.api.fxom.mask.FXOMObjectMask;
 
 @EditorDescriptor(
             label = "scenebuilder.app.label",

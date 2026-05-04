@@ -41,14 +41,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.action.Action;
-import com.gluonhq.jfxapps.core.api.fs.FileSystemActionFactory;
-import com.gluonhq.jfxapps.core.api.fs.RecentItems;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.action.Action;
+import com.treilhes.jfxplace.core.api.fs.FileSystemActionFactory;
+import com.treilhes.jfxplace.core.api.fs.RecentItems;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBuilder;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 import javafx.scene.control.Menu;
@@ -58,9 +58,9 @@ import javafx.scene.control.SeparatorMenuItem;
 @ApplicationInstancePrototype
 public class OpenRecentProvider implements MenuItemProvider {
 
-    public final static String TARGET_MENU_ID = OpenAction.OPEN_MENU_ID;
-    public final static String MENU_ID = DefaultMenu.File.OPEN_RECENT_ID;
-    public final static String CLEARRECENT_MENU_ID = "clearRecentMenu";
+    public static final String TARGET_MENU_ID = OpenAction.OPEN_MENU_ID;
+    public static final String MENU_ID = DefaultMenu.File.OPEN_RECENT_ID;
+    public static final String CLEARRECENT_MENU_ID = "clearRecentMenu";
 
     private I18N i18n;
     private final MenuBuilder builder;

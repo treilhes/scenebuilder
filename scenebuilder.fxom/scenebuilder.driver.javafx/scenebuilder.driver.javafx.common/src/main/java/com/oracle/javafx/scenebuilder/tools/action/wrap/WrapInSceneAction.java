@@ -33,15 +33,15 @@
  */
 package com.oracle.javafx.scenebuilder.tools.action.wrap;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractJobAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.tools.job.wrap.WrapInSceneJob;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.action.AbstractJobAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.job.JobManager;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 
 /**
  *
@@ -59,7 +59,7 @@ import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototy
         separatorBefore = true)
 public class WrapInSceneAction extends AbstractJobAction {
 
-    public final static String MENU_ID = "WrapInSceneMenu";
+    public static final String MENU_ID = "WrapInSceneMenu";
 
     //@formatter:off
     public WrapInSceneAction(

@@ -33,18 +33,13 @@
  */
 package com.oracle.javafx.scenebuilder.exporter.controller;
 
-import java.io.File;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.exporter.format.ExportFormat;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
 
 import jakarta.inject.Provider;
 import javafx.scene.Node;
@@ -60,16 +55,16 @@ public class ExporterMenuController {
     private final I18N i18n;
     private final Provider<MainInstanceWindow> document;
     private final List<ExportFormat> formats;
-    private final ApplicationInstanceEvents documentManager;
+    private final FxomEvents fxomEvents;
 
     public ExporterMenuController(
             I18N i18n,
             Provider<MainInstanceWindow> document,
-            ApplicationInstanceEvents documentManager,
+            FxomEvents fxomEvents,
             List<ExportFormat> formats) {
         this.i18n = i18n;
         this.document = document;
-        this.documentManager = documentManager;
+        this.fxomEvents = fxomEvents;
         this.formats = formats;
     }
 
@@ -83,28 +78,29 @@ public class ExporterMenuController {
 
     public void performExportSelection() {
 
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(i18n.getString("menu.title.export") + " " + i18n.getString("menu.title.export.selection"));
+        var fileChooser = new FileChooser();
+        var title = i18n.getString("menu.title.export") + " " + i18n.getString("menu.title.export.selection");
 
-        List<ExportFormat> sceneFormats = formats.stream().filter(f -> f.canHandleSelection()).collect(Collectors.toList());
+        fileChooser.setTitle(title);
+
+        var sceneFormats = formats.stream().filter(f -> f.canHandleSelection()).toList();
 
         sceneFormats.forEach(f -> fileChooser.getExtensionFilters()
                 .add(new ExtensionFilter(f.getDescription(), "*." + f.getExtension())));
 
         var stage = document.get().getStage();
-        File result = fileChooser.showSaveDialog(stage);
+        var result = fileChooser.showSaveDialog(stage);
+
         if (result != null) {
             if (!result.getParentFile().exists()) {
                 result.getParentFile().mkdirs();
             }
-            ExtensionFilter selectedFilter = fileChooser.getSelectedExtensionFilter();
-            String extension = selectedFilter.getExtensions().get(0).substring(2);
-
-            Optional<ExportFormat> format = sceneFormats.stream()
-                    .filter(f -> f.getExtension().equalsIgnoreCase(extension)).findFirst();
+            var selectedFilter = fileChooser.getSelectedExtensionFilter();
+            var extension = selectedFilter.getExtensions().get(0).substring(2);
+            var format = sceneFormats.stream().filter(f -> f.getExtension().equalsIgnoreCase(extension)).findFirst();
 
             if (format.isPresent()) {
-                Selection selection = documentManager.selectionDidChange().get().getSelection();
+                var selection = fxomEvents.selectionDidChange().get().getSelection();
                 format.get().exportSelection(selection, result);
             }
         }
@@ -112,31 +108,36 @@ public class ExporterMenuController {
 
     public void performExportScene() {
 
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(i18n.getString("menu.title.export") + " " + i18n.getString("menu.title.export.scene"));
+        var fileChooser = new FileChooser();
+        var title = i18n.getString("menu.title.export") + " " + i18n.getString("menu.title.export.scene");
+        fileChooser.setTitle(title);
 
-        List<ExportFormat> sceneFormats = formats.stream().filter(f -> f.canHandleScene()).collect(Collectors.toList());
+        var sceneFormats = formats.stream().filter(ExportFormat::canHandleScene).toList();
 
         sceneFormats.forEach(f -> fileChooser.getExtensionFilters()
                 .add(new ExtensionFilter(f.getDescription(), "*." + f.getExtension())));
 
         var stage = document.get().getStage();
-        File result = fileChooser.showSaveDialog(stage);
-        if (result != null) {
-            if (!result.getParentFile().exists()) {
-                result.getParentFile().mkdirs();
-            }
-            ExtensionFilter selectedFilter = fileChooser.getSelectedExtensionFilter();
-            String extension = selectedFilter.getExtensions().get(0).substring(2);
+        var result = fileChooser.showSaveDialog(stage);
 
-            Optional<ExportFormat> format = sceneFormats.stream()
-                    .filter(f -> f.getExtension().equalsIgnoreCase(extension)).findFirst();
-
-            if (format.isPresent()) {
-                FXOMDocument fd = documentManager.fxomDocument().get();
-                Node rootNode = fd.getFxomRoot().getSceneGraphObject().getAs(Node.class);
-                format.get().exportScene(rootNode, result);
-            }
+        if (result == null) {
+            return;
         }
+
+        if (!result.getParentFile().exists()) {
+            result.getParentFile().mkdirs();
+        }
+
+        var selectedFilter = fileChooser.getSelectedExtensionFilter();
+        var extension = selectedFilter.getExtensions().get(0).substring(2);
+
+        var format = sceneFormats.stream().filter(f -> f.getExtension().equalsIgnoreCase(extension)).findFirst();
+
+        if (format.isPresent()) {
+            var fd = fxomEvents.fxomDocument().get();
+            var rootNode = fd.getFxomRoot().getSceneGraphObject().getAs(Node.class);
+            format.get().exportScene(rootNode, result);
+        }
+
     }
 }

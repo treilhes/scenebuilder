@@ -33,14 +33,14 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.node;
 
-import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractGesture;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.pring.AbstractGenericPring;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.SelectWithPringGesture.Factory;
+import com.treilhes.jfxplace.core.api.fxom.gesture.AbstractGesture;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;

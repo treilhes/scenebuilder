@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.metadata.custom;
 
-import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.treilhes.jfxplace.core.metadata.klass.ComponentClassMetadata;
+import com.treilhes.jfxplace.core.metadata.property.ComponentPropertyMetadata;
+import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
 
 public class SbComponentClassMetadata<T> extends ComponentClassMetadata<T,
     ComponentClassMetadataCustomization,

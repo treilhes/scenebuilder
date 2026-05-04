@@ -36,110 +36,112 @@ package com.oracle.javafx.scenebuilder.api.menu;
 public interface DefaultMenu {
 
     public interface File {
-        public final static String ID = "fileMenu";
-        public final static String NEW_ID = ID + "-new";
-        //public final static String NEW_FROM_TEMPLATE_ID = ID + "-newfromtemplate";
-        public final static String OPEN_ID = ID + "-open";
-        public final static String OPEN_RECENT_ID = ID + "-openrecent";
-        public final static String SAVE_ID = ID + "-save";
-        public final static String SAVE_AS_ID = ID + "-saveas";
-        public final static String REVERT_TO_SAVED_ID = ID + "-reverttosaved";
-        public final static String REVEAL_ID = ID + "-reveal";
-        public final static String IMPORT_ID = ID + "-import";
-        public final static String INCLUDE_ID = ID + "-include";
-        public final static String CLOSE_WINDOW_ID = ID + "-closewindow";
-        public final static String PREFERENCE_ID = ID + "-preference";
-        public final static String QUIT_ID = ID + "-quit";
+        public static final String ID = "fileMenu";
+        public static final String NEW_ID = ID + "-new";
+        //public static final String NEW_FROM_TEMPLATE_ID = ID + "-newfromtemplate";
+        public static final String OPEN_ID = ID + "-open";
+        public static final String OPEN_RECENT_ID = ID + "-openrecent";
+        public static final String SAVE_ID = ID + "-save";
+        public static final String SAVE_AS_ID = ID + "-saveas";
+        public static final String REVERT_TO_SAVED_ID = ID + "-reverttosaved";
+        public static final String REVEAL_ID = ID + "-reveal";
+        public static final String IMPORT_ID = ID + "-import";
+        public static final String INCLUDE_ID = ID + "-include";
+        public static final String CLOSE_WINDOW_ID = ID + "-closewindow";
+        public static final String PREFERENCE_ID = ID + "-preference";
+        public static final String QUIT_ID = ID + "-quit";
     }
 
     public interface Edit {
-        public final static String ID = "editMenu";
-        public final static String UNDO_ID = ID + "-undo";
-        public final static String REDO_ID = ID + "-redo";
-        public final static String CUT_ID = ID + "-cut";
-        public final static String COPY_ID = ID + "-copy";
-        public final static String PASTE_ID = ID + "-paste";
-        public final static String PASTE_INTO_ID = ID + "-pasteinto";
-        public final static String DUPLICATE_ID = ID + "-duplicate";
-        public final static String DELETE_ID = ID + "-delete";
-        public final static String SELECT_ALL_ID = ID + "-selectall";
-        public final static String SELECT_NONE_ID = ID + "-selectnone";
-        public final static String SELECT_PARENT_ID = ID + "-selectparent";
-        public final static String SELECT_NEXT_ID = ID + "-selectnext";
-        public final static String SELECT_PREVIOUS_ID = ID + "-selectprevious";
-        public final static String TRIM_DOC_ID = ID + "-trimdoc";
+        public static final String ID = "editMenu";
+        public static final String UNDO_ID = ID + "-undo";
+        public static final String REDO_ID = ID + "-redo";
+        public static final String CUT_ID = ID + "-cut";
+        public static final String COPY_ID = ID + "-copy";
+        public static final String PASTE_ID = ID + "-paste";
+        public static final String PASTE_INTO_ID = ID + "-pasteinto";
+        public static final String DUPLICATE_ID = ID + "-duplicate";
+        public static final String DELETE_ID = ID + "-delete";
+        public static final String SELECT_ALL_ID = ID + "-selectall";
+        public static final String SELECT_NONE_ID = ID + "-selectnone";
+        public static final String SELECT_PARENT_ID = ID + "-selectparent";
+        public static final String SELECT_NEXT_ID = ID + "-selectnext";
+        public static final String SELECT_PREVIOUS_ID = ID + "-selectprevious";
+        public static final String TRIM_DOC_ID = ID + "-trimdoc";
     }
 
     public interface View {
-        public final static String ID = "viewMenu";
-        public final static String CONTENT_ID = ID + "-content";
-        public final static String PROPERTIES_ID = ID + "-properties";
-        public final static String LAYOUT_ID = ID + "-layout";
-        public final static String CODE_ID = ID + "-code";
-        public final static String LIBRARY_TOGGLE_ID = ID + "-librarytoggle";
-        public final static String DOCUMENT_TOGGLE_ID = ID + "-documenttoggle";
-        public final static String CSS_ANALYSER_TOGGLE_ID = ID + "-cssanalysertoggle";
-        public final static String LEFT_PANE_TOGGLE_ID = ID + "-leftpanetoggle";
-        public final static String RIGHT_PANE_TOGGLE_ID = ID + "-rightpanetoggle";
-        public final static String OUTLINES_TOGGLE_ID = ID + "-outlinestoggle";
-        public final static String SAMPLE_DATA_TOGGLE_ID = ID + "-sampledatatoggle";
-        public final static String GUIDES_TOGGLE_ID = ID + "-guidestoggle";
-        public final static String ZOOM_ID = ID + "-zoom";
-        public final static String SAMPLE_CONTROLLER_ID = ID + "-samplecontroller";
+        public static final String ID = "viewMenu";
+        public static final String SHOW_VIEWS_ID = ID + "-showviews";
+        public static final String CONTENT_ID = ID + "-content";
+        public static final String PROPERTIES_ID = ID + "-properties";
+        public static final String LAYOUT_ID = ID + "-layout";
+        public static final String CODE_ID = ID + "-code";
+        public static final String LIBRARY_TOGGLE_ID = ID + "-librarytoggle";
+        public static final String DOCUMENT_TOGGLE_ID = ID + "-documenttoggle";
+
+        public static final String LEFT_PANE_TOGGLE_ID = ID + "-leftpanetoggle";
+        public static final String RIGHT_PANE_TOGGLE_ID = ID + "-rightpanetoggle";
+        public static final String OUTLINES_TOGGLE_ID = ID + "-outlinestoggle";
+        public static final String SAMPLE_DATA_TOGGLE_ID = ID + "-sampledatatoggle";
+        public static final String GUIDES_TOGGLE_ID = ID + "-guidestoggle";
+        public static final String ZOOM_ID = ID + "-zoom";
+        public static final String SAMPLE_CONTROLLER_ID = ID + "-samplecontroller";
     }
 
     public interface Insert {
-        public final static String ID = "insertMenu";
+        public static final String ID = "insertMenu";
     }
 
     public interface Modify {
-        public final static String ID = "modifyMenu";
-        public final static String FIT_TO_PARENT_ID = ID + "-fittoparent";
-        public final static String USE_COMPUTED_SIZE_ID = ID + "-usecomputedsize";
-        public final static String GRIDPANE_ID = ID + "-gridpane";
-        public final static String EFFECTS_ID = ID + "-effects";
-        public final static String POPUP_CONTROL_ID = ID + "-popupcontrol";
-        public final static String SCENE_SIZE_ID = ID + "-scenesize";
+        public static final String ID = "modifyMenu";
+        public static final String FIT_TO_PARENT_ID = ID + "-fittoparent";
+        public static final String USE_COMPUTED_SIZE_ID = ID + "-usecomputedsize";
+        public static final String GRIDPANE_ID = ID + "-gridpane";
+        public static final String EFFECTS_ID = ID + "-effects";
+        public static final String POPUP_CONTROL_ID = ID + "-popupcontrol";
+        public static final String SCENE_SIZE_ID = ID + "-scenesize";
     }
 
     public interface Arrange {
-        public final static String ID = "arrangeMenu";
-        public final static String BRING_TO_FRONT_ID = ID + "-bringtofront";
-        public final static String SEND_TO_BACK_ID = ID + "-sendtoback";
-        public final static String BRING_FORWARD_ID = ID + "-bringforward";
-        public final static String BRING_BACKWARD_ID = ID + "-bringbackward";
-        public final static String WRAP_ID = ID + "-wrap";
-        public final static String UNWRAP_ID = ID + "-unwrap";
+        public static final String ID = "arrangeMenu";
+        public static final String BRING_TO_FRONT_ID = ID + "-bringtofront";
+        public static final String SEND_TO_BACK_ID = ID + "-sendtoback";
+        public static final String BRING_FORWARD_ID = ID + "-bringforward";
+        public static final String BRING_BACKWARD_ID = ID + "-bringbackward";
+        public static final String WRAP_ID = ID + "-wrap";
+        public static final String UNWRAP_ID = ID + "-unwrap";
     }
 
     public interface Preview {
-        public final static String ID = "previewMenu";
-        public final static String SHOW_IN_WINDOW_ID = ID + "-showinwindow";
-        public final static String SHOW_IN_DIALOG_ID = ID + "-showindialog";
-        public final static String THEME_ID = ID + "-theme";
-        public final static String STYLESHEETS_ID = ID + "-stylesheets";
-        public final static String INTERNATIONALIZATION_ID = ID + "-internationalization";
-        public final static String PREVIEW_SIZE_ID = ID + "-previewsize";
+        public static final String ID = "previewMenu";
+        public static final String SHOW_IN_WINDOW_ID = ID + "-showinwindow";
+        public static final String SHOW_IN_DIALOG_ID = ID + "-showindialog";
+        public static final String THEME_ID = ID + "-theme";
+        public static final String STYLESHEETS_ID = ID + "-stylesheets";
+        public static final String INTERNATIONALIZATION_ID = ID + "-internationalization";
+        public static final String PREVIEW_SIZE_ID = ID + "-previewsize";
     }
 
     public interface Window {
-        public final static String ID = "windowMenu";
+        public static final String ID = "windowMenu";
     }
 
     public interface Help {
-        public final static String ID = "helpMenu";
-        public final static String SB_HELP_ID = ID + "-sbhelp";
-        public final static String JAVAFX_ID = ID + "-javafx";
-        public final static String CONTRIBUTE_ID = ID + "-contribute";
-        public final static String CHECK_UPDATE_ID = ID + "-checkupdate";
-        public final static String REGISTER_ID = ID + "-register";
-        public final static String SHOW_WELCOME_ID = ID + "-showwelcome";
-        public final static String ABOUT_ID = ID + "-about";
+        public static final String ID = "helpMenu";
+        public static final String SB_HELP_ID = ID + "-sbhelp";
+        public static final String JAVAFX_ID = ID + "-javafx";
+        public static final String CONTRIBUTE_ID = ID + "-contribute";
+        public static final String CHECK_UPDATE_ID = ID + "-checkupdate";
+        public static final String REGISTER_ID = ID + "-register";
+        public static final String SHOW_WELCOME_ID = ID + "-showwelcome";
+        public static final String ABOUT_ID = ID + "-about";
     }
 
     @Deprecated
     public interface Debug {
-        public final static String ID = "debugMenu";
+        @Deprecated
+        public static final String ID = "debugMenu";
     }
 }
 

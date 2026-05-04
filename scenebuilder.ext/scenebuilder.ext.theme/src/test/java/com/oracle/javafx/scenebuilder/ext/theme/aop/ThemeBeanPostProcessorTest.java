@@ -43,7 +43,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.Singleton;
-import com.gluonhq.jfxapps.test.JfxAppsTest;
+import com.treilhes.jfxplace.testold.JfxAppsTest;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeContext;
 

@@ -34,9 +34,9 @@
 package com.oracle.javafx.scenebuilder.welcome.controller;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.core.api.application.InstancesManager;
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.lifecycle.InitWithApplication;
+import com.treilhes.jfxplace.core.api.application.InstancesManager;
+import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.api.lifecycle.InitWithApplication;
 
 @ApplicationSingleton
 public class WelcomeDialogInitializer implements InitWithApplication {

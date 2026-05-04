@@ -33,17 +33,17 @@
  */
 package com.oracle.javafx.scenebuilder.cssanalyser.actions;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.Dock;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.DockViewController;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
@@ -62,9 +62,9 @@ public class ToggleCssAnalyserVisibilityAction extends AbstractAction {
      * but is it the right choice, i'm wondering ?
      */
     // TODO reevaluate adding a direct dependency
-    public final static String TOGGLE_DOCUMENT_MENU_ID = "toggleDocumentVisibilityMenuItem"; //NOCHECK
+    public static final String TOGGLE_DOCUMENT_MENU_ID = "toggleDocumentVisibilityMenuItem"; //NOCHECK
 
-    public final static String MENU_ID = "toggleCssAnalyserVisibilityMenuItem"; //NOCHECK
+    public static final String MENU_ID = "toggleCssAnalyserVisibilityMenuItem"; //NOCHECK
 
     private final CssPanelController cssPanelController;
 

@@ -38,15 +38,15 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.exporter.controller.ExporterMenuController;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -54,19 +54,19 @@ import javafx.scene.control.MenuItem;
 @ApplicationInstanceSingleton
 public class ExporterMenuProvider implements MenuItemProvider {
 
-    private final static String TARGET_MENU_ID = DefaultMenu.File.INCLUDE_ID;
-    private final static String EXPORT_MENU_ID = "exportMenu";
-    private final static String SELECTION_EXPORT_MENU_ID = "selectionExportMenu";
-    private final static String SCENE_EXPORT_MENU_ID = "sceneExportMenu";
+    private static final String TARGET_MENU_ID = DefaultMenu.File.INCLUDE_ID;
+    private static final String EXPORT_MENU_ID = "exportMenu";
+    private static final String SELECTION_EXPORT_MENU_ID = "selectionExportMenu";
+    private static final String SCENE_EXPORT_MENU_ID = "sceneExportMenu";
 
     private final ExporterMenuController exporterMenuController;
-    private final Selection selection;
+    private final FxomSelection selection;
     private final I18N i18n;
 
     public ExporterMenuProvider(
             I18N i18n,
             @Autowired  @Lazy ExporterMenuController exporterMenuController,
-            @Autowired  @Lazy Selection selection
+            @Autowired  @Lazy FxomSelection selection
             ) {
         this.i18n = i18n;
         this.exporterMenuController = exporterMenuController;
@@ -83,6 +83,7 @@ public class ExporterMenuProvider implements MenuItemProvider {
         private MenuItem menu = null;
 
         public ExporteMenuAttachment() {
+            // No-op
         }
 
         @Override
@@ -107,17 +108,17 @@ public class ExporterMenuProvider implements MenuItemProvider {
 
             MenuItem selectionMenu = new MenuItem(i18n.getString("menu.title.export.selection"));
             selectionMenu.setId(SELECTION_EXPORT_MENU_ID);
-            selectionMenu.setOnAction((e) -> exporterMenuController.performExportSelection());
+            selectionMenu.setOnAction(_ -> exporterMenuController.performExportSelection());
             selectionMenu.setDisable(!exporterMenuController.hasSelectionExportFormat());
 
             MenuItem sceneMenu = new MenuItem(i18n.getString("menu.title.export.scene"));
             sceneMenu.setId(SCENE_EXPORT_MENU_ID);
-            sceneMenu.setOnAction((e) -> exporterMenuController.performExportScene());
+            sceneMenu.setOnAction(_ -> exporterMenuController.performExportScene());
             sceneMenu.setDisable(!exporterMenuController.hasSceneExportFormat());
 
             exportMenu.getItems().add(sceneMenu);
             exportMenu.getItems().add(selectionMenu);
-            exportMenu.setOnShowing((e) -> selectionMenu.setDisable(selection.getGroup() == null));
+            exportMenu.setOnShowing(_ -> selectionMenu.setDisable(selection.getGroup() == null));
 
             menu = exportMenu;
             return menu;

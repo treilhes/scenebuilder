@@ -40,16 +40,6 @@ import java.util.Set;
 
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.core.api.fxom.content.mode.Layer;
-import com.gluonhq.jfxapps.core.api.fxom.content.mode.ModeManager;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
-import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractMouseGesture;
-import com.gluonhq.jfxapps.core.api.fxom.gesture.GestureFactory;
-import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.Pring;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
 import com.oracle.javafx.scenebuilder.api.control.SbDriver;
@@ -57,6 +47,16 @@ import com.oracle.javafx.scenebuilder.editor.fxml.controller.EditModeController;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.fxom.content.mode.Layer;
+import com.treilhes.jfxplace.core.api.fxom.content.mode.ModeManager;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.gesture.AbstractMouseGesture;
+import com.treilhes.jfxplace.core.api.fxom.gesture.GestureFactory;
+import com.treilhes.jfxplace.core.api.fxom.mask.FXOMObjectMask;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Point2D;

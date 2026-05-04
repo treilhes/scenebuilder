@@ -36,19 +36,19 @@ package com.oracle.javafx.scenebuilder.controllibrary.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionGroup;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.selection.Selection;
+import com.treilhes.jfxplace.core.api.selection.SelectionGroup;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 @ApplicationInstanceSingleton
 @ActionMeta(nameKey = "action.name.import.selection", descriptionKey = "action.description.import.selection")
@@ -62,7 +62,7 @@ import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSinglet
 @Accelerator(accelerator = "SHIFT+I", whenFocusing = LibraryPanelController.class)
 public class ImportSelectionAsControlAction extends AbstractAction {
 
-    public final static String MENU_ID = "importSelectionMenu";
+    public static final String MENU_ID = "importSelectionMenu";
 
     private final Selection selection;
     private final LibraryPanelController libraryPanelController;
@@ -88,13 +88,7 @@ public class ImportSelectionAsControlAction extends AbstractAction {
 
         SelectionGroup asg = selection.getGroup();
 
-        if (asg instanceof ObjectSelectionGroup) {
-            if (((ObjectSelectionGroup) asg).getItems().size() >= 1) {
-                return true;
-            }
-        }
-
-        return false;
+        return asg instanceof ObjectSelectionGroup osg && !osg.getItems().isEmpty();
     }
 
     @Override
@@ -102,8 +96,8 @@ public class ImportSelectionAsControlAction extends AbstractAction {
         SelectionGroup asg = selection.getGroup();
         ObjectSelectionGroup osg = (ObjectSelectionGroup) asg;
         assert !osg.getItems().isEmpty();
-        List<FXOMObject> selection = new ArrayList<>(osg.getItems());
-        libraryPanelController.performImportSelection(selection);
+        List<FXOMObject> selected = new ArrayList<>(osg.getItems());
+        libraryPanelController.performImportSelection(selected);
         return ActionStatus.DONE;
     }
 }

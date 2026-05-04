@@ -36,16 +36,16 @@ package com.oracle.javafx.scenebuilder.menu.main.help;
 import java.io.IOException;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.action.editor.EditorPlatform;
-import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.action.editor.EditorPlatform;
+import com.treilhes.jfxplace.core.api.fs.FileSystem;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 @ApplicationInstancePrototype
@@ -60,8 +60,8 @@ import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 @Accelerator(accelerator = "F1")
 public class ShowDocumentationAction extends AbstractAction {
 
-    public final static String HELP_MENU_ID = DefaultMenu.Help.ID;
-    public final static String DOCUMENTATION_MENU_ID = DefaultMenu.Help.SB_HELP_ID;
+    public static final String HELP_MENU_ID = DefaultMenu.Help.ID;
+    public static final String DOCUMENTATION_MENU_ID = DefaultMenu.Help.SB_HELP_ID;
 
     private final Dialog dialog;
     private final FileSystem fileSystem;

@@ -47,29 +47,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.fxom.clipboard.ClipboardHandler;
-import com.gluonhq.jfxapps.core.api.fxom.css.CssInternal;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.javafx.LoadInFxThread;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.gluonhq.jfxapps.util.javafx.NodeUtils;
 import com.oracle.javafx.scenebuilder.api.Documentation;
-import com.oracle.javafx.scenebuilder.api.SbEditor;
 import com.oracle.javafx.scenebuilder.api.ui.Docks;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath;
 import com.oracle.javafx.scenebuilder.cssanalyser.control.SelectionPath.Item;
@@ -80,10 +58,33 @@ import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.Css
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.PropertyState;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssValuePresenterFactory.CssValuePresenter;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.NodeCssState.CssProperty;
+import com.oracle.javafx.scenebuilder.cssanalyser.mode.PickModeController;
 import com.oracle.javafx.scenebuilder.cssanalyser.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
+import com.treilhes.jfxplace.core.api.fs.FileSystem;
+import com.treilhes.jfxplace.core.api.fxom.clipboard.ClipboardHandler;
+import com.treilhes.jfxplace.core.api.fxom.content.mode.ModeManager;
+import com.treilhes.jfxplace.core.api.fxom.css.CssInternal;
+import com.treilhes.jfxplace.core.api.fxom.dnd.Drag;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.javafx.LoadInFxThread;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlViewController;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.ViewSearch;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenu;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.collector.SceneGraphCollector;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
+import com.treilhes.jfxplace.util.javafx.NodeUtils;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.property.ObjectProperty;
@@ -147,8 +148,8 @@ import javafx.util.Duration;
 @LoadInFxThread
 public class CssPanelController extends AbstractFxmlViewController implements ClipboardHandler {
 
-    public final static String VIEW_ID = "3c2fda5d-9351-4629-a318-1dca2edff438"; // NOCHECK
-    public final static String VIEW_NAME = "csspanel"; // NOCHECK
+    public static final String VIEW_ID = "3c2fda5d-9351-4629-a318-1dca2edff438"; // NOCHECK
+    public static final String VIEW_NAME = "csspanel"; // NOCHECK
 
     @FXML
     private StackPane cssPanelHost;
@@ -214,7 +215,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
 
     private Object selectedObject; // Can be either an FXOMObject (selection mode), or a Node (pick mode)
     private final FxomSelection selection;
-    private final SbEditor editor;
+    private final PickModeController pickMode;
     private final Delegate applicationDelegate;
     private final ObjectProperty<NodeCssState> cssStateProperty = new SimpleObjectProperty<>();
 
@@ -228,13 +229,14 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
 
     private final ViewSearch viewSearch;
     private final SbMetadata metadata;
+    private final ModeManager modeManager;
 
     /**
      * Should be implemented by the application.
      *
      * @treatAsPrivate
      */
-    public static abstract class Delegate {
+    public abstract static class Delegate {
 
         public abstract void revealInspectorEditor(ValuePropertyMetadata propMeta);
     }
@@ -252,7 +254,8 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
             FxomEvents fxomEvents,
             SbMetadata metadata,
             FxomSelection selection,
-            SbEditor editor,
+            PickModeController pickMode,
+            ModeManager modeManager,
             Delegate delegate,
             CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference,
             Drag drag,
@@ -262,7 +265,8 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
      // @formatter:on
         super(i18n, scenebuilderManager, documentManager, viewMenuController,
                 CssPanelController.class.getResource("CssPanel.fxml"));
-        this.editor = editor;
+        this.pickMode = pickMode;
+        this.modeManager = modeManager;
         this.selection = selection;
         this.documentManager = documentManager;
         this.fxomEvents = fxomEvents;
@@ -284,7 +288,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     @FXML
     public void initialize() {
 
-        fxomEvents.fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
+        fxomEvents.fxomDocument().subscribe(this::fxomDocumentDidChange);
         fxomEvents.sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
         fxomEvents.cssRevisionDidChange().subscribe(c -> cssRevisionDidChange());
         fxomEvents.selectionDidChange().subscribe(c -> editorSelectionDidChange());
@@ -339,12 +343,11 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
         root.getChildren().remove(textPane);
         root.getChildren().remove(table);
 
-        pick.setOnAction(t -> editor.setPickModeEnabled(true));
-        edit.setOnAction(t -> editor.setPickModeEnabled(false));
-        editor.pickModeEnabledProperty()
-                .addListener((ChangeListener<Boolean>) (ov, oldVal, newVal) -> setPickMode(newVal));
+        pick.setOnAction(t -> modeManager.enableMode(pickMode.getModeId()));
+        edit.setOnAction(t -> modeManager.enableDefaultMode());
+        pickMode.activeProperty().addListener((ChangeListener<Boolean>) (ov, oldVal, newVal) -> setPickMode(newVal));
         // Initialize the pick mode from the editorController value
-        setPickMode(editor.isPickModeEnabled());
+        setPickMode(pickMode.isActive());
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -385,7 +388,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
                 selectedObject = selectedSubNode;
                 refresh();
                 // Switch to pick mode
-                editor.setPickModeEnabled(true);
+                modeManager.enableMode(pickMode.getModeId());
                 // Select the sub node
                 selection.select(getFXOMInstance(selection), selectedSubNode);
             }
@@ -776,7 +779,7 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     }
 
     private boolean isPickMode() {
-        return editor.isPickModeEnabled();
+        return pickMode.isActive();
     }
 
     private void setPickMode(boolean pickMode) {
@@ -1836,8 +1839,8 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
 
     private static class HtmlStyler {
 
-        private final static String INIT_STRING = "<html><body>"; // NOI18N
-        private final static String END_STRING = "</body></html>"; // NOI18N
+        private static final String INIT_STRING = "<html><body>"; // NOI18N
+        private static final String END_STRING = "</body></html>"; // NOI18N
         private final StringBuilder builder = new StringBuilder();
         private String html;
 
@@ -2267,10 +2270,6 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
                 cssStyle.getParsedValue());
         TreeItem<Node> item = new TreeItem<>(getContent(ps.getCssProperty(), cssValue, value, applied));
         parent.getChildren().add(item);
-    }
-
-    public SbEditor getEditorController() {
-        return editor;
     }
 
     @Override

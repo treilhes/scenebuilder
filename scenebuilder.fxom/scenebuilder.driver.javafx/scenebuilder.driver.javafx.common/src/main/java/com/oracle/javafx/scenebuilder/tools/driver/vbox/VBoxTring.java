@@ -35,13 +35,13 @@ package com.oracle.javafx.scenebuilder.tools.driver.vbox;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.fxom.dnd.AccessoryDropTarget;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.fxom.dnd.AccessoryDropTarget;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DropTarget;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

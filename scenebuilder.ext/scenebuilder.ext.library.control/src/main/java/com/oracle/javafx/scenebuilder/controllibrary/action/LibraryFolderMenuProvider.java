@@ -36,20 +36,20 @@ package com.oracle.javafx.scenebuilder.controllibrary.action;
 import java.util.Arrays;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenuItemProvider;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBuilder;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenuItemProvider;
 
 import javafx.scene.control.Menu;
 
 @ApplicationInstanceSingleton
 public class LibraryFolderMenuProvider implements ViewMenuItemProvider {
 
-    public final static String MENU_ID = "libraryFolderMenu";
+    public static final String MENU_ID = "libraryFolderMenu";
 
     private final MenuBuilder menuBuilder;
 

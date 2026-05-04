@@ -37,7 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.action.AbstractActionExtension;
+import com.treilhes.jfxplace.core.api.action.AbstractActionExtension;
 import com.oracle.javafx.scenebuilder.ext.theme.preference.UserStylesheetsPreference;
 
 @ApplicationInstancePrototype

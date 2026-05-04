@@ -41,15 +41,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
 import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.fs.FileSystem;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
 import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelController;
 
@@ -67,7 +67,7 @@ import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelContro
 @Accelerator(accelerator = "CTRL+R", whenFocusing = ImageLibraryPanelController.class)
 public class RevealImageFolderAction extends AbstractAction {
 
-    public final static String MENU_ID = "revealMenu";
+    public static final String MENU_ID = "revealMenu";
 
     private final ApplicationInstanceWindow documentWindowController;
     private final ImageLibrary userLibrary;

@@ -37,14 +37,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMElement;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
-import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
-import com.gluonhq.jfxapps.core.fxom.collector.FXOMCollector;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.scenebuilder.metadata.property.value.IntegerPropertyMetadata;
+import com.treilhes.jfxplace.core.fxom.FXOMElement;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.FXOMProperty;
+import com.treilhes.jfxplace.core.fxom.FXOMPropertyC;
+import com.treilhes.jfxplace.core.fxom.collector.FXOMCollector;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.core.metadata.property.base.IntegerPropertyMetadata;
 
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;

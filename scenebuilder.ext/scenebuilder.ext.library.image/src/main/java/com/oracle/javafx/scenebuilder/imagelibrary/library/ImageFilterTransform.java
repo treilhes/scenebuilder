@@ -38,8 +38,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.gluonhq.jfxapps.core.api.fxom.library.ReportEntry.Status;
-import com.gluonhq.jfxapps.core.library.api.Transform;
+import com.treilhes.jfxplace.core.api.fxom.library.ReportEntry.Status;
+import com.treilhes.jfxplace.core.library.api.Transform;
 
 public class ImageFilterTransform implements Transform<ImageReport, ImageReport> {
     Map<String, StandardImage> imageSourceData = new HashMap<>();

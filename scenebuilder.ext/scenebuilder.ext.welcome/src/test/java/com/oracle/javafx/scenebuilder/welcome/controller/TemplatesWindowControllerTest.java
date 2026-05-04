@@ -43,16 +43,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
-import com.gluonhq.jfxapps.core.api.application.ApplicationActionFactory;
-import com.gluonhq.jfxapps.core.api.application.InstancesManager;
-import com.gluonhq.jfxapps.core.api.document.DocumentActionFactory;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
-import com.gluonhq.jfxapps.test.JfxAppsTest;
-import com.gluonhq.jfxapps.test.StageBuilder;
-import com.gluonhq.jfxapps.test.StageType;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
+import com.treilhes.jfxplace.core.api.application.ApplicationActionFactory;
+import com.treilhes.jfxplace.core.api.application.InstancesManager;
+import com.treilhes.jfxplace.core.api.document.DocumentActionFactory;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
+import com.treilhes.jfxplace.testold.JfxAppsTest;
+import com.treilhes.jfxplace.testold.StageBuilder;
+import com.treilhes.jfxplace.testold.StageType;
 
 import javafx.stage.Stage;
 

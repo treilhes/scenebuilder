@@ -34,13 +34,13 @@
 package com.oracle.javafx.scenebuilder.ext.theme.preference;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups;
-import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
-import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
-import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preference.Preference;
-import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
-import com.gluonhq.jfxapps.core.api.preference.UserPreference;
+import com.treilhes.jfxplace.core.api.preference.DefaultPreferenceGroups;
+import com.treilhes.jfxplace.core.api.preference.DefaultValueProvider;
+import com.treilhes.jfxplace.core.api.preference.ManagedGlobalPreference;
+import com.treilhes.jfxplace.core.api.preference.Preference;
+import com.treilhes.jfxplace.core.api.preference.PreferenceContext;
+import com.treilhes.jfxplace.core.api.preference.UserPreference;
+import com.treilhes.jfxplace.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeManager;
 import com.oracle.javafx.scenebuilder.ext.theme.DefaultThemesList;

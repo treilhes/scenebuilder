@@ -38,24 +38,24 @@ import java.util.List;
 
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchDocumentJob;
-import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.oracle.javafx.scenebuilder.tools.mask.GridPaneHierarchyMask;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.treilhes.jfxplace.core.api.fxom.job.base.BatchDocumentJob;
+import com.treilhes.jfxplace.core.api.fxom.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.job.Job;
+import com.treilhes.jfxplace.core.api.job.JobExtensionFactory;
+import com.treilhes.jfxplace.core.api.job.JobFactory;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
 
 import javafx.scene.layout.GridPane;
 
@@ -262,7 +262,7 @@ public final class SpanJob extends BatchDocumentJob {
 
     @ApplicationInstanceSingleton
     @Lazy
-    public final static class Factory extends JobFactory<SpanJob> {
+    public static final class Factory extends JobFactory<SpanJob> {
         public Factory(EmContext sbContext) {
             super(sbContext);
         }

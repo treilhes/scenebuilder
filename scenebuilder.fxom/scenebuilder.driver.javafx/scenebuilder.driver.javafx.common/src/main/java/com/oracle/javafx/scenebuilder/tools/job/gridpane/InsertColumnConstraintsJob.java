@@ -38,16 +38,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.scenebuilder.metadata.property.value.list.ColumnConstraintsListPropertyMetadata;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.job.JobExtensionFactory;
+import com.treilhes.jfxplace.core.api.job.JobFactory;
+import com.treilhes.jfxplace.core.api.job.base.AbstractJob;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.core.metadata.property.value.list.ColumnConstraintsListPropertyMetadata;
 
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -153,7 +153,7 @@ public final class InsertColumnConstraintsJob extends AbstractJob {
     }
 
     @ApplicationInstanceSingleton
-    public final static class Factory extends JobFactory<InsertColumnConstraintsJob> {
+    public static final class Factory extends JobFactory<InsertColumnConstraintsJob> {
         public Factory(EmContext sbContext) {
             super(sbContext);
         }

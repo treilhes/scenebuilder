@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.sourcegen.skeleton;
 
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
 
 class SkeletonCreator {
 

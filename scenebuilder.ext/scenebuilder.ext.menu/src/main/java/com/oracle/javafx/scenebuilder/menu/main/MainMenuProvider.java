@@ -33,17 +33,17 @@
  */
 package com.oracle.javafx.scenebuilder.menu.main;
 
-import static com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest.AsFirstChild;
-import static com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest.AsNextSibling;
+import static com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest.AsFirstChild;
+import static com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest.AsNextSibling;
 
 import java.util.Arrays;
 import java.util.List;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBuilder;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 import javafx.scene.control.Menu;

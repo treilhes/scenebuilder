@@ -6,7 +6,7 @@ import javax.script.ScriptException;
 
 public class JavascriptEngine {
 
-    private final static String ENGINE_NAME = "graal.js";
+    private static final String ENGINE_NAME = "graal.js";
 
     public void setup() {
         System.setProperty("polyglot.js.nashorn-compat", "true");

@@ -34,14 +34,14 @@ package com.oracle.javafx.scenebuilder.controllibrary.preferences.global;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
 
-import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups;
-import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preference.PreferenceEditorFactory;
-import com.gluonhq.jfxapps.core.api.preference.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preference.UserPreference;
-import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
-import com.gluonhq.jfxapps.core.api.preference.type.EnumPreference;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController.DISPLAY_MODE;
+import com.treilhes.jfxplace.core.api.preference.DefaultPreferenceGroups;
+import com.treilhes.jfxplace.core.api.preference.ManagedGlobalPreference;
+import com.treilhes.jfxplace.core.api.preference.PreferenceEditorFactory;
+import com.treilhes.jfxplace.core.api.preference.PreferencesContext;
+import com.treilhes.jfxplace.core.api.preference.UserPreference;
+import com.treilhes.jfxplace.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
+import com.treilhes.jfxplace.core.api.preference.type.EnumPreference;
 
 import javafx.scene.Parent;
 

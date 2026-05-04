@@ -33,29 +33,27 @@
  */
 package com.oracle.javafx.scenebuilder.menu.main.file;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.document.DocumentActionFactory;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.document.DocumentActionFactory;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 @MenuItemAttachment(
-        id = SaveOrSaveAsAction.MENU_ID,
+        id = DefaultMenu.File.SAVE_ID,
         targetMenuId = OpenRecentProvider.MENU_ID,
         label = "menu.title.save",
         positionRequest = PositionRequest.AsNextSibling,
         separatorBefore = true)
 @Accelerator(accelerator = "CTRL+S")
 public class SaveOrSaveAsAction extends AbstractAction {
-
-    public final static String MENU_ID = DefaultMenu.File.SAVE_AS_ID;
 
     private final DocumentActionFactory documentActionFactory;
 

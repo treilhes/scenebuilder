@@ -36,37 +36,37 @@ package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
+import com.oracle.javafx.scenebuilder.editor.fxml.controller.EditModeController;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
 @MenuItemAttachment(
-        id = ToggleOutlinesVisibilityAction.MENU_ID,
-        targetMenuId = ToggleMinimizeBottomDockAction.MENU_ID,
+        id = DefaultMenu.View.OUTLINES_TOGGLE_ID,
+        targetMenuId = DefaultMenu.View.SHOW_VIEWS_ID,
         label = "#this.getToggleTitle()", // NOCHECK
         positionRequest = PositionRequest.AfterNextSeparator)
 @Accelerator(accelerator = "CTRL+E")
 public class ToggleOutlinesVisibilityAction extends AbstractAction {
 
-    public final static String MENU_ID = "toggleOutlinesMenu"; // NOCHECK
-
-    private final ContentPanelController contentPanelController;
+    private final EditModeController editModeController;
 
     //@formatter:off
     public ToggleOutlinesVisibilityAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            @Autowired @Lazy ContentPanelController contentPanelController) {
+            @Autowired @Lazy EditModeController editModeController) {
         //@formatter:on
         super(i18n, extensionFactory);
-        this.contentPanelController = contentPanelController;
+        this.editModeController = editModeController;
     }
 
     @Override
@@ -76,12 +76,19 @@ public class ToggleOutlinesVisibilityAction extends AbstractAction {
 
     @Override
     public ActionStatus doPerform() {
-        contentPanelController.setOutlinesVisible(!contentPanelController.isOutlinesVisible());
+        var outlineLayer = editModeController.getLayer(EditModeController.OUTLINE_LAYER);
+        if (outlineLayer.isEnabled()) {
+            outlineLayer.disable();
+        } else {
+            outlineLayer.enable();
+            outlineLayer.update();
+        }
         return ActionStatus.DONE;
     }
 
     public String getToggleTitle() {
-        if (contentPanelController.isOutlinesVisible()) {
+        var outlineLayer = editModeController.getLayer(EditModeController.OUTLINE_LAYER);
+        if (outlineLayer.isEnabled()) {
             return "menu.title.hide.outlines";
         } else {
             return "menu.title.show.outlines";

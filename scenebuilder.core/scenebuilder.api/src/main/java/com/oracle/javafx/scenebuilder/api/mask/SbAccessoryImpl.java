@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.api.mask;
 
-import com.gluonhq.jfxapps.core.api.fxom.mask.AccessoryGeneric;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbComponentPropertyMetadata;
+import com.treilhes.jfxplace.core.api.fxom.mask.AccessoryGeneric;
 
 public class SbAccessoryImpl extends AccessoryGeneric<SbComponentClassMetadata<?>, SbComponentPropertyMetadata> implements SbAccessory {
 

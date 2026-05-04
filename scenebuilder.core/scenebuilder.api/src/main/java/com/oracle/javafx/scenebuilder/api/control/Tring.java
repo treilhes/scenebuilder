@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.control;
 
-import com.gluonhq.jfxapps.core.api.fxom.content.decoration.Decoration;
+import com.treilhes.jfxplace.core.api.fxom.content.decoration.Decoration;
 
 import javafx.scene.Node;
 import javafx.scene.paint.Paint;

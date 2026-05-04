@@ -38,18 +38,19 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.util.FXOMDocumentUtils;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.document.DocumentTitleGenerator;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlViewController;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.ViewSearch;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenu;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.pipeline.FXOMSerializer;
 
 import eu.mihosoft.monacofx.MonacoFX;
 import javafx.beans.value.ChangeListener;
@@ -74,8 +75,8 @@ import javafx.scene.layout.StackPane;
 // @formatter:on
 public class ScriptEditorViewController extends AbstractFxmlViewController {
 
-    public final static String VIEW_ID = "05c449b9-8669-4a75-93ee-43d250136f7c";
-    public final static String VIEW_NAME = "view.name.controller.script.editor";
+    public static final String VIEW_ID = "05c449b9-8669-4a75-93ee-43d250136f7c";
+    public static final String VIEW_NAME = "view.name.controller.script.editor";
 
     @FXML
     ChoiceBox<SkeletonSettings.LANGUAGE> languageChoiceBox;
@@ -93,6 +94,8 @@ public class ScriptEditorViewController extends AbstractFxmlViewController {
     private boolean dirty = true;
     private final ApplicationInstanceEvents documentManager;
     private final FxomEvents fxomEvents;
+    private final DocumentTitleGenerator documentTitleGenerator;
+    private final FXOMSerializer fxomSerializer;
 
     public ScriptEditorViewController(
             I18N i18n,
@@ -100,17 +103,21 @@ public class ScriptEditorViewController extends AbstractFxmlViewController {
             ApplicationInstanceEvents documentManager,
             FxomEvents fxomEvents,
             @Autowired MainInstanceWindow document,
-            ViewMenu viewMenuController) {
+            ViewMenu viewMenuController,
+            FXOMSerializer fxomSerializer,
+            DocumentTitleGenerator documentTitleGenerator) {
         super(i18n, scenebuilderManager, documentManager, viewMenuController, ScriptEditorViewController.class.getResource("ScriptEditor.fxml"));
 
         this.documentManager = documentManager;
         this.fxomEvents = fxomEvents;
+        this.fxomSerializer = fxomSerializer;
+        this.documentTitleGenerator = documentTitleGenerator;
     }
 
     private void setFxomDocument(FXOMDocument fxomDocument) {
         assert fxomDocument != null;
         this.fxomDocument = fxomDocument;
-        this.documentName = FXOMDocumentUtils.makeTitle(fxomDocument);
+        this.documentName = documentTitleGenerator.makeTitle(fxomDocument);
         update();
     }
     @FXML
@@ -156,7 +163,7 @@ public class ScriptEditorViewController extends AbstractFxmlViewController {
         assert fxomDocument != null;
 
         // No need to eat CPU if the skeleton window isn't opened
-        if (isEnabled()) {
+        if (isVisible()) {
             updateTitle();
 //            final SkeletonBuffer buf = new SkeletonBuffer(fxomDocument, documentName);
 //
@@ -175,8 +182,8 @@ public class ScriptEditorViewController extends AbstractFxmlViewController {
 //            }
 
             try {
-
-                monacoFX.getEditor().getDocument().setText(fxomDocument.getFxmlText(false));
+                var text = fxomSerializer.serialize(fxomDocument);
+                monacoFX.getEditor().getDocument().setText(text);
                 // use a predefined language like 'c'
                 monacoFX.getEditor().setCurrentLanguage("xml");
                 monacoFX.getEditor().setCurrentTheme("vs-dark");

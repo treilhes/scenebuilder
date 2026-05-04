@@ -43,6 +43,7 @@ open module scenebuilder.ext.inspector {
 
     requires scenebuilder.starter;
     requires transitive scenebuilder.api;
+    requires jfxplace.fxom.editors;
 
     provides Extension with InspectorExtension;
 }

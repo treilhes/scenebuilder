@@ -38,13 +38,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.selection.SelectionGroup;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup.Type;
 import com.oracle.javafx.scenebuilder.tools.mask.GridPaneHierarchyMask;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.treilhes.jfxplace.core.api.selection.SelectionGroup;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.scene.layout.GridPane;
 

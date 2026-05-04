@@ -37,8 +37,8 @@ import java.io.File;
 import java.util.Optional;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.treilhes.jfxplace.core.api.fs.FileSystem;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
 
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -46,7 +46,6 @@ import javafx.stage.FileChooser.ExtensionFilter;
 @ApplicationInstanceSingleton
 public class FileHelper {
 
-    //private final static Logger logger = LoggerFactory.getLogger(FileHelper.class);
     private final MainInstanceWindow instanceWindow;
     private FileSystem fileSystem;
 

@@ -35,15 +35,15 @@ package com.oracle.javafx.scenebuilder.tools.driver.quadcurve;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.fxom.gesture.DiscardGesture;
-import com.gluonhq.jfxapps.core.api.fxom.gesture.Gesture;
-import com.gluonhq.jfxapps.core.api.fxom.gesture.Tunable;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.api.control.handles.AbstractCurveHandles;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.EditCurveGesture;
 import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
+import com.treilhes.jfxplace.core.api.fxom.gesture.DiscardGesture;
+import com.treilhes.jfxplace.core.api.fxom.gesture.Gesture;
+import com.treilhes.jfxplace.core.api.fxom.gesture.Tunable;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;

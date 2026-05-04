@@ -32,23 +32,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.gluonhq.jfxapps.boot.api.loader.extension.Extension;
 import com.oracle.javafx.app.fxmlrunner.RunnerExtension;
+import com.treilhes.emc4j.boot.api.loader.extension.Extension;
 
 open module scenebuilder.app.fxmlrunner {
 
-    requires jfxapps.boot.api;
-    requires jfxapps.boot.context;
-    requires jfxapps.boot.loader;
-
-
-    requires jakarta.annotation;
-    requires org.slf4j;
-    requires javafx.graphics;
-    requires javafx.fxml;
-    requires java.scripting;
-    requires org.graalvm.sdk;
-    requires spring.context;
+    requires jfxplace.core.api;
+    requires jfxplace.core.starter;
 
     provides Extension with RunnerExtension;
 }

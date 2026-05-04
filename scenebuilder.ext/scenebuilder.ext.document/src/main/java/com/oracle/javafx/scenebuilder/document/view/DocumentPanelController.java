@@ -35,13 +35,13 @@ package com.oracle.javafx.scenebuilder.document.view;
 
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlViewController;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.ViewSearch;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenu;
 import com.oracle.javafx.scenebuilder.api.ui.Docks;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
 import com.oracle.javafx.scenebuilder.document.api.DocumentPanel;
@@ -72,8 +72,8 @@ import javafx.scene.layout.StackPane;
 //@formatter:on
 public class DocumentPanelController extends AbstractFxmlViewController implements DocumentPanel {
 
-    public final static String VIEW_ID = "d1fd6f6a-5de0-4d92-9300-4309c4332ea5";
-    public final static String VIEW_NAME = "document";
+    public static final String VIEW_ID = "d1fd6f6a-5de0-4d92-9300-4309c4332ea5";
+    public static final String VIEW_NAME = "document";
 
     private final HierarchyController hierarchyController;
     private final InfoPanelController infoPanelController;

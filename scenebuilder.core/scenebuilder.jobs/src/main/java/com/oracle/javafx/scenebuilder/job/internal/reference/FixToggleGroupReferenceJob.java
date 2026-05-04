@@ -35,12 +35,12 @@
 package com.oracle.javafx.scenebuilder.job.internal.reference;
 
 import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
-import com.gluonhq.jfxapps.core.fxom.FXOMNode;
-import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
+import com.treilhes.jfxplace.core.api.job.Job;
+import com.treilhes.jfxplace.core.api.job.JobExtensionFactory;
+import com.treilhes.jfxplace.core.api.job.base.AbstractJob;
+import com.treilhes.jfxplace.core.fxom.FXOMIntrinsic;
+import com.treilhes.jfxplace.core.fxom.FXOMNode;
+import com.treilhes.jfxplace.core.fxom.FXOMPropertyT;
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 
 import javafx.scene.control.ToggleGroup;

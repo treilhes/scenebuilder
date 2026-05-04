@@ -54,13 +54,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
-import com.gluonhq.jfxapps.core.api.ui.dialog.AbstractModalDialog;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert.ButtonID;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.gluonhq.jfxapps.core.library.util.LibraryUtil;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageFilterTransform;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageFilterTransform.FontImage;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageFilterTransform.FontImageItem;
@@ -68,6 +61,13 @@ import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageFilterTransform.
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReport;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReportEntry;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageExplorerUtil;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
+import com.treilhes.jfxplace.core.api.ui.dialog.AbstractModalDialog;
+import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
+import com.treilhes.jfxplace.core.api.ui.dialog.Alert.ButtonID;
+import com.treilhes.jfxplace.core.library.util.LibraryUtil;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;

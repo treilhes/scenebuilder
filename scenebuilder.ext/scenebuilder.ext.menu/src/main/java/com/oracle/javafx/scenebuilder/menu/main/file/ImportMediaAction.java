@@ -37,17 +37,17 @@ import java.io.File;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
-import com.gluonhq.jfxapps.util.ResourceUtils;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.fs.FileSystem;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.job.JobManager;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.MessageLogger;
+import com.treilhes.jfxplace.util.ResourceUtils;
 import com.oracle.javafx.scenebuilder.api.selection.SbSelectionJobsFactory;
 
 import javafx.stage.FileChooser;
@@ -70,7 +70,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
         positionRequest = PositionRequest.AsNextSibling)
 public class ImportMediaAction extends AbstractAction {
 
-    public final static String MENU_ID = "importMediaMenu";
+    public static final String MENU_ID = "importMediaMenu";
 
     private final MainInstanceWindow documentWindow;
     private final FileSystem fileSystem;

@@ -37,10 +37,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.api.control.relocater.AbstractRelocater;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.util.MathUtils;
 
 import javafx.geometry.Bounds;
 import javafx.scene.layout.Pane;

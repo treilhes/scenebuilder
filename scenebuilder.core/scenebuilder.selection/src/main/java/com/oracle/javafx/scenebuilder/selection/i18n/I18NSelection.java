@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.selection.i18n;
 
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
+import com.treilhes.jfxplace.core.api.i18n.BundleProvider;
 
 @Component
 public class I18NSelection implements BundleProvider {

@@ -47,6 +47,6 @@ public interface GluonConstants {
     /**
      * Gluon javadoc home (for Inspector and CSS Analyzer properties)
      */
-    public final static String GLUON_JAVADOC_HOME = "http://docs.gluonhq.com/charm/javadoc/" + "latest" +"/"; //NOCHECK
+    public static final String GLUON_JAVADOC_HOME = "http://docs.gluonhq.com/charm/javadoc/" + "latest" +"/"; //NOCHECK
 
 }

@@ -35,27 +35,35 @@ package com.oracle.javafx.scenebuilder.api;
 
 import java.io.File;
 
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.FxomDisplay;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.FxomDisplay;
 
 import javafx.beans.value.ObservableValue;
 
+@Deprecated(forRemoval = true)
 public interface SbEditor extends FxomDisplay {
 
-	public File getIncludedFile();
+	@Deprecated(forRemoval = true)
+    public File getIncludedFile();
 
-	public void setPickModeEnabled(boolean b);
+	@Deprecated(forRemoval = true)
+    public void setPickModeEnabled(boolean b);
 
-	public boolean isPickModeEnabled();
+	@Deprecated(forRemoval = true)
+    public boolean isPickModeEnabled();
 
+    @Deprecated(forRemoval = true)
     public ObservableValue<Boolean> sampleDataEnabledProperty();
 
+    @Deprecated(forRemoval = true)
     public ObservableValue<Boolean> pickModeEnabledProperty();
 
+    @Deprecated(forRemoval = true)
     public boolean isSampleDataEnabled();
 
     /**
      * @param sampleDataEnabled
      */
+    @Deprecated(forRemoval = true)
     void setSampleDataEnabled(boolean sampleDataEnabled);
 
 }

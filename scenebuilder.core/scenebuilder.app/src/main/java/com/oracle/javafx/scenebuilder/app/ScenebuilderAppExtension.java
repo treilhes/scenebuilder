@@ -41,9 +41,11 @@ import com.oracle.javafx.scenebuilder.api.SbApiExtension;
 import com.oracle.javafx.scenebuilder.app.action.FxomApplicationActionFactoryImpl;
 import com.oracle.javafx.scenebuilder.app.action.FxomCloseInstanceAction;
 import com.oracle.javafx.scenebuilder.app.doc.DocumentationImpl;
+import com.oracle.javafx.scenebuilder.app.editors.EditorsContextImpl;
 import com.oracle.javafx.scenebuilder.app.fs.FxmlOpenFileHandler;
 import com.oracle.javafx.scenebuilder.app.fs.FxomOpenCommandEventHandler;
 import com.oracle.javafx.scenebuilder.app.i18n.I18NFxmlCoreExtension;
+import com.oracle.javafx.scenebuilder.editors.control.effect.JavaFxEffectsProvider;
 import com.treilhes.emc4j.boot.api.loader.extension.OpenExtension;
 
 public class ScenebuilderAppExtension implements OpenExtension {
@@ -66,6 +68,8 @@ public class ScenebuilderAppExtension implements OpenExtension {
         return Arrays.asList(
                 I18NFxmlCoreExtension.class,
                 DocumentationImpl.class,
+                EditorsContextImpl.class,
+                JavaFxEffectsProvider.class,
                 FxomApplicationActionFactoryImpl.class,
                 FxomCloseInstanceAction.class,
                 FxmlOpenFileHandler.class,

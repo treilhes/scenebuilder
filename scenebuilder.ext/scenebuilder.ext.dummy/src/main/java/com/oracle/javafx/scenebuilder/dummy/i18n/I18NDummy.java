@@ -34,7 +34,7 @@
 package com.oracle.javafx.scenebuilder.dummy.i18n;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.i18n.BundleProvider;
+import com.treilhes.jfxplace.core.api.i18n.BundleProvider;
 
 @ApplicationInstanceSingleton
 public class I18NDummy implements BundleProvider {

@@ -36,22 +36,22 @@ package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 import java.util.Arrays;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.Size;
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.Size;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.job.Job;
+import com.treilhes.jfxplace.core.api.job.JobManager;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBuilder;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -105,8 +105,8 @@ public class SetRootSizeAction extends AbstractAction {
     @ApplicationInstanceSingleton
     public static class MenuProvider implements MenuItemProvider {
 
-        private final static String TARGET_MENU_ID = DefaultMenu.Modify.ID;
-        public final static String SET_ROOT_SIZE_MENU_ID = "setRootSize";
+        private static final String TARGET_MENU_ID = DefaultMenu.Modify.ID;
+        public static final String SET_ROOT_SIZE_MENU_ID = "setRootSize";
 
         private final ActionFactory actionFactory;
         private final MenuBuilder menuBuilder;

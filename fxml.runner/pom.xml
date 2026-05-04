@@ -10,6 +10,11 @@
   <dependencies>
         <dependency>
             <groupId>com.treilhes.jfxplace</groupId>
+            <artifactId>jfxplace.core.api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.treilhes.jfxplace</groupId>
             <artifactId>jfxplace.core.starter</artifactId>
             <scope>provided</scope>
         </dependency>

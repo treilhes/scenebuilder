@@ -36,21 +36,21 @@ package com.oracle.javafx.scenebuilder.tools.job.wrap;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
-import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
 import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.SelectionJobsFactory;
+import com.treilhes.jfxplace.core.api.fxom.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.job.Job;
+import com.treilhes.jfxplace.core.api.job.JobExtensionFactory;
+import com.treilhes.jfxplace.core.api.job.JobFactory;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.FXOMPropertyC;
 
 import javafx.scene.control.DialogPane;
 
@@ -127,7 +127,7 @@ public final class WrapInDialogPaneJob extends AbstractWrapInJob {
     }
 
     @ApplicationInstanceSingleton
-    public final static class Factory extends JobFactory<WrapInDialogPaneJob> {
+    public static final class Factory extends JobFactory<WrapInDialogPaneJob> {
         public Factory(EmContext sbContext) {
             super(sbContext);
         }

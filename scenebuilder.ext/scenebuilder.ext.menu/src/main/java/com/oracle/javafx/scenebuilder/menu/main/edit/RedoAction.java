@@ -34,15 +34,15 @@
 package com.oracle.javafx.scenebuilder.menu.main.edit;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.JobManagerActionFactory;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.job.JobManager;
+import com.treilhes.jfxplace.core.api.job.JobManagerActionFactory;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 @ApplicationInstancePrototype
@@ -60,7 +60,7 @@ import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 public class RedoAction extends AbstractAction {
 
-    public final static String MENU_ID = DefaultMenu.Edit.REDO_ID;
+    public static final String MENU_ID = DefaultMenu.Edit.REDO_ID;
 
     private final JobManager jobManager;
     private final JobManagerActionFactory jobManagerActionFactory;

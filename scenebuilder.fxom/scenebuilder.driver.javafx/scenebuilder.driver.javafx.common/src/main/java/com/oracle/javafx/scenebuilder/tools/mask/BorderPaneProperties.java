@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.tools.mask;
 
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
 
 public interface BorderPaneProperties {
     public static final PropertyName TOP = new PropertyName("top"); //NOCHECK

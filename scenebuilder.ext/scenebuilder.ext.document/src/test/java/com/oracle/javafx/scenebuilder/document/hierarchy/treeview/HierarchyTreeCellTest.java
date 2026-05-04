@@ -33,117 +33,103 @@
  */
 package com.oracle.javafx.scenebuilder.document.hierarchy.treeview;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
-import java.net.URL;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxRobot;
-import org.testfx.framework.junit5.ApplicationExtension;
-import org.testfx.framework.junit5.Start;
 
-import com.treilhes.emc4j.boot.api.context.EmContext;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.fxom.error.ErrorReport;
-import com.gluonhq.jfxapps.core.api.fxom.error.ErrorReportEntry;
-import com.gluonhq.jfxapps.core.api.fxom.error.ErrorType;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
-import com.gluonhq.jfxapps.core.fxom.FXOMInclude;
-import com.gluonhq.jfxapps.core.fxom.FXOMNode;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
+import com.oracle.javafx.scenebuilder.document.api.Hierarchy;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
-import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyController;
+import com.oracle.javafx.scenebuilder.document.api.HierarchyPanel;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyCellAssignment;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyDNDController;
+import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyParentRing;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.test.EmcInject;
+import com.treilhes.emc4j.test.EmcInjectMock;
+import com.treilhes.jfxplace.core.api.fxom.dnd.Drag;
+import com.treilhes.jfxplace.core.api.fxom.error.ErrorReport;
+import com.treilhes.jfxplace.core.api.fxom.error.ErrorReportEntry;
+import com.treilhes.jfxplace.core.api.tooltheme.ToolStylesheetProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.pipeline.FXOMDocumentFactory;
+import com.treilhes.jfxplace.test.JfxPlaceTest;
+import com.treilhes.jfxplace.test.builder.StageBuilder;
+import com.treilhes.jfxplace.test.builder.StageType;
 
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.Scene;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 /**
  *
  */
-@ExtendWith({ApplicationExtension.class, MockitoExtension.class})
+@JfxPlaceTest(classes = { HierarchyTreeCell.class, HierarchyTreeCell.Factory.class })
 class HierarchyTreeCellTest {
 
-    private Stage stage;
-    private Pane pane;
+    @EmcInjectMock
+    private Drag drag;
+    @EmcInjectMock
+    private InlineEdit inlineEdit;
+    @EmcInjectMock
+    private ErrorReport errorReport;
+    @EmcInjectMock
+    private TreeItem<HierarchyItem> treeItem;
+    @EmcInjectMock
+    private HierarchyItem item;
+    @EmcInjectMock
+    private DisplayOption displayOption;
+    @EmcInjectMock
+    private EmContext context;
+    @EmcInjectMock
+    private Hierarchy panelController;
+
+    @EmcInjectMock
+    HierarchyPanel hierarchyPanel;
+    @EmcInjectMock
+    HierarchyCellAssignment cellAssignment;
+    @EmcInjectMock
+    HierarchyParentRing parentRing;
+    @EmcInjectMock
+    HierarchyDNDController dndController;
+
+    @EmcInject
+    HierarchyTreeCell.Factory factory;
+
+    @EmcInject
+    StageBuilder builder;
 
     @Mock
-    private Drag drag;
-    @Mock
-    private InlineEdit inlineEdit;
-    @Mock
-    private ErrorReport errorReport;
-    @Mock
-    private TreeItem<HierarchyItem> treeItem;
-    @Mock
-    private HierarchyItem item;
-    @Mock
-    private DisplayOption displayOption;
-    @Mock
-    private EmContext context;
-    @Mock
-    private HierarchyController panelController;
-    @InjectMocks
-    private HierarchyTreeCell.Factory factory;
-    @InjectMocks
-    private HierarchyTreeCell<HierarchyItem> cell;
+    ErrorReportEntry errorReportEntry;
 
     private FXOMDocument document = FXOMDocumentFactory.DEFAULT.newDocument();
-    /**
-     * Will be called with {@code @Before} semantics, i. e. before each test method.
-     *
-     * @param stage - Will be injected by the test runner.
-     */
-    @Start
-    private void start(Stage stage) {
-        this.stage = stage;
-        pane = new Pane();
-        stage.setScene(new Scene(pane, 800, 100, Color.BEIGE));
-        stage.getScene().getStylesheets().add("file:///C:/SSDDrive/git/scenebuilder/scenebuilder.ext.sb/src/main/resources/com/oracle/javafx/scenebuilder/sb/css/ThemeDark.css");
-        stage.show();
-    }
 
     @BeforeEach
-    public void setupMocking() {
-        Mockito.when(panelController.displayOptionProperty()).thenReturn(new SimpleObjectProperty<DisplayOption>(displayOption));
+    void setupMocking() {
+        Mockito.when(panelController.displayOptionProperty())
+                .thenReturn(new SimpleObjectProperty<DisplayOption>(displayOption));
         Mockito.when(panelController.getDisplayOption()).thenReturn(displayOption);
 
         Mockito.when(displayOption.hasValue(Mockito.any())).thenReturn(true);
         Mockito.when(displayOption.getResolvedValue(Mockito.any())).thenReturn("getResolvedValue");
-        Mockito.when(displayOption.isReadOnly(Mockito.any())).thenReturn(true);
-
-        Mockito.when(context.getBean(HierarchyTreeCell.class)).thenReturn(cell);
-
-        Mockito.when(errorReport.query(Mockito.any(), Mockito.anyBoolean())).thenReturn(null);
-
-        Mockito.when(treeItem.isExpanded()).thenReturn(false);
-        Mockito.when(treeItem.expandedProperty()).thenReturn(new SimpleBooleanProperty());
-        Mockito.when(treeItem.leafProperty()).thenReturn(new SimpleBooleanProperty());
-        cell.updateTreeItem(treeItem);
+        Mockito.when(displayOption.isReadOnly(Mockito.any())).thenReturn(false);
 
     }
     /**
-     * Test method for {@link com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell#HierarchyTreeCell(com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit, com.gluonhq.jfxapps.core.api.fxom.error.ErrorReport, com.gluonhq.jfxapps.core.api.fxom.dnd.Drag)}.
+     * Test method for {@link com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell#HierarchyTreeCell(com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit, com.treilhes.jfxplace.core.api.fxom.error.ErrorReport, com.treilhes.jfxplace.core.api.fxom.dnd.Drag)}.
      */
     @Test
-    void testHierarchyTreeCell(FxRobot robot) {
+    void testHierarchyTreeCell(EmContext context, FxRobot robot) {
 
-        //Mockito.when(item.getFxomObject()).thenReturn(new FXOMInstance(document, "sometag"));
-        Mockito.when(item.getFxomObject()).thenReturn(new FXOMInclude(document, ""));
+        Mockito.when(item.getFxomObject()).thenReturn(new FXOMInstance(document, "sometag"));
+//        Mockito.when(item.getFxomObject()).thenReturn(new FXOMInclude(document, ""));
 
         Mockito.when(item.getPlaceHolderImage()).thenReturn(new Image(getClass().getResourceAsStream("icon.png")));
         Mockito.when(item.getPlaceHolderInfo()).thenReturn("getPlaceHolderInfo");
@@ -152,69 +138,27 @@ class HierarchyTreeCellTest {
         Mockito.when(item.getClassNameInfo()).thenReturn("getClassNameInfo");
 
         // error
-        Mockito.when(errorReport.query(Mockito.any(), Mockito.anyBoolean())).thenReturn(List.of(new ErrorReportEntry() {
+        Mockito.when(errorReport.query(Mockito.any(), Mockito.anyBoolean())).thenReturn(List.of(errorReportEntry));
+        Mockito.when(errorReportEntry.getText()).thenReturn("some error text");
 
-            @Override
-            public FXOMNode getFxomNode() {
-                return null;
-            }
+        try(var testStage = builder
+                .controller()
+                .css(ToolStylesheetProvider.builder()
+                        //.stylesheet(CssPanelController.class.getResource("css/ThemeDark_common.css").toExternalForm())
+                        //.stylesheet(CssPanelController.class.getResource("css/ThemeDark_SBKIT-css-panel.css").toExternalForm())
+                        .build())
+                .setup(StageType.Fill)
+                .size(800, 600).show()) {
 
-            @Override
-            public ErrorType getType() {
-                return null;
-            }
+            var treeView = new TreeView<HierarchyItem>();
+            treeView.setCellFactory(t -> factory.newCell(hierarchyPanel));
+            treeView.setRoot(new TreeItem<>(item));
 
-            @Override
-            public URL getLinkedResource() {
-                return null;
-            }
+            var stage = testStage.getStage();
 
-            @Override
-            public String getText() {
-                return null;
-            }
+            robot.interact(() -> stage.getScene().setRoot(treeView));
 
-        }));
-        Mockito.when(errorReport.getText(Mockito.any())).thenReturn("some error text");
-
-        final HierarchyTreeCell<HierarchyItem> cell = (HierarchyTreeCell<HierarchyItem>)factory.newCell(panelController);
-
-        cell.updateItem(item, false);
-        robot.interact(() -> pane.getChildren().add(cell.getGraphic()));
-
-        System.out.println();
+            System.out.println();
+        }
     }
-
-    /**
-     * Test method for {@link com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell#updateItem(com.oracle.javafx.scenebuilder.document.api.HierarchyItem, boolean)}.
-     */
-    @Test
-    void testUpdateItemHierarchyItemBoolean() {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell#updatePlaceHolder()}.
-     */
-    @Test
-    void testUpdatePlaceHolder() {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell#startEditingDisplayOption()}.
-     */
-    @Test
-    void testStartEditingDisplayInfo() {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell#toString()}.
-     */
-    @Test
-    void testToString() {
-        fail("Not yet implemented");
-    }
-
 }

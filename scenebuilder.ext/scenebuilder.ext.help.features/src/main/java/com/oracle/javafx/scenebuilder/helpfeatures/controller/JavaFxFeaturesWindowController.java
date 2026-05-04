@@ -34,11 +34,12 @@
 package com.oracle.javafx.scenebuilder.helpfeatures.controller;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
+import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlWindowController;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
 
 import javafx.application.ConditionalFeature;
 import javafx.application.Platform;
@@ -54,8 +55,11 @@ public class JavaFxFeaturesWindowController extends AbstractFxmlWindowController
     @FXML
     TextArea textArea;
 
-    public JavaFxFeaturesWindowController(I18N i18n, ApplicationEvents sceneBuilderManager, IconSetting iconSetting,
-            MainInstanceWindow document) {
+    public JavaFxFeaturesWindowController(
+            I18N i18n,
+            ApplicationEvents sceneBuilderManager,
+            IconSetting iconSetting,
+            @Lazy MainInstanceWindow document) {
         super(i18n, sceneBuilderManager, iconSetting,
                 JavaFxFeaturesWindowController.class.getResource("JavaFxFeaturesWindow.fxml"), document); // NOI18N
     }

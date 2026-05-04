@@ -37,72 +37,82 @@ import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
+import org.springframework.core.annotation.AnnotationUtils;
 
-import com.treilhes.emc4j.boot.api.aop.AopContext;
-import com.treilhes.emc4j.boot.api.aop.AopFactoryBean;
-import com.treilhes.emc4j.boot.api.aop.AopMetadata;
-import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeGroup;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeGroupContext;
+import com.treilhes.emc4j.boot.api.aop.AopContext;
+import com.treilhes.emc4j.boot.api.aop.AopFactory;
+import com.treilhes.emc4j.boot.api.aop.AopFactoryBean;
+import com.treilhes.emc4j.boot.api.aop.AopMetadata;
+import com.treilhes.emc4j.boot.api.aop.DefaultMethodInterceptor;
+import com.treilhes.emc4j.boot.api.aop.ImplementationInterceptor;
+import com.treilhes.emc4j.boot.api.context.EmContext;
 
-public class ThemeGroupAopContext extends AopContext<ThemeGroup, ThemeGroupContext, ThemeGroupAopContext.ThemeGroupMetadata> {
+public class ThemeGroupAopContext extends AopContext<ThemeGroup> {
 
     public ThemeGroupAopContext() {
-        super(ThemeGroup.class, ThemeGroupContext.class);
-    }
-
-    @Override
-    public ThemeGroupAopContext.ThemeGroupMetadata loadMetadata(Class<?> clazz) {
-        return new ThemeGroupMetadata(getContexAnnotationClass(), getMarkerClass(), clazz);
-    }
-
-    @Override
-    public ThemeGroup createTarget(EmContext context, ThemeGroupMetadata metadata) {
-
-        var id = metadata.getId();
-        var name = metadata.getName();
-
-        return new BaseThemeGroup(id, name);
-    }
-
-    @Override
-    public Class<? extends AopFactoryBean<ThemeGroup, ThemeGroupMetadata>> factoryBeanClass() {
-        return ThemeGroupFactoryBean.class;
-    }
-
-
-    @Override
-    public <EX extends Annotation> Class<EX> getExclusionAnnotation() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public static class ThemeGroupFactoryBean extends AopFactoryBean<ThemeGroup, ThemeGroupMetadata> {
-
-        public ThemeGroupFactoryBean(Class<?> preferenceInterface) {
-            super(preferenceInterface, new ThemeGroupAopContext());
-        }
-
+        super(ThemeGroup.class);
     }
 
     @Override
     public boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
 
-        boolean isNonPreferenceInterface = !ThemeGroup.class.getName().equals(beanDefinition.getBeanClassName());
-        boolean isPreference = Arrays.stream(beanDefinition.getMetadata().getInterfaceNames())
+        boolean isNotThemeGroupInterface = !ThemeGroup.class.getName().equals(beanDefinition.getBeanClassName());
+        boolean isThemeGroup = Arrays.stream(beanDefinition.getMetadata().getInterfaceNames())
                 .anyMatch(ThemeGroup.class.getName()::equals);
         boolean isInterface = beanDefinition.getMetadata().isInterface();
         boolean hasContextAnnotation = beanDefinition.getMetadata().isAnnotated(ThemeGroupContext.class.getName());
 
-        return isPreference && isInterface && isNonPreferenceInterface && hasContextAnnotation;
+        return isThemeGroup && isInterface && isNotThemeGroupInterface && hasContextAnnotation;
+    }
+
+    @Override
+    public Class<? extends AopFactoryBean<ThemeGroup>> factoryBeanClass() {
+        return ThemeGroupFactoryBean.class;
+    }
+
+    @Override
+    public <E extends Annotation> Class<E> getExclusionAnnotation() {
+        // No exclusion annotation for ThemeGroup
+        return null;
+    }
+
+    @Override
+    public Object createProxy(AopFactory aopFactory, EmContext context, AopMetadata metadata) {
+        var themeGroupInterface = metadata.getBeanClass();
+
+        aopFactory.addRead(themeGroupInterface);
+
+        var themeGroup = createTarget(themeGroupInterface);
+
+        // Create proxy
+        var result = new ProxyFactory();
+        result.setTarget(themeGroup);
+        result.setInterfaces(themeGroupInterface);
+        result.addAdvice(new DefaultMethodInterceptor());
+        result.addAdvice(new ImplementationInterceptor(themeGroup, themeGroupInterface));
+
+        return result.getProxy(themeGroupInterface.getClassLoader());
+    }
+
+    private ThemeGroup createTarget(Class<?> themeGroupInterface) {
+
+        var annotation = AnnotationUtils.findAnnotation(themeGroupInterface, ThemeGroupContext.class);
+
+        if (annotation == null) {
+            throw new IllegalStateException("ThemeGroup interface " + themeGroupInterface.getName() + " is missing @ThemeGroupContext annotation");
+        }
+
+        var id = UUID.fromString(annotation.id());
+        var name = annotation.name();
+
+        return new BaseThemeGroup(id, name);
     }
 
     public class BaseThemeGroup implements ThemeGroup {
-
-        private static final Logger logger = LoggerFactory.getLogger(BaseThemeGroup.class);
 
         private final UUID id;
         private final String name;
@@ -127,33 +137,9 @@ public class ThemeGroupAopContext extends AopContext<ThemeGroup, ThemeGroupConte
         }
     }
 
-    public static class ThemeGroupMetadata extends AopMetadata<ThemeGroupContext, ThemeGroup> {
-
-        private UUID id;
-        private String name;
-
-        public ThemeGroupMetadata(Class<ThemeGroupContext> annotationClass, Class<ThemeGroup> markerClass, Class<?> preferenceInterface) {
-            super(annotationClass, markerClass, preferenceInterface);
-        }
-
-        @Override
-        protected void loadMetadata(ThemeGroupContext annotation) {
-            if (hasAnnotation()) {
-                this.id = UUID.fromString(annotation.id());
-                this.name = annotation.name();
-            } else {
-                this.id = null;
-                this.name = null;
-            }
-        }
-
-        public UUID getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
+    public static class ThemeGroupFactoryBean extends AopFactoryBean<ThemeGroup> {
+        public ThemeGroupFactoryBean(Class<?> themeGroupInterface) {
+            super(themeGroupInterface, new ThemeGroupAopContext());
         }
     }
-
 }

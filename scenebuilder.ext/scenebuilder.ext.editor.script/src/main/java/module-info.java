@@ -32,15 +32,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import com.oracle.javafx.scenebuilder.editor.script.ScriptEditorExtension;
+import com.treilhes.emc4j.boot.api.loader.extension.Extension;
 
 open module scenebuilder.ext.editor.script {
     exports com.oracle.javafx.scenebuilder.editor.script;
     exports com.oracle.javafx.scenebuilder.editor.script.i18n;
 
-    requires scenebuilder.starter;
-    
     requires transitive scenebuilder.api;
-    requires scenebuilder.core.extension.api;
+    requires scenebuilder.starter;
+
     requires eu.mihosoft.monacofx;
 
     provides Extension with ScriptEditorExtension;

@@ -35,21 +35,25 @@ package com.oracle.javafx.app.fxmlrunner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationListener;
 
-import com.gluonhq.jfxapps.boot.api.context.annotation.Singleton;
-import com.gluonhq.jfxapps.boot.api.loader.OpenCommandEvent;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.emc4j.boot.api.loader.OpenCommandEvent;
+import com.treilhes.emc4j.boot.api.loader.RestartCommandEvent;
+import com.treilhes.emc4j.boot.api.loader.RestartedCommandEvent;
+import com.treilhes.emc4j.boot.api.loader.StopCommandEvent;
+import com.treilhes.jfxplace.core.api.application.CommandEventHandler;
 
 import javafx.application.Application;
 
-@Singleton
-public class Runner implements ApplicationListener<OpenCommandEvent> {
+@ApplicationSingleton
+public class Runner implements CommandEventHandler {
 
-    static Logger logger = LoggerFactory.getLogger(Runner.class);
+    private static final Logger logger = LoggerFactory.getLogger(Runner.class);
 
     @Override
-    public void onApplicationEvent(OpenCommandEvent event) {
+    public void handleOpenCommand(OpenCommandEvent command) {
 
+        command.
         String fxmlFile = event.getFile().getAbsolutePath();
 
         System.setProperty("polyglot.js.nashorn-compat", "true");
@@ -71,8 +75,23 @@ public class Runner implements ApplicationListener<OpenCommandEvent> {
 //        scriptContext.setBindings(graalEngine.createBindings(), ScriptContext.ENGINE_SCOPE);
 //        manager.setBindings(scriptContext.getBindings(ScriptContext.ENGINE_SCOPE));
 
-
-
         Application.launch(RunnerFxApplication.class, fxmlFile);
+
+    }
+
+    @Override
+    public void handleStopCommand(StopCommandEvent command) {
+        // not implemented, do nothing
+    }
+
+    @Override
+    public void handleRestartCommand(RestartCommandEvent command) {
+        // not implemented, do nothing
+
+    }
+
+    @Override
+    public void handleRestartedCommand(RestartedCommandEvent command) {
+        // not implemented, do nothing
     }
 }

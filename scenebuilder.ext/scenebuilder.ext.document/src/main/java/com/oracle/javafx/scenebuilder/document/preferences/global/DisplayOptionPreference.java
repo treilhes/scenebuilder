@@ -36,13 +36,13 @@ package com.oracle.javafx.scenebuilder.document.preferences.global;
 import java.util.function.Supplier;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups;
-import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
-import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
-import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preference.Preference;
-import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
-import com.gluonhq.jfxapps.core.api.preference.UserPreference;
+import com.treilhes.jfxplace.core.api.preference.DefaultPreferenceGroups;
+import com.treilhes.jfxplace.core.api.preference.DefaultValueProvider;
+import com.treilhes.jfxplace.core.api.preference.ManagedGlobalPreference;
+import com.treilhes.jfxplace.core.api.preference.Preference;
+import com.treilhes.jfxplace.core.api.preference.PreferenceContext;
+import com.treilhes.jfxplace.core.api.preference.UserPreference;
+import com.treilhes.jfxplace.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
 import com.oracle.javafx.scenebuilder.document.hierarchy.display.MetadataInfoDisplayOption;
 

@@ -36,16 +36,16 @@ package com.oracle.javafx.scenebuilder.tools.action.gridpane;
 import java.util.Arrays;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.ctxmenu.ContextMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ctxmenu.ContextMenuItemProvider;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultContextMenu;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.ctxmenu.ContextMenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ctxmenu.ContextMenuItemProvider;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBuilder;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 
 import javafx.scene.control.Menu;
 

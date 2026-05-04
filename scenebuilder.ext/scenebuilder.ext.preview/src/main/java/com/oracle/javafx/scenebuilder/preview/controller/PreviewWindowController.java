@@ -44,24 +44,22 @@ import java.util.TimerTask;
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.gluonhq.jfxapps.core.api.Size;
-import com.gluonhq.jfxapps.core.api.fxom.css.StylesheetProvider;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.util.FXOMDocumentUtils;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.i18n.I18nResourceProvider;
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.ui.InstanceWindow;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractWindowController;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
-import com.gluonhq.jfxapps.util.MathUtils;
-import com.oracle.javafx.scenebuilder.api.SbEditor;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.Size;
+import com.treilhes.jfxplace.core.api.fxom.css.StylesheetProvider;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.fxom.util.FXOMDocumentUtils;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.i18n.I18nResourceProvider;
+import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractWindowController;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.pipeline.FXOMPipeline;
+import com.treilhes.jfxplace.util.MathUtils;
 
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
@@ -86,14 +84,12 @@ import javafx.stage.Modality;
 public class PreviewWindowController extends AbstractWindowController implements InitializingBean {
 
     private final I18N i18n;
-    private final FXOMDocumentFactory fxomDocumentFactory;
-    private final SbEditor editorController;
     private Timer timer = null;
     private final int WIDTH_WHEN_EMPTY = 320;
     private final int HEIGHT_WHEN_EMPTY = 200;
     private CameraType cameraType;
     private boolean autoResize3DContent = true;
-    private static final String NID_PREVIEW_ROOT = "previewRoot"; //NOCHECK
+    private static final String NID_PREVIEW_ROOT = "previewRoot"; // NOCHECK
 
     private ObservableList<File> sceneStyleSheet;
     private Size currentSize = Size.SIZE_PREFERRED;
@@ -108,11 +104,13 @@ public class PreviewWindowController extends AbstractWindowController implements
     private boolean isDirty = true;
     private final long IMMEDIATE = 0; // milliseconds
     private final long DELAYED = 1000; // milliseconds
-	private StylesheetProvider stylesheetConfig;
+    private StylesheetProvider stylesheetConfig;
     private I18nResourceProvider resourceConfig;
     private FXOMDocument fxomDocument;
     private final FxomEvents fxomEvents;
     private final JfxAppPlatform jfxAppPlatform;
+    private final FXOMPipeline fxomPipeline;
+
     /**
      * The type of Camera used by the Preview panel.
      */
@@ -127,19 +125,16 @@ public class PreviewWindowController extends AbstractWindowController implements
             JfxAppPlatform jfxAppPlatform,
             ApplicationEvents sceneBuilderManager,
             IconSetting iconSetting,
-            SbEditor editorController,
-            InstanceWindow document,
+            MainInstanceWindow document,
             FxomEvents fxomEvents,
-            FXOMDocumentFactory fxomDocumentFactory) {
+            FXOMPipeline fxomPipeline) {
         //@formatter:on
         super(sceneBuilderManager, iconSetting, document);
-        this.editorController = editorController;
-        this.fxomEvents = fxomEvents;
-        this.fxomDocumentFactory = fxomDocumentFactory;
-        this.jfxAppPlatform = jfxAppPlatform;
         this.i18n = i18n;
+        this.fxomEvents = fxomEvents;
+        this.jfxAppPlatform = jfxAppPlatform;
+        this.fxomPipeline = fxomPipeline;
     }
-
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -170,10 +165,7 @@ public class PreviewWindowController extends AbstractWindowController implements
             requestUpdate(DELAYED);
         });
 
-        this.editorController.sampleDataEnabledProperty()
-                .addListener((ChangeListener<Boolean>) (ov, t, t1) -> requestUpdate(DELAYED));
     }
-
 
 //    /*
 //     * AbstractWindowController
@@ -198,14 +190,15 @@ public class PreviewWindowController extends AbstractWindowController implements
     }
 
     @Override
-    public void onFocus() {}
+    public void onFocus() {
+    }
 
     @Override
     protected void controllerDidCreateStage() {
         updateWindowSize();
         updateWindowTitle();
 
-     // Until the timer used in requestUpdate() expires, so that the root of
+        // Until the timer used in requestUpdate() expires, so that the root of
         // the scene is updated to the real content, we set a placeholder.
         StackPane sp = new StackPane();
         sp.setPrefSize(WIDTH_WHEN_EMPTY, HEIGHT_WHEN_EMPTY);
@@ -228,13 +221,9 @@ public class PreviewWindowController extends AbstractWindowController implements
         // We clone the FXOMDocument
         FXOMDocument clone;
         try {
-            clone = fxomDocumentFactory.newDocument(fxomDocument.getFxmlText(false),
-                    fxomDocument.getLocation(),
-                    fxomDocument.getClassLoader(),
-                    fxomDocument.getResources());
-            clone.setSampleDataEnabled(fxomDocument.isSampleDataEnabled());
+            clone = fxomPipeline.clone(fxomDocument);
         } catch (IOException ex) {
-            throw new RuntimeException("Bug in PreviewWindowController::openDialog", ex); //NOCHECK
+            throw new RuntimeException("Bug in PreviewWindowController::openDialog", ex); // NOCHECK
         }
 
         final Object sceneGraphRoot = clone.getSceneGraphRoot();
@@ -256,12 +245,11 @@ public class PreviewWindowController extends AbstractWindowController implements
     }
 
     /**
-     * We use the provided delay before refreshing the content of the preview.
-     * If further modification is brought to the layout before expiration of it
-     * we restart the timer. The idea is to lower the resources used to refresh
-     * the preview window content.
-     * The delay is expressed in milliseconds.
-     * In some cases it is wise to used delay = 0, e.g. when opening the window.
+     * We use the provided delay before refreshing the content of the preview. If
+     * further modification is brought to the layout before expiration of it we
+     * restart the timer. The idea is to lower the resources used to refresh the
+     * preview window content. The delay is expressed in milliseconds. In some cases
+     * it is wise to used delay = 0, e.g. when opening the window.
      */
     private void requestUpdate(long delay) {
 
@@ -272,94 +260,91 @@ public class PreviewWindowController extends AbstractWindowController implements
 
             @Override
             public void run() {
-            // JavaFX data should only be accessed on the JavaFX thread.
-            // => we must wrap the code into a Runnable object and call the SbPlatform.runLater
-            jfxAppPlatform.runOnFxThread(() -> {
-                String themeStyleSheetString = null;
-                if (fxomDocument != null) {
-                    // We clone the FXOMDocument
-                    FXOMDocument clone;
+                // JavaFX data should only be accessed on the JavaFX thread.
+                // => we must wrap the code into a Runnable object and call the
+                // SbPlatform.runLater
+                jfxAppPlatform.runOnFxThread(() -> {
+                    String themeStyleSheetString = null;
+                    if (fxomDocument != null) {
+                        // We clone the FXOMDocument
+                        FXOMDocument clone;
 
-                    try {
-                        clone = fxomDocumentFactory.newDocument(fxomDocument.getFxmlText(false),
-                                fxomDocument.getLocation(),
-                                fxomDocument.getClassLoader(),
-                                fxomDocument.getResources());
-                        clone.setSampleDataEnabled(fxomDocument.isSampleDataEnabled());
-                    } catch (IOException ex) {
-                        throw new RuntimeException("Bug in PreviewWindowController::requestUpdate", ex); //NOCHECK
-                    }
+                        try {
+                            clone = fxomPipeline.clone(fxomDocument);
+                        } catch (IOException ex) {
+                            throw new RuntimeException("Bug in PreviewWindowController::requestUpdate", ex); // NOCHECK
+                        }
 
-                    Object sceneGraphRoot = clone.getDisplayNodeOrSceneGraphRoot();
-                    themeStyleSheetString = stylesheetConfig.getUserAgentStylesheet();
+                        Object sceneGraphRoot = clone.getDisplayNodeOrSceneGraphRoot();
+                        themeStyleSheetString = stylesheetConfig.getUserAgentStylesheet();
 
-                    if (sceneGraphRoot instanceof Parent) {
-                        Parent root = (Parent) sceneGraphRoot;
-                        root.setId(NID_PREVIEW_ROOT);
-                        assert root.getScene() == null;
+                        if (sceneGraphRoot instanceof Parent root) {
+                            root.setId(NID_PREVIEW_ROOT);
+                            assert root.getScene() == null;
 
-                        setRoot((Parent) updateAutoResizeTransform(root));
+                            setRoot((Parent) updateAutoResizeTransform(root));
 
-                        // Compute the proper styling
-                        List<String> newStyleSheets1 = new ArrayList<>();
-                        computeStyleSheets(newStyleSheets1, sceneGraphRoot, clone.getDisplayStylesheets());
+                            // Compute the proper styling
+                            List<String> newStyleSheets1 = new ArrayList<>();
+                            computeStyleSheets(newStyleSheets1, sceneGraphRoot, clone.getDisplayStylesheets());
 
-                        // Clean all styling
-                        root.getStylesheets().removeAll();
+                            // Clean all styling
+                            root.getStylesheets().removeAll();
 
-                        // Apply the new styling
-                        root.getStylesheets().addAll(newStyleSheets1);
-                    } else if (sceneGraphRoot instanceof Node) {
-                        Node root = (Node) sceneGraphRoot;
-                        StackPane sp1 = new StackPane();
-                        sp1.setId(NID_PREVIEW_ROOT);
+                            // Apply the new styling
+                            root.getStylesheets().addAll(newStyleSheets1);
+                        } else if (sceneGraphRoot instanceof Node root) {
+                            StackPane sp1 = new StackPane();
+                            sp1.setId(NID_PREVIEW_ROOT);
 
-                        // Compute the proper styling
-                        List<String> newStyleSheets2 = new ArrayList<>();
-                        computeStyleSheets(newStyleSheets2, sceneGraphRoot, clone.getDisplayStylesheets());
+                            // Compute the proper styling
+                            List<String> newStyleSheets2 = new ArrayList<>();
+                            computeStyleSheets(newStyleSheets2, sceneGraphRoot, clone.getDisplayStylesheets());
 
-                        // Apply the new styling as a whole
-                        sp1.getStylesheets().addAll(newStyleSheets2);
+                            // Apply the new styling as a whole
+                            sp1.getStylesheets().addAll(newStyleSheets2);
 
-                        // With some 3D assets such as TuxRotation the
-                        // rendering is wrong unless applyCSS is called.
-                        root.applyCss();
-                        sp1.getChildren().add(updateAutoResizeTransform((Node) sceneGraphRoot));
-                        setRoot(sp1);
+                            // With some 3D assets such as TuxRotation the
+                            // rendering is wrong unless applyCSS is called.
+                            root.applyCss();
+                            sp1.getChildren().add(updateAutoResizeTransform(root));
+                            setRoot(sp1);
+                        } else {
+                            setCameraType(CameraType.PARALLEL);
+                            sizeChangedFromMenu = false;
+                            StackPane sp2 = new StackPane(new Label(i18n.getString("preview.not.node")));
+                            sp2.setId(NID_PREVIEW_ROOT);
+                            sp2.setPrefSize(WIDTH_WHEN_EMPTY, HEIGHT_WHEN_EMPTY);
+                            setRoot(sp2);
+                        }
                     } else {
                         setCameraType(CameraType.PARALLEL);
                         sizeChangedFromMenu = false;
-                        StackPane sp2 = new StackPane(new Label(i18n.getString("preview.not.node")));
-                        sp2.setId(NID_PREVIEW_ROOT);
-                        sp2.setPrefSize(WIDTH_WHEN_EMPTY, HEIGHT_WHEN_EMPTY);
-                        setRoot(sp2);
+                        StackPane sp3 = new StackPane(new Label(i18n.getString("preview.no.document")));
+                        sp3.setId(NID_PREVIEW_ROOT);
+                        sp3.setPrefSize(WIDTH_WHEN_EMPTY, HEIGHT_WHEN_EMPTY);
+                        setRoot(sp3);
                     }
-                } else {
-                    setCameraType(CameraType.PARALLEL);
-                    sizeChangedFromMenu = false;
-                    StackPane sp3 = new StackPane(new Label(i18n.getString("preview.no.document")));
-                    sp3.setId(NID_PREVIEW_ROOT);
-                    sp3.setPrefSize(WIDTH_WHEN_EMPTY, HEIGHT_WHEN_EMPTY);
-                    setRoot(sp3);
-                }
 
-                getScene().setRoot(getRoot());
-                if (themeStyleSheetString != null) {
-                	ObservableList<String> newStylesheets = FXCollections.observableArrayList(getScene().getStylesheets());
-                	getScene().setUserAgentStylesheet(themeStyleSheetString);// OR stylesheetConfig.getUserAgentStylesheet()
-                	getScene().getStylesheets().clear();
-                    getScene().getStylesheets().addAll(newStylesheets);
-                    getScene().getStylesheets().addAll(stylesheetConfig.getStylesheets());
-                }
+                    getScene().setRoot(getRoot());
+                    if (themeStyleSheetString != null) {
+                        ObservableList<String> newStylesheets = FXCollections
+                                .observableArrayList(getScene().getStylesheets());
+                        getScene().setUserAgentStylesheet(themeStyleSheetString);// OR
+                                                                                 // stylesheetConfig.getUserAgentStylesheet()
+                        getScene().getStylesheets().clear();
+                        getScene().getStylesheets().addAll(newStylesheets);
+                        getScene().getStylesheets().addAll(stylesheetConfig.getStylesheets());
+                    }
 
 //                PerspectiveCamera pc = new PerspectiveCamera(false);
 //                pc.setLayoutX(50);
 //                pc.setCLayoutY(50);
 //                ParallelCamera pl = new ParallelCamera();
 //                getScene().setCamera(pc);
-                updateWindowSize();
-                updateWindowTitle();
-            });
+                    updateWindowSize();
+                    updateWindowTitle();
+                });
             }
         };
 
@@ -380,12 +365,9 @@ public class PreviewWindowController extends AbstractWindowController implements
             double prefHeight = getRoot().prefHeight(-1);
             double prefWidth = getRoot().prefWidth(-1);
 
-            if ((!MathUtils.equals(prefHeight, sceneHeight)
-                    && !MathUtils.equals(sceneHeight, HEIGHT_WHEN_EMPTY)
+            if ((!MathUtils.equals(prefHeight, sceneHeight) && !MathUtils.equals(sceneHeight, HEIGHT_WHEN_EMPTY)
                     && !MathUtils.equals(sceneHeight, getHeightFromSize(getSize())))
-                    ||
-                    (!MathUtils.equals(prefWidth, sceneWidth)
-                            && !MathUtils.equals(sceneWidth, WIDTH_WHEN_EMPTY)
+                    || (!MathUtils.equals(prefWidth, sceneWidth) && !MathUtils.equals(sceneWidth, WIDTH_WHEN_EMPTY)
                             && !MathUtils.equals(sceneWidth, getWidthFromSize(getSize())))) {
                 res = true;
             }
@@ -469,8 +451,8 @@ public class PreviewWindowController extends AbstractWindowController implements
     /**
      * Enables or disables autoresizing of 3D content.
      *
-     * @param autoResize3DContent true if this preview panel should autoresize
-     *                            3D content.
+     * @param autoResize3DContent true if this preview panel should autoresize 3D
+     *                            content.
      */
     public void setAutoResize3DContent(boolean autoResize3DContent) {
         this.autoResize3DContent = autoResize3DContent;
@@ -508,23 +490,23 @@ public class PreviewWindowController extends AbstractWindowController implements
 
     private double getWidthFromSize(Size size) {
         switch (size) {
-            case SIZE_DEFAULT:
-                return WIDTH_WHEN_EMPTY;
-            case SIZE_PREFERRED:
-                return getRoot().prefWidth(-1);
-            default:
-                return size.getWidth();
+        case SIZE_DEFAULT:
+            return WIDTH_WHEN_EMPTY;
+        case SIZE_PREFERRED:
+            return getRoot().prefWidth(-1);
+        default:
+            return size.getWidth();
         }
     }
 
     private double getHeightFromSize(Size size) {
         switch (size) {
-            case SIZE_DEFAULT:
-                return HEIGHT_WHEN_EMPTY;
-            case SIZE_PREFERRED:
-                return getRoot().prefHeight(-1);
-            default:
-                return size.getHeight();
+        case SIZE_DEFAULT:
+            return HEIGHT_WHEN_EMPTY;
+        case SIZE_PREFERRED:
+            return getRoot().prefHeight(-1);
+        default:
+            return size.getHeight();
         }
     }
 
@@ -541,7 +523,8 @@ public class PreviewWindowController extends AbstractWindowController implements
         requestUpdate(IMMEDIATE);
     }
 
-    private void computeStyleSheets(List<String> newStyleSheets, Object sceneGraphRoot, List<String> displayStylesheets) {
+    private void computeStyleSheets(List<String> newStyleSheets, Object sceneGraphRoot,
+            List<String> displayStylesheets) {
         if (sceneGraphRoot instanceof Parent) {
             // At that stage current style sheets are the one defined within the FXML
             ObservableList<String> currentStyleSheets = ((Parent) sceneGraphRoot).getStylesheets();
@@ -556,11 +539,11 @@ public class PreviewWindowController extends AbstractWindowController implements
         // Add style sheet set thanks Preview > Scene Style Sheets > Add a Style Sheet
         if (sceneStyleSheet != null) {
             for (File f : sceneStyleSheet) {
-                String urlString = ""; //NOCHECK
+                String urlString = ""; // NOCHECK
                 try {
                     urlString = f.toURI().toURL().toString();
                 } catch (MalformedURLException ex) {
-                    throw new RuntimeException("Bug in PreviewWindowController", ex); //NOCHECK
+                    throw new RuntimeException("Bug in PreviewWindowController", ex); // NOCHECK
                 }
                 newStyleSheets.add(urlString);
             }
@@ -581,12 +564,5 @@ public class PreviewWindowController extends AbstractWindowController implements
 
         return res;
     }
-
-
-    @Override
-    protected void toolStylesheetDidChange(StylesheetProvider newToolStylesheetConfig) {
-        // disable tool stylesheet to prevent side effects on preview
-    }
-
 
 }

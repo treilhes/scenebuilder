@@ -33,19 +33,21 @@
  */
 package com.oracle.javafx.scenebuilder.cssanalyser.mode;
 
-import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
-import com.gluonhq.jfxapps.core.api.fxom.content.mode.AbstractModeController;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
-import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
 import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
+import com.treilhes.jfxplace.core.api.editor.images.ImageUtils;
+import com.treilhes.jfxplace.core.api.fxom.content.mode.AbstractModeController;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.collector.SceneGraphCollector;
+import com.treilhes.jfxplace.core.fxom.util.Deprecation;
 
+import jakarta.annotation.PostConstruct;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -62,9 +64,11 @@ public class PickModeController extends AbstractModeController {
     private final SbDriver driver;
     private final FxomEvents fxomEvents;
     private final FxomSelection selection;
+    private final JfxAppPlatform platform;
     //private HitNodeChrome hitNodeChrome;
 
     public PickModeController(
+            JfxAppPlatform platform,
             SbDriver driver,
             FxomEvents fxomEvents,
             FxomSelection selection,
@@ -73,7 +77,24 @@ public class PickModeController extends AbstractModeController {
         this.driver = driver;
         this.fxomEvents = fxomEvents;
         this.selection = selection;
+        this.platform = platform;
+    }
 
+    @PostConstruct
+    protected void postConstruct() {
+        platform.runOnFxThreadWithActiveScope(this::initLayers);
+        activeProperty().addListener((v, oldValue, newValue) -> {
+            if (newValue && !oldValue) {
+                activate();
+            }
+
+            if (!newValue && oldValue) {
+                disable();
+            }
+        });
+    }
+
+    private void initLayers() {
         newLayer(HitNodeChrome.class, false, selection,
                 // object selection
                 s -> s.getGroup().getItems(),
@@ -100,15 +121,13 @@ public class PickModeController extends AbstractModeController {
      * AbstractModeController
      */
 
-    @Override
-    public void willResignActive(AbstractModeController nextModeController) {
+    private void disable() {
         getWorkspace().getGlassLayer().setCursor(Cursor.DEFAULT);
         stopListeningToInputEvents();
         clearLayers();
     }
 
-    @Override
-    public void didBecomeActive(AbstractModeController previousModeController) {
+    private void activate() {
         assert getWorkspace().getGlassLayer() != null;
         getLayers().forEach(l -> l.enable());
         getLayer(HitNodeChrome.class).update();

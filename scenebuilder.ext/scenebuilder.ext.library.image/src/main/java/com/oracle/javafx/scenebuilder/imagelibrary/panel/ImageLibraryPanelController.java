@@ -54,22 +54,6 @@ import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
-import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSource;
-import com.gluonhq.jfxapps.core.api.fxom.library.LibraryItem;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
-import com.gluonhq.jfxapps.core.fxom.FXOMArchive;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.library.util.LibraryUtil;
 import com.oracle.javafx.scenebuilder.api.SbEditor;
 import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageLibraryController;
@@ -79,6 +63,22 @@ import com.oracle.javafx.scenebuilder.imagelibrary.library.builtin.BuiltinSectio
 import com.oracle.javafx.scenebuilder.imagelibrary.library.builtin.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.builtin.LibraryItemNameComparator;
 import com.oracle.javafx.scenebuilder.imagelibrary.preferences.global.ImageDisplayModePreference;
+import com.treilhes.jfxplace.core.api.fxom.dnd.Drag;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DragSource;
+import com.treilhes.jfxplace.core.api.fxom.library.LibraryItem;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlViewController;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.Dock;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.ViewSearch;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenu;
+import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
+import com.treilhes.jfxplace.core.api.util.FXMLUtils;
+import com.treilhes.jfxplace.core.fxom.FXOMArchive;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.library.util.LibraryUtil;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -108,8 +108,8 @@ import javafx.util.Callback;
     icon = "ViewIconImageLib.png", iconX2 = "ViewIconImageLib@2x.png")
 public class ImageLibraryPanelController extends AbstractFxmlViewController implements ImageLibraryPanel {
 
-    public final static String VIEW_ID = "453fc4cf-eb86-4115-b744-f61103a14d51";
-    public final static String VIEW_NAME = "view.name.image.library";
+    public static final String VIEW_ID = "453fc4cf-eb86-4115-b744-f61103a14d51";
+    public static final String VIEW_NAME = "view.name.image.library";
 
     private String searchPattern;
     ArrayList<LibraryItemImpl> searchData = new ArrayList<>();

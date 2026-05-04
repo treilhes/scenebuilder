@@ -39,13 +39,13 @@ import java.util.stream.Collectors;
 import org.graalvm.compiler.lir.CompositeValue.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.gluonhq.jfxapps.core.extstore.fs.ExtensionFileSystemFactory;
-import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
-import com.gluonhq.jfxapps.core.library.api.LibraryStore;
-import com.gluonhq.jfxapps.core.library.api.LibraryStoreConfiguration;
-import com.gluonhq.jfxapps.core.library.api.LibraryStoreFactory;
+import com.treilhes.jfxplace.core.api.fs.FileSystem;
+import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
+import com.treilhes.jfxplace.core.extstore.fs.ExtensionFileSystemFactory;
+import com.treilhes.jfxplace.core.fs.controller.ClassLoaderController;
+import com.treilhes.jfxplace.core.library.api.LibraryStore;
+import com.treilhes.jfxplace.core.library.api.LibraryStoreConfiguration;
+import com.treilhes.jfxplace.core.library.api.LibraryStoreFactory;
 
 import javafx.stage.FileChooser.ExtensionFilter;
 

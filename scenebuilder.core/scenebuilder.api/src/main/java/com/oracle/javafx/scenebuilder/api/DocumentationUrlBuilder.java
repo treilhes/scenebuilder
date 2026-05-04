@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.api;
 
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
 
 public interface DocumentationUrlBuilder {
     boolean canBuild(Class<?> cls);

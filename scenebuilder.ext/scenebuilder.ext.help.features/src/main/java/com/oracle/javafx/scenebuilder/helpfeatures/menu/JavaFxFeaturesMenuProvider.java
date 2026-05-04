@@ -37,10 +37,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.helpfeatures.controller.JavaFxFeaturesMenuController;
 
 import javafx.scene.control.MenuItem;
@@ -48,8 +48,8 @@ import javafx.scene.control.MenuItem;
 @ApplicationInstanceSingleton
 public class JavaFxFeaturesMenuProvider implements MenuItemProvider {
 
-    private final static String HELP_MENU_ID = "helpMenu";
-    private final static String SHOW_FEATURES_WINDOW_ID = "showJavaFxFeaturesMenuItem";
+    private static final String HELP_MENU_ID = "helpMenu";
+    private static final String SHOW_FEATURES_WINDOW_ID = "showJavaFxFeaturesMenuItem";
 
     private final I18N i18n;
     private final JavaFxFeaturesMenuController featuresMenuController;

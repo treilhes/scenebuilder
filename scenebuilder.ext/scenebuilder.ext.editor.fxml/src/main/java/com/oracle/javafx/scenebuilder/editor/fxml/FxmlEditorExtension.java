@@ -46,7 +46,6 @@ import com.oracle.javafx.scenebuilder.editor.fxml.actions.SendToBackAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.SetRootSizeAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.ToggleGuidesVisibilityAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.ToggleOutlinesVisibilityAction;
-import com.oracle.javafx.scenebuilder.editor.fxml.actions.ToggleSampleDataAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.ZoomAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.ZoomInAction;
 import com.oracle.javafx.scenebuilder.editor.fxml.actions.ZoomOutAction;
@@ -107,7 +106,7 @@ public class FxmlEditorExtension implements OpenExtension {
                 SetRootSizeAction.MenuProvider.class,
                 ToggleGuidesVisibilityAction.class,
                 ToggleOutlinesVisibilityAction.class,
-                ToggleSampleDataAction.class,
+
                 ZoomGesture.class,
                 ZoomGesture.Factory.class,
                 ZoomAction.class,

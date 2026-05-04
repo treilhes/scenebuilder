@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.api.selection;
 
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.TargetSelection;
 import com.oracle.javafx.scenebuilder.api.mask.SbAccessory;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.TargetSelection;
 
 public interface SbTargetSelection extends TargetSelection<SbAccessory> {
 

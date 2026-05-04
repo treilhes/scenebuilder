@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.metadata.custom;
 
-import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
+import com.treilhes.jfxplace.core.metadata.property.ComponentPropertyMetadata;
 
 public class SbComponentPropertyMetadata extends ComponentPropertyMetadata<ComponentPropertyMetadataCustomization, SbComponentClassMetadata<?>> {
 

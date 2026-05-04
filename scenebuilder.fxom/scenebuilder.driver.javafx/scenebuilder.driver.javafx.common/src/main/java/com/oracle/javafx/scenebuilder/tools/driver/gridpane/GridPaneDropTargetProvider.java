@@ -33,17 +33,17 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.gridpane;
 
-import com.gluonhq.jfxapps.core.api.fxom.dnd.AbstractDropTarget;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
-import com.gluonhq.jfxapps.util.javafx.BoundsUtils;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetProvider;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridPaneDropTarget.ColumnArea;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridPaneDropTarget.RowArea;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.fxom.dnd.AbstractDropTarget;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DropTarget;
+import com.treilhes.jfxplace.core.api.fxom.util.CoordinateHelper;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.util.Deprecation;
+import com.treilhes.jfxplace.util.javafx.BoundsUtils;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

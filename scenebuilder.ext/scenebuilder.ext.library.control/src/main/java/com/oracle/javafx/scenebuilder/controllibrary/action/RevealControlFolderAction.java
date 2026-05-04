@@ -35,21 +35,21 @@ package com.oracle.javafx.scenebuilder.controllibrary.action;
 
 import java.io.IOException;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
 import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.fs.FileSystem;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
 
 @ApplicationInstanceSingleton
 @ActionMeta(nameKey = "action.name.reveal.custom.folder", descriptionKey = "action.description.reveal.custom.folder")
@@ -62,7 +62,7 @@ import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
 @Accelerator(accelerator = "SHIFT+R", whenFocusing = LibraryPanelController.class)
 public class RevealControlFolderAction extends AbstractAction {
 
-    public final static String MENU_ID = "revealMenu";
+    public static final String MENU_ID = "revealMenu";
 
     private final MainInstanceWindow documentWindowController;
     private final ControlLibrary userLibrary;

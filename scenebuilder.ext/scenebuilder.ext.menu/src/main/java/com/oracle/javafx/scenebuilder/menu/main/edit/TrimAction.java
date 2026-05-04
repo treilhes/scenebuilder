@@ -33,15 +33,15 @@
  */
 package com.oracle.javafx.scenebuilder.menu.main.edit;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionActionsFactory;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelectionActionsFactory;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 
 @ApplicationInstancePrototype
 @ActionMeta(
@@ -56,15 +56,15 @@ import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototy
         separatorBefore = true)
 public final class TrimAction extends AbstractAction {
 
-    public final static String MENU_ID = DefaultMenu.Edit.TRIM_DOC_ID;
+    public static final String MENU_ID = DefaultMenu.Edit.TRIM_DOC_ID;
 
-    private final SelectionActionsFactory selectionActionFactory;
+    private final FxomSelectionActionsFactory selectionActionFactory;
 
     //@formatter:off
     public TrimAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            SelectionActionsFactory selectionActionFactory) {
+            FxomSelectionActionsFactory selectionActionFactory) {
         //@formatter:on
         super(i18n, extensionFactory);
         this.selectionActionFactory = selectionActionFactory;

@@ -43,11 +43,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
-import com.gluonhq.jfxapps.test.JfxAppsTest;
-import com.gluonhq.jfxapps.test.StageBuilder;
-import com.gluonhq.jfxapps.test.StageType;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
+import com.treilhes.jfxplace.testold.JfxAppsTest;
+import com.treilhes.jfxplace.testold.StageBuilder;
+import com.treilhes.jfxplace.testold.StageType;
 
 @JfxAppsTest
 @ContextConfiguration(classes = {TemplatesSelectionControllerTest.Config.class ,TemplatesSelectionController.class})

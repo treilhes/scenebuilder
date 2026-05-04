@@ -39,19 +39,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.treilhes.emc4j.boot.api.context.EmContext;
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
-import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
-import com.gluonhq.jfxapps.core.api.fxom.error.ErrorReport;
-import com.gluonhq.jfxapps.core.api.fxom.error.ErrorReportEntry;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit.Type;
-import com.gluonhq.jfxapps.core.api.util.StringUtils;
-import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
 import com.oracle.javafx.scenebuilder.document.api.Hierarchy;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
@@ -61,6 +48,19 @@ import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyCellAssignment
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyDNDController;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyDNDController.DroppingMouseLocation;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyParentRing;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.editor.images.ImageUtils;
+import com.treilhes.jfxplace.core.api.factory.AbstractFactory;
+import com.treilhes.jfxplace.core.api.fxom.error.ErrorReport;
+import com.treilhes.jfxplace.core.api.fxom.error.ErrorReportEntry;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit.Type;
+import com.treilhes.jfxplace.core.api.util.StringUtils;
+import com.treilhes.jfxplace.core.fxom.FXOMIntrinsic;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.util.PrefixedValue;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
@@ -199,12 +199,12 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
 
         // Key events
         //----------------------------------------------------------------------
-        final EventHandler<KeyEvent> keyEventHandler = e -> filterKeyEvent(e);
+        final EventHandler<KeyEvent> keyEventHandler = this::filterKeyEvent;
         this.addEventFilter(KeyEvent.ANY, keyEventHandler);
 
         // Mouse events
         //----------------------------------------------------------------------
-        final EventHandler<MouseEvent> mouseEventHandler = e -> filterMouseEvent(e);
+        final EventHandler<MouseEvent> mouseEventHandler = this::filterMouseEvent;
         this.addEventFilter(MouseEvent.ANY, mouseEventHandler);
 
     }
@@ -581,7 +581,7 @@ public class HierarchyTreeCell<T extends HierarchyItem> extends TreeCell<Hierarc
 
     @ApplicationInstanceSingleton
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public final static class Factory extends AbstractFactory<HierarchyTreeCell> {
+    public static final class Factory extends AbstractFactory<HierarchyTreeCell> {
         public Factory(EmContext sbContext) {
             super(sbContext);
         }

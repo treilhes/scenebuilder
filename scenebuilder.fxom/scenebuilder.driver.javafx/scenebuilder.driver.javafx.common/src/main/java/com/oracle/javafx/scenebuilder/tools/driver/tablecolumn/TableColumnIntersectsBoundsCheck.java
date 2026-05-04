@@ -33,10 +33,10 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.tablecolumn;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.intersect.AbstractIntersectsBoundsCheck;
 import com.oracle.javafx.scenebuilder.tools.driver.tableview.TableViewDesignInfoX;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.scene.control.TableColumn;

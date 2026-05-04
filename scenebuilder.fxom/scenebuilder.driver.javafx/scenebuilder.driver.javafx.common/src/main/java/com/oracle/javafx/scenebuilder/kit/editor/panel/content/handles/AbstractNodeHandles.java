@@ -33,13 +33,13 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles;
 
-import com.gluonhq.jfxapps.core.api.fxom.gesture.DiscardGesture;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
+import com.treilhes.jfxplace.core.api.fxom.gesture.DiscardGesture;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;

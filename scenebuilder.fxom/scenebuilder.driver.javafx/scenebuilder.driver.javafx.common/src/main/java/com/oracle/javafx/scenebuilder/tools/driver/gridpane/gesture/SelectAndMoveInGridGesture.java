@@ -36,16 +36,16 @@ package com.oracle.javafx.scenebuilder.tools.driver.gridpane.gesture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.core.api.action.editor.EditorPlatform;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractMouseDragGesture;
-import com.gluonhq.jfxapps.core.api.fxom.gesture.GestureFactory;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.action.editor.EditorPlatform;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.treilhes.jfxplace.core.api.fxom.gesture.AbstractMouseDragGesture;
+import com.treilhes.jfxplace.core.api.fxom.gesture.GestureFactory;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -57,7 +57,7 @@ import javafx.scene.layout.GridPane;
 @ApplicationInstancePrototype
 public class SelectAndMoveInGridGesture extends AbstractMouseDragGesture {
 
-    private final static Logger logger = LoggerFactory.getLogger(SelectAndMoveInGridGesture.class);
+    private static final Logger logger = LoggerFactory.getLogger(SelectAndMoveInGridGesture.class);
     private final FxomSelection selection;
     private final GridSelectionGroup.Factory gridSelectionGroupFactory;
 

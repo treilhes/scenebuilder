@@ -33,18 +33,18 @@
  */
 package com.oracle.javafx.scenebuilder.tools.job.wrap;
 
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
-import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.JobFactory;
 import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.SelectionJobsFactory;
+import com.treilhes.jfxplace.core.api.fxom.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.job.JobExtensionFactory;
+import com.treilhes.jfxplace.core.api.job.JobFactory;
 
 import javafx.scene.layout.Pane;
 
@@ -72,7 +72,7 @@ public final class WrapInPaneJob extends AbstractWrapInSubComponentJob {
 
 
     @ApplicationInstanceSingleton
-    public final static class Factory extends JobFactory<WrapInPaneJob> {
+    public static final class Factory extends JobFactory<WrapInPaneJob> {
         public Factory(EmContext sbContext) {
             super(sbContext);
         }

@@ -40,15 +40,15 @@ import org.graalvm.compiler.lir.CompositeValue.Component;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelController;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.Selection;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 @ApplicationInstanceSingleton
 @Lazy
@@ -65,7 +65,7 @@ import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelContro
 @Accelerator(accelerator = "CTRL+I", whenFocusing = ImageLibraryPanelController.class)
 public class ImportSelectionAsImageAction extends AbstractAction {
 
-    public final static String MENU_ID = "importSelectionMenu";
+    public static final String MENU_ID = "importSelectionMenu";
 
 	private final Selection selection;
 	private final ImageLibraryPanelController libraryPanelController;

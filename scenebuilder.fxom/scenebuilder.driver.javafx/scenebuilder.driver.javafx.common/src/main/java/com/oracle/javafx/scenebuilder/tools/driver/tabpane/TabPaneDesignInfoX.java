@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.tools.driver.tabpane;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
+import com.treilhes.jfxplace.core.api.fxom.util.CoordinateHelper;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;

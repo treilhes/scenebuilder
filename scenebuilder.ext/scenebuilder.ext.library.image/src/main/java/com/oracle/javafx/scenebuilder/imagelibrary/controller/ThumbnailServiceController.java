@@ -43,10 +43,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
-import com.gluonhq.jfxapps.core.api.fxom.library.LibraryItem;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
+import com.treilhes.jfxplace.core.api.fxom.library.LibraryItem;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
@@ -63,7 +63,7 @@ import javafx.scene.image.WritableImage;
 @Lazy
 public class ThumbnailServiceController implements DisposeWithApplication {
 
-    private final static Logger logger = LoggerFactory.getLogger(ThumbnailServiceController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ThumbnailServiceController.class);
     
     private final ApplicationEvents sceneBuilderManager;
     private final ImageLibrary imageLibrary;

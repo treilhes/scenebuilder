@@ -38,10 +38,10 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
-import com.oracle.javafx.scenebuilder.api.editors.EditorMapProvider;
-import com.oracle.javafx.scenebuilder.api.editors.PropertyEditor;
 import com.oracle.javafx.scenebuilder.metadata.custom.addon.AnchorPropertyGroupMetadata;
+import com.treilhes.jfxplace.core.metadata.property.PropertyMetadata;
+import com.treilhes.jfxplace.fxom.editors.api.EditorMapProvider;
+import com.treilhes.jfxplace.fxom.editors.api.PropertyEditor;
 
 @Component
 public class AnchorPaneEditorProvider implements EditorMapProvider {

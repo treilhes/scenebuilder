@@ -37,7 +37,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.treilhes.emc4j.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.api.SbApiExtension;
 import com.oracle.javafx.scenebuilder.menu.i18n.I18NDefaultMenu;
 import com.oracle.javafx.scenebuilder.menu.main.MainMenuProvider;
@@ -74,6 +73,7 @@ import com.oracle.javafx.scenebuilder.menu.main.file.SaveOrSaveAsAction;
 import com.oracle.javafx.scenebuilder.menu.main.file.ShowPreferencesAction;
 import com.oracle.javafx.scenebuilder.menu.main.help.ShowDocumentationAction;
 import com.oracle.javafx.scenebuilder.menu.main.modify.FitToParentAction;
+import com.oracle.javafx.scenebuilder.menu.main.modify.SetEffectAction;
 import com.oracle.javafx.scenebuilder.menu.main.modify.UseComputedSizeAction;
 import com.oracle.javafx.scenebuilder.menu.main.view.ToggleMinimizeBottomDockAction;
 import com.oracle.javafx.scenebuilder.menu.main.view.ToggleMinimizeLeftDockAction;
@@ -86,6 +86,7 @@ import com.oracle.javafx.scenebuilder.menu.view.CloseViewAction;
 import com.oracle.javafx.scenebuilder.menu.view.DockTypeMenuProvider;
 import com.oracle.javafx.scenebuilder.menu.view.MoveToDockMenuProvider;
 import com.oracle.javafx.scenebuilder.menu.view.UndockViewAction;
+import com.treilhes.emc4j.boot.api.loader.extension.OpenExtension;
 
 public class DefaultMenuExtension implements OpenExtension {
 
@@ -163,7 +164,9 @@ public class DefaultMenuExtension implements OpenExtension {
                 UndoAction.class,
                 UndockViewAction.class,
                 UseComputedSizeAction.class,
-                ViewMenuProvider.class
+                ViewMenuProvider.class,
+                SetEffectAction.class,
+                SetEffectAction.MenuProvider.class
             );
      // @formatter:on
     }

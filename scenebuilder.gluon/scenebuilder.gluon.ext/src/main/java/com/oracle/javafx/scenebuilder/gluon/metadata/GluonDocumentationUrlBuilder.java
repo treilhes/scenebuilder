@@ -37,8 +37,8 @@ import java.util.Locale;
 import org.scenebuilder.fxml.api.DocumentationUrlBuilder;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.gluon.GluonConstants;
+import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
 
 import javafx.scene.Node;
 

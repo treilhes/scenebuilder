@@ -37,15 +37,15 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Objects;
 
-import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
-import com.gluonhq.jfxapps.core.api.fxom.mask.Accessory;
-import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.fxom.mask.HierarchyMask;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.mask.SbAccessory;
 import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
+import com.treilhes.jfxplace.core.api.editor.images.ImageUtils;
+import com.treilhes.jfxplace.core.api.fxom.mask.Accessory;
+import com.treilhes.jfxplace.core.api.fxom.mask.FXOMObjectMask;
+import com.treilhes.jfxplace.core.api.fxom.mask.HierarchyMask;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.scene.image.Image;
 

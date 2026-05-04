@@ -40,9 +40,9 @@ import java.io.FileOutputStream;
 import javax.imageio.ImageIO;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
@@ -79,7 +79,7 @@ public class PngFormat implements ExportFormat {
     }
 
     @Override
-    public void exportSelection(Selection selection, File output) {
+    public void exportSelection(FxomSelection selection, File output) {
         String baseName = output.getName().substring(0, output.getName().lastIndexOf("."));
         String extension = output.getName().substring(output.getName().lastIndexOf(".") + 1);
 

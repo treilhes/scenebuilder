@@ -42,11 +42,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.fxom.mask.Accessory;
-import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.fxom.mask.HierarchyMask;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.api.fxom.mask.Accessory;
+import com.treilhes.jfxplace.core.api.fxom.mask.FXOMObjectMask;
+import com.treilhes.jfxplace.core.api.fxom.mask.HierarchyMask;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.mask.SbAccessory;
 import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
@@ -63,7 +63,7 @@ import javafx.scene.control.TreeItem;
 @ApplicationInstanceSingleton
 public class TreeItemFactory {
 
-    private final static Logger logger = LoggerFactory.getLogger(TreeItemFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(TreeItemFactory.class);
 
     private final Map<ExpandedKey, Boolean> treeItemsExpandedMapProperty = new HashMap<>();
 

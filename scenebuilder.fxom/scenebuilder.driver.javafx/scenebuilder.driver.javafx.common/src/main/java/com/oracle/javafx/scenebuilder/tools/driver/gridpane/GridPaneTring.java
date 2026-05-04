@@ -34,13 +34,13 @@
 
 package com.oracle.javafx.scenebuilder.tools.driver.gridpane;
 
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridPaneDropTarget.ColumnArea;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridPaneDropTarget.RowArea;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DropTarget;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
 
 import javafx.scene.layout.GridPane;
 

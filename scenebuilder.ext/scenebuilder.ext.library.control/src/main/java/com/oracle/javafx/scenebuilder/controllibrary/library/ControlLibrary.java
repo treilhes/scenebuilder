@@ -44,21 +44,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 
-import com.gluonhq.jfxapps.core.api.fxom.library.LibraryFilter;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.UILogger;
-import com.gluonhq.jfxapps.core.extstore.fs.ExtensionFileSystemFactory;
-import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
-import com.gluonhq.jfxapps.core.library.api.AbstractLibrary;
-import com.gluonhq.jfxapps.core.library.api.AbstractLibrary.Exploration;
-import com.gluonhq.jfxapps.core.library.api.Explorer;
-import com.gluonhq.jfxapps.core.library.api.LibraryDialogFactory;
-import com.gluonhq.jfxapps.core.library.api.LibraryStoreFactory;
-import com.gluonhq.jfxapps.core.library.api.Transform;
-import com.gluonhq.jfxapps.core.library.maven.MavenArtifact;
-import com.gluonhq.jfxapps.core.library.util.LibraryUtil;
 import com.oracle.javafx.scenebuilder.controllibrary.ControlLibraryExtension;
 import com.oracle.javafx.scenebuilder.controllibrary.importer.ImportWindowController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.BuiltinLibrary;
@@ -67,23 +58,28 @@ import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlFil
 import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlFolderExplorer;
 import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlMavenArtifactExplorer;
 import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.fxom.library.LibraryFilter;
+import com.treilhes.jfxplace.core.api.lifecycle.DisposeWithApplication;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.UILogger;
 
 /**
  *
  *
  */
-@Component//("userLibrary")
-@Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
+@ApplicationInstanceSingleton
 @DependsOn("metadata")
 public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryItemImpl> implements InitializingBean, DisposeWithApplication{
 
-    public final static List<String> HANDLED_JAVA_EXTENSIONS = List.of("jar");
-    public final static List<String> HANDLED_CONTROLFILE_EXTENSIONS = List.of("fxml");
-    public final static List<String> HANDLED_FILE_EXTENSIONS = List.of("jar", "fxml");
+    private static final Logger logger = LoggerFactory.getLogger(ControlLibrary.class);
 
-    private final static Logger logger = LoggerFactory.getLogger(ControlLibrary.class);
+    public static final List<String> HANDLED_JAVA_EXTENSIONS = List.of("jar");
+    public static final List<String> HANDLED_CONTROLFILE_EXTENSIONS = List.of("fxml");
+    public static final List<String> HANDLED_FILE_EXTENSIONS = List.of("jar", "fxml");
 
-    private final static String LIBRARY_ID = "Control";
+    private static final String LIBRARY_ID = "Control";
 
     private final BuiltinLibrary builtinLibrary;
 
@@ -105,7 +101,7 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
 
     private final List<LibraryFilter> filters;
 
-    private final SceneBuilderBeanFactory context;
+    private final EmContext context;
 
     private final ControlFileExplorer controlFileExplorer;
 
@@ -123,8 +119,9 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
     /*
      * Public
      */
+    //@formatter:off
     protected ControlLibrary(
-            @Autowired SceneBuilderBeanFactory context,
+            @Autowired EmContext context,
             @Autowired BuiltinLibrary builtinLibrary,
             @Autowired ControlLibraryDialogConfiguration libraryDialogConfiguration,
             @Autowired ExtensionFileSystemFactory extFactory,
@@ -137,6 +134,7 @@ public class ControlLibrary extends AbstractLibrary<ControlReportImpl, LibraryIt
             @Autowired ControlFolderExplorer controlFolderExplorer,
             @Autowired ControlMavenArtifactExplorer controlMavenArtifactExplorer,
             @Autowired(required = false) List<LibraryFilter> filters) {
+        //@formatter:on
         super(context,sceneBuilderManager,
                 classLoaderController,
                 libraryStoreFactory.getStore(LIBRARY_ID, extFactory.get(ControlLibraryExtension.class)),

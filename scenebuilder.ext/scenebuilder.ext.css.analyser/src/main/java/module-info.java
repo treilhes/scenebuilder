@@ -31,8 +31,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import com.treilhes.emc4j.boot.api.loader.extension.Extension;
 import com.oracle.javafx.scenebuilder.cssanalyser.CssAnalyserExtension;
+import com.treilhes.emc4j.boot.api.loader.extension.Extension;
 
 open module scenebuilder.ext.css.analyser {
     exports com.oracle.javafx.scenebuilder.cssanalyser.i18n;
@@ -45,6 +45,7 @@ open module scenebuilder.ext.css.analyser {
 
     requires transitive scenebuilder.api;
     requires scenebuilder.starter;
+    requires jfxplace.fxom.editors;
 
     provides Extension with CssAnalyserExtension;
 }

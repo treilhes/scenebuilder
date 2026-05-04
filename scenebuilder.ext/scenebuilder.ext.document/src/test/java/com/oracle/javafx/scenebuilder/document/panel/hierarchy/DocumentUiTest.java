@@ -35,219 +35,191 @@ package com.oracle.javafx.scenebuilder.document.panel.hierarchy;
 
 import static org.mockito.ArgumentMatchers.any;
 
-import java.io.IOException;
-import java.util.Collections;
-
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.TestContext;
-import org.testfx.framework.junit5.ApplicationExtension;
-import org.testfx.framework.junit5.Start;
 
-import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.ExternalDragSource;
-import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocumentFactory;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.metadata.klass.ComponentClassMetadata;
+import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyCellAssignment;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyController;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyDNDController;
 import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyParentRing;
 import com.oracle.javafx.scenebuilder.document.hierarchy.display.MetadataInfoDisplayOption;
-import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell;
-import com.oracle.javafx.scenebuilder.document.preferences.document.ShowExpertByDefaultPreference;
-import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
+import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeViewController;
+import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.TreeItemFactory;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.test.EmcInject;
+import com.treilhes.emc4j.test.EmcInjectMock;
+import com.treilhes.jfxplace.core.api.ctxmenu.ContextMenu;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.job.JobManager;
+import com.treilhes.jfxplace.core.api.tooltheme.ToolStylesheetProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.pipeline.FXOMDocumentFactory;
+import com.treilhes.jfxplace.test.JfxPlaceTest;
+import com.treilhes.jfxplace.test.builder.StageBuilder;
+import com.treilhes.jfxplace.test.builder.StageType;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.collections.FXCollections;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
 /**
  * The Class DocumentUiTest is at least for now a temp test to define starter test usage
  */
-@ExtendWith({ApplicationExtension.class, MockitoExtension.class})
+@JfxPlaceTest(classes = HierarchyController.class)
 class DocumentUiTest {
 
-    private Stage stage;
-    /**
-     * Will be called with {@code @Before} semantics, i. e. before each test method.
-     *
-     * @param stage - Will be injected by the test runner.
-     */
-    @Start
-    private void start(Stage stage) {
-        this.stage = stage;
-    }
+    @EmcInjectMock
+    ContextMenu contextMenu;
 
-    @Spy
-    ApplicationEvents scenebuilderManager = new ApplicationEvents.ApplicationEventsImpl();
-
-    @Spy
-    ApplicationInstanceEvents documentManager = new ApplicationInstanceEvents.ApplicationInstanceEventsImpl();
-
-    @Mock
-    UpdateReferencesJob.Factory updateReferencesJobFactory;
-
-    @Mock
-    InlineEdit inlineEdit;
-
-    @Mock
-    ContextMenu contextMenuw;
-
-    @Mock
-    JobManager jobManager;
-
-    @Mock
-    Drag drag;
-
-    @Mock
-    Selection selection;
-
-    @Mock
-    ShowExpertByDefaultPreference showExpertByDefaultPreference;
-
-    @Mock
-    DocumentDragSource.Factory documentDragSourceFactory;
-
-    @Mock
-    ExternalDragSource.Factory externalDragSourceFactory;
-
-    @Mock
-    FXOMObjectMask.Factory designHierarchyMaskFactory;
-
-    @Mock
-    HierarchyTreeCell.Factory hierarchyTreeCellFactory;
-
-    @Mock
-    HierarchyDNDController.Factory hierarchyDNDControllerFactory;
-
-    @Mock
-    MetadataInfoDisplayOption metadataInfoDisplayOption;
-
-    @Mock
-    FXOMObjectMask mask;
-
-    @Mock
-    ComponentClassMetadata ccm;
-
-    @Mock
+    @EmcInjectMock
     HierarchyCellAssignment cellAssignments;
 
-    @Mock
+    @EmcInjectMock
+    HierarchyDNDController dndController;
+
+    @EmcInjectMock
     HierarchyParentRing parentRing;
 
-    @Mock
-    SbMetadata metadata;
+    @EmcInjectMock
+    HierarchyTreeViewController hierarchyTreeView;
 
-    //@Test
-    void testForTest() {
+    @EmcInjectMock
+    InlineEdit inlineEdit;
 
-        //metadata for mask
-        Mockito.doReturn(ccm).when(metadata).queryComponentMetadata(Pane.class);
-        //Mockito.when(metadata.queryComponentMetadata(Pane.class)).thenReturn(ccm);
-        Mockito.when(ccm.getAllSubComponentProperties()).thenReturn(Collections.emptySet());
+    @EmcInjectMock
+    JobManager jobManager;
 
-        //setup
+    @EmcInjectMock
+    MetadataInfoDisplayOption defaultDisplayOptions;
+
+    @EmcInjectMock
+    FxomSelection selection;
+
+    @EmcInjectMock
+    TreeItemFactory rootTreeItemFactory;
+
+    @EmcInject
+    FxomEvents fxomEvents;
+
+    @EmcInject
+    StageBuilder builder;
+
+
+//    @Spy
+//    FxomEvents fxomEvents = new FxomEvents.FxomEventsImpl();
+//
+//    @Spy
+//    ApplicationInstanceEvents documentManager = new ApplicationInstanceEvents.ApplicationInstanceEventsImpl();
+//
+////    @Mock
+////    UpdateReferencesJob.Factory updateReferencesJobFactory;
+//
+//    @Mock
+//    InlineEdit inlineEdit;
+//
+//    @Mock
+//    ContextMenu contextMenu;
+//
+//    @Mock
+//    JobManager jobManager;
+//
+//    @Mock
+//    Drag drag;
+//
+//    @Mock
+//    FxomSelection selection;
+//
+//    @Mock
+//    ShowExpertByDefaultPreference showExpertByDefaultPreference;
+//
+//    @Mock
+//    DocumentDragSource.Factory documentDragSourceFactory;
+//
+//    @Mock
+//    ExternalDragSource.Factory externalDragSourceFactory;
+//
+//    @Mock
+//    FXOMObjectMask.Factory designHierarchyMaskFactory;
+//
+//    @Mock
+//    HierarchyTreeCell.Factory hierarchyTreeCellFactory;
+//
+//    @Mock
+//    HierarchyDNDController dndController;
+//
+//    @Mock
+//    MetadataInfoDisplayOption defaultDisplayOptions;
+//
+//    @Mock
+//    FXOMObjectMask mask;
+//
+//    @Mock
+//    ComponentClassMetadata ccm;
+//
+//    @Mock
+//    HierarchyCellAssignment cellAssignments;
+//
+//    @Mock
+//    HierarchyParentRing parentRing;
+//
+//    @Mock
+//    SbMetadata metadata;
+
+    @Test
+    void testForTest(EmContext ctx) {
+
+        //Mockito.when(metadata.queryComponentMetadata(Panel.class)).thenReturn(ccm);
+
+//        //metadata for mask
+//        Mockito.doReturn(ccm).when(metadata).queryComponentMetadata(Pane.class);
+//        //Mockito.when(metadata.queryComponentMetadata(Pane.class)).thenReturn(ccm);
+//        Mockito.when(ccm.getAllSubComponentProperties()).thenReturn(Collections.emptySet());
+//
+//        //setup
         Mockito.when(jobManager.revisionProperty()).thenReturn(new SimpleIntegerProperty());
-        Mockito.when(designHierarchyMaskFactory.getMask(any())).thenReturn(mask);
+
+        var pane = new Pane();
+        var treeView = new TreeView<HierarchyItem>();
+        pane.getChildren().add(treeView);
+
+        Mockito.when(hierarchyTreeView.getTreeView()).thenReturn(treeView);
+        Mockito.when(hierarchyTreeView.getRoot()).thenReturn(pane);
+        Mockito.when(rootTreeItemFactory.makeRootItem(any())).thenReturn(new TreeItem<>());
+        Mockito.when(hierarchyTreeView.getSelectedItems()).thenReturn(FXCollections.observableArrayList());
+
+//        Mockito.when(designHierarchyMaskFactory.getMask(any())).thenReturn(mask);
 
 
         //Mockito.when(api.getMetadata().queryComponentMetadata(Panel.class)).thenReturn(ccm);
 
+        try(var testStage = builder
+                .controller()
+                .css(ToolStylesheetProvider.builder()
+                        //.stylesheet(CssPanelController.class.getResource("css/ThemeDark_common.css").toExternalForm())
+                        //.stylesheet(CssPanelController.class.getResource("css/ThemeDark_SBKIT-css-panel.css").toExternalForm())
+                        .build())
+                .setup(StageType.Fill)
+                .size(800, 600).show()) {
 
-        HierarchyController controller = new HierarchyController(scenebuilderManager, documentManager,
-                inlineEdit, contextMenuw, jobManager, drag, selection, cellAssignments, parentRing, showExpertByDefaultPreference,
-                documentDragSourceFactory, externalDragSourceFactory, designHierarchyMaskFactory,
-                hierarchyTreeCellFactory, hierarchyDNDControllerFactory, metadataInfoDisplayOption);
+            var hc = ctx.getBean(HierarchyController.class);
+            var stage = testStage.getStage();
+            stage.getScene().setRoot(hc.getRoot());
 
-        FXOMDocument doc = FXOMDocumentFactory.DEFAULT.newDocument();
-        FXOMInstance inst = new FXOMInstance(doc, Pane.class);
-        doc.setFxomRoot(inst);
-        documentManager.fxomDocument().set(doc);
+            FXOMDocument doc = FXOMDocumentFactory.DEFAULT.newDocument();
+            FXOMInstance inst = new FXOMInstance(doc, Pane.class);
+            doc.setFxomRoot(inst);
+            fxomEvents.fxomDocument().set(doc);
 
-        FXMLLoader loader = new FXMLLoader();
-        loader.setController(controller);
-        loader.setLocation(controller.getFxmlURL());
-        loader.setResources(controller.getResources());
-        loader.setClassLoader(this.getClass().getClassLoader());
-
-        try {
-            controller.setRoot((Parent) loader.load());
-            controller.controllerDidLoadFxml();
-        } catch (RuntimeException | IOException x) {
-            throw new RuntimeException(
-                    String.format("Failed to load %s with %s",
-                            loader.getLocation(), loader.getController()), x); // NOI18N
+            System.out.println();
         }
-
-        JfxAppPlatform.runOnFxThread(() -> {
-            controller.getRoot().getStylesheets().add("file:///C:/SSDDrive/git/scenebuilder/scenebuilder.ext.sb/src/main/resources/com/oracle/javafx/scenebuilder/sb/css/ThemeDark.css");
-            Scene scene = new Scene(controller.getRoot(), 300, 600);
-            stage.setScene(scene);
-            stage.show();
-        });
-
-        System.out.println();
-        System.out.println();
-
 
     }
 
-
-    @Test
-    void other() {
-
-        ApplicationContext ctx = TestContext.get();
-
-
-        FXOMDocument doc = new FXOMDocument();
-        FXOMInstance inst = new FXOMInstance(doc, Pane.class);
-        doc.setFxomRoot(inst);
-        //documentManager.fxomDocument().set(doc);
-
-        HierarchyController controller = ctx.getBean(HierarchyController.class);
-
-        FXMLLoader loader = new FXMLLoader();
-        loader.setController(controller);
-        loader.setLocation(controller.getFxmlURL());
-        loader.setResources(controller.getResources());
-        loader.setClassLoader(this.getClass().getClassLoader());
-
-        try {
-            controller.setRoot((Parent) loader.load());
-            controller.controllerDidLoadFxml();
-        } catch (RuntimeException | IOException x) {
-            throw new RuntimeException(
-                    String.format("Failed to load %s with %s",
-                            loader.getLocation(), loader.getController()), x); // NOI18N
-        }
-
-        JfxAppPlatform.runOnFxThread(() -> {
-            controller.getRoot().getStylesheets().add("file:///C:/SSDDrive/git/scenebuilder/scenebuilder.ext.sb/src/main/resources/com/oracle/javafx/scenebuilder/sb/css/ThemeDark.css");
-            Scene scene = new Scene(controller.getRoot(), 300, 600);
-            stage.setScene(scene);
-            stage.show();
-        });
-
-        System.out.println();
-        System.out.println();
-
-
-    }
 
 }

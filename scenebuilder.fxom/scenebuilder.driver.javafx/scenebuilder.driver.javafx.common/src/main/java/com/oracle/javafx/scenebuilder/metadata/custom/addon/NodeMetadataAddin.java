@@ -35,13 +35,13 @@ package com.oracle.javafx.scenebuilder.metadata.custom.addon;
 
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
 import com.oracle.javafx.scenebuilder.metadata.javafx.PropertyNames;
 import com.oracle.javafx.scenebuilder.metadata.javafx.javafx.scene.NodeMetadata;
 import com.oracle.javafx.scenebuilder.metadata.javafx.javafx.scene.layout.AnchorPaneMetadata;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
 
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;

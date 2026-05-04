@@ -52,56 +52,55 @@ import java.util.stream.Collectors;
 
 import org.pdfsam.rxjavafx.schedulers.JavaFxScheduler;
 
-import com.gluonhq.jfxapps.core.api.fxom.css.CssInternal;
-import com.gluonhq.jfxapps.core.api.fxom.css.CssPropAuthorInfo;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSource;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
-import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
-import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMElement;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.util.ValuePropertyMetadataClassComparator;
-import com.gluonhq.jfxapps.core.metadata.util.ValuePropertyMetadataNameComparator;
 import com.oracle.javafx.scenebuilder.api.Inspector;
-import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertiesEditor;
-import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor;
-import com.oracle.javafx.scenebuilder.api.editors.AbstractPropertyEditor.LayoutFormat;
-import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
-import com.oracle.javafx.scenebuilder.api.editors.PropertyEditor;
-import com.oracle.javafx.scenebuilder.api.editors.PropertyEditorFactory;
-import com.oracle.javafx.scenebuilder.api.editors.PropertyEditorFactorySession;
 import com.oracle.javafx.scenebuilder.api.selection.SbSelectionJobsFactory;
 import com.oracle.javafx.scenebuilder.api.ui.Docks;
-import com.oracle.javafx.scenebuilder.core.editors.FxIdEditor;
-import com.oracle.javafx.scenebuilder.editors.control.GenericEditor;
-import com.oracle.javafx.scenebuilder.editors.control.ToggleGroupEditor;
 import com.oracle.javafx.scenebuilder.inspector.preference.InspectorSectionIdPreference;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.fxom.dnd.Drag;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DragSource;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.SelectionJobsFactory;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.SelectionState;
+import com.treilhes.jfxplace.core.api.fxom.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.fxom.util.CoordinateHelper;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.api.job.Job;
+import com.treilhes.jfxplace.core.api.job.JobManager;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlViewController;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.ViewSearch;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenu;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.MessageLogger;
+import com.treilhes.jfxplace.core.api.util.FXMLUtils;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMElement;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMIntrinsic;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
+import com.treilhes.jfxplace.core.metadata.util.ValuePropertyMetadataClassComparator;
+import com.treilhes.jfxplace.core.metadata.util.ValuePropertyMetadataNameComparator;
+import com.treilhes.jfxplace.fxom.editors.api.AbstractPropertiesEditor;
+import com.treilhes.jfxplace.fxom.editors.api.AbstractPropertyEditor;
+import com.treilhes.jfxplace.fxom.editors.api.AbstractPropertyEditor.LayoutFormat;
+import com.treilhes.jfxplace.fxom.editors.api.EditorUtils;
+import com.treilhes.jfxplace.fxom.editors.api.PropertyEditor;
+import com.treilhes.jfxplace.fxom.editors.api.PropertyEditorFactory;
+import com.treilhes.jfxplace.fxom.editors.api.PropertyEditorFactorySession;
+import com.treilhes.jfxplace.fxom.editors.base.FxIdEditor;
+import com.treilhes.jfxplace.fxom.editors.control.GenericEditor;
+import com.treilhes.jfxplace.fxom.editors.util.Css;
+import com.treilhes.jfxplace.fxom.editors.util.CssPropAuthorInfo;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -144,9 +143,9 @@ import javafx.scene.layout.VBox;
 //@formatter:on
 public class InspectorPanelController extends AbstractFxmlViewController implements Inspector {
 
-    public final static String VIEW_ID = "68a8c5dd-0b5f-4551-95d1-5b5bdf89ee4b";
+    public static final String VIEW_ID = "68a8c5dd-0b5f-4551-95d1-5b5bdf89ee4b";
 
-    public final static String VIEW_NAME = "inspector";
+    public static final String VIEW_NAME = "inspector";
 
     @FXML
     private TitledPane propertiesTitledPane;
@@ -224,13 +223,11 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     // Charsets for the properties of included elements
 //    private Map<String, Charset> availableCharsets;
 
-    private final Selection selection;
+    private final FxomSelection selection;
     private final InlineEdit inlineEdit;
     private final JobManager jobManager;
     private final MessageLogger messageLogger;
     private final InspectorSectionIdPreference inspectorSectionIdPreference;
-
-    private final ApplicationInstanceEvents documentManager;
 
     private final Drag drag;
     private final FxomJobsFactory fxomJobsFactory;
@@ -254,7 +251,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             ApplicationEvents applicationEvents,
             ApplicationInstanceEvents instanceEvents,
             FxomEvents fxomEvents,
-            Selection selection,
+            FxomSelection selection,
             InlineEdit inlineEdit,
             JobManager jobManager,
             MessageLogger messageLogger,
@@ -274,7 +271,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         this.inlineEdit = inlineEdit;
         this.jobManager = jobManager;
         this.messageLogger = messageLogger;
-        this.documentManager = instanceEvents;
         this.fxomEvents = fxomEvents;
         this.metadata = metadata;
         this.session = propertyEditorFactory.newSession();
@@ -327,17 +323,17 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             return null;
         }
         final TitledPane expandedSection = accordion.getExpandedPane();
-        final InspectorPanelController.SectionId result;
+        final Inspector.SectionId result;
 
         if (expandedSection == null) {
             // all sections are collapsed
-            result = InspectorPanelController.SectionId.NONE;
+            result = Inspector.SectionId.NONE;
         } else if (expandedSection == propertiesTitledPane) {
-            result = InspectorPanelController.SectionId.PROPERTIES;
+            result = Inspector.SectionId.PROPERTIES;
         } else if (expandedSection == layoutTitledPane) {
-            result = InspectorPanelController.SectionId.LAYOUT;
+            result = Inspector.SectionId.LAYOUT;
         } else if (expandedSection == codeTitledPane) {
-            result = InspectorPanelController.SectionId.CODE;
+            result = Inspector.SectionId.CODE;
         } else {
             // may happen if the view mode has been changed
             return null;
@@ -453,7 +449,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     protected void fxomDocumentDidChange(FXOMDocument oldDocument) {
 //        System.out.println("FXOM Document changed : " + getEditorController().getFxomDocument());
-        if (isInspectorLoaded() && hasFxomDocument()) {
+        if (canUpdate()) {
             selectionState.initialize();
             rebuild();
         }
@@ -556,7 +552,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
      * Private
      */
     private void updateInspector() {
-        if (isInspectorLoaded() && hasFxomDocument()) {
+        if (canUpdate()) {
             var newSelectionState = fxomEvents.selectionDidChange().get();
             if (isInspectorStateChanged(newSelectionState) || isEditedMode()) {
                 selectionState = newSelectionState;
@@ -643,7 +639,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
         if (session != null) {
             session.forEach((e) -> {
-                e.reset(e.getPropertyMeta(), selectionState);
+                e.reset(e.getPropertyMeta());
                 setEditorValueFromSelection(e);
             }, lastPropertyEditorValueChanged);
 
@@ -796,7 +792,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     }
 
     private int addFxIdEditor(GridPane gridPane, int lineIndex) {
-        PropertyEditor propertyEditor = session.getFxIdEditor(selectionState);
+        PropertyEditor propertyEditor = session.getFxIdEditor();
         setFxIdFromSelection(propertyEditor);
         handlePropertyEditorChanges(propertyEditor);
         return addInGridPane(gridPane, propertyEditor, lineIndex);
@@ -1075,10 +1071,10 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         HBox propNameNode;
         String propNameText;
 
-        if (editor instanceof AbstractPropertyEditor) {
-            propNameNode = ((AbstractPropertyEditor) editor).getPropNameNode();
-            propNameText = ((AbstractPropertyEditor) editor).getPropertyNameText();
-            editorLayout = ((AbstractPropertyEditor) editor).getLayoutFormat();
+        if (editor instanceof AbstractPropertyEditor abstractPropertyEditor) {
+            propNameNode = abstractPropertyEditor.getPropNameNode();
+            propNameText = abstractPropertyEditor.getPropertyNameText();
+            editorLayout = abstractPropertyEditor.getLayoutFormat();
 
             // TODO check if the group code commented below is well handled
         } else {
@@ -1197,16 +1193,15 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         if (propertyEditor.isUpdateFromModel()) {
             return;
         }
-//        System.out.println("Property " + propertyEditor.getPropertyName() + ": Value changed from \"" + oldValue + "\" to \"" + newValue + "\"");
+
+        Job job = null;
         if (propertyEditor instanceof FxIdEditor) {
             assert (newValue instanceof String) || (newValue == null);
-            setSelectedFXOMInstanceFxId(getSelectedObject(), (String) newValue);
-        } else if (propertyEditor instanceof ToggleGroupEditor) {
-            assert (newValue instanceof String) || (newValue == null);
-            setSelectionToggleGroup((String) newValue);
+            job = fxomJobsFactory.modifyFxId(getSelectedObject(), (String) newValue);
         } else {
-            setSelectedFXOMInstances(propertyEditor.getPropertyMeta(), newValue);
+            job = selectionJobsFactory.modifySelection(propertyEditor.getPropertyMeta(), newValue);
         }
+        pushJob(job);
     }
 
     private void handleEditingChange(PropertyEditor propertyEditor) {
@@ -1257,28 +1252,6 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
         });
     }
 
-    private void setSelectedFXOMInstances(ValuePropertyMetadata propMeta, Object value) {
-        final PropertyName cacheHintPN = new PropertyName("cacheHint"); // NOI18N
-        final Job job;
-        if (cacheHintPN.equals(propMeta.getName())) {
-            job = sbSelectionJobsFactory.modifyCacheHint(propMeta, value);
-        } else {
-            job = selectionJobsFactory.modifySelection(propMeta, value);
-        }
-//        System.out.println(job.getDescription());
-        pushJob(job);
-    }
-
-    private void setSelectedFXOMInstanceFxId(FXOMObject fxomObject, String fxId) {
-        final var job = fxomJobsFactory.modifyFxId(fxomObject, fxId);
-        pushJob(job);
-    }
-
-    private void setSelectionToggleGroup(String tgId) {
-        final var job = modifySelectionToggleGroupJobFactory.getJob(tgId);
-        pushJob(job);
-    }
-
     private void pushJob(Job job) {
         if (job.isExecutable()) {
             jobManager.push(job);
@@ -1327,7 +1300,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             String instanceFxId = getSelectedObject().getFxId();
             fxIdEditor.setDisable(false);
             fxIdEditor.setUpdateFromModel(true);
-            fxIdEditor.reset(null, selectionState);
+            fxIdEditor.reset(null);
             fxIdEditor.setValue(instanceFxId);
             fxIdEditor.setUpdateFromModel(false);
         }
@@ -1367,7 +1340,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
             }
 
             Map<StyleableProperty, List<Style>> cssState = selectionState.getCssState(instance);
-            cssInfo = CssInternal.getCssInfo(cssState, propMeta);
+            cssInfo = Css.getCssInfo(cssState, propMeta);
             if (cssInfo != null) {
                 isRuledByCss = true;
             }
@@ -1410,7 +1383,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     }
 
     private PropertyEditor getPropertyEditor(ValuePropertyMetadata<ValuePropertyMetadataCustomization> propMeta) {
-        PropertyEditor propertyEditor = session.getEditor(propMeta, selectionState);
+        PropertyEditor propertyEditor = session.getEditor(propMeta);
 
         // Set all the "Code" properties a double line layout
         if (isSameSection(propMeta.getCustomization().getInspectorPath().getSectionTag(), SectionId.CODE)) {
@@ -1574,6 +1547,14 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     private boolean hasFxomDocument() {
         return fxomEvents.fxomDocument().get() != null;
+    }
+
+    private boolean hasSelectionState() {
+        return isInspectorLoaded() && fxomEvents.selectionDidChange().get() != null;
+    }
+
+    private boolean canUpdate() {
+        return hasFxomDocument() && hasSelectionState();
     }
 
     private void addMessage(GridPane gridPane, String mess) {
@@ -2064,7 +2045,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
     }
 
     private Set<Class<?>> getSelectedClasses() {
-        return selectionState.getSelectedClasses();
+        return selectionState != null ? selectionState.getSelectedClasses() : Set.of();
     }
 
     private Class<?> getSelectedClass() {

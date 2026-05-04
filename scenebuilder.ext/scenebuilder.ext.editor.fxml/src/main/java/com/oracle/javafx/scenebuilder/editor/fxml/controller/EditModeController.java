@@ -42,28 +42,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.core.api.ctxmenu.ContextMenu;
-import com.gluonhq.jfxapps.core.api.fxom.content.mode.AbstractModeController;
-import com.gluonhq.jfxapps.core.api.fxom.content.mode.Layer;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.gesture.Gesture;
-import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.MessageLogger;
-import com.gluonhq.jfxapps.core.api.util.StringUtils;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
 import com.oracle.javafx.scenebuilder.api.control.Pring;
 import com.oracle.javafx.scenebuilder.api.control.ResizeGuide;
@@ -81,7 +59,30 @@ import com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse.SelectAndMoveGes
 import com.oracle.javafx.scenebuilder.editor.fxml.gesture.mouse.SelectWithMarqueeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.key.MoveWithKeyGesture;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.ctxmenu.ContextMenu;
+import com.treilhes.jfxplace.core.api.fxom.content.mode.AbstractModeController;
+import com.treilhes.jfxplace.core.api.fxom.content.mode.Layer;
+import com.treilhes.jfxplace.core.api.fxom.dnd.Drag;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.treilhes.jfxplace.core.api.fxom.gesture.Gesture;
+import com.treilhes.jfxplace.core.api.fxom.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.core.api.fxom.util.CoordinateHelper;
+import com.treilhes.jfxplace.core.api.job.Job;
+import com.treilhes.jfxplace.core.api.job.JobManager;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.MessageLogger;
+import com.treilhes.jfxplace.core.api.util.StringUtils;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.util.PrefixedValue;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
 
+import jakarta.annotation.PostConstruct;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
@@ -101,17 +102,17 @@ import javafx.util.Callback;
 @ApplicationInstanceSingleton
 public class EditModeController extends AbstractModeController implements Gesture.Observer {
 
-    private final static Logger logger = LoggerFactory.getLogger(EditModeController.class);
+    private static final Logger logger = LoggerFactory.getLogger(EditModeController.class);
 
-    public final static Object ID = EditModeController.class;
+    public static final Object ID = EditModeController.class;
 
-    public final static Class<Outline> OUTLINE_LAYER = Outline.class;
-    public final static Class<Shadow> SHADOW_LAYER = Shadow.class;
-    public final static Class<Rudder> RUDDER_LAYER = Rudder.class;
-    public final static Class<ResizeGuide> RESIZE_GUIDE_LAYER = ResizeGuide.class;
-    public final static Class<Pring> PRING_LAYER = Pring.class;
-    public final static Class<Handles> HANDLES_LAYER = Handles.class;
-    public final static Class<Tring> TRING_LAYER = Tring.class;
+    public static final Class<Outline> OUTLINE_LAYER = Outline.class;
+    public static final Class<Shadow> SHADOW_LAYER = Shadow.class;
+    public static final Class<Rudder> RUDDER_LAYER = Rudder.class;
+    public static final Class<ResizeGuide> RESIZE_GUIDE_LAYER = ResizeGuide.class;
+    public static final Class<Pring> PRING_LAYER = Pring.class;
+    public static final Class<Handles> HANDLES_LAYER = Handles.class;
+    public static final Class<Tring> TRING_LAYER = Tring.class;
 
     // private final SceneBuilderBeanFactory context;
     private final SbDriver driver;
@@ -240,7 +241,20 @@ public class EditModeController extends AbstractModeController implements Gestur
 //                    }
                     return tring;
                 });
+    }
 
+    @PostConstruct
+    public void postConstruct() {
+
+        activeProperty().addListener((v, oldValue, newValue) -> {
+            if (newValue && !oldValue) {
+                activate();
+            }
+
+            if (!newValue && oldValue) {
+                disable();
+            }
+        });
     }
 
     @Override
@@ -268,14 +282,12 @@ public class EditModeController extends AbstractModeController implements Gestur
      * AbstractModeController
      */
 
-    @Override
-    public void willResignActive(AbstractModeController nextModeController) {
+    private void disable() {
         stopListeningToInputEvents();
         clearLayers();
     }
 
-    @Override
-    public void didBecomeActive(AbstractModeController previousModeController) {
+    private void activate() {
         assert getWorkspace().getGlassLayer() != null;
 
         if (this.selectWithMarqueeGesture == null) {

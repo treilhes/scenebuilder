@@ -34,8 +34,8 @@
 package com.oracle.javafx.scenebuilder.core.ui.settings;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.core.api.settings.AbstractSetting;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
+import com.treilhes.jfxplace.core.api.settings.AbstractSetting;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
 
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;

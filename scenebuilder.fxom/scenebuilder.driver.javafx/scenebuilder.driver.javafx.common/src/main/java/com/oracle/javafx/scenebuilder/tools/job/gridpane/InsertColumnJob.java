@@ -38,20 +38,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
-import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchSelectionJob;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.JobFactory;
-import com.gluonhq.jfxapps.core.api.selection.SelectionGroup;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.scenebuilder.metadata.property.value.list.ColumnConstraintsListPropertyMetadata;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.job.base.BatchSelectionJob;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.job.Job;
+import com.treilhes.jfxplace.core.api.job.JobExtensionFactory;
+import com.treilhes.jfxplace.core.api.job.JobFactory;
+import com.treilhes.jfxplace.core.api.selection.SelectionGroup;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.core.metadata.property.value.list.ColumnConstraintsListPropertyMetadata;
 
 import javafx.scene.layout.GridPane;
 
@@ -134,7 +134,7 @@ public final class InsertColumnJob extends BatchSelectionJob {
     }
 
     @ApplicationInstanceSingleton
-    public final static class Factory extends JobFactory<InsertColumnJob> {
+    public static final class Factory extends JobFactory<InsertColumnJob> {
         public Factory(EmContext sbContext) {
             super(sbContext);
         }

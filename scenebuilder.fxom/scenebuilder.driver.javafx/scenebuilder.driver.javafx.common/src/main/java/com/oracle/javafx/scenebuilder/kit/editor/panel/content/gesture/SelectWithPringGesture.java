@@ -33,14 +33,14 @@
  */
 package com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture;
 
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractMouseDragGesture;
-import com.gluonhq.jfxapps.core.api.fxom.gesture.GestureFactory;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.treilhes.jfxplace.core.api.fxom.gesture.AbstractMouseDragGesture;
+import com.treilhes.jfxplace.core.api.fxom.gesture.GestureFactory;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
 
 import javafx.scene.input.MouseEvent;
 

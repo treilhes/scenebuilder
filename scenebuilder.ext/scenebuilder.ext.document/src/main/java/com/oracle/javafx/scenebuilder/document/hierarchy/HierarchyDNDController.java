@@ -35,17 +35,6 @@ package com.oracle.javafx.scenebuilder.document.hierarchy;
 
 import java.util.Optional;
 
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DefaultDragSourceFactory;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DefaultDropTargetFactory;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSource;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMElement;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.mask.SbAccessory;
 import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
@@ -56,6 +45,17 @@ import com.oracle.javafx.scenebuilder.document.hierarchy.item.HierarchyItemAcces
 import com.oracle.javafx.scenebuilder.document.hierarchy.item.HierarchyItemBase;
 import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeViewController;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DefaultDragSourceFactory;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DefaultDropTargetFactory;
+import com.treilhes.jfxplace.core.api.fxom.dnd.Drag;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DragSource;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DropTarget;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMElement;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;

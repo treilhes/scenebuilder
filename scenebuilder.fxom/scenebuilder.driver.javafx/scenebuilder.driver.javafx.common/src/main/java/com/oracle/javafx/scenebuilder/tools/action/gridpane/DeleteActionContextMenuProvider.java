@@ -35,13 +35,13 @@ package com.oracle.javafx.scenebuilder.tools.action.gridpane;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.ctxmenu.ContextMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ctxmenu.ContextMenuItemProvider;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionActionsFactory;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.ctxmenu.ContextMenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ctxmenu.ContextMenuItemProvider;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelectionActionsFactory;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBuilder;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 
 import javafx.scene.control.MenuItem;
 
@@ -51,16 +51,16 @@ import javafx.scene.control.MenuItem;
 @ApplicationInstanceSingleton
 public class DeleteActionContextMenuProvider implements ContextMenuItemProvider {
 
-    //public final static String MENU_ID = DefaultMenu.Edit.DELETE_ID;
-    public final static String MENU_ID = "ctxDeleteGrid";
-    public final static String TITLE = "menu.title.delete";
+    //public static final String MENU_ID = DefaultMenu.Edit.DELETE_ID;
+    public static final String MENU_ID = "ctxDeleteGrid";
+    public static final String TITLE = "menu.title.delete";
 
     private final MenuBuilder menuBuilder;
-    private final SelectionActionsFactory selectionActionsFactory;
+    private final FxomSelectionActionsFactory selectionActionsFactory;
 
     public DeleteActionContextMenuProvider(
             MenuBuilder menuBuilder,
-            SelectionActionsFactory selectionActionsFactory
+            FxomSelectionActionsFactory selectionActionsFactory
             ) {
         super();
         this.menuBuilder = menuBuilder;

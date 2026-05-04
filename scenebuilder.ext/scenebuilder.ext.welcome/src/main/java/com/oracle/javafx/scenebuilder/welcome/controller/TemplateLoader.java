@@ -39,11 +39,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.core.api.application.ApplicationActionFactory;
-import com.gluonhq.jfxapps.core.api.application.InstancesManager;
-import com.gluonhq.jfxapps.core.api.document.DocumentActionFactory;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
+import com.treilhes.jfxplace.core.api.application.ApplicationActionFactory;
+import com.treilhes.jfxplace.core.api.application.InstancesManager;
+import com.treilhes.jfxplace.core.api.document.DocumentActionFactory;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.job.JobManager;
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 
@@ -55,7 +55,7 @@ import com.oracle.javafx.scenebuilder.api.template.Template;
 @ApplicationSingleton
 public class TemplateLoader {
 
-    public final static Logger logger = LoggerFactory.getLogger(TemplateLoader.class);
+    public static final Logger logger = LoggerFactory.getLogger(TemplateLoader.class);
 
     private final InstancesManager instancesManager;
     private final ApplicationActionFactory applicationActionFactory;

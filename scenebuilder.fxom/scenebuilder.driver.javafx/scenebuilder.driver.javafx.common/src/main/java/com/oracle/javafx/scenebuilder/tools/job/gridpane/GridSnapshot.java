@@ -37,8 +37,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.util.javafx.GridBounds;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.util.javafx.GridBounds;
 
 /**
  *

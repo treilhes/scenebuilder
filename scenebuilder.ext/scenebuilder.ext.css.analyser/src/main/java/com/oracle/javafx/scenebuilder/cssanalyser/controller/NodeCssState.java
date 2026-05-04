@@ -45,11 +45,11 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.gluonhq.jfxapps.core.api.fxom.css.CssInternal;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.CssPropertyState;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.sun.javafx.scene.NodeHelper;
+import com.treilhes.jfxplace.core.api.fxom.css.CssInternal;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

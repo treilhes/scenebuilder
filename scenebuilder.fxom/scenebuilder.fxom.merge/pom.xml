@@ -43,6 +43,11 @@
         </dependency>
         <dependency>
             <groupId>com.treilhes.jfxplace</groupId>
+            <artifactId>jfxplace.core.error</artifactId>
+            <version>${jfxplace.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.treilhes.jfxplace</groupId>
             <artifactId>jfxplace.fxom.selection</artifactId>
             <version>${jfxplace.version}</version>
         </dependency>

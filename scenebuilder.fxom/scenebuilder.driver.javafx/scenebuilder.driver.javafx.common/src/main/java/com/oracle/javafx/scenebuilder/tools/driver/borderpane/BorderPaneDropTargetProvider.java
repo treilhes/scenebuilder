@@ -36,16 +36,16 @@ package com.oracle.javafx.scenebuilder.tools.driver.borderpane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DefaultDropTargetFactory;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.fxom.mask.Accessory;
-import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetProvider;
 import com.oracle.javafx.scenebuilder.tools.driver.borderpane.BorderPaneTring.BorderPanePosition;
 import com.oracle.javafx.scenebuilder.tools.mask.BorderPaneHierarchyMask;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DefaultDropTargetFactory;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DropTarget;
+import com.treilhes.jfxplace.core.api.fxom.mask.Accessory;
+import com.treilhes.jfxplace.core.api.fxom.util.CoordinateHelper;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

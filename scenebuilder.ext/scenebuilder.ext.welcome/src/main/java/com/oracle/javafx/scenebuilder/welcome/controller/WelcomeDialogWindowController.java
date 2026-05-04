@@ -43,15 +43,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.core.api.WelcomeDialog;
-import com.gluonhq.jfxapps.core.api.application.ApplicationActionFactory;
-import com.gluonhq.jfxapps.core.api.application.InstancesManager;
-import com.gluonhq.jfxapps.core.api.document.DocumentActionFactory;
-import com.gluonhq.jfxapps.core.api.fs.RecentItems;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
+import com.treilhes.jfxplace.core.api.WelcomeDialog;
+import com.treilhes.jfxplace.core.api.application.ApplicationActionFactory;
+import com.treilhes.jfxplace.core.api.application.InstancesManager;
+import com.treilhes.jfxplace.core.api.document.DocumentActionFactory;
+import com.treilhes.jfxplace.core.api.fs.RecentItems;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlWindowController;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 
 import javafx.event.ActionEvent;
@@ -67,7 +67,7 @@ import javafx.stage.Modality;
 @ApplicationSingleton
 public class WelcomeDialogWindowController extends AbstractFxmlWindowController implements WelcomeDialog {
 
-    public final static Logger logger = LoggerFactory.getLogger(WelcomeDialogWindowController.class);
+    public static final Logger logger = LoggerFactory.getLogger(WelcomeDialogWindowController.class);
 
     @FXML
     private VBox recentDocuments;

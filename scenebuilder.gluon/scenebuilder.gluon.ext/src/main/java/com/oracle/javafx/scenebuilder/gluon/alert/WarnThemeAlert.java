@@ -33,13 +33,13 @@
 
 package com.oracle.javafx.scenebuilder.gluon.alert;
 
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.controller.alert.SBAlert;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.GluonConstants;
 import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.controller.alert.SBAlert;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;

@@ -40,13 +40,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Content;
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.gluonhq.jfxapps.util.MathUtils;
+import com.treilhes.jfxplace.core.api.fs.FileSystem;
+import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Content;
+import com.treilhes.jfxplace.core.api.job.Job;
+import com.treilhes.jfxplace.core.api.job.JobManager;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
+import com.treilhes.jfxplace.util.MathUtils;
 import com.oracle.javafx.scenebuilder.api.menu.DebugMenu;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 

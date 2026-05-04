@@ -35,7 +35,7 @@ import org.scenebuilder.ext.script.LoaderCapabilitiesManagerImpl;
 import org.scenebuilder.ext.script.ScenebuilderScriptExtension;
 
 import com.treilhes.emc4j.boot.api.loader.extension.Extension;
-import com.gluonhq.jfxapps.core.fxom.ext.LoaderCapabilitiesManager;
+import com.treilhes.jfxplace.core.fxom.ext.LoaderCapabilitiesManager;
 
 open module scenebuilder.ext.script {
     exports org.scenebuilder.ext.script;

@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Set;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
-import com.gluonhq.jfxapps.core.fxom.ext.WeakProperty;
+import com.treilhes.jfxplace.core.fxom.FXOMNodes;
+import com.treilhes.jfxplace.core.fxom.ext.WeakProperty;
 
 class WeakPropertiesTest {
 

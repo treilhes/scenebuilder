@@ -33,19 +33,19 @@
  */
 package com.oracle.javafx.scenebuilder.tools.action.gridpane;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.ctxmenu.annotation.ContextMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.tools.driver.gridpane.GridSelectionGroup;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.AddColumnJob;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.GridPaneJobUtils.Position;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.ctxmenu.annotation.ContextMenuItemAttachment;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.job.JobManager;
+import com.treilhes.jfxplace.core.api.job.base.AbstractJob;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 
 @ApplicationInstancePrototype
 @ActionMeta(
@@ -65,8 +65,8 @@ import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototy
         positionRequest = PositionRequest.AsNextSibling)
 public class AddColumnBeforeAction extends AbstractAction {
 
-    public final static String MENU_ID = "addColumnBeforeMenuItem";
-    public final static String TITLE = "menu.title.grid.add.column.before";
+    public static final String MENU_ID = "addColumnBeforeMenuItem";
+    public static final String TITLE = "menu.title.grid.add.column.before";
 
     private final AddColumnJob.Factory addColumnJobFactory;
     private final JobManager jobManager;

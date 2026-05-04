@@ -38,40 +38,84 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
+import org.springframework.core.annotation.AnnotationUtils;
 
-import com.treilhes.emc4j.boot.api.aop.AopContext;
-import com.treilhes.emc4j.boot.api.aop.AopFactoryBean;
-import com.treilhes.emc4j.boot.api.aop.AopMetadata;
-import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.oracle.javafx.scenebuilder.api.theme.NoThemeBean;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeContext;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeGroup;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeManager;
+import com.treilhes.emc4j.boot.api.aop.AopContext;
+import com.treilhes.emc4j.boot.api.aop.AopFactory;
+import com.treilhes.emc4j.boot.api.aop.AopFactoryBean;
+import com.treilhes.emc4j.boot.api.aop.AopMetadata;
+import com.treilhes.emc4j.boot.api.aop.DefaultMethodInterceptor;
+import com.treilhes.emc4j.boot.api.aop.ImplementationInterceptor;
+import com.treilhes.emc4j.boot.api.context.EmContext;
 
-public class ThemeAopContext extends AopContext<Theme, ThemeContext, ThemeAopContext.ThemeMetadata> {
+public class ThemeAopContext extends AopContext<Theme> {
 
     public ThemeAopContext() {
-        super(Theme.class, ThemeContext.class);
+        super(Theme.class);
     }
 
     @Override
-    public ThemeAopContext.ThemeMetadata loadMetadata(Class<?> clazz) {
-        return new ThemeMetadata(getContexAnnotationClass(), getMarkerClass(), clazz);
+    public boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
+
+        boolean isNonThemeInterface = !Theme.class.getName().equals(beanDefinition.getBeanClassName());
+        boolean isTheme = Arrays.stream(beanDefinition.getMetadata().getInterfaceNames())
+                .anyMatch(Theme.class.getName()::equals);
+        boolean isInterface = beanDefinition.getMetadata().isInterface();
+        boolean hasContextAnnotation = beanDefinition.getMetadata().isAnnotated(ThemeContext.class.getName());
+
+        return isTheme && isInterface && isNonThemeInterface && hasContextAnnotation;
     }
 
     @Override
-    public Theme createTarget(EmContext context, ThemeMetadata metadata) {
+    public Class<? extends AopFactoryBean<Theme>> factoryBeanClass() {
+        return ThemeFactoryBean.class;
+    }
 
-        var id = metadata.getId();
-        var name = metadata.getName();
-        var userAgentStylesheet = metadata.getUserAgentStylesheet();
-        var stylesheets = metadata.getStylesheets();
-        var groupClass = metadata.getGroupClass();
-        var groupId = metadata.getGroupId();
+    @Override
+    public Class<? extends NoThemeBean> getExclusionAnnotation() {
+        return NoThemeBean.class;
+    }
+
+
+    @Override
+    public Object createProxy(AopFactory aopFactory, EmContext context, AopMetadata metadata) {
+        var themeInterface = metadata.getBeanClass();
+
+        aopFactory.addRead(themeInterface);
+
+        var theme = createTarget(context, themeInterface);
+
+        // Create proxy
+        var result = new ProxyFactory();
+        result.setTarget(theme);
+        result.setInterfaces(themeInterface);
+        result.addAdvice(new DefaultMethodInterceptor());
+        result.addAdvice(new ImplementationInterceptor(theme, themeInterface));
+
+        return result.getProxy(themeInterface.getClassLoader());
+    }
+
+    private Theme createTarget(EmContext context, Class<?> themeInterface) {
+
+        var annotation = AnnotationUtils.findAnnotation(themeInterface, ThemeContext.class);
+
+        if (annotation == null) {
+            throw new IllegalStateException("Theme interface must be annotated with ThemeContext");
+        }
+
+        var id = UUID.fromString(annotation.id());
+        var name = annotation.name();
+        var userAgentStylesheet = annotation.userAgentStylesheet();
+        var stylesheets = List.of(annotation.stylesheets());
+        var groupClass = annotation.groupClass();
+        var groupId = annotation.groupId().isBlank() ? null : UUID.fromString(annotation.groupId());
 
         ThemeGroup group = null;
         if (groupClass != ThemeContext.NoThemeGroup.class) {
@@ -94,40 +138,7 @@ public class ThemeAopContext extends AopContext<Theme, ThemeContext, ThemeAopCon
         return new BaseTheme(id, name, userAgentStylesheet, stylesheets, group);
     }
 
-    @Override
-    public Class<? extends AopFactoryBean<Theme, ThemeMetadata>> factoryBeanClass() {
-        return ThemeFactoryBean.class;
-    }
-
-    public static class ThemeFactoryBean extends AopFactoryBean<Theme, ThemeMetadata> {
-
-        public ThemeFactoryBean(Class<?> themeInterface) {
-            super(themeInterface, new ThemeAopContext());
-        }
-
-    }
-
-    @Override
-    public boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
-
-        boolean isNonThemeInterface = !Theme.class.getName().equals(beanDefinition.getBeanClassName());
-        boolean isTheme = Arrays.stream(beanDefinition.getMetadata().getInterfaceNames())
-                .anyMatch(Theme.class.getName()::equals);
-        boolean isInterface = beanDefinition.getMetadata().isInterface();
-        boolean hasContextAnnotation = beanDefinition.getMetadata().isAnnotated(ThemeContext.class.getName());
-
-        return isTheme && isInterface && isNonThemeInterface && hasContextAnnotation;
-    }
-
-
-    @Override
-    public Class<? extends NoThemeBean> getExclusionAnnotation() {
-        return NoThemeBean.class;
-    }
-
     public class BaseTheme implements Theme {
-
-        private static final Logger logger = LoggerFactory.getLogger(BaseTheme.class);
 
         private final UUID id;
         private final String name;
@@ -177,62 +188,10 @@ public class ThemeAopContext extends AopContext<Theme, ThemeContext, ThemeAopCon
 
     }
 
-
-    public static class ThemeMetadata extends AopMetadata<ThemeContext, Theme> {
-
-        private UUID id;
-        private String name;
-        private String userAgentStylesheet;
-        private List<String> stylesheets;
-        private Class<? extends ThemeGroup> groupClass;
-        private UUID groupId;
-
-        public ThemeMetadata(Class<ThemeContext> annotationClass, Class<Theme> markerClass, Class<?> themeInterface) {
-            super(annotationClass, markerClass, themeInterface);
+    public static class ThemeFactoryBean extends AopFactoryBean<Theme> {
+        public ThemeFactoryBean(Class<?> themeInterface) {
+            super(themeInterface, new ThemeAopContext());
         }
-
-        @Override
-        protected void loadMetadata(ThemeContext annotation) {
-            if (hasAnnotation()) {
-                this.id = UUID.fromString(annotation.id());
-                this.name = annotation.name();
-                this.userAgentStylesheet = annotation.userAgentStylesheet();
-                this.stylesheets = List.of(annotation.stylesheets());
-                this.groupClass = annotation.groupClass();
-                this.groupId = annotation.groupId().isBlank() ? null : UUID.fromString(annotation.groupId());
-            } else {
-                this.id = null;
-                this.name = null;
-                this.userAgentStylesheet = null;
-                this.stylesheets = null;
-                this.groupClass = null;
-                this.groupId = null;
-            }
-        }
-
-        public UUID getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getUserAgentStylesheet() {
-            return userAgentStylesheet;
-        }
-
-        public List<String> getStylesheets() {
-            return stylesheets;
-        }
-
-        public Class<? extends ThemeGroup> getGroupClass() {
-            return groupClass;
-        }
-
-        public UUID getGroupId() {
-            return groupId;
-        }
-
     }
+
 }

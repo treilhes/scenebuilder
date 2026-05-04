@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.api.control.pring;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;

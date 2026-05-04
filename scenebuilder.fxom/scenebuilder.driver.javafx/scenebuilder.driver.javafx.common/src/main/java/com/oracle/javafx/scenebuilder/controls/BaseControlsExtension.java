@@ -42,7 +42,7 @@ import com.treilhes.emc4j.boot.api.loader.extension.OpenExtension;
 
 public class BaseControlsExtension implements OpenExtension {
 
-    public final static UUID ID = UUID.fromString("aca5161a-89c1-47a8-bb54-bb376d1f1b38");
+    public static final UUID ID = UUID.fromString("aca5161a-89c1-47a8-bb54-bb376d1f1b38");
 
     @Override
     public UUID getParentId() {

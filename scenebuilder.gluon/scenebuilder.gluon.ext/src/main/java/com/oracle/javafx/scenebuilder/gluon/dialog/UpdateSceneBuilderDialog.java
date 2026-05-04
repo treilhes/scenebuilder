@@ -35,13 +35,13 @@ package com.oracle.javafx.scenebuilder.gluon.dialog;
 
 import java.time.LocalDate;
 
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.IgnoreVersionPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.ShowUpdateDialogDatePreference;
 import com.oracle.javafx.scenebuilder.gluon.setting.VersionSetting;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
 
 import javafx.application.HostServices;
 import javafx.scene.control.ButtonBar;

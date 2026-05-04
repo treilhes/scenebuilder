@@ -46,11 +46,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.core.api.fxom.FxomDocumentFactory;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibraryFilter;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl.SubStatus;
+import com.treilhes.jfxplace.core.api.fxom.FxomDocumentFactory;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;

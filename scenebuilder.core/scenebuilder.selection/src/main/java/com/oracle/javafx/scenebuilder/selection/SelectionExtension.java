@@ -37,7 +37,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.treilhes.emc4j.boot.api.loader.extension.OpenExtension;
 import com.oracle.javafx.scenebuilder.api.SbApiExtension;
 import com.oracle.javafx.scenebuilder.selection.extension.DuplicateSelectionJob;
 import com.oracle.javafx.scenebuilder.selection.extension.PasteIntoJob;
@@ -47,9 +46,9 @@ import com.oracle.javafx.scenebuilder.selection.i18n.I18NSelection;
 import com.oracle.javafx.scenebuilder.selection.job.FitToParentSelectionJob;
 import com.oracle.javafx.scenebuilder.selection.job.ImportFileJob;
 import com.oracle.javafx.scenebuilder.selection.job.IncludeFileJob;
-import com.oracle.javafx.scenebuilder.selection.job.ModifyCacheHintJob;
 import com.oracle.javafx.scenebuilder.selection.job.SbSelectionJobsFactoryImpl;
 import com.oracle.javafx.scenebuilder.selection.job.UseComputedSizesSelectionJob;
+import com.treilhes.emc4j.boot.api.loader.extension.OpenExtension;
 
 public class SelectionExtension implements OpenExtension {
 
@@ -79,7 +78,6 @@ public class SelectionExtension implements OpenExtension {
                 SelectionJobsFactoryOverrides.class,
                 SetDocumentRootJob.class,
                 FitToParentSelectionJob.class,
-                ModifyCacheHintJob.class,
                 UseComputedSizesSelectionJob.class,
                 SbTargetSelectionImpl.class,
                 SbSelectionJobsFactoryImpl.class,

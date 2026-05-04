@@ -37,15 +37,15 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.preference.ManagedDocumentPreference;
-import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preference.Preference;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.preference.ManagedDocumentPreference;
+import com.treilhes.jfxplace.core.api.preference.ManagedGlobalPreference;
+import com.treilhes.jfxplace.core.api.preference.Preference;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlViewController;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenu;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -61,8 +61,8 @@ import javafx.scene.layout.VBox;
 @ViewAttachment(name = DebugPreferencesView.VIEW_NAME, id = DebugPreferencesView.VIEW_ID, debug = true)
 public class DebugPreferencesView extends AbstractFxmlViewController {
 
-    public final static String VIEW_ID = "03c79b0c-0366-4238-b82c-ce901048e91a";
-    public final static String VIEW_NAME = "debug pref";
+    public static final String VIEW_ID = "03c79b0c-0366-4238-b82c-ce901048e91a";
+    public static final String VIEW_NAME = "debug pref";
 
     private final List<ManagedGlobalPreference> globalPreferences;
     private final List<ManagedDocumentPreference> documentPreferences;

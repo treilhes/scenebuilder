@@ -33,19 +33,19 @@
  */
 package com.oracle.javafx.scenebuilder.app.action;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.application.ApplicationActionFactory;
-import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
-import com.gluonhq.jfxapps.core.api.document.DocumentActionFactory;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.application.ApplicationActionFactory;
+import com.treilhes.jfxplace.core.api.application.ApplicationInstance;
+import com.treilhes.jfxplace.core.api.document.DocumentActionFactory;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit;
+import com.treilhes.jfxplace.core.api.ui.dialog.Alert;
+import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
 
 @ApplicationInstancePrototype("com.oracle.javafx.scenebuilder.app.action.CloseInstanceAction")
 @ActionMeta(

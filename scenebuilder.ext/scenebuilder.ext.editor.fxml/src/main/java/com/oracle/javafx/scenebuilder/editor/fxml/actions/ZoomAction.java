@@ -36,19 +36,20 @@ package com.oracle.javafx.scenebuilder.editor.fxml.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.util.MathUtils;
+import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBuilder;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.util.MathUtils;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.RadioMenuItem;
@@ -58,8 +59,8 @@ import javafx.scene.control.ToggleGroup;
 @ActionMeta(nameKey = "action.name.zoom", descriptionKey = "action.description.zoom")
 public class ZoomAction extends AbstractAction {
 
-    public final static String ZOOM_MENU_ID = "zoomMenu"; // NOCHECK
-    public final static String ZOOM_PERCENT_MENU_ID = "zoomPercentMenu"; // NOCHECK
+    public static final String ZOOM_MENU_ID = "zoomMenu"; // NOCHECK
+    public static final String ZOOM_PERCENT_MENU_ID = "zoomPercentMenu"; // NOCHECK
 
     private final Workspace workspace;
     private double scaleValue;
@@ -109,14 +110,17 @@ public class ZoomAction extends AbstractAction {
         public List<MenuItemAttachment> menuItems() {
             List<MenuItemAttachment> result = new ArrayList<>();
 
-            Menu menu = menuBuilder.menu().id(ZOOM_MENU_ID).title("menu.title.zoom").build();
-            MenuItemAttachment menuAttachment = MenuItemAttachment.create(menu, ToggleGuidesVisibilityAction.MENU_ID,
+            var targetId = DefaultMenu.View.ZOOM_ID;
+            var attachId = DefaultMenu.View.GUIDES_TOGGLE_ID;
+
+            Menu menu = menuBuilder.menu().id(targetId).title("menu.title.zoom").build();
+            MenuItemAttachment menuAttachment = MenuItemAttachment.create(menu, attachId,
                     PositionRequest.AfterNextSeparator);
             result.add(menuAttachment);
 
             ToggleGroup zoomToggle = new ToggleGroup();
 
-            String target = ZOOM_MENU_ID;
+            String target = targetId;
             PositionRequest positionRequest = PositionRequest.AsLastChild;
 
             for (Double scaling : ZoomFeatureConfig.scalingTable) {

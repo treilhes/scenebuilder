@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.core.ui.template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.preference.Preference;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
+import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.api.preference.Preference;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.Dock;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener.Change;

@@ -36,11 +36,11 @@ package com.oracle.javafx.scenebuilder.document.hierarchy.item;
 import java.net.URL;
 import java.util.Objects;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.mask.SbAccessory;
 import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.scene.image.Image;
 

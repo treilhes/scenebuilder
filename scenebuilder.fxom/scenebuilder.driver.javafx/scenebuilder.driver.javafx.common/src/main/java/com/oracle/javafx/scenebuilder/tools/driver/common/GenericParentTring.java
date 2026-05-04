@@ -33,17 +33,17 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.common;
 
-import com.gluonhq.jfxapps.core.api.fxom.dnd.AccessoryDropTarget;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.api.fxom.mask.HierarchyMask;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractNodeTring;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.fxom.dnd.AccessoryDropTarget;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DropTarget;
+import com.treilhes.jfxplace.core.api.fxom.mask.FXOMObjectMask;
+import com.treilhes.jfxplace.core.api.fxom.mask.HierarchyMask;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.core.api.fxom.util.CoordinateHelper;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.util.MathUtils;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;

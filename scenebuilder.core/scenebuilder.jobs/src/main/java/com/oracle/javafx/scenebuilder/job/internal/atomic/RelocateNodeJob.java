@@ -33,15 +33,15 @@
  */
 package com.oracle.javafx.scenebuilder.job.internal.atomic;
 
-import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.api.control.Relocater;
 import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
+import com.treilhes.jfxplace.core.api.job.JobExtensionFactory;
+import com.treilhes.jfxplace.core.api.job.base.AbstractJob;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.util.MathUtils;
 
 import javafx.scene.Node;
 

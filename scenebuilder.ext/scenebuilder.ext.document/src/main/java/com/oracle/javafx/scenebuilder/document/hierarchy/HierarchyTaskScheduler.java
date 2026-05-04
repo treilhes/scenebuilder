@@ -38,9 +38,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.fxom.mask.Accessory;
-import com.gluonhq.jfxapps.core.api.fxom.mask.HierarchyMask;
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.api.fxom.mask.Accessory;
+import com.treilhes.jfxplace.core.api.fxom.mask.HierarchyMask;
+import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
 import com.oracle.javafx.scenebuilder.api.mask.SbAccessory;
 import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;

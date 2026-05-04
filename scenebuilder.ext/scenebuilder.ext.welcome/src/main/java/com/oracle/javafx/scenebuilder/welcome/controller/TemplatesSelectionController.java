@@ -43,11 +43,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
-import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractApplicationUiController;
-import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
+import com.treilhes.jfxplace.core.api.editor.images.ImageUtils;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractApplicationUiController;
+import com.treilhes.jfxplace.core.api.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
 
@@ -69,10 +69,10 @@ public class TemplatesSelectionController extends AbstractApplicationUiControlle
     private static final Comparator<Template> TEMPLATE_COMPARATOR = Comparator.comparing(Template::getOrderKey)
             .thenComparing(Comparator.comparing(Template::getName));
 
-    private final static Logger logger = LoggerFactory.getLogger(TemplatesSelectionController.class);
+    private static final Logger logger = LoggerFactory.getLogger(TemplatesSelectionController.class);
 
-    private final static double TEMPLATE_MAX_WIDTH = 240;
-    private final static double TEMPLATE_MAX_HEIGHT = 180;
+    private static final double TEMPLATE_MAX_WIDTH = 240;
+    private static final double TEMPLATE_MAX_HEIGHT = 180;
 
     private Consumer<Template> onTemplateChosen;
 

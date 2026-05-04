@@ -37,19 +37,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
+import com.oracle.javafx.scenebuilder.api.SbEditor;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.annotation.ContextMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.oracle.javafx.scenebuilder.api.SbEditor;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.ctxmenu.annotation.ContextMenuItemAttachment;
+import com.treilhes.jfxplace.core.api.fs.FileSystem;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
 
 /**
  * @deprecated include will use multiple fx:include instead of a single file included
@@ -72,13 +72,16 @@ import com.oracle.javafx.scenebuilder.api.SbEditor;
 @Deprecated
 public class IncludedRevealFxmlAction extends AbstractAction {
 
-    public final static String MENU_ID = "revealIncludedFxmlMenu"; //NOCHECK
-    public final static String TITLE = "menu.title.reveal.included.default";
+    @Deprecated
+    public static final String MENU_ID = "revealIncludedFxmlMenu"; //NOCHECK
+    @Deprecated
+    public static final String TITLE = "menu.title.reveal.included.default";
 
     private final FileSystem fileSystem;
     private final SbEditor editor;
     private final Dialog dialog;
 
+    @Deprecated
     public IncludedRevealFxmlAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
@@ -92,6 +95,7 @@ public class IncludedRevealFxmlAction extends AbstractAction {
 
     }
 
+    @Deprecated
     @Override
     public boolean canPerform() {
         if (editor == null) {
@@ -100,6 +104,7 @@ public class IncludedRevealFxmlAction extends AbstractAction {
         return editor.getIncludedFile() != null;
     }
 
+    @Deprecated
     @Override
     public ActionStatus doPerform() {
         assert canPerform(); // (1)
@@ -115,6 +120,7 @@ public class IncludedRevealFxmlAction extends AbstractAction {
         return ActionStatus.DONE;
     }
 
+    @Deprecated
     public String getTitle() {
         String title = getI18n().getString("menu.title.reveal.included.default");
         final File file = editor.getIncludedFile();

@@ -33,17 +33,17 @@
  */
 package com.oracle.javafx.scenebuilder.controllibrary.action;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.JarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelController;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
 
 @ApplicationInstanceSingleton
 @ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report")
@@ -56,7 +56,7 @@ import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
 @Accelerator(accelerator = "SHIFT+A", whenFocusing = LibraryPanelController.class)
 public class ShowControlAnalysisReportAction extends AbstractAction {
 
-    public final static String MENU_ID = "showAnalysisMenu";
+    public static final String MENU_ID = "showAnalysisMenu";
 
     private final JarAnalysisReportController jarAnalysisReportController;
 

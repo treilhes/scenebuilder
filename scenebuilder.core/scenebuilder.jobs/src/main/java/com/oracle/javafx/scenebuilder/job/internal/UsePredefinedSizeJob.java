@@ -34,11 +34,11 @@
 package com.oracle.javafx.scenebuilder.job.internal;
 
 import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.Size;
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.api.Size;
+import com.treilhes.jfxplace.core.api.job.Job;
+import com.treilhes.jfxplace.core.api.job.JobExtensionFactory;
+import com.treilhes.jfxplace.core.api.job.base.AbstractJob;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 import com.oracle.javafx.scenebuilder.job.preference.RootContainerHeightPreference;
 import com.oracle.javafx.scenebuilder.job.preference.RootContainerWidthPreference;

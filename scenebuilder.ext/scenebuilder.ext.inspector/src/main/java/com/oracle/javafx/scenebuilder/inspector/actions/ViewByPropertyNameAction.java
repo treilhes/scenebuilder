@@ -35,12 +35,12 @@ package com.oracle.javafx.scenebuilder.inspector.actions;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.ViewMode;
 
@@ -61,7 +61,7 @@ import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelControl
 //@formatter:on
 public class ViewByPropertyNameAction extends AbstractViewAction {
 
-    public final static String MENU_ID = "inspectorViewByPropNameMenu";
+    public static final String MENU_ID = "inspectorViewByPropNameMenu";
 
     //@formatter:off
     public ViewByPropertyNameAction(

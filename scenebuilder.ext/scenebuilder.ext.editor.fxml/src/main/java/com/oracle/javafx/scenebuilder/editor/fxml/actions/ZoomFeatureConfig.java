@@ -40,6 +40,6 @@ import java.util.List;
  *
  */
 public interface ZoomFeatureConfig {
-    public final static List<Double> scalingTable = List.of(0.25, 0.50, 0.75, 1.00, 1.50, 2.0, 4.0);
+    public static final List<Double> scalingTable = List.of(0.25, 0.50, 0.75, 1.00, 1.50, 2.0, 4.0);
 
 }

@@ -33,10 +33,10 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.treetableview;
 
-import com.gluonhq.jfxapps.core.api.fxom.ui.tool.PickRefiner;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.fxom.ui.tool.PickRefiner;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.collector.SceneGraphCollector;
 
 import javafx.scene.Node;
 import javafx.scene.control.TreeTableColumn;

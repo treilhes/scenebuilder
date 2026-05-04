@@ -36,12 +36,6 @@ package com.oracle.javafx.scenebuilder.api.control.driver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.core.api.driver.AbstractDriver;
-import com.gluonhq.jfxapps.core.api.driver.DriverRegistry;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.api.fxom.ui.tool.PickRefiner;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
 import com.oracle.javafx.scenebuilder.api.control.DropTargetProvider;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
@@ -69,6 +63,12 @@ import com.oracle.javafx.scenebuilder.api.control.resizer.AbstractShadow;
 import com.oracle.javafx.scenebuilder.api.control.rudder.AbstractRudder;
 import com.oracle.javafx.scenebuilder.api.control.tring.AbstractTring;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.jfxplace.core.api.driver.AbstractDriver;
+import com.treilhes.jfxplace.core.api.driver.DriverRegistry;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DropTarget;
+import com.treilhes.jfxplace.core.api.fxom.ui.tool.PickRefiner;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;

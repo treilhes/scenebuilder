@@ -34,10 +34,10 @@
 package com.oracle.javafx.scenebuilder.document.preferences.document;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
-import com.gluonhq.jfxapps.core.api.preference.ManagedDocumentPreference;
-import com.gluonhq.jfxapps.core.api.preference.Preference;
-import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
+import com.treilhes.jfxplace.core.api.preference.DefaultValueProvider;
+import com.treilhes.jfxplace.core.api.preference.ManagedDocumentPreference;
+import com.treilhes.jfxplace.core.api.preference.Preference;
+import com.treilhes.jfxplace.core.api.preference.PreferenceContext;
 
 @ApplicationInstanceSingleton
 @PreferenceContext(id = "6ebf9f62-5b99-46ed-a4e6-8b7f3c283c7c",

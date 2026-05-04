@@ -44,17 +44,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.DockActionFactory;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.DockActionFactory;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.DockViewController;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.View;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.ViewAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBuilder;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -66,8 +66,8 @@ public class ViewMenuProvider implements MenuItemProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(ViewMenuProvider.class);
 
-    public final static String MENU_ID = "showViewsMenuItem";
-    public final static String TARGET_MENU_ID = DefaultMenu.View.ID;
+    public static final String MENU_ID = DefaultMenu.View.SHOW_VIEWS_ID;
+    public static final String TARGET_MENU_ID = DefaultMenu.View.ID;
 
     private final DockViewController dockViewController;
     private final MenuBuilder menuBuiler;

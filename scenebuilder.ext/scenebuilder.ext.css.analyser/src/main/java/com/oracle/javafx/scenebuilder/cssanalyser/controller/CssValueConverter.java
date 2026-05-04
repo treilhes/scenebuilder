@@ -39,9 +39,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import com.gluonhq.jfxapps.core.metadata.util.ColorEncoder;
-import com.gluonhq.jfxapps.util.MathUtils;
-import com.oracle.javafx.scenebuilder.api.editors.EditorUtils;
+import com.treilhes.jfxplace.core.metadata.util.ColorEncoder;
+import com.treilhes.jfxplace.fxom.editors.api.EditorUtils;
+import com.treilhes.jfxplace.util.MathUtils;
 
 import javafx.css.Declaration;
 import javafx.css.ParsedValue;

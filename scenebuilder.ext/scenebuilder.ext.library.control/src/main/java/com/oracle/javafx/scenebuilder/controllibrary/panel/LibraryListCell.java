@@ -38,10 +38,10 @@ import java.net.URL;
 import org.graalvm.compiler.lir.CompositeValue.Component;
 
 import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
-import com.gluonhq.jfxapps.core.api.action.ActionFactory;
-import com.gluonhq.jfxapps.core.api.editor.images.ImageUtils;
-import com.gluonhq.jfxapps.core.api.fxom.library.LibraryItem;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.action.ActionFactory;
+import com.treilhes.jfxplace.core.api.editor.images.ImageUtils;
+import com.treilhes.jfxplace.core.api.fxom.library.LibraryItem;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.controllibrary.action.InsertControlAction;
 import com.oracle.javafx.scenebuilder.controllibrary.controller.LibraryController;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemImpl;

@@ -35,18 +35,18 @@ package com.oracle.javafx.scenebuilder.menu.main.edit;
 
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionActionsFactory;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.ctxmenu.annotation.ContextMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.ctxmenu.annotation.ContextMenuItemAttachment;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelectionActionsFactory;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.ObjectSelectionGroup;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 
 @ApplicationInstancePrototype
 @Lazy
@@ -68,14 +68,14 @@ import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototy
 @Accelerator(accelerator = "CTRL+V")
 public final class PasteAction extends AbstractAction {
 
-    public final static String MENU_ID = DefaultMenu.Edit.PASTE_ID;
+    public static final String MENU_ID = DefaultMenu.Edit.PASTE_ID;
 
-    private final SelectionActionsFactory selectionActionFactory;
+    private final FxomSelectionActionsFactory selectionActionFactory;
 
     protected PasteAction(
             I18N i18n,
             ActionExtensionFactory extensionFactory,
-            SelectionActionsFactory selectionActionFactory) {
+            FxomSelectionActionsFactory selectionActionFactory) {
         super(i18n, extensionFactory);
         this.selectionActionFactory = selectionActionFactory;
     }

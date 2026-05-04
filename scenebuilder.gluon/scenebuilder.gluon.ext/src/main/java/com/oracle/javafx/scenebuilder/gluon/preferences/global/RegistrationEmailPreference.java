@@ -32,11 +32,11 @@
  */
 package com.oracle.javafx.scenebuilder.gluon.preferences.global;
 
-import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
-import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preference.Preference;
-import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.jfxplace.core.api.preference.DefaultValueProvider;
+import com.treilhes.jfxplace.core.api.preference.ManagedGlobalPreference;
+import com.treilhes.jfxplace.core.api.preference.Preference;
+import com.treilhes.jfxplace.core.api.preference.PreferenceContext;
 
 @ApplicationSingleton
 @PreferenceContext(id = "5c10e650-db8a-4304-9e5a-c217b49bbe55", // NO CHECK

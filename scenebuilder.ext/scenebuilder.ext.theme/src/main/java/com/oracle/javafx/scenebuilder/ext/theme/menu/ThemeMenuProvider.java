@@ -41,11 +41,11 @@ import java.util.stream.Collectors;
 import org.springframework.context.annotation.Lazy;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.action.ActionFactory;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.action.ActionFactory;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeManager;
 import com.oracle.javafx.scenebuilder.ext.theme.actions.ApplyCssContentAction;
@@ -60,8 +60,8 @@ import javafx.scene.control.ToggleGroup;
 @ApplicationInstanceSingleton
 public class ThemeMenuProvider implements MenuItemProvider {
 
-    // private final static String FIRST_SEPARATOR_ID = "firstSeparator";
-    private final static String FIRST_SEPARATOR_ID = "previewMenu";
+    // private static final String FIRST_SEPARATOR_ID = "firstSeparator";
+    private static final String FIRST_SEPARATOR_ID = "previewMenu";
 
     private final I18N i18n;
     private final ThemeManager themeManager;

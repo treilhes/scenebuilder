@@ -52,19 +52,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Scope;
 
-import com.gluonhq.jfxapps.core.api.fxom.library.LibraryFilter;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.UILogger;
-import com.gluonhq.jfxapps.core.extstore.fs.ExtensionFileSystemFactory;
-import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
-import com.gluonhq.jfxapps.core.library.api.AbstractLibrary;
-import com.gluonhq.jfxapps.core.library.api.AbstractLibrary.Exploration;
-import com.gluonhq.jfxapps.core.library.api.Explorer;
-import com.gluonhq.jfxapps.core.library.api.LibraryDialogFactory;
-import com.gluonhq.jfxapps.core.library.api.LibraryStoreFactory;
-import com.gluonhq.jfxapps.core.library.api.Transform;
-import com.gluonhq.jfxapps.core.library.maven.MavenArtifact;
-import com.gluonhq.jfxapps.core.library.util.LibraryUtil;
 import com.oracle.javafx.scenebuilder.imagelibrary.ImageLibraryExtension;
 import com.oracle.javafx.scenebuilder.imagelibrary.importer.ImageImportWindowController;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReportEntry.Type;
@@ -74,6 +61,19 @@ import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageExplore
 import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageFileExplorer;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageFolderExplorer;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.explorer.ImageMavenArtifactExplorer;
+import com.treilhes.jfxplace.core.api.fxom.library.LibraryFilter;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.UILogger;
+import com.treilhes.jfxplace.core.extstore.fs.ExtensionFileSystemFactory;
+import com.treilhes.jfxplace.core.fs.controller.ClassLoaderController;
+import com.treilhes.jfxplace.core.library.api.AbstractLibrary;
+import com.treilhes.jfxplace.core.library.api.Explorer;
+import com.treilhes.jfxplace.core.library.api.LibraryDialogFactory;
+import com.treilhes.jfxplace.core.library.api.LibraryStoreFactory;
+import com.treilhes.jfxplace.core.library.api.Transform;
+import com.treilhes.jfxplace.core.library.api.AbstractLibrary.Exploration;
+import com.treilhes.jfxplace.core.library.maven.MavenArtifact;
+import com.treilhes.jfxplace.core.library.util.LibraryUtil;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -89,15 +89,15 @@ import javafx.scene.text.Text;
 @DependsOn("metadata") //NOCHECK
 public class ImageLibrary extends AbstractLibrary<ImageReport, LibraryItemImpl> implements InitializingBean, DisposeWithApplication{
 
-    public final static String TTF_EXTENSION = "ttf"; //NOCHECK
-    //public final static String OTF_EXTENSION = "otf"; //NOCHECK
-    public final static List<String> HANDLED_JAVA_EXTENSIONS = List.of("jar"); //NOCHECK
-    public final static List<String> HANDLED_IMAGE_EXTENSIONS = List.of("jpg", "jpeg", "gif", "png", "ttf");//, "otf"); //NOCHECK
-    public final static List<String> HANDLED_FILE_EXTENSIONS = List.of("jar", "jpg", "jpeg", "gif", "png", "ttf");//, "otf"); //NOCHECK
+    public static final String TTF_EXTENSION = "ttf"; //NOCHECK
+    //public static final String OTF_EXTENSION = "otf"; //NOCHECK
+    public static final List<String> HANDLED_JAVA_EXTENSIONS = List.of("jar"); //NOCHECK
+    public static final List<String> HANDLED_IMAGE_EXTENSIONS = List.of("jpg", "jpeg", "gif", "png", "ttf");//, "otf"); //NOCHECK
+    public static final List<String> HANDLED_FILE_EXTENSIONS = List.of("jar", "jpg", "jpeg", "gif", "png", "ttf");//, "otf"); //NOCHECK
 
-    private final static Logger logger = LoggerFactory.getLogger(ImageLibrary.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImageLibrary.class);
 
-    private final static String LIBRARY_ID = "Images"; //NOCHECK
+    private static final String LIBRARY_ID = "Images"; //NOCHECK
 
     private final ImageBuiltinLibrary builtinLibrary;
 

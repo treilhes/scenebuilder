@@ -37,10 +37,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenuItemProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBuilder;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenuItemProvider;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
 
 import javafx.scene.control.Menu;
@@ -48,7 +48,7 @@ import javafx.scene.control.Menu;
 @ApplicationInstanceSingleton
 public class CssViewAsMenuProvider implements ViewMenuItemProvider {
 
-    public final static String MENU_ID = "cssViewAsMenu";
+    public static final String MENU_ID = "cssViewAsMenu";
 
     private final MenuBuilder menuBuilder;
 

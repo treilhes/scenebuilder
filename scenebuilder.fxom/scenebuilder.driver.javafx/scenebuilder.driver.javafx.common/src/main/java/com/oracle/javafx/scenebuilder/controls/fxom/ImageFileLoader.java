@@ -37,14 +37,14 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.ext.FileLoader;
-import com.gluonhq.jfxapps.core.fxom.util.DesignImage;
-import com.gluonhq.scenebuilder.metadata.property.value.DoublePropertyMetadata;
-import com.gluonhq.scenebuilder.metadata.property.value.ImagePropertyMetadata;
 import com.oracle.javafx.scenebuilder.metadata.javafx.javafx.scene.image.ImageViewMetadata;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.ext.FileLoader;
+import com.treilhes.jfxplace.core.fxom.util.DesignImage;
+import com.treilhes.jfxplace.core.metadata.property.base.DoublePropertyMetadata;
+import com.treilhes.jfxplace.core.metadata.property.value.ImagePropertyMetadata;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

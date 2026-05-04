@@ -37,15 +37,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.gluonhq.jfxapps.boot.api.loader.extension.SealedExtension;
+import com.treilhes.emc4j.boot.api.loader.extension.ApplicationExtension;
+import com.treilhes.emc4j.boot.api.loader.extension.Extension;
 
-public class RunnerExtension implements SealedExtension {
+public class RunnerExtension implements ApplicationExtension {
 
-    public final static UUID ID = UUID.fromString("feda298c-4a63-450d-8c59-8cb43241ba3d");
+    public static final UUID ID = UUID.fromString("feda298c-4a63-450d-8c59-8cb43241ba3d");
 
     @Override
     public UUID getParentId() {
-        return SealedExtension.ROOT_ID;
+        return Extension.ROOT_ID;
     }
 
     @Override
@@ -57,36 +58,5 @@ public class RunnerExtension implements SealedExtension {
     public List<Class<?>> localContextClasses() {
         return Arrays.asList(Runner.class);
     }
-
-//    @Override
-//    public InputStream getLicense() {
-//        // TODO Auto-generated method stub
-//        return null;
-//    }
-//
-//    @Override
-//    public InputStream getDescription() {
-//        // TODO Auto-generated method stub
-//        return null;
-//    }
-//
-//    @Override
-//    public InputStream getLoadingImage() {
-//        // TODO Auto-generated method stub
-//        return null;
-//    }
-//
-//    @Override
-//    public InputStream getIcon() {
-//        // TODO Auto-generated method stub
-//        return null;
-//    }
-//
-//    @Override
-//    public InputStream getIconX2() {
-//        // TODO Auto-generated method stub
-//        return null;
-//    }
-
 
 }

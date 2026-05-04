@@ -38,13 +38,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
-import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
-import com.gluonhq.jfxapps.core.fxom.ext.FileLoader;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.FXOMPropertyC;
+import com.treilhes.jfxplace.core.fxom.FXOMPropertyT;
+import com.treilhes.jfxplace.core.fxom.ext.FileLoader;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaException;

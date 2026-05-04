@@ -44,11 +44,11 @@ import org.springframework.context.annotation.Lazy;
 
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.action.AbstractActionExtension;
-import com.gluonhq.jfxapps.core.api.fs.FileSystem;
-import com.gluonhq.jfxapps.core.api.fs.FileSystem.WatchingCallback;
-import com.gluonhq.jfxapps.core.api.lifecycle.DisposeWithDocument;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
+import com.treilhes.jfxplace.core.api.action.AbstractActionExtension;
+import com.treilhes.jfxplace.core.api.fs.FileSystem;
+import com.treilhes.jfxplace.core.api.fs.FileSystem.WatchingCallback;
+import com.treilhes.jfxplace.core.api.lifecycle.DisposeWithDocument;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
 import com.oracle.javafx.scenebuilder.ext.i18n.controller.I18nResourceMenuController;
 import com.oracle.javafx.scenebuilder.ext.i18n.preference.I18NResourcePreference;
 

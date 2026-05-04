@@ -161,6 +161,7 @@ import com.oracle.javafx.scenebuilder.tools.driver.webview.WebViewResizer;
 import com.oracle.javafx.scenebuilder.tools.driver.window.WindowHandles;
 import com.oracle.javafx.scenebuilder.tools.driver.window.WindowIntersectsBoundsCheck;
 import com.oracle.javafx.scenebuilder.tools.driver.window.WindowPring;
+import com.oracle.javafx.scenebuilder.tools.job.SelectionJobsOverride;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.AddColumnConstraintsJob;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.AddColumnJob;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.AddRowConstraintsJob;
@@ -184,6 +185,7 @@ import com.oracle.javafx.scenebuilder.tools.job.gridpane.RemoveColumnContentJob;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.RemoveRowConstraintsJob;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.RemoveRowContentJob;
 import com.oracle.javafx.scenebuilder.tools.job.gridpane.SpanJob;
+import com.oracle.javafx.scenebuilder.tools.job.node.ModifyCacheHintJob;
 import com.oracle.javafx.scenebuilder.tools.job.togglegroup.ModifySelectionToggleGroupJob;
 import com.oracle.javafx.scenebuilder.tools.job.togglegroup.ModifyToggleGroupJob;
 import com.oracle.javafx.scenebuilder.tools.job.wrap.UnwrapJob;
@@ -304,6 +306,12 @@ public class BaseToolingExtension implements OpenExtension {
                 LineEditor.class,
                 LineHandles.class,
                 MainAccessoryDropTargetProvider.class,
+                ModifyCacheHintJob.class,
+                ModifyCacheHintJob.Factory.class,
+                ModifyToggleGroupJob.class,
+                ModifyToggleGroupJob.Factory.class,
+                ModifySelectionToggleGroupJob.class,
+                ModifySelectionToggleGroupJob.Factory.class,
                 MoveCellContentJob.class,
                 MoveCellContentJob.Factory.class,
                 MoveColumnAfterAction.class,
@@ -363,6 +371,7 @@ public class BaseToolingExtension implements OpenExtension {
                 ScenePring.class,
                 SelectAndMoveInGridGesture.class,
                 SelectAndMoveInGridGesture.Factory.class,
+                SelectionJobsOverride.class,
                 SelectWithPringGesture.class,
                 SelectWithPringGesture.Factory.class,
                 SpanJob.class,

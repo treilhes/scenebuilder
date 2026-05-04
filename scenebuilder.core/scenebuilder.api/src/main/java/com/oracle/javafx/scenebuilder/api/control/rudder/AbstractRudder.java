@@ -33,10 +33,10 @@
  */
 package com.oracle.javafx.scenebuilder.api.control.rudder;
 
-import com.gluonhq.jfxapps.core.api.fxom.content.decoration.AbstractDecoration;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
 import com.oracle.javafx.scenebuilder.api.control.Rudder;
+import com.treilhes.jfxplace.core.api.fxom.content.decoration.AbstractDecoration;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
 
 /**
  *

@@ -37,14 +37,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.subjects.DockManager;
-import com.gluonhq.jfxapps.core.api.ui.DockActionFactory;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockNameHelper;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenuItemProvider;
+import com.treilhes.jfxplace.core.api.subjects.DockManager;
+import com.treilhes.jfxplace.core.api.ui.DockActionFactory;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlViewController;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.DockNameHelper;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBuilder;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenuItemProvider;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -52,8 +52,8 @@ import javafx.scene.control.MenuItem;
 @ApplicationInstanceSingleton
 public class MoveToDockMenuProvider implements ViewMenuItemProvider {
 
-    public final static String MENU_ID = "viewMoveToMenu";
-    public final static String MENU_ITEM_ID = "viewMoveToMenu-%s";
+    public static final String MENU_ID = "viewMoveToMenu";
+    public static final String MENU_ITEM_ID = "viewMoveToMenu-%s";
 
     private final DockActionFactory dockActionFactory;
     private final MenuBuilder menuBuilder;

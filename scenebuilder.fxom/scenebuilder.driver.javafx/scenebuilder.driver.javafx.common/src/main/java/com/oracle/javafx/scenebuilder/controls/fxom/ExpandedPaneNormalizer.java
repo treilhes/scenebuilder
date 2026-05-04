@@ -36,18 +36,18 @@ package com.oracle.javafx.scenebuilder.controls.fxom;
 import java.util.Collection;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMElement;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMIntrinsic;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.FXOMProperty;
-import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
-import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
-import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
-import com.gluonhq.jfxapps.core.fxom.collector.PropertyCollector;
-import com.gluonhq.jfxapps.core.fxom.ext.FXOMNormalizer;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMElement;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMIntrinsic;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.FXOMProperty;
+import com.treilhes.jfxplace.core.fxom.FXOMPropertyC;
+import com.treilhes.jfxplace.core.fxom.FXOMPropertyT;
+import com.treilhes.jfxplace.core.fxom.collector.FxCollector;
+import com.treilhes.jfxplace.core.fxom.collector.PropertyCollector;
+import com.treilhes.jfxplace.core.fxom.ext.FXOMNormalizer;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
 
 import javafx.scene.control.TitledPane;
 

@@ -37,10 +37,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
-import com.gluonhq.jfxapps.core.api.fxom.FxomDocumentFactory;
-import com.gluonhq.jfxapps.core.api.fxom.library.LibraryItem;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
+import com.treilhes.jfxplace.core.api.fxom.FxomDocumentFactory;
+import com.treilhes.jfxplace.core.api.fxom.library.LibraryItem;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
 
 /**
  *

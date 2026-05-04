@@ -56,7 +56,6 @@ open module scenebuilder.api {
     exports com.oracle.javafx.scenebuilder.api.controls;
     exports com.oracle.javafx.scenebuilder.api.css;
     exports com.oracle.javafx.scenebuilder.api.dnd;
-    exports com.oracle.javafx.scenebuilder.api.editors;
 
     exports com.oracle.javafx.scenebuilder.api.job;
     exports com.oracle.javafx.scenebuilder.api.mask;
@@ -71,6 +70,7 @@ open module scenebuilder.api {
 
     requires transitive jfxplace.core.api;
     requires transitive jfxplace.fxom.api;
+
     //requires transitive jfxplace.core.fxom;
     //requires transitive scenebuilder.metadata.sbjavafx;
     requires transitive jfxplace.core.starter;

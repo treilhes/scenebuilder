@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.core.ui.preference;
 
-import com.gluonhq.jfxapps.core.api.preference.ValueValidator;
+import com.treilhes.jfxplace.core.api.preference.ValueValidator;
 
 public class DividerValueValidator implements ValueValidator<Double> {
     @Override

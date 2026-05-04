@@ -33,34 +33,34 @@
  */
 package com.oracle.javafx.scenebuilder.menu.main.file;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.application.ApplicationInstance;
-import com.gluonhq.jfxapps.core.api.document.DocumentActionFactory;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Alert;
-import com.gluonhq.jfxapps.core.api.ui.dialog.Dialog;
-import com.gluonhq.jfxapps.core.api.ui.dialog.ModalWindow;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.application.ApplicationInstance;
+import com.treilhes.jfxplace.core.api.document.DocumentActionFactory;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.dialog.Alert;
+import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
+import com.treilhes.jfxplace.core.api.ui.dialog.ModalWindow;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 @MenuItemAttachment(
         id = RevertAction.MENU_ID,
-        targetMenuId = SaveAsAction.MENU_ID,
+        targetMenuId = DefaultMenu.File.SAVE_AS_ID,
         label = "menu.title.revert",
         positionRequest = PositionRequest.AsNextSibling)
 public class RevertAction extends AbstractAction {
 
-    public final static String MENU_ID = DefaultMenu.File.REVERT_TO_SAVED_ID;
+    public static final String MENU_ID = DefaultMenu.File.REVERT_TO_SAVED_ID;
 
     private final DocumentActionFactory documentActionFactory;
 

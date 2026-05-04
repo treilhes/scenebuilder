@@ -33,34 +33,49 @@
  */
 package com.oracle.javafx.scenebuilder.preview.actions;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractActionExtension;
-import com.gluonhq.jfxapps.core.api.action.ActionFactory;
-import com.oracle.javafx.scenebuilder.editor.fxml.actions.SetRootSizeAction;
+//import com.oracle.javafx.scenebuilder.editor.fxml.actions.SetRootSizeAction;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.action.ActionFactory;
 
+/**
+ * This extension is used to set the size of the root element of the preview. It is used by the
+ * {@link SetRootSizeAction} action, but it is deprecated because it is not used
+ * anymore. The size of the root element of the preview is now set by the {@link SetPreviewSizeAction}
+ *
+ * When no value is set for the size of the root element of the preview, the size of the preview is set to the size of the
+ * scene on launch, and then it is updated when the size of the scene changes. This allows to have a preview that is always
+ * the same size as the scene, which is more intuitive for the user.
+ *
+ * That's why this extension is deprecated, because it is not needed anymore
+ *
+ */
+@Deprecated(forRemoval = true)
 @ApplicationInstancePrototype
-public class SetRootSizeExtension extends AbstractActionExtension<SetRootSizeAction> {
+public class SetRootSizeExtension {//extends AbstractActionExtension<SetRootSizeAction> {
 
     private final ActionFactory actionFactory;
 
+    @Deprecated(forRemoval = true)
     public SetRootSizeExtension(
             ActionFactory actionFactory) {
         super();
         this.actionFactory = actionFactory;
     }
 
-    @Override
-    public boolean canPerform() {
-        SetPreviewSizeAction action = actionFactory.create(SetPreviewSizeAction.class);
-        action.setSize(getExtendedAction().getSize());
-        return action.canPerform();
-    }
-
-    @Override
-    public void postPerform() {
-        SetPreviewSizeAction action = actionFactory.create(SetPreviewSizeAction.class);
-        action.setSize(getExtendedAction().getSize());
-        action.perform();
-    }
+//    @Deprecated(forRemoval = true)
+//    @Override
+//    public boolean canPerform() {
+//        SetPreviewSizeAction action = actionFactory.create(SetPreviewSizeAction.class);
+//        action.setSize(getExtendedAction().getSize());
+//        return action.canPerform();
+//    }
+//
+//    @Deprecated(forRemoval = true)
+//    @Override
+//    public void postPerform() {
+//        SetPreviewSizeAction action = actionFactory.create(SetPreviewSizeAction.class);
+//        action.setSize(getExtendedAction().getSize());
+//        action.perform();
+//    }
 
 }

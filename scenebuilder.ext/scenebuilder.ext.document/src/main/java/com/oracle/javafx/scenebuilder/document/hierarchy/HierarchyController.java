@@ -41,14 +41,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.core.api.ctxmenu.ContextMenu;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.InlineEdit;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.document.api.DisplayOption;
 import com.oracle.javafx.scenebuilder.document.api.Hierarchy;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
@@ -57,6 +49,15 @@ import com.oracle.javafx.scenebuilder.document.hierarchy.display.MetadataInfoDis
 import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeViewController;
 import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.TreeItemFactory;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.ctxmenu.ContextMenu;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.api.job.JobManager;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.beans.property.ObjectProperty;
@@ -136,9 +137,9 @@ public class HierarchyController implements Hierarchy {
         displayOptionProperty = new SimpleObjectProperty<>(defaultDisplayOptions);
 
         fxomEvents.fxomDocument().subscribe(fd -> fxomDocumentDidChange(fd));
-        fxomEvents.sceneGraphRevisionDidChange().subscribe(c -> sceneGraphRevisionDidChange());
-        fxomEvents.cssRevisionDidChange().subscribe(c -> cssRevisionDidChange());
-        jobManager.revisionProperty().addListener((ob, o, n) -> jobManagerRevisionDidChange());
+        fxomEvents.sceneGraphRevisionDidChange().subscribe(c -> sceneDidChange());
+        fxomEvents.cssRevisionDidChange().subscribe(c -> sceneDidChange());
+        jobManager.revisionProperty().addListener((ob, o, n) -> sceneDidChange());
 
 
 
@@ -158,22 +159,22 @@ public class HierarchyController implements Hierarchy {
         // ----------------------------------------------------------------------
         // DRAG_DONE event received when drag gesture
         // started from the hierarchy panel ends
-        treeView.setOnDragDone(event -> dndController.handleTreeOnDragDone(event));
-        treeView.setOnDragDropped(event -> dndController.handleTreeOnDragDropped(event));
-        treeView.setOnDragEntered(event -> dndController.handleTreeOnDragEntered(event));
-        treeView.setOnDragExited(event -> dndController.handleTreeOnDragExited(event));
-        treeView.setOnDragOver(event -> dndController.handleTreeOnDragOver(event));
+        treeView.setOnDragDone(dndController::handleTreeOnDragDone);
+        treeView.setOnDragDropped(dndController::handleTreeOnDragDropped);
+        treeView.setOnDragEntered(dndController::handleTreeOnDragEntered);
+        treeView.setOnDragExited(dndController::handleTreeOnDragExited);
+        treeView.setOnDragOver(dndController::handleTreeOnDragOver);
 
         // Key events
         // ----------------------------------------------------------------------
-        treeView.setOnKeyPressed(event -> handleTreeOnKeyPressed(event));
+        treeView.setOnKeyPressed(this::handleTreeOnKeyPressed);
 
         // Mouse events
         // ----------------------------------------------------------------------
         // DRAG_DETECTED event received when drag gesture
         // starts from the hierarchy panel
-        treeView.setOnDragDetected(event -> dndController.handleTreeOnDragDetected(event));
-        treeView.setOnMousePressed(event -> handleTreeOnMousePressed(event));
+        treeView.setOnDragDetected(dndController::handleTreeOnDragDetected);
+        treeView.setOnMousePressed(this::handleTreeOnMousePressed);
 
         // Setup the context menu
         treeView.setContextMenu(contextMenu.getContextMenu());
@@ -246,7 +247,7 @@ public class HierarchyController implements Hierarchy {
     /**
      * @treatAsPrivate
      */
-    protected void sceneGraphRevisionDidChange() {
+    protected void sceneDidChange() {
         if (hierarchyTreeView.getTreeView() != null) {
             // Update the map containing the TreeItems expanded property values
             // This map will be used after rebuilding the tree,
@@ -257,28 +258,21 @@ public class HierarchyController implements Hierarchy {
             // be updated because:
             // - classes of scene graph objects may have mutated
             // - infos displayed in the tree items may be obsoletes
-            updatePanel();
-            editorSelectionDidChange();
+            JfxAppPlatform.ensureFxThread(() -> {
+                updatePanel();
+                editorSelectionDidChange();
+            });
         }
     }
 
     /**
-     * @treatAsPrivate
-     */
-    protected void cssRevisionDidChange() {
-        sceneGraphRevisionDidChange();
-    }
-
-    /**
-     * @treatAsPrivate
-     */
-    protected void jobManagerRevisionDidChange() {
-        // FXOMDocument has been modified by a job.
-        // Tree items must all be updated.
-        sceneGraphRevisionDidChange();
-    }
-
-    /**
+     * The method editorSelectionDidChange() updates the selection in the hierarchy
+     * tree view to match the current editor selection. It clears the current
+     * selection in the tree, finds the corresponding tree items for the selected
+     * FXOM objects, selects and scrolls to them if necessary, and updates the
+     * parent ring. This ensures the hierarchy view stays in sync with the editor's
+     * selection state.
+     *
      * @treatAsPrivate
      */
     protected void editorSelectionDidChange() {
@@ -293,7 +287,7 @@ public class HierarchyController implements Hierarchy {
             stopListeningToTreeItemSelection();
             hierarchyTreeView.clearSelection();
             // Root TreeItem may be null
-            if (rootTreeItem != null && selectedFxomObjects.isEmpty() == false) {
+            if (rootTreeItem != null && !selectedFxomObjects.isEmpty()) {
                 List<TreeItem<HierarchyItem>> selectedTreeItems = hierarchyTreeView.lookupTreeItem(selectedFxomObjects);
 
                 // TODO check selection of grid pane in document when column/row selected
@@ -301,14 +295,14 @@ public class HierarchyController implements Hierarchy {
 //                    selectedTreeItems = lookupTreeItem(List.of(selection.getGroup().getAncestor()));
 //                }
 
-                if (selectedTreeItems.isEmpty() == false) {
+                if (!selectedTreeItems.isEmpty()) {
                     hierarchyTreeView.select(selectedTreeItems);
                     // Scroll to the last TreeItem
                     final TreeItem<HierarchyItem> lastTreeItem = selectedTreeItems.get(selectedTreeItems.size() - 1);
                     // Call scrollTo only if the item is not visible.
                     // This avoid unexpected scrolling to occur in the hierarchy
                     // TreeView / TreeTableView while changing some property in the inspector.
-                    if (hierarchyTreeView.isVisible(lastTreeItem) == false) {
+                    if (!hierarchyTreeView.isVisible(lastTreeItem)) {
                         hierarchyTreeView.scrollTo(lastTreeItem);
                     }
                 }
@@ -373,7 +367,7 @@ public class HierarchyController implements Hierarchy {
             } else {
                 label.setText(i18n.getString("content.label.status.invitation"));
             }
-            if (pane.getChildren().contains(label) == false) {
+            if (!pane.getChildren().contains(label)) {
                 // This may occur when closing en empty document
                 // => we switch from null FXOM root to null FXOM document
                 pane.getChildren().add(label);
@@ -396,29 +390,32 @@ public class HierarchyController implements Hierarchy {
             break;
 
         // Handle collapse all
-        case LEFT:
+        case LEFT: {
             if (event.isAltDown()) {
-                final List<TreeItem<HierarchyItem>> treeItems = hierarchyTreeView.getSelectedItems();
-                if (!treeItems.isEmpty()) {
-                    for (TreeItem<HierarchyItem> treeItem : treeItems) {
-                        hierarchyTreeView.collapseAllTreeItems(treeItem);
-                    }
+                break;
+            }
+            final var treeItems = hierarchyTreeView.getSelectedItems();
+            if (!treeItems.isEmpty()) {
+                for (TreeItem<HierarchyItem> treeItem : treeItems) {
+                    hierarchyTreeView.collapseAllTreeItems(treeItem);
                 }
             }
             break;
-
+        }
         // Handle expand all
-        case RIGHT:
+        case RIGHT: {
             if (event.isAltDown()) {
-                final List<TreeItem<HierarchyItem>> treeItems = hierarchyTreeView.getSelectedItems();
-                if (!treeItems.isEmpty()) {
-                    for (TreeItem<HierarchyItem> treeItem : treeItems) {
-                        hierarchyTreeView.expandAllTreeItems(treeItem);
-                    }
+                break;
+            }
+            final var treeItems = hierarchyTreeView.getSelectedItems();
+            if (!treeItems.isEmpty()) {
+                for (TreeItem<HierarchyItem> treeItem : treeItems) {
+                    hierarchyTreeView.expandAllTreeItems(treeItem);
                 }
             }
-            break;
 
+            break;
+        }
         default:
             break;
         }

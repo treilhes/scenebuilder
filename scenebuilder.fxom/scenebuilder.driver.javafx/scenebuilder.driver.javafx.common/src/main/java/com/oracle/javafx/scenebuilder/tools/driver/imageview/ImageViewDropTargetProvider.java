@@ -33,10 +33,10 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.imageview;
 
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetProvider;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DropTarget;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.scene.image.ImageView;
 

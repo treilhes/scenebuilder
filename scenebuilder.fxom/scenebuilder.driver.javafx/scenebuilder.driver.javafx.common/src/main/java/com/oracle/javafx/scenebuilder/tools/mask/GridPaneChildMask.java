@@ -33,14 +33,14 @@
  */
 package com.oracle.javafx.scenebuilder.tools.mask;
 
-import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
-import com.gluonhq.jfxapps.core.fxom.FXOMElement;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
 import com.treilhes.emc4j.boot.api.context.annotation.Singleton;
+import com.treilhes.jfxplace.core.api.factory.AbstractFactory;
+import com.treilhes.jfxplace.core.fxom.FXOMElement;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
 
 import javafx.scene.layout.GridPane;
 

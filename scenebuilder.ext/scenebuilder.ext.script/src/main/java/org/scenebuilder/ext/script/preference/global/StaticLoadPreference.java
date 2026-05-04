@@ -1,10 +1,10 @@
 package org.scenebuilder.ext.script.preference.global;
 
-import com.gluonhq.jfxapps.core.api.preference.DefaultValueProvider;
-import com.gluonhq.jfxapps.core.api.preference.ManagedGlobalPreference;
-import com.gluonhq.jfxapps.core.api.preference.Preference;
-import com.gluonhq.jfxapps.core.api.preference.PreferenceContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.jfxplace.core.api.preference.DefaultValueProvider;
+import com.treilhes.jfxplace.core.api.preference.ManagedGlobalPreference;
+import com.treilhes.jfxplace.core.api.preference.Preference;
+import com.treilhes.jfxplace.core.api.preference.PreferenceContext;
 
 @ApplicationSingleton
 @PreferenceContext(id = "18e02c42-8a76-4c22-8c4f-7bc4be53d131", // NO CHECK

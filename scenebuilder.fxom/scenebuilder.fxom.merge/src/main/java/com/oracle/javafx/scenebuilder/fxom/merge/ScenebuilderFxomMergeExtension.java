@@ -28,8 +28,9 @@ public class ScenebuilderFxomMergeExtension implements OpenExtension {
                 UUID.fromString("07a8af43-755e-4a51-a598-66ac13e3f7a5"), // fxom.jobs
                 UUID.fromString("51c14d5d-1f38-4f15-ae5d-c7d493d4e726"), // fxom.editor
                 UUID.fromString("285f16bb-9af8-4c60-9ca9-5098a9d6e920"), // fxom.dnd
+                UUID.fromString("f784b4aa-1970-4253-83f4-5a0a08149807"), // fxom.error
                 UUID.fromString("a112d6e9-4079-4733-96d1-d29b3fef675d") // fxom.selection
-                
+
                 );
     }
 

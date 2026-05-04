@@ -44,13 +44,13 @@ import org.graalvm.compiler.lir.CompositeValue.Component;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlWindowController;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReport;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReportEntry;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlWindowController;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
 
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;

@@ -33,11 +33,11 @@
  */
 package com.oracle.javafx.scenebuilder.inspector.actions;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController;
 import com.oracle.javafx.scenebuilder.inspector.controller.InspectorPanelController.ShowMode;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
 
 public abstract class AbstractShowAction extends AbstractAction {
 

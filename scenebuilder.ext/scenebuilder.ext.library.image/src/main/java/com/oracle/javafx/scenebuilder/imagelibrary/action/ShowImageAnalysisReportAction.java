@@ -37,14 +37,14 @@ import org.graalvm.compiler.lir.CompositeValue.Component;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.imagelibrary.controller.ImageJarAnalysisReportController;
 import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelController;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
 
 @ApplicationInstanceSingleton
 @Lazy
@@ -60,7 +60,7 @@ import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelContro
 @Accelerator(accelerator = "CTRL+A", whenFocusing = ImageLibraryPanelController.class)
 public class ShowImageAnalysisReportAction extends AbstractAction {
 
-    public final static String MENU_ID = "showAnalysisMenu";
+    public static final String MENU_ID = "showAnalysisMenu";
 
 	private final ImageJarAnalysisReportController jarAnalysisReportController;
 

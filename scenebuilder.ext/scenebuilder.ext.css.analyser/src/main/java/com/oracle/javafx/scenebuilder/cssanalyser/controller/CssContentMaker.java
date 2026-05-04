@@ -39,16 +39,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.gluonhq.jfxapps.core.api.fxom.css.CssInternal;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.CssPropertyState.CssStyle;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.NodeCssState.CssProperty;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.sun.javafx.scene.NodeHelper;
+import com.treilhes.jfxplace.core.api.fxom.css.CssInternal;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.core.metadata.property.PropertyMetadata;
+import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
 
 import javafx.css.CssMetaData;
 import javafx.css.ParsedValue;

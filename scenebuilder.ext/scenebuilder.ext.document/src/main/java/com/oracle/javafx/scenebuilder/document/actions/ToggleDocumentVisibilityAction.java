@@ -33,19 +33,19 @@
  */
 package com.oracle.javafx.scenebuilder.document.actions;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.Action;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.DockActionFactory;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.DockViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.document.api.DocumentPanel;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.Action;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.DockActionFactory;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.DockViewController;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.View;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.about", descriptionKey = "action.description.show.about")
@@ -64,9 +64,9 @@ public class ToggleDocumentVisibilityAction  extends AbstractAction {
      * but is it the right choice, i'm wondering ?
      */
     // TODO reevaluate adding a direct dependency
-    public final static String TOGGLE_LIBRARY_MENU_ID = "toggleControlLibraryVisibilityMenuItem"; //NOCHECK
+    public static final String TOGGLE_LIBRARY_MENU_ID = "toggleControlLibraryVisibilityMenuItem"; //NOCHECK
 
-    public final static String MENU_ID = "toggleDocumentVisibilityMenuItem"; //NOCHECK
+    public static final String MENU_ID = "toggleDocumentVisibilityMenuItem"; //NOCHECK
 
     private View view;
     private Action toggleAction;
@@ -96,7 +96,7 @@ public class ToggleDocumentVisibilityAction  extends AbstractAction {
 
     public String getTitle() {
         final String title;
-        if (view.isVisible() && !view.getParentDock().isMinimized()) {
+        if (view.isVisible() && view.getParentDock() != null && !view.getParentDock().isMinimized()) {
             title = "menu.title.hide.document.panel";
         } else {
             title = "menu.title.show.document.panel";

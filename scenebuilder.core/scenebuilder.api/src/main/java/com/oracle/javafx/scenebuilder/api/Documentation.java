@@ -34,7 +34,7 @@ package com.oracle.javafx.scenebuilder.api;
 
 import java.util.Set;
 
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
+import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
 
 public interface Documentation {
     
@@ -42,7 +42,7 @@ public interface Documentation {
     /**
      * Javadoc default home
      */
-    public final static String DEFAULT_JAVADOC_HOME = "https://openjfx.io/javadoc/11/"; //NOCHECK
+    public static final String DEFAULT_JAVADOC_HOME = "https://openjfx.io/javadoc/11/"; //NOCHECK
     
 
     void openDocumentationUrl(Set<Class<?>> selectedClasses, ValuePropertyMetadata propMeta);

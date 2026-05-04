@@ -43,16 +43,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
-import com.gluonhq.jfxapps.core.library.api.Explorer;
-import com.gluonhq.jfxapps.core.library.api.ExplorerInspector;
-import com.gluonhq.jfxapps.core.library.util.ExplorationCancelledException;
-import com.gluonhq.jfxapps.core.library.util.FolderExplorer;
-import com.gluonhq.jfxapps.core.library.util.LibraryUtil;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibraryFilter;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReport;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReportEntry;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.fs.controller.ClassLoaderController;
+import com.treilhes.jfxplace.core.library.api.Explorer;
+import com.treilhes.jfxplace.core.library.api.ExplorerInspector;
+import com.treilhes.jfxplace.core.library.util.ExplorationCancelledException;
+import com.treilhes.jfxplace.core.library.util.FolderExplorer;
+import com.treilhes.jfxplace.core.library.util.LibraryUtil;
 
 import javafx.concurrent.Task;
 
@@ -60,7 +60,7 @@ import javafx.concurrent.Task;
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 public class ImageFolderExplorer implements Explorer<Path, ImageReport> {
 
-    private final static Logger logger = LoggerFactory.getLogger(ImageFolderExplorer.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImageFolderExplorer.class);
 
     private final ClassLoaderController classLoaderController;
     private final List<ImageLibraryFilter> filters;

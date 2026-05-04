@@ -33,18 +33,18 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.tab;
 
-import com.gluonhq.jfxapps.core.api.fxom.gesture.DiscardGesture;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
-import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.util.javafx.BoundsUtils;
 import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.gesture.mouse.ResizeGesture;
 import com.oracle.javafx.scenebuilder.kit.editor.panel.content.handles.AbstractResilientHandles;
 import com.oracle.javafx.scenebuilder.tools.driver.tabpane.TabPaneDesignInfoX;
 import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
+import com.treilhes.jfxplace.core.api.fxom.gesture.DiscardGesture;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.core.api.fxom.util.CoordinateHelper;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.util.javafx.BoundsUtils;
 
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Bounds;

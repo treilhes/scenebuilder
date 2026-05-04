@@ -34,14 +34,14 @@
 package com.oracle.javafx.scenebuilder.menu.main.file;
 
 import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.preference.PreferenceActionFactory;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.preference.PreferenceActionFactory;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 
 @Prototype
@@ -57,9 +57,9 @@ import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 @Accelerator(accelerator = "CTRL+,")
 public class ShowPreferencesAction extends AbstractAction {
 
-    public final static String QUIT_MENU_REF_ID = QuitScenebuilderAction.MENU_ID;
+    public static final String QUIT_MENU_REF_ID = QuitScenebuilderAction.MENU_ID;
 
-    public final static String MENU_ID = DefaultMenu.File.PREFERENCE_ID;
+    public static final String MENU_ID = DefaultMenu.File.PREFERENCE_ID;
 
     private final PreferenceActionFactory preferenceActionFactory;
 

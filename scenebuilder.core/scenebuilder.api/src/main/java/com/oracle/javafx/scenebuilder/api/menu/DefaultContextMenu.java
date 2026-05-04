@@ -36,35 +36,35 @@ package com.oracle.javafx.scenebuilder.api.menu;
 public interface DefaultContextMenu {
 
     public interface Edit {
-        public final static String ID = "ctxEditMenu";
-        public final static String CUT_ID = ID + "-cut";
-        public final static String COPY_ID = ID + "-copy";
-        public final static String PASTE_ID = ID + "-paste";
-        public final static String PASTE_INTO_ID = ID + "-pasteinto";
-        public final static String DUPLICATE_ID = ID + "-duplicate";
-        public final static String DELETE_ID = ID + "-delete";
+        public static final String ID = "ctxEditMenu";
+        public static final String CUT_ID = ID + "-cut";
+        public static final String COPY_ID = ID + "-copy";
+        public static final String PASTE_ID = ID + "-paste";
+        public static final String PASTE_INTO_ID = ID + "-pasteinto";
+        public static final String DUPLICATE_ID = ID + "-duplicate";
+        public static final String DELETE_ID = ID + "-delete";
     }
 
     public interface Modify {
-        public final static String ID = "ctxModifyMenu";
-        public final static String FIT_TO_PARENT_ID = ID + "-fittoparent";
-        public final static String USE_COMPUTED_SIZE_ID = ID + "-usecomputedsize";
+        public static final String ID = "ctxModifyMenu";
+        public static final String FIT_TO_PARENT_ID = ID + "-fittoparent";
+        public static final String USE_COMPUTED_SIZE_ID = ID + "-usecomputedsize";
     }
 
     public interface File {
-        public final static String ID = "ctxFileMenu";
-        public final static String EDIT_INCLUDED_ID = ID + "-editincluded";
-        public final static String REVEAL_INCLUDED_ID = ID + "-revealincluded";
+        public static final String ID = "ctxFileMenu";
+        public static final String EDIT_INCLUDED_ID = ID + "-editincluded";
+        public static final String REVEAL_INCLUDED_ID = ID + "-revealincluded";
     }
 
     public interface Arrange {
-        public final static String ID = "ctxArrangeMenu";
-        public final static String BRING_TO_FRONT_ID = ID + "-bringtofront";
-        public final static String SEND_TO_BACK_ID = ID + "-sendtoback";
-        public final static String BRING_FORWARD_ID = ID + "-bringforward";
-        public final static String SEND_BACKWARD_ID = ID + "-sendbackward";
-        public final static String WRAP_ID = ID + "-wrap";
-        public final static String UNWRAP_ID = ID + "-unwrap";
+        public static final String ID = "ctxArrangeMenu";
+        public static final String BRING_TO_FRONT_ID = ID + "-bringtofront";
+        public static final String SEND_TO_BACK_ID = ID + "-sendtoback";
+        public static final String BRING_FORWARD_ID = ID + "-bringforward";
+        public static final String SEND_BACKWARD_ID = ID + "-sendbackward";
+        public static final String WRAP_ID = ID + "-wrap";
+        public static final String UNWRAP_ID = ID + "-unwrap";
     }
 
 }

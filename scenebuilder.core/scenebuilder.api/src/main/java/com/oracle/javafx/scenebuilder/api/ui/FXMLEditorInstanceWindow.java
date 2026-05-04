@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.api.ui;
 
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.Dock;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.Dock;
 
 public interface FXMLEditorInstanceWindow extends MainInstanceWindow {
 

@@ -34,8 +34,8 @@ package com.oracle.javafx.scenebuilder.tools.driver.splitpane;
 
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.api.fxom.util.CoordinateHelper;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Orientation;

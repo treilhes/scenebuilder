@@ -38,13 +38,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.treilhes.emc4j.boot.context.JfxAppContext;
-import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups;
-import com.gluonhq.jfxapps.core.api.preference.ManagedDocumentPreference;
-import com.gluonhq.jfxapps.core.api.preference.PreferenceEditorFactory;
-import com.gluonhq.jfxapps.core.api.preference.PreferencesContext;
-import com.gluonhq.jfxapps.core.api.preference.UserPreference;
-import com.gluonhq.jfxapps.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
-import com.gluonhq.jfxapps.core.api.preference.type.EnumPreference;
+import com.treilhes.jfxplace.core.api.preference.DefaultPreferenceGroups;
+import com.treilhes.jfxplace.core.api.preference.ManagedDocumentPreference;
+import com.treilhes.jfxplace.core.api.preference.PreferenceEditorFactory;
+import com.treilhes.jfxplace.core.api.preference.PreferencesContext;
+import com.treilhes.jfxplace.core.api.preference.UserPreference;
+import com.treilhes.jfxplace.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
+import com.treilhes.jfxplace.core.api.preference.type.EnumPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference.GluonSwatch;
 
 import javafx.scene.Parent;

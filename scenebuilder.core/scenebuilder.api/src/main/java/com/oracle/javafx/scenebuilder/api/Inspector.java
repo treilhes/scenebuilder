@@ -33,9 +33,9 @@
  */
  package com.oracle.javafx.scenebuilder.api;
 
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.View;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.View;
+import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
 
 public interface Inspector extends View {
 

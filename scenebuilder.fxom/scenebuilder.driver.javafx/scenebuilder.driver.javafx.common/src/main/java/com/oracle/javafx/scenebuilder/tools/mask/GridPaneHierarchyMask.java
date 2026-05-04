@@ -36,16 +36,16 @@ package com.oracle.javafx.scenebuilder.tools.mask;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.factory.AbstractFactory;
-import com.gluonhq.jfxapps.core.api.fxom.mask.Accessory;
-import com.gluonhq.jfxapps.core.api.fxom.mask.FXOMObjectMask;
-import com.gluonhq.jfxapps.core.fxom.FXOMElement;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
-import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
 import com.treilhes.emc4j.boot.api.context.annotation.Singleton;
+import com.treilhes.jfxplace.core.api.factory.AbstractFactory;
+import com.treilhes.jfxplace.core.api.fxom.mask.Accessory;
+import com.treilhes.jfxplace.core.api.fxom.mask.FXOMObjectMask;
+import com.treilhes.jfxplace.core.fxom.FXOMElement;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.FXOMPropertyC;
+import com.treilhes.jfxplace.core.fxom.util.Deprecation;
 
 import javafx.scene.layout.GridPane;
 

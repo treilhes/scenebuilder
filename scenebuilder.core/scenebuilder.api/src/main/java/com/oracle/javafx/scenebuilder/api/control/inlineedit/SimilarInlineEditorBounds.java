@@ -34,7 +34,7 @@
 package com.oracle.javafx.scenebuilder.api.control.inlineedit;
 
 import com.treilhes.emc4j.boot.api.context.annotation.Singleton;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 import javafx.scene.Node;
 

@@ -39,14 +39,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
+import org.springframework.core.annotation.AnnotationUtils;
 
-import com.treilhes.emc4j.boot.api.aop.AopContext;
-import com.treilhes.emc4j.boot.api.aop.AopFactoryBean;
-import com.treilhes.emc4j.boot.api.aop.AopMetadata;
-import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.oracle.javafx.scenebuilder.api.template.NoTemplateBean;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateContext;
@@ -54,34 +50,83 @@ import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
 import com.oracle.javafx.scenebuilder.api.template.TemplateManager;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.api.theme.ThemeManager;
+import com.treilhes.emc4j.boot.api.aop.AopContext;
+import com.treilhes.emc4j.boot.api.aop.AopFactory;
+import com.treilhes.emc4j.boot.api.aop.AopFactoryBean;
+import com.treilhes.emc4j.boot.api.aop.AopMetadata;
+import com.treilhes.emc4j.boot.api.aop.DefaultMethodInterceptor;
+import com.treilhes.emc4j.boot.api.aop.ImplementationInterceptor;
+import com.treilhes.emc4j.boot.api.context.EmContext;
 
-public class TemplateAopContext extends AopContext<Template, TemplateContext, TemplateAopContext.TemplateMetadata> {
+public class TemplateAopContext extends AopContext<Template> {
 
     public TemplateAopContext() {
-        super(Template.class, TemplateContext.class);
+        super(Template.class);
     }
 
     @Override
-    public TemplateAopContext.TemplateMetadata loadMetadata(Class<?> clazz) {
-        return new TemplateMetadata(getContexAnnotationClass(), getMarkerClass(), clazz);
+    public boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
+
+        boolean isNonTemplateInterface = !Template.class.getName().equals(beanDefinition.getBeanClassName());
+        boolean isTemplate = Arrays.stream(beanDefinition.getMetadata().getInterfaceNames())
+                .anyMatch(Template.class.getName()::equals);
+        boolean isInterface = beanDefinition.getMetadata().isInterface();
+        boolean hasContextAnnotation = beanDefinition.getMetadata().isAnnotated(TemplateContext.class.getName());
+
+        return isTemplate && isInterface && isNonTemplateInterface && hasContextAnnotation;
     }
 
     @Override
-    public Template createTarget(EmContext context, TemplateMetadata metadata) {
+    public Class<? extends AopFactoryBean<Template>> factoryBeanClass() {
+        return TemplateFactoryBean.class;
+    }
 
+    @Override
+    public Class<? extends NoTemplateBean> getExclusionAnnotation() {
+        return NoTemplateBean.class;
+    }
 
-        var id = metadata.getId();
-        var name = metadata.getName();
-        var description = metadata.getDescription();
-        var orderKey = metadata.getOrderKey();
-        var fxmlUrl = metadata.getFxmlUrl();
-        var iconUrl = metadata.getIconUrl();
-        var iconX2Url = metadata.getIconX2Url();
-        var width = metadata.getWidth();
-        var height = metadata.getHeight();
+    @Override
+    public Object createProxy(AopFactory aopFactory, EmContext context, AopMetadata metadata) {
 
-        var groupClass = metadata.getGroupClass();
-        var groupId = metadata.getGroupId();
+        var templateInterface = metadata.getBeanClass();
+
+        aopFactory.addRead(templateInterface);
+
+        var template = createTarget(context, templateInterface);
+
+        // Create proxy
+        var result = new ProxyFactory();
+        result.setTarget(template);
+        result.setInterfaces(templateInterface);
+        result.addAdvice(new DefaultMethodInterceptor());
+        result.addAdvice(new ImplementationInterceptor(template, templateInterface));
+
+        return result.getProxy(templateInterface.getClassLoader());
+
+    }
+
+    private Template createTarget(EmContext context, Class<?> templateInterface) {
+
+        var annotation = AnnotationUtils.findAnnotation(templateInterface, TemplateContext.class);
+
+        if (annotation == null) {
+            throw new IllegalStateException("Template interface " + templateInterface.getName() + " must be annotated with @TemplateContext");
+        }
+
+        var id = UUID.fromString(annotation.id());
+        var name = annotation.name();
+        var description = annotation.description();
+        var orderKey = annotation.orderKey();
+        var groupClass = annotation.groupClass();
+        var groupId = annotation.groupId().isBlank() ? null : UUID.fromString(annotation.groupId());
+        var fxmlUrl = templateInterface.getResource(annotation.fxmlUrl());
+        var iconUrl = templateInterface.getResource(annotation.iconUrl());
+        var iconX2Url = templateInterface.getResource(annotation.iconX2Url());
+        var width = annotation.width();
+        var height = annotation.height();
+        var themeClasses = annotation.themeClasses();
+        var themeIds = Arrays.stream(annotation.themeIds()).map(UUID::fromString).toList();
 
         TemplateGroup group = null;
         if (groupClass != TemplateContext.NoTemplateGroup.class) {
@@ -101,9 +146,6 @@ public class TemplateAopContext extends AopContext<Template, TemplateContext, Te
             group = groupFromManager;
         }
 
-        var themeClasses = metadata.getThemeClasses();
-        var themeIds = metadata.getThemeIds();
-
         List<Theme> themes = new ArrayList<>();
         if (themeClasses.length > 0) {
             for (var cls : themeClasses) {
@@ -111,7 +153,7 @@ public class TemplateAopContext extends AopContext<Template, TemplateContext, Te
             }
         }
 
-        if (themeIds.size() > 0) {
+        if (!themeIds.isEmpty()) {
             var manager = context.getBean(ThemeManager.class);
             for (var tId : themeIds) {
                 var theme = manager.getTheme(tId);
@@ -122,12 +164,7 @@ public class TemplateAopContext extends AopContext<Template, TemplateContext, Te
         return new BaseTemplate(id, name, description, group, orderKey, fxmlUrl, iconUrl, iconX2Url, width, height, themes);
     }
 
-    @Override
-    public Class<? extends AopFactoryBean<Template, TemplateMetadata>> factoryBeanClass() {
-        return TemplateFactoryBean.class;
-    }
-
-    public static class TemplateFactoryBean extends AopFactoryBean<Template, TemplateMetadata> {
+    public static class TemplateFactoryBean extends AopFactoryBean<Template> {
 
         public TemplateFactoryBean(Class<?> templateInterface) {
             super(templateInterface, new TemplateAopContext());
@@ -135,26 +172,7 @@ public class TemplateAopContext extends AopContext<Template, TemplateContext, Te
 
     }
 
-    @Override
-    public boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
-
-        boolean isNonTemplateInterface = !Template.class.getName().equals(beanDefinition.getBeanClassName());
-        boolean isTemplate = Arrays.stream(beanDefinition.getMetadata().getInterfaceNames())
-                .anyMatch(Template.class.getName()::equals);
-        boolean isInterface = beanDefinition.getMetadata().isInterface();
-        boolean hasContextAnnotation = beanDefinition.getMetadata().isAnnotated(TemplateContext.class.getName());
-
-        return isTemplate && isInterface && isNonTemplateInterface && hasContextAnnotation;
-    }
-
-    @Override
-    public Class<NoTemplateBean> getExclusionAnnotation() {
-        return NoTemplateBean.class;
-    }
-
     public class BaseTemplate implements Template {
-
-        private static final Logger logger = LoggerFactory.getLogger(BaseTemplate.class);
 
         private final UUID id;
         private final String name;
@@ -250,99 +268,5 @@ public class TemplateAopContext extends AopContext<Template, TemplateContext, Te
         public List<Theme> getThemes() {
             return themes;
         }
-
-    }
-
-    public static class TemplateMetadata extends AopMetadata<TemplateContext, Template> {
-
-        private UUID id;
-        private String name;
-        private String description;
-        private String orderKey;
-        private Class<? extends TemplateGroup> groupClass;
-        private UUID groupId;
-        private URL fxmlUrl;
-        private URL iconUrl;
-        private URL iconX2Url;
-        private int width;
-        private int height;
-        private Class<? extends TemplateGroup>[] themeClasses;
-        private List<UUID> themeIds;
-
-        public TemplateMetadata(Class<TemplateContext> annotationClass, Class<Template> markerClass, Class<?> templateInterface) {
-            super(annotationClass, markerClass, templateInterface);
-        }
-
-        @Override
-        protected void loadMetadata(TemplateContext annotation) {
-            if (hasAnnotation()) {
-                this.id = UUID.fromString(annotation.id());
-                this.name = annotation.name();
-                this.description = annotation.description();
-                this.orderKey = annotation.orderKey();
-                this.groupClass = annotation.groupClass();
-                this.groupId = annotation.groupId().isBlank() ? null : UUID.fromString(annotation.groupId());
-                this.fxmlUrl = this.getBeanClass().getResource(annotation.fxmlUrl());
-                this.iconUrl = this.getBeanClass().getResource(annotation.iconUrl());
-                this.iconX2Url = this.getBeanClass().getResource(annotation.iconX2Url());
-                this.width = annotation.width();
-                this.height = annotation.height();
-                this.themeClasses = annotation.themeClasses();
-                this.themeIds = Arrays.stream(annotation.themeIds()).map(UUID::fromString).toList();
-            }
-        }
-
-        public UUID getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public String getOrderKey() {
-            return orderKey;
-        }
-
-        public Class<? extends TemplateGroup> getGroupClass() {
-            return groupClass;
-        }
-
-        public UUID getGroupId() {
-            return groupId;
-        }
-
-        public URL getFxmlUrl() {
-            return fxmlUrl;
-        }
-
-        public URL getIconUrl() {
-            return iconUrl;
-        }
-
-        public URL getIconX2Url() {
-            return iconX2Url;
-        }
-
-        public int getWidth() {
-            return width;
-        }
-
-        public int getHeight() {
-            return height;
-        }
-
-        public Class<? extends TemplateGroup>[] getThemeClasses() {
-            return themeClasses;
-        }
-
-        public List<UUID> getThemeIds() {
-            return themeIds;
-        }
-
     }
 }

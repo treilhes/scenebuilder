@@ -34,7 +34,7 @@ package com.oracle.javafx.scenebuilder.controllibrary.library;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
 
-import com.gluonhq.jfxapps.core.api.fxom.library.LibraryFilter;
+import com.treilhes.jfxplace.core.api.fxom.library.LibraryFilter;
 
 @Component
 public class ControlLibraryDefaultFilter implements LibraryFilter {

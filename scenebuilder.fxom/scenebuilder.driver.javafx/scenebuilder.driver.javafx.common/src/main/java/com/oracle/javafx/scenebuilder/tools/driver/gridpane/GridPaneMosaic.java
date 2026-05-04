@@ -37,10 +37,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.core.api.fxom.gesture.CardinalPoint;
-import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
-import com.gluonhq.scenebuilder.metadata.util.ColorEncoder;
 import com.oracle.javafx.scenebuilder.tools.driver.quadcurve.Quad;
+import com.treilhes.jfxplace.core.api.fxom.gesture.CardinalPoint;
+import com.treilhes.jfxplace.core.fxom.util.Deprecation;
+import com.treilhes.jfxplace.core.metadata.util.ColorEncoder;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
@@ -60,10 +60,10 @@ import javafx.scene.shape.Rectangle;
  */
 class GridPaneMosaic {
 
-    public final static double NORTH_TRAY_SIZE = 22;
-    public final static double SOUTH_TRAY_SIZE = NORTH_TRAY_SIZE;
-    public final static double WEST_TRAY_SIZE = 24;
-    public final static double EAST_TRAY_SIZE = WEST_TRAY_SIZE;
+    public static final double NORTH_TRAY_SIZE = 22;
+    public static final double SOUTH_TRAY_SIZE = NORTH_TRAY_SIZE;
+    public static final double WEST_TRAY_SIZE = 24;
+    public static final double EAST_TRAY_SIZE = WEST_TRAY_SIZE;
 
     private final Group topGroup = new Group();
     private final Path gridPath = new Path();

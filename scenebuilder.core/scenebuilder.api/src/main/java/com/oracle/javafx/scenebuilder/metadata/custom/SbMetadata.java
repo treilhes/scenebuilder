@@ -38,14 +38,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.core.metadata.AbstractMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.ComponentPropertyMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPathComparator;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.core.metadata.AbstractMetadata;
+import com.treilhes.jfxplace.core.metadata.property.ComponentPropertyMetadata;
+import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
 
 @ApplicationSingleton
 public class SbMetadata extends AbstractMetadata<
@@ -68,9 +69,14 @@ public class SbMetadata extends AbstractMetadata<
      */
     private final Set<PropertyName> parentRelatedProperties = new HashSet<>();
 
-    protected SbMetadata(List<SbComponentClassMetadata<?>> componentClassMetadatas, MetadataIntrospector<SbComponentClassMetadata<?>> metadataIntrospector) {
+    //@formatter:off
+    protected SbMetadata(
+            List<SbComponentClassMetadata<?>> componentClassMetadatas,
+            Optional<MetadataIntrospector<SbComponentClassMetadata<?>>> metadataIntrospector) {
+        //@formatter:on
         super(componentClassMetadatas);
-        setMetadataIntrospector(metadataIntrospector);
+        metadataIntrospector.ifPresent(this::setMetadataIntrospector);
+
         // Populates parentRelatedProperties
 //        parentRelatedProperties.add(PropertyNames.layoutXName);
 //        parentRelatedProperties.add(PropertyNames.layoutYName);

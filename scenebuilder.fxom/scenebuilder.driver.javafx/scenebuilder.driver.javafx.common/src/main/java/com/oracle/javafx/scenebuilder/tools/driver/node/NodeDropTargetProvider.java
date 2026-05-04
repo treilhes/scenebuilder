@@ -33,14 +33,14 @@
  */
 package com.oracle.javafx.scenebuilder.tools.driver.node;
 
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DefaultDropTargetFactory;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTarget;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.control.droptarget.AbstractDropTargetProvider;
 import com.oracle.javafx.scenebuilder.api.dnd.SbDropTargetFactory;
 import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DefaultDropTargetFactory;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DropTarget;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
 
 @ApplicationInstanceSingleton
 public final class NodeDropTargetProvider extends AbstractDropTargetProvider {

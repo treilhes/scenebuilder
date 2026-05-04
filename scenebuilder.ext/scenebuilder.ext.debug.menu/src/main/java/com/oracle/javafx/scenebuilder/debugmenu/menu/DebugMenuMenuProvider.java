@@ -40,9 +40,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.debugmenu.controller.DebugMenuController;
 
 import javafx.scene.control.Menu;
@@ -50,7 +50,7 @@ import javafx.scene.control.Menu;
 @ApplicationInstanceSingleton
 public class DebugMenuMenuProvider implements MenuProvider {
 
-    private final static String VIEW_MENU_ID = "viewMenu";
+    private static final String VIEW_MENU_ID = "viewMenu";
 
     private final DebugMenuController debugMenuController;
 

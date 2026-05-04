@@ -8,9 +8,9 @@
   <artifactId>scenebuilder.fxom</artifactId>
   <packaging>pom</packaging>
   <modules>
-  	<module>scenebuilder.fxom.editor</module>
-  	<module>scenebuilder.fxom.metadata</module>
+  	<module>scenebuilder.fxom.metadata.javafx.fx</module>
+  	<module>scenebuilder.fxom.metadata.javafx</module>
+  	<module>scenebuilder.fxom.metadata.base</module>
   	<module>scenebuilder.driver.javafx</module>
-  	<module>scenebuilder.fxom.merge</module>
   </modules>
 </project>

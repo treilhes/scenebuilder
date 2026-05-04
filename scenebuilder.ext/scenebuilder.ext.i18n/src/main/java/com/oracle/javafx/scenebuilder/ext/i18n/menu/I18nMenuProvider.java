@@ -40,14 +40,14 @@ import java.util.List;
 
 import org.springframework.context.annotation.Lazy;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.ext.i18n.controller.I18nResourceMenuController;
 import com.oracle.javafx.scenebuilder.ext.i18n.preference.I18NResourcePreference;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.util.FXMLUtils;
 
 import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.FXML;
@@ -57,7 +57,7 @@ import javafx.scene.control.MenuItem;
 @ApplicationInstanceSingleton
 public class I18nMenuProvider implements MenuItemProvider {
 
-	private final static String THEME_ID = "themeMenu";
+	private static final String THEME_ID = "themeMenu";
 
 	private final I18N i18n;
 	private final I18NResourcePreference i18nResourcePreference;
@@ -108,7 +108,7 @@ public class I18nMenuProvider implements MenuItemProvider {
 				return internationalizationMenu;
 			}
 
-			internationalizationMenu = FXMLUtils.load(this, "i18nMenu.fxml");
+			internationalizationMenu = FXMLUtils.load(i18n, this, "i18nMenu.fxml");
 
 			assert setResourceMenuItem != null;
 	        assert removeResourceMenuItem != null;

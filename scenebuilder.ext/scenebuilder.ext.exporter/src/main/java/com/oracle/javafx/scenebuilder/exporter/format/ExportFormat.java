@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.exporter.format;
 
 import java.io.File;
 
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.Selection;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
 
 import javafx.scene.Node;
 
@@ -47,6 +47,6 @@ public interface ExportFormat {
     boolean canHandleSelection();
     boolean canHandleScene();
 
-    void exportSelection(Selection selection, File output);
+    void exportSelection(FxomSelection selection, File output);
     void exportScene(Node rootNode, File output);
 }

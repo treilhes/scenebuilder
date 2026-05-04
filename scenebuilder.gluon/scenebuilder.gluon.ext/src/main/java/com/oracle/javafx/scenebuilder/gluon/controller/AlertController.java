@@ -35,13 +35,13 @@ package com.oracle.javafx.scenebuilder.gluon.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
-import com.gluonhq.jfxapps.core.api.lifecycle.InitWithDocument;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.editors.ApplicationInstanceWindow;
+import com.treilhes.jfxplace.core.api.lifecycle.InitWithDocument;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
 
 @ApplicationInstanceSingleton
 public class AlertController implements InitWithDocument {

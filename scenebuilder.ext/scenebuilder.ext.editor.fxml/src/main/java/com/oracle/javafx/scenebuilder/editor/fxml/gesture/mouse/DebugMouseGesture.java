@@ -39,9 +39,9 @@ import org.slf4j.LoggerFactory;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.fxom.gesture.AbstractMouseGesture;
-import com.gluonhq.jfxapps.core.api.fxom.gesture.GestureFactory;
-import com.gluonhq.jfxapps.core.api.fxom.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.core.api.fxom.gesture.AbstractMouseGesture;
+import com.treilhes.jfxplace.core.api.fxom.gesture.GestureFactory;
+import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
 
 import javafx.scene.input.KeyEvent;
 
@@ -52,7 +52,7 @@ import javafx.scene.input.KeyEvent;
 @ApplicationInstancePrototype
 public class DebugMouseGesture extends AbstractMouseGesture {
 
-    private final static Logger logger = LoggerFactory.getLogger(DebugMouseGesture.class);
+    private static final Logger logger = LoggerFactory.getLogger(DebugMouseGesture.class);
 
     private String title;
 

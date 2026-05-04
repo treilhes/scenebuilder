@@ -33,13 +33,13 @@
  */
 package com.oracle.javafx.scenebuilder.document.hierarchy.display;
 
-import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.fxom.FXOMElement;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
 import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
 import com.oracle.javafx.scenebuilder.document.api.AbstractDisplayOption;
+import com.treilhes.jfxplace.core.api.fxom.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.core.api.job.Job;
+import com.treilhes.jfxplace.core.api.job.JobManager;
+import com.treilhes.jfxplace.core.fxom.FXOMElement;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
 
 /**
  *

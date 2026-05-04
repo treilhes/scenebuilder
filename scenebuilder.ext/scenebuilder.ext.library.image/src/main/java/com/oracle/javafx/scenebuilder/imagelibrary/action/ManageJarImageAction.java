@@ -38,14 +38,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
 import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelController;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
 
 @ApplicationInstanceSingleton
 @Lazy
@@ -61,7 +61,7 @@ import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelContro
 @Accelerator(accelerator = "CTRL+M", whenFocusing = ImageLibraryPanelController.class)
 public class ManageJarImageAction extends AbstractAction {
 
-    public final static String MENU_ID = "manageMenu";
+    public static final String MENU_ID = "manageMenu";
     private final ImageLibrary controlLibrary;
 
     public ManageJarImageAction(ActionExtensionFactory extensionFactory, @Autowired @Lazy ImageLibrary controlLibrary) {

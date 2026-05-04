@@ -41,25 +41,24 @@ import java.util.Set;
 
 import org.springframework.context.annotation.Lazy;
 
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.FxomSelection;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
-import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlController;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
-import com.oracle.javafx.scenebuilder.api.SbEditor;
-import com.oracle.javafx.scenebuilder.api.editors.PropertyEditor;
-import com.oracle.javafx.scenebuilder.api.editors.PropertyEditorFactory;
-import com.oracle.javafx.scenebuilder.api.editors.PropertyEditorFactorySession;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.SelectionState;
+import com.treilhes.jfxplace.core.api.fxom.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.api.job.JobManager;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlController;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.collector.FxCollector;
+import com.treilhes.jfxplace.fxom.editors.api.PropertyEditor;
+import com.treilhes.jfxplace.fxom.editors.api.PropertyEditorFactory;
+import com.treilhes.jfxplace.fxom.editors.api.PropertyEditorFactorySession;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -94,7 +93,6 @@ public class InfoPanelController extends AbstractFxmlController {
     private PropertyEditor controllerClassEditor;
     private boolean controllerDidLoadFxmlOver = false;
     private final PropertyEditorFactorySession editorFactorysession;
-    private final SbEditor editor;
     private final ApplicationInstanceEvents instanceEvents;
     private final FxomSelection selection;
     private final JobManager jobManager;
@@ -105,7 +103,6 @@ public class InfoPanelController extends AbstractFxmlController {
             I18N i18n,
             ApplicationEvents applicationEvents,
             ApplicationInstanceEvents instanceEvents,
-            SbEditor editor,
             FxomSelection selection,
             JobManager jobManager,
             PropertyEditorFactory propertyEditorFactory,
@@ -113,7 +110,6 @@ public class InfoPanelController extends AbstractFxmlController {
             FxomJobsFactory fxomJobsFactory
         ) {
         super(i18n, applicationEvents, instanceEvents, InfoPanelController.class.getResource("InfoPanel.fxml"));
-        this.editor = editor;
         this.instanceEvents = instanceEvents;
         this.selection = selection;
         this.jobManager = jobManager;
@@ -135,10 +131,18 @@ public class InfoPanelController extends AbstractFxmlController {
      * AbstractPanelController
      */
 
-    protected void fxomDocumentDidChange(FXOMDocument oldDocument) {
+    protected void fxomDocumentDidChange(FXOMDocument newFxomDocument) {
         requestEntriesUpdate();
         updateAsPerRootNodeStatus();
         updateControllerAndControllerClassEditor();
+
+     // We e.g. an Untitled document is saved we need to trigger a scan for
+        // potential controller classes.
+        newFxomDocument.locationProperty().addListener((ChangeListener<URL>) (ov, t, t1) -> {
+            if (t1 != null) {
+                resetSuggestedControllerClasses(t1);
+            }
+        });
 
         if (fxrootCheckBox != null) {
             fxrootCheckBox.selectedProperty().removeListener(checkBoxListener);
@@ -211,9 +215,9 @@ public class InfoPanelController extends AbstractFxmlController {
         SelectionState selectionState = fxomEvents.selectionDidChange().get();
 
         if (controllerClassEditor == null) {
-            controllerClassEditor = editorFactorysession.getControllerClassEditor(selectionState);
+            controllerClassEditor = editorFactorysession.getControllerClassEditor();
         } else {
-            controllerClassEditor.reset(null, selectionState);
+            controllerClassEditor.reset(null);
         }
 
         HBox propNameNode = controllerClassEditor.getPropNameNode();
@@ -228,14 +232,6 @@ public class InfoPanelController extends AbstractFxmlController {
 
         // Need to react each time value of fx controller is changed (direct user input)
         controllerClassEditor.valueProperty().addListener((ChangeListener<Object>) (ov, t, t1) -> InfoPanelController.this.updateControllerAndControllerClassEditor((String)t1));
-
-        // We e.g. an Untitled document is saved we need to trigger a scan for
-        // potential controller classes.
-        editor.fxmlLocationProperty().addListener((ChangeListener<URL>) (ov, t, t1) -> {
-            if (t1 != null) {
-                resetSuggestedControllerClasses(t1);
-            }
-        });
 
         // DTL-6626
         controllerClassEditor.focusedProperty().addListener((ChangeListener<Boolean>) (ov, t, t1) -> {
@@ -263,7 +259,7 @@ public class InfoPanelController extends AbstractFxmlController {
     /*
      * Private
      */
-    private final static String IGNORED = "ignored"; //NOCHECK
+    private static final String IGNORED = "ignored"; //NOCHECK
 
     private synchronized void updateControllerAndControllerClassEditor() {
         updateControllerAndControllerClassEditor(IGNORED);
@@ -508,7 +504,7 @@ public class InfoPanelController extends AbstractFxmlController {
             // denoted by the location is created on disk, hence the runLater.
             JfxAppPlatform.ensureFxThread(() -> {
                 controllerClassEditor.setUpdateFromModel(true);
-                controllerClassEditor.reset(null, null);
+                controllerClassEditor.reset(null);
                 controllerClassEditor.setUpdateFromModel(false);
             });
         }

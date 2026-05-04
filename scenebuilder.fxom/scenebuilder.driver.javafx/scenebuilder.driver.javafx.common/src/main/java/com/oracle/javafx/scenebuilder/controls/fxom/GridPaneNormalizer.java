@@ -33,21 +33,21 @@
  */
 package com.oracle.javafx.scenebuilder.controls.fxom;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.collector.SceneGraphCollector;
-import com.gluonhq.jfxapps.core.fxom.ext.FXOMNormalizer;
-import com.gluonhq.jfxapps.core.fxom.util.Deprecation;
-import com.gluonhq.scenebuilder.metadata.property.value.list.ColumnConstraintsListPropertyMetadata;
-import com.gluonhq.scenebuilder.metadata.property.value.list.RowConstraintsListPropertyMetadata;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.collector.SceneGraphCollector;
+import com.treilhes.jfxplace.core.fxom.ext.FXOMNormalizer;
+import com.treilhes.jfxplace.core.fxom.util.Deprecation;
+import com.treilhes.jfxplace.core.metadata.property.value.list.ColumnConstraintsListPropertyMetadata;
+import com.treilhes.jfxplace.core.metadata.property.value.list.RowConstraintsListPropertyMetadata;
 
 import javafx.scene.layout.GridPane;
 
 public class GridPaneNormalizer implements FXOMNormalizer {
 
-    private final static ColumnConstraintsListPropertyMetadata columnConstraintsMeta = new ColumnConstraintsListPropertyMetadata.Builder().build();
-    private final static RowConstraintsListPropertyMetadata rowConstraintsMeta = new RowConstraintsListPropertyMetadata.Builder().build();
+    private static final ColumnConstraintsListPropertyMetadata columnConstraintsMeta = new ColumnConstraintsListPropertyMetadata.Builder().build();
+    private static final RowConstraintsListPropertyMetadata rowConstraintsMeta = new RowConstraintsListPropertyMetadata.Builder().build();
 
     @Override
     public int normalize(FXOMDocument fxomDocument) {

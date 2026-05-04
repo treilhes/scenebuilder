@@ -37,10 +37,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuBuilder;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenuItemProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBuilder;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenuItemProvider;
 import com.oracle.javafx.scenebuilder.document.view.DocumentPanelController;
 
 import javafx.scene.control.Menu;
@@ -48,7 +48,7 @@ import javafx.scene.control.Menu;
 @ApplicationInstanceSingleton
 public class HierarchyMenuProvider implements ViewMenuItemProvider {
 
-    public final static String MENU_ID = "hierarchyMenu";
+    public static final String MENU_ID = "hierarchyMenu";
 
     private final MenuBuilder menuBuilder;
 

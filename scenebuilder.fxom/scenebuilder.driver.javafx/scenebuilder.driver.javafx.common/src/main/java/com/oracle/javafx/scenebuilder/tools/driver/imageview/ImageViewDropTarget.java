@@ -34,22 +34,22 @@
 
 package com.oracle.javafx.scenebuilder.tools.driver.imageview;
 
-import com.gluonhq.jfxapps.core.api.fxom.dnd.AbstractDropTarget;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DragSource;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DropTargetFactory;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.ExternalDragSource;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionJobsFactory;
-import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchJob;
-import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJob;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.scenebuilder.metadata.property.value.ImagePropertyMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.fxom.dnd.AbstractDropTarget;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DragSource;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DropTargetFactory;
+import com.treilhes.jfxplace.core.api.fxom.dnd.ExternalDragSource;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.SelectionJobsFactory;
+import com.treilhes.jfxplace.core.api.fxom.job.base.BatchJob;
+import com.treilhes.jfxplace.core.api.fxom.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.core.api.job.base.AbstractJob;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.core.metadata.property.value.ImagePropertyMetadata;
 
 import javafx.scene.image.ImageView;
 

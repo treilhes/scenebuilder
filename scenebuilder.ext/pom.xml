@@ -31,7 +31,6 @@
         
         <module>scenebuilder.ext.editor.fxml</module>
         <module>scenebuilder.ext.editor.script</module>
-        <module>scenebuilder.ext.editors</module>
         <module>scenebuilder.ext.exporter</module>
         <module>scenebuilder.ext.inspector</module>
         <module>scenebuilder.ext.library.image</module>

@@ -35,13 +35,13 @@ package com.oracle.javafx.scenebuilder.cssanalyser.actions;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
-import com.gluonhq.jfxapps.core.api.action.AbstractAction;
-import com.gluonhq.jfxapps.core.api.action.ActionExtensionFactory;
-import com.gluonhq.jfxapps.core.api.action.ActionMeta;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.shortcut.annotation.Accelerator;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
+import com.treilhes.jfxplace.core.api.action.AbstractAction;
+import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
+import com.treilhes.jfxplace.core.api.action.ActionMeta;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
 
 @ApplicationInstancePrototype
@@ -57,10 +57,10 @@ import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController;
 @Accelerator(accelerator = "CTRL+D", whenFocusing = CssPanelController.class)
 public class SplitDefaultsAction extends AbstractAction {
 
-    public final static String MENU_ID = "cssSplitMenu";
+    public static final String MENU_ID = "cssSplitMenu";
 
-    private final static String LABEL_ON = "csspanel.defaults.join";
-    private final static String LABEL_OFF = "csspanel.defaults.split";
+    private static final String LABEL_ON = "csspanel.defaults.join";
+    private static final String LABEL_OFF = "csspanel.defaults.split";
 
     private final CssPanelController cssPanelController;
 

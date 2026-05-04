@@ -40,17 +40,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.graalvm.compiler.lir.CompositeValue.Component;
 
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.fs.controller.ClassLoaderController;
-import com.gluonhq.jfxapps.core.library.api.Explorer;
-import com.gluonhq.jfxapps.core.library.api.ExplorerInspector;
-import com.gluonhq.jfxapps.core.library.maven.MavenArtifact;
-import com.gluonhq.jfxapps.core.library.util.ExplorationCancelledException;
-import com.gluonhq.jfxapps.core.library.util.JarExplorer;
-import com.gluonhq.jfxapps.core.library.util.LibraryUtil;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibraryFilter;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.fs.controller.ClassLoaderController;
+import com.treilhes.jfxplace.core.library.api.Explorer;
+import com.treilhes.jfxplace.core.library.api.ExplorerInspector;
+import com.treilhes.jfxplace.core.library.maven.MavenArtifact;
+import com.treilhes.jfxplace.core.library.util.ExplorationCancelledException;
+import com.treilhes.jfxplace.core.library.util.JarExplorer;
+import com.treilhes.jfxplace.core.library.util.LibraryUtil;
 
 import javafx.concurrent.Task;
 
@@ -58,7 +58,7 @@ import javafx.concurrent.Task;
 @Scope(SceneBuilderBeanFactory.SCOPE_SINGLETON)
 public class ControlMavenArtifactExplorer implements Explorer<MavenArtifact, ControlReportImpl> {
 
-    private final static Logger logger = LoggerFactory.getLogger(ControlMavenArtifactExplorer.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControlMavenArtifactExplorer.class);
 
     private final ClassLoaderController classLoaderController;
     private final List<ControlLibraryFilter> filters;

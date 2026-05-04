@@ -40,11 +40,11 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
 import com.oracle.javafx.scenebuilder.sourcegen.util.eventnames.EventNames;
 import com.oracle.javafx.scenebuilder.sourcegen.util.eventnames.FindEventNamesUtil;
 import com.oracle.javafx.scenebuilder.sourcegen.util.eventnames.ImportBuilder;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.FXOMPropertyT;
 
 import javafx.fxml.FXML;
 

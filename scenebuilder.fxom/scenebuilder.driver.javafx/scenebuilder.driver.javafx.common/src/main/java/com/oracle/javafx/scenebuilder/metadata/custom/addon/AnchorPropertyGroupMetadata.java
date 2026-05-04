@@ -33,9 +33,9 @@
  */
 package com.oracle.javafx.scenebuilder.metadata.custom.addon;
 
-import com.gluonhq.jfxapps.core.metadata.property.PropertyGroupMetadata;
-import com.gluonhq.jfxapps.core.metadata.property.ValuePropertyMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
+import com.treilhes.jfxplace.core.metadata.property.PropertyGroupMetadata;
+import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
 
 public class AnchorPropertyGroupMetadata extends PropertyGroupMetadata<ValuePropertyMetadataCustomization> {
 

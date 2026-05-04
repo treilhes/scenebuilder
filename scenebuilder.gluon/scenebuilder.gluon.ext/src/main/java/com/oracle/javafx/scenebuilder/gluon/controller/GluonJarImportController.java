@@ -39,10 +39,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.core.api.WelcomeDialog;
-import com.gluonhq.jfxapps.core.api.application.InstancesManager;
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.ui.controller.misc.IconSetting;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;
@@ -50,6 +46,10 @@ import com.oracle.javafx.scenebuilder.gluon.GluonConstants;
 import com.oracle.javafx.scenebuilder.gluon.alert.ImportingGluonControlsAlert;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.ImportedGluonJarsPreference;
 import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.jfxplace.core.api.WelcomeDialog;
+import com.treilhes.jfxplace.core.api.application.InstancesManager;
+import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
 
 @Component
 @Lazy

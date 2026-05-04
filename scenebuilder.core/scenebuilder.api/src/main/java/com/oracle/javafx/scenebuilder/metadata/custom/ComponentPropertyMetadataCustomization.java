@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.metadata.custom;
 
 import java.net.URL;
 
-import com.gluonhq.jfxapps.core.metadata.property.PropertyMetadata;
+import com.treilhes.jfxplace.core.metadata.property.PropertyMetadata;
 
 /**
  * This class describes a property used as a placeholder for other component

@@ -41,13 +41,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import com.gluonhq.jfxapps.core.api.fxom.gesture.Tunable;
-import com.gluonhq.jfxapps.core.api.guide.EditCurveGuide;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.jfxapps.util.MathUtils;
 import com.oracle.javafx.scenebuilder.api.control.curve.AbstractCurveEditor;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.fxom.gesture.Tunable;
+import com.treilhes.jfxplace.core.api.guide.EditCurveGuide;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.util.MathUtils;
 
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Line;

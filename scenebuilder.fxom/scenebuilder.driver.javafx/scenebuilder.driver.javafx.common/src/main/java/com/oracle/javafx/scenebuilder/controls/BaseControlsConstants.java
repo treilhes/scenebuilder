@@ -48,6 +48,6 @@ public interface BaseControlsConstants {
     /**
      * Javadoc home (for Inspector and CSS Analyzer properties)
      */
-    public final static String JAVADOC_HOME = "https://openjfx.io/javadoc/11/"; //NOCHECK
+    public static final String JAVADOC_HOME = "https://openjfx.io/javadoc/11/"; //NOCHECK
 
 }

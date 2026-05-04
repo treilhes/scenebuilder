@@ -37,21 +37,21 @@ package com.oracle.javafx.scenebuilder.job.internal.reference;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.gluonhq.jfxapps.core.api.fxom.job.base.InlineDocumentJob;
-import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
-import com.gluonhq.jfxapps.core.api.fxom.subjects.FxomEvents;
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.api.job.JobExtensionFactory;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
-import com.gluonhq.jfxapps.core.fxom.FXOMElement;
-import com.gluonhq.jfxapps.core.fxom.FXOMNodes;
-import com.gluonhq.jfxapps.core.fxom.FXOMObject;
-import com.gluonhq.jfxapps.core.fxom.FXOMPropertyC;
-import com.gluonhq.jfxapps.core.fxom.FXOMPropertyT;
-import com.gluonhq.jfxapps.core.fxom.collector.FxCollector;
-import com.gluonhq.jfxapps.core.fxom.util.PrefixedValue;
-import com.oracle.javafx.scenebuilder.api.util.ToggleGroupHelper;
 import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
+import com.treilhes.jfxplace.core.api.fxom.job.base.InlineDocumentJob;
+import com.treilhes.jfxplace.core.api.fxom.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
+import com.treilhes.jfxplace.core.api.job.Job;
+import com.treilhes.jfxplace.core.api.job.JobExtensionFactory;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.core.fxom.FXOMElement;
+import com.treilhes.jfxplace.core.fxom.FXOMNodes;
+import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.fxom.FXOMPropertyC;
+import com.treilhes.jfxplace.core.fxom.FXOMPropertyT;
+import com.treilhes.jfxplace.core.fxom.collector.FxCollector;
+import com.treilhes.jfxplace.core.fxom.util.PrefixedValue;
+import com.treilhes.jfxplace.core.fxom.util.ToggleGroupHelper;
 
 import javafx.scene.control.ToggleGroup;
 

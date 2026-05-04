@@ -33,10 +33,6 @@
  */
 package com.oracle.javafx.scenebuilder.tools;
 
-import com.gluonhq.jfxapps.core.api.driver.DriverRegistry;
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DropJobCustomizer;
-import com.gluonhq.jfxapps.core.api.fxom.ui.tool.NoPickRefiner;
-import com.gluonhq.jfxapps.core.api.fxom.ui.tool.PickRefiner;
 import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
 import com.oracle.javafx.scenebuilder.api.control.DropTargetProvider;
 import com.oracle.javafx.scenebuilder.api.control.Handles;
@@ -128,6 +124,10 @@ import com.oracle.javafx.scenebuilder.tools.driver.window.WindowHandles;
 import com.oracle.javafx.scenebuilder.tools.driver.window.WindowIntersectsBoundsCheck;
 import com.oracle.javafx.scenebuilder.tools.driver.window.WindowPring;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.jfxplace.core.api.driver.DriverRegistry;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DropJobCustomizer;
+import com.treilhes.jfxplace.core.api.fxom.ui.tool.NoPickRefiner;
+import com.treilhes.jfxplace.core.api.fxom.ui.tool.PickRefiner;
 
 import javafx.scene.Node;
 import javafx.scene.Scene;

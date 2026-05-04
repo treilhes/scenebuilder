@@ -36,14 +36,14 @@ package com.oracle.javafx.scenebuilder.controllibrary.controller;
 import org.graalvm.compiler.lir.CompositeValue.Component;
 import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 
-import com.gluonhq.jfxapps.core.api.fxom.dnd.Drag;
-import com.gluonhq.jfxapps.core.api.fxom.editor.selection.SelectionState;
-import com.gluonhq.jfxapps.core.api.fxom.library.LibraryItem;
-import com.gluonhq.jfxapps.core.api.job.JobManager;
-import com.gluonhq.jfxapps.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.controllibrary.drag.source.ControlLibraryDragSource;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryListCell;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryListItem;
+import com.treilhes.jfxplace.core.api.fxom.dnd.Drag;
+import com.treilhes.jfxplace.core.api.fxom.editor.selection.SelectionState;
+import com.treilhes.jfxplace.core.api.fxom.library.LibraryItem;
+import com.treilhes.jfxplace.core.api.job.JobManager;
+import com.treilhes.jfxplace.core.fxom.FXOMDocument;
 
 import javafx.scene.control.ListView;
 import javafx.scene.input.Dragboard;

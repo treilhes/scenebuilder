@@ -38,10 +38,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.core.api.Size;
-import com.gluonhq.jfxapps.core.api.template.AbstractTemplate;
-import com.gluonhq.jfxapps.core.api.template.TemplateGroup;
 import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
+import com.treilhes.jfxplace.core.api.Size;
+import com.treilhes.jfxplace.core.api.template.AbstractTemplate;
+import com.treilhes.jfxplace.core.api.template.TemplateGroup;
 
 public class GluonTemplateList {
         

@@ -34,15 +34,15 @@ package com.oracle.javafx.scenebuilder.gluon;
 
 import org.springframework.stereotype.Component;
 
-import com.gluonhq.jfxapps.core.api.WelcomeDialog;
-import com.gluonhq.jfxapps.core.api.javafx.JfxAppPlatform;
-import com.gluonhq.jfxapps.core.api.lifecycle.InitWithApplication;
-import com.gluonhq.jfxapps.core.api.ui.MainInstanceWindow;
 import com.oracle.javafx.scenebuilder.gluon.controller.GluonJarImportController;
 import com.oracle.javafx.scenebuilder.gluon.controller.RegistrationController;
 import com.oracle.javafx.scenebuilder.gluon.controller.TrackingController;
 import com.oracle.javafx.scenebuilder.gluon.controller.UpdateController;
 import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.jfxplace.core.api.WelcomeDialog;
+import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.api.lifecycle.InitWithApplication;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
 
 import javafx.application.Platform;
 

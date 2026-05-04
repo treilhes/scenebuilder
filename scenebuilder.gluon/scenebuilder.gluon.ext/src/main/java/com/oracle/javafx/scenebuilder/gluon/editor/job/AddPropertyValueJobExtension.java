@@ -33,11 +33,11 @@
  */
 package com.oracle.javafx.scenebuilder.gluon.editor.job;
 
-import com.gluonhq.jfxapps.core.api.editors.ApplicationInstanceWindow;
-import com.gluonhq.jfxapps.core.api.job.base.AbstractJobExtension;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.jfxplace.core.api.editors.ApplicationInstanceWindow;
+import com.treilhes.jfxplace.core.api.job.base.AbstractJobExtension;
 
 @ApplicationInstancePrototype
 public class AddPropertyValueJobExtension extends AbstractJobExtension<AddPropertyValueJob> {

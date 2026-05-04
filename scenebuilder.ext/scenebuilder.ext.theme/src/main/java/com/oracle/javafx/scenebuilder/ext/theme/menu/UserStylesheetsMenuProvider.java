@@ -41,11 +41,11 @@ import java.util.List;
 import org.springframework.context.annotation.Lazy;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.MenuItemProvider;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.PositionRequest;
-import com.gluonhq.jfxapps.core.api.util.FXMLUtils;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.core.api.util.FXMLUtils;
 import com.oracle.javafx.scenebuilder.ext.theme.controller.SceneStyleSheetMenuController;
 import com.oracle.javafx.scenebuilder.ext.theme.preference.UserStylesheetsPreference;
 
@@ -57,7 +57,7 @@ import javafx.scene.control.MenuItem;
 @ApplicationInstanceSingleton
 public class UserStylesheetsMenuProvider implements MenuItemProvider {
 
-    private final static String THEME_ID = "themeMenu";
+    private static final String THEME_ID = "themeMenu";
 
     private final I18N i18n;
     private final UserStylesheetsPreference userStylesheetsPreference;

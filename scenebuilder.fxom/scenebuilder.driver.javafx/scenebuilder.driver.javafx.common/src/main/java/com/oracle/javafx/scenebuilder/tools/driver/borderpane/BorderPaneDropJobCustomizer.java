@@ -1,12 +1,12 @@
 package com.oracle.javafx.scenebuilder.tools.driver.borderpane;
 
-import com.gluonhq.jfxapps.core.api.fxom.dnd.DropJobCustomizer;
-import com.gluonhq.jfxapps.core.api.fxom.job.base.BatchJob;
-import com.gluonhq.jfxapps.core.api.fxom.jobs.FxomJobsFactory;
-import com.gluonhq.jfxapps.core.api.job.Job;
-import com.gluonhq.jfxapps.core.fxom.FXOMInstance;
-import com.gluonhq.jfxapps.core.fxom.util.PropertyName;
-import com.gluonhq.scenebuilder.metadata.property.value.EnumerationPropertyMetadata;
+import com.treilhes.jfxplace.core.api.fxom.dnd.DropJobCustomizer;
+import com.treilhes.jfxplace.core.api.fxom.job.base.BatchJob;
+import com.treilhes.jfxplace.core.api.fxom.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.core.api.job.Job;
+import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.core.metadata.property.base.EnumerationPropertyMetadata;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;

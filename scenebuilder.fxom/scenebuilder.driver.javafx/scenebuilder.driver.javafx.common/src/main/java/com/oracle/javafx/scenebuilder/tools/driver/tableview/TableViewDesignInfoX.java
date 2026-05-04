@@ -38,7 +38,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.gluonhq.jfxapps.core.api.fxom.util.CoordinateHelper;
+import com.treilhes.jfxplace.core.api.fxom.util.CoordinateHelper;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;

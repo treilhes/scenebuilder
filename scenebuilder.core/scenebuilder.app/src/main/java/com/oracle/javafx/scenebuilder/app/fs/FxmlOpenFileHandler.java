@@ -6,11 +6,11 @@ import java.net.MalformedURLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gluonhq.jfxapps.core.api.application.ApplicationActionFactory;
-import com.gluonhq.jfxapps.core.api.document.DocumentActionFactory;
-import com.gluonhq.jfxapps.core.api.fs.OpenFileHandler;
-import com.gluonhq.jfxapps.core.api.ui.dialog.ApplicationDialog;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.jfxplace.core.api.application.ApplicationActionFactory;
+import com.treilhes.jfxplace.core.api.document.DocumentActionFactory;
+import com.treilhes.jfxplace.core.api.fs.OpenFileHandler;
+import com.treilhes.jfxplace.core.api.ui.dialog.ApplicationDialog;
 
 @ApplicationSingleton
 public class FxmlOpenFileHandler implements OpenFileHandler {

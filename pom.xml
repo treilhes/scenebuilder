@@ -14,12 +14,13 @@
     <url>https://github.com/gluonhq/scenebuilder</url>
 
     <modules>
-        <!--<module>fxml.serializer</module>-->
         <module>scenebuilder.core</module>
         <module>scenebuilder.registry</module>
         <module>scenebuilder.launcher</module>
         <module>scenebuilder.fxom</module>
-        <!--
+        
+        <!--<module>fxml.runner</module>
+        <module>fxml.serializer</module>
         <module>scenebuilder.ext</module>
         <module>scenebuilder.gluon</module>
         -->
@@ -237,11 +238,6 @@
             <dependency>
                 <groupId>com.treilhes.scenebuilder</groupId>
                 <artifactId>scenebuilder.ext.editor.script</artifactId>
-                <version>${scenebuilder.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.treilhes.scenebuilder</groupId>
-                <artifactId>scenebuilder.ext.editors</artifactId>
                 <version>${scenebuilder.version}</version>
             </dependency>
             <dependency>

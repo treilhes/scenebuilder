@@ -34,13 +34,13 @@
 package com.oracle.javafx.scenebuilder.dummy.controller;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.gluonhq.jfxapps.core.api.i18n.I18N;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationEvents;
-import com.gluonhq.jfxapps.core.api.subjects.ApplicationInstanceEvents;
-import com.gluonhq.jfxapps.core.api.ui.controller.AbstractFxmlViewController;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.ViewSearch;
-import com.gluonhq.jfxapps.core.api.ui.controller.dock.annotation.ViewAttachment;
-import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlViewController;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.ViewSearch;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.annotation.ViewAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenu;
 
 /**
  *
@@ -49,8 +49,8 @@ import com.gluonhq.jfxapps.core.api.ui.controller.menu.ViewMenu;
 @ViewAttachment(name = DummyWindowController.VIEW_NAME, id = DummyWindowController.VIEW_ID)
 public class DummyWindowController extends AbstractFxmlViewController {
 
-    public final static String VIEW_ID = "07a57164-de78-40f0-bb26-7c6b95afc35a";
-    public final static String VIEW_NAME = "menu.title.dummy";
+    public static final String VIEW_ID = "07a57164-de78-40f0-bb26-7c6b95afc35a";
+    public static final String VIEW_NAME = "menu.title.dummy";
 
     //@formatter:off
     public DummyWindowController(
