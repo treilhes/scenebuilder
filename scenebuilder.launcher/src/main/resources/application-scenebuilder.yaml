@@ -1,11 +1,22 @@
 emc4j:
+  registry:
+    defaults:
+      devtools:
+        groupId: com.treilhes.jfxplace
+        artifactId: debugtools.registry
+        mandatory: true
   maven:
     directory: ${user.home}/.m2/repository
     redirectionsEnabled: true
     redirect:
-      - groupId: com.gluonhq.jfxapps
-        artifactId: scenebuilder.app
-        path: ../../../../scenebuilder.core/scenebuilder.app/target/classes
+      - groupId: com.treilhes.scenebuilder
+        artifactId: scenebuilder\.(?!registry$)(.*)
+        path: ../../../../scenebuilder.core/scenebuilder.$1/target/classes
+        useRegex: true
+      - groupId: com.treilhes.scenebuilder
+        artifactId: scenebuilder\.ext\.(.*)
+        path: ../../../../scenebuilder.ext/scenebuilder.ext.$1/target/classes
+        useRegex: true
 
 server:
   port: 8080

@@ -49,7 +49,7 @@
                     </profiles>
                     <applicationId>06ae1f67-a8aa-49e3-abb5-4f108534578c</applicationId>
                     <registry>
-                        <groupId>com.gluonhq.jfxapps</groupId>
+                        <groupId>com.treilhes.scenebuilder</groupId>
                         <artifactId>scenebuilder.registry</artifactId>
                         <version>${scenebuilder.version}</version>
                     </registry>
@@ -80,7 +80,7 @@
                             </profiles>
                             <applicationId>06ae1f67-a8aa-49e3-abb5-4f108534578c</applicationId>
                             <registry>
-                                <groupId>com.gluonhq.jfxapps</groupId>
+                                <groupId>com.treilhes.scenebuilder</groupId>
                                 <artifactId>scenebuilder.registry</artifactId>
                                 <version>${scenebuilder.version}</version>
                                 <localFolder>${basedir}/src/main/resources/registries/minimal</localFolder>
@@ -110,7 +110,7 @@
                             </profiles>
                             <applicationId>06ae1f67-a8aa-49e3-abb5-4f108534578c</applicationId>
                             <registry>
-                                <groupId>com.gluonhq.jfxapps</groupId>
+                                <groupId>com.treilhes.scenebuilder</groupId>
                                 <artifactId>scenebuilder.registry</artifactId>
                                 <version>${scenebuilder.version}</version>
                                 <localFolder>${basedir}/src/main/resources/registries/all-cores</localFolder>
@@ -140,7 +140,7 @@
                             </profiles>
                             <applicationId>06ae1f67-a8aa-49e3-abb5-4f108534578c</applicationId>
                             <registry>
-                                <groupId>com.gluonhq.jfxapps</groupId>
+                                <groupId>com.treilhes.scenebuilder</groupId>
                                 <artifactId>scenebuilder.registry</artifactId>
                                 <version>${scenebuilder.version}</version>
                                 <localFolder>${basedir}/src/main/resources/registries/all-cores-and-extensions</localFolder>

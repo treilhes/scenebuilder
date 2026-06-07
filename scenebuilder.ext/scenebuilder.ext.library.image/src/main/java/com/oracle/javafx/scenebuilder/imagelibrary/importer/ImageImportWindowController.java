@@ -66,8 +66,8 @@ import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
 import com.treilhes.jfxplace.core.api.ui.dialog.AbstractModalDialog;
 import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
-import com.treilhes.jfxplace.core.api.ui.dialog.Alert.ButtonID;
-import com.treilhes.jfxplace.core.library.util.LibraryUtil;
+import com.treilhes.jfxplace.fxom.api.ui.dialog.Alert.ButtonID;
+import com.treilhes.jfxplace.fxom.library.util.LibraryUtil;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;

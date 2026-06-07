@@ -42,8 +42,8 @@ import java.util.List;
 import org.junit.Test;
 
 import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.pipeline.FXOMDocumentFactory;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.pipeline.FXOMDocumentFactory;
 
 /**
  * Unit test for {@link SkeletonBuffer#toString()}.

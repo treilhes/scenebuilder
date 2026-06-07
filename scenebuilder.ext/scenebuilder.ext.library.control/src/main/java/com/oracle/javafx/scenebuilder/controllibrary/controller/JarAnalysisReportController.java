@@ -45,12 +45,12 @@ import org.graalvm.compiler.lir.CompositeValue.Component;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibrary;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;
-import com.treilhes.jfxplace.core.api.fxom.library.Report;
-import com.treilhes.jfxplace.core.api.fxom.library.ReportEntry;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
 import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlWindowController;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
+import com.treilhes.jfxplace.fxom.api.library.Report;
+import com.treilhes.jfxplace.fxom.api.library.ReportEntry;
 
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;

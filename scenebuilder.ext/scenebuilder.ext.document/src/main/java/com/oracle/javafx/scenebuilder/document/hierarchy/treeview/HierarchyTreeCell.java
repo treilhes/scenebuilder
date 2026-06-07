@@ -53,14 +53,14 @@ import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototy
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.jfxplace.core.api.editor.images.ImageUtils;
 import com.treilhes.jfxplace.core.api.factory.AbstractFactory;
-import com.treilhes.jfxplace.core.api.fxom.error.ErrorReport;
-import com.treilhes.jfxplace.core.api.fxom.error.ErrorReportEntry;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit.Type;
 import com.treilhes.jfxplace.core.api.util.StringUtils;
-import com.treilhes.jfxplace.core.fxom.FXOMIntrinsic;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
-import com.treilhes.jfxplace.core.fxom.util.PrefixedValue;
+import com.treilhes.jfxplace.fxom.api.error.ErrorReport;
+import com.treilhes.jfxplace.fxom.api.error.ErrorReportEntry;
+import com.treilhes.jfxplace.fxom.model.FXOMIntrinsic;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.util.PrefixedValue;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;

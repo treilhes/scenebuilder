@@ -42,19 +42,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
-import com.treilhes.jfxplace.core.api.fxom.util.FXOMDocumentUtils;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.api.instance.ApplicationInstance;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
-import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
 import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlViewController;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.ViewSearch;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.annotation.ViewAttachment;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenu;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.pipeline.FXOMDocumentFactory;
-import com.treilhes.jfxplace.core.fxom.pipeline.FXOMSerializer;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.api.util.FXOMDocumentUtils;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.pipeline.FXOMDocumentFactory;
+import com.treilhes.jfxplace.fxom.model.pipeline.FXOMSerializer;
 
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
@@ -84,8 +83,6 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
     @FXML
     Label updateResultLabel;
 
-
-    private final JfxAppPlatform platform;
     private final FxomEvents fxomEvents;
     private final FXOMSerializer fxomSerializer;
 
@@ -98,20 +95,20 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
 
     private FXOMDocument fxomDocument;
     private String documentName;
+    private final ApplicationInstance instance;
 
     //@formatter:off
     public SourceViewWindowController(
             I18N i18n,
-            JfxAppPlatform platform,
             ApplicationEvents applicationEvents,
-            ApplicationInstanceEvents applicationInstanceEvents,
+            ApplicationInstance instance,
             FxomEvents fxomEvents,
             FXOMDocumentFactory fxomDocumentFactory,
             FXOMSerializer fxomSerializer,
             ViewMenu viewMenu) {
         //@formatter:on
-        super(i18n, applicationEvents, applicationInstanceEvents, viewMenu, SourceViewWindowController.class.getResource("SourceWindow.fxml"));
-        this.platform = platform;
+        super(i18n, applicationEvents, instance.getEvents(), viewMenu, SourceViewWindowController.class.getResource("SourceWindow.fxml"));
+        this.instance = instance;
         this.fxomEvents = fxomEvents;
         this.fxomDocumentFactory = fxomDocumentFactory;
         this.fxomSerializer = fxomSerializer;
@@ -218,7 +215,7 @@ public class SourceViewWindowController extends AbstractFxmlViewController {
             String fxml = fxomSerializer.serialize(fxomDocument);
             textArea.setText(fxml);
 
-            platform.runOnFxThreadWithActiveScope(() -> {
+            instance.getExecutor().runOnFxThread(() -> {
                 textArea.setScrollLeft(scrollLeftSave);
                 textArea.setScrollTop(scrollTopSave);
             });

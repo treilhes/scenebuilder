@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization;
 import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
-import com.treilhes.jfxplace.core.fxom.FXOMComment;
+import com.treilhes.jfxplace.fxom.model.FXOMComment;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbComponentClassMetadata;
 
 @Component

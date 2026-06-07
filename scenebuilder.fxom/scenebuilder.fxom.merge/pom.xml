@@ -23,7 +23,7 @@
         
         <dependency>
             <groupId>com.treilhes.jfxplace</groupId>
-            <artifactId>jfxplace.core.document</artifactId>
+            <artifactId>jfxplace.fxom.document</artifactId>
             <version>${jfxplace.version}</version>
         </dependency>
         <dependency>
@@ -33,7 +33,7 @@
         </dependency>
         <dependency>
             <groupId>com.treilhes.jfxplace</groupId>
-            <artifactId>jfxplace.core.jobs</artifactId>
+            <artifactId>jfxplace.fxom.jobs</artifactId>
             <version>${jfxplace.version}</version>
         </dependency>
         <dependency>

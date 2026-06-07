@@ -37,9 +37,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
-import com.treilhes.jfxplace.core.api.fxom.FxomDocumentFactory;
-import com.treilhes.jfxplace.core.api.fxom.library.LibraryItem;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.fxom.api.fxom.FxomDocumentFactory;
+import com.treilhes.jfxplace.fxom.api.library.LibraryItem;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
 
 /**
  *

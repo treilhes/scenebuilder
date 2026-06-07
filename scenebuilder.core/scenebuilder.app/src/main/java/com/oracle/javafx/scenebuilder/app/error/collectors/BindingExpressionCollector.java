@@ -34,13 +34,13 @@
 package com.oracle.javafx.scenebuilder.app.error.collectors;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.fxom.error.AbstractErrorCollector;
-import com.treilhes.jfxplace.core.api.fxom.error.ErrorReportEntry;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.fxom.FXOMPropertyT;
-import com.treilhes.jfxplace.core.fxom.collector.PropertyCollector;
-import com.treilhes.jfxplace.core.fxom.util.PrefixedValue;
+import com.treilhes.jfxplace.fxom.api.error.AbstractErrorCollector;
+import com.treilhes.jfxplace.fxom.api.error.ErrorReportEntry;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.model.FXOMPropertyT;
+import com.treilhes.jfxplace.fxom.model.collector.PropertyCollector;
+import com.treilhes.jfxplace.fxom.model.util.PrefixedValue;
 import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 import com.oracle.javafx.scenebuilder.app.error.FxmlErrorReportEntryImpl;
 import com.oracle.javafx.scenebuilder.app.error.Type;

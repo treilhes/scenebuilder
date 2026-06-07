@@ -35,11 +35,11 @@ package com.oracle.javafx.scenebuilder.document.hierarchy.display;
 
 import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
 import com.oracle.javafx.scenebuilder.document.api.AbstractDisplayOption;
-import com.treilhes.jfxplace.core.api.fxom.jobs.FxomJobsFactory;
 import com.treilhes.jfxplace.core.api.job.Job;
 import com.treilhes.jfxplace.core.api.job.JobManager;
-import com.treilhes.jfxplace.core.fxom.FXOMElement;
-import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.fxom.api.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.fxom.model.FXOMElement;
+import com.treilhes.jfxplace.fxom.model.util.PropertyName;
 
 /**
  *

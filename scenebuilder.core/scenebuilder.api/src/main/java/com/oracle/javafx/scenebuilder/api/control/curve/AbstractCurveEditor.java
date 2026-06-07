@@ -39,10 +39,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.api.control.CurveEditor;
-import com.treilhes.jfxplace.core.api.fxom.gesture.Tunable;
 import com.treilhes.jfxplace.core.api.guide.EditCurveGuide;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
-import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.fxom.api.gesture.Tunable;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.util.PropertyName;
 
 import javafx.scene.Node;
 

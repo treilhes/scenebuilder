@@ -49,11 +49,11 @@ import com.oracle.javafx.scenebuilder.gluon.controller.TrackingController;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationEmailPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationHashPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.RegistrationOptInPreference;
-import com.treilhes.jfxplace.core.api.editors.ApplicationInstanceWindow;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
 import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlWindowController;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
+import com.treilhes.jfxplace.fxom.api.editors.ApplicationInstanceWindow;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;

@@ -43,8 +43,8 @@ import java.util.TreeSet;
 import com.oracle.javafx.scenebuilder.sourcegen.util.eventnames.EventNames;
 import com.oracle.javafx.scenebuilder.sourcegen.util.eventnames.FindEventNamesUtil;
 import com.oracle.javafx.scenebuilder.sourcegen.util.eventnames.ImportBuilder;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
-import com.treilhes.jfxplace.core.fxom.FXOMPropertyT;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.FXOMPropertyT;
 
 import javafx.fxml.FXML;
 

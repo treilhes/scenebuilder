@@ -42,11 +42,11 @@ import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;
 import com.oracle.javafx.scenebuilder.exporter.controller.ExporterMenuController;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.fxom.api.editor.selection.FxomSelection;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;

@@ -8,7 +8,9 @@
   <artifactId>scenebuilder.driver.javafx</artifactId>
   <packaging>pom</packaging>
   <modules>
-      <module>scenebuilder.driver.javafx.common</module>
+      <module>scenebuilder.driver.javafx.11</module>
+      <module>scenebuilder.driver.javafx.15</module>
       <module>scenebuilder.driver.javafx.22</module>
+      <module>scenebuilder.driver.javafx.26</module>
   </modules>
 </project>

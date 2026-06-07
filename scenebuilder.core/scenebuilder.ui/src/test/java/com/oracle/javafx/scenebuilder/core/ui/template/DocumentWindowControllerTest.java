@@ -38,126 +38,87 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
 import com.oracle.javafx.scenebuilder.core.ui.preference.BottomDividerVPosPreference;
 import com.oracle.javafx.scenebuilder.core.ui.preference.LeftDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.core.ui.preference.RightDividerHPosPreference;
-import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
-import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
-import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
-import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.emc4j.test.EmcInject;
+import com.treilhes.emc4j.test.EmcInjectMock;
+import com.treilhes.jfxplace.core.api.application.Application;
+import com.treilhes.jfxplace.core.api.instance.ApplicationInstance;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.Dock;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.DockFactory;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.DockViewController;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBar;
-import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.MessageBar;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.SelectionBar;
-import com.treilhes.jfxplace.testold.JfxAppsTest;
-import com.treilhes.jfxplace.testold.StageBuilder;
-import com.treilhes.jfxplace.testold.StageType;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.api.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.test.JfxPlaceTest;
+import com.treilhes.jfxplace.test.builder.StageBuilder;
+import com.treilhes.jfxplace.test.builder.StageType;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
 import javafx.scene.layout.Pane;
-@JfxAppsTest
-@ContextConfiguration(classes = { DocumentWindowControllerTest.Config.class, ScenebuilderWindowController.class })
+
+@JfxPlaceTest //(classes = { ScenebuilderWindowController.class })
 class DocumentWindowControllerTest {
 
-        @TestConfiguration
-        static class Config {
-            @Bean
-            JfxAppPlatform jfxAppPlatform() {
-                return Mockito.mock(JfxAppPlatform.class);
-            }
-            @Bean
-            IconSetting iconSetting() {
-                return Mockito.mock(IconSetting.class);
-            }
-            @Bean
-            LeftDividerHPosPreference leftDividerHPosPreference() {
-                return Mockito.mock(LeftDividerHPosPreference.class);
-            }
-            @Bean
-            RightDividerHPosPreference rightDividerHPosPreference() {
-                return Mockito.mock(RightDividerHPosPreference.class);
-            }
-            @Bean
-            BottomDividerVPosPreference bottomDividerVPosPreference() {
-                return Mockito.mock(BottomDividerVPosPreference.class);
-            }
-            @Bean
-            @Prototype
-            Dock dockController() {
-                return Mockito.mock(Dock.class);
-            }
-            @Bean
-            DockViewController viewMenuController() {
-                return Mockito.mock(DockViewController.class);
-            }
-            @Bean
-            MenuBar menuBar() {
-                return Mockito.mock(MenuBar.class);
-            }
-            @Bean
-            MessageBar messageBar() {
-                return Mockito.mock(MessageBar.class);
-            }
-            @Bean
-            SelectionBar selectionBar() {
-                return Mockito.mock(SelectionBar.class);
-            }
-            @Bean
-            Workspace workspace() {
-                return Mockito.mock(Workspace.class);
-            }
-        }
+    @EmcInjectMock
+    LeftDividerHPosPreference leftDividerHPos;
 
-        @Autowired
-        I18N i18n;
-        @Autowired
-        JfxAppPlatform jfxAppPlatform;
-        @Autowired
-        ApplicationEvents sceneBuilderManager;
-        @Autowired
-        IconSetting iconSetting;
-        @Autowired
-        FxomEvents documentManager;
+    @EmcInjectMock
+    RightDividerHPosPreference rightDividerHPos;
 
-        @Autowired
-        LeftDividerHPosPreference leftDividerHPos;
-        @Autowired
-        RightDividerHPosPreference rightDividerHPos;
-        @Autowired
-        BottomDividerVPosPreference bottomDividerVPos;
+    @EmcInjectMock
+    BottomDividerVPosPreference bottomDividerVPos;
 
-        @Autowired
-        Dock leftDockController;
-        @Autowired
-        Dock rightDockController;
-        @Autowired
-        Dock bottomDockController;
-        @Autowired
-        MenuBar menuBar;
-        @Autowired
-        MessageBar messageBar;
-        @Autowired
-        SelectionBar selectionBar;
-        @Autowired
-        Workspace workspace;
+    @Mock
+    Dock leftDockController;
 
+    @Mock
+    Dock rightDockController;
+
+    @Mock
+    Dock bottomDockController;
+//
+//    @EmcInjectMock
+//    DockFactory dockFactory;
+
+    @EmcInjectMock
+    DockViewController viewMenuController;
+
+    @EmcInjectMock
+    MenuBar menuBar;
+
+    @EmcInjectMock
+    MessageBar messageBar;
+
+    @EmcInjectMock
+    SelectionBar selectionBar;
+
+    @EmcInjectMock
+    Workspace workspace;
+
+
+    @EmcInject
+    Application application;
+
+    @EmcInject
+    ApplicationInstance instance;
+
+    @EmcInject
+    FxomEvents fxomEvents;
+
+    @EmcInject
+    StageBuilder builder;
 
     // @formatter:off
     private ScenebuilderWindowController getInstance() {
@@ -165,18 +126,12 @@ class DocumentWindowControllerTest {
         Mockito.when(dockFactory.create(any(), any(String.class))).thenReturn(leftDockController, rightDockController, bottomDockController);
 
         return new ScenebuilderWindowController(
-                i18n,
-                jfxAppPlatform,
-                sceneBuilderManager,
-                iconSetting,
-                documentManager,
-
+                instance,
+                fxomEvents,
                 () -> leftDividerHPos,
                 () -> rightDividerHPos,
                 () -> bottomDividerVPos,
-
                 dockFactory,
-
                 menuBar,
                 messageBar,
                 selectionBar,
@@ -187,15 +142,15 @@ class DocumentWindowControllerTest {
 
     @Test
     @DirtiesContext
-    void should_load_the_fxml(StageBuilder builder) {
-        var leftDivider = new SimpleDoubleProperty(0.2);
+    void should_load_the_fxml() {
+        //var leftDivider = new SimpleDoubleProperty(0.2);
         var rightDivider = new SimpleDoubleProperty(0.8);
-        var bottomDivider = new SimpleDoubleProperty(0.2);
+        //var bottomDivider = new SimpleDoubleProperty(0.2);
 
         Mockito.when(leftDockController.minimizedProperty()).thenReturn(new SimpleBooleanProperty(false));
         Mockito.when(leftDockController.getContent()).thenReturn(new Pane());
-        Mockito.when(leftDividerHPos.getValue()).thenReturn(leftDivider.doubleValue());
-        Mockito.when(leftDividerHPos.getObservableValue()).thenReturn((ObservableValue)leftDivider);
+        //Mockito.when(leftDividerHPos.getValue()).thenReturn(leftDivider.doubleValue());
+        //Mockito.when(leftDividerHPos.getObservableValue()).thenReturn((ObservableValue)leftDivider);
 
         Mockito.when(rightDockController.minimizedProperty()).thenReturn(new SimpleBooleanProperty(false));
         Mockito.when(rightDockController.getContent()).thenReturn(new Pane());
@@ -204,8 +159,8 @@ class DocumentWindowControllerTest {
 
         Mockito.when(bottomDockController.minimizedProperty()).thenReturn(new SimpleBooleanProperty(false));
         Mockito.when(bottomDockController.getContent()).thenReturn(new Pane());
-        Mockito.when(bottomDividerVPos.getValue()).thenReturn(bottomDivider.doubleValue());
-        Mockito.when(bottomDividerVPos.getObservableValue()).thenReturn((ObservableValue)bottomDivider);
+        //Mockito.when(bottomDividerVPos.getValue()).thenReturn(bottomDivider.doubleValue());
+        //Mockito.when(bottomDividerVPos.getObservableValue()).thenReturn((ObservableValue)bottomDivider);
 
         var controller = builder.controller(getInstance()).show().getController();
         assertNotNull(controller.getRoot());
@@ -213,7 +168,7 @@ class DocumentWindowControllerTest {
 
     @Test
     @DirtiesContext
-    void should_show_docks_when_adding_content(StageBuilder builder, FxRobot robot) {
+    void should_show_docks_when_adding_content(FxRobot robot) {
         var leftDivider = new SimpleDoubleProperty(0.2);
         var rightDivider = new SimpleDoubleProperty(0.8);
         var bottomDivider = new SimpleDoubleProperty(0.2);
@@ -237,27 +192,28 @@ class DocumentWindowControllerTest {
         Mockito.when(bottomDividerVPos.getValue()).thenReturn(bottomDivider.doubleValue());
         Mockito.when(bottomDividerVPos.getObservableValue()).thenReturn((ObservableValue)bottomDivider);
 
-        Mockito.when(menuBar.getMenuBar()).thenReturn(new javafx.scene.control.MenuBar(new Menu("Menu")));
-
-        builder.controller(getInstance())
+        try (var testStage = builder.controller(getInstance())
                 .setup(StageType.Fill)
                 .size(800, 600)
-                .show();
+                .show()){
 
-        robot.interact(() -> {
-            leftDividerContent.getChildren().add(newButton("leftDockController"));
-            rightDividerContent.getChildren().add(newButton("rightDockController"));
-            bottomDividerContent.getChildren().add(newButton("bottomDockController"));
-        });
+            robot.interact(() -> {
+                leftDividerContent.getChildren().add(newButton("leftDockController"));
+                rightDividerContent.getChildren().add(newButton("rightDockController"));
+                bottomDividerContent.getChildren().add(newButton("bottomDockController"));
+            });
 
-        Button leftDockContent = robot.lookup("#leftDockController").query();
-        Button rightDockContent = robot.lookup("#rightDockController").query();
-        Button bottomDockContent = robot.lookup("#bottomDockController").query();
+            Button leftDockContent = robot.lookup("#leftDockController").query();
+            Button rightDockContent = robot.lookup("#rightDockController").query();
+            Button bottomDockContent = robot.lookup("#bottomDockController").query();
 
 
-        assertTrue(leftDockContent.isVisible());
-        assertTrue(rightDockContent.isVisible());
-        assertTrue(bottomDockContent.isVisible());
+            assertTrue(leftDockContent.isVisible());
+            assertTrue(rightDockContent.isVisible());
+            assertTrue(bottomDockContent.isVisible());
+        }
+
+
     }
 
     private Button newButton(String id) {

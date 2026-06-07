@@ -37,12 +37,12 @@ import java.util.Map;
 
 import com.treilhes.jfxplace.core.api.Size;
 import com.treilhes.jfxplace.core.api.job.Job;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.FXOMInstance;
-import com.treilhes.jfxplace.core.fxom.FXOMIntrinsic;
-import com.treilhes.jfxplace.core.fxom.FXOMNode;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
-import com.treilhes.jfxplace.core.fxom.FXOMPropertyT;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.FXOMInstance;
+import com.treilhes.jfxplace.fxom.model.FXOMIntrinsic;
+import com.treilhes.jfxplace.fxom.model.FXOMNode;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.FXOMPropertyT;
 
 import javafx.geometry.Point2D;
 import javafx.scene.control.ToggleGroup;

@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.editor.fxml.gesture;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.fxom.gesture.AbstractGesture;
-import com.treilhes.jfxplace.core.api.fxom.gesture.GestureFactory;
-import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.fxom.api.gesture.AbstractGesture;
+import com.treilhes.jfxplace.fxom.api.gesture.GestureFactory;
+import com.treilhes.jfxplace.fxom.api.ui.controller.misc.Workspace;
 
 import javafx.scene.Node;
 import javafx.scene.input.InputEvent;

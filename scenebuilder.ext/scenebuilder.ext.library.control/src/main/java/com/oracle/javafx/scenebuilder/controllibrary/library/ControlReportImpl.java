@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.controllibrary.library;
 import java.nio.file.Path;
 import java.util.List;
 
-import com.treilhes.jfxplace.core.api.fxom.library.Report;
+import com.treilhes.jfxplace.fxom.api.library.Report;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

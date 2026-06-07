@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.metadata.javafx.fx;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.metadata.custom.SbComponentClassMetadata;
-import com.treilhes.jfxplace.core.fxom.FXOMIntrinsic;
+import com.treilhes.jfxplace.fxom.model.FXOMIntrinsic;
 
 @Component
 public class IntrinsicMetadata extends SbComponentClassMetadata<FXOMIntrinsic> {

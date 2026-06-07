@@ -38,11 +38,11 @@ import java.util.ResourceBundle;
 
 import com.oracle.javafx.scenebuilder.sourcegen.util.eventnames.FindEventNamesUtil;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
-import com.treilhes.jfxplace.core.fxom.FXOMPropertyT;
-import com.treilhes.jfxplace.core.fxom.collector.EventHandlerCollector;
-import com.treilhes.jfxplace.core.fxom.collector.FxCollector;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.FXOMPropertyT;
+import com.treilhes.jfxplace.fxom.model.collector.EventHandlerCollector;
+import com.treilhes.jfxplace.fxom.model.collector.FxCollector;
 
 class SkeletonBuffer {
 

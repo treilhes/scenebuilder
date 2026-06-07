@@ -33,8 +33,8 @@
  */
 package com.oracle.javafx.scenebuilder.document.hierarchy.treeview;
 
-import com.treilhes.jfxplace.core.api.fxom.mask.Accessory;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.fxom.api.mask.Accessory;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 /**
  *

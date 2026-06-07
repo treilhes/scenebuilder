@@ -42,13 +42,13 @@ import com.oracle.javafx.scenebuilder.preview.controller.PreviewWindowController
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
 import com.treilhes.jfxplace.core.api.Size;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBuilder;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 import com.treilhes.jfxplace.core.api.util.StringUtils;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;

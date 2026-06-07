@@ -52,15 +52,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.treilhes.jfxplace.core.api.fxom.FxomDocumentFactory;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
 import com.treilhes.jfxplace.core.api.ui.dialog.AbstractModalDialog;
 import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
-import com.treilhes.jfxplace.core.api.ui.dialog.Alert.ButtonID;
 import com.treilhes.jfxplace.core.controls.IntegerField;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.fxom.api.fxom.FxomDocumentFactory;
+import com.treilhes.jfxplace.fxom.api.ui.dialog.Alert.ButtonID;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlFilterTransform;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;

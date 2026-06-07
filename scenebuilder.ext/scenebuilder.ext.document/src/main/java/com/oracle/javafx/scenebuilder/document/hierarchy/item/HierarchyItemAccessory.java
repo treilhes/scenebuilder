@@ -41,11 +41,11 @@ import com.oracle.javafx.scenebuilder.api.mask.SbAccessory;
 import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
 import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
 import com.treilhes.jfxplace.core.api.editor.images.ImageUtils;
-import com.treilhes.jfxplace.core.api.fxom.mask.Accessory;
-import com.treilhes.jfxplace.core.api.fxom.mask.FXOMObjectMask;
-import com.treilhes.jfxplace.core.api.fxom.mask.HierarchyMask;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.fxom.api.mask.Accessory;
+import com.treilhes.jfxplace.fxom.api.mask.FXOMObjectMask;
+import com.treilhes.jfxplace.fxom.api.mask.HierarchyMask;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 import javafx.scene.image.Image;
 

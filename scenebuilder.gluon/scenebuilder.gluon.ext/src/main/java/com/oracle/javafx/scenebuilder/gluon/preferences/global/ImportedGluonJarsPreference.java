@@ -36,8 +36,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.treilhes.jfxplace.core.api.preference.ManagedGlobalPreference;
-import com.treilhes.jfxplace.core.api.preference.PreferencesContext;
-import com.treilhes.jfxplace.core.api.preference.type.StringArrayPreference;
+import com.treilhes.jfxplace.fxom.api.preference.PreferencesContext;
+import com.treilhes.jfxplace.fxom.api.preference.type.StringArrayPreference;
 
 @Component
 public class ImportedGluonJarsPreference extends StringArrayPreference implements ManagedGlobalPreference {

@@ -42,9 +42,9 @@ import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.treilhes.jfxplace.core.api.application.InstancesManager;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
 import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
 import com.treilhes.jfxplace.core.api.ui.controller.alert.SBAlert;
+import com.treilhes.jfxplace.fxom.api.javafx.JfxAppPlatform;
 
 @ApplicationSingleton
 public class UpdateController {

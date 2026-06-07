@@ -38,16 +38,16 @@ import java.util.List;
 import java.util.Map;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.fxom.job.JobPipeline;
-import com.treilhes.jfxplace.core.api.fxom.job.base.BatchJob;
 import com.treilhes.jfxplace.core.api.job.Job;
-import com.treilhes.jfxplace.core.fxom.FXOMNode;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
-import com.treilhes.jfxplace.core.fxom.FXOMPath;
-import com.treilhes.jfxplace.core.fxom.collector.ExpressionCollector;
-import com.treilhes.jfxplace.core.fxom.collector.FXOMCollector;
-import com.treilhes.jfxplace.core.fxom.collector.ExpressionCollector.UndeclaredExpressionReference;
-import com.treilhes.jfxplace.core.fxom.util.ToggleGroupHelper;
+import com.treilhes.jfxplace.fxom.api.job.JobPipeline;
+import com.treilhes.jfxplace.fxom.api.job.base.BatchJob;
+import com.treilhes.jfxplace.fxom.model.FXOMNode;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.FXOMPath;
+import com.treilhes.jfxplace.fxom.model.collector.ExpressionCollector;
+import com.treilhes.jfxplace.fxom.model.collector.FXOMCollector;
+import com.treilhes.jfxplace.fxom.model.collector.ExpressionCollector.UndeclaredExpressionReference;
+import com.treilhes.jfxplace.fxom.model.util.ToggleGroupHelper;
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 
 @ApplicationInstanceSingleton

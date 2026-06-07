@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.api.control.relocater.AbstractRelocater;
-import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.fxom.model.util.PropertyName;
 import com.treilhes.jfxplace.util.MathUtils;
 
 import javafx.geometry.Bounds;

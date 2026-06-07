@@ -60,10 +60,10 @@ import com.oracle.javafx.scenebuilder.controllibrary.library.explorer.ControlMav
 import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.fxom.library.LibraryFilter;
 import com.treilhes.jfxplace.core.api.lifecycle.DisposeWithApplication;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.UILogger;
+import com.treilhes.jfxplace.fxom.api.library.LibraryFilter;
 
 /**
  *

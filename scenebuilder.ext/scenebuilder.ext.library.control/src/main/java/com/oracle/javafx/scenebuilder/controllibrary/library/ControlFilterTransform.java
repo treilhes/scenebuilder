@@ -37,8 +37,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.treilhes.jfxplace.core.api.fxom.library.ReportEntry;
-import com.treilhes.jfxplace.core.library.api.Transform;
+import com.treilhes.jfxplace.fxom.api.library.ReportEntry;
+import com.treilhes.jfxplace.fxom.library.api.Transform;
 
 
 public class ControlFilterTransform implements Transform<ControlReportImpl, ControlReportImpl> {

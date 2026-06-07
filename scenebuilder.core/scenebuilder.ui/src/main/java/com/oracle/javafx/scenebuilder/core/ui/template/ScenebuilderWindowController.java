@@ -37,29 +37,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
-import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
-import com.treilhes.jfxplace.core.api.fxom.util.FXOMDocumentUtils;
-import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
-import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
-import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
-import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlWindowController;
-import com.treilhes.jfxplace.core.api.ui.controller.dock.Dock;
-import com.treilhes.jfxplace.core.api.ui.controller.dock.DockFactory;
-import com.treilhes.jfxplace.core.api.ui.controller.dock.Dock.Orientation;
-import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBar;
-import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
-import com.treilhes.jfxplace.core.api.ui.controller.misc.MessageBar;
-import com.treilhes.jfxplace.core.api.ui.controller.misc.SelectionBar;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
 import com.oracle.javafx.scenebuilder.api.ui.Docks;
 import com.oracle.javafx.scenebuilder.core.ui.preference.BottomDividerVPosPreference;
 import com.oracle.javafx.scenebuilder.core.ui.preference.LeftDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.core.ui.preference.RightDividerHPosPreference;
 import com.oracle.javafx.scenebuilder.core.ui.template.InnerDockManager.DividerPosition;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
+import com.treilhes.jfxplace.core.api.instance.ApplicationInstance;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlWindowController;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.Dock;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.Dock.Orientation;
+import com.treilhes.jfxplace.core.api.ui.controller.dock.DockFactory;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBar;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.MessageBar;
+import com.treilhes.jfxplace.core.api.ui.controller.misc.SelectionBar;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.api.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.fxom.api.util.FXOMDocumentUtils;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Provider;
@@ -121,22 +118,19 @@ public class ScenebuilderWindowController extends AbstractFxmlWindowController i
     private InnerDockManager leftDockManager;
     private InnerDockManager rightDockManager;
     private InnerDockManager bottomDockManager;
-    private final FxomEvents documentManager;
+    private final FxomEvents fxomEvents;
 
     private final MenuBar menuBar;
 
     private final MessageBar messageBar;
     private final SelectionBar selectionBar;
     private final Workspace workspace;
-    private final JfxAppPlatform jfxAppPlatform;
+    private final ApplicationInstance instance;
 
     // @formatter:off
     public ScenebuilderWindowController(
-            I18N i18n,
-            JfxAppPlatform jfxAppPlatform,
-            ApplicationEvents sceneBuilderManager,
-            IconSetting iconSetting,
-            FxomEvents documentManager,
+            ApplicationInstance instance,
+            FxomEvents fxomEvents,
 
 
             Provider<LeftDividerHPosPreference> leftDividerHPos,
@@ -152,10 +146,10 @@ public class ScenebuilderWindowController extends AbstractFxmlWindowController i
             SelectionBar selectionBar,
             Workspace workspace
             ) {
-        super(i18n, sceneBuilderManager, iconSetting, ScenebuilderWindowController.class.getResource("DocumentWindow.fxml"), false);
+        super(instance, ScenebuilderWindowController.class.getResource("DocumentWindow.fxml"), false);
         // @formatter:on
-        this.jfxAppPlatform = jfxAppPlatform;
-        this.documentManager = documentManager;
+        this.instance = instance;
+        this.fxomEvents = fxomEvents;
 
         this.leftDockController = dockFactory.create(Docks.LEFT_DOCK_UUID, "dock.name.left");
         this.rightDockController = dockFactory.create(Docks.RIGHT_DOCK_UUID, "dock.name.right");
@@ -191,14 +185,14 @@ public class ScenebuilderWindowController extends AbstractFxmlWindowController i
     public void initialize() {
 
         // TODO ensure property listener is garbaged when fxom doc change
-        documentManager.fxomDocument().subscribe(fxom -> {
+        fxomEvents.fxomDocument().subscribe(fxom -> {
             updateStageTitle();
             fxom.locationProperty().addListener((o, n, c) -> updateStageTitle());
         });
 
-        leftDockManager = new InnerDockManager(jfxAppPlatform, leftDockController, leftHost, leftRightSplitPane, DividerPosition.AFTER, leftDividerHPos.get());
-        rightDockManager = new InnerDockManager(jfxAppPlatform, rightDockController, rightHost, leftRightSplitPane, DividerPosition.BEFORE, rightDividerHPos.get());
-        bottomDockManager = new InnerDockManager(jfxAppPlatform, bottomDockController, bottomHost, mainSplitPane, DividerPosition.BEFORE, bottomDividerVPos.get());
+        leftDockManager = new InnerDockManager(instance, leftDockController, leftHost, leftRightSplitPane, DividerPosition.AFTER, leftDividerHPos.get());
+        rightDockManager = new InnerDockManager(instance, rightDockController, rightHost, leftRightSplitPane, DividerPosition.BEFORE, rightDividerHPos.get());
+        bottomDockManager = new InnerDockManager(instance, bottomDockController, bottomHost, mainSplitPane, DividerPosition.BEFORE, bottomDividerVPos.get());
 
 //        topBottonController = SplitPositionController.of(mainSplitPane, 2).content(leftRightSplitPane)
 //                .divider(bottomDividerVPos).content(bottomHost)
@@ -426,9 +420,9 @@ public class ScenebuilderWindowController extends AbstractFxmlWindowController i
     @Override
     public void updateStageTitle() {
         if (contentPanelHost != null) {
-            final FXOMDocument fxomDocument = documentManager.fxomDocument().get();
+            final FXOMDocument fxomDocument = fxomEvents.fxomDocument().get();
 
-            jfxAppPlatform.runOnFxThreadWithActiveScope(()->{
+            instance.getExecutor().runOnFxThread(()->{
                 getStage().setTitle(FXOMDocumentUtils.makeTitle(getI18n(), fxomDocument));
             });
 

@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.app.error;
 
-import com.treilhes.jfxplace.core.api.fxom.error.ErrorType;
+import com.treilhes.jfxplace.fxom.api.error.ErrorType;
 
 public enum Type implements ErrorType {
     UNRESOLVED_CLASS("sb.error.unresolved.class"),

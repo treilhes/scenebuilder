@@ -52,12 +52,12 @@ import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyCellAssignment
 import com.oracle.javafx.scenebuilder.document.hierarchy.display.MetadataInfoDisplayOption;
 import com.oracle.javafx.scenebuilder.document.hierarchy.item.HierarchyItemAccessory;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.fxom.mask.Accessory;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
-import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlController;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractPanelController;
+import com.treilhes.jfxplace.fxom.api.mask.Accessory;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 import javafx.collections.ObservableList;
 import javafx.event.EventTarget;
@@ -77,7 +77,7 @@ import javafx.scene.control.TreeView;
  * Hierarchy panel controller based on the TreeView control.
  */
 @ApplicationInstanceSingleton
-public class HierarchyTreeViewController extends AbstractFxmlController implements HierarchyPanel {
+public class HierarchyTreeViewController extends AbstractPanelController implements HierarchyPanel {
 
     private static final Logger logger = LoggerFactory.getLogger(HierarchyTreeViewController.class);
 

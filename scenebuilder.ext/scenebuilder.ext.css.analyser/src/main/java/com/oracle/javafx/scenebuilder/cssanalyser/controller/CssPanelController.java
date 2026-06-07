@@ -64,12 +64,6 @@ import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.emc4j.boot.api.platform.EmcPlatform;
 import com.treilhes.jfxplace.core.api.fs.FileSystem;
-import com.treilhes.jfxplace.core.api.fxom.clipboard.ClipboardHandler;
-import com.treilhes.jfxplace.core.api.fxom.content.mode.ModeManager;
-import com.treilhes.jfxplace.core.api.fxom.css.CssInternal;
-import com.treilhes.jfxplace.core.api.fxom.dnd.Drag;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.treilhes.jfxplace.core.api.javafx.LoadInFxThread;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
@@ -78,12 +72,18 @@ import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlViewController;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.ViewSearch;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.annotation.ViewAttachment;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenu;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.FXOMInstance;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
-import com.treilhes.jfxplace.core.fxom.collector.SceneGraphCollector;
-import com.treilhes.jfxplace.core.fxom.util.PropertyName;
 import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
+import com.treilhes.jfxplace.fxom.api.clipboard.ClipboardHandler;
+import com.treilhes.jfxplace.fxom.api.content.mode.ModeManager;
+import com.treilhes.jfxplace.fxom.api.css.CssInternal;
+import com.treilhes.jfxplace.fxom.api.dnd.Drag;
+import com.treilhes.jfxplace.fxom.api.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.FXOMInstance;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.collector.SceneGraphCollector;
+import com.treilhes.jfxplace.fxom.model.util.PropertyName;
 import com.treilhes.jfxplace.util.javafx.NodeUtils;
 
 import javafx.animation.FadeTransition;
@@ -142,10 +142,17 @@ import javafx.util.Duration;
  * Controller for the CSS Panel.
  *
  */
+// @formatter:off
 @ApplicationInstanceSingleton
-@ViewAttachment(name = CssPanelController.VIEW_NAME, id = CssPanelController.VIEW_ID, prefDockId = Docks.BOTTOM_DOCK_ID, openOnStart = false,
-        icon = "ViewIconCss.png", iconX2 = "ViewIconCss@2x.png")
+@ViewAttachment(
+        name = CssPanelController.VIEW_NAME,
+        id = CssPanelController.VIEW_ID,
+        prefDockId = Docks.BOTTOM_DOCK_ID,
+        openOnStart = false,
+        icon = "ViewIconCss.png",
+        iconX2 = "ViewIconCss@2x.png")
 @LoadInFxThread
+// @formatter:on
 public class CssPanelController extends AbstractFxmlViewController implements ClipboardHandler {
 
     public static final String VIEW_ID = "3c2fda5d-9351-4629-a318-1dca2edff438"; // NOCHECK
@@ -221,7 +228,6 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
 
     private final CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference;
 
-    private final ApplicationInstanceEvents documentManager;
     private final FxomEvents fxomEvents;
     private final FileSystem fileSystem;
 
@@ -249,8 +255,8 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
     // @formatter:off
     public CssPanelController(
             I18N i18n,
-            ApplicationEvents scenebuilderManager,
-            ApplicationInstanceEvents documentManager,
+            ApplicationEvents applicationEvents,
+            ApplicationInstanceEvents instanceEvents,
             FxomEvents fxomEvents,
             SbMetadata metadata,
             FxomSelection selection,
@@ -263,12 +269,11 @@ public class CssPanelController extends AbstractFxmlViewController implements Cl
             ViewSearch viewSearch,
             ViewMenu viewMenuController) {
      // @formatter:on
-        super(i18n, scenebuilderManager, documentManager, viewMenuController,
+        super(i18n, applicationEvents, instanceEvents, viewMenuController,
                 CssPanelController.class.getResource("CssPanel.fxml"));
         this.pickMode = pickMode;
         this.modeManager = modeManager;
         this.selection = selection;
-        this.documentManager = documentManager;
         this.fxomEvents = fxomEvents;
         this.metadata = metadata;
         this.applicationDelegate = delegate;

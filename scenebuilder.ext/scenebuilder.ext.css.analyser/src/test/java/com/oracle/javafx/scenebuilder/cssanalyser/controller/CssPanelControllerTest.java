@@ -43,12 +43,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssPanelController.Delegate;
@@ -56,143 +50,97 @@ import com.oracle.javafx.scenebuilder.cssanalyser.controller.NodeCssState.CssPro
 import com.oracle.javafx.scenebuilder.cssanalyser.mode.PickModeController;
 import com.oracle.javafx.scenebuilder.cssanalyser.preferences.global.CssTableColumnsOrderingReversedPreference;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
+import com.treilhes.emc4j.test.EmcInject;
+import com.treilhes.emc4j.test.EmcInjectMock;
 import com.treilhes.jfxplace.core.api.fs.FileSystem;
-import com.treilhes.jfxplace.core.api.fxom.content.mode.ModeManager;
-import com.treilhes.jfxplace.core.api.fxom.dnd.Drag;
-import com.treilhes.jfxplace.core.api.fxom.dnd.DragSource;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelectionGroup;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
 import com.treilhes.jfxplace.core.api.tooltheme.ToolStylesheetProvider;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.ViewSearch;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenu;
-import com.treilhes.jfxplace.core.fxom.pipeline.FXOMDocumentFactory;
-import com.treilhes.jfxplace.testold.JfxAppsTest;
-import com.treilhes.jfxplace.testold.StageBuilder;
-import com.treilhes.jfxplace.testold.StageType;
+import com.treilhes.jfxplace.fxom.api.content.mode.ModeManager;
+import com.treilhes.jfxplace.fxom.api.dnd.Drag;
+import com.treilhes.jfxplace.fxom.api.dnd.DragSource;
+import com.treilhes.jfxplace.fxom.api.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.fxom.api.editor.selection.FxomSelectionGroup;
+import com.treilhes.jfxplace.fxom.model.pipeline.FXOMDocumentFactory;
+import com.treilhes.jfxplace.test.JfxPlaceTest;
+import com.treilhes.jfxplace.test.builder.StageBuilder;
+import com.treilhes.jfxplace.test.builder.StageType;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-@JfxAppsTest
-@ContextConfiguration(classes = { CssPanelControllerTest.Config.class, CssPanelController.class })
+@JfxPlaceTest(classes = { CssPanelController.class })
 class CssPanelControllerTest {
 
+    @EmcInjectMock
+    SbMetadata metadata;
 
-
-    @TestConfiguration
-    static class Config {
-//        @Bean
-//        IconSetting iconSetting() {
-//            return Mockito.mock(IconSetting.class);
-//        }
-        @Bean
-        SbMetadata metadata() {
-            return Mockito.mock(SbMetadata.class);
-        }
-
-        @Bean
-        FxomSelection selection() {
-            return Mockito.mock(FxomSelection.class);
-        }
-//
-//        @Bean
-//        SbEditor editor() {
-//            return Mockito.mock(SbEditor.class);
-//        }
-
-        @Bean
-        Delegate delegate() {
-            return Mockito.mock(Delegate.class);
-        }
-
-        @Bean
-        CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference() {
-            return Mockito.mock(CssTableColumnsOrderingReversedPreference.class);
-        }
-
-        @Bean
-        Drag drag() {
-            return Mockito.mock(Drag.class);
-        }
-
-        @Bean
-        FileSystem fileSystem() {
-            return Mockito.mock(FileSystem.class);
-        }
-
-        @Bean
-        ViewSearch viewSearch() {
-            return Mockito.mock(ViewSearch.class);
-        }
-
-        @Bean
-        ViewMenu viewMenuController() {
-            return Mockito.mock(ViewMenu.class);
-        }
-
-        @Bean
-        ModeManager modeManager() {
-            return Mockito.mock(ModeManager.class);
-        }
-
-        @Bean
-        PickModeController pickModeController() {
-            return Mockito.mock(PickModeController.class);
-        }
-    }
-
-    @Autowired
-    CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference;
-
-    @Autowired
-    ViewSearch viewSearch;
-
-    @Autowired
-    PickModeController pickMode;
-
-    @Autowired
-    ModeManager modeManager;
-
-    @Autowired
-    Drag drag;
-
-    @Autowired
+    @EmcInjectMock
     FxomSelection selection;
 
-    @Mock
+    @EmcInjectMock
+    Delegate delegate;
+
+    @EmcInjectMock
+    CssTableColumnsOrderingReversedPreference cssTableColumnsOrderingReversedPreference;
+
+    @EmcInjectMock
+    Drag drag;
+
+    @EmcInjectMock
+    FileSystem fileSystem;
+
+    @EmcInjectMock
+    ViewSearch viewSearch;
+
+    @EmcInjectMock
+    ViewMenu viewMenuController;
+
+    @EmcInjectMock
+    ModeManager modeManager;
+
+    @EmcInjectMock
+    PickModeController pickMode;
+
+    @EmcInjectMock
     FxomSelectionGroup group;
 
-    @Autowired
+    @EmcInject
     ApplicationInstanceEvents instanceEvents;
 
+    @EmcInject
+    StageBuilder builder;
+
     @Test
-    void load_ui_success(StageBuilder builder, FxRobot robot) {
+    void load_ui_success(FxRobot robot) {
 
         when(cssTableColumnsOrderingReversedPreference.getValue()).thenReturn(true);
         when(cssTableColumnsOrderingReversedPreference.getObservableValue()).thenReturn(new SimpleBooleanProperty(true));
         when(viewSearch.textProperty()).thenReturn(new SimpleStringProperty(""));
-        when(modeManager.isModeEnabled(any())).thenReturn(true);
+//        when(modeManager.isModeEnabled(any())).thenReturn(true);
         when(pickMode.activeProperty()).thenReturn(new SimpleBooleanProperty(true));
         when(drag.dragSourceProperty()).thenReturn(new SimpleObjectProperty<DragSource>(null));
 
-        var testStage = builder
+        try (var testStage = builder
                 .controller(CssPanelController.class)
                 .css(ToolStylesheetProvider.builder()
                         //.stylesheet(CssPanelController.class.getResource("css/ThemeDark_common.css").toExternalForm())
                         //.stylesheet(CssPanelController.class.getResource("css/ThemeDark_SBKIT-css-panel.css").toExternalForm())
                         .build())
                 .setup(StageType.Fill)
-                .size(800, 600).show();
+                .size(800, 600).show()) {
 
-        var controller = testStage.getController();
+            var controller = testStage.getController();
 
-        assertNotNull("Controller must load successfully", controller);
+            assertNotNull("Controller must load successfully", controller);
+        }
+
     }
 
     @Test
-    void inline_style_must_be_shown_in_table(StageBuilder builder, FxRobot robot) throws IOException {
+    void inline_style_must_be_shown_in_table(FxRobot robot) throws IOException {
 
         var document = FXOMDocumentFactory.DEFAULT.newDocument("""
                 <?import javafx.scene.control.Label?>

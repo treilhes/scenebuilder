@@ -40,15 +40,15 @@ import java.util.Locale;
 import java.util.Set;
 
 import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
-import com.treilhes.jfxplace.core.api.fxom.job.base.BatchDocumentJob;
-import com.treilhes.jfxplace.core.api.fxom.jobs.FxomJobsFactory;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.job.Job;
 import com.treilhes.jfxplace.core.api.job.JobExtensionFactory;
-import com.treilhes.jfxplace.core.fxom.FXOMElement;
-import com.treilhes.jfxplace.core.fxom.FXOMInstance;
-import com.treilhes.jfxplace.core.fxom.FXOMProperty;
-import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.fxom.api.job.base.BatchDocumentJob;
+import com.treilhes.jfxplace.fxom.api.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.model.FXOMElement;
+import com.treilhes.jfxplace.fxom.model.FXOMInstance;
+import com.treilhes.jfxplace.fxom.model.FXOMProperty;
+import com.treilhes.jfxplace.fxom.model.util.PropertyName;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 import javafx.geometry.Bounds;

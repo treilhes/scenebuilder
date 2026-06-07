@@ -41,9 +41,9 @@ import org.slf4j.LoggerFactory;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.treilhes.jfxplace.core.api.application.ApplicationActionFactory;
 import com.treilhes.jfxplace.core.api.application.InstancesManager;
-import com.treilhes.jfxplace.core.api.document.DocumentActionFactory;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.job.JobManager;
+import com.treilhes.jfxplace.fxom.api.document.DocumentActionFactory;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 import com.oracle.javafx.scenebuilder.api.template.Template;
 

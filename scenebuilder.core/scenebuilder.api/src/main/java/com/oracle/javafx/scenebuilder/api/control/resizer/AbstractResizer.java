@@ -37,8 +37,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.api.control.Resizer;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
-import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.util.PropertyName;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;

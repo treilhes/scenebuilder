@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.api.theme;
 
 import java.util.UUID;
 
-import com.treilhes.jfxplace.core.api.fxom.css.StylesheetProvider;
+import com.treilhes.jfxplace.fxom.api.css.StylesheetProvider;
 
 /**
  * Theme contract supported by Scene Builder Kit.

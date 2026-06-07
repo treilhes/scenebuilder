@@ -51,8 +51,7 @@ import java.util.TreeSet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
-import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
+import org.springframework.context.annotation.Lazy;
 
 import com.oracle.javafx.scenebuilder.api.SbEditor;
 import com.oracle.javafx.scenebuilder.api.controls.DefaultSectionNames;
@@ -63,12 +62,12 @@ import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.BuiltinSect
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.builtin.LibraryItemNameComparator;
 import com.oracle.javafx.scenebuilder.controllibrary.preferences.global.DisplayModePreference;
-import com.treilhes.jfxplace.core.api.action.ActionFactory;
-import com.treilhes.jfxplace.core.api.fxom.dnd.Drag;
-import com.treilhes.jfxplace.core.api.fxom.dnd.DragSource;
-import com.treilhes.jfxplace.core.api.fxom.library.LibraryItem;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.instance.ActionFactory;
+import com.treilhes.jfxplace.core.api.lifecycle.InitWithDocument;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
 import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlViewController;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.Dock;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.ViewSearch;
@@ -76,10 +75,12 @@ import com.treilhes.jfxplace.core.api.ui.controller.dock.annotation.ViewAttachme
 import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenu;
 import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
 import com.treilhes.jfxplace.core.api.util.FXMLUtils;
-import com.treilhes.jfxplace.core.fxom.FXOMArchive;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
-import com.treilhes.jfxplace.core.library.util.LibraryUtil;
+import com.treilhes.jfxplace.fxom.api.dnd.Drag;
+import com.treilhes.jfxplace.fxom.api.dnd.DragSource;
+import com.treilhes.jfxplace.fxom.api.library.LibraryItem;
+import com.treilhes.jfxplace.fxom.model.FXOMArchive;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;

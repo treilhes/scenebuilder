@@ -41,11 +41,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.jfxplace.core.api.fs.FileSystem;
-import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Content;
 import com.treilhes.jfxplace.core.api.job.Job;
 import com.treilhes.jfxplace.core.api.job.JobManager;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
 import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
+import com.treilhes.jfxplace.fxom.api.ui.controller.misc.Content;
 import com.treilhes.jfxplace.util.MathUtils;
 import com.oracle.javafx.scenebuilder.api.menu.DebugMenu;
 import com.oracle.javafx.scenebuilder.api.menu.DefaultMenu;

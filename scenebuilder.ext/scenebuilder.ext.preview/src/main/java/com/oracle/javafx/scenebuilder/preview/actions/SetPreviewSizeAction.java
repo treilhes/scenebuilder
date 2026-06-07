@@ -39,9 +39,9 @@ import com.treilhes.jfxplace.core.api.Size;
 import com.treilhes.jfxplace.core.api.action.AbstractAction;
 import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
 import com.treilhes.jfxplace.core.api.action.ActionMeta;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
 
 
 @ApplicationInstancePrototype

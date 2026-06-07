@@ -2,8 +2,8 @@ package com.oracle.javafx.scenebuilder.app.action;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.jfxplace.core.api.action.Action;
-import com.treilhes.jfxplace.core.api.action.ActionFactory;
-import com.treilhes.jfxplace.core.api.fxom.action.FxomApplicationActionFactory;
+import com.treilhes.jfxplace.core.api.instance.ActionFactory;
+import com.treilhes.jfxplace.fxom.api.action.FxomApplicationActionFactory;
 
 @ApplicationInstanceSingleton
 public class FxomApplicationActionFactoryImpl implements FxomApplicationActionFactory {

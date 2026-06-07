@@ -42,9 +42,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.treilhes.jfxplace.core.fxom.util.PropertyName;
 import com.treilhes.jfxplace.core.metadata.property.ComponentPropertyMetadata;
 import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
+import com.treilhes.jfxplace.fxom.model.util.PropertyName;
 
 import javafx.scene.Node;
 

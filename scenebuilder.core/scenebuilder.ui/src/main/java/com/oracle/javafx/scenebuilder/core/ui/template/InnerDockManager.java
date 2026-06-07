@@ -36,7 +36,7 @@ package com.oracle.javafx.scenebuilder.core.ui.template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.api.instance.ApplicationInstance;
 import com.treilhes.jfxplace.core.api.preference.Preference;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.Dock;
 
@@ -65,7 +65,7 @@ public class InnerDockManager {
         AFTER
     }
 
-    private final JfxAppPlatform jfxAppPlatform;
+    private final ApplicationInstance instance;
     private final Dock dock;
     private final VBox dockHost;
     private final SplitPane splitPane;
@@ -79,10 +79,10 @@ public class InnerDockManager {
 
     //double dividerMinimizedValue;
 
-    public InnerDockManager(JfxAppPlatform jfxAppPlatform ,Dock dock, VBox dockHost, SplitPane splitPane, DividerPosition dividerPosition,
+    public InnerDockManager(ApplicationInstance instance ,Dock dock, VBox dockHost, SplitPane splitPane, DividerPosition dividerPosition,
             Preference<Double> dividerPositionPreference) {
         super();
-        this.jfxAppPlatform = jfxAppPlatform;
+        this.instance = instance;
         this.dock = dock;
         this.dockHost = dockHost;
         this.splitPane = splitPane;
@@ -161,7 +161,7 @@ public class InnerDockManager {
             trackPreference(divider);
             dock.setMinimized(false);
 
-            jfxAppPlatform.runOnFxThread(() -> {
+            instance.getExecutor().runOnFxThread(() -> {
                 logger.debug("Delayed setting divider position to {} of divider {}", position, divider);
                 divider.setPosition(position);
             });

@@ -60,16 +60,8 @@ import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPath;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.fxom.dnd.Drag;
-import com.treilhes.jfxplace.core.api.fxom.dnd.DragSource;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.SelectionJobsFactory;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.SelectionState;
-import com.treilhes.jfxplace.core.api.fxom.jobs.FxomJobsFactory;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
-import com.treilhes.jfxplace.core.api.fxom.util.CoordinateHelper;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.api.javafx.JfxPlaceExecutor;
 import com.treilhes.jfxplace.core.api.job.Job;
 import com.treilhes.jfxplace.core.api.job.JobManager;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
@@ -81,15 +73,17 @@ import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenu;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.MessageLogger;
 import com.treilhes.jfxplace.core.api.util.FXMLUtils;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.FXOMElement;
-import com.treilhes.jfxplace.core.fxom.FXOMInstance;
-import com.treilhes.jfxplace.core.fxom.FXOMIntrinsic;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
-import com.treilhes.jfxplace.core.fxom.util.PropertyName;
 import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
 import com.treilhes.jfxplace.core.metadata.util.ValuePropertyMetadataClassComparator;
 import com.treilhes.jfxplace.core.metadata.util.ValuePropertyMetadataNameComparator;
+import com.treilhes.jfxplace.fxom.api.dnd.Drag;
+import com.treilhes.jfxplace.fxom.api.dnd.DragSource;
+import com.treilhes.jfxplace.fxom.api.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.fxom.api.editor.selection.SelectionJobsFactory;
+import com.treilhes.jfxplace.fxom.api.editor.selection.SelectionState;
+import com.treilhes.jfxplace.fxom.api.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.api.util.CoordinateHelper;
 import com.treilhes.jfxplace.fxom.editors.api.AbstractPropertiesEditor;
 import com.treilhes.jfxplace.fxom.editors.api.AbstractPropertyEditor;
 import com.treilhes.jfxplace.fxom.editors.api.AbstractPropertyEditor.LayoutFormat;
@@ -101,6 +95,12 @@ import com.treilhes.jfxplace.fxom.editors.base.FxIdEditor;
 import com.treilhes.jfxplace.fxom.editors.control.GenericEditor;
 import com.treilhes.jfxplace.fxom.editors.util.Css;
 import com.treilhes.jfxplace.fxom.editors.util.CssPropAuthorInfo;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.FXOMElement;
+import com.treilhes.jfxplace.fxom.model.FXOMInstance;
+import com.treilhes.jfxplace.fxom.model.FXOMIntrinsic;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.util.PropertyName;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -464,7 +464,7 @@ public class InspectorPanelController extends AbstractFxmlViewController impleme
 
     protected void cssRevisionDidChange() {
 //        System.out.println("CSS changed.");
-        JfxAppPlatform.ensureFxThread(() -> {
+        JfxPlaceExecutor.ensureFxThread(() -> {
             if (!dragOnGoing) {
                 updateInspector();
             }

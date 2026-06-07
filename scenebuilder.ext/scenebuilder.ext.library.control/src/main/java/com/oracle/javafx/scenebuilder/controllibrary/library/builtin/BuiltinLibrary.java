@@ -41,9 +41,9 @@ import org.graalvm.compiler.lir.CompositeValue.Component;
 
 import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.library.util.LibraryUtil;
 import com.treilhes.jfxplace.core.metadata.klass.ComponentClassMetadata;
+import com.treilhes.jfxplace.fxom.library.util.LibraryUtil;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

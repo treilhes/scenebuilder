@@ -38,10 +38,10 @@ import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryPanelControlle
 import com.treilhes.jfxplace.core.api.preference.DefaultPreferenceGroups;
 import com.treilhes.jfxplace.core.api.preference.ManagedGlobalPreference;
 import com.treilhes.jfxplace.core.api.preference.PreferenceEditorFactory;
-import com.treilhes.jfxplace.core.api.preference.PreferencesContext;
 import com.treilhes.jfxplace.core.api.preference.UserPreference;
 import com.treilhes.jfxplace.core.api.preference.DefaultPreferenceGroups.PreferenceGroup;
-import com.treilhes.jfxplace.core.api.preference.type.EnumPreference;
+import com.treilhes.jfxplace.fxom.api.preference.PreferencesContext;
+import com.treilhes.jfxplace.fxom.api.preference.type.EnumPreference;
 
 import javafx.scene.Parent;
 

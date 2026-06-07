@@ -44,11 +44,11 @@ import com.oracle.javafx.scenebuilder.imagelibrary.panel.ImageLibraryPanelContro
 import com.treilhes.jfxplace.core.api.action.AbstractAction;
 import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
 import com.treilhes.jfxplace.core.api.action.ActionMeta;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.Selection;
 import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.ViewMenuItemAttachment;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.fxom.api.editor.selection.Selection;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 @ApplicationInstanceSingleton
 @Lazy

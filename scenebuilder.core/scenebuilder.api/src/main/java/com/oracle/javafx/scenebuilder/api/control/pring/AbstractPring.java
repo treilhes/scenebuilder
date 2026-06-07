@@ -34,10 +34,10 @@
 package com.oracle.javafx.scenebuilder.api.control.pring;
 
 import com.oracle.javafx.scenebuilder.api.control.Pring;
-import com.treilhes.jfxplace.core.api.fxom.content.decoration.AbstractDecoration;
-import com.treilhes.jfxplace.core.api.fxom.gesture.AbstractGesture;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
-import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.fxom.api.content.decoration.AbstractDecoration;
+import com.treilhes.jfxplace.fxom.api.gesture.AbstractGesture;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.api.ui.controller.misc.Workspace;
 
 import javafx.scene.Node;
 import javafx.scene.paint.Paint;

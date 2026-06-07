@@ -34,13 +34,11 @@
 
 package com.oracle.javafx.scenebuilder.welcome.controller;
 
+import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.instance.ApplicationInstance;
 import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
 import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlWindowController;
-import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
-import com.oracle.javafx.scenebuilder.api.template.Template;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
@@ -55,19 +53,14 @@ public class TemplatesWindowController extends AbstractFxmlWindowController {
     @FXML
     private ScrollPane scrollPane;
 
-
-
     //@formatter:off
     public TemplatesWindowController(
-            I18N i18n,
-            ApplicationEvents sceneBuilderManager,
-            IconSetting iconSetting,
+            ApplicationInstance instance,
             MainInstanceWindow document,
             TemplateLoader templateLoader,
             TemplatesSelectionController templateSelection) {
         //@formatter:on
-        super(i18n, sceneBuilderManager, iconSetting,
-                TemplatesWindowController.class.getResource("TemplatesWindow.fxml"), document);
+        super(instance, TemplatesWindowController.class.getResource("TemplatesWindow.fxml"), document);
         this.templateSelection = templateSelection;
         this.templateLoader = templateLoader;
     }

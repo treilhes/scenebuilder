@@ -47,7 +47,7 @@ import com.oracle.javafx.scenebuilder.api.util.FileHelper;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.treilhes.emc4j.boot.api.loader.extension.ApplicationExtension;
 import com.treilhes.jfxplace.core.api.application.annotation.EditorDescriptor;
-import com.treilhes.jfxplace.core.api.fxom.mask.FXOMObjectMask;
+import com.treilhes.jfxplace.fxom.api.mask.FXOMObjectMask;
 
 @EditorDescriptor(
             label = "scenebuilder.app.label",

@@ -37,14 +37,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.action.ActionFactory;
-import com.treilhes.jfxplace.core.api.fs.FileSystem;
-import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
-import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
 import com.oracle.javafx.scenebuilder.ext.theme.actions.ApplyCssContentAction;
 import com.oracle.javafx.scenebuilder.ext.theme.preference.UserStylesheetsPreference;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.fs.FileSystem;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.instance.ActionFactory;
+import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
+import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
 
 import javafx.stage.FileChooser;
 

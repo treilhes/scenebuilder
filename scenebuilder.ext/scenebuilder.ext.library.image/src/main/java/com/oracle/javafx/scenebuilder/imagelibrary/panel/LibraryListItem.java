@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.imagelibrary.panel;
 
-import com.treilhes.jfxplace.core.api.fxom.library.LibraryItem;
+import com.treilhes.jfxplace.fxom.api.library.LibraryItem;
 
 /**
  * This class hosts either a LibraryItem or a library section name. The cell

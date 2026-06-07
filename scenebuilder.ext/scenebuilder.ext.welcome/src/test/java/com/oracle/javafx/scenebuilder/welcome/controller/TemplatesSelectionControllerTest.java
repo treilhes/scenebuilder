@@ -37,42 +37,30 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
-import com.treilhes.jfxplace.testold.JfxAppsTest;
-import com.treilhes.jfxplace.testold.StageBuilder;
-import com.treilhes.jfxplace.testold.StageType;
+import com.treilhes.emc4j.test.EmcInject;
+import com.treilhes.emc4j.test.EmcInjectMock;
+import com.treilhes.jfxplace.test.JfxPlaceTest;
+import com.treilhes.jfxplace.test.builder.StageBuilder;
+import com.treilhes.jfxplace.test.builder.StageType;
 
-@JfxAppsTest
-@ContextConfiguration(classes = {TemplatesSelectionControllerTest.Config.class ,TemplatesSelectionController.class})
+@JfxPlaceTest(classes = {TemplatesSelectionController.class})
 class TemplatesSelectionControllerTest {
 
-    @TestConfiguration
-    static class Config {
-        @Bean
-        Template template() {
-            return Mockito.mock(Template.class);
-        }
-        @Bean
-        TemplateGroup templateGroup() {
-            return Mockito.mock(TemplateGroup.class);
-        }
-    }
-
-    @Autowired
+    @EmcInjectMock
     Template template;
 
-    @Autowired
+    @EmcInjectMock
     TemplateGroup templateGroup;
 
+    @EmcInject
+    StageBuilder builder;
+
     @Test
-    void show_ui(StageBuilder builder, FxRobot robot) {
+    void show_ui(FxRobot robot) {
 
         Mockito.when(template.getName()).thenReturn("template name");
         Mockito.when(template.getDescription()).thenReturn("template description");

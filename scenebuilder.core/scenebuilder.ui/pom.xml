@@ -26,4 +26,37 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.treilhes.jfxplace</groupId>
+                <artifactId>jfxplace-helper-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>argline</id>
+                        <goals>
+                            <goal>argline</goal>
+                        </goals>
+                        <configuration>
+                            <emc4jVersion>${emc4j.version}</emc4jVersion>
+                            <propertyName>jfxplaceArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <useModulePath>true</useModulePath>
+                    <argLine>
+                        ${jfxplaceArgLine}
+                        --add-opens
+                        javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
+                    </argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

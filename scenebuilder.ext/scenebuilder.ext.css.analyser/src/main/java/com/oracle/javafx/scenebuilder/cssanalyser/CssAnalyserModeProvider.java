@@ -37,9 +37,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.fxom.content.mode.ModeDescriptor;
-import com.treilhes.jfxplace.core.api.fxom.content.mode.ModeProvider;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.fxom.api.content.mode.ModeDescriptor;
+import com.treilhes.jfxplace.fxom.api.content.mode.ModeProvider;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
 import com.oracle.javafx.scenebuilder.cssanalyser.mode.PickModeController;
 
 @ApplicationInstanceSingleton

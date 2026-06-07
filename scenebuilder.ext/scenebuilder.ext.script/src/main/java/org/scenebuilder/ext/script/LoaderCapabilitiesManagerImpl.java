@@ -41,12 +41,12 @@ import org.slf4j.LoggerFactory;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.emc4j.boot.api.context.annotation.PreferedConstructor;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.lifecycle.InitWithDocument;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.ext.LoaderCapabilitiesManager;
-import com.treilhes.jfxplace.core.fxom.pipeline.FXOMDocumentFactory;
-import com.treilhes.jfxplace.core.fxom.pipeline.FXOMSerializer;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.ext.LoaderCapabilitiesManager;
+import com.treilhes.jfxplace.fxom.model.pipeline.FXOMDocumentFactory;
+import com.treilhes.jfxplace.fxom.model.pipeline.FXOMSerializer;
 
 @ApplicationInstanceSingleton
 public class LoaderCapabilitiesManagerImpl implements LoaderCapabilitiesManager, InitWithDocument {

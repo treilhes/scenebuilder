@@ -39,77 +39,50 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
 import org.testfx.api.FxRobot;
 
 import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.oracle.javafx.scenebuilder.api.template.TemplateGroup;
+import com.treilhes.emc4j.test.EmcInject;
+import com.treilhes.emc4j.test.EmcInjectMock;
 import com.treilhes.jfxplace.core.api.application.ApplicationActionFactory;
 import com.treilhes.jfxplace.core.api.application.InstancesManager;
-import com.treilhes.jfxplace.core.api.document.DocumentActionFactory;
 import com.treilhes.jfxplace.core.api.fs.RecentItems;
-import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
-import com.treilhes.jfxplace.testold.JfxAppsTest;
-import com.treilhes.jfxplace.testold.StageBuilder;
-import com.treilhes.jfxplace.testold.StageType;
+import com.treilhes.jfxplace.fxom.api.document.DocumentActionFactory;
+import com.treilhes.jfxplace.test.JfxPlaceTest;
+import com.treilhes.jfxplace.test.builder.StageBuilder;
+import com.treilhes.jfxplace.test.builder.StageType;
 
 import javafx.collections.FXCollections;
 import javafx.stage.Stage;
 
-@JfxAppsTest
-@ContextConfiguration(classes = { WelcomeDialogWindowControllerTest.Config.class, TemplatesSelectionController.class,
-        WelcomeDialogWindowController.class, TemplateLoader.class })
+@JfxPlaceTest(classes = { TemplatesSelectionController.class, WelcomeDialogWindowController.class,
+        TemplateLoader.class })
 class WelcomeDialogWindowControllerTest {
 
-    @TestConfiguration
-    static class Config {
-        @Bean
-        InstancesManager instancesManager() {
-            return Mockito.mock(InstancesManager.class);
-        }
+    @EmcInjectMock
+    InstancesManager instancesManager;
 
-        @Bean
-        ApplicationActionFactory applicationActionFactory() {
-            return Mockito.mock(ApplicationActionFactory.class);
-        }
-        @Bean
-        DocumentActionFactory documentActionFactory() {
-            return Mockito.mock(DocumentActionFactory.class);
-        }
+    @EmcInjectMock
+    ApplicationActionFactory applicationActionFactory;
 
-        @Bean
-        RecentItems recentItems() {
-            return Mockito.mock(RecentItems.class);
-        }
+    @EmcInjectMock
+    DocumentActionFactory documentActionFactory;
 
-        @Bean
-        IconSetting iconSetting() {
-            return Mockito.mock(IconSetting.class);
-        }
-        @Bean
-        Template template() {
-            return Mockito.mock(Template.class);
-        }
-        @Bean
-        TemplateGroup templateGroup() {
-            return Mockito.mock(TemplateGroup.class);
-        }
-    }
-
-    @Autowired
+    @EmcInjectMock
     RecentItems recentItems;
 
-    @Autowired
+    @EmcInjectMock
     Template template;
 
-    @Autowired
+    @EmcInjectMock
     TemplateGroup templateGroup;
 
+    @EmcInject
+    StageBuilder builder;
+
     @Test
-    void show_ui(Stage stage, StageBuilder builder, FxRobot robot) {
+    void show_ui(Stage stage, FxRobot robot) {
 
         Mockito.when(recentItems.getRecentItems())
                 .thenReturn(FXCollections.observableArrayList(List.of("item 1", "item 2", "item 3")));

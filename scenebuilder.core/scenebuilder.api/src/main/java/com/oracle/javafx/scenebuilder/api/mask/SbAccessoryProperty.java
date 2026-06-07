@@ -33,7 +33,7 @@
  */
 package com.oracle.javafx.scenebuilder.api.mask;
 
-import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.fxom.model.util.PropertyName;
 
 public interface SbAccessoryProperty {
     PropertyName ROOT = new PropertyName("root");

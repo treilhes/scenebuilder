@@ -37,15 +37,15 @@ import com.oracle.javafx.scenebuilder.api.control.SbDriver;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
 import com.treilhes.jfxplace.core.api.editor.images.ImageUtils;
-import com.treilhes.jfxplace.core.api.fxom.content.mode.AbstractModeController;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
-import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
-import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
-import com.treilhes.jfxplace.core.fxom.collector.SceneGraphCollector;
-import com.treilhes.jfxplace.core.fxom.util.Deprecation;
+import com.treilhes.jfxplace.core.api.instance.ApplicationInstance;
+import com.treilhes.jfxplace.fxom.api.content.mode.AbstractModeController;
+import com.treilhes.jfxplace.fxom.api.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.api.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.collector.SceneGraphCollector;
+import com.treilhes.jfxplace.fxom.model.util.Deprecation;
 
 import jakarta.annotation.PostConstruct;
 import javafx.event.EventHandler;
@@ -64,11 +64,11 @@ public class PickModeController extends AbstractModeController {
     private final SbDriver driver;
     private final FxomEvents fxomEvents;
     private final FxomSelection selection;
-    private final JfxAppPlatform platform;
+    private final ApplicationInstance instance;
     //private HitNodeChrome hitNodeChrome;
 
     public PickModeController(
-            JfxAppPlatform platform,
+            ApplicationInstance instance,
             SbDriver driver,
             FxomEvents fxomEvents,
             FxomSelection selection,
@@ -77,12 +77,12 @@ public class PickModeController extends AbstractModeController {
         this.driver = driver;
         this.fxomEvents = fxomEvents;
         this.selection = selection;
-        this.platform = platform;
+        this.instance = instance;
     }
 
     @PostConstruct
     protected void postConstruct() {
-        platform.runOnFxThreadWithActiveScope(this::initLayers);
+        instance.getExecutor().runOnFxThread(this::initLayers);
         activeProperty().addListener((v, oldValue, newValue) -> {
             if (newValue && !oldValue) {
                 activate();

@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.cssanalyser.controller;
 
 import java.util.Set;
 
-import com.treilhes.jfxplace.core.api.fxom.css.CssInternal;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.fxom.api.css.CssInternal;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;

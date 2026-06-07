@@ -36,13 +36,13 @@ package com.oracle.javafx.scenebuilder.api.control.handles;
 import java.net.URL;
 
 import com.oracle.javafx.scenebuilder.api.control.Handles;
-import com.treilhes.jfxplace.core.api.fxom.content.decoration.AbstractDecoration;
-import com.treilhes.jfxplace.core.api.fxom.gesture.DiscardGesture;
-import com.treilhes.jfxplace.core.api.fxom.gesture.Gesture;
-import com.treilhes.jfxplace.core.api.fxom.gesture.DiscardGesture.Factory;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
-import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
 import com.treilhes.jfxplace.core.api.selection.SelectionGroup;
+import com.treilhes.jfxplace.fxom.api.content.decoration.AbstractDecoration;
+import com.treilhes.jfxplace.fxom.api.gesture.DiscardGesture;
+import com.treilhes.jfxplace.fxom.api.gesture.Gesture;
+import com.treilhes.jfxplace.fxom.api.gesture.DiscardGesture.Factory;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.api.ui.controller.misc.Workspace;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;

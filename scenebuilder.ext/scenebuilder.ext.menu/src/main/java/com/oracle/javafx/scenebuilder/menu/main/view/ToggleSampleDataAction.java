@@ -41,8 +41,8 @@ import com.treilhes.jfxplace.core.api.action.ActionMeta;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
-import com.treilhes.jfxplace.core.fxom.sample.SampleDataActionFactory;
-import com.treilhes.jfxplace.core.fxom.sample.SampleDataEnabledPreference;
+import com.treilhes.jfxplace.fxom.api.sample.SampleDataActionFactory;
+import com.treilhes.jfxplace.fxom.api.sample.SampleDataEnabledPreference;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.toggle.dock", descriptionKey = "action.description.toggle.dock")

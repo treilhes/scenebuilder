@@ -39,11 +39,11 @@ import org.scenebuilder.fxml.api.subjects.ApplicationInstanceEvents;
 import com.oracle.javafx.scenebuilder.controllibrary.drag.source.ControlLibraryDragSource;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryListCell;
 import com.oracle.javafx.scenebuilder.controllibrary.panel.LibraryListItem;
-import com.treilhes.jfxplace.core.api.fxom.dnd.Drag;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.SelectionState;
-import com.treilhes.jfxplace.core.api.fxom.library.LibraryItem;
 import com.treilhes.jfxplace.core.api.job.JobManager;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.fxom.api.dnd.Drag;
+import com.treilhes.jfxplace.fxom.api.editor.selection.SelectionState;
+import com.treilhes.jfxplace.fxom.api.library.LibraryItem;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
 
 import javafx.scene.control.ListView;
 import javafx.scene.input.Dragboard;

@@ -40,9 +40,9 @@ import java.io.FileOutputStream;
 import javax.imageio.ImageIO;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.fxom.api.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;

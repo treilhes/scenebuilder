@@ -42,17 +42,16 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oracle.javafx.scenebuilder.api.template.Template;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.treilhes.jfxplace.core.api.WelcomeDialog;
+import com.treilhes.jfxplace.core.api.application.Application;
 import com.treilhes.jfxplace.core.api.application.ApplicationActionFactory;
 import com.treilhes.jfxplace.core.api.application.InstancesManager;
-import com.treilhes.jfxplace.core.api.document.DocumentActionFactory;
 import com.treilhes.jfxplace.core.api.fs.RecentItems;
-import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
-import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlWindowController;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlApplicationWindowController;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
-import com.oracle.javafx.scenebuilder.api.template.Template;
+import com.treilhes.jfxplace.fxom.api.document.DocumentActionFactory;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -65,7 +64,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 
 @ApplicationSingleton
-public class WelcomeDialogWindowController extends AbstractFxmlWindowController implements WelcomeDialog {
+public class WelcomeDialogWindowController extends AbstractFxmlApplicationWindowController implements WelcomeDialog {
 
     public static final Logger logger = LoggerFactory.getLogger(WelcomeDialogWindowController.class);
 
@@ -92,9 +91,7 @@ public class WelcomeDialogWindowController extends AbstractFxmlWindowController 
 
     //@formatter:off
     private WelcomeDialogWindowController(
-            I18N i18n,
-            ApplicationEvents applicationEvents,
-            IconSetting iconSetting,
+            Application application,
             InstancesManager instancesManager,
             DocumentActionFactory documentActionFactory,
             ApplicationActionFactory applicationActionFactory,
@@ -103,8 +100,7 @@ public class WelcomeDialogWindowController extends AbstractFxmlWindowController 
             TemplateLoader templateLoader,
             TemplatesSelectionController templateSelection) {
         //@formatter:on
-        super(i18n, applicationEvents, iconSetting, WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"),
-                null); // We want it to be a top level window so we're setting the owner to null.
+        super(application, WelcomeDialogWindowController.class.getResource("WelcomeWindow.fxml"));
 
         this.instancesManager = instancesManager;
         this.documentActionFactory = documentActionFactory;

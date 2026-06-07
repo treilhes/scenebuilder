@@ -39,8 +39,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.document.DocumentTitleGenerator;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
@@ -49,8 +47,10 @@ import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlViewController;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.ViewSearch;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.annotation.ViewAttachment;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenu;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.pipeline.FXOMSerializer;
+import com.treilhes.jfxplace.fxom.api.document.DocumentTitleGenerator;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.pipeline.FXOMSerializer;
 
 import eu.mihosoft.monacofx.MonacoFX;
 import javafx.beans.value.ChangeListener;

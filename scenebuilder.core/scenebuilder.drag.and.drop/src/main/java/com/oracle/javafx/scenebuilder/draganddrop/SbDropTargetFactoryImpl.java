@@ -35,9 +35,9 @@ package com.oracle.javafx.scenebuilder.draganddrop;
 
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.fxom.dnd.DropTarget;
-import com.treilhes.jfxplace.core.api.fxom.dnd.DropTargetFactory;
-import com.treilhes.jfxplace.core.fxom.FXOMInstance;
+import com.treilhes.jfxplace.fxom.api.dnd.DropTarget;
+import com.treilhes.jfxplace.fxom.api.dnd.DropTargetFactory;
+import com.treilhes.jfxplace.fxom.model.FXOMInstance;
 import com.oracle.javafx.scenebuilder.api.dnd.SbDropTargetFactory;
 import com.oracle.javafx.scenebuilder.draganddrop.droptarget.ContainerXYDropTarget;
 

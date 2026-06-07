@@ -40,8 +40,8 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
 import com.treilhes.jfxplace.core.api.Size;
-import com.treilhes.jfxplace.core.api.template.AbstractTemplate;
-import com.treilhes.jfxplace.core.api.template.TemplateGroup;
+import com.treilhes.jfxplace.fxom.api.template.AbstractTemplate;
+import com.treilhes.jfxplace.fxom.api.template.TemplateGroup;
 
 public class GluonTemplateList {
         

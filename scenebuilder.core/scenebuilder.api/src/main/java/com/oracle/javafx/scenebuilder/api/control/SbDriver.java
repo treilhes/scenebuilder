@@ -33,8 +33,8 @@
 package com.oracle.javafx.scenebuilder.api.control;
 
 import com.oracle.javafx.scenebuilder.api.control.outline.Outline;
-import com.treilhes.jfxplace.core.api.fxom.dnd.DropTarget;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.fxom.api.dnd.DropTarget;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;

@@ -37,18 +37,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
-
 import com.oracle.javafx.scenebuilder.api.Documentation;
 import com.oracle.javafx.scenebuilder.api.DocumentationUrlBuilder;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.treilhes.jfxplace.core.api.fs.FileSystem;
-import com.treilhes.jfxplace.core.fxom.util.PropertyName;
 import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
+import com.treilhes.jfxplace.fxom.model.util.PropertyName;
 
-@Component
-@Lazy
+@ApplicationInstanceSingleton
 public class DocumentationImpl implements Documentation {
 
     private final List<DocumentationUrlBuilder> urlBuilders;

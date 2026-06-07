@@ -38,7 +38,7 @@ import java.util.Optional;
 
 import com.oracle.javafx.scenebuilder.api.Inspector;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.api.instance.ApplicationInstance;
 import com.treilhes.jfxplace.core.api.subjects.ViewManager;
 import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
 
@@ -48,18 +48,18 @@ import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
 @ApplicationInstanceSingleton
 public class CssPanelDelegate extends CssPanelController.Delegate {
 
-    private final JfxAppPlatform jfxAppPlatform;
+    private final ApplicationInstance instance;
     private final Optional<Inspector> inspector;
     private final Optional<ViewManager> viewManager;
 
 
     //@formatter:off
     public CssPanelDelegate(
-            JfxAppPlatform jfxAppPlatform,
+            ApplicationInstance instance,
             Optional<Inspector> inspector,
             Optional<ViewManager> viewManager) {
         //@formatter:on
-        this.jfxAppPlatform = jfxAppPlatform;
+        this.instance = instance;
         this.inspector = inspector;
         this.viewManager = viewManager;
     }
@@ -77,9 +77,9 @@ public class CssPanelDelegate extends CssPanelController.Delegate {
 //            documentWindowController.performControlAction(Document.DocumentControlAction.TOGGLE_RIGHT_PANEL);
 //        }
 
-
+        var executor = instance.getExecutor();
         // Need to delay the focus to the editor, so that the section is actually expanded first.
-        jfxAppPlatform.runOnFxThread(() -> jfxAppPlatform.runOnFxThread(() -> inspector.get().setFocusToEditor(propMeta)));
+        executor.runOnFxThread(() -> executor.runOnFxThread(() -> inspector.get().setFocusToEditor(propMeta)));
     }
 
 }

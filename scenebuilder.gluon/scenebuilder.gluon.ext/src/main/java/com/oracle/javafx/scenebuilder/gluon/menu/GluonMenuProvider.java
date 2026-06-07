@@ -41,12 +41,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.treilhes.emc4j.boot.context.JfxAppContext;
-import com.treilhes.jfxplace.core.api.action.ActionFactory;
-import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
-import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
-import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 import com.oracle.javafx.scenebuilder.api.theme.Theme;
 import com.oracle.javafx.scenebuilder.ext.actions.ApplyCssContentAction;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
@@ -54,6 +48,11 @@ import com.oracle.javafx.scenebuilder.gluon.controller.UpdateController;
 import com.oracle.javafx.scenebuilder.gluon.preferences.document.GluonSwatchDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.preferences.global.GluonSwatchPreference.GluonSwatch;
 import com.oracle.javafx.scenebuilder.gluon.theme.GluonThemesList;
+import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.instance.ActionFactory;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
+import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;

@@ -36,12 +36,12 @@ package com.oracle.javafx.scenebuilder.app.error;
 import java.net.URL;
 
 import com.oracle.javafx.scenebuilder.api.mask.SbFXOMObjectMask;
-import com.treilhes.jfxplace.core.api.fxom.error.ErrorReportEntry;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.fxom.FXOMIntrinsic;
-import com.treilhes.jfxplace.core.fxom.FXOMNode;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
-import com.treilhes.jfxplace.core.fxom.FXOMPropertyT;
+import com.treilhes.jfxplace.fxom.api.error.ErrorReportEntry;
+import com.treilhes.jfxplace.fxom.model.FXOMIntrinsic;
+import com.treilhes.jfxplace.fxom.model.FXOMNode;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.FXOMPropertyT;
 
 /**
  *

@@ -45,17 +45,17 @@ import com.oracle.javafx.scenebuilder.document.hierarchy.item.HierarchyItemAcces
 import com.oracle.javafx.scenebuilder.document.hierarchy.item.HierarchyItemBase;
 import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeViewController;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.treilhes.jfxplace.core.api.fxom.dnd.DefaultDragSourceFactory;
-import com.treilhes.jfxplace.core.api.fxom.dnd.DefaultDropTargetFactory;
-import com.treilhes.jfxplace.core.api.fxom.dnd.Drag;
-import com.treilhes.jfxplace.core.api.fxom.dnd.DragSource;
-import com.treilhes.jfxplace.core.api.fxom.dnd.DropTarget;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.FXOMElement;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.fxom.api.dnd.DefaultDragSourceFactory;
+import com.treilhes.jfxplace.fxom.api.dnd.DefaultDropTargetFactory;
+import com.treilhes.jfxplace.fxom.api.dnd.Drag;
+import com.treilhes.jfxplace.fxom.api.dnd.DragSource;
+import com.treilhes.jfxplace.fxom.api.dnd.DropTarget;
+import com.treilhes.jfxplace.fxom.api.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.FXOMElement;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;

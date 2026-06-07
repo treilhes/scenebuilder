@@ -39,9 +39,9 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.editor.fxml.controller.EditModeController;
-import com.treilhes.jfxplace.core.api.fxom.content.mode.ModeDescriptor;
-import com.treilhes.jfxplace.core.api.fxom.content.mode.ModeProvider;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.fxom.api.content.mode.ModeDescriptor;
+import com.treilhes.jfxplace.fxom.api.content.mode.ModeProvider;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
 
 @Component
 public class ContentModeProvider implements ModeProvider {

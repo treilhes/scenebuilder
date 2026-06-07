@@ -34,30 +34,17 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.treilhes.emc4j</groupId>
-                <artifactId>emc4j-dependency-plugin</artifactId>
+                <groupId>com.treilhes.jfxplace</groupId>
+                <artifactId>jfxplace-helper-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>resolve-jar-path</id>
+                        <id>argLine</id>
                         <goals>
-                            <goal>properties</goal>
+                            <goal>argline</goal>
                         </goals>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.treilhes.jfxplace</groupId>
-                        <artifactId>javafx.graphics.patch</artifactId>
-                        <version>${jfxplace.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.treilhes.jfxplace</groupId>
-                        <artifactId>javafx.fxml.patch</artifactId>
-                        <version>${jfxplace.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
-
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -65,10 +52,9 @@
                 <configuration>
                     <useModulePath>true</useModulePath>
                     <argLine>
+                        ${jfxplaceArgLine}
                         --add-opens javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
                         --add-opens javafx.graphics/com.sun.javafx.scene=scenebuilder.ext.css.analyser
-                        --patch-module javafx.graphics=${com.treilhes.jfxplace:javafx.graphics.patch:jar}
-                        --patch-module javafx.fxml=${com.treilhes.jfxplace:javafx.fxml.patch:jar}
                     </argLine>
                 </configuration>
             </plugin>

@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.preview.actions;
 
 //import com.oracle.javafx.scenebuilder.editor.fxml.actions.SetRootSizeAction;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.treilhes.jfxplace.core.api.action.ActionFactory;
+import com.treilhes.jfxplace.core.api.instance.ActionFactory;
 
 /**
  * This extension is used to set the size of the root element of the preview. It is used by the

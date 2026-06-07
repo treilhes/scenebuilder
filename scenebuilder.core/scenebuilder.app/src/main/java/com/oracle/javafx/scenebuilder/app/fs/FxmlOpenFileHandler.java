@@ -8,48 +8,48 @@ import org.slf4j.LoggerFactory;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.treilhes.jfxplace.core.api.application.ApplicationActionFactory;
-import com.treilhes.jfxplace.core.api.document.DocumentActionFactory;
 import com.treilhes.jfxplace.core.api.fs.OpenFileHandler;
 import com.treilhes.jfxplace.core.api.ui.dialog.ApplicationDialog;
+import com.treilhes.jfxplace.fxom.api.document.DocumentActionFactory;
 
 @ApplicationSingleton
 public class FxmlOpenFileHandler implements OpenFileHandler {
 
-	private static final String FXML_EXTENSION = ".fxml";
+    private static final String FXML_EXTENSION = ".fxml";
 
-	private static final Logger logger = LoggerFactory.getLogger(FxmlOpenFileHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(FxmlOpenFileHandler.class);
 
-	private final ApplicationDialog applicationDialog;
-	private final ApplicationActionFactory applicationActionFactory;
-	private final DocumentActionFactory documentActionFactory;
+    private final ApplicationDialog applicationDialog;
+    private final ApplicationActionFactory applicationActionFactory;
 
-	public FxmlOpenFileHandler(
-			ApplicationActionFactory applicationActionFactory,
-			DocumentActionFactory documentActionFactory, 
-			ApplicationDialog applicationDialog) {
+    public FxmlOpenFileHandler(
+            ApplicationActionFactory applicationActionFactory,
+            ApplicationDialog applicationDialog) {
 
-		this.applicationActionFactory = applicationActionFactory;
-		this.documentActionFactory = documentActionFactory;
-		this.applicationDialog = applicationDialog;
-	}
+        this.applicationActionFactory = applicationActionFactory;
+        this.applicationDialog = applicationDialog;
+    }
 
-	@Override
-	public boolean canOpen(File file) {
-		return file.getName().toLowerCase().endsWith(FXML_EXTENSION);
-	}
+    @Override
+    public boolean canOpen(File file) {
+        return file.getName().toLowerCase().endsWith(FXML_EXTENSION);
+    }
 
-	@Override
-	public void open(File file) {
-		try {
-			var fileURL = file.toURI().toURL();
-			applicationActionFactory.lookupUnusedInstance(fileURL, (instance) -> {
-				instance.openWindow();
-				documentActionFactory.loadFile(file).perform();
-			}).perform();
-		} catch (MalformedURLException e) {
-			logger.error("Error converting file to URL: {}", file, e);
-			applicationDialog.addError("Unable to open file", e.getMessage(), e);
-		}
-	}
+    @Override
+    public void open(File file) {
+        try {
+            var fileURL = file.toURI().toURL();
+            applicationActionFactory.lookupUnusedInstance(fileURL, (instance) -> {
+                var ctx = instance.getContext();
+                var ui = instance.getUi();
+                var documentActionFactory = ctx.getBean(DocumentActionFactory.class);
+                ui.openWindow();
+                documentActionFactory.loadFile(file).perform();
+            }).perform();
+        } catch (MalformedURLException e) {
+            logger.error("Error converting file to URL: {}", file, e);
+            applicationDialog.addError("Unable to open file", e.getMessage(), e);
+        }
+    }
 
 }

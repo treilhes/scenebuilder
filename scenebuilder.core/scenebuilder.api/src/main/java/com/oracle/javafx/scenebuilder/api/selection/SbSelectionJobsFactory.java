@@ -36,9 +36,9 @@ package com.oracle.javafx.scenebuilder.api.selection;
 import java.io.File;
 
 import com.treilhes.jfxplace.core.api.job.Job;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
-import com.treilhes.jfxplace.core.fxom.FXOMProperty;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.FXOMProperty;
 
 import javafx.scene.layout.AnchorPane;
 

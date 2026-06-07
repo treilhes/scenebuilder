@@ -39,11 +39,11 @@ import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototy
 import com.treilhes.jfxplace.core.api.action.AbstractAction;
 import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
 import com.treilhes.jfxplace.core.api.action.ActionMeta;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
 
 //@formatter:off
 @ApplicationInstancePrototype

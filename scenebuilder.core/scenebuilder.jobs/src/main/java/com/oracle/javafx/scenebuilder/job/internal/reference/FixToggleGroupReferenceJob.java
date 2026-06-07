@@ -38,9 +38,9 @@ import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
 import com.treilhes.jfxplace.core.api.job.Job;
 import com.treilhes.jfxplace.core.api.job.JobExtensionFactory;
 import com.treilhes.jfxplace.core.api.job.base.AbstractJob;
-import com.treilhes.jfxplace.core.fxom.FXOMIntrinsic;
-import com.treilhes.jfxplace.core.fxom.FXOMNode;
-import com.treilhes.jfxplace.core.fxom.FXOMPropertyT;
+import com.treilhes.jfxplace.fxom.model.FXOMIntrinsic;
+import com.treilhes.jfxplace.fxom.model.FXOMNode;
+import com.treilhes.jfxplace.fxom.model.FXOMPropertyT;
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 
 import javafx.scene.control.ToggleGroup;

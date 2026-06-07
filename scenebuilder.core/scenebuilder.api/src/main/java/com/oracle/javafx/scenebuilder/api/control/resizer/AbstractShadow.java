@@ -34,10 +34,10 @@
 package com.oracle.javafx.scenebuilder.api.control.resizer;
 
 import com.oracle.javafx.scenebuilder.api.control.Shadow;
-import com.treilhes.jfxplace.core.api.fxom.content.decoration.AbstractDecoration;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
-import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.fxom.api.content.decoration.AbstractDecoration;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.api.ui.controller.misc.Workspace;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;

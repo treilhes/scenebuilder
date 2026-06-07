@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.document.api;
 
 import com.oracle.javafx.scenebuilder.api.mask.SbAccessory;
 import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 import javafx.scene.image.Image;
 

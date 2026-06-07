@@ -14,9 +14,9 @@ import com.treilhes.emc4j.boot.api.loader.RestartedCommandEvent;
 import com.treilhes.emc4j.boot.api.loader.StopCommandEvent;
 import com.treilhes.jfxplace.core.api.application.ApplicationActionFactory;
 import com.treilhes.jfxplace.core.api.application.CommandEventHandler;
-import com.treilhes.jfxplace.core.api.document.DocumentActionFactory;
 import com.treilhes.jfxplace.core.api.fs.OpenFileHandler;
 import com.treilhes.jfxplace.core.api.ui.dialog.ApplicationDialog;
+import com.treilhes.jfxplace.fxom.api.document.DocumentActionFactory;
 
 @ApplicationSingleton
 public class FxomOpenCommandEventHandler implements CommandEventHandler {
@@ -26,17 +26,14 @@ public class FxomOpenCommandEventHandler implements CommandEventHandler {
     private static final Logger logger = LoggerFactory.getLogger(FxomOpenCommandEventHandler.class);
 
     private final ApplicationActionFactory applicationActionFactory;
-    private final DocumentActionFactory documentActionFactory;
     private final ApplicationDialog applicationDialog;
     private final List<OpenFileHandler> openFileHandlers;
 
     public FxomOpenCommandEventHandler(
             ApplicationActionFactory applicationActionFactory,
-            DocumentActionFactory documentActionFactory,
             ApplicationDialog applicationDialog,
             List<OpenFileHandler> openFileHandlers) {
         this.applicationActionFactory = applicationActionFactory;
-        this.documentActionFactory = documentActionFactory;
         this.applicationDialog = applicationDialog;
         this.openFileHandlers = openFileHandlers;
     }
@@ -44,10 +41,11 @@ public class FxomOpenCommandEventHandler implements CommandEventHandler {
     @Override
     public void handleOpenCommand(OpenCommandEvent command) {
 
-        var files = new ArrayList<File>();
-        var args = command.getArguments();
+        var args = command != null ? command.getArguments() : null;
 
         if (args != null && args.contains(FILE_ARG)) {
+            var files = new ArrayList<File>();
+
             int index = args.indexOf(FILE_ARG);
             var filePathes = args.size() > index + 1 ? args.get(index + 1) : null;
 
@@ -68,7 +66,10 @@ public class FxomOpenCommandEventHandler implements CommandEventHandler {
                         }
                     } else {
                         applicationActionFactory.lookupUnusedInstance(null, instance -> {
-                            instance.openWindow();
+                            var ctx = instance.getContext();
+                            var ui = instance.getUi();
+                            var documentActionFactory = ctx.getBean(DocumentActionFactory.class);
+                            ui.openWindow();
                             documentActionFactory.loadBlank().perform();
                         }).perform();
                     }
@@ -80,7 +81,10 @@ public class FxomOpenCommandEventHandler implements CommandEventHandler {
 
         } else {
             applicationActionFactory.lookupUnusedInstance(null, instance -> {
-                instance.openWindow();
+                var ctx = instance.getContext();
+                var ui = instance.getUi();
+                var documentActionFactory = ctx.getBean(DocumentActionFactory.class);
+                ui.openWindow();
                 documentActionFactory.loadBlank().perform();
             }).perform();
         }
@@ -101,7 +105,6 @@ public class FxomOpenCommandEventHandler implements CommandEventHandler {
 
     @Override
     public void handleRestartedCommand(RestartedCommandEvent command) {
-        // TODO Auto-generated method stub
-
+        handleOpenCommand(null);
     }
 }

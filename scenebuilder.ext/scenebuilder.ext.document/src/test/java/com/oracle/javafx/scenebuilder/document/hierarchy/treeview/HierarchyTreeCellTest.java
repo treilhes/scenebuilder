@@ -51,14 +51,14 @@ import com.oracle.javafx.scenebuilder.document.hierarchy.HierarchyParentRing;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.test.EmcInject;
 import com.treilhes.emc4j.test.EmcInjectMock;
-import com.treilhes.jfxplace.core.api.fxom.dnd.Drag;
-import com.treilhes.jfxplace.core.api.fxom.error.ErrorReport;
-import com.treilhes.jfxplace.core.api.fxom.error.ErrorReportEntry;
 import com.treilhes.jfxplace.core.api.tooltheme.ToolStylesheetProvider;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.FXOMInstance;
-import com.treilhes.jfxplace.core.fxom.pipeline.FXOMDocumentFactory;
+import com.treilhes.jfxplace.fxom.api.dnd.Drag;
+import com.treilhes.jfxplace.fxom.api.error.ErrorReport;
+import com.treilhes.jfxplace.fxom.api.error.ErrorReportEntry;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.FXOMInstance;
+import com.treilhes.jfxplace.fxom.model.pipeline.FXOMDocumentFactory;
 import com.treilhes.jfxplace.test.JfxPlaceTest;
 import com.treilhes.jfxplace.test.builder.StageBuilder;
 import com.treilhes.jfxplace.test.builder.StageType;
@@ -86,8 +86,8 @@ class HierarchyTreeCellTest {
     private HierarchyItem item;
     @EmcInjectMock
     private DisplayOption displayOption;
-    @EmcInjectMock
-    private EmContext context;
+//    @EmcInjectMock
+//    private EmContext context;
     @EmcInjectMock
     private Hierarchy panelController;
 
@@ -123,7 +123,7 @@ class HierarchyTreeCellTest {
 
     }
     /**
-     * Test method for {@link com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell#HierarchyTreeCell(com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit, com.treilhes.jfxplace.core.api.fxom.error.ErrorReport, com.treilhes.jfxplace.core.api.fxom.dnd.Drag)}.
+     * Test method for {@link com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeCell#HierarchyTreeCell(com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit, com.treilhes.jfxplace.fxom.api.error.ErrorReport, com.treilhes.jfxplace.fxom.api.dnd.Drag)}.
      */
     @Test
     void testHierarchyTreeCell(EmContext context, FxRobot robot) {

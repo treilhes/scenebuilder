@@ -37,8 +37,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
-import com.treilhes.jfxplace.core.api.fxom.util.FXOMDocumentUtils;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
@@ -46,7 +44,9 @@ import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlViewController;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.ViewSearch;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.annotation.ViewAttachment;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.ViewMenu;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.api.util.FXOMDocumentUtils;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
 
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;

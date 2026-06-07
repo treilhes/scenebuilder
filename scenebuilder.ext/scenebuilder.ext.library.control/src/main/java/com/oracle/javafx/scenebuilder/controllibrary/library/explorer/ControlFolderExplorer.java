@@ -45,12 +45,12 @@ import com.oracle.javafx.scenebuilder.controllibrary.library.ControlLibraryFilte
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportEntryImpl;
 import com.oracle.javafx.scenebuilder.controllibrary.library.ControlReportImpl;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.fs.controller.ClassLoaderController;
-import com.treilhes.jfxplace.core.library.api.Explorer;
-import com.treilhes.jfxplace.core.library.api.ExplorerInspector;
-import com.treilhes.jfxplace.core.library.util.ExplorationCancelledException;
-import com.treilhes.jfxplace.core.library.util.FolderExplorer;
-import com.treilhes.jfxplace.core.library.util.LibraryUtil;
+import com.treilhes.jfxplace.fxom.fs.controller.ClassLoaderController;
+import com.treilhes.jfxplace.fxom.library.api.Explorer;
+import com.treilhes.jfxplace.fxom.library.api.ExplorerInspector;
+import com.treilhes.jfxplace.fxom.library.util.ExplorationCancelledException;
+import com.treilhes.jfxplace.fxom.library.util.FolderExplorer;
+import com.treilhes.jfxplace.fxom.library.util.LibraryUtil;
 
 import javafx.concurrent.Task;
 

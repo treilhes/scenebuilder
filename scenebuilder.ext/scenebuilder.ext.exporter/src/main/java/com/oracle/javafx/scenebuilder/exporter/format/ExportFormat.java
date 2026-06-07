@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.exporter.format;
 
 import java.io.File;
 
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.fxom.api.editor.selection.FxomSelection;
 
 import javafx.scene.Node;
 

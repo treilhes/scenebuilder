@@ -50,14 +50,14 @@ import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.HierarchyTreeV
 import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.TreeItemFactory;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.jfxplace.core.api.ctxmenu.ContextMenu;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.api.javafx.JfxPlaceExecutor;
 import com.treilhes.jfxplace.core.api.job.JobManager;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.fxom.api.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.beans.property.ObjectProperty;
@@ -258,7 +258,7 @@ public class HierarchyController implements Hierarchy {
             // be updated because:
             // - classes of scene graph objects may have mutated
             // - infos displayed in the tree items may be obsoletes
-            JfxAppPlatform.ensureFxThread(() -> {
+            JfxPlaceExecutor.ensureFxThread(() -> {
                 updatePanel();
                 editorSelectionDidChange();
             });

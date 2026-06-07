@@ -37,15 +37,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
-import com.treilhes.jfxplace.core.api.fxom.job.base.BatchDocumentJob;
-import com.treilhes.jfxplace.core.api.fxom.jobs.FxomJobsFactory;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.job.Job;
 import com.treilhes.jfxplace.core.api.job.JobExtensionFactory;
-import com.treilhes.jfxplace.core.fxom.FXOMInstance;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
-import com.treilhes.jfxplace.core.fxom.util.PropertyName;
 import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
+import com.treilhes.jfxplace.fxom.api.job.base.BatchDocumentJob;
+import com.treilhes.jfxplace.fxom.api.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.model.FXOMInstance;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.util.PropertyName;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 
 import javafx.scene.control.TableColumnBase;

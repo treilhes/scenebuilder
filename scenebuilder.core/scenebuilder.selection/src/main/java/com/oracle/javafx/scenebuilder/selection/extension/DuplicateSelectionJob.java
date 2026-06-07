@@ -40,22 +40,22 @@ import java.util.Map;
 
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.ObjectSelectionGroup;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.SelectionJobsFactory;
-import com.treilhes.jfxplace.core.api.fxom.job.base.BatchSelectionJob;
-import com.treilhes.jfxplace.core.api.fxom.mask.Accessory;
-import com.treilhes.jfxplace.core.api.fxom.mask.FXOMObjectMask;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.treilhes.jfxplace.core.api.job.Job;
 import com.treilhes.jfxplace.core.api.job.JobExtensionFactory;
 import com.treilhes.jfxplace.core.api.selection.SelectionGroup;
-import com.treilhes.jfxplace.core.fxom.FXOMCollection;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.FXOMInstance;
-import com.treilhes.jfxplace.core.fxom.FXOMNodes;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.fxom.api.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.fxom.api.editor.selection.ObjectSelectionGroup;
+import com.treilhes.jfxplace.fxom.api.editor.selection.SelectionJobsFactory;
+import com.treilhes.jfxplace.fxom.api.job.base.BatchSelectionJob;
+import com.treilhes.jfxplace.fxom.api.mask.Accessory;
+import com.treilhes.jfxplace.fxom.api.mask.FXOMObjectMask;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.model.FXOMCollection;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.FXOMInstance;
+import com.treilhes.jfxplace.fxom.model.FXOMNodes;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 import javafx.scene.Node;
 

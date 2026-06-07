@@ -41,14 +41,14 @@ import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototy
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.jfxplace.core.api.action.AbstractAction;
 import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
-import com.treilhes.jfxplace.core.api.action.ActionFactory;
 import com.treilhes.jfxplace.core.api.action.ActionMeta;
-import com.treilhes.jfxplace.core.api.fxom.ui.controller.misc.Workspace;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.instance.ActionFactory;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBuilder;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
+import com.treilhes.jfxplace.fxom.api.ui.controller.misc.Workspace;
 import com.treilhes.jfxplace.util.MathUtils;
 
 import javafx.scene.control.Menu;

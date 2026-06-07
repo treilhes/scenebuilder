@@ -37,14 +37,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.fxom.util.FXOMDocumentUtils;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
 import com.treilhes.jfxplace.core.api.ui.InstanceWindow;
 import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlWindowController;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.fxom.api.util.FXOMDocumentUtils;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

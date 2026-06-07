@@ -33,31 +33,29 @@
  */
 package com.oracle.javafx.scenebuilder.welcome.action;
 
+import com.oracle.javafx.scenebuilder.welcome.controller.WelcomeDialogWindowController;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationPrototype;
 import com.treilhes.jfxplace.core.api.action.AbstractAction;
 import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
 import com.treilhes.jfxplace.core.api.action.ActionMeta;
-import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
-import com.oracle.javafx.scenebuilder.welcome.controller.WelcomeDialogWindowController;
+import com.treilhes.jfxplace.core.api.application.Application;
 
 @ApplicationPrototype
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
 public class ShowWelcomeDialogAction extends AbstractAction {
 
-    private final JfxAppPlatform jfxAppPlatform;
+    private final Application application;
     private final WelcomeDialogWindowController welcomeDialogWindowController;
 
     //@formatter:off
     public ShowWelcomeDialogAction(
-            I18N i18n,
+            Application application,
             ActionExtensionFactory extensionFactory,
-            JfxAppPlatform jfxAppPlatform,
             WelcomeDialogWindowController welcomeDialogWindowController
             ) {
         //@formatter:on
-        super(i18n, extensionFactory);
-        this.jfxAppPlatform = jfxAppPlatform;
+        super(application.getI18n(), extensionFactory);
+        this.application = application;
         this.welcomeDialogWindowController = welcomeDialogWindowController;
     }
 
@@ -71,7 +69,7 @@ public class ShowWelcomeDialogAction extends AbstractAction {
         // Unless we're on a Mac we're starting SB directly (fresh start)
         // so we're not opening any file and as such we should show the Welcome Dialog
         // TODO: need to check if the previous comment is still valid on macOS
-        jfxAppPlatform.runOnFxThread(() -> {
+        application.getExecutor().runOnFxThread(() -> {
             welcomeDialogWindowController.openWindow();
         });
 

@@ -41,10 +41,10 @@ import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototy
 import com.treilhes.jfxplace.core.api.action.AbstractAction;
 import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
 import com.treilhes.jfxplace.core.api.action.ActionMeta;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.treilhes.jfxplace.core.api.i18n.I18nResourceProvider;
 import com.treilhes.jfxplace.core.api.lifecycle.InitWithDocument;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.show.jar.analysis.report", descriptionKey = "action.description.show.jar.analysis.report")

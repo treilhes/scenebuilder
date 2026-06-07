@@ -38,19 +38,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.treilhes.emc4j.boot.api.context.annotation.Prototype;
-import com.treilhes.jfxplace.core.api.fxom.job.base.InlineDocumentJob;
-import com.treilhes.jfxplace.core.api.fxom.jobs.FxomJobsFactory;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.job.Job;
 import com.treilhes.jfxplace.core.api.job.JobExtensionFactory;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.FXOMIntrinsic;
-import com.treilhes.jfxplace.core.fxom.FXOMNodes;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
-import com.treilhes.jfxplace.core.fxom.FXOMProperty;
-import com.treilhes.jfxplace.core.fxom.FXOMPropertyC;
-import com.treilhes.jfxplace.core.fxom.collector.FxCollector;
-import com.treilhes.jfxplace.core.fxom.util.ToggleGroupHelper;
+import com.treilhes.jfxplace.fxom.api.job.base.InlineDocumentJob;
+import com.treilhes.jfxplace.fxom.api.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.FXOMIntrinsic;
+import com.treilhes.jfxplace.fxom.model.FXOMNodes;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.FXOMProperty;
+import com.treilhes.jfxplace.fxom.model.FXOMPropertyC;
+import com.treilhes.jfxplace.fxom.model.collector.FxCollector;
+import com.treilhes.jfxplace.fxom.model.util.ToggleGroupHelper;
 
 import javafx.scene.control.ToggleGroup;
 

@@ -43,10 +43,10 @@ import java.util.Set;
 
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization.InspectorPathComparator;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
-import com.treilhes.jfxplace.core.fxom.util.PropertyName;
 import com.treilhes.jfxplace.core.metadata.AbstractMetadata;
 import com.treilhes.jfxplace.core.metadata.property.ComponentPropertyMetadata;
 import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
+import com.treilhes.jfxplace.fxom.model.util.PropertyName;
 
 @ApplicationSingleton
 public class SbMetadata extends AbstractMetadata<

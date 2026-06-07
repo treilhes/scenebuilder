@@ -44,9 +44,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
-import com.treilhes.jfxplace.core.api.fxom.library.LibraryItem;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.fxom.api.library.LibraryItem;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;

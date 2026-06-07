@@ -48,8 +48,8 @@ import java.util.TreeSet;
 import com.oracle.javafx.scenebuilder.cssanalyser.controller.CssContentMaker.CssPropertyState;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
 import com.sun.javafx.scene.NodeHelper;
-import com.treilhes.jfxplace.core.api.fxom.css.CssInternal;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.fxom.api.css.CssInternal;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

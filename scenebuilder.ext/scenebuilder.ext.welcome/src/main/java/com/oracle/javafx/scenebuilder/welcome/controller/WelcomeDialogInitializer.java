@@ -34,21 +34,21 @@
 package com.oracle.javafx.scenebuilder.welcome.controller;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
+import com.treilhes.jfxplace.core.api.application.Application;
 import com.treilhes.jfxplace.core.api.application.InstancesManager;
-import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
 import com.treilhes.jfxplace.core.api.lifecycle.InitWithApplication;
 
 @ApplicationSingleton
 public class WelcomeDialogInitializer implements InitWithApplication {
 
-    private final JfxAppPlatform platform;
+    private final Application application;
     private final InstancesManager main;
 
     public WelcomeDialogInitializer(
-            JfxAppPlatform platform,
+            Application application,
             InstancesManager main) {
         super();
-        this.platform = platform;
+        this.application = application;
         this.main = main;
     }
 
@@ -61,7 +61,7 @@ public class WelcomeDialogInitializer implements InitWithApplication {
         if (target != null) {
             var targetContext = target.getContext();
             var wdwc = targetContext.getBean(WelcomeDialogWindowController.class);
-            platform.runOnFxThreadWithActiveScope(() -> {
+            application.getExecutor().runOnFxThread(() -> {
                 wdwc.getStage().show();
             });
         }

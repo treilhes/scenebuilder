@@ -46,18 +46,16 @@ import org.springframework.beans.factory.InitializingBean;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.jfxplace.core.api.Size;
-import com.treilhes.jfxplace.core.api.fxom.css.StylesheetProvider;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
-import com.treilhes.jfxplace.core.api.fxom.util.FXOMDocumentUtils;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.treilhes.jfxplace.core.api.i18n.I18nResourceProvider;
-import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
-import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
+import com.treilhes.jfxplace.core.api.instance.ApplicationInstance;
 import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
 import com.treilhes.jfxplace.core.api.ui.controller.AbstractWindowController;
-import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.pipeline.FXOMPipeline;
+import com.treilhes.jfxplace.fxom.api.css.StylesheetProvider;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.api.util.FXOMDocumentUtils;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.pipeline.FXOMPipeline;
 import com.treilhes.jfxplace.util.MathUtils;
 
 import javafx.collections.FXCollections;
@@ -108,8 +106,8 @@ public class PreviewWindowController extends AbstractWindowController implements
     private I18nResourceProvider resourceConfig;
     private FXOMDocument fxomDocument;
     private final FxomEvents fxomEvents;
-    private final JfxAppPlatform jfxAppPlatform;
     private final FXOMPipeline fxomPipeline;
+    private final ApplicationInstance instance;
 
     /**
      * The type of Camera used by the Preview panel.
@@ -121,18 +119,15 @@ public class PreviewWindowController extends AbstractWindowController implements
 
     //@formatter:off
     public PreviewWindowController(
-            I18N i18n,
-            JfxAppPlatform jfxAppPlatform,
-            ApplicationEvents sceneBuilderManager,
-            IconSetting iconSetting,
+            ApplicationInstance instance,
             MainInstanceWindow document,
             FxomEvents fxomEvents,
             FXOMPipeline fxomPipeline) {
         //@formatter:on
-        super(sceneBuilderManager, iconSetting, document);
-        this.i18n = i18n;
+        super(instance, document);
+        this.i18n = instance.getApplication().getI18n();
         this.fxomEvents = fxomEvents;
-        this.jfxAppPlatform = jfxAppPlatform;
+        this.instance = instance;
         this.fxomPipeline = fxomPipeline;
     }
 
@@ -263,7 +258,7 @@ public class PreviewWindowController extends AbstractWindowController implements
                 // JavaFX data should only be accessed on the JavaFX thread.
                 // => we must wrap the code into a Runnable object and call the
                 // SbPlatform.runLater
-                jfxAppPlatform.runOnFxThread(() -> {
+                instance.getExecutor().runOnFxThread(() -> {
                     String themeStyleSheetString = null;
                     if (fxomDocument != null) {
                         // We clone the FXOMDocument

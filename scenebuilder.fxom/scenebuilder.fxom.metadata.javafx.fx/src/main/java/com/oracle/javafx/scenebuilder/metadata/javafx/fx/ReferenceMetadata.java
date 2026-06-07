@@ -37,13 +37,13 @@ import org.springframework.stereotype.Component;
 
 import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization;
 import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.FXOMIntrinsic;
-import com.treilhes.jfxplace.core.fxom.FXOMReference;
-import com.treilhes.jfxplace.core.fxom.FXOMIntrinsic.Type;
-import com.treilhes.jfxplace.core.fxom.util.PropertyName;
-import com.treilhes.jfxplace.core.metadata.property.base.NullReference;
-import com.treilhes.jfxplace.core.metadata.property.base.StringPropertyMetadata.I18nStringPropertyMetadata;
+import com.treilhes.jfxplace.core.metadata.property.value.NullReference;
+import com.treilhes.jfxplace.core.metadata.property.value.StringPropertyMetadata.I18nStringPropertyMetadata;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.FXOMIntrinsic;
+import com.treilhes.jfxplace.fxom.model.FXOMReference;
+import com.treilhes.jfxplace.fxom.model.FXOMIntrinsic.Type;
+import com.treilhes.jfxplace.fxom.model.util.PropertyName;
 import com.oracle.javafx.scenebuilder.metadata.custom.SbComponentClassMetadata;
 import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
 

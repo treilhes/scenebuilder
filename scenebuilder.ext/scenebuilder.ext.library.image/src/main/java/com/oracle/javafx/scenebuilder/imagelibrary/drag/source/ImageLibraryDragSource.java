@@ -43,12 +43,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
 import com.treilhes.jfxplace.core.api.editor.images.ImageUtils;
-import com.treilhes.jfxplace.core.api.fxom.dnd.DragSourceFactory;
-import com.treilhes.jfxplace.core.api.fxom.library.LibraryItem;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.FXOMInstance;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.fxom.api.dnd.DragSourceFactory;
+import com.treilhes.jfxplace.fxom.api.library.LibraryItem;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.FXOMInstance;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Group;

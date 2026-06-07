@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.imagelibrary.library;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.treilhes.jfxplace.core.api.fxom.library.ReportEntry;
+import com.treilhes.jfxplace.fxom.api.library.ReportEntry;
 
 /**
  *

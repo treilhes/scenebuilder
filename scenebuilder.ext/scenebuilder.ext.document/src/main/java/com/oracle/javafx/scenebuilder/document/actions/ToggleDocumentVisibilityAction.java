@@ -42,7 +42,6 @@ import com.treilhes.jfxplace.core.api.action.ActionMeta;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.treilhes.jfxplace.core.api.shortcut.annotation.Accelerator;
 import com.treilhes.jfxplace.core.api.ui.DockActionFactory;
-import com.treilhes.jfxplace.core.api.ui.controller.dock.DockViewController;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.View;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
@@ -76,7 +75,6 @@ public class ToggleDocumentVisibilityAction  extends AbstractAction {
             I18N i18n,
             ActionExtensionFactory extensionFactory,
             DockActionFactory dockActionFactory,
-            DockViewController dockViewController,
             DocumentPanel documentPanel) {
         //@formatter:on
         super(i18n, extensionFactory);

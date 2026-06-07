@@ -34,9 +34,9 @@
 package com.oracle.javafx.scenebuilder.document.hierarchy.display;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.fxom.jobs.FxomJobsFactory;
 import com.treilhes.jfxplace.core.api.job.JobManager;
-import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.fxom.api.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.fxom.model.util.PropertyName;
 import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
 import com.oracle.javafx.scenebuilder.document.api.annotation.DisplayOptionName;
 

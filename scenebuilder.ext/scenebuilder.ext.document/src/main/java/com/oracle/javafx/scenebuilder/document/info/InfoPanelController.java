@@ -42,23 +42,23 @@ import java.util.Set;
 import org.springframework.context.annotation.Lazy;
 
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.SelectionState;
-import com.treilhes.jfxplace.core.api.fxom.jobs.FxomJobsFactory;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
-import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
+import com.treilhes.jfxplace.core.api.javafx.JfxPlaceExecutor;
 import com.treilhes.jfxplace.core.api.job.JobManager;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationEvents;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
-import com.treilhes.jfxplace.core.api.ui.controller.AbstractFxmlController;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
-import com.treilhes.jfxplace.core.fxom.FXOMInstance;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
-import com.treilhes.jfxplace.core.fxom.collector.FxCollector;
+import com.treilhes.jfxplace.core.api.ui.controller.AbstractPanelController;
+import com.treilhes.jfxplace.fxom.api.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.fxom.api.editor.selection.SelectionState;
+import com.treilhes.jfxplace.fxom.api.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
 import com.treilhes.jfxplace.fxom.editors.api.PropertyEditor;
 import com.treilhes.jfxplace.fxom.editors.api.PropertyEditorFactory;
 import com.treilhes.jfxplace.fxom.editors.api.PropertyEditorFactorySession;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
+import com.treilhes.jfxplace.fxom.model.FXOMInstance;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.collector.FxCollector;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -79,7 +79,7 @@ import javafx.scene.layout.VBox;
  */
 @ApplicationInstanceSingleton
 @Lazy
-public class InfoPanelController extends AbstractFxmlController {
+public class InfoPanelController extends AbstractPanelController {
 
     @FXML private TableColumn<IndexEntry,String> leftTableColumn;
     @FXML private TableColumn<IndexEntry,FXOMObject> rightTableColumn;
@@ -502,7 +502,7 @@ public class InfoPanelController extends AbstractFxmlController {
         if (controllerClassEditor != null) {
             // The listener on fxmlLocationProperty is called before the file
             // denoted by the location is created on disk, hence the runLater.
-            JfxAppPlatform.ensureFxThread(() -> {
+            JfxPlaceExecutor.ensureFxThread(() -> {
                 controllerClassEditor.setUpdateFromModel(true);
                 controllerClassEditor.reset(null);
                 controllerClassEditor.setUpdateFromModel(false);

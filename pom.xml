@@ -15,13 +15,14 @@
 
     <modules>
         <module>scenebuilder.core</module>
+        <module>scenebuilder.ext</module>
         <module>scenebuilder.registry</module>
         <module>scenebuilder.launcher</module>
         <module>scenebuilder.fxom</module>
         
         <!--<module>fxml.runner</module>
         <module>fxml.serializer</module>
-        <module>scenebuilder.ext</module>
+        
         <module>scenebuilder.gluon</module>
         -->
     </modules>
@@ -711,8 +712,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <!-- <version>3.3.0</version> -->
-                    <version>3.3.1-SNAPSHOT</version>
+                    <version>${maven-javadoc-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -804,6 +804,22 @@
                                     </pluginExecutionFilter>
                                     <action>
                                         <ignore/>
+                                    </action>
+                                </pluginExecution>
+                                
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>com.treilhes.jfxplace</groupId>
+                                        <artifactId>jfxplace-helper-plugin</artifactId>
+                                        <versionRange>[0.0.0,)</versionRange>
+                                        <goals>
+                                            <goal>argline</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <execute>
+                                            <runOnConfiguration>true</runOnConfiguration>
+                                        </execute>
                                     </action>
                                 </pluginExecution>
                                 

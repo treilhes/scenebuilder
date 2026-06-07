@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.document.api;
 
 import java.util.List;
 
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;

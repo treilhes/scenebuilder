@@ -41,11 +41,11 @@ import org.graalvm.compiler.lir.CompositeValue.Component;
 import com.treilhes.jfxplace.core.api.fs.FileSystem;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
 import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
-import com.treilhes.jfxplace.core.extstore.fs.ExtensionFileSystemFactory;
-import com.treilhes.jfxplace.core.fs.controller.ClassLoaderController;
-import com.treilhes.jfxplace.core.library.api.LibraryStore;
-import com.treilhes.jfxplace.core.library.api.LibraryStoreConfiguration;
-import com.treilhes.jfxplace.core.library.api.LibraryStoreFactory;
+import com.treilhes.jfxplace.fxom.extstore.fs.ExtensionFileSystemFactory;
+import com.treilhes.jfxplace.fxom.fs.controller.ClassLoaderController;
+import com.treilhes.jfxplace.fxom.library.api.LibraryStore;
+import com.treilhes.jfxplace.fxom.library.api.LibraryStoreConfiguration;
+import com.treilhes.jfxplace.fxom.library.api.LibraryStoreFactory;
 
 import javafx.stage.FileChooser.ExtensionFilter;
 

@@ -38,10 +38,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.treilhes.emc4j.boot.context.JfxAppContext;
-import com.treilhes.jfxplace.core.api.editors.ApplicationInstanceWindow;
 import com.treilhes.jfxplace.core.api.job.base.AbstractJobExtension;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
-import com.treilhes.jfxplace.core.job.editor.atomic.SetFxomRootJob;
+import com.treilhes.jfxplace.fxom.api.editors.ApplicationInstanceWindow;
+import com.treilhes.jfxplace.fxom.job.editor.atomic.SetFxomRootJob;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 

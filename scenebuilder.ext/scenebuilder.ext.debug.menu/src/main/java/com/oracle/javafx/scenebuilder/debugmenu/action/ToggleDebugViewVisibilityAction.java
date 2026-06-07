@@ -47,9 +47,9 @@ import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
-import com.treilhes.jfxplace.core.api.action.ActionFactory;
 import com.treilhes.jfxplace.core.api.action.ActionMeta;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.instance.ActionFactory;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.DockViewController;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.View;
 import com.treilhes.jfxplace.core.api.ui.controller.dock.ViewAttachment;
@@ -63,18 +63,25 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * @deprecated use debugtools instead, will be replaced by a DebugView for DebugTools
+ *
+ */
+@Deprecated
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.toggle.view", descriptionKey = "action.description.toggle.view")
 public class ToggleDebugViewVisibilityAction extends AbstractToggleViewVisibilityAction {
 
     private static final Logger logger = LoggerFactory.getLogger(ToggleDebugViewVisibilityAction.class);
 
+    @Deprecated
     public ToggleDebugViewVisibilityAction(
             ActionExtensionFactory extensionFactory,
             DockViewController dockViewController) {
         super(extensionFactory, dockViewController);
     }
 
+    @Deprecated
     @ApplicationInstanceSingleton
     public class ViewMenuProvider implements MenuItemProvider {
 
@@ -87,6 +94,7 @@ public class ToggleDebugViewVisibilityAction extends AbstractToggleViewVisibilit
         private final ActionFactory actionFactory;
         private final EmContext context;
 
+        @Deprecated
         public ViewMenuProvider(
                 ActionFactory actionFactory,
                 EmContext context,
@@ -99,11 +107,13 @@ public class ToggleDebugViewVisibilityAction extends AbstractToggleViewVisibilit
             this.context = context;
         }
 
+        @Deprecated
         @Override
         public List<MenuItemAttachment> menuItems() {
             return Arrays.asList(new ShowDebugViewAttachment());
         }
 
+        @Deprecated
         public class ShowDebugViewAttachment implements MenuItemAttachment {
 
             private Menu menu = null;

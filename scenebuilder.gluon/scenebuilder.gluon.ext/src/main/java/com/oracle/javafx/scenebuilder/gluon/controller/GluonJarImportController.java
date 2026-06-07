@@ -48,8 +48,8 @@ import com.oracle.javafx.scenebuilder.gluon.preferences.global.ImportedGluonJars
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.jfxplace.core.api.WelcomeDialog;
 import com.treilhes.jfxplace.core.api.application.InstancesManager;
-import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.IconSetting;
+import com.treilhes.jfxplace.fxom.api.javafx.JfxAppPlatform;
 
 @Component
 @Lazy
@@ -96,7 +96,7 @@ public class GluonJarImportController {
 
             if (shouldShowImportGluonJarAlert) {
                 JfxAppPlatform.runOnFxThread(() -> {
-                    ApplicationInstance dwc = main.getFrontInstance();
+                    ApplicationInstanceUi dwc = main.getFrontInstance();
                     if (dwc == null) {
                         //TODO when started to fast will throw IndexOutOfBoundsException
                         dwc = main.getInstances().get(0);

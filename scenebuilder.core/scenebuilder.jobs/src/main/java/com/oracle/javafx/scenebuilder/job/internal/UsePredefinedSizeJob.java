@@ -38,7 +38,7 @@ import com.treilhes.jfxplace.core.api.Size;
 import com.treilhes.jfxplace.core.api.job.Job;
 import com.treilhes.jfxplace.core.api.job.JobExtensionFactory;
 import com.treilhes.jfxplace.core.api.job.base.AbstractJob;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 import com.oracle.javafx.scenebuilder.job.preference.RootContainerHeightPreference;
 import com.oracle.javafx.scenebuilder.job.preference.RootContainerWidthPreference;

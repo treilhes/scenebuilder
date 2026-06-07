@@ -41,7 +41,7 @@ import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.jfxplace.core.api.job.Job;
 import com.treilhes.jfxplace.core.api.job.JobFactory;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 @ApplicationInstanceSingleton
 public class SbSelectionJobsFactoryImpl extends JobFactory<Job> implements SbSelectionJobsFactory {

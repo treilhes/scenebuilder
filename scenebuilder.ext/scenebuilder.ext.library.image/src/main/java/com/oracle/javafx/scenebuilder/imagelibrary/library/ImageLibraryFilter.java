@@ -32,7 +32,7 @@
  */
 package com.oracle.javafx.scenebuilder.imagelibrary.library;
 
-import com.treilhes.jfxplace.core.api.fxom.library.LibraryFilter;
+import com.treilhes.jfxplace.fxom.api.library.LibraryFilter;
 
 public interface ImageLibraryFilter extends LibraryFilter{
 

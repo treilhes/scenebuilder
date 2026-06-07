@@ -1,0 +1,327 @@
+/*
+ * Copyright (c) 2016, 2024, Gluon and/or its affiliates.
+ * Copyright (c) 2021, 2024, Pascal Treilhes and/or its affiliates.
+ * Copyright (c) 2012, 2014, Oracle and/or its affiliates.
+ * All rights reserved. Use is subject to license terms.
+ *
+ * This file is available and licensed under the following license:
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  - Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *  - Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the distribution.
+ *  - Neither the name of Oracle Corporation and Gluon nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+package com.oracle.javafx.scenebuilder.tools.driver.gridpane;
+
+import java.util.List;
+
+import com.oracle.javafx.scenebuilder.tools.job.gridpane.GridSnapshot;
+import com.oracle.javafx.scenebuilder.tools.job.gridpane.InsertColumnJob;
+import com.oracle.javafx.scenebuilder.tools.job.gridpane.InsertRowJob;
+import com.oracle.javafx.scenebuilder.tools.job.gridpane.MoveCellContentJob;
+import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.job.base.AbstractJob;
+import com.treilhes.jfxplace.fxom.api.dnd.AbstractDropTarget;
+import com.treilhes.jfxplace.fxom.api.dnd.DragSource;
+import com.treilhes.jfxplace.fxom.api.dnd.DropTargetFactory;
+import com.treilhes.jfxplace.fxom.api.editor.selection.SelectionJobsFactory;
+import com.treilhes.jfxplace.fxom.api.job.base.BatchJob;
+import com.treilhes.jfxplace.fxom.api.jobs.FxomJobsFactory;
+import com.treilhes.jfxplace.fxom.api.mask.FXOMObjectMask;
+import com.treilhes.jfxplace.fxom.model.FXOMInstance;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
+import com.treilhes.jfxplace.fxom.model.util.Deprecation;
+import com.treilhes.jfxplace.util.javafx.GridBounds;
+
+import javafx.scene.Node;
+import javafx.scene.layout.GridPane;
+
+/**
+ *
+ */
+@ApplicationInstancePrototype
+public final class GridPaneDropTarget extends AbstractDropTarget {
+
+    public enum ColumnArea {
+        LEFT, CENTER, RIGHT
+    }
+
+    public enum RowArea {
+        TOP, CENTER, BOTTOM
+    }
+
+    private final FXOMObjectMask.Factory designMaskFactory;
+    private final BatchJob.Factory batchJobFactory;
+    private final FxomJobsFactory fxomJobsFactory;
+    private final SelectionJobsFactory selectionJobsFactory;
+    private final InsertColumnJob.Factory insertColumnJobFactory;
+    private final InsertRowJob.Factory insertRowJobFactory;
+    private final MoveCellContentJob.Factory moveCellContentJobFactory;
+
+    private FXOMObject targetGridPane;
+    private int targetColumnIndex;
+    private int targetRowIndex;
+    private ColumnArea targetColumnArea;
+    private RowArea targetRowArea;
+
+    // @formatter:off
+    protected GridPaneDropTarget(
+            FXOMObjectMask.Factory designMaskFactory,
+            BatchJob.Factory batchJobFactory,
+            FxomJobsFactory fxomJobsFactory,
+            SelectionJobsFactory selectionJobsFactory,
+            InsertColumnJob.Factory insertColumnJobFactory,
+            InsertRowJob.Factory insertRowJobFactory,
+            MoveCellContentJob.Factory moveCellContentJobFactory) {
+     // @formatter:on
+        this.designMaskFactory = designMaskFactory;
+        this.batchJobFactory = batchJobFactory;
+        this.fxomJobsFactory = fxomJobsFactory;
+        this.selectionJobsFactory = selectionJobsFactory;
+        this.insertColumnJobFactory = insertColumnJobFactory;
+        this.insertRowJobFactory = insertRowJobFactory;
+        this.moveCellContentJobFactory = moveCellContentJobFactory;
+    }
+
+    protected void setDropTargetParameters(FXOMObject targetGridPane, int columnIndex, int rowIndex,
+            ColumnArea targetColumnArea, RowArea targetRowArea) {
+        assert targetGridPane != null;
+        assert targetGridPane.getSceneGraphObject().isInstanceOf(GridPane.class);
+        assert columnIndex >= 0;
+        assert rowIndex >= 0;
+
+        this.targetGridPane = targetGridPane;
+        this.targetColumnIndex = columnIndex;
+        this.targetRowIndex = rowIndex;
+        this.targetColumnArea = targetColumnArea;
+        this.targetRowArea = targetRowArea;
+    }
+
+    public int getTargetColumnIndex() {
+        return targetColumnIndex;
+    }
+
+    public int getTargetRowIndex() {
+        return targetRowIndex;
+    }
+
+    public ColumnArea getTargetColumnArea() {
+        return targetColumnArea;
+    }
+
+    public RowArea getTargetRowArea() {
+        return targetRowArea;
+    }
+
+    /*
+     * AbstractDropTarget
+     */
+    @Override
+    public FXOMObject getTargetObject() {
+        return targetGridPane;
+    }
+
+    @Override
+    public boolean acceptDragSource(DragSource dragSource) {
+        assert dragSource != null;
+
+        final boolean result;
+        if (dragSource.getDraggedObjects().isEmpty()) {
+            result = false;
+        } else {
+            final var m = designMaskFactory.getMask(targetGridPane);
+            if (m.isAcceptingSubComponent(dragSource.getDraggedObjects())) {
+                final FXOMObject draggedObject0 = dragSource.getDraggedObjects().get(0);
+                assert draggedObject0.getSceneGraphObject().isInstanceOf(Node.class);
+
+                final Node draggedNode0 = draggedObject0.getSceneGraphObject().getAs(Node.class);
+                final Integer columIndexObj = GridPane.getColumnIndex(draggedNode0);
+                final Integer rowIndexObj = GridPane.getRowIndex(draggedNode0);
+                final int currentColumnIndex = (columIndexObj == null) ? 0 : columIndexObj;
+                final int currentRowIndex = (rowIndexObj == null) ? 0 : rowIndexObj;
+
+                final boolean sameContainer = targetGridPane == draggedObject0.getParentObject();
+                final boolean sameColumnIndex = targetColumnIndex == currentColumnIndex;
+                final boolean sameRowIndex = targetRowIndex == currentRowIndex;
+                final boolean sameArea = (targetColumnArea == ColumnArea.CENTER) && (targetRowArea == RowArea.CENTER);
+
+                result = (sameContainer == false) || (sameColumnIndex == false) || (sameRowIndex == false)
+                        || (sameArea == false);
+            } else {
+                result = false;
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public AbstractJob makeDropJob(DragSource dragSource) {
+        assert acceptDragSource(dragSource); // (1)
+
+        final boolean shouldRefreshSceneGraph = true;
+        final BatchJob result = batchJobFactory.getJob(shouldRefreshSceneGraph);
+        result.setDescription(dragSource.makeDropJobDescription());
+
+        final List<FXOMObject> draggedObjects = (List<FXOMObject>) dragSource.getDraggedObjects();
+        final var hitObject = dragSource.getHitObject();
+        final var currentParent = hitObject.getParentObject();
+        final boolean reparenting = (currentParent != targetGridPane);
+        final GridPane gridPane = targetGridPane.getSceneGraphObject().getAs(GridPane.class);
+
+        // Steps:
+        //
+        // 1) snapshot grid related properties of dragged objects
+        // => this must be done here because they will be lost by #1
+        // 2) clear the selection
+        // 3) remove drag source objects from their current parent (if any)
+        // 4) add new columns/rows in target grip pane as needed
+        // 5) add drag source objects to this drop target
+        // 6) restore grid related properties
+        // 7) select the dragged objects
+        //
+        // Note: if source and target parents are the same, skip #2,#3,#5,#7 and #8
+
+        // Step #1
+        final GridSnapshot gridSnapshot;
+        if ((currentParent != null) && (currentParent.getSceneGraphObject().isInstanceOf(GridPane.class))) {
+            gridSnapshot = new GridSnapshot(draggedObjects);
+        } else {
+            gridSnapshot = new GridSnapshot(draggedObjects, 1);
+        }
+
+        if (reparenting) {
+
+            // Step #2
+            result.addSubJob(selectionJobsFactory.clearSelection());
+
+            // Step #3
+            if (currentParent != null) {
+                for (FXOMObject draggedObject : draggedObjects) {
+                    result.addSubJob(fxomJobsFactory.removeObject(draggedObject));
+                }
+            }
+        }
+
+        // Step #4
+        final GridBounds snapshotBounds = gridSnapshot.getBounds();
+        final int hitColumnIndex = gridSnapshot.getColumnIndex(hitObject);
+        final int hitRowIndex = gridSnapshot.getRowIndex(hitObject);
+        final int destColumnIndex = (targetColumnArea == ColumnArea.RIGHT) ? targetColumnIndex + 1 : targetColumnIndex;
+        final int destRowIndex = (targetRowArea == RowArea.BOTTOM) ? targetRowIndex + 1 : targetRowIndex;
+        final int columnDelta = destColumnIndex - hitColumnIndex;
+        final int rowDelta = destRowIndex - hitRowIndex;
+        final GridBounds adjustedBounds = snapshotBounds.move(columnDelta, rowDelta);
+
+        // Step #4.1 : columns
+        switch (targetColumnArea) {
+        case LEFT:
+        case RIGHT: { // Insert columns at destColumnIndex
+            final int insertCount = snapshotBounds.getColumnSpan();
+            result.addSubJob(insertColumnJobFactory.getJob(targetGridPane, destColumnIndex, insertCount));
+            break;
+        }
+        case CENTER: {// Insert columns at right (first) and left ends if needed
+            final int targetColumnCount = Deprecation.getGridPaneColumnCount(gridPane);
+            if (adjustedBounds.getMaxColumnIndex() > targetColumnCount) {
+                final int insertCount = adjustedBounds.getMaxColumnIndex() - targetColumnCount;
+                result.addSubJob(insertColumnJobFactory.getJob(targetGridPane, targetColumnCount, insertCount));
+            }
+            if (adjustedBounds.getMinColumnIndex() < 0) {
+                final int insertCount = -adjustedBounds.getMinColumnIndex();
+                result.addSubJob(insertColumnJobFactory.getJob(targetGridPane, 0, insertCount));
+            }
+            break;
+        }
+        }
+
+        // Step #4.2 : rows
+        switch (targetRowArea) {
+        case TOP:
+        case BOTTOM: { // Insert rows at destRowIndex
+            final int insertCount = snapshotBounds.getRowSpan();
+            result.addSubJob(insertRowJobFactory.getJob(targetGridPane, destRowIndex, insertCount));
+            break;
+        }
+        case CENTER: { // Insert rows at bottom (first) and top ends if needed
+            final int targetRowCount = Deprecation.getGridPaneRowCount(gridPane);
+            if (adjustedBounds.getMaxRowIndex() > targetRowCount) {
+                final int insertCount = adjustedBounds.getMaxRowIndex() - targetRowCount;
+                result.addSubJob(insertRowJobFactory.getJob(targetGridPane, targetRowCount, insertCount));
+            }
+            if (adjustedBounds.getMinRowIndex() < 0) {
+                final int insertCount = -adjustedBounds.getMinRowIndex();
+                result.addSubJob(insertRowJobFactory.getJob(targetGridPane, 0, insertCount));
+            }
+            break;
+        }
+        }
+
+        if (reparenting) {
+
+            // Step #5
+            for (var draggedObject : draggedObjects) {
+                final var j = selectionJobsFactory.insertAsSubComponent(draggedObject, targetGridPane, -1);
+                result.addSubJob(j);
+            }
+        }
+
+        // Step #6
+        for (var draggedObject : draggedObjects) {
+            assert draggedObject instanceof FXOMInstance; // Because (1)
+            result.addSubJob(moveCellContentJobFactory.getJob((FXOMInstance) draggedObject, columnDelta, rowDelta));
+        }
+
+        if (reparenting) {
+
+            // Step #7
+            result.addSubJob(selectionJobsFactory.updateSelection(draggedObjects));
+        }
+
+        assert result.isExecutable();
+
+        return result;
+    }
+
+    @Override
+    public boolean isSelectRequiredAfterDrop() {
+        return true;
+    }
+
+    @ApplicationInstanceSingleton
+    public static class Factory extends DropTargetFactory<GridPaneDropTarget> {
+        public Factory(EmContext sbContext) {
+            super(sbContext);
+        }
+
+        public GridPaneDropTarget getDropTarget(FXOMObject targetGridPane, int columnIndex, int rowIndex,
+                ColumnArea targetColumnArea, RowArea targetRowArea) {
+            return create(GridPaneDropTarget.class, j -> j.setDropTargetParameters(targetGridPane, columnIndex,
+                    rowIndex, targetColumnArea, targetRowArea));
+        }
+
+    }
+}

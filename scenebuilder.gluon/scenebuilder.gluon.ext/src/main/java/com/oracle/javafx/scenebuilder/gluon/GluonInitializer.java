@@ -40,9 +40,9 @@ import com.oracle.javafx.scenebuilder.gluon.controller.TrackingController;
 import com.oracle.javafx.scenebuilder.gluon.controller.UpdateController;
 import com.treilhes.emc4j.boot.api.context.EmContext;
 import com.treilhes.jfxplace.core.api.WelcomeDialog;
-import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
 import com.treilhes.jfxplace.core.api.lifecycle.InitWithApplication;
 import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
+import com.treilhes.jfxplace.fxom.api.javafx.JfxAppPlatform;
 
 import javafx.application.Platform;
 

@@ -39,17 +39,17 @@ import com.treilhes.emc4j.boot.api.context.annotation.Lazy;
 import com.treilhes.jfxplace.core.api.action.AbstractAction;
 import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
 import com.treilhes.jfxplace.core.api.action.ActionMeta;
-import com.treilhes.jfxplace.core.api.application.ApplicationInstance;
-import com.treilhes.jfxplace.core.api.document.DocumentActionFactory;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.instance.ApplicationInstanceUi;
 import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.annotation.MenuItemAttachment;
 import com.treilhes.jfxplace.core.api.ui.dialog.Alert;
 import com.treilhes.jfxplace.core.api.ui.dialog.Dialog;
 import com.treilhes.jfxplace.core.api.ui.dialog.ModalWindow;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.fxom.api.document.DocumentActionFactory;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
 
 @ApplicationInstancePrototype
 @ActionMeta(nameKey = "action.name.save", descriptionKey = "action.description.save")
@@ -70,7 +70,7 @@ public class RevertAction extends AbstractAction {
 
     private final MainInstanceWindow instanceWindow;
 
-    private final ApplicationInstance instance;
+    private final ApplicationInstanceUi instance;
 
     public RevertAction(
             I18N i18n,
@@ -78,7 +78,7 @@ public class RevertAction extends AbstractAction {
             FxomEvents applicationInstanceEvents,
             DocumentActionFactory documentActionFactory,
             Dialog dialog,
-            @Lazy ApplicationInstance instance,
+            @Lazy ApplicationInstanceUi instance,
             @Lazy MainInstanceWindow instanceWindow) {
         super(i18n, extensionFactory);
         this.documentActionFactory = documentActionFactory;

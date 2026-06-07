@@ -43,14 +43,14 @@ import org.slf4j.LoggerFactory;
 
 import com.oracle.javafx.scenebuilder.api.job.SbJobsFactory;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelectionGroup;
-import com.treilhes.jfxplace.core.api.fxom.job.base.BatchDocumentJob;
-import com.treilhes.jfxplace.core.api.fxom.subjects.FxomEvents;
 import com.treilhes.jfxplace.core.api.job.Job;
 import com.treilhes.jfxplace.core.api.job.JobExtensionFactory;
-import com.treilhes.jfxplace.core.fxom.FXOMInstance;
-import com.treilhes.jfxplace.core.fxom.FXOMObject;
+import com.treilhes.jfxplace.fxom.api.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.fxom.api.editor.selection.FxomSelectionGroup;
+import com.treilhes.jfxplace.fxom.api.job.base.BatchDocumentJob;
+import com.treilhes.jfxplace.fxom.api.subjects.FxomEvents;
+import com.treilhes.jfxplace.fxom.model.FXOMInstance;
+import com.treilhes.jfxplace.fxom.model.FXOMObject;
 
 import javafx.scene.layout.AnchorPane;
 

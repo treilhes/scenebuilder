@@ -53,7 +53,7 @@
                         <configuration>
                             <sourceDependency>
                                 <groupId>com.treilhes.scenebuilder</groupId>
-                                <artifactId>scenebuilder.driver.javafx.common</artifactId>
+                                <artifactId>scenebuilder.driver.javafx.15</artifactId>
                                 <version>${scenebuilder.version}</version>
                             </sourceDependency>
                         </configuration>

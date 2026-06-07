@@ -37,16 +37,14 @@ import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.fxom.mask.Accessory;
-import com.treilhes.jfxplace.core.api.fxom.mask.HierarchyMask;
-import com.treilhes.jfxplace.core.api.javafx.JfxAppPlatform;
 import com.oracle.javafx.scenebuilder.api.mask.SbAccessory;
 import com.oracle.javafx.scenebuilder.api.mask.SbHierarchyMask;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyCell.BorderSide;
 import com.oracle.javafx.scenebuilder.document.api.HierarchyItem;
 import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.TreeItemFactory;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
+import com.treilhes.jfxplace.core.api.javafx.JfxPlaceExecutor;
 
 import javafx.scene.control.TreeItem;
 
@@ -99,7 +97,7 @@ public class HierarchyTaskScheduler {
             public void run() {
                 // JavaFX data should only be accessed on the JavaFX thread.
                 // => we must wrap the code into a Runnable object and call the SbPlatform.runLater
-                JfxAppPlatform.ensureFxThread(() -> {
+                JfxPlaceExecutor.ensureFxThread(() -> {
 
                     for (SbAccessory accessory:owner.getAccessories()) {
                       //TODO may be deletable
@@ -161,7 +159,7 @@ public class HierarchyTaskScheduler {
         public void run() {
             // JavaFX data should only be accessed on the JavaFX thread.
             // => we must wrap the code into a Runnable object and call the SbPlatform.runLater
-            JfxAppPlatform.ensureFxThread(() -> treeItem.setExpanded(true));
+            JfxPlaceExecutor.ensureFxThread(() -> treeItem.setExpanded(true));
         }
     }
 }

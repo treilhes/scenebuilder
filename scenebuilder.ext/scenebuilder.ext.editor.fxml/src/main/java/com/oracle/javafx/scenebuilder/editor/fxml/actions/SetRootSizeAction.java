@@ -43,9 +43,9 @@ import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSinglet
 import com.treilhes.jfxplace.core.api.Size;
 import com.treilhes.jfxplace.core.api.action.AbstractAction;
 import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
-import com.treilhes.jfxplace.core.api.action.ActionFactory;
 import com.treilhes.jfxplace.core.api.action.ActionMeta;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.instance.ActionFactory;
 import com.treilhes.jfxplace.core.api.job.Job;
 import com.treilhes.jfxplace.core.api.job.JobManager;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBuilder;

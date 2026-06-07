@@ -35,8 +35,8 @@ package com.oracle.javafx.scenebuilder.api.mask;
 
 import java.net.URL;
 
-import com.treilhes.jfxplace.core.api.fxom.mask.HierarchyMask;
-import com.treilhes.jfxplace.core.fxom.util.PropertyName;
+import com.treilhes.jfxplace.fxom.api.mask.HierarchyMask;
+import com.treilhes.jfxplace.fxom.model.util.PropertyName;
 
 import javafx.scene.image.Image;
 

@@ -36,8 +36,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.treilhes.jfxplace.core.api.preference.ManagedGlobalPreference;
-import com.treilhes.jfxplace.core.api.preference.PreferencesContext;
-import com.treilhes.jfxplace.core.api.preference.type.StringPreference;
+import com.treilhes.jfxplace.fxom.api.preference.PreferencesContext;
+import com.treilhes.jfxplace.fxom.api.preference.type.StringPreference;
 
 @Component
 public class IgnoreVersionPreference extends StringPreference implements ManagedGlobalPreference {

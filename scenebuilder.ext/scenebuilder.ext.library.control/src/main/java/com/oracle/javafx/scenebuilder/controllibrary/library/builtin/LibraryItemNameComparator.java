@@ -35,7 +35,7 @@ package com.oracle.javafx.scenebuilder.controllibrary.library.builtin;
 import java.util.Comparator;
 import java.util.Locale;
 
-import com.treilhes.jfxplace.core.api.fxom.library.LibraryItem;
+import com.treilhes.jfxplace.fxom.api.library.LibraryItem;
 
 /**
  *

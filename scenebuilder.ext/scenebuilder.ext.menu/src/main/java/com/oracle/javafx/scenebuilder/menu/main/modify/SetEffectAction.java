@@ -48,20 +48,20 @@ import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototy
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.jfxplace.core.api.action.AbstractAction;
 import com.treilhes.jfxplace.core.api.action.ActionExtensionFactory;
-import com.treilhes.jfxplace.core.api.action.ActionFactory;
 import com.treilhes.jfxplace.core.api.action.ActionMeta;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.FxomSelection;
-import com.treilhes.jfxplace.core.api.fxom.editor.selection.SelectionJobsFactory;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.instance.ActionFactory;
 import com.treilhes.jfxplace.core.api.job.JobManager;
 import com.treilhes.jfxplace.core.api.ui.MainInstanceWindow;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuBuilder;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemAttachment;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.MenuItemProvider;
 import com.treilhes.jfxplace.core.api.ui.controller.menu.PositionRequest;
-import com.treilhes.jfxplace.core.fxom.util.PropertyName;
 import com.treilhes.jfxplace.core.metadata.AbstractMetadata;
 import com.treilhes.jfxplace.core.metadata.property.ValuePropertyMetadata;
+import com.treilhes.jfxplace.fxom.api.editor.selection.FxomSelection;
+import com.treilhes.jfxplace.fxom.api.editor.selection.SelectionJobsFactory;
+import com.treilhes.jfxplace.fxom.model.util.PropertyName;
 
 import javafx.scene.Node;
 import javafx.scene.control.Menu;

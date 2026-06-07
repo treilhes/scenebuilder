@@ -48,7 +48,7 @@ import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibrary;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageLibraryFilter;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReportEntry;
 import com.oracle.javafx.scenebuilder.imagelibrary.library.ImageReportEntry.Type;
-import com.treilhes.jfxplace.core.library.util.LibraryUtil;
+import com.treilhes.jfxplace.fxom.library.util.LibraryUtil;
 
 public class ImageExplorerUtil {
 

@@ -38,10 +38,10 @@ import org.springframework.context.annotation.Lazy;
 import com.oracle.javafx.scenebuilder.ext.theme.document.ThemeDocumentPreference;
 import com.oracle.javafx.scenebuilder.gluon.alert.WarnThemeAlert;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
-import com.treilhes.jfxplace.core.api.editors.ApplicationInstanceWindow;
 import com.treilhes.jfxplace.core.api.lifecycle.InitWithDocument;
 import com.treilhes.jfxplace.core.api.subjects.ApplicationInstanceEvents;
-import com.treilhes.jfxplace.core.fxom.FXOMDocument;
+import com.treilhes.jfxplace.fxom.api.editors.ApplicationInstanceWindow;
+import com.treilhes.jfxplace.fxom.model.FXOMDocument;
 
 @ApplicationInstanceSingleton
 public class AlertController implements InitWithDocument {
