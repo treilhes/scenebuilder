@@ -55,6 +55,15 @@ public class SbMetadata extends AbstractMetadata<
     ValuePropertyMetadata<ValuePropertyMetadataCustomization>,
     SbComponentClassMetadata<?>> {
 
+    private final MetadataIntrospector<SbComponentClassMetadata<?>> NOOP_METADATA_INTROSPECTOR = componentClass -> {
+        //FIXME this is strange to set the owner after creating the metadata, probably a better solution can be provided
+        ComponentClassMetadataCustomization customization = new ComponentClassMetadataCustomization();
+        var metadata = new SbComponentClassMetadata(componentClass, null, customization);
+        customization.setOwner(metadata);
+        return metadata;
+    };
+
+
     private final List<String> sectionNames = new ArrayList<>();
     private final Map<String, List<String>> subSectionMap = new HashMap<>();
 
@@ -75,7 +84,7 @@ public class SbMetadata extends AbstractMetadata<
             Optional<MetadataIntrospector<SbComponentClassMetadata<?>>> metadataIntrospector) {
         //@formatter:on
         super(componentClassMetadatas);
-        metadataIntrospector.ifPresent(this::setMetadataIntrospector);
+        this.setMetadataIntrospector(metadataIntrospector.orElse(NOOP_METADATA_INTROSPECTOR));
 
         // Populates parentRelatedProperties
 //        parentRelatedProperties.add(PropertyNames.layoutXName);

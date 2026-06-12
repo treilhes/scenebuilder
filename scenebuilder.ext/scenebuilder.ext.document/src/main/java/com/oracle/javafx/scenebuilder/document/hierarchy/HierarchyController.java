@@ -51,6 +51,7 @@ import com.oracle.javafx.scenebuilder.document.hierarchy.treeview.TreeItemFactor
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstanceSingleton;
 import com.treilhes.jfxplace.core.api.ctxmenu.ContextMenu;
 import com.treilhes.jfxplace.core.api.i18n.I18N;
+import com.treilhes.jfxplace.core.api.instance.ApplicationInstance;
 import com.treilhes.jfxplace.core.api.javafx.JfxPlaceExecutor;
 import com.treilhes.jfxplace.core.api.job.JobManager;
 import com.treilhes.jfxplace.core.api.ui.controller.misc.InlineEdit;
@@ -109,8 +110,10 @@ public class HierarchyController implements Hierarchy {
 
     private TreeItem<HierarchyItem> rootTreeItem;
 
+    private final ApplicationInstance instance;
+
     public HierarchyController(
-            I18N i18n,
+            ApplicationInstance instance,
             ContextMenu contextMenu,
             FxomEvents fxomEvents,
             HierarchyCellAssignment cellAssignments,
@@ -123,7 +126,8 @@ public class HierarchyController implements Hierarchy {
             FxomSelection selection,
             TreeItemFactory rootTreeItemFactory
             ) {
-        this.i18n = i18n;
+        this.instance = instance;
+        this.i18n = instance.getApplication().getI18n();
         this.cellAssignments = cellAssignments;
         this.contextMenu = contextMenu;
         this.dndController = dndController;
@@ -239,9 +243,11 @@ public class HierarchyController implements Hierarchy {
      * @treatAsPrivate
      */
     protected void fxomDocumentDidChange(FXOMDocument oldDocument) {
-        // Clear the map containing the TreeItems expanded property values
-        rootTreeItemFactory.clearExpandedMapCache();
-        updatePanel();
+        instance.getExecutor().runOnFxThread(() -> {
+            // Clear the map containing the TreeItems expanded property values
+            rootTreeItemFactory.clearExpandedMapCache();
+            updatePanel();
+        });
     }
 
     /**

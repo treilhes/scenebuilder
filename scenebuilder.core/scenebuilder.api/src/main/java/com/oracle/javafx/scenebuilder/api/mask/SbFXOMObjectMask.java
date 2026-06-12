@@ -39,7 +39,13 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbComponentClassMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbComponentPropertyMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
+import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
 import com.treilhes.emc4j.boot.api.context.EmContext;
+import com.treilhes.emc4j.boot.api.context.annotation.ApplicationInstancePrototype;
 import com.treilhes.emc4j.boot.api.context.annotation.ApplicationSingleton;
 import com.treilhes.jfxplace.core.api.editor.images.ImageUtils;
 import com.treilhes.jfxplace.core.api.factory.AbstractFactory;
@@ -50,18 +56,11 @@ import com.treilhes.jfxplace.fxom.model.FXOMElement;
 import com.treilhes.jfxplace.fxom.model.FXOMIntrinsic;
 import com.treilhes.jfxplace.fxom.model.FXOMObject;
 import com.treilhes.jfxplace.fxom.model.util.PropertyName;
-import com.oracle.javafx.scenebuilder.metadata.custom.ComponentClassMetadataCustomization.Qualifier;
-import com.oracle.javafx.scenebuilder.metadata.custom.SbComponentClassMetadata;
-import com.oracle.javafx.scenebuilder.metadata.custom.SbComponentPropertyMetadata;
-import com.oracle.javafx.scenebuilder.metadata.custom.SbMetadata;
-import com.oracle.javafx.scenebuilder.metadata.custom.ValuePropertyMetadataCustomization;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 
-/**
- * Abstract class that provides a common implementation for the HierarchyMask interface.
- */
+@ApplicationInstancePrototype
 public class SbFXOMObjectMask
         extends AbstractHierarchyMask<
         SbMetadata,

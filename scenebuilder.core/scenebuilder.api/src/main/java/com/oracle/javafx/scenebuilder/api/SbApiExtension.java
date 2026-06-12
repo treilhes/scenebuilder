@@ -103,7 +103,8 @@ public class SbApiExtension implements ApplicationExtension  {
                 I18NSceneBuilderApi.class,
 
                 SbMetadata.class,
-                SbFXOMObjectMask.Factory.class
+                SbFXOMObjectMask.Factory.class,
+                SbFXOMObjectMask.class
             );
      // @formatter:on
     }
